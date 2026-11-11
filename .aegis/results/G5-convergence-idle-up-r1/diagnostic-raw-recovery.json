@@ -1,0 +1,186 @@
+{
+  "status": "WINDOW_FAILED_RSS_RAW_DATA_PRESERVED",
+  "rows": [
+    {
+      "case": "long1600",
+      "raw_status": "OBSERVED",
+      "rounds": 1,
+      "root_starts": 2,
+      "root_ends": 2,
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 44,
+        "after_revision": 46
+      },
+      "terminal": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "2",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "eb313d8efe45db694605ae2eb66a3734",
+          "ordinal": "2",
+          "presentedGeneration": "2",
+          "runtimeEpoch": "1"
+        },
+        "objects": 40,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 1010,
+          "width": 1431
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "status": "OFFLINE_RECOVERED_RAW_PENDING_QUALIFICATION"
+    },
+    {
+      "case": "growth10",
+      "raw_status": "OBSERVED",
+      "rounds": 10,
+      "root_starts": 20,
+      "root_ends": 20,
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 840,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 61,
+        "after_revision": 63
+      },
+      "terminal": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "19",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "fa313d8efe45db694605ae2eb66a3734",
+          "ordinal": "19",
+          "presentedGeneration": "19",
+          "runtimeEpoch": "1"
+        },
+        "objects": 40,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 1010,
+          "width": 1431
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "status": "OFFLINE_RECOVERED_RAW_PENDING_QUALIFICATION"
+    }
+  ],
+  "guard_status_not_overridden": true,
+  "no_browser_retry": true,
+  "memory_mechanism_candidate": "Growth raw JSON124.6MB and row returned over CDP plus metadata/worker duplication while snapshots/traces in memory; exact current traces may already complete, do not reinterpret guard as CPU timeout."
+}

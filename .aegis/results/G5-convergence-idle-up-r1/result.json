@@ -1,0 +1,190 @@
+{
+  "schema": "g5-focused-convergence-result-v1",
+  "status": "BLOCKED_EVIDENCE",
+  "return_surface": "CONTROL_REVIEW",
+  "terminal": "BOUNDED_CONVERGENCE_DIAGNOSIS_COMPLETE_WITH_CONFIRMED_RESOURCE_AND_ACTIVE_PIXEL_GAPS",
+  "blocking_class": "CONFIRMED_UNSAFE_RESOURCE_LIFETIME_NOT_SCOPED",
+  "package": {
+    "path": ".aegis/packages/G5-convergence-idle-up-r1/package.json",
+    "sha256": "6504d8daadd9821ca264641db932bf59825472f0d5652c4a5e211071a57aa45c"
+  },
+  "result_time": "2026-11-11T11:50:11.149558+08:00",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "result_revision": "203436038719d9fa3badf4a7b5b26af6cad5f754+isolateduncommittedconvergencedelta",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-convergence-idle-up-r1/result.json"
+  },
+  "obligations": [
+    {
+      "id": "CV-IDLE",
+      "status": "PARTIAL_ACTIVE_PIXEL_MISMATCH",
+      "evidence": "idle-feedback.json",
+      "findings": "OwnidleDPR4 currentpose witness positivewhileDown;fullactiveinkROI1011interiorpixelsdifferent;finalRedoqualified. NoHUD/AAwiden orfalseprogressPASS."
+    },
+    {
+      "id": "CV-CONTEXT",
+      "status": "BLOCKED_CONFIRMED_RESIDUAL_CONTEXT_DELETE",
+      "evidence": "context-lifecycle.json",
+      "findings": "Actual6wrongcontextdeleteslocalized;3rendererentryreleaseorderingnativeRED/GREENcorrected. FreshWebafterstillmasked4/recovery4;cannotclaimallGPUresourcesafe."
+    },
+    {
+      "id": "CV-UP",
+      "status": "READY_FOR_CONTROL_REVIEW_WITH_CLOCK_FINDING",
+      "evidence": "current-up-attribution.json",
+      "findings": "Samefinalsourceordinarylong1600/growth10complete;22diagnosticrootscompleted/loss0/reconciledfrompersistedraw. WholewindowRSSSTOPPEDkept. Primarynoin-timingreadback;contentopclockisproxyonly."
+    },
+    {
+      "id": "CV-SAFETY",
+      "status": "PARTIAL_WITH_REQUIRED_ACTIVE_RESOURCE_FINDINGS",
+      "evidence": "independent-pixel-proof.json",
+      "findings": "14terminalCPUcomparisons+2maskedactivequalified;12affectednativepass/8Node/3Python/120boundary. Activeidle1011mismatch/foreigndeleteunresolved."
+    },
+    {
+      "id": "CV-BIND",
+      "status": "READY_FOR_CONTROL_REVIEW",
+      "evidence": "source-manifest.json",
+      "findings": "4windows/512ceilseconds;allsourceSDKstable/ownedPIDsclean,oldhardlinkedrawimmutable,newnormalDemo4324;stopbackgroundcheckpoint."
+    }
+  ],
+  "measured_main_facts": {
+    "ordinary_long1600_main_ms": 4166.4,
+    "ordinary_long1600_successor_ms": 4004.8,
+    "ordinary_growth10_main_ms": 7797.8,
+    "ordinary_growth10_successor_ms": 363.0,
+    "diagnostic_long1600_root_ms": 4178.9,
+    "diagnostic_long1600_path_ms": 3733.1,
+    "diagnostic_growth10_root_ms": 7727.0,
+    "diagnostic_growth10_history_path_ms": 6529.9,
+    "body_compile_calls": 0,
+    "comparative_performance_PASS": false
+  },
+  "next_sync_proposal": "Audit exact historical path reservation/eviction/weakproof pin lifetimes within8MiB/512 andexistingglobalbudget; then per-localnewqueryprefix preparationpreservingf32andsequentialunion. NoCPUalgorithmchangesimplemented.",
+  "next_step_inputs": {
+    "path": ".aegis/results/G5-convergence-idle-up-r1/next-step-inputs.json",
+    "sha256": "e1ad5366127304f034e16e2cf275a860acc4742ccb2c7a1562eed19461e75ca2"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/preflight.json",
+      "sha256": "5999ff58e2cb07bd096c505416ac88b593e2e4bcaafa8fc3eba8188e1ec36dae"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/source-manifest.json",
+      "sha256": "8e55cd3df0de235bb2b5a86540e4e962613222f393bc333346e6ebc67000e9b8"
+    },
+    "source-delta.patch": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/source-delta.patch",
+      "sha256": "d01f6b651431c769f4928269003b9c6747a4c3051db63f59f018bacac49c7ae9"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/SDK-manifest.json",
+      "sha256": "37d243cb5d434fc418cac6d8b8b25f49b447ed9cb359083561dd2ed5bcfa867e"
+    },
+    "normal-sdk-manifest.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/normal-sdk-manifest.json",
+      "sha256": "f36578f898c207115c50229e34fb0a2571ae2bd235b606206463f3cdf15ff1e7"
+    },
+    "diagnostic-sdk-manifest.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/diagnostic-sdk-manifest.json",
+      "sha256": "fe3ec82ea38311dae246dc7ac8218fad27ba1dda5472a3186aa5424892f9fec1"
+    },
+    "idle-feedback.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/idle-feedback.json",
+      "sha256": "2a243e1c1a661bec79a15421013ca114e15fcf2a81b811a3dcbba7a8d9f3d2c7"
+    },
+    "idle-active-residual.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/idle-active-residual.json",
+      "sha256": "ba459b545c522a0d52656bf50aca0e5f2155e5521e686b15c99ef6b90a465531"
+    },
+    "context-lifecycle.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/context-lifecycle.json",
+      "sha256": "68f20969003eb70b0be9073f7648c832ddffe62d598022c4dac8e683a35d0af7"
+    },
+    "repairs-or-no-change.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/repairs-or-no-change.json",
+      "sha256": "924294eb0a21ee8eed63ce29bc6f17a2ac7c2d8b08461d53378fad0b68145697"
+    },
+    "ordinary-latency.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/ordinary-latency.json",
+      "sha256": "1b2b83ec472fcaa0a39dd6f2927663206b0b823f85944491949f764f75e0c436"
+    },
+    "current-up-attribution.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/current-up-attribution.json",
+      "sha256": "ea6106ed50e39040591e9d338350b7d30535e6bc9a7f26b3770d2822ae0a33dc"
+    },
+    "current-up-phase-detail.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/current-up-phase-detail.json",
+      "sha256": "183773adfdf00649c65921a6e5679d1d6aed1d3f241e441eb7be5676b054a211"
+    },
+    "diagnostic-raw-recovery.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/diagnostic-raw-recovery.json",
+      "sha256": "e7e02cd7e2953aab78f221e675aca6fd69c90786ebdb1f6c6223c4c322528521"
+    },
+    "runtime-invariants.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/runtime-invariants.json",
+      "sha256": "e0a63a37462d9496a618967e34a5374a1343ed20ff13abe30e9c071bbc16af10"
+    },
+    "up-semantic-pairing.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/up-semantic-pairing.json",
+      "sha256": "81cd16a0e774c2f112e98f65824b02f7d161061ef12944d12279e49b3bf03ac8"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/regressions.json",
+      "sha256": "c51867a7de677273df2fac4a44eb92bd2b17d153c4ea46437c99898c44b221c5"
+    },
+    "independent-pixel-proof.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/independent-pixel-proof.json",
+      "sha256": "4497ae5185a26e2abeae6b7a923531666c7812f60eee35d5320e9f906b267e48"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/sampling-ledger.json",
+      "sha256": "a29ce5ecf0221873aa3bd184073befdcb294b19594f2ab611e1fec4332b1fe18"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/cleanup.json",
+      "sha256": "6cfbd3ad706d06cdf6c03b61315dfa980d2b31dd0f0d9f008676420067fbc365"
+    },
+    "remaining-items.json": {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/remaining-items.json",
+      "sha256": "21f28657307f69be1ffcc51cd1cc7a963c919e10284b042ea2511776d15986af"
+    }
+  },
+  "artifact_manifest_ref": ".aegis/results/G5-convergence-idle-up-r1/artifact-manifest.json",
+  "normalDemoURL": "http://127.0.0.1:4324/example.html",
+  "preserved_user_ports": [
+    4318,
+    4323
+  ],
+  "final_normal_WASM": "bab6d175d940c4674429809a1ef2f1cedd80789d1ca4155202b176e4e3f97bd5",
+  "final_diagnostic_WASM": "500465b344e84e545b7736fdf87159ac2a068adbc11cfe468a188bdac9ac42e5",
+  "drivers": {
+    "verification/runners/g5/convergence_idle_up_surface.mjs": "77aa9cbf79d87bea6fac68f9e2560308937eb5ede3afcf09b8cfb5d656adb5bb",
+    "verification/runners/g5/convergence_idle_up_context.mjs": "ce7809cfb961f0ad90d4d2269480307dcfd326f0f7cc99f76e5bc733a50278cd",
+    "verification/runners/g5/convergence_idle_up_up.mjs": "20ca345610b675dbf47f75e8c242ff1db9c0ee274c07558391627000c6d15ca8",
+    "verification/runners/g5/convergence_idle_up_runner.py": "e1a0a08cf32d9ec1ab225360f4d86be6a3495624b63a9af28c4b9e6490350225",
+    "verification/runners/g5/convergence_idle_up_reduce.py": "e045823cbf9c654b2384f3c2c16854a8156582f3d846acf0f63ecb60125c1c3e"
+  },
+  "ledger_summary": {
+    "starts": 4,
+    "charged_seconds": 512,
+    "cap_seconds": 1140,
+    "time_remaining_not_newstart_authority": 628,
+    "all_authorized_IDs_used": true,
+    "diagnostic_window_STATUS": "STOPPED_RSS_LIMIT",
+    "all_owned_cleanup_complete": true
+  },
+  "human_checkpoint": {
+    "state": "MANDATORY_STOP_BEFORE_BACKGROUND_COMPUTE_DESIGN_OR_PROTOTYPE",
+    "continue_execution": false,
+    "background_worker_threads_asyncUp_design_implementation": false,
+    "reason": "Allfourauthorizedwindowsconsumed;returnmeasuredproposal+exactresidualsforcontrol/usercomparison"
+  },
+  "no_commit_push": true,
+  "index_empty": true,
+  "official_G5_UR3_P34_performance_PASS": false
+}

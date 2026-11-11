@@ -1,0 +1,35 @@
+{
+  "reviewer_boundary": "Shared controlled worktree exact local artifacts; all text/refs durable; later publication separate.",
+  "required": [
+    "preflight.json",
+    "idle-feedback.json",
+    "context-lifecycle.json",
+    "repairs-or-no-change.json",
+    "ordinary-latency.json",
+    "current-up-attribution.json",
+    "runtime-invariants.json",
+    "regressions.json",
+    "independent-pixel-proof.json",
+    "source-manifest.json",
+    "SDK-manifest.json",
+    "sampling-ledger.json",
+    "artifact-manifest.json",
+    "cleanup.json",
+    "next-step-inputs.json",
+    "result.json"
+  ],
+  "bindings": "Each obligation maps exact current raw+source/runner+normal or qualification SDK hashes; old refs reusable only byte-identical source/request/expected values. Distinguish independent vs same-path semantic oracle.",
+  "raw_policy": "Retain all failures/censored results with status; no overwrite old or current IDs, no in-place historical raw edits. Primary vs correctness/diagnostic labels never merged.",
+  "result_fields": [
+    "package sha",
+    "actual source revision/delta",
+    "materialized_ref",
+    "obligation results with explicit findings",
+    "sampling charged/remaining",
+    "owned PIDs cleaned",
+    "current normal demo when owner changed",
+    "precise next synchronous proposal",
+    "stop before human background checkpoint"
+  ],
+  "official_gate": false
+}

@@ -1,0 +1,138 @@
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -304,8 +304,6 @@
+     G5_ROUTE(g5Route,g5::Route::canonical_prepared);
+     G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
+ 
+-    partialEraseFrame_.reset();transientDisplay_.reset();
+-    serviceResourceRetirements();
+     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
+     const auto& metrics=plan.frame.metrics;
+     if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
+@@ -327,6 +325,10 @@
+        acquired.frame.surface->height()!=static_cast<int>(metrics.physicalHeight)){
+         provider.release();return BackendSubmissionResult::rejected("frame target dimensions differ");
+     }
++    // These objects may release GPU surfaces. Select the owning provider's
++    // context before dropping the previous disposable frame or polling leases.
++    partialEraseFrame_.reset();transientDisplay_.reset();
++    serviceResourceRetirements();
+     if (plan.referenceDrawList.frame.surfaceGeneration != plan.frame.surfaceGeneration ||
+         plan.referenceDrawList.frame.frameId != plan.frame.frameId ||
+         plan.referenceDrawList.frame.sceneGeneration != plan.frame.sceneGeneration) {
+@@ -537,8 +539,6 @@
+     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
+     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
+ 
+-    transientDisplay_.reset();
+-    serviceResourceRetirements();
+     const auto cache=navigationCache_;
+     if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
+        cache->frame->viewId!=current.viewId || cache->frame->sceneGeneration!=current.sceneGeneration ||
+@@ -554,6 +554,8 @@
+     if(acquired.frame.generation!=current.surfaceGeneration.value()){
+         provider.release();return BackendSubmissionResult::rejected("stale navigation surface");
+     }
++    transientDisplay_.reset();
++    serviceResourceRetirements();
+     if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,
+         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
+@@ -600,6 +602,19 @@
+     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
+     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
+ 
++    // Navigation may discard a prior edit attempt and obsolete work buffers
++    // before the tile renderer acquires its final target. Bind their actual
++    // provider context for that preparation as well as for the later draw.
++    const auto preparedTarget=provider.acquire();
++    if(preparedTarget.code!=SkiaSurfaceAcquireCode::kAcquired||!preparedTarget.frame.surface)
++        return BackendSubmissionResult::retry("navigation preparation target unavailable");
++    if(preparedTarget.frame.generation!=current.surfaceGeneration.value()){
++        provider.release();return BackendSubmissionResult::rejected("stale navigation preparation surface");
++    }
++    struct PreparationTargetRelease {
++        SkiaSurfaceProvider& provider;bool active=true;
++        ~PreparationTargetRelease(){if(active)provider.release();}
++    } preparationTarget{provider};
+     transientDisplay_.reset();
+     serviceResourceRetirements();
+     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+@@ -749,6 +764,7 @@
+     try{
+         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
++        provider.release();preparationTarget.active=false;
+         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background);
+         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
+         return result;
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -797,6 +797,16 @@
+ 
+ # Private native fault injection is never compiled into ordinary Web consumers.
+ if(CANVAS_RENDER_BUILD_TESTS AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSCRIPTEN)
++ add_executable(axiom_g5_convergence_context_tests tests/g5_convergence_context_test.cpp)
++ target_link_libraries(axiom_g5_convergence_context_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++ target_compile_definitions(axiom_g5_convergence_context_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
++ target_compile_features(axiom_g5_convergence_context_tests PRIVATE cxx_std_20)
++ if(MSVC)
++  target_compile_options(axiom_g5_convergence_context_tests PRIVATE /W4 /WX /UNDEBUG)
++ else()
++  target_compile_options(axiom_g5_convergence_context_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
++ endif()
++ add_test(NAME G5ConvergenceContextRelease COMMAND axiom_g5_convergence_context_tests)
+  target_compile_definitions(canvas_runtime_render PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
+  if(AXIOM_BUILD_RUNTIME_QUALIFICATION)
+   target_compile_definitions(canvas_runtime_render PRIVATE AXIOM_UR2D_TESTS=1)
+--- /dev/null
++++ b/runtime/render/tests/g5_convergence_context_test.cpp
+@@ -0,0 +1,48 @@
++// Real renderer release ordering. A SkSurface release callback independently
++// observes the current provider identity; no product-private state is exposed.
++#include "canvas/render/skia_renderer.hpp"
++#include "../src/transient_display_state.hpp"
++#include "include/core/SkSurface.h"
++#include <cassert>
++#include <vector>
++#include <iostream>
++using namespace canvas;using namespace canvas::render;
++namespace {
++int currentContext=1;unsigned releases=0,foreignDeletes=0;
++class ContextTarget final:public SkiaSurfaceProvider {
++ RasterSkiaSurfaceProvider actual_;
++ public:
++ bool unavailable=false;bool stale=false;unsigned acquired=0,released=0;
++ ContextTarget(){assert(actual_.resize(64,64).code==BackendSubmissionCode::kAccepted);}
++ RenderTargetInfo describe()const noexcept override{return actual_.describe();}
++ SkiaSurfaceAcquireResult acquire()noexcept override{if(unavailable)return {};currentContext=1;++acquired;auto result=actual_.acquire();if(stale)++result.frame.generation;return result;}
++ void release()noexcept override{++released;actual_.release();}
++ BackendSubmissionResult present()noexcept override{return actual_.present();}
++ BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h)noexcept override{return actual_.resize(w,h);}
++ BackendSubmissionResult readbackRgba(std::span<std::uint8_t>o)noexcept override{return actual_.readbackRgba(o);}
++ std::uint64_t generation()const noexcept override{return actual_.generation();}
++ BackendSubmissionResult advanceGeneration()noexcept override{return actual_.advanceGeneration();}
++ std::uint64_t readbackCount()const noexcept override{return actual_.readbackCount();}
++ std::uint64_t cpuCopyCount()const noexcept override{return actual_.cpuCopyCount();}
++ std::uint64_t presentCount()const noexcept override{return actual_.presentCount();}
++};
++FramePlan plan(){
++ FrameState f{ViewId{1},CameraState{{32,32},1,0,CameraGeneration{1}},{0,0,64,64},{64,64,64,64,1,1},semantic::SemanticGeneration{1},SceneRevision{1},SurfaceGeneration{1},MetricsGeneration{1},FrameId{1},{0,0,64,64}};
++ ReferenceDrawList list{f,{},0,0,{},{},{},{},ReferenceDrawList::kCanonicalEncodingVersion,CanonicalByteOrder::kLittleEndian,{},{}};list.viewportClip=f.viewportClip;
++ return FramePlan{f,std::move(list),{},false,true};
++}
++void retainedAttemptRelease(unsigned route){
++ ContextTarget target;SkiaRenderer renderer;const auto frame=plan();assert(renderer.renderFrame(target,frame).code==BackendSubmissionCode::kAccepted);EditingOverlay overlay{frame.frame};assert(renderer.renderTransientOverlay(target,frame,&overlay).code==BackendSubmissionCode::kAccepted);
++ auto attempt=internal::transientDisplayAttempt.lock();assert(attempt);auto pixels=new std::vector<std::uint8_t>(64*64*4);
++ attempt->surface=SkSurfaces::WrapPixels(SkImageInfo::MakeN32Premul(64,64),pixels->data(),64*4,[](void*,void* raw){++releases;if(currentContext!=1)++foreignDeletes;delete static_cast<std::vector<std::uint8_t>*>(raw);},pixels);
++ attempt.reset();currentContext=2;
++ auto invoke=[&]{if(route==0)return renderer.renderFrame(target,frame);
++ if(route==1)return renderer.renderNavigation(target,{1,0,0},frame.frame);
++ NavigationSourceQuery query=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&){return true;};return renderer.renderNavigation(target,{1,0,0},frame.frame,query);};
++ const auto before=releases;target.unavailable=true;(void)invoke();assert(releases==before&&"failed activation must preserve old resources");target.unavailable=false;
++ target.stale=true;(void)invoke();assert(releases==before&&"stale target must preserve old resources");target.stale=false;
++ (void)invoke();assert(target.acquired==target.released);
++ std::cout<<"route="<<route<<" releases="<<releases<<" foreign="<<foreignDeletes<<'\n';assert(releases==route+1);assert(foreignDeletes==0&&"renderer released canonical-owned attempt while preview context was current");
++}
++}
++int main(){for(unsigned route=0;route<3;++route)retainedAttemptRelease(route);}

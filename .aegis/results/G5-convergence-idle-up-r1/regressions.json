@@ -1,0 +1,37 @@
+{
+  "status": "AFFECTED_SCOPE_VERIFIED_WITH_REMAINING_REAL_WEB_FINDINGS",
+  "native_initial": {
+    "tests": 12,
+    "failures": 0,
+    "not_run": 1,
+    "junit": "lifecycle-native.xml"
+  },
+  "new_target_final": {
+    "tests": 1,
+    "failures": 0,
+    "junit": "lifecycle-new-test-complete.xml"
+  },
+  "effective_native_unique_passed": 12,
+  "new_red": "context-native-red.log",
+  "new_green": "context-native-green2.log",
+  "initial_test_compile_and_NotRun_retained": true,
+  "Node": {
+    "passed": 8,
+    "log": "final-node.log"
+  },
+  "Python": {
+    "passed": 3,
+    "log": "final-python.log"
+  },
+  "actual_branchVM": [
+    "actual-driver-vm.json",
+    "up-driver-vm.json"
+  ],
+  "boundary": {
+    "files": 120,
+    "log": "final-boundaries.log",
+    "passed": true
+  },
+  "inheritedFC00X519_not_reopened": "EarlierUR3 acceptedbaselinefailure,unaffectedtestcontract",
+  "not_full_project_PASS": true
+}

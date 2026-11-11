@@ -1,0 +1,201 @@
+{
+  "status": "PARTIAL_RELEASE_ORDER_FIX_RESIDUAL_FOREIGN_CONTEXT_DELETE",
+  "native_red": "context-native-red.log",
+  "native_green": "lifecycle-new-test-complete.xml",
+  "actual_before": "context-initial-observation.json",
+  "after": [
+    {
+      "id": "foreground-idle-d4",
+      "created": 7700,
+      "deleted": 7152,
+      "mismatches": [],
+      "overflow": false,
+      "source": ".aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-LIFECYCLE-VERIFY/foreground-idle-d4/context-objects.json"
+    },
+    {
+      "id": "masked-affine-d4",
+      "created": 4828,
+      "deleted": 4573,
+      "mismatches": [
+        {
+          "method": "deleteFramebuffer",
+          "at": 31211.299999952316,
+          "objectId": 4617,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-4zchbuc3054-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-4zchbuc3054-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 29116.399999976158,
+          "kind": "Framebuffer",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e13f\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88"
+        },
+        {
+          "method": "deleteTexture",
+          "at": 31211.799999952316,
+          "objectId": 4616,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-4zchbuc3054-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-4zchbuc3054-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 29116.399999976158,
+          "kind": "Texture",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e144\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+        },
+        {
+          "method": "deleteFramebuffer",
+          "at": 31212.100000023842,
+          "objectId": 4615,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-4zchbuc3054-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-4zchbuc3054-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 29116.399999976158,
+          "kind": "Framebuffer",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e13f\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88"
+        },
+        {
+          "method": "deleteTexture",
+          "at": 31212.299999952316,
+          "objectId": 4614,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-4zchbuc3054-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-4zchbuc3054-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 29116.399999976158,
+          "kind": "Texture",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e144\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+        }
+      ],
+      "overflow": false,
+      "source": ".aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-LIFECYCLE-VERIFY/masked-affine-d4/context-objects.json"
+    },
+    {
+      "id": "navigation-recovery-d4",
+      "created": 4279,
+      "deleted": 3103,
+      "mismatches": [
+        {
+          "method": "deleteFramebuffer",
+          "at": 18487.399999976158,
+          "objectId": 3971,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-pvh0pctlst-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-pvh0pctlst-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 16522.799999952316,
+          "kind": "Framebuffer",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e13f\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88"
+        },
+        {
+          "method": "deleteTexture",
+          "at": 18487.899999976158,
+          "objectId": 3970,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-pvh0pctlst-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-pvh0pctlst-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 16522.799999952316,
+          "kind": "Texture",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e144\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+        },
+        {
+          "method": "deleteFramebuffer",
+          "at": 18488.299999952316,
+          "objectId": 3973,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-pvh0pctlst-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-pvh0pctlst-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 16522.799999952316,
+          "kind": "Framebuffer",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e13f\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88"
+        },
+        {
+          "method": "deleteTexture",
+          "at": 18488.5,
+          "objectId": 3972,
+          "owner": {
+            "id": 1,
+            "canvas": "axiom-sdk-1-pvh0pctlst-canonical",
+            "width": 4400,
+            "height": 3040
+          },
+          "current": {
+            "id": 2,
+            "canvas": "axiom-sdk-1-pvh0pctlst-preview",
+            "width": 4400,
+            "height": 3040
+          },
+          "createdAt": 16522.799999952316,
+          "kind": "Texture",
+          "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:53688/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[17916]:0xa6e144\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[9865]:0x72fe88\n    at http://127.0.0.1:53688/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+        }
+      ],
+      "overflow": false,
+      "source": ".aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-LIFECYCLE-VERIFY/navigation-recovery-d4/context-objects.json"
+    }
+  ],
+  "root_proven": "Early renderer transientDisplay destruction before provider acquire independent releasecallbackRED, patched3route",
+  "residual_root_candidates": [
+    "Ownerop service retirement queue restores prior context then erases last service or resource; destructor/callback can delete against preview",
+    "SkiaRenderer.clearRenderCache/target-independentcache reclaim before provider selection; sources preserve separate GL lifetimes"
+  ],
+  "candidate_not_proven": true,
+  "no_further_windows_or_unreviewed_lifecycle_refactor": true
+}

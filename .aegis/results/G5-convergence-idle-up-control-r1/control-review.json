@@ -1,0 +1,83 @@
+{
+  "schema": "g5-focused-control-review-v1",
+  "status": "ATTRIBUTION_ACCEPTED_SCOPED_FIX_PRESERVED_RESOURCE_AND_ACTIVE_PIXEL_CLOSURE_BLOCKED",
+  "implementation_result": {
+    "path": ".aegis/results/G5-convergence-idle-up-r1/result.json",
+    "sha256": "7b979f67b8b03cca346559bae7096f459efa0e5cb10602b8e83f5978d80f0924"
+  },
+  "independent_artifact_audit": {
+    "path": ".aegis/results/G5-convergence-idle-up-control-r1/independent-artifact-audit.json",
+    "sha256": "f13d8973a0b1ceeaf942b66e2176536b58227a8c1f18170e50b05da1b03b9846"
+  },
+  "independent_root_audit": {
+    "path": ".aegis/results/G5-convergence-idle-up-control-r1/independent-up-root-audit.json",
+    "sha256": "9a214ca798aeb130dd3272aecab8d77ae095f9e583a112ceaa3e9b86cd2edf8c"
+  },
+  "independent_native": {
+    "path": ".aegis/results/G5-convergence-idle-up-control-r1/independent-context-native.xml",
+    "sha256": "152934df3d139e638c594fd570031f745becb20272d0c276b13e51e21575466d"
+  },
+  "independent_idle_pixels": {
+    "path": ".aegis/results/G5-convergence-idle-up-control-r1/independent-idle-active-pixels.json",
+    "sha256": "56def10d5fa426354be1f88a47526eeb3e907cae98f0907ca7aed7daf3e0c735"
+  },
+  "git": {
+    "branch": "codex/geometry-navigation-integration",
+    "HEAD": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+    "origin": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+    "existing_publication": [
+      "a09fbdb2d13829be09a2a36b236eabd00b3c7599",
+      "203436038719d9fa3badf4a7b5b26af6cad5f754"
+    ],
+    "new_lifecycle_delta_uncommitted": true,
+    "index_empty": true
+  },
+  "accepted_findings": [
+    "Current ordinary long1600Up4166.4ms/successor4004.8ms, growth10Up7797.8ms/successor363ms; terminal tails704.9/710.5ms. Samefixture no performancecomparisonPASS.",
+    "22 diagnostic roots complete, exact Begin/End/aggregate/directchild residual reconciled, no critical/statistical loss; body/prepared compilation0. Recovered persisted raw is valid for those roots; window remains STOPPED_RSS_LIMIT.",
+    "longmain3733.1/4178.9ms pathbuild; distinctlocalqueries16x1600. Successor3697.8ms historicalpath. Growth10historical6529.9ms of7727.0ms, totalpath7246.6ms.",
+    "Acquire correct current target before dropping old disposable surfaces on canonical/two navigation entries; native actualreleaseRED/GREEN and failedacquire/stalegeneration preservation. Existing GPUfinished lease rules unchanged.",
+    "14final/RedoCPU comparisons and2maskedactive qualified under originalAA; scoped source/runtime boundary regressions preserved."
+  ],
+  "not_closed": [
+    {
+      "id": "FOREIGN_CONTEXT_DELETE",
+      "evidence": "Postfixmasked4/recovery4canonicalTexture/FBOdeletedfrompreview. Firstnarrowrelease-orderfixdoesnotestablishfullresourceclosure. Keepcurrentpatchforproveninvariant; nofurtherlifecycleclaim."
+    },
+    {
+      "id": "IDLE_ACTIVE_PIXELS",
+      "evidence": "Independentcontrolrecomparisonconfirms1011interiorpixelmismatchinownidleactiveROI; finalRedo0. Positivecurrentposewitness~2667.1msdoesnotqualifyfullactiveframe."
+    },
+    {
+      "id": "IMMEDIATE_SUCCESSOR_FIRST_CORRECT_PIXEL",
+      "evidence": "No-readbackprimarycontentopclockisproxy; correctpixelwhileDownnotcapturedforlong/growthcurrentwaveform. KeepMISSINGnot0."
+    }
+  ],
+  "next_scoped_sync_work": {
+    "priority": "Userlongerasewait, withprovennumerics/owners retained",
+    "first": "Causal audit exactmaskpath estimate/reservation/eviction/weakproofmiss on capturedhistory. Measured1600estimate6747136+Entry vs8MiB; notproofgloballymorememoryneeded. Complete existinglocal geometry/history validation and chargedpins; avoidrecurrentsame-pathbuild ifpossible.",
+    "second": "Per-localnewqueryprefix reuse; preserveoriginalf32sequentialunionorder. No unprovenworlduniontransform/balancedunion math rewrite.",
+    "third": "Mask-onlyScenedeltaafterpathworkreduced, secondary295.3mslate successor."
+  },
+  "background_checkpoint": {
+    "status": "STOPPED_FOR_USER_COMPARISON_NO_DESIGN_OR_PROTOTYPE",
+    "candidate_facts": [
+      "RemainingCPUexactquery/pathpreparation withimmutablefullsourceidentityandquotas",
+      "DerivedScene/renderpreparation separately; GPUcontextowner/lifecyclemustremainexplicit"
+    ],
+    "decision": "Assess reusable synchronous work first; present concrete remaining CPUjobs to user before anythread/worker/asyncUpimplementation. CurrentcontextfindingsexcludeclaimofsafeGPUthreadmigration."
+  },
+  "disk_cleanup": {
+    "published_evidence": {
+      "path": ".aegis/results/G5-publication-cleanup-20261111-r1/cleanup-summary.json",
+      "sha256": "ec55cba2851f18a7bf8024454bace81273254ea922e30bef9051f6aab0165a66"
+    },
+    "reclaimed_approx_gib": 32.64,
+    "unique_raw_and_all_evidence_paths_preserved": true,
+    "frozen_identical_raw_hardlinks_immutable": true
+  },
+  "demo": "http://127.0.0.1:4324/example.html",
+  "official_gate": false,
+  "further_browser_authorized_by_this_review": false,
+  "implementation_thread_idle_after_result": true
+}

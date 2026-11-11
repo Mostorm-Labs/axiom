@@ -1,0 +1,124 @@
+{
+  "schema": "g5-convergence-four-windows-v1",
+  "cap_seconds": 1140,
+  "charged_seconds": 512,
+  "attempts": [
+    {
+      "id": "G5CV1-IDLE-CONTEXT",
+      "status": "COMPLETED",
+      "limit_seconds": 240,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_surface.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-convergence-idle-up-r1/idle-context-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-IDLE-CONTEXT"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 132.840596875,
+        "peak_process_family_rss_kib": 1841920,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 133,
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "G5CV1-LIFECYCLE-VERIFY",
+      "status": "COMPLETED",
+      "limit_seconds": 240,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_surface.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-convergence-idle-up-r1/lifecycle-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-LIFECYCLE-VERIFY"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 174.539448125,
+        "peak_process_family_rss_kib": 1794992,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 175,
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "G5CV1-UP-NORMAL",
+      "status": "COMPLETED",
+      "limit_seconds": 300,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_up.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-convergence-idle-up-r1/up-normal-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 91.560552583,
+        "peak_process_family_rss_kib": 1892896,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 300,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 92,
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "G5CV1-UP-DIAGNOSTIC",
+      "status": "STOPPED",
+      "limit_seconds": 360,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_up.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-convergence-idle-up-r1/up-diagnostic-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-DIAGNOSTIC"
+        ],
+        "reason": "rss_limit",
+        "returncode": 1,
+        "elapsed_s": 111.04376125,
+        "peak_process_family_rss_kib": 4216000,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 360,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FAILED",
+          "error": "page.evaluate: Target page, context or browser has been closed\nBrowser logs:\n\n<launching> /Applications/Google Chrome.app/Contents/MacOS/Google Chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/playwright_chromiumdev_profile-jKBorn --remote-debugging-pipe --no-startup-window\n<launched> pid=43487\n[pid=43487][err] Trying to load the allocator multiple times. This is *not* supported.\n[pid=43487][err] [43496:17625313:1111/113455.965364:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113455.965804:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625313:1111/113455.968891:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113455.968939:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625313:1111/113455.969070:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113455.969099:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625313:1111/113523.796828:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113523.796881:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625313:1111/113523.797245:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113523.797286:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625313:1111/113523.797394:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487][err] [43496:17625377:1111/113523.797437:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[pid=43487] <gracefully close start>\n    at runWindow (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_up.mjs:68:26)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/convergence_idle_up_up.mjs:98:123"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 112,
+      "worker_status": "FAILED"
+    }
+  ]
+}

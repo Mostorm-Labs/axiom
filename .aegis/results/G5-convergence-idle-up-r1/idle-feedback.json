@@ -1,0 +1,58 @@
+{
+  "status": "PARTIAL_CURRENT_WITNESS_WITH_FULL_ACTIVE_MISMATCH",
+  "rows": [
+    {
+      "case": "foreground-idle-d4",
+      "status": "QUALIFIED",
+      "contacts": 0,
+      "generation": "14",
+      "presented": "14",
+      "pose": [
+        {
+          "label": "ink-drag",
+          "start": 46053.700000047684,
+          "firstCorrectAt": 48720.800000071526,
+          "waitMs": 2667.100000023842
+        }
+      ],
+      "pixel_status": "ACTIVE_INK_ROI_FAILED_1011",
+      "final_redo": "QUALIFIED"
+    },
+    {
+      "case": "masked-affine-d4",
+      "status": "QUALIFIED",
+      "contacts": 0,
+      "generation": "7",
+      "presented": "7",
+      "pose": [
+        {
+          "label": "ink-cancel",
+          "start": 14184.899999976158,
+          "firstCorrectAt": 16098.600000023842,
+          "waitMs": 1913.7000000476837
+        },
+        {
+          "label": "ink-drag",
+          "start": 22742.100000023842,
+          "firstCorrectAt": 24697.600000023842,
+          "waitMs": 1955.5
+        }
+      ],
+      "pixel_status": "QUALIFIED",
+      "final_redo": "QUALIFIED"
+    },
+    {
+      "case": "navigation-recovery-d4",
+      "status": "QUALIFIED",
+      "contacts": 0,
+      "generation": "5",
+      "presented": "5",
+      "pose": [],
+      "pixel_status": "QUALIFIED",
+      "final_redo": "QUALIFIED"
+    }
+  ],
+  "actual_idle_witness": "currentidleownwhileDownpositiveat2667.1ms (qualificationsampling);full1011AAinteriorremaining",
+  "no_smoothness_claim": true,
+  "rawpolicy": "earlysamples/final/Redo/metadata preserved;originalAA/HUDunchanged"
+}

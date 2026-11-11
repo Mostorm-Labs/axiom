@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "browser_starts": 0,
+  "actual_consumer_branch": "masked-affine",
+  "snapshot_only_contacts0": true,
+  "canonical_committed_before_down": true,
+  "invalid_readback_metadata_persisted_before_assert": true,
+  "primary_error_and_cleanup_error_separate": true,
+  "terminal_cancel": true,
+  "rows": [
+    {
+      "invalid": false,
+      "captures": [
+        {
+          "generation": 0,
+          "contacts": 0
+        },
+        {
+          "generation": 1,
+          "contacts": 0
+        },
+        {
+          "generation": 1,
+          "contacts": 0
+        },
+        {
+          "generation": 5,
+          "contacts": 0
+        },
+        {
+          "generation": 6,
+          "contacts": 0
+        },
+        {
+          "generation": 7,
+          "contacts": 0
+        }
+      ],
+      "closed": true,
+      "status": "QUALIFIED",
+      "metadata_before_assert": 9
+    },
+    {
+      "invalid": true,
+      "captures": [
+        {
+          "generation": 0,
+          "contacts": 0
+        },
+        {
+          "generation": 1,
+          "contacts": 0
+        }
+      ],
+      "closed": true,
+      "status": "FAILED",
+      "metadata_before_assert": 420
+    }
+  ]
+}

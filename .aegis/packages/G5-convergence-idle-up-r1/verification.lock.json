@@ -1,0 +1,61 @@
+{
+  "status": "FROZEN_FOCUSED_OBLIGATIONS_NO_FULL_GATE",
+  "obligations": [
+    {
+      "id": "CV-IDLE",
+      "requirement": "Actual content feedback after foreground idle at DPR4 is identified and timed.",
+      "oracle": "Own foreground-idle-d4 expected active snapshot/CPU reference and independent new-pose pixel witness; final/Redo/history/contacts.",
+      "acceptance": "Current pose while Down qualified by actual content; early old pose and first correct sample times retained. If not reached within guard, report exact missing evidence/no-progress finding, never claim smoothness from final pixels. Do not substitute pure masked case for mixed idle.",
+      "evidence_required": [
+        "idle-feedback.json"
+      ]
+    },
+    {
+      "id": "CV-CONTEXT",
+      "requirement": "Classify six historical foreign-context GPU deletes and repair proven owner violation within scope.",
+      "oracle": "Test-host create/delete owner/current identities + first mismatch stack; native owner lifecycle RED then GREEN; current context loss/restore/pixels/leasing keepers when changed.",
+      "acceptance": "If reproduced, exact owning resource/current context/root and minimal existing-owner repair validated. If not reproduced in bounded slice, retain unresolved warning finding and precise coverage; continue current Up attribution. Confirmed unsafe new lifetime failure blocks production acceptance, not diagnostic capture. No unproven absence claim from suppression.",
+      "evidence_required": [
+        "context-lifecycle.json",
+        "repairs-or-no-change.json"
+      ]
+    },
+    {
+      "id": "CV-UP",
+      "requirement": "Identify current long-erase Up and next-action waits after r4/UR3 fixes.",
+      "oracle": "Two fixed ordinary rows and same-source private diagnostics with existing root spans/work counts, final/Undo/Redo/History/receipt snapshots.",
+      "acceptance": "Current long1600 and late growth10 root complete or honestly censored; exclusive child/residual attribution. Separate CPU path construction/exact, Scene/observer/apply, render preparation/GPU submit/resource waiting. Compare counts not inferred cpuCoverage0. Terminal clocks explicit; show successor feedback including predecessorUp. Timing requires functional state/witness proof, no button-only assertion.",
+      "evidence_required": [
+        "current-up-attribution.json",
+        "ordinary-latency.json",
+        "runtime-invariants.json"
+      ]
+    },
+    {
+      "id": "CV-SAFETY",
+      "requirement": "Existing semantics, final visuals and resource ownership remain correct.",
+      "oracle": "Reuse unaffected independent refs and fresh affected native/Node/Python/runtime-boundary checks.",
+      "acceptance": "GPU/context changes must have owner RED plus relevant G5GpuResourceRecovery/retirement/lease/last-success/preview/recovery tests and masked/idle final+Redo pixels. Attribution-only source observations stay qualification-only, no ordinary private exports. Existing FC00X519 baseline issue reported, no unrelated broad all-project rerun.",
+      "evidence_required": [
+        "regressions.json",
+        "independent-pixel-proof.json"
+      ]
+    },
+    {
+      "id": "CV-BIND",
+      "requirement": "Evidence is durable, exact, bounded and preserves user checkpoint.",
+      "oracle": "Local content-addressed package/preflight/source/normal+diagnostic SDK/runner/ledger/ownedPID manifests.",
+      "acceptance": "Result accessible in shared worktree; every failure/censored window preserved; cleanup own test processes. Finish before any background design/prototype and report concrete CPU candidate phases for user discussion. No official G5/full UR3/P34 claim.",
+      "evidence_required": [
+        "preflight.json",
+        "source-manifest.json",
+        "SDK-manifest.json",
+        "sampling-ledger.json",
+        "artifact-manifest.json",
+        "cleanup.json",
+        "next-step-inputs.json",
+        "result.json"
+      ]
+    }
+  ]
+}

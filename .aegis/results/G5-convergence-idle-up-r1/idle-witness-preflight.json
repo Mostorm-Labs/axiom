@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "independent_reference_plan": {
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/foreground-idle-d4/ink-drag-expected.axsnap",
+    "snapshot_sha256": "d031f269fee2c381c79340d5d63be24ae570399180934e116b08e2ae8aca0387",
+    "request": {
+      "width": 4400,
+      "height": 3040,
+      "logical_width": 1100,
+      "logical_height": 760,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": [
+        [
+          179.0670394897461,
+          149.05681610107422,
+          690.9158325195312,
+          500.8218688964844
+        ]
+      ]
+    },
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "timeout_seconds": 60,
+    "rss_mib": 4096
+  },
+  "reference_sha256": "4abd5c9fb05667edcdcb3663f7f404cc78e06256b5b5a5a8044ed8295eb75ad5",
+  "edge_sha256": "1c9eb6a05e934251024b2e322325accf0d643828304ded496a5b8978272b9112",
+  "rect": {
+    "x": 2598,
+    "y": 998,
+    "width": 4,
+    "height": 4
+  },
+  "CSSpoint": [
+    650,
+    250
+  ],
+  "expected": [
+    13,
+    26,
+    51,
+    255
+  ],
+  "all16independentAA0": true,
+  "negative_geometry": "x650 beyond old ink right610.916;inside translated right690.916/HUDdistance40;no typed preseed at x650y250; actualcamera returns1/0/0",
+  "actualcandidatepixelsnotused": true
+}

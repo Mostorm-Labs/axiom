@@ -1,0 +1,79 @@
+{
+  "status": "FACTS_AND_SCOPED_SYNC_PROPOSAL_FOR_CONTROL_NO_IMPLEMENTATION",
+  "priority": "UserlongeraseUpwait",
+  "current_measurements": {
+    "long1600main_ms": 4178.9,
+    "long1600query_path_ms": 3661.5,
+    "long1600successor_ms": 4007.9,
+    "successor_history_path_ms": 3697.8,
+    "growth10main_ms": 7727.0,
+    "growth10history_path_ms": 6529.9,
+    "growth10query_path_ms": 717.1,
+    "growth10successor_scene_ms": 295.3,
+    "all22rootcomplete": true
+  },
+  "two_distinct_causes": [
+    {
+      "id": "NEW_LONG_QUERY",
+      "fact": "16distinctobject-localtransforms x1600segmentsequentialunions=25600;bodycompile0. ExistingprepareQueryPrefix not observedinlongUp, availableincrementalroutebounded but optional.",
+      "owner": "runtime/render/src/selection_region_geometry.cpp:prepareQueryPrefix/get; runtime/interaction/src/canvas_partial_erase.cpp",
+      "proposal": "Audit reusable per-local query prefix qualification and admission under existing owner/framebudget; preserve exact per-localf32 geometry and sequentialOp order. Beforeimplementationfreeze differentialoracle and counterRED for same finalizedpath; do not worlduniontheninverse-transform.",
+      "numeric_risk": "Highifuniontree/order/worldspacechanged; excludedhere"
+    },
+    {
+      "id": "HISTORICAL_PATH_THRASH",
+      "fact": "longsuccessorhistory26624union3697.8ms;growth10history304build/24192union6529.9ms. 8MiB cacheusage8330917/8382224byte nearcap; exactproofpathsweak, evaluatorpinsperobjectonly;get reservesbase+4096/segment before knowingactualsize, evictsLRUidleEntry/proof underquota.",
+      "owner": "runtime/render/src/selection_region_geometry.cpp:Impl::evict/get/exactHistoricalPath/eraseGeometryQuery",
+      "estimate_evidence": {
+        "capacity_bytes": 8388608,
+        "policy": "get estimate=sizeofEntry+rawsegments*sizeof(EraseCubicSegment)+65536+units4096; rawsizeof measuredseparately; actualpostbuildshrinks",
+        "local_actual_max_bytes": [
+          8330917,
+          8382224
+        ],
+        "global_budget_mib": [
+          256,
+          512,
+          64
+        ],
+        "EraseCubicSegment_sizeof": 80,
+        "estimated_1600segment_bytes_beforeEntry": 6747136,
+        "estimated_160segment_bytes_beforeEntry": 733696,
+        "mechanism": "Temporaryreservation~6.44MiBfor1600localsegments can evict priorpaths even when retainedactualpathfootprintmuchsmaller; currentcountsprove rebuild, exactper-reservationevictioncausaltrace not yetobserved."
+      },
+      "proposal": "Firstfreeze measured reservation\u2192eviction\u2192weakpathmiss chain against capturedlatehistory; audit cacheworking-set/ref lifetimes so alreadycompiledexactlocalhistory can survive the relevantUpcohort andimmediatesuccessor within unchanged8MiB/512/globalbudget. Reuse exactvalue/owneridentity andpreservesequentialunion; an admission/eviction review should precede anyalgorithmorbudgetchange.",
+      "needed_proof": "source exactsizeof/estimatedpeakvsactualpathfootprint, reserve/evictioncauseandcallcounts;no existingcountermeans0. Exacthitdecisions/History/order/undoandpixeloracle,512/localquota/externallyheldleasecorrectness",
+      "not_implemented": true
+    },
+    {
+      "id": "SCENE_SECONDARY",
+      "fact": "whenhistorypathwarm late shortsuccessorScene295.3ms dominates385.3ms;mainheavyhistorystilldominates",
+      "owner": "runtime/scene/src/incremental_runtime_coordinator.cpp/runtime_scene_projection.cpp",
+      "proposal": "Afterpathreuseaudit, inspectderivedmask-onlyScene publication delta/copycost usingcurrentsemanticstamp. No alternate Sceneowner ormutationchange."
+    }
+  ],
+  "background_candidate_facts_only": [
+    {
+      "candidate_work": "remainingper-localexactqueryconstruction anduncacheablehistoricalpathrebuild",
+      "current_constraints": [
+        "SynchronousUpcanonicaladmission/History/Operationowner",
+        "fullimmutablebody/masks/transform/seed/stamp identity",
+        "resourceleases/quota and cancellations/generation",
+        "exactAA/pathnumerics ordering",
+        "ordinarySDK no privateexport"
+      ]
+    },
+    {
+      "candidate_work": "derivedScene/renderpreparation heavyphase",
+      "current_constraints": [
+        "GPU contexts ownerthread/lifetime",
+        "noobservedreleasecontextclosure",
+        "nohalf-frame/fakereceipt"
+      ]
+    }
+  ],
+  "no_background_architecture_or_threadprototype": true,
+  "resource_blocker": "foreigncontextdelete remains4+4; patchimprovedknownorderingonly",
+  "feedback_limit": "normalfirstactualcontentproxy notfirstcorrectpixel;idlefullactive1011mismatchremains",
+  "stop": "MANDATORY_STOP_BEFORE_BACKGROUND_COMPUTE_DESIGN_OR_PROTOTYPE"
+}

@@ -1,0 +1,57 @@
+{
+  "status": "QUALIFIED",
+  "compared_pixels": 2492410,
+  "aa_boundary_pixels": 1155590,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": {
+    "x": 0,
+    "y": 0,
+    "width": 1200,
+    "height": 3040
+  },
+  "request": {
+    "width": 4400,
+    "height": 3040,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "hud_bounds": []
+  },
+  "actual_sha256": "5c0c5513a4b0c65089d76f891089285ffe2912f9a97eb12f31caca2a40c6ba5e",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-006/reference.rgba",
+    "sha256": "981814ca0f66031c6c9294cff5619bdeffb88210f86c061f7e390975dcfd226f",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/lifecycle-pixels/foreground-idle-d4/ink-final.axsnap",
+    "plan": {
+      "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/foreground-idle-d4/ink-final.axsnap",
+      "snapshot_sha256": "f88e3d47d7af2ba4cc1a67825bf4583299290057f91ecb98c15bb1c5d97e0f2b",
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "hud_bounds": []
+      },
+      "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+      "timeout_seconds": 60,
+      "rss_mib": 4096
+    }
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-006/reference.edge",
+    "sha256": "a4a5c6effb5fa8e97ff743a569ac8f7b7d13906bae69880c8eba64915a31af91"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "g5-convergence-source-v1",
+  "repository": "Mostorm-Labs/axiom",
+  "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+  "anchor": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+  "files": {
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "f288c66f330e8dbbc4c798976fe1c81ef19c592af567b5715aeecb07829d543a",
+      "before_sha256": "fec67132f909b8c2535e9833e687707684f445942fea11c5e2bf4905b1a56fe3",
+      "postimage": ".aegis/results/G5-convergence-idle-up-r1/source-postimages/runtime/render/src/skia_renderer.cpp"
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "be5eba33ab3dcdeeedeefb68b373b677c406601d901fc181721175afeae303e3",
+      "before_sha256": "1abd1eb64ab465d6cd2310755ba508e02d9fcfa8b60b588d7c97acd2a9199c64",
+      "postimage": ".aegis/results/G5-convergence-idle-up-r1/source-postimages/runtime/render/CMakeLists.txt"
+    },
+    "runtime/render/tests/g5_convergence_context_test.cpp": {
+      "sha256": "2de596cd82906e9f8a7a52538b4b9f6194fc9ceac4012834f914d8a80ebfcc4a",
+      "before_sha256": null,
+      "postimage": ".aegis/results/G5-convergence-idle-up-r1/source-postimages/runtime/render/tests/g5_convergence_context_test.cpp"
+    }
+  },
+  "helpers": {
+    "verification/runners/g5/convergence_idle_up_context.mjs": "ce7809cfb961f0ad90d4d2269480307dcfd326f0f7cc99f76e5bc733a50278cd",
+    "verification/runners/g5/convergence_idle_up_growth_pixels.mjs": "37a66004ee9e3b98d5d788f809903e925200ab32aab4bd2123ba4693cb8c0e4e",
+    "verification/runners/g5/convergence_idle_up_pixels.mjs": "1676b4f957f9989d7444a6abd2502c109fcde8e7bbce6f0150fbbfd5e1ef2ffe",
+    "verification/runners/g5/convergence_idle_up_reduce.py": "e045823cbf9c654b2384f3c2c16854a8156582f3d846acf0f63ecb60125c1c3e",
+    "verification/runners/g5/convergence_idle_up_runner.py": "e1a0a08cf32d9ec1ab225360f4d86be6a3495624b63a9af28c4b9e6490350225",
+    "verification/runners/g5/convergence_idle_up_surface.mjs": "77aa9cbf79d87bea6fac68f9e2560308937eb5ede3afcf09b8cfb5d656adb5bb",
+    "verification/runners/g5/convergence_idle_up_up.mjs": "20ca345610b675dbf47f75e8c242ff1db9c0ee274c07558391627000c6d15ca8",
+    "verification/runners/g5/convergence_idle_up_up_pixels.mjs": "f96ca0ca33102d19f923dc40b70aa74363aa2ed62a3b0b696b0082e55770bb3d",
+    "verification/tests/g5_convergence_idle_up.test.mjs": "b4a3ef78fc954f33e1b7ece504fda0940d85ff01ad532b408b185fda24464c13",
+    "verification/tests/test_g5_convergence_idle_up.py": "4700503e5402cb6aa112ad4974b6318ce9fb52e4310b6fe102f5c33221b7f348"
+  },
+  "delta_sha256": "d01f6b651431c769f4928269003b9c6747a4c3051db63f59f018bacac49c7ae9",
+  "no_commit_push": true,
+  "index_empty": true,
+  "unchangedlocks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "normal_diag_productsource_pair": "SDK-manifest.json",
+  "no_CPU_numeric_Brush_Operation_History_API_budget_changes": true
+}

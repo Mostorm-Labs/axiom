@@ -1,0 +1,65 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-convergence-idle-up-r1",
+  "status": "FROZEN_AUTHORIZED_FOCUSED_CONVERGENCE",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+    "completed_through": [
+      "existing changes committed/pushed",
+      "lossless disk cleanup",
+      "prior r4+UR3 accepted scoped fixes preserved"
+    ],
+    "next_action": "Offline fixed idle witness/context observation preflight; then focused context+idle, measured current longUp attribution; stop before concurrency design."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-convergence-idle-up-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "33b10027037af8301895e72fe1278fcafe83cbc1b2cd3923fa0e6401b6a9f243"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "2b93984883a62b524c1c5d030d6eedc72a8d6120e0b2482e1222a2e3f3e0141f"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "009865cee8dd5044cc1675145c68c2aa0e0fdde708e74bec0034f687ab3aa3a2"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "5c23773a21056af908c355af92ef2b65afda43f463f8ca0aaf7049c33862f0f6"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "f0d5ec62fd6ef162840eb9ee5c956edbf99cfb26179ce80765fe7c45b74a4564"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "11e7cfe7bd7767797343d01e0630c75f6f6fdfe09745f1d982353be691497d3e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "6e533684eff0afab29e9a48cc47c1d01d864e16bbd5a660861c162a7cad43c3a"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "human_stop": "MANDATORY_STOP_BEFORE_BACKGROUND_COMPUTE_DESIGN_OR_PROTOTYPE"
+}

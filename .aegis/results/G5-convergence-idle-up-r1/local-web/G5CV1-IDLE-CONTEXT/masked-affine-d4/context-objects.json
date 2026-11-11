@@ -1,0 +1,2565 @@
+{
+  "status": "OBSERVED",
+  "created": 5041,
+  "deleted": 4789,
+  "unknown": 0,
+  "contextCount": 2,
+  "mismatches": [
+    {
+      "method": "deleteFramebuffer",
+      "at": 10532.899999976158,
+      "objectId": 3606,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 9086.300000071526,
+      "kind": "Framebuffer",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e09d\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 10533.300000071526,
+      "objectId": 3605,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 9086.300000071526,
+      "kind": "Texture",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e0a2\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 30424.100000023842,
+      "objectId": 4831,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 28292.600000023842,
+      "kind": "Framebuffer",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e09d\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 30424.5,
+      "objectId": 4830,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 28292.600000023842,
+      "kind": "Texture",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e0a2\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 30424.800000071526,
+      "objectId": 4829,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 28292.600000023842,
+      "kind": "Framebuffer",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteFramebuffer] (<anonymous>:11:331)\n    at _emscripten_glDeleteFramebuffers (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:72738)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1274]:0x8c4ef\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3889]:0x2557de\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e09d\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 30425.100000023842,
+      "objectId": 4828,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 2,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-preview",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 28292.5,
+      "kind": "Texture",
+      "stack": "Error: foreign WebGL object deletion\n    at proto.<computed> [as deleteTexture] (<anonymous>:11:331)\n    at _emscripten_glDeleteTextures (http://127.0.0.1:51163/sdk/internal/axiom.mjs:1:74355)\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1970]:0xf7a79\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[3887]:0x255779\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[17916]:0xa6e0a2\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1997]:0xfbe59\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[319]:0xf8af\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1458]:0xa2a50\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[9865]:0x72fde6\n    at http://127.0.0.1:51163/sdk/axiom.wasm:wasm-function[1153]:0x7746f"
+    }
+  ],
+  "firstDeletes": [
+    {
+      "method": "deleteRenderbuffer",
+      "at": 476.89999997615814,
+      "objectId": 16,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 476.7000000476837,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 476.89999997615814,
+      "objectId": 14,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 476.7000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 477,
+      "objectId": 15,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 476.7000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteShader",
+      "at": 496.3000000715256,
+      "objectId": 19,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 490.10000002384186,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 496.3000000715256,
+      "objectId": 20,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 494.2000000476837,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 499.2000000476837,
+      "objectId": 22,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 497.39999997615814,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 499.2000000476837,
+      "objectId": 23,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 498.7000000476837,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 501.89999997615814,
+      "objectId": 25,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 499.89999997615814,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 501.89999997615814,
+      "objectId": 26,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 501.10000002384186,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 518.7000000476837,
+      "objectId": 43,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 514.6000000238419,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 518.7000000476837,
+      "objectId": 44,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 517.8000000715256,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 523,
+      "objectId": 46,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 518.8999999761581,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 523,
+      "objectId": 47,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 521.6000000238419,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 526.2000000476837,
+      "objectId": 49,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 524.6000000238419,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 526.2000000476837,
+      "objectId": 50,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 525.7000000476837,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 528.3999999761581,
+      "objectId": 53,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 526.8000000715256,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 528.3999999761581,
+      "objectId": 54,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 528,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 530.8999999761581,
+      "objectId": 56,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 529,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 530.8999999761581,
+      "objectId": 57,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 530.3999999761581,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteSync",
+      "at": 533,
+      "objectId": 28,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 502.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 548.8999999761581,
+      "objectId": 58,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 531.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteShader",
+      "at": 563,
+      "objectId": 79,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 559.3999999761581,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 563,
+      "objectId": 80,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 562,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 565.1000000238419,
+      "objectId": 82,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 563.3000000715256,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 565.1000000238419,
+      "objectId": 83,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 564.3999999761581,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteSync",
+      "at": 577.8000000715256,
+      "objectId": 72,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 543.2000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 592,
+      "objectId": 84,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 565.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 640.3000000715256,
+      "objectId": 91,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 577.2000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 675.2000000476837,
+      "objectId": 101,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 588.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 675.2000000476837,
+      "objectId": 112,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 603.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 708.6000000238419,
+      "objectId": 123,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 617.6000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 742.1000000238419,
+      "objectId": 126,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 636.3999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 775.3000000715256,
+      "objectId": 130,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 652.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 807.1000000238419,
+      "objectId": 133,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 670.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 841.3999999761581,
+      "objectId": 134,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 686.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 892,
+      "objectId": 137,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 702.7000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 964.8999999761581,
+      "objectId": 140,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 719.3999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 964.8999999761581,
+      "objectId": 143,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 736.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 964.8999999761581,
+      "objectId": 147,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 753.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 998,
+      "objectId": 153,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 768,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1033.7000000476837,
+      "objectId": 156,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 786.2000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 159,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 802.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 163,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 817.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 166,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 835.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 167,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 852.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 171,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 868.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 174,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 885.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 184,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 903,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 187,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 964.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 190,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 997.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1376.1000000238419,
+      "objectId": 191,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1033.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1408.6000000238419,
+      "objectId": 194,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1044,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1440.2000000476837,
+      "objectId": 197,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1375.3999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1475,
+      "objectId": 202,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1386.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1506.6000000238419,
+      "objectId": 205,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1402,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1542,
+      "objectId": 206,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1418.6000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1575.2000000476837,
+      "objectId": 207,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1435.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1607.8999999761581,
+      "objectId": 208,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1450.6000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1642,
+      "objectId": 209,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1468.8999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1670.3000000715256,
+      "objectId": 210,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1485.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1702.3000000715256,
+      "objectId": 211,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1501.6000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1736.8999999761581,
+      "objectId": 212,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1517.2000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1772,
+      "objectId": 213,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1535.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 1805.3000000715256,
+      "objectId": 214,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1552.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteShader",
+      "at": 2139.2000000476837,
+      "objectId": 232,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1844.1000000238419,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteShader",
+      "at": 2139.2000000476837,
+      "objectId": 233,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 2138.399999976158,
+      "kind": "Shader"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 235,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 2139.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 215,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1568.2000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 216,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1585.3000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 217,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1602.1000000238419,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 218,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1618,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 219,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1635.7000000476837,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 221,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1669.8000000715256,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 222,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1701.5,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 223,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1736.3999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 229,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1771.3999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 230,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1804.8999999761581,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteSync",
+      "at": 2174.8000000715256,
+      "objectId": 234,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 2139.399999976158,
+      "kind": "Sync"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.5,
+      "objectId": 155,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 784.3000000715256,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.5,
+      "objectId": 154,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 784.2000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 161,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 815.8999999761581,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 160,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 815.8999999761581,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 145,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 751,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 144,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 751,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 125,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 634.2000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 124,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 634.2000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 97,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 586.5,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 96,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 586.5,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 165,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 833.8999999761581,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 164,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 833.8999999761581,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 139,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 717.3999999761581,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 138,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 717.3999999761581,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 186,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 915.8999999761581,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 185,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 915.8999999761581,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 132,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 667.7000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 131,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 667.7000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 204,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1400.5,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 203,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 1400.5,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 128,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 649.1000000238419,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 127,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 649.1000000238419,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 136,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 700.5,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 135,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 700.5,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 142,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 734.1000000238419,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 141,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 734,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 107,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 600.7000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 106,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 600.7000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.600000023842,
+      "objectId": 74,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 557.8000000715256,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.600000023842,
+      "objectId": 73,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 557.8000000715256,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7038.700000047684,
+      "objectId": 8,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 474.5,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7038.700000047684,
+      "objectId": 7,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 474.5,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7297.600000023842,
+      "objectId": 2,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 473.89999997615814,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7297.600000023842,
+      "objectId": 3,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 473.89999997615814,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7297.600000023842,
+      "objectId": 4,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 473.89999997615814,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7297.600000023842,
+      "objectId": 17,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 477,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7297.700000047684,
+      "objectId": 1,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 473.7000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteBuffer",
+      "at": 7297.899999976158,
+      "objectId": 75,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 557.8999999761581,
+      "kind": "Buffer"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7298,
+      "objectId": 149,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 765.8000000715256,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7298,
+      "objectId": 150,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 765.8000000715256,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7298,
+      "objectId": 151,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 765.8000000715256,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7298,
+      "objectId": 152,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 767.7000000476837,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7298,
+      "objectId": 148,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 765.8000000715256,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7308.300000071526,
+      "objectId": 176,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 900.7000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7308.300000071526,
+      "objectId": 177,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 900.7000000476837,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7308.300000071526,
+      "objectId": 178,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 900.7000000476837,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteRenderbuffer",
+      "at": 7308.399999976158,
+      "objectId": 183,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 902.7000000476837,
+      "kind": "Renderbuffer"
+    },
+    {
+      "method": "deleteTexture",
+      "at": 7308.399999976158,
+      "objectId": 175,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 900.7000000476837,
+      "kind": "Texture"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7309.600000023842,
+      "objectId": 114,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 615.3999999761581,
+      "kind": "Framebuffer"
+    },
+    {
+      "method": "deleteFramebuffer",
+      "at": 7309.600000023842,
+      "objectId": 115,
+      "owner": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "current": {
+        "id": 1,
+        "canvas": "axiom-sdk-1-iujg54qvbpf-canonical",
+        "width": 4400,
+        "height": 3040
+      },
+      "createdAt": 615.3999999761581,
+      "kind": "Framebuffer"
+    }
+  ],
+  "overflow": false,
+  "scope": "actual object owner vs delete receiver; no GL errors drained or operations suppressed"
+}

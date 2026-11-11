@@ -1,0 +1,192 @@
+{
+  "status": "FAILED",
+  "compared_pixels": 2454996,
+  "aa_boundary_pixels": 1060116,
+  "hud_excluded_pixels": 132888,
+  "interior_mismatched_pixels": 1011,
+  "max_interior_delta": 242,
+  "witnesses": [
+    {
+      "pixel": 2208770,
+      "actual": [
+        214,
+        216,
+        221,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2209970,
+      "actual": [
+        103,
+        111,
+        127,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2211169,
+      "actual": [
+        223,
+        224,
+        228,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2228398,
+      "actual": [
+        17,
+        29,
+        54,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2228399,
+      "actual": [
+        27,
+        39,
+        63,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2229595,
+      "actual": [
+        28,
+        40,
+        64,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2229596,
+      "actual": [
+        73,
+        82,
+        101,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2232765,
+      "actual": [
+        149,
+        154,
+        165,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  ],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": {
+    "x": 0,
+    "y": 0,
+    "width": 1200,
+    "height": 3040
+  },
+  "request": {
+    "width": 4400,
+    "height": 3040,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "hud_bounds": [
+      [
+        179.0670394897461,
+        149.05681610107422,
+        690.9158325195312,
+        500.8218688964844
+      ]
+    ]
+  },
+  "actual_sha256": "93de1c2d45ed06942bccfc3d5354d690ffd3da6c5bc02abb88510119e6a57eab",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/lifecycle-pixels/reference-000/reference.rgba",
+    "sha256": "4abd5c9fb05667edcdcb3663f7f404cc78e06256b5b5a5a8044ed8295eb75ad5",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/lifecycle-pixels/foreground-idle-d4/ink-drag-expected.axsnap",
+    "plan": {
+      "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/lifecycle-pixels/foreground-idle-d4/ink-drag-expected.axsnap",
+      "snapshot_sha256": "d031f269fee2c381c79340d5d63be24ae570399180934e116b08e2ae8aca0387",
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "hud_bounds": [
+          [
+            179.0670394897461,
+            149.05681610107422,
+            690.9158325195312,
+            500.8218688964844
+          ]
+        ]
+      },
+      "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+      "timeout_seconds": 60,
+      "rss_mib": 4096
+    }
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/lifecycle-pixels/reference-000/reference.edge",
+    "sha256": "1c9eb6a05e934251024b2e322325accf0d643828304ded496a5b8978272b9112"
+  }
+}

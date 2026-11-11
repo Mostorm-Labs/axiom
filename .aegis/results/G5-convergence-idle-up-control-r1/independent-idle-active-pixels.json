@@ -1,0 +1,156 @@
+{
+  "status": "FAILED",
+  "compared_pixels": 2454996,
+  "aa_boundary_pixels": 1060116,
+  "hud_excluded_pixels": 132888,
+  "interior_mismatched_pixels": 1011,
+  "max_interior_delta": 242,
+  "witnesses": [
+    {
+      "pixel": 2208770,
+      "actual": [
+        214,
+        216,
+        221,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2209970,
+      "actual": [
+        103,
+        111,
+        127,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2211169,
+      "actual": [
+        223,
+        224,
+        228,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "pixel": 2228398,
+      "actual": [
+        17,
+        29,
+        54,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2228399,
+      "actual": [
+        27,
+        39,
+        63,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2229595,
+      "actual": [
+        28,
+        40,
+        64,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2229596,
+      "actual": [
+        73,
+        82,
+        101,
+        255
+      ],
+      "reference": [
+        13,
+        26,
+        51,
+        255
+      ]
+    },
+    {
+      "pixel": 2232765,
+      "actual": [
+        149,
+        154,
+        165,
+        255
+      ],
+      "reference": [
+        255,
+        255,
+        255,
+        255
+      ]
+    }
+  ],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "oracle_request": {
+    "width": 4400,
+    "height": 3040,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "hud_bounds": [
+      [
+        179.0670394897461,
+        149.05681610107422,
+        690.9158325195312,
+        500.8218688964844
+      ]
+    ]
+  },
+  "roi": {
+    "x": 0,
+    "y": 0,
+    "width": 1200,
+    "height": 3040
+  }
+}

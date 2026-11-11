@@ -1,0 +1,47 @@
+{
+  "status": "ALL_FOUR_OWNED_WINDOWS_CLOSED",
+  "attempts": [
+    {
+      "id": "G5CV1-IDLE-CONTEXT",
+      "status": "COMPLETED",
+      "guard_reason": "completed",
+      "charged_seconds": 133,
+      "cleanup_complete": true,
+      "remaining_owned_pids": [],
+      "source_stable": true
+    },
+    {
+      "id": "G5CV1-LIFECYCLE-VERIFY",
+      "status": "COMPLETED",
+      "guard_reason": "completed",
+      "charged_seconds": 175,
+      "cleanup_complete": true,
+      "remaining_owned_pids": [],
+      "source_stable": true
+    },
+    {
+      "id": "G5CV1-UP-NORMAL",
+      "status": "COMPLETED",
+      "guard_reason": "completed",
+      "charged_seconds": 92,
+      "cleanup_complete": true,
+      "remaining_owned_pids": [],
+      "source_stable": true
+    },
+    {
+      "id": "G5CV1-UP-DIAGNOSTIC",
+      "status": "STOPPED",
+      "guard_reason": "rss_limit",
+      "charged_seconds": 112,
+      "cleanup_complete": true,
+      "remaining_owned_pids": [],
+      "source_stable": true
+    }
+  ],
+  "currentnormalDemo": "http://127.0.0.1:4324/example.html",
+  "demo_intentionally_alive": true,
+  "demoPID": 38347,
+  "user4318and4323preserved": true,
+  "frozenhistoryhardlinksnotwritten": true,
+  "no_further_browser_starts": true
+}

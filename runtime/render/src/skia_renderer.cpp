@@ -304,8 +304,6 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     G5_ROUTE(g5Route,g5::Route::canonical_prepared);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
 
-    partialEraseFrame_.reset();transientDisplay_.reset();
-    serviceResourceRetirements();
     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
     const auto& metrics=plan.frame.metrics;
     if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
@@ -327,6 +325,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
        acquired.frame.surface->height()!=static_cast<int>(metrics.physicalHeight)){
         provider.release();return BackendSubmissionResult::rejected("frame target dimensions differ");
     }
+    // These objects may release GPU surfaces. Select the owning provider's
+    // context before dropping the previous disposable frame or polling leases.
+    partialEraseFrame_.reset();transientDisplay_.reset();
+    serviceResourceRetirements();
     if (plan.referenceDrawList.frame.surfaceGeneration != plan.frame.surfaceGeneration ||
         plan.referenceDrawList.frame.frameId != plan.frame.frameId ||
         plan.referenceDrawList.frame.sceneGeneration != plan.frame.sceneGeneration) {
@@ -537,8 +539,6 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
 
-    transientDisplay_.reset();
-    serviceResourceRetirements();
     const auto cache=navigationCache_;
     if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
        cache->frame->viewId!=current.viewId || cache->frame->sceneGeneration!=current.sceneGeneration ||
@@ -554,6 +554,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(acquired.frame.generation!=current.surfaceGeneration.value()){
         provider.release();return BackendSubmissionResult::rejected("stale navigation surface");
     }
+    transientDisplay_.reset();
+    serviceResourceRetirements();
     if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,
         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
@@ -600,6 +602,19 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
 
+    // Navigation may discard a prior edit attempt and obsolete work buffers
+    // before the tile renderer acquires its final target. Bind their actual
+    // provider context for that preparation as well as for the later draw.
+    const auto preparedTarget=provider.acquire();
+    if(preparedTarget.code!=SkiaSurfaceAcquireCode::kAcquired||!preparedTarget.frame.surface)
+        return BackendSubmissionResult::retry("navigation preparation target unavailable");
+    if(preparedTarget.frame.generation!=current.surfaceGeneration.value()){
+        provider.release();return BackendSubmissionResult::rejected("stale navigation preparation surface");
+    }
+    struct PreparationTargetRelease {
+        SkiaSurfaceProvider& provider;bool active=true;
+        ~PreparationTargetRelease(){if(active)provider.release();}
+    } preparationTarget{provider};
     transientDisplay_.reset();
     serviceResourceRetirements();
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -749,6 +764,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     try{
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
+        provider.release();preparationTarget.active=false;
         const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background);
         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;

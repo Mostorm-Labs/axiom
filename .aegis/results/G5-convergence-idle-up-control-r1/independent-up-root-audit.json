@@ -1,0 +1,236 @@
+{
+  "schema": "g5-independent-current-up-root-audit-v1",
+  "producer_summary_sha256": "183773adfdf00649c65921a6e5679d1d6aed1d3f241e441eb7be5676b054a211",
+  "cases": [
+    {
+      "case": "long1600",
+      "raw_sha256": "32531fb0e28b6f15de2ac28a9645087e87c73ee15face2b34114cc62e944180e",
+      "records": 4578,
+      "matched_spans": 184,
+      "aggregate_spans": 340,
+      "roots": 2,
+      "all_loss_zero": true,
+      "terminal_receipt_matches": true,
+      "roots_detail": [
+        {
+          "job": "2",
+          "span": "3",
+          "root_ms": 4178.9,
+          "path_build_ms": 3733.1,
+          "path_share": 0.8933212089305799,
+          "direct_children_ms": 4170.7,
+          "residual_ms": 8.2
+        },
+        {
+          "job": "260",
+          "span": "261",
+          "root_ms": 4007.9,
+          "path_build_ms": 3700.0,
+          "path_share": 0.9231767259662167,
+          "direct_children_ms": 3994.7,
+          "residual_ms": 13.2
+        }
+      ]
+    },
+    {
+      "case": "growth10",
+      "raw_sha256": "f96f9dcc109a1646d3611f8afbfb265e618908c9302d08e22b17f0ca085645ef",
+      "records": 267021,
+      "matched_spans": 1831,
+      "aggregate_spans": 3988,
+      "roots": 20,
+      "all_loss_zero": true,
+      "terminal_receipt_matches": true,
+      "roots_detail": [
+        {
+          "job": "2",
+          "span": "3",
+          "root_ms": 953.3,
+          "path_build_ms": 801.4,
+          "path_share": 0.8406587642924578,
+          "direct_children_ms": 945.9,
+          "residual_ms": 7.4
+        },
+        {
+          "job": "261",
+          "span": "262",
+          "root_ms": 62.6,
+          "path_build_ms": 0.0,
+          "path_share": 0.0,
+          "direct_children_ms": 53.3,
+          "residual_ms": 9.3
+        },
+        {
+          "job": "527",
+          "span": "528",
+          "root_ms": 909.9,
+          "path_build_ms": 687.5,
+          "path_share": 0.7555775359929663,
+          "direct_children_ms": 901.0,
+          "residual_ms": 8.9
+        },
+        {
+          "job": "801",
+          "span": "802",
+          "root_ms": 117.0,
+          "path_build_ms": 0.0,
+          "path_share": 0.0,
+          "direct_children_ms": 106.3,
+          "residual_ms": 10.7
+        },
+        {
+          "job": "1083",
+          "span": "1084",
+          "root_ms": 945.8,
+          "path_build_ms": 718.7,
+          "path_share": 0.75988581095369,
+          "direct_children_ms": 933.9,
+          "residual_ms": 11.9
+        },
+        {
+          "job": "1373",
+          "span": "1374",
+          "root_ms": 30.6,
+          "path_build_ms": 0.0,
+          "path_share": 0.0,
+          "direct_children_ms": 30.5,
+          "residual_ms": 0.1
+        },
+        {
+          "job": "1621",
+          "span": "1622",
+          "root_ms": 994.1,
+          "path_build_ms": 720.9,
+          "path_share": 0.7251785534654461,
+          "direct_children_ms": 981.5,
+          "residual_ms": 12.6
+        },
+        {
+          "job": "1903",
+          "span": "1904",
+          "root_ms": 128.9,
+          "path_build_ms": 0.1,
+          "path_share": 0.0007757951900698216,
+          "direct_children_ms": 115.2,
+          "residual_ms": 13.7
+        },
+        {
+          "job": "2185",
+          "span": "2186",
+          "root_ms": 1155.9,
+          "path_build_ms": 906.8,
+          "path_share": 0.7844969288000692,
+          "direct_children_ms": 1142.8,
+          "residual_ms": 13.1
+        },
+        {
+          "job": "2475",
+          "span": "2476",
+          "root_ms": 171.7,
+          "path_build_ms": 0.2,
+          "path_share": 0.0011648223645894002,
+          "direct_children_ms": 156.5,
+          "residual_ms": 15.2
+        },
+        {
+          "job": "2777",
+          "span": "2778",
+          "root_ms": 4508.1,
+          "path_build_ms": 4147.4,
+          "path_share": 0.9199884652070717,
+          "direct_children_ms": 4493.2,
+          "residual_ms": 14.9
+        },
+        {
+          "job": "3079",
+          "span": "3080",
+          "root_ms": 223.6,
+          "path_build_ms": 0.0,
+          "path_share": 0.0,
+          "direct_children_ms": 207.7,
+          "residual_ms": 15.9
+        },
+        {
+          "job": "3381",
+          "span": "3382",
+          "root_ms": 5489.2,
+          "path_build_ms": 5094.4,
+          "path_share": 0.928076951103986,
+          "direct_children_ms": 5474.3,
+          "residual_ms": 14.9
+        },
+        {
+          "job": "3683",
+          "span": "3684",
+          "root_ms": 248.2,
+          "path_build_ms": 0.2,
+          "path_share": 0.0008058017727639,
+          "direct_children_ms": 231.5,
+          "residual_ms": 16.7
+        },
+        {
+          "job": "3985",
+          "span": "3986",
+          "root_ms": 6280.0,
+          "path_build_ms": 5944.3,
+          "path_share": 0.9465445859872611,
+          "direct_children_ms": 6263.8,
+          "residual_ms": 16.2
+        },
+        {
+          "job": "4291",
+          "span": "4292",
+          "root_ms": 182.7,
+          "path_build_ms": 0.1,
+          "path_share": 0.0005473453749315818,
+          "direct_children_ms": 163.4,
+          "residual_ms": 19.3
+        },
+        {
+          "job": "4597",
+          "span": "4598",
+          "root_ms": 6951.9,
+          "path_build_ms": 6542.6,
+          "path_share": 0.9411240092636546,
+          "direct_children_ms": 6934.3,
+          "residual_ms": 17.6
+        },
+        {
+          "job": "4903",
+          "span": "4904",
+          "root_ms": 269.3,
+          "path_build_ms": 0.2,
+          "path_share": 0.0007426661715558856,
+          "direct_children_ms": 249.3,
+          "residual_ms": 20.0
+        },
+        {
+          "job": "5209",
+          "span": "5210",
+          "root_ms": 7727.0,
+          "path_build_ms": 7246.6,
+          "path_share": 0.9378283939433156,
+          "direct_children_ms": 7707.6,
+          "residual_ms": 19.4
+        },
+        {
+          "job": "5515",
+          "span": "5516",
+          "root_ms": 385.3,
+          "path_build_ms": 0.3,
+          "path_share": 0.0007786140669608098,
+          "direct_children_ms": 360.7,
+          "residual_ms": 24.6
+        }
+      ]
+    }
+  ],
+  "status": "QUALIFIED_CURRENT_ROOT_ATTRIBUTION_ONLY",
+  "not_claimed": [
+    "worker/window succeeded",
+    "instant correct successor feedback",
+    "full idle pixels",
+    "resource lifetime fully safe",
+    "P34/G5 performance PASS"
+  ]
+}

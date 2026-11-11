@@ -1,0 +1,37 @@
+{
+  "status": "FRESH_VERIFICATION_COMPLETE_BEFORE_COMMIT",
+  "branch": "codex/geometry-navigation-integration",
+  "base": "203436038719d9fa3badf4a7b5b26af6cad5f754",
+  "scope": "Select and validate existing target before dropping disposable canonical/navigation resources; new real renderer release callback regression, bounded current Up diagnosis and controlled review. No SDK/API/ABI/schema/Brush/PathOps/budget/threads changes.",
+  "native": {
+    "passed": 12,
+    "junit": "native.xml"
+  },
+  "Node": {
+    "passed": 8,
+    "command": "node --test verification/tests/g5_convergence_idle_up.test.mjs verification/tests/g5_ur3_continuous.test.mjs verification/tests/g5_web_up_attribution.test.mjs"
+  },
+  "Python": {
+    "passed": 3,
+    "commands": [
+      "python3 -m unittest verification/tests/test_g5_convergence_idle_up.py verification/tests/test_g5_web_up_attribution.py",
+      "python3 -m unittest verification/tests/test_g5_ur3_continuous.py"
+    ]
+  },
+  "boundaries": {
+    "passed": true,
+    "contract_files": 120,
+    "command": "python3 tools/check_runtime_boundaries.py --root ."
+  },
+  "remaining": [
+    "Postfix masked4/recovery4 foreign-context delete warnings",
+    "Idle fullactive1011 interiorpixel differences",
+    "StillDown firstcorrectpixel precise clock missing forcurrentlong/growth"
+  ],
+  "browser_repeated_for_publication": false,
+  "result_ref": {
+    "path": ".aegis/results/G5-convergence-idle-up-r1/result.json",
+    "sha256": "7b979f67b8b03cca346559bae7096f459efa0e5cb10602b8e83f5978d80f0924"
+  },
+  "no_full_G5_PASS": true
+}

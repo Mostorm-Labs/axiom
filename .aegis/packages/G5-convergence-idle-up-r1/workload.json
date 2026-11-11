@@ -1,0 +1,81 @@
+{
+  "fixed40_restore_only": true,
+  "fixture_metadata_ref": "trusted-basis.json/restore_metadata",
+  "entropy_seed": 324508639,
+  "no_public_duplicate_or_new_random_identity_for_pairing": true,
+  "idle_case": {
+    "protocol": "Reuse foreground-idle-d4 from ur3_continuous_recovery_final.mjs: mixed seeded scene,160-Move erase,foreground idle30s,8/4pan,-4zoom,return camera,masked drag +80/+30,short erase,Undo/Redo. No inter-operation settle insertion.",
+    "css": [
+      1100,
+      760
+    ],
+    "dpr": 4,
+    "active_guard_ms": 15000,
+    "observations": "Record active contacts and selected expected transform/camera, early old-pose frame and first correct active feedback while Down. Freeze independent expected new-footprint vs old-footprint negative witness offline. Never snapshot during active gesture. Readbacks only in correctness lane; full active image at first-qualified pose, final/Redo with old CPU edge/tolerance. Mixed ink projection+disjoint ROI and typed resources remain explicit limitations, not whole-mixed CPU certification."
+  },
+  "context_case": {
+    "protocol": "Single current masked-affine-d4 preparation/drag/cancel/UndoRedo using existing exact protocol and isolated test-host create/delete instrumentation. Existing navigation-recovery-d4 only on repaired SDK if lifecycle production changes.",
+    "diagnostic": "Per-object WebGL identity: create method/context/canvas, delete method/current context, lifecycle time and first mismatch stack. No getError draining, gl.finish, forced deletes, suppressions or ordinary SDK tracing."
+  },
+  "long_Up": {
+    "css": [
+      1431,
+      1010
+    ],
+    "dpr": 2,
+    "initial_fixture": "FIXED40",
+    "cases": [
+      "long1600",
+      "growth10"
+    ],
+    "protocol": "Reuse exact-fixed-scene confirmed-waveform and same entropy; long1600 x420+7sin(i*.17),y160+170*i/1600 with existing pause0/every8; main Up followed immediately by short erase. Growth10 reuses r4 continuous160-Move rounds + immediate short successors without canonical settle/host IO. Do not substitute S2+newpublicduplicates.",
+    "normal_rows": 2,
+    "diagnostic_rows": 2,
+    "clocks": [
+      "mainUp dispatch start/end",
+      "nextDown start/end",
+      "next Move first correct feedback",
+      "short successor Up",
+      "Undo readiness derived state",
+      "canonical terminal receipt and separate settle end"
+    ],
+    "separate_lanes": "Ordinary no readback/trace/profile during timed interval; diagnostic same-source existing private aggregate spans only. No sum of nested inclusive phases. Missing/overflow/censored traces stay missing, not zero.",
+    "current_vs_historical": "Do not claim paired optimization from old timings or old IDs; old root shares are hypotheses requiring current source/binary evidence."
+  },
+  "sampling_windows": [
+    {
+      "id": "G5CV1-IDLE-CONTEXT",
+      "seconds": 240,
+      "required": true,
+      "purpose": "One idle-d4 correctness + one masked-affine-d4 context localization; reuse existing references."
+    },
+    {
+      "id": "G5CV1-LIFECYCLE-VERIFY",
+      "seconds": 240,
+      "required_if": "production lifecycle fix changes source",
+      "purpose": "Repaired owner exact failing context probe + focused idle/masked/recovery correctness only."
+    },
+    {
+      "id": "G5CV1-UP-NORMAL",
+      "seconds": 300,
+      "required": true,
+      "purpose": "Current final normal long1600 + growth10; two source-bound fixed rows."
+    },
+    {
+      "id": "G5CV1-UP-DIAGNOSTIC",
+      "seconds": 360,
+      "required": true,
+      "purpose": "Same final source qualification long1600 + growth10 with current phase/work counts; attribution only."
+    }
+  ],
+  "max_starts": 4,
+  "total_seconds_cap": 1140,
+  "rss_mib": 4096,
+  "offline_reference": {
+    "seconds": 60,
+    "rss_mib": 4096,
+    "parallelism": 1
+  },
+  "mutex": "Notify control before/after browser; no source writes/build/native/reference/GPU/video while window active. Source/SDK/runner hashes before=after. Do not reuse old IDs or overwrite frozen output. No extra real-browser windows automatically.",
+  "oracle_reuse": "Current original ab7a CPU oracle. Preserve float32 DOM seam followed by double BrushSample, sequential PathOps and existing independent AA band <=2. Reuse exact prior references when snapshot/camera/resource/request hashes equal. Any fresh oracle generation is sequential and outside browser."
+}

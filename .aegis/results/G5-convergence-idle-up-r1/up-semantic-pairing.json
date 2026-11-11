@@ -1,0 +1,88 @@
+{
+  "status": "QUALIFIED_EXACT_CANONICAL_SOURCE_PAIR",
+  "rows": [
+    {
+      "window": "G5CV1-UP-NORMAL",
+      "case": "long1600",
+      "raw_sha256": "1c580ada429920d9a2f85555f8ad9d5f1e0238011a8b7e43d937eb17fd88aa9f",
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 44,
+        "after_revision": 46
+      },
+      "generation": "4",
+      "presented": "4",
+      "contacts": 0,
+      "frames": 6,
+      "operations": 4,
+      "public_errors": []
+    },
+    {
+      "window": "G5CV1-UP-DIAGNOSTIC",
+      "case": "long1600",
+      "raw_sha256": "32531fb0e28b6f15de2ac28a9645087e87c73ee15face2b34114cc62e944180e",
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 44,
+        "after_revision": 46
+      },
+      "generation": "4",
+      "presented": "4",
+      "contacts": 0,
+      "frames": 6,
+      "operations": 4,
+      "public_errors": []
+    },
+    {
+      "window": "G5CV1-UP-NORMAL",
+      "case": "growth10",
+      "raw_sha256": "8594d08169c30e7e2f3f5d7a37cd1cf8913e5ca690a6c66aa6656968ad6c046a",
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 840,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 61,
+        "after_revision": 63
+      },
+      "generation": "21",
+      "presented": "21",
+      "contacts": 0,
+      "frames": 6,
+      "operations": 21,
+      "public_errors": []
+    },
+    {
+      "window": "G5CV1-UP-DIAGNOSTIC",
+      "case": "growth10",
+      "raw_sha256": "f96f9dcc109a1646d3611f8afbfb265e618908c9302d08e22b17f0ca085645ef",
+      "roundtrip": {
+        "objects": 40,
+        "total_masks": 840,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 61,
+        "after_revision": 63
+      },
+      "generation": "21",
+      "presented": "21",
+      "contacts": 0,
+      "frames": 6,
+      "operations": 21,
+      "public_errors": []
+    }
+  ],
+  "all4stages2cases_normal_diagnostic_equal": true,
+  "diagnostic_guard_failed_kept": true,
+  "not_relative_performance_evidence": true
+}
