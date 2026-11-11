@@ -11,11 +11,6 @@ REPO = Path(__file__).resolve().parents[3]
 
 
 class NativePackageTest(unittest.TestCase):
-    def setUp(self):
-        env = patch.dict(os.environ, {'AXIOM_BUILD_NUMBER': '0'})
-        env.start()
-        self.addCleanup(env.stop)
-
     def test_public_package_matrix_and_platform_naming_are_frozen(self):
         common=json.loads((REPO/'sdk/react-native/package.json').read_text())
         self.assertEqual(common['name'],'@mostorm/axiom-react-native')
@@ -95,6 +90,9 @@ class NativePackageTest(unittest.TestCase):
             self.assertEqual(runtime.read_bytes(), b'fixture')
 
     def setUp(self):
+        env = patch.dict(os.environ, {'AXIOM_BUILD_NUMBER': '0'})
+        env.start()
+        self.addCleanup(env.stop)
         self.source = patch('tools.release.native_package.source_identity', return_value=('a'*40, False))
         self.source.start()
         self.addCleanup(self.source.stop)
