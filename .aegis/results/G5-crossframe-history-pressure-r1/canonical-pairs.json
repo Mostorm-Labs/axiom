@@ -1,0 +1,217 @@
+{
+  "status": "EXACT_CANONICAL_ENTROPY_PAIRS",
+  "pairs": [
+    {
+      "mode": "long",
+      "stages": [
+        {
+          "stage": "initial",
+          "proof": {
+            "objects": 40,
+            "total_masks": 80,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 42,
+            "after_revision": 42
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/initial.axsnap",
+              "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/initial.axsnap",
+              "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+            }
+          ]
+        },
+        {
+          "stage": "final",
+          "proof": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 44,
+            "after_revision": 44
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/final.axsnap",
+              "sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/final.axsnap",
+              "sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f"
+            }
+          ]
+        },
+        {
+          "stage": "undo",
+          "proof": {
+            "objects": 40,
+            "total_masks": 120,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 45,
+            "after_revision": 45
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/undo.axsnap",
+              "sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/undo.axsnap",
+              "sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c"
+            }
+          ]
+        },
+        {
+          "stage": "redo",
+          "proof": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 46,
+            "after_revision": 46
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/redo.axsnap",
+              "sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/redo.axsnap",
+              "sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b"
+            }
+          ]
+        }
+      ],
+      "entropy_equal": true,
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "mode": "growth",
+      "stages": [
+        {
+          "stage": "initial",
+          "proof": {
+            "objects": 40,
+            "total_masks": 80,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 42,
+            "after_revision": 42
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/initial.axsnap",
+              "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/initial.axsnap",
+              "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+            }
+          ]
+        },
+        {
+          "stage": "final",
+          "proof": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 61,
+            "after_revision": 61
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/final.axsnap",
+              "sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/final.axsnap",
+              "sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d"
+            }
+          ]
+        },
+        {
+          "stage": "undo",
+          "proof": {
+            "objects": 40,
+            "total_masks": 800,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 62,
+            "after_revision": 62
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/undo.axsnap",
+              "sha256": "cd5cdd3880a7733def7b74d17b9227c2c736762f885f4cb4e01019c743b10984"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/undo.axsnap",
+              "sha256": "cd5cdd3880a7733def7b74d17b9227c2c736762f885f4cb4e01019c743b10984"
+            }
+          ]
+        },
+        {
+          "stage": "redo",
+          "proof": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 63,
+            "after_revision": 63
+          },
+          "inputs": [
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/redo.axsnap",
+              "sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea"
+            },
+            {
+              "path": ".aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/redo.axsnap",
+              "sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea"
+            }
+          ]
+        }
+      ],
+      "entropy_equal": true,
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    }
+  ]
+}

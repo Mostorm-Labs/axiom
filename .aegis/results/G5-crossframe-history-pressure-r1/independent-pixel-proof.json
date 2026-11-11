@@ -1,0 +1,839 @@
+{
+  "status": "QUALIFIED",
+  "rows": [
+    {
+      "window": "G5CFH1-PAIRS",
+      "id": "old58f-long",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/final.axsnap",
+          "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+          "original_snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+          "actual_sha256": "e804ebbaa567d650ec8ccb21c12ad5b737d1134766cb4fd69f6543e22b1915bc",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.rgba",
+            "sha256": "6591482d6c6f6e3078f029cd23d3e3287c8b8eebdfc0aa99e6f68bbd8c9e254c"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap",
+            "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 44,
+            "after_revision": 44
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-long/redo.axsnap",
+          "snapshot_sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b",
+          "original_snapshot_sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b",
+          "actual_sha256": "e804ebbaa567d650ec8ccb21c12ad5b737d1134766cb4fd69f6543e22b1915bc",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.rgba",
+            "sha256": "6591482d6c6f6e3078f029cd23d3e3287c8b8eebdfc0aa99e6f68bbd8c9e254c"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap",
+            "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 46,
+            "after_revision": 44
+          }
+        }
+      ]
+    },
+    {
+      "window": "G5CFH1-PAIRS",
+      "id": "candidate-long",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/final.axsnap",
+          "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+          "original_snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+          "actual_sha256": "f16f50f08b819a092e139cab5dbc6878f211dc2ececc0a8d94abdd0aadd27a99",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.rgba",
+            "sha256": "6591482d6c6f6e3078f029cd23d3e3287c8b8eebdfc0aa99e6f68bbd8c9e254c"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap",
+            "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 44,
+            "after_revision": 44
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-long/redo.axsnap",
+          "snapshot_sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b",
+          "original_snapshot_sha256": "9cf8296550b9194cd9b5a5ef8a8adb541ae1b25e46bbf4ba8c94b9c32fac716b",
+          "actual_sha256": "49dfb0f037f1a42ee97025125fb6825323d39764edc9c8d4a1e066997ed21d9d",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.rgba",
+            "sha256": "6591482d6c6f6e3078f029cd23d3e3287c8b8eebdfc0aa99e6f68bbd8c9e254c"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap",
+            "snapshot_sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 160,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 46,
+            "after_revision": 44
+          }
+        }
+      ]
+    },
+    {
+      "window": "G5CFH1-PAIRS",
+      "id": "old58f-growth",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/final.axsnap",
+          "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "original_snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "actual_sha256": "cb6f8ceffd75555bc01af63dcbdd4ccf175fcf874f445b3ff5b5bd255a5705cb",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 61,
+            "after_revision": 61
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/old58f-growth/redo.axsnap",
+          "snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "original_snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "actual_sha256": "b6f89bee8ac709f5c33480d9bfbf816d7e13e93f2adb0640d0d9d1de87e57bdd",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 63,
+            "after_revision": 61
+          }
+        }
+      ]
+    },
+    {
+      "window": "G5CFH1-PAIRS",
+      "id": "candidate-growth",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/final.axsnap",
+          "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "original_snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "actual_sha256": "b71520f03c0019680d1d5080abaa522c0311af0c455ed6d54b6a164fbe4ae0e5",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 61,
+            "after_revision": 61
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-PAIRS/candidate-growth/redo.axsnap",
+          "snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "original_snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "actual_sha256": "67c17b9a92b4b66ca82e00b55327fa3e918dbb14b09768aea261ee95f7fea4a0",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 63,
+            "after_revision": 61
+          }
+        }
+      ]
+    },
+    {
+      "window": "G5CFH1-DIAGNOSTIC",
+      "id": "candidate-growth-diagnostic",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-DIAGNOSTIC/candidate-growth-diagnostic/final.axsnap",
+          "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "original_snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+          "actual_sha256": "356bde7f681110ec3ca9a84e9e38ded0e4681b984cfb60905c0b68b802fd3382",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 61,
+            "after_revision": 61
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 5079493,
+          "aa_boundary_pixels": 701747,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "projection": null,
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-crossframe-history-pressure-r1/local-web/G5CFH1-DIAGNOSTIC/candidate-growth-diagnostic/redo.axsnap",
+          "snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "original_snapshot_sha256": "6fac22dbbe0d6fe9f313ae0214a29acc525b3b22351e1cf160d4491b9f61c2ea",
+          "actual_sha256": "7816daf3d0530f6b42f9b1dbf26c3d61a475de8b6b5a4939e27e492f2cbe3773",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.rgba",
+            "sha256": "d3108f1ed4d01422b257ea0b9eb49fa05e7946f1e9a123e280756f51896d5eaf"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/up-growth-pixels/ref0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/growth10/final.axsnap",
+            "snapshot_sha256": "eefa6276d484da0307cf8566c8d1f1af94428bb2f4b084abffcdc9525601ad3d",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "timeout_seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 840,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 63,
+            "after_revision": 61
+          }
+        }
+      ]
+    },
+    {
+      "window": "G5CFH1-FEEDBACK",
+      "id": "candidate-mixed-feedback",
+      "status": "QUALIFIED",
+      "proofs": [
+        {
+          "stage": "final",
+          "status": "QUALIFIED",
+          "compared_pixels": 702434,
+          "aa_boundary_pixels": 577566,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": {
+            "x": 0,
+            "y": 0,
+            "width": 1600,
+            "height": 800
+          },
+          "projection": {
+            "before": 44,
+            "ink": 40,
+            "status": "PROJECTED"
+          },
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-final-ink.axsnap",
+          "snapshot_sha256": "65000ba61d84bbfae8e255aea226943ffe033f86c7d2c2bcb3c7119cd673c03e",
+          "original_snapshot_sha256": "de8f0087ef36916acddcb1b7a11ec7e3ea23f5fa1da7e34f6ba0e977ebf4a812",
+          "actual_sha256": "d76c9ae8553a48a31551aab081d9da712f1e6e5403c62611f5760647a59ad79a",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/reference.rgba",
+            "sha256": "6c837c9790e085855beeec27b02937fff1f77d61a681b2a8b0811cd798c5a28e"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-final-ink.axsnap",
+            "snapshot_sha256": "65000ba61d84bbfae8e255aea226943ffe033f86c7d2c2bcb3c7119cd673c03e",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "seconds": 60,
+            "rss_mib": 4096
+          }
+        },
+        {
+          "stage": "redo",
+          "status": "QUALIFIED",
+          "compared_pixels": 702434,
+          "aa_boundary_pixels": 577566,
+          "hud_excluded_pixels": 0,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": {
+            "x": 0,
+            "y": 0,
+            "width": 1600,
+            "height": 800
+          },
+          "projection": {
+            "before": 44,
+            "ink": 40,
+            "status": "PROJECTED"
+          },
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-redo-ink.axsnap",
+          "snapshot_sha256": "229a8452212257c6e1c86a9933397de2e9058147cf38fea4682e473ca861d488",
+          "original_snapshot_sha256": "0fcfa605b5f21e594402da2f1298177c740d05f7a55aa67debf84b806e1493e4",
+          "actual_sha256": "d76c9ae8553a48a31551aab081d9da712f1e6e5403c62611f5760647a59ad79a",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/reference.rgba",
+            "sha256": "6c837c9790e085855beeec27b02937fff1f77d61a681b2a8b0811cd798c5a28e"
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/reference.edge",
+            "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+          },
+          "request": {
+            "width": 2862,
+            "height": 2020,
+            "logical_width": 1431,
+            "logical_height": 1010,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": []
+          },
+          "plan": {
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-final-ink.axsnap",
+            "snapshot_sha256": "65000ba61d84bbfae8e255aea226943ffe033f86c7d2c2bcb3c7119cd673c03e",
+            "request": {
+              "width": 2862,
+              "height": 2020,
+              "logical_width": 1431,
+              "logical_height": 1010,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "hud_bounds": []
+            },
+            "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+            "seconds": 60,
+            "rss_mib": 4096
+          },
+          "reuse": {
+            "objects": 40,
+            "total_masks": 480,
+            "objects_equal": true,
+            "manifest_background_equal": true,
+            "document_digest_equal": true,
+            "before_revision": 64,
+            "after_revision": 62
+          }
+        }
+      ]
+    }
+  ],
+  "original_AA_unchanged": true,
+  "mixed_scope": "ink projection disjoint worldx<800,y<400 plus separately typed resource/table canonical painter; not fullmixedoracle",
+  "no_current_pixels_as_reference": true
+}

@@ -1,0 +1,7 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/crossframe_history_runtime_test.cpp:32:88: error: object of type 'SurfaceMetrics' cannot be assigned because its copy assignment operator is implicitly deleted
+   32 |  RenderTargetInfo describe()const noexcept override{auto i=target_.describe();i.metrics={1431,1010,2862,2020,2,1};return i;}
+      |                                                                                        ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/surface_metrics.hpp:9:17: note: copy assignment operator of 'SurfaceMetrics' is implicitly deleted because field 'logicalWidth' is of const-qualified type 'const float'
+    9 |     const float logicalWidth = 0.0F;
+      |                 ^
+1 error generated.

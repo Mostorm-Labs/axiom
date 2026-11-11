@@ -1,0 +1,79 @@
+{
+  "status": "FROZEN_INCREMENTAL_QUERY_PREPARATION",
+  "obligations": [
+    {
+      "id": "LQP-CAUSE",
+      "requirement": "Currentpreparedprefixmiss/restart/noncoverage reasons actual beforeoptimization.",
+      "oracle": "FrozenCFHsource/liveRender+exactquery/nativeguardedprefixevents; currentlongpathreference.",
+      "acceptance": "OldactualREDshowsavoidablepreparedworkloss/eligibilitygap ormostlocalqueriesunprepared. Do notclaimall16sharegeometry becausecopies; completeperlocalqueriesqualified.",
+      "evidence_required": [
+        "cause-audit.json",
+        "native-red.json",
+        "implementation-design.json"
+      ]
+    },
+    {
+      "id": "LQP-NUMERIC",
+      "requirement": "Preparedpathisexact original localquery includingpartialprefixremainder andversions.",
+      "oracle": "Independentanchoredmonolithicpathbuilder/ref +634componentdecisioncorpus+fullpath/AA+oldnewSnapshotCodec/UndoRedo.",
+      "acceptance": "Sequentialpersegmentstroke/union/f32orderunmodified, finalfullinputvalidated; prefixneverqualifiescompletewhenforked orstale. source/transform/session/hashcollisions/NaN/kind/pressure/shape/history invalidation nofalsehit. Oldsnapshotsimmutable.",
+      "evidence_required": [
+        "prefix-path-parity.json",
+        "exact-parity.json",
+        "canonical-pairs.json",
+        "independent-pixel-proof.json"
+      ]
+    },
+    {
+      "id": "LQP-PROGRESS",
+      "requirement": "ReusableprogresscontinuesacrossMove andfinalexactUp usingexistingRenderowner.",
+      "oracle": "NativeactualRuntime/renderframeappend/cancel/latehistory pressure+selecteddiagnosticcounts.",
+      "acceptance": "No restartfrom0forvalidstableprefix, boundedfairmultipleperlocal demand ifneeded, maintainacceptedCFHhistory0rebuild. FinalUpreusesvalidworkandfinishesremainder, noorphanedjobs/renderretryloop/falseCanonicalVisible. Equivalentcopiescanreuse fullvaluequalifiedlocalpath.",
+      "evidence_required": [
+        "native-green.json",
+        "progress-work.json",
+        "current-phase-work.json",
+        "runtime-invariants.json"
+      ]
+    },
+    {
+      "id": "LQP-BUDGET",
+      "requirement": "Optionalpreparationusesexistingframe/time+memoryallowance andlegitlifetimes.",
+      "oracle": "Sharedownerallowanceinclusiveclock/steps,maxsingleOp, ResourceBudgetManagerresident/staging/COW/source/pins/clear/exhaustiontests.",
+      "acceptance": "Singleframe8ms/4096defaultsnotexpanded; prefixusesleftoverexistingallowance, not16budgets. Mandatorydraw/presentnotconditionedonprefix. OvershootdueindivisibleOp disclosedactual. Resident8MiB512globalconstructcaps kept, overlapsprecharged, alllease0. Protectedhistorynotexpelledbyoptionalprefixunlessexistingexactpressurepolicyrequires; cancellationretiresderivedworkonly.",
+      "evidence_required": [
+        "frame-budget.json",
+        "working-set-accounting.json",
+        "pressure-recovery.json"
+      ]
+    },
+    {
+      "id": "LQP-WEB",
+      "requirement": "MeasuredUpwinpreservesinput/drawing/wholegestureperformanceandcorrectfeedback.",
+      "oracle": "Sixordinaryexactpairs3waveforms+2candidateprivatephasecounts+mixedwhileDowngoodpixels/legitimateUp/receipt.",
+      "acceptance": "ReportUpandMoveelapsed/CPU/contentgaps/tail,nextDownfirstcorrectseparately; meaningfulpacedUporburstimprovementmustnotbedescribedwinifnewlongMove/presentstall orworsewholegesture. Iflittleprogressunderfastburst quantitativelyexplainavailableopportunities, do notrepeatbrowsers/tuneuntilgood.",
+      "evidence_required": [
+        "paired-web.json",
+        "post-erase-feedback.json",
+        "runtime-invariants.json",
+        "regressions.json"
+      ]
+    },
+    {
+      "id": "LQP-BIND",
+      "requirement": "AcceptedpriorCFH/TPtruthpreservedwithfrozennewsource/evidence.",
+      "oracle": "Exactacceptedsourcehash/baselineSDKnumericrefs, Package/Evidencepreflight, source/normalqualification36files/ledger/ownedPIDcleanup.",
+      "acceptance": "ReconcilecontrolleduncommittedCFHdelta againstmanifest; notrequiregitHEADequalsfutureoptimization. No accidentalrollback/oldrawedit. Allfrozenwindowoutcomesretained, finalhashboundsharedresult. Stopbeforethreading andreturnremainingCPUcandidatefactsforusercompare.",
+      "evidence_required": [
+        "preflight.json",
+        "source-manifest.json",
+        "SDK-manifest.json",
+        "sampling-ledger.json",
+        "artifact-manifest.json",
+        "cleanup.json",
+        "next-step-inputs.json",
+        "result.json"
+      ]
+    }
+  ]
+}

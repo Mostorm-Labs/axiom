@@ -1,0 +1,170 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/table_continuity_proof_oracle.cpp:22:296: error: invalid operands to binary expression ('std::string' (aka 'basic_string<char>') and 'const value_type' (aka 'const nlohmann::basic_json<>'))
+   22 |  need(argc==4,"usage snapshot request outputprefix");auto s=decode(argv[1]);std::ifstream in(argv[2]);const json q=json::parse(in);const semantic::ObjectRecord* original=nullptr;for(const auto&o:s.objects)if(o.kind==semantic::ObjectKind::kTable&&(q.value("objectId",std::string{})==""||hex(o.id)==q["objectId"]))original=&o;need(original,"table absent");auto o=*original;
+      |                                                                                                                                                                                                                                                                                               ~~~~~~~~~^ ~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__variant/monostate.h:28:45: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'monostate' for 1st argument
+   28 | _LIBCPP_HIDE_FROM_ABI inline constexpr bool operator==(monostate, monostate) noexcept { return true; }
+      |                                             ^          ~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_condition.h:95:35: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const error_condition' for 1st argument
+   95 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_condition& __x, const error_condition& __y) _NOEXCEPT {
+      |                                   ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:91:35: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const error_code' for 1st argument
+   91 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_code& __y) _NOEXCEPT {
+      |                                   ^          ~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:95:35: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const error_code' for 1st argument
+   95 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_condition& __y) _NOEXCEPT {
+      |                                   ^          ~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__system_error/error_code.h:95:35: note: candidate function (with reversed parameter order) not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const error_condition' for 1st argument
+   95 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const error_code& __x, const error_condition& __y) _NOEXCEPT {
+      |                                   ^          ~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__thread/id.h:78:35: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to '__thread_id' for 1st argument
+   78 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(__thread_id __x, __thread_id __y) _NOEXCEPT {
+      |                                   ^          ~~~~~~~~~~~~~~~
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkSize.h:44:20: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const SkISize' for 1st argument
+   44 | static inline bool operator==(const SkISize& a, const SkISize& b) {
+      |                    ^          ~~~~~~~~~~~~~~~~
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkSize.h:88:20: note: candidate function not viable: no known conversion from 'std::string' (aka 'basic_string<char>') to 'const SkSize' for 1st argument
+   88 | static inline bool operator==(const SkSize& a, const SkSize& b) {
+      |                    ^          ~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/pair.h:455:1: note: candidate template ignored: could not match 'pair' against 'std::basic_string'
+  455 | operator==(const pair<_T1, _T2>& __x, const pair<_U1, _U2>& __y)
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/pair.h:455:1: note: candidate template ignored: could not match 'pair' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/reverse_iterator.h:203:1: note: candidate template ignored: could not match 'reverse_iterator' against 'std::basic_string'
+  203 | operator==(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/wrap_iter.h:126:1: note: candidate template ignored: could not match '__wrap_iter' against 'std::basic_string'
+  126 | operator==(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter1>& __y) _NOEXCEPT {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/wrap_iter.h:132:1: note: candidate template ignored: could not match '__wrap_iter' against 'std::basic_string'
+  132 | operator==(const __wrap_iter<_Iter1>& __x, const __wrap_iter<_Iter2>& __y) _NOEXCEPT {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/wrap_iter.h:132:1: note: candidate template ignored: could not match '__wrap_iter' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:479:1: note: candidate template ignored: could not match 'array' against 'std::basic_string'
+  479 | operator==(const array<_Tp, _Size>& __x, const array<_Tp, _Size>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:638:1: note: candidate template ignored: could not match 'unique_ptr' against 'std::basic_string'
+  638 | operator==(const unique_ptr<_T1, _D1>& __x, const unique_ptr<_T2, _D2>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:638:1: note: candidate template ignored: could not match 'unique_ptr' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:684:1: note: candidate template ignored: could not match 'unique_ptr' against 'std::basic_string'
+  684 | operator==(const unique_ptr<_T1, _D1>& __x, nullptr_t) _NOEXCEPT {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:684:1: note: candidate template ignored: could not match 'unique_ptr' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:150:1: note: candidate template ignored: could not match 'allocator' against 'std::basic_string'
+  150 | operator==(const allocator<_Tp>&, const allocator<_Up>&) _NOEXCEPT {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:150:1: note: candidate template ignored: could not match 'allocator' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/move_iterator.h:255:1: note: candidate template ignored: could not match 'move_iterator' against 'std::basic_string'
+  255 | operator==(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/move_iterator.h:255:1: note: candidate template ignored: could not match 'move_iterator' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/istream_iterator.h:88:35: note: candidate template ignored: could not match 'istream_iterator' against 'std::basic_string'
+   88 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const istream_iterator<_Tp, _CharT, _Traits, _Distance>& __x,
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__iterator/istreambuf_iterator.h:96:1: note: candidate template ignored: could not match 'istreambuf_iterator' against 'std::basic_string'
+   96 | operator==(const istreambuf_iterator<_CharT, _Traits>& __a, const istreambuf_iterator<_CharT, _Traits>& __b) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/variant:1445:38: note: candidate template ignored: could not match 'variant' against 'std::basic_string'
+ 1445 | _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(const variant<_Types...>& __lhs, const variant<_Types...>& __rhs) {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/tuple:1194:1: note: candidate template ignored: could not match 'tuple' against 'std::basic_string'
+ 1194 | operator==(const tuple<_Tp...>& __x, const tuple<_Up...>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/tuple:1194:1: note: candidate template ignored: could not match 'tuple' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:966:35: note: candidate template ignored: could not match 'shared_ptr' against 'std::basic_string'
+  966 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const shared_ptr<_Tp>& __x, const shared_ptr<_Up>& __y) _NOEXCEPT {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:966:35: note: candidate template ignored: could not match 'shared_ptr' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1012:35: note: candidate template ignored: could not match 'shared_ptr' against 'std::basic_string'
+ 1012 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const shared_ptr<_Tp>& __x, nullptr_t) _NOEXCEPT {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:1012:35: note: candidate template ignored: could not match 'shared_ptr' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1453:38: note: candidate template ignored: could not match 'optional' against 'std::basic_string'
+ 1453 | _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(const optional<_Tp>& __x, const optional<_Up>& __y) {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1453:38: note: candidate template ignored: could not match 'optional' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1539:38: note: candidate template ignored: could not match 'optional' against 'std::basic_string'
+ 1539 | _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(const optional<_Tp>& __x, nullopt_t) noexcept {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1539:38: note: candidate template ignored: could not match 'optional' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1616:38: note: candidate template ignored: could not match 'optional' against 'std::basic_string'
+ 1616 | _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(const optional<_Tp>& __x, const _Up& __v) {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1616:38: note: candidate template ignored: could not match 'optional' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1627:38: note: candidate template ignored: could not match 'optional' against 'basic_json'
+ 1627 | _LIBCPP_HIDE_FROM_ABI constexpr bool operator==(const _Tp& __v, const optional<_Up>& __x) {
+      |                                      ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:1627:38: note: candidate template ignored: could not match 'optional' against 'std::basic_string'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/comparison.h:27:1: note: candidate template ignored: could not match 'vector' against 'std::basic_string'
+   27 | operator==(const vector<_Tp, _Allocator>& __x, const vector<_Tp, _Allocator>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string_view:756:1: note: candidate template ignored: could not match 'basic_string_view' against 'std::basic_string'
+  756 | operator==(basic_string_view<_CharT, _Traits> __lhs,
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string_view:756:1: note: candidate template ignored: could not match 'basic_string_view' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:3573:1: note: candidate template ignored: could not match 'basic_string' against 'basic_json'
+ 3573 | operator==(const basic_string<_CharT, _Traits, _Allocator>& __lhs,
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:3581:1: note: candidate template ignored: could not match 'const _CharT * _Nonnull' against 'value_type' (aka 'nlohmann::basic_json<>')
+ 3581 | operator==(const basic_string<_CharT, _Traits, _Allocator>& __lhs,
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string:3581:1: note: candidate template ignored: could not match 'basic_string' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__ios/fpos.h:65:35: note: candidate template ignored: could not match 'fpos' against 'std::basic_string'
+   65 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const fpos<_StateT>& __x, const fpos<_StateT>& __y) {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/function.h:779:35: note: candidate template ignored: could not match 'function' against 'std::basic_string'
+  779 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const function<_Rp(_ArgTypes...)>& __f, nullptr_t) _NOEXCEPT {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/function.h:779:35: note: candidate template ignored: could not match 'function' against 'basic_json'
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:1623:28: note: candidate template ignored: could not match 'unordered_map' against 'std::basic_string'
+ 1623 | _LIBCPP_HIDE_FROM_ABI bool operator==(const unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+      |                            ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/unordered_map:2291:28: note: candidate template ignored: could not match 'unordered_multimap' against 'std::basic_string'
+ 2291 | _LIBCPP_HIDE_FROM_ABI bool operator==(const unordered_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+      |                            ^
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkRefCnt.h:345:47: note: candidate template ignored: could not match 'sk_sp' against 'std::basic_string'
+  345 | template <typename T, typename U> inline bool operator==(const sk_sp<T>& a, const sk_sp<U>& b) {
+      |                                               ^
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkRefCnt.h:348:35: note: candidate template ignored: could not match 'sk_sp' against 'std::basic_string'
+  348 | template <typename T> inline bool operator==(const sk_sp<T>& a, std::nullptr_t) /*noexcept*/ {
+      |                                   ^
+/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/include/core/SkRefCnt.h:351:35: note: candidate template ignored: could not match 'sk_sp' against 'basic_json'
+  351 | template <typename T> inline bool operator==(std::nullptr_t, const sk_sp<T>& b) /*noexcept*/ {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/forward_list:1505:1: note: candidate template ignored: could not match 'forward_list' against 'std::basic_string'
+ 1505 | operator==(const forward_list<_Tp, _Alloc>& __x, const forward_list<_Tp, _Alloc>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/map:1558:1: note: candidate template ignored: could not match 'map' against 'std::basic_string'
+ 1558 | operator==(const map<_Key, _Tp, _Compare, _Allocator>& __x, const map<_Key, _Tp, _Compare, _Allocator>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/map:2083:1: note: candidate template ignored: could not match 'multimap' against 'std::basic_string'
+ 2083 | operator==(const multimap<_Key, _Tp, _Compare, _Allocator>& __x, const multimap<_Key, _Tp, _Compare, _Allocator>& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2949:1: note: candidate template ignored: requirement '__is_val_expr<std::string>::value' was not satisfied [with _Expr1 = std::string, _Expr2 = value_type]
+ 2949 | operator==(const _Expr1& __x, const _Expr2& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2958:1: note: candidate template ignored: requirement '__is_val_expr<std::string>::value' was not satisfied [with _Expr = std::string]
+ 2958 | operator==(const _Expr& __x, const typename _Expr::value_type& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/valarray:2967:1: note: candidate template ignored: requirement '__is_val_expr<nlohmann::basic_json<std::map, std::vector, std::string, bool, long long, unsigned long long, double, std::allocator, nlohmann::adl_serializer, std::vector<unsigned char, std::allocator<unsigned char>>, void>>::value' was not satisfied [with _Expr = value_type]
+ 2967 | operator==(const typename _Expr::value_type& __x, const _Expr& __y) {
+      | ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/deque:2454:35: note: candidate template ignored: could not match 'deque' against 'std::basic_string'
+ 2454 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const deque<_Tp, _Allocator>& __x, const deque<_Tp, _Allocator>& __y) {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/queue:470:35: note: candidate template ignored: could not match 'queue' against 'std::basic_string'
+  470 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const queue<_Tp, _Container>& __x, const queue<_Tp, _Container>& __y) {
+      |                                   ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/stack:328:35: note: candidate template ignored: could not match 'stack' against 'std::basic_string'
+  328 | inline _LIBCPP_HIDE_FROM_ABI bool operator==(const stack<_Tp, _Container>& __x, const stack<_Tp, _Container>& __y) {
+      |                                   ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include/nlohmann/json.hpp:23741:10: note: candidate template ignored: constraints not satisfied [with ScalarType = std::string]
+ 23741 |     bool operator==(ScalarType rhs) const noexcept
+       |          ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include/nlohmann/json.hpp:23740:14: note: because 'std::is_scalar_v<std::string>' evaluated to false
+ 23740 |     requires std::is_scalar_v<ScalarType>
+       |              ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/table_continuity_proof_oracle.cpp:30:351: error: no member named 'OpacityValue' in namespace 'canvas::semantic'
+   30 |  json props=json::array();for(const auto&p:o.properties.entries){json row{{"field_id",p.field_id},{"variant",p.value.index()}};if(const auto*v=std::get_if<semantic::SketchStyleV1>(&p.value))row["sketch"]={{"enabled",v->enabled},{"roughness",v->roughness},{"seed",std::to_string(v->seed)},{"version",v->version}};if(const auto*v=std::get_if<semantic::OpacityValue>(&p.value))row["opacity"]=v->value;props.push_back(row);}
+      |                                                                                                                                                                                                                                                                                                                                                               ^~~~~~~~~~~~
+2 errors generated.

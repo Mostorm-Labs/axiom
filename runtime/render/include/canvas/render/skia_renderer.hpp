@@ -108,6 +108,8 @@ class SkiaRenderer final {
     };
     // Private source profile only; not installed/exported in consumer SDKs.
     [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
+    // Existing interaction owner cancels disposable partial exact preparation.
+    void discardEraseQueryPreparation() noexcept;
     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
         std::span<const foundation::WorldPoint>) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;

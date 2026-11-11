@@ -1,0 +1,54 @@
+TAP version 13
+# (node:82566) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+ok 1 - actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+  ---
+  duration_ms: 26.037459
+  ...
+# Subtest: actual driver VM separates invalid readback from white and retains Cancel/close errors
+ok 2 - actual driver VM separates invalid readback from white and retains Cancel/close errors
+  ---
+  duration_ms: 15.421792
+  ...
+# Subtest: actual driver VM keeps last valid table pixels when next read throws
+ok 3 - actual driver VM keeps last valid table pixels when next read throws
+  ---
+  duration_ms: 20.486084
+  ...
+# Subtest: frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+ok 4 - frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+  ---
+  duration_ms: 33.025167
+  ...
+# Subtest: actual HTTP entry serves browser-only consumer and exact public SDK entry
+ok 5 - actual HTTP entry serves browser-only consumer and exact public SDK entry
+  ---
+  duration_ms: 16.848917
+  ...
+# Subtest: snap-aware positive branch commits table legitimate Up with80/32 and complete image sequence
+ok 6 - snap-aware positive branch commits table legitimate Up with80/32 and complete image sequence
+  ---
+  duration_ms: 32.4535
+  ...
+# (node:82567) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual normal/diagnostic consumer preserves original ten main/short waveform
+ok 7 - actual normal/diagnostic consumer preserves original ten main/short waveform
+  ---
+  duration_ms: 18.07075
+  ...
+# Subtest: actual Up failure preserves full frame and original state before independent close error
+ok 8 - actual Up failure preserves full frame and original state before independent close error
+  ---
+  duration_ms: 6.887875
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 443.915708

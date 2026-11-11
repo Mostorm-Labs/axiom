@@ -1,0 +1,39 @@
+{
+  "status": "DIAGNOSTIC_LOSS_CONFIRMED",
+  "rows": [
+    {
+      "id": "candidate-burst-diagnostic",
+      "sha256": "8d1468deeab8e43098aac8e732f769423825a8a61bd28d716d4f15c11bd7a703",
+      "records": 152142,
+      "last_page_metadata": {
+        "version": 1,
+        "run": 731,
+        "loss": {
+          "statistical": 62200,
+          "critical": 0
+        },
+        "pending_gpu": 0,
+        "finished": true
+      },
+      "eraser_up_begin_roots": 0,
+      "expected_roots": 2
+    },
+    {
+      "id": "candidate-paced-diagnostic",
+      "sha256": "2459784aeab5f9cb5b7af412131c8bf0be5c5f9c175f5dcad55cde597e89d4ef",
+      "records": 152142,
+      "last_page_metadata": {
+        "version": 1,
+        "run": 731,
+        "loss": {
+          "statistical": 136624,
+          "critical": 0
+        },
+        "pending_gpu": 0,
+        "finished": true
+      },
+      "eraser_up_begin_roots": 0,
+      "expected_roots": 2
+    }
+  ]
+}

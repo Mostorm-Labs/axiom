@@ -1,0 +1,176 @@
+{
+  "schema": "g5-long-query-preparation-result-v1",
+  "status": "BLOCKED",
+  "blocker": "FROZEN_PROOF_INCOMPLETE",
+  "task_id": "G5-long-query-preparation-r1",
+  "result_revision": "89325c4648b11c0540fdc859cb0556b945481c1e",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-long-query-preparation-r1",
+    "artifact_manifest": "artifact-manifest.json"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-long-query-preparation-r1/package.json",
+    "sha256": "b9cc0465e8f7900145396653a14f216d0a366e55450faabf124f92619df7a523"
+  },
+  "delta": {
+    "path": ".aegis/results/G5-long-query-preparation-r1/source-delta.patch",
+    "sha256": "22bbf3e6e9437eabf29746d4306e95bddb2db702afd9053e4abc82c97654d1c4"
+  },
+  "evidence_input_refs": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/preflight.json",
+      "sha256": "2aa12f1a6b479d82bab4c407cae7b7fc1dd55a02fbbff4199bbf4d2e0379cb54"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/implementation-design.json",
+      "sha256": "4b174ea9290a3a53ae88f568f71317dd11f5745824d20ddcc9524a00dbe0fc70"
+    },
+    "cause-audit.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/cause-audit.json",
+      "sha256": "f8ad843b12a4be65766f5117452d5151df2e39ff15ca96af1081b0532de1a155"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/native-red.json",
+      "sha256": "f8ad843b12a4be65766f5117452d5151df2e39ff15ca96af1081b0532de1a155"
+    },
+    "native-green.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/native-green.json",
+      "sha256": "f9c42ba403492a47fad9a57672c41a6f11b2be26c4c64a2661528b221c65b14d"
+    },
+    "prefix-path-parity.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/prefix-path-parity.json",
+      "sha256": "7fa4fdbdc3c4b62a9d999c1884334699e6205ed28cd2ae5d18707bd07fbafc14"
+    },
+    "exact-parity.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/exact-parity.json",
+      "sha256": "24982fb822e2a527302a0923518bcf21fbbad9226f68874b7c354ebfbabc3c0d"
+    },
+    "progress-work.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/progress-work.json",
+      "sha256": "3482892e3c47176912dcc84d533f89da36cfa730a3ddb29c4c78287d4179c347"
+    },
+    "frame-budget.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/frame-budget.json",
+      "sha256": "231bf554e885de457acd5ad547d92a5da6840ef5a8646cc44e005ec6f5881d03"
+    },
+    "working-set-accounting.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/working-set-accounting.json",
+      "sha256": "6a7d2bc3da2913a2b93ef09c9c9b70a68d0dc09617ad24212a4a71674a834ee6"
+    },
+    "pressure-recovery.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/pressure-recovery.json",
+      "sha256": "8f6b86ca4002248357de87435878c73bb76deff4ab55ecef1db5f27cc86f491e"
+    },
+    "paired-web.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/paired-web.json",
+      "sha256": "333f9fdffb40bf3ff9ba11ddbe5758ee0ba5de29135b5d7a3ee1ecea1e49837b"
+    },
+    "current-phase-work.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/current-phase-work.json",
+      "sha256": "7b863df8ab39bb7085df27a18cbcd93c17b5dbb01e6317a907a91c25654b3c09"
+    },
+    "post-erase-feedback.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/post-erase-feedback.json",
+      "sha256": "5f71bd0abfeee62a1e23e3f3e8a16adb768e2b4e5f7c34e161bd1facb7ee70c5"
+    },
+    "canonical-pairs.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/canonical-pairs.json",
+      "sha256": "82f5b39b1386ede640c555ed71d1f1bb24aa94c1beb297dd86483ec63e0e99bc"
+    },
+    "independent-pixel-proof.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/independent-pixel-proof.json",
+      "sha256": "fc4808a99d8a2c7886076bbb3295642efe1da967d48dca26700976b35eebbf4a"
+    },
+    "runtime-invariants.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/runtime-invariants.json",
+      "sha256": "e37e295d83c2458b4e1b5b671a35822e438be18bdeb98f69c82557b996b48e95"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/regressions.json",
+      "sha256": "8a1da354bf252cd0d62d19d551ebd5f2c21e5b6fdc01123ef4202e221cec08f5"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/source-manifest.json",
+      "sha256": "a96188535928d5b3793822a21b58d37a3fb49405965b7747eb2343526db6c040"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/SDK-manifest.json",
+      "sha256": "8349d4c35690814989940195f26a021b8665d93242394b500245006036fcecb7"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/sampling-ledger.json",
+      "sha256": "2eee4543a1b6ab14ff00ac7ac1d30f3b0127ed80df75324b4dfb087363f15ca7"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/cleanup.json",
+      "sha256": "375cf9234397235ef13b067f2a652164198fcee16e89dc0879e233d41402ecf6"
+    },
+    "next-step-inputs.json": {
+      "path": ".aegis/results/G5-long-query-preparation-r1/next-step-inputs.json",
+      "sha256": "8f69b7ce1a75a57d0c623e0feccb7958d0ef0f456e749ca1cfcdc0191037d97c"
+    }
+  },
+  "blocking_condition": {
+    "classification": "FROZEN_PROOF_INCOMPLETE",
+    "missing": [
+      "candidate-burst-diagnostic main+successor Up Begin/End and associatedcompleteprefix/path counters",
+      "candidate-paced-diagnostic main+successor Up Begin/End and associatedcompleteprefix/path counters"
+    ],
+    "actual": "both diagnostic traces 152142 retainedrecords; statistical losses62200/136624, critical0, expected4Up roots observed0",
+    "cause": "Qualificationdriverenabledwholegesturetrace; boundedstatisticalcollectoroverflowbeforeUp roots. Frozenmatrixspent, no extra sampling/retry allowed.",
+    "evidence": "current-phase-work.json",
+    "native_not_substituted": true,
+    "missing_counter_not_zero": true
+  },
+  "valid_partial_scope": {
+    "production": "ExistingEraseMaskPathCache multi-localstablecomputedprefix/fullvaluequalification, finaloriginalleftfoldremainder; SkiaRenderer leftoverafterpixelpresent sameinvocationallowance; InteractionbeginCancelclearonlyderivedpartial",
+    "preserved": "AcceptedCFHdrawpriority/sourcefullgeometry/identity/f32PathOps/8MiB512/globalprecharge/GPUleases/SDKpubliccontract",
+    "native": "25/25 tests includingoriginalCFH+newpath/fullfinitefork/cancel/budget; original634decisionsidentical; independentoriginalSkPath16localprogressproof",
+    "normal": "6ordinaryonesame-seedrowsallOBSERVED, initial/final/UndoRedocanonical+entropyexact",
+    "pixels": "9rows18finalRedo independentCPUab7a originalAAqualified; mixedtypedresource/tableknownreferenceconsistent",
+    "feedback": "sticky/table/imagewhileDowncontentpositive+legitUp noCancel,receipt22/22; nohostIOtransition",
+    "ledger": "3/3starts258/660seconds, allsourceSDKstable, ownedworkerscleaned"
+  },
+  "observed_normal": {
+    "burst": {
+      "Up_old_ms": 4091,
+      "Up_candidate_ms": 3768,
+      "Move_span_old_ms": 2128,
+      "Move_span_candidate_ms": 2311,
+      "whole_gesture_old_ms": 6527,
+      "whole_gesture_candidate_ms": 6387
+    },
+    "paced": {
+      "Up_old_ms": 4095,
+      "Up_candidate_ms": 3245,
+      "Move_span_old_ms": 4311,
+      "Move_span_candidate_ms": 4418,
+      "whole_gesture_old_ms": 8714,
+      "whole_gesture_candidate_ms": 7978
+    },
+    "growth10": {
+      "lastUp_old_ms": 1154,
+      "lastUp_candidate_ms": 1153,
+      "whole_old_ms": 23789,
+      "whole_candidate_ms": 23142
+    },
+    "classification": "singlepairmeasuredpartialbenefit withMoveoverhead, notoverallperformancePASS"
+  },
+  "remaining": [
+    "burst/pacedstill3.77s/3.25sUp; much exactlocalunionworkremains, noapproximationorbackgroundimplementation",
+    "WebdiagnosticexactUpcounts/inclusivephasefacts unavailable; nativeclock~8.098ms andretainedWeb8.1/8.2ms cannotproveallWebinvocations",
+    "maxsingleOpnative~0.272ms reported; optionalcooperativeallowance nothardpreemptivedeadline",
+    "Knownforeigncontext/idle1011separatefindings notclosed"
+  ],
+  "next_step": "CONTROL_REVIEW of partial validity/blocker, then human comparison of exact-local-query/approved-error simplification/backgroundCPU candidates beforeanyconcurrencydesignprototype",
+  "normal_Demo_URL": "http://127.0.0.1:4327/example.html",
+  "baseline_Demo_URL": "http://127.0.0.1:4326/example.html",
+  "source_frozen_no_postsample_product_changes": true,
+  "no_commit_push": true,
+  "no_official_G5_P34_or_performance_PASS": true,
+  "stop_before_background": true,
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+}

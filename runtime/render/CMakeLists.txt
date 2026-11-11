@@ -271,6 +271,12 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
+    add_executable(axiom_long_query_preparation_tests tests/long_query_preparation_test.cpp)
+    target_link_libraries(axiom_long_query_preparation_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    target_compile_definitions(axiom_long_query_preparation_tests PRIVATE AXIOM_UR2D_TESTS=1)
+    target_compile_features(axiom_long_query_preparation_tests PRIVATE cxx_std_20)
+    add_test(NAME G5LongQueryPreparationPath COMMAND axiom_long_query_preparation_tests
+      "${CMAKE_CURRENT_BINARY_DIR}/long-query-preparation.json")
     add_executable(axiom_exact_history_path_residency_tests tests/exact_history_path_residency_test.cpp)
     target_link_libraries(axiom_exact_history_path_residency_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     target_compile_definitions(axiom_exact_history_path_residency_tests PRIVATE AXIOM_UR2D_TESTS=1)
@@ -282,6 +288,25 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
       "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-residency.json" --verify)
     add_test(NAME G5ExactHistoryPathMemory COMMAND axiom_exact_history_path_memory_tests
       "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-memory.json")
+    if(APPLE AND AXIOM_BUILD_RUNTIME_QUALIFICATION)
+      add_executable(axiom_crossframe_history_runtime_tests tests/crossframe_history_runtime_test.cpp)
+      target_link_libraries(axiom_crossframe_history_runtime_tests PRIVATE canvas_runtime_composition CanvasSkia::Skia "-framework Metal" "-framework Foundation")
+      target_compile_definitions(axiom_crossframe_history_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1)
+      target_compile_features(axiom_crossframe_history_runtime_tests PRIVATE cxx_std_20)
+      add_test(NAME G5CrossframeHistoryRuntime COMMAND axiom_crossframe_history_runtime_tests
+        "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
+        "${CMAKE_CURRENT_BINARY_DIR}/crossframe-history-runtime.json" 10)
+      set_tests_properties(G5CrossframeHistoryRuntime PROPERTIES ENVIRONMENT "CFH_VERIFY=1" TIMEOUT 180)
+      add_executable(axiom_long_query_preparation_runtime_tests tests/long_query_preparation_runtime_test.cpp)
+      target_link_libraries(axiom_long_query_preparation_runtime_tests PRIVATE canvas_runtime_composition CanvasSkia::Skia "-framework Metal" "-framework Foundation")
+      target_compile_definitions(axiom_long_query_preparation_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1)
+      target_compile_features(axiom_long_query_preparation_runtime_tests PRIVATE cxx_std_20)
+      add_test(NAME G5LongQueryPreparationRuntime COMMAND axiom_long_query_preparation_runtime_tests
+        "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
+        "${CMAKE_CURRENT_BINARY_DIR}/long-query-preparation-runtime.json" 1)
+      set_tests_properties(G5LongQueryPreparationRuntime PROPERTIES TIMEOUT 120)
+
+    endif()
     add_executable(axiom_exact_owner_residency_tests tests/exact_owner_residency_test.cpp)
     add_executable(axiom_exact_owner_residency_pixels tests/exact_owner_residency_pixels.cpp)
     target_link_libraries(axiom_exact_owner_residency_pixels PRIVATE canvas_runtime_render CanvasSkia::Skia)

@@ -1,0 +1,64 @@
+TAP version 13
+# (node:99179) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+ok 1 - actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+  ---
+  duration_ms: 26.019625
+  ...
+# Subtest: actual driver VM separates invalid readback from white and retains Cancel/close errors
+ok 2 - actual driver VM separates invalid readback from white and retains Cancel/close errors
+  ---
+  duration_ms: 15.614625
+  ...
+# Subtest: actual driver VM keeps last valid table pixels when next read throws
+ok 3 - actual driver VM keeps last valid table pixels when next read throws
+  ---
+  duration_ms: 22.755459
+  ...
+# Subtest: frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+ok 4 - frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+  ---
+  duration_ms: 34.693625
+  ...
+# Subtest: actual HTTP entry serves browser-only consumer and exact public SDK entry
+ok 5 - actual HTTP entry serves browser-only consumer and exact public SDK entry
+  ---
+  duration_ms: 16.255958
+  ...
+# Subtest: snap-aware positive branch commits table legitimate Up with80/32 and complete image sequence
+ok 6 - snap-aware positive branch commits table legitimate Up with80/32 and complete image sequence
+  ---
+  duration_ms: 35.126666
+  ...
+# Subtest: actual canonical mixed geometry and shared SnapResolver cover all predecessor drags
+ok 7 - actual canonical mixed geometry and shared SnapResolver cover all predecessor drags
+  ---
+  duration_ms: 313.02375
+  ...
+# Subtest: snap-aware material witness rejects unsnapped old/white/HUD and keeps <=2 threshold
+ok 8 - snap-aware material witness rejects unsnapped old/white/HUD and keeps <=2 threshold
+  ---
+  duration_ms: 0.346458
+  ...
+# (node:99181) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual normal/diagnostic consumer preserves original ten main/short waveform
+ok 9 - actual normal/diagnostic consumer preserves original ten main/short waveform
+  ---
+  duration_ms: 11.356083
+  ...
+# Subtest: actual Up failure preserves full frame and original state before independent close error
+ok 10 - actual Up failure preserves full frame and original state before independent close error
+  ---
+  duration_ms: 3.519875
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 414.347292

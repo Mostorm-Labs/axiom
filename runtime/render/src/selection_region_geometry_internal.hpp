@@ -2,6 +2,7 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/render_cache.hpp"
+#include "canvas/render/reference_draw_list.hpp"
 #include <functional>
 namespace canvas::render::internal {
 class PreparedGeometryCache;
@@ -9,6 +10,7 @@ class SourceRetentionPool;
 struct MaskHistoryPlan;
 struct ExactHistoryProof;
 class PreparedNavigationGeometry;
+struct PreparationAllowance;
 enum class MaskHistoryAdmission { kReady, kNotAdmitted, kResourcePending };
 // Independent component-order oracle retained for fallback qualification.
 // Private source header; no consumer bridge/package export.
@@ -49,9 +51,15 @@ class EraseMaskPathCache final {
     void prepareQueryPrefix(const semantic::EraseMaskGeometry&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         std::size_t maxSegments=8)noexcept;
+    void discardQueryPrefixes()noexcept;
+    void prepareQueryPrefixes(std::span<const ReferenceTraversalEntry>,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,PreparationAllowance&)noexcept;
     void clear()noexcept;
     Work work()const noexcept;
  private:
+    void advanceQueryPrefix(const semantic::EraseMaskGeometry&,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+        std::size_t maxSegments,PreparationAllowance*)noexcept;
     struct Impl;
     std::shared_ptr<ExactHistoryProof> exactHistory(const scene::SharedVector<semantic::EraseMaskRecord>&);
     std::unique_ptr<Impl> impl_;

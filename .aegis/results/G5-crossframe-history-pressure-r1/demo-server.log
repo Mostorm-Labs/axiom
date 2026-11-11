@@ -1,0 +1,15 @@
+http://127.0.0.1:4326/example.html
+127.0.0.1 - - [11/Nov/2026 15:42:18] "HEAD /example.html HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /example.html HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /axiom.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /api/demo-controls.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /api/internal/controller.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /api/axiom.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /api/internal/values.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /internal/axiom.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] code 404, message File not found
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /axiom.data HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:33] "GET /axiom.wasm HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:34] "GET /pointer_input.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [11/Nov/2026 15:49:34] "GET /text_input.mjs HTTP/1.1" 200 -

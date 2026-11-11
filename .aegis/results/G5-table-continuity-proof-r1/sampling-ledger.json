@@ -1,0 +1,67 @@
+{
+  "schema": "g5-table-proof-two-windows-v1",
+  "cap_seconds": 420,
+  "charged_seconds": 142,
+  "attempts": [
+    {
+      "id": "G5TP1-PAIR",
+      "status": "COMPLETED",
+      "limit_seconds": 240,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/table_continuity_proof_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-table-continuity-proof-r1/pair-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-table-continuity-proof-r1/local-web/G5TP1-PAIR"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 95.098759833,
+        "peak_process_family_rss_kib": 1808256,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "CAPTURED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 96,
+      "worker_status": "CAPTURED",
+      "hard_stop": false
+    },
+    {
+      "id": "G5TP1-LOCALIZE",
+      "status": "COMPLETED",
+      "limit_seconds": 180,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/table_continuity_proof_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-table-continuity-proof-r1/localize-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-table-continuity-proof-r1/local-web/G5TP1-LOCALIZE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 45.2316035,
+        "peak_process_family_rss_kib": 1711248,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "CAPTURED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 46,
+      "worker_status": "CAPTURED",
+      "hard_stop": false
+    }
+  ]
+}

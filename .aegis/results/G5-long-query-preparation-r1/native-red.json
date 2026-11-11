@@ -1,0 +1,41 @@
+{
+  "status": "CAUSAL_RED_CONFIRMED",
+  "single_progress": {
+    "final_remainder_unions": 0,
+    "path_equal": true,
+    "prepared_segments": 1600,
+    "resident": 132396,
+    "status": "GREEN"
+  },
+  "multilocal_progress": {
+    "final_remainder_unions": 1600,
+    "path_equal": true,
+    "prepared_segments": 25600,
+    "resident": 261384,
+    "status": "RED"
+  },
+  "actual_native_live_frame": {
+    "main": {
+      "flatten": 0,
+      "history_builds": 32,
+      "history_unions": 1024,
+      "local_bytes": 3023454,
+      "prepared_body_builds": 0,
+      "prepared_body_canonical_draws": 0,
+      "prepared_compile": 0,
+      "query_builds": 15,
+      "query_unions": 24000,
+      "value_primitives": 1622,
+      "value_records": 196
+    },
+    "main_ms": 3241.11375,
+    "whole_ms": 6674.351709
+  },
+  "causes": [
+    "OnequeryPrefix slot restarted by otherobject-localgeometry; 25600optionalunions before1600finalremainderforfirstlocal",
+    "CurrentrealRenderchoosesmostaliasonly; finalUp15of16object-localqueries stillfull24000unions",
+    "Optionalprefixusesseparate2msbefore sharedallowance; constructionestimatecompeteswithresidentratherthanseparatedglobalcharge"
+  ],
+  "oracle": "path-oracle-manifest.json",
+  "not_claimed": "singlelocal doesprogress, nofalsefailureclaim; multi localloss/realuncoveredqueryevidence drives repair"
+}

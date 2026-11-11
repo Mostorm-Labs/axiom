@@ -1,0 +1,23 @@
+{
+  "rule": "sameactualnativeRuntime/Metal10round finalmain historybuilds==0",
+  "checks": [
+    {
+      "source": "old",
+      "expected_late_history_builds": 0,
+      "observed": 304,
+      "status": "RED"
+    },
+    {
+      "source": "candidate",
+      "expected_late_history_builds": 0,
+      "observed": 0,
+      "status": "GREEN"
+    }
+  ],
+  "oldcaptured_before_production_repair": true,
+  "geometry_event_matches": "completecanonicalmaskvalues, nothash",
+  "observer_dropped": [
+    0,
+    0
+  ]
+}

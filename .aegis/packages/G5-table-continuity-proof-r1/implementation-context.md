@@ -1,0 +1,11 @@
+# Table feedback evidence before cache pressure and prefix work
+
+Published89325c46 holds HP resident/construction split+tests, necessarylongfixture nowtracked andGitindex-extractednativepass. Userorderedtableproof→crossframehistorypressure→newquerypreparation. Thisfirstpackageisdiagnostic/verificationonly,currentproduction58funchanged andoldbab6forcomparison.
+
+Previousgrowthmixedsequence: fixed40,rect850/500,sticky1050/500,table850/750(240x96),image1150/750,6erase160rounds + shortsuccessors, immediatelysticky+80/+30 then table+80/+30. Stickypixelsqualified,tablecontacts1/Moveaccepted,15s old4x1gridwitness1130/828neverexactcolor,gen18/presented7,thenCancel;imageNOT_RUN. Driverassertbeforepushlosttypedplan/lastprobeRGBA, so neitherharnessnorproductrootproven.
+
+ActualTableReferenceCommand uses cellfills plus grid. GridantiAlias=true and scene::sketchGeometry(record.content,properties) may drawroughoutlineusing outlineWidthScale, notidealstraightlineatrow48. Originalonepixel exactcolorwitnessmay bewrong; proveofflinefromcanonicaltableobject/property/seed andcache-disabledCPUreference, notassume. Independentreferencewrtstaticcache/scheduler isvalidlocalizedoracle; itsharespainteralgorithm, saythat. Existingab7aCPUoracleink/shapeonly isnotfulltableoracle. UseonlyknownnonAAregionororiginalprovenband, noAA/tolwiden.
+
+Persistbeforeeveryassert: completepublicselection/typedtablegrid/row/column/cell/content/roughnessbasis; beforeDowncommittedsnapshot; baseline/positiveROI+expectedCPUreference; eachprobeorboundedfirst+last8,metadata,state/time/contacts/receipt. ActualstillDownpixels+expectedknown+80/+30clone; neverSnapshotactive. Capturefailurefullframeonce/lastRGBAandseparateinnerfailurefromCancel/close. ContinueimageonlyafterexplicithealthyCancel iftablefailed, labelmodifiedpacing.
+
+2freshold/currentcorrectnessrows same1431x1010DPR2seed, fullfixed40restore notpublicnewduplicate. Optionaloneprefrozenfocusifneeded, max2windows420s. Sourcemutex, noCPUoracle/native/buildwhilebrowser. Originalknowncrosscontext/idlefindingsretained withoutscopecreep. No productionfixhere; returnconcreterootororaclelimitation. Controlwillpackagefollowingcachepressure/prefixworkautonomouslyunderuserinstruction.

@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "Node": 10,
+  "Python": 3,
+  "logs": [
+    "node-preflight-final.log",
+    "python-preflight.log"
+  ],
+  "actualVM": true,
+  "actualHTTP": true,
+  "actualnativeSnapResolver": true,
+  "predown_hostIO": false,
+  "no_active_snapshot": true,
+  "deferEvidence": true,
+  "negativeCases": [
+    "wrongpixel",
+    "white",
+    "HUD",
+    "unsnapped",
+    "material>2",
+    "readInvalid",
+    "readthrow",
+    "Cancelerror",
+    "closeBUSY"
+  ],
+  "sourceSDKexact": true
+}

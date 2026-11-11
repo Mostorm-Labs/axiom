@@ -1,0 +1,35 @@
+{
+  "status": "BOUNDED_EXISTING_OWNER_POLICY",
+  "resident_cap": 8388608,
+  "max_entries": 512,
+  "resident_peak": 8388522,
+  "categories": [
+    "rawsource_and_index",
+    "flattened_drawprimitive",
+    "drawmetadata",
+    "exactproof",
+    "querymemo",
+    "compiledpath",
+    "refusal"
+  ],
+  "category_maxima": [
+    5714872,
+    4379424,
+    646080,
+    51408,
+    436656,
+    3596572,
+    264
+  ],
+  "category_sum_reconciles": true,
+  "construction_max_conservative_estimate": 733808,
+  "combined_resident_construction_peak": 9122330,
+  "global_peak_observed": 164160371,
+  "global_hard": 536870912,
+  "source": "native keeper crossframe-history-runtime.json",
+  "source_sha256": "c9afd3f5687001314e015f44022fb7eec5627d3457a3a57d155c7a61cc0f4c61",
+  "preserved_storage_identity": "sourceowner+pointee and type; COW newallocations charged independently, no weakhash reuse",
+  "unavoidable_minimum": "No policy increase required: finalnative andrealWeb0latehistorybuild within8MiB. Observedfullpath+source reuse possible withoptionalflatten declining.",
+  "no_GPU_early_release": true,
+  "no_new_pool": true
+}

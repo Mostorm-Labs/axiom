@@ -1,0 +1,38 @@
+{
+  "status": "HARNESS_REFERENCE_SEARCH_ERROR",
+  "rows_observed": [
+    {
+      "id": "old58f-long",
+      "status": "INCOMPLETE",
+      "uniqueReferences": 0
+    },
+    {
+      "id": "candidate-long",
+      "status": "INCOMPLETE",
+      "uniqueReferences": 0
+    },
+    {
+      "id": "old58f-growth",
+      "status": "QUALIFIED",
+      "uniqueReferences": 0
+    },
+    {
+      "id": "candidate-growth",
+      "status": "QUALIFIED",
+      "uniqueReferences": 0
+    },
+    {
+      "id": "candidate-growth-diagnostic",
+      "status": "QUALIFIED",
+      "uniqueReferences": 0
+    },
+    {
+      "id": "candidate-mixed-feedback",
+      "status": "INCOMPLETE",
+      "uniqueReferences": 0
+    }
+  ],
+  "error": "snapshot-roundtrip threw when comparing unequallongtofirstgrowth10candidate; missingcatchcontinue. Not pixel failure, no oracle invocation or browser retry.",
+  "original_log": "pixel-qualification.log",
+  "repair": "newcrossframehelper catchnonmatchingreference thencontinue existingexactreferences; offlineonly"
+}

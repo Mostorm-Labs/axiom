@@ -1,0 +1,25 @@
+{
+  "status": "FROZEN_BEFORE_ANY_BROWSER",
+  "requests": {
+    "G5TP1-PAIR": "2b1cf2a7a989c510a4b7ef1bdf11b80c74adaed2191dbb5001a3430f2c497723",
+    "G5TP1-LOCALIZE": "a676cc65e65b7f8b07d50d4bfc1f7bbf27856b72ba25d06ff30c6595e620ddfe"
+  },
+  "rosters": {
+    "G5TP1-PAIR": [
+      "oldbab6-mixed-d2",
+      "current58f-mixed-d2"
+    ],
+    "G5TP1-LOCALIZE": [
+      "current58f-table-localize-d2"
+    ]
+  },
+  "limits": {
+    "G5TP1-PAIR": 240,
+    "G5TP1-LOCALIZE": 180
+  },
+  "cap_seconds": 420,
+  "max_starts": 2,
+  "rss_mib": 4096,
+  "localize_policy": "only if table unqualified, original mixed sequence low-intrusion deferEvidence; same latest known committed basis proven offline from initial and public legitimate stickyUp plus operation/generation stamps. No extra window.",
+  "pair_timing_limit": "required latest committed snapshot before tableDown adds IO; not identical noIO original intervals; overhead recorded separately"
+}

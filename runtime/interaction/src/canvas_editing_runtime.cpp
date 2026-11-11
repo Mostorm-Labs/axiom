@@ -3210,6 +3210,7 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
     previewProvider_->setOverlayVisible(false);
   }
   }
+  skiaRenderer_.discardEraseQueryPreparation();
   if(!reserveDisplay(pointerId,DisplayKind::kErase))return false;
   std::lock_guard lock(previewStateMutex_);
   eraserTraces_[pointerId] = {};
@@ -3429,6 +3430,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
 
 bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
   std::lock_guard lock(previewStateMutex_);
+  skiaRenderer_.discardEraseQueryPreparation();
   if(toolMode_==ToolMode::kObjectEraser)finishObjectEraseFeedback(pointerId,true);
   canonicalPresentationDirty_=true;
   transientOverlayDirty_=false;

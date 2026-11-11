@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/long_query_preparation_reduce.py", line 98, in <module>
+    cases=[reduce_row(RESULT/"local-web/G5LQP1-DIAGNOSTIC"/name/"raw-row.json")for name in ["candidate-burst-diagnostic","candidate-paced-diagnostic"]]
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/long_query_preparation_reduce.py", line 98, in <listcomp>
+    cases=[reduce_row(RESULT/"local-web/G5LQP1-DIAGNOSTIC"/name/"raw-row.json")for name in ["candidate-burst-diagnostic","candidate-paced-diagnostic"]]
+  File "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/long_query_preparation_reduce.py", line 43, in reduce_row
+    assert len(up_spans) == 2*len(selected)
+AssertionError

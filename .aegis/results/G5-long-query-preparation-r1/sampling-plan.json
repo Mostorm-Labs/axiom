@@ -1,0 +1,33 @@
+{
+  "status": "FROZEN_BEFORE_BROWSER",
+  "requests": {
+    "G5LQP1-PAIRS": "4043216bf2347e8a54c076385d28ca637f36cdc90dd797745ca629f7828f13ca",
+    "G5LQP1-DIAGNOSTIC": "35341fb5332b4b5a261fabda860d9bc85a1873c1ce1ee12fc222613ba0b64193",
+    "G5LQP1-FEEDBACK": "95f0b08def19b398fca0a22ddb1f5ec4b32f4b3ef5cf5f6647728f53e4d3da8d"
+  },
+  "limits": {
+    "G5LQP1-PAIRS": 360,
+    "G5LQP1-DIAGNOSTIC": 180,
+    "G5LQP1-FEEDBACK": 120
+  },
+  "rosters": {
+    "G5LQP1-PAIRS": [
+      "old-burst",
+      "candidate-burst",
+      "old-paced",
+      "candidate-paced",
+      "old-growth",
+      "candidate-growth"
+    ],
+    "G5LQP1-DIAGNOSTIC": [
+      "candidate-burst-diagnostic",
+      "candidate-paced-diagnostic"
+    ],
+    "G5LQP1-FEEDBACK": [
+      "candidate-mixed-feedback"
+    ]
+  },
+  "max_starts": 3,
+  "cap_seconds": 660,
+  "rss_mib": 4096
+}

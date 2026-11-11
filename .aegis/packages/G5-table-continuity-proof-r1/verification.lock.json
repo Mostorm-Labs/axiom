@@ -1,0 +1,63 @@
+{
+  "status": "FROZEN_TABLE_FAILURE_DIAGNOSIS",
+  "obligations": [
+    {
+      "id": "TP-RETENTION",
+      "requirement": "Failure neverloses typedbasis/probe/rawclassification data.",
+      "oracle": "OfflineVMactualdriverforcedempty/wrongpixel/error/timeoutcase writescomplete beforeassert; tablebasis+lastRGBA+metadata+clock+state saved duringfailure.",
+      "acceptance": "OriginalmissingdataREDfixed inverificationonly, bounded output evenonCancel/closeexceptions. NoactiveSnapshot/privateconsumerAPI.",
+      "evidence_required": [
+        "failure-retention-preflight.json",
+        "driver-preflight.json"
+      ]
+    },
+    {
+      "id": "TP-ORACLE",
+      "requirement": "Tableexpectedcontent canbeidentified independentofcandidatepixels andHUD.",
+      "oracle": "Frozenactualcommittedsnapshot+typedtablegrid/style/roughness/sourceCPUcache-disabledreference vsoldpose/blank/HUDnegative atsameDPR.",
+      "acceptance": "Original4x1ruleindependentlyqualifiedorclassifiedinvalidwithcounterexample. Neworaclecannotusecandidatepixel/pickAA/widenedtol. Saveexpectedfullreference/sourcehashes+typedresourceprooflimits; layer/cacheindependence distinguishedfromalgorithmindependence.",
+      "evidence_required": [
+        "table-oracle-preflight.json",
+        "expected-reference-manifest.json"
+      ]
+    },
+    {
+      "id": "TP-PAIR",
+      "requirement": "Old/currentsamecontinuouscase classifiedwithactualactivefeedback.",
+      "oracle": "2freshordinarySDK/inputmixedruns samefixedscene/seedwaveform; actualpixelscontacts/pose/receipt andterminalHistoryproof.",
+      "acceptance": "For each table determine qualifiedcontent vs timeoutinvalidwitness/actualoldpose/progressunknown. old/newsamecommittedbasissexact; preserve anyprior3sechooseprofile limitations. sticky/imageeachseparateactualproof, nofailfiltering/noautomaticclaimproductregression.",
+      "evidence_required": [
+        "same-scene-pairs.json",
+        "table-feedback.json",
+        "mixed-kinds.json",
+        "runtime-invariants.json"
+      ]
+    },
+    {
+      "id": "TP-CLASSIFY",
+      "requirement": "Returnactionablefailureclassification withoutspeculativeproductfix.",
+      "oracle": "Fullinputtyped/rawGLstate/referenceandexistingownerlogs; oneoptionalpredeclaredlocalizationrowifrequired.",
+      "acceptance": "Eitherpreviousfailureprovenharnessissue andindependentlycorrecttablefeedback, OR actualproductprogressfailurewithproperpositiveoracle/negativeoldpose, OR explicitlyterminalmissingbasis/unknowncause withcompletepreservedprobes. Returnprecisenextownerfiles/tests forcontrol. No15srawtimeout aloneasnewroot.",
+      "evidence_required": [
+        "failure-classification.json",
+        "next-owner-fix-inputs.json"
+      ]
+    },
+    {
+      "id": "TP-BIND",
+      "requirement": "ExactsourceandSDKboundedproof no hiddenproductionchanges.",
+      "oracle": "Normal36fileSDKmanifests/hashcheck,2windowsledger/cleanup, source/helpers/durablelocalmanifest andaffectedNode/Python/boundaries.",
+      "acceptance": "SourceSDKunchangedincludingproduction, allfailed/cancelrawpersisted,ownedPIDsclean; no newbroadmatrix/release/G5claim. Nextcachepressure/prefixpackagesmayproceedbasedontrustworthyevidence aftercontrolreview.",
+      "evidence_required": [
+        "preflight.json",
+        "source-manifest.json",
+        "SDK-manifest.json",
+        "sampling-ledger.json",
+        "regressions.json",
+        "artifact-manifest.json",
+        "cleanup.json",
+        "result.json"
+      ]
+    }
+  ]
+}

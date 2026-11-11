@@ -1,0 +1,61 @@
+{
+  "status": "PARTIAL_ACCEPTABLE_PROOFS_WITH_BLOCKING_WEB_DIAGNOSTIC_GAP",
+  "native": {
+    "tests": 25,
+    "failures": 0,
+    "junit": "native-release-keepers.xml"
+  },
+  "numeric": {
+    "rows": 634,
+    "mismatches": 0,
+    "proof": "exact-parity.json"
+  },
+  "Node": {
+    "passed": 10,
+    "failed": 0,
+    "log": "node-final.log"
+  },
+  "Python": {
+    "passed": 3,
+    "failed": 0,
+    "log": "python-final.log"
+  },
+  "boundary": {
+    "contracts": 120,
+    "log": "boundaries-final.log"
+  },
+  "normal": {
+    "rows": 6,
+    "canonical_entropy_exact": true,
+    "pairs": "paired-web.json"
+  },
+  "pixel": {
+    "rows": 9,
+    "finalRedoScopes": 18,
+    "status": "QUALIFIED",
+    "proof": "independent-pixel-proof.json",
+    "originalAAunchanged": true
+  },
+  "feedback": {
+    "rows": 1,
+    "kinds": 3,
+    "status": "QUALIFIED_LEGIT_UP"
+  },
+  "diagnostic": {
+    "rows": 2,
+    "expectedUpRoots": 4,
+    "observedUpRoots": 0,
+    "loss": {
+      "burst": 62200,
+      "paced": 136624
+    },
+    "blocking": true,
+    "proof": "current-phase-work.json"
+  },
+  "preserved_failures": [
+    "prefix-red-multilocal expectedRED",
+    "path-overflow-test incorrectmustrejectoracle:Skiafiniteemptyoriginalresult; correctedoriginalparity, finitecheckunchanged",
+    "phase-reduction assertion failed becauseUprootscensored; no resample/no fakezero"
+  ],
+  "no_wholeG5_PASS": true
+}

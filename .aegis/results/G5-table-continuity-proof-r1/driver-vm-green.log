@@ -1,0 +1,57 @@
+TAP version 13
+# (node:72750) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+ok 1 - actual driver VM preserves timeout, preDown committed basis and continues independent image after Cancel
+  ---
+  duration_ms: 24.943417
+  ...
+# Subtest: actual driver VM separates invalid readback from white and retains Cancel/close errors
+ok 2 - actual driver VM separates invalid readback from white and retains Cancel/close errors
+  ---
+  duration_ms: 15.040542
+  ...
+# Subtest: actual driver VM keeps last valid table pixels when next read throws
+ok 3 - actual driver VM keeps last valid table pixels when next read throws
+  ---
+  duration_ms: 20.043667
+  ...
+# Subtest: frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+ok 4 - frozen deferred branch retains failed proof without preDown host snapshot and preserves actual sticky commit
+  ---
+  duration_ms: 33.623458
+  ...
+# Subtest: actual HTTP entry serves browser-only consumer and exact public SDK entry
+ok 5 - actual HTTP entry serves browser-only consumer and exact public SDK entry
+  ---
+  duration_ms: 15.379167
+  ...
+# Subtest: native uncached table target qualifies eight non-AA core pixels
+ok 6 - native uncached table target qualifies eight non-AA core pixels
+  ---
+  duration_ms: 0.476875
+  ...
+# Subtest: original four-pixel witness is independently valid in native reference
+ok 7 - original four-pixel witness is independently valid in native reference
+  ---
+  duration_ms: 7.155542
+  ...
+# Subtest: timeout saves complete failing basis/state/lastRGBA before throwing or cleanup
+ok 8 - timeout saves complete failing basis/state/lastRGBA before throwing or cleanup
+  ---
+  duration_ms: 0.785958
+  ...
+# Subtest: probe exception preserves error and prior pixels; bounded ring never exceeds eight
+ok 9 - probe exception preserves error and prior pixels; bounded ring never exceeds eight
+  ---
+  duration_ms: 1.17625
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 378.580791

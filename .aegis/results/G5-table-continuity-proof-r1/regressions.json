@@ -1,0 +1,39 @@
+{
+  "status": "SCOPED_VERIFICATION_PASS_NO_PRODUCTION_MUTATION",
+  "Node": {
+    "passed": 11,
+    "failed": 0,
+    "log": "node-final.log"
+  },
+  "Python": {
+    "passed": 3,
+    "failed": 0,
+    "log": "python-final.log"
+  },
+  "boundary": {
+    "contracts": 120,
+    "log": "boundaries-final.log"
+  },
+  "native": {
+    "oracle": "table-oracle-preflight.json",
+    "snap": "*-snap-final.json",
+    "canonical_invariants_rows": 3,
+    "no_whole_project_build": true,
+    "locked_prebuilt_dependencies": true,
+    "build_warning": "linkignoredduplicatepublishedstaticlibs; noerrors"
+  },
+  "published_checkpoint": {
+    "path": ".aegis/results/G5-exact-history-path-residency-r1/regressions.json",
+    "sha256": "c3b99ea9323bae4aaaf85b0aa948fb5ddb0cf66e0a2fbcef1997f29f7ead85fd",
+    "nativekeepers": 19,
+    "exact_decision_rows": 634,
+    "status": "CARRY_FORWARD_NOT_RERUN_PRODUCTION_UNCHANGED"
+  },
+  "limitations": [
+    "SnapawareROI only known atguardend wholeframe; firstcorrectframe/3sgoal/5sreference latency MISSING, no relativeperformancePASS.",
+    "Raw unsnappedtimeout does not prove productstall orG5regression.",
+    "Image sampled afterexplicit tableCancel; modifiedrecoverypacing, notoriginaluninterruptedsequencePASS.",
+    "No newrealbrowser after2frozenstarts; no productionfix inthispackage.",
+    "Knowncontextwarnings andidle1011 separate gaps remain."
+  ]
+}

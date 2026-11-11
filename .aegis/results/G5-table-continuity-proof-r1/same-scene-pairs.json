@@ -1,0 +1,99 @@
+{
+  "status": "CONFIRMED_EXACT_CANONICAL_PAIR",
+  "old": "oldbab6-mixed-d2",
+  "current": "current58f-mixed-d2",
+  "stages": {
+    "initial": {
+      "objects": 44,
+      "total_masks": 80,
+      "objects_equal": true,
+      "manifest_background_equal": true,
+      "document_digest_equal": true,
+      "before_revision": 49,
+      "after_revision": 49,
+      "returncode": 0,
+      "input_sha256": {
+        "old_sha": "c2027312155e60ad7c9248b9fa3982afa37271ea3f65775c73f25af816e831de",
+        "current_sha": "c2027312155e60ad7c9248b9fa3982afa37271ea3f65775c73f25af816e831de"
+      }
+    },
+    "table-preDown": {
+      "objects": 44,
+      "total_masks": 480,
+      "objects_equal": true,
+      "manifest_background_equal": true,
+      "document_digest_equal": true,
+      "before_revision": 60,
+      "after_revision": 60,
+      "returncode": 0,
+      "input_sha256": {
+        "old_sha": "7f5d6b52cc008e93949deb4213c70fff6948923d98557c16e11ac91e6c9db7e2",
+        "current_sha": "7f5d6b52cc008e93949deb4213c70fff6948923d98557c16e11ac91e6c9db7e2"
+      }
+    },
+    "final": {
+      "objects": 44,
+      "total_masks": 480,
+      "objects_equal": true,
+      "manifest_background_equal": true,
+      "document_digest_equal": true,
+      "before_revision": 61,
+      "after_revision": 61,
+      "returncode": 0,
+      "input_sha256": {
+        "old_sha": "e3077636156476168b533ea415455e487972b8bb3a58d7a776155a11b0d96366",
+        "current_sha": "e3077636156476168b533ea415455e487972b8bb3a58d7a776155a11b0d96366"
+      }
+    },
+    "undo": {
+      "objects": 44,
+      "total_masks": 480,
+      "objects_equal": true,
+      "manifest_background_equal": true,
+      "document_digest_equal": true,
+      "before_revision": 62,
+      "after_revision": 62,
+      "returncode": 0,
+      "input_sha256": {
+        "old_sha": "01df7fbb1d52f2682840a364c4c65cdf2f52dbafe6f44704bd99ddaf7cae5e53",
+        "current_sha": "01df7fbb1d52f2682840a364c4c65cdf2f52dbafe6f44704bd99ddaf7cae5e53"
+      }
+    },
+    "redo": {
+      "objects": 44,
+      "total_masks": 480,
+      "objects_equal": true,
+      "manifest_background_equal": true,
+      "document_digest_equal": true,
+      "before_revision": 63,
+      "after_revision": 63,
+      "returncode": 0,
+      "input_sha256": {
+        "old_sha": "722a28c934b03031014f58de4dee18782adaf03b09f7d29e5e6998f72f029e36",
+        "current_sha": "722a28c934b03031014f58de4dee18782adaf03b09f7d29e5e6998f72f029e36"
+      }
+    }
+  },
+  "entropy_equal": true,
+  "entropy": {
+    "seed": 324508639,
+    "algorithm": "xorshift32-byte-v1-fixture-only",
+    "call_lengths": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "byte_count": 16,
+    "stream_fnv1a32": 2536440519
+  },
+  "CSS": [
+    1431,
+    1010
+  ],
+  "DPR": 2,
+  "raw_pointer_waveform": "6x160Move main +5shortsuccessors; sticky/table/image raw80/30; fixed40restore no duplicate",
+  "canonical_and_entropy_exact": true,
+  "performance_pair_PASS": false,
+  "timing_limit": "PAIR requiredlatestcommittedsnapshot IO; LOCALIZE deferredretention isolates transition; no firstcorrectsnapawareROI timestamp"
+}

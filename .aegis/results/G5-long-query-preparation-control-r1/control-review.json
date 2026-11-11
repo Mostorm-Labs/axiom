@@ -1,0 +1,67 @@
+{
+  "schema": "g5-scoped-control-review-v1",
+  "status": "PARTIAL_VALIDITY_ACCEPTED_CLOSURE_BLOCKED",
+  "blocker": "FROZEN_PROOF_INCOMPLETE",
+  "result": {
+    "path": ".aegis/results/G5-long-query-preparation-r1/result.json",
+    "sha256": "61fa7bf25dbe656cdd8aacfb9374b9a0dba5fa9486925c2934a112fa2fe3afcc"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-long-query-preparation-r1/package.json",
+    "sha256": "b9cc0465e8f7900145396653a14f216d0a366e55450faabf124f92619df7a523"
+  },
+  "independent_reviews": {
+    "independent-artifact-audit": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-artifact-audit.json",
+      "sha256": "5c032f2730ed7dcdfaad0b2a4763b34bbf07b95e1152d66753e4890593da0c82"
+    },
+    "independent-canonical-pairs": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-canonical-pairs.json",
+      "sha256": "cd801c8da40042d283af6fe28e97090aa19afe8d227c4b10f5560f9ad50dc801"
+    },
+    "independent-native": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-native.xml",
+      "sha256": "26a311be634e1a6db3bea253d0356fc10050aa62c2953d134699f77ea9072a21"
+    },
+    "independent-normal-observations": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-normal-observations.json",
+      "sha256": "866542f887a7c2a51b3fbc2c7a73ba72e37471867c6570420a62061d28007c49"
+    },
+    "independent-selected-pixels": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-selected-pixels.json",
+      "sha256": "1551428da8044600210f54fa70a92c55445b21f56b27e7a0d4bb34294caffb94"
+    },
+    "independent-source-sdk-audit": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-source-sdk-audit.json",
+      "sha256": "6ce208df46cf23a859c225c45b4770dba041187eec9c9cadac85e25f7936c296"
+    },
+    "independent-trace-loss-audit": {
+      "path": ".aegis/results/G5-long-query-preparation-control-r1/independent-trace-loss-audit.json",
+      "sha256": "701a9478471588b972d416693ceb423d2460649669d30600d043bf5221cf27ea"
+    }
+  },
+  "accepted_partial": [
+    "Existing Render owner retains fully value-qualified computed local prefixes; final Up preserves original f32 stroke and sequential union order; mandatory pixel publication comes before optional preparation under same invocation allowance.",
+    "Control reran LongQueryPreparationPath, ExactHistoryPathMemory, LongQueryPreparationRuntime, ExactOwnerResidencyPixels: 4/4 passed. Control reran actual VM/HTTP/snap driver tests 10/10 and guard tests 3/3; producer 25 native and 634 exact results inspected and bound.",
+    "Control verified 408 artifact hashes, 1187 frozen source hashes and 108 baseline/normal/qualification SDK files. No source or SDK changes during 3 windows, 258 charged seconds, no remaining owned workers.",
+    "Control recomputed 12 canonical old/new snapshot comparisons and 4 selected candidate final/Redo CPU-reference pixel comparisons; original AA rule unchanged.",
+    "Normal one-seed paired burst Up 4091→3768 ms with Move span 2128→2311 ms and whole sequence 6527→6387 ms; paced Up 4095→3245 ms with Move 4311→4418 ms and sequence 8714→7978 ms. No assertion of zero blocking or physical input-to-photon.",
+    "Growth10 latest Up 1154→1153 ms preserves accepted CFH benefit; mixed sticky/table/image whileDown valid feedback + legitimate Up inspected, receipt22/22, no artificial intersettle."
+  ],
+  "blocking_findings": [
+    "Whole-gesture diagnostic collector overflow: burst statistical loss62200, paced136624, critical0; each expected 2 eraser_up Begin roots but observed0. Complete Web Up attribution and all-invocation budget/work accounting are not proven.",
+    "Native complete work facts and retained partial Web samples cannot substitute for missing Web roots. Full frozen LQP closure is not accepted; no extra sampling or code mutation authorized by this review."
+  ],
+  "remaining": [
+    "Long query Up still approximately3.25–3.77 seconds in these normal cases; CPU preparation uses available frame opportunities and leaves large final remainder.",
+    "Background computation and algorithmic local exact-query alternatives require user comparison before concurrency design or prototype; bounded approximation needs geometric error semantics beyond previous AA-only tolerance.",
+    "Foreign-context release warning and idle1011 feedback gap remain separate findings."
+  ],
+  "implementation_status": "Preserve accepted CFH and partial LQP dirty changes; no new commit/push in this slice. Published earlier checkpoint89325c4648b11c0540fdc859cb0556b945481c1e remains remoteHEAD.",
+  "demos": {
+    "candidate": "http://127.0.0.1:4327/example.html",
+    "baseline": "http://127.0.0.1:4326/example.html"
+  },
+  "next": "Stop current synchronous slice at user comparison checkpoint; retain raw failed diagnostic evidence and valid partial implementation. No new execution dispatch.",
+  "official_gate": false
+}

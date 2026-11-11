@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="2"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="6"
+	timestamp="2026-11-11T17:10:54"
+	>
+	<testcase name="G5LongQueryPreparationRuntime" classname="G5LongQueryPreparationRuntime" time="6.8685" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=2 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=3 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=4 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=5 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=6 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present begin frame=7 objects=40 scene_records=40
+[axiom] present skia failed: exact cache preparation pending framegen=1 providergen=1
+[axiom] present ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5ExactOwnerResidencyPixels" classname="G5ExactOwnerResidencyPixels" time="0.0874771" status="run">
+		<properties/>
+		<system-out>{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":0}
+{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":1}
+{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":2}
+</system-out>
+	</testcase>
+</testsuite>

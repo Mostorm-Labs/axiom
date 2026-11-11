@@ -1,0 +1,49 @@
+{
+  "status": "SCOPED_NATIVE_WEB_PIXELS_ALL_REQUIRED_COMPLETE",
+  "native": {
+    "tests": 23,
+    "failures": 0,
+    "junit": "native-keepers.xml",
+    "includes": "actualcrossframeRuntime/Metal10round+alllistedkeepers"
+  },
+  "numeric": {
+    "rows": 634,
+    "mismatches": 0,
+    "proof": "exact-parity.json"
+  },
+  "Node": {
+    "passed": 10,
+    "failed": 0,
+    "log": "node-final.log"
+  },
+  "Python": {
+    "passed": 3,
+    "failed": 0,
+    "log": "python-final.log"
+  },
+  "boundaries": {
+    "contracts": 120,
+    "log": "boundaries-final.log"
+  },
+  "web": {
+    "starts": 3,
+    "charged_seconds": 222,
+    "rows": 6,
+    "proof": "sampling-ledger.json"
+  },
+  "pixels": {
+    "final_redo_rows": 12,
+    "status": "QUALIFIED",
+    "original_AA_unchanged": true,
+    "tableactive": "table-active-independent-proof.json",
+    "tablefinal": "table-terminal-independent-proof.json"
+  },
+  "failure_findings": [
+    "Offlinepixelreference-search helper firstversionthrowonunequalreference; fixedcatchcontinue, priorreportretained, noBrowserRetry",
+    "longmainnewquery4100msremains; separateprefixnext",
+    "knownforeign-context/idle1011notclosed",
+    "singlepairedseed givesobservation notoverallperformancePASS"
+  ],
+  "build_warning": "duplicatepublishedstaticlibslinkwarningspreserved;normalconfigrequiresEMSDK_PYTHON=/opt/homebrew/bin/python3.12;diagnosticinstallguardexpectedprivatearchive",
+  "no_fullG5_PASS": true
+}

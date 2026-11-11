@@ -1,0 +1,23 @@
+{
+  "status": "QUALIFIED_ORIGINAL_SEQUENTIAL_PATH",
+  "independent_oracle": "path-oracle-manifest.json",
+  "multilocal": {
+    "final_remainder_unions": 0,
+    "path_equal": true,
+    "prepared_segments": 25600,
+    "resident": 2117805,
+    "status": "GREEN"
+  },
+  "edgecases": [
+    "computedtailfork",
+    "partialremainder",
+    "expiredzeroallowance",
+    "oneStep",
+    "NaN",
+    "doublefinite-f32overflow-originalparity",
+    "globaldeny",
+    "cancelalllease0",
+    "oldheldpathafterclear"
+  ],
+  "source_sha256": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5"
+}

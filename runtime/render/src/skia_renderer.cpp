@@ -787,6 +787,7 @@ SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const 
     try{return ExactQueryCohort(eraseQueries_,[cache]{if(const auto owner=cache.lock())owner->retireIdleHistoryPreparation();});}
     catch(const std::bad_alloc&){return ExactQueryCohort(eraseQueries_);}
 }
+void SkiaRenderer::discardEraseQueryPreparation()noexcept{if(eraseQueries_)eraseQueries_->discardQueryPrefixes();}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
     try{
@@ -840,6 +841,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     G5_ROUTE(g5Route,g5::Route::edit_plain);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::transient,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_);
 
+    internal::PreparationAllowance allowance;
     const auto previousErase=partialEraseFrame_;
     serviceResourceRetirements();
     if (selectionOverlay == nullptr) {
@@ -930,20 +932,6 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
     }
     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
-    if(gpuLiveV4&&eraseQueries_){
-        // One optional owner-frame advance, shared across all affected copies.
-        // Keep the original sequential union order; final exact Up validates
-        // the complete local geometry and finishes any unprepared remainder.
-        const ReferenceTraversalEntry* common=nullptr;std::size_t aliases=0;
-        for(const auto& entry:plan.referenceDrawList.entries)if(entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()){
-            const auto count=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& other){
-                return other.presentationEraseActive&&!other.presentationEraseMasks.empty()&&other.record.transform==entry.record.transform;});
-            if(std::size_t(count)>aliases){common=&entry;aliases=count;}
-        }
-        if(common)eraseQueries_->prepareQueryPrefix(common->presentationEraseMasks.back().geometry,resourceBudget_,
-            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),8);
-    }
-    internal::PreparationAllowance allowance;
     if(cache){
         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
@@ -1141,6 +1129,12 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
 #endif
         if(candidate)candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);
     }else partialEraseFrame_.reset();
+    // Pixel publication has priority. CPU-only exact preparation may consume
+    // only the remainder of this same invocation's existing allowance, even
+    // when no coverage step was needed. It never delays publication readiness.
+    if(presented.code==BackendSubmissionCode::kAccepted&&eraseQueries_)
+        eraseQueries_->prepareQueryPrefixes(plan.referenceDrawList.entries,resourceBudget_,
+            std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),allowance);
     return presented;
 }
 

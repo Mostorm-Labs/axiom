@@ -1,0 +1,4371 @@
+{
+  "status": "THREE_MATERIAL_WHILE_DOWN_AND_LEGITIMATE_UP",
+  "rows": [
+    {
+      "kind": "sticky",
+      "status": "QUALIFIED",
+      "clock": {
+        "predecessorUpStart": 10454,
+        "downStart": 11498.600000023842,
+        "lastMoveEnd": 11793,
+        "guardPollStart": 11809,
+        "firstQualifiedObservation": 12213,
+        "limitation": "observation bounds; not physical input-to-photon; required evidence snapshot/readback overhead included"
+      },
+      "sinceDown": 714.3999999761581,
+      "sinceLastMove": 420,
+      "sinceMainUp": 1759,
+      "contacts": 1,
+      "finalPose": [
+        1,
+        0,
+        0,
+        1,
+        1130,
+        530
+      ],
+      "legitimateUp": {
+        "phase": "up",
+        "x": 1160,
+        "y": 560,
+        "start": 12213.5,
+        "end": 12415.100000023842,
+        "contacts": 0,
+        "generation": "18"
+      },
+      "lastReadback": {
+        "metadata": {
+          "schema": "g5-qualified-default-readback-v1",
+          "id": 3,
+          "role": "canonical",
+          "status": "VALID",
+          "started": 11809.300000071526,
+          "selected": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 1,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "errors": {
+            "preexisting": {
+              "codes": [],
+              "truncated": false
+            },
+            "setup": {
+              "codes": [],
+              "truncated": false
+            },
+            "read": {
+              "codes": [],
+              "truncated": false
+            },
+            "restore": {
+              "codes": [],
+              "truncated": false
+            }
+          },
+          "restoration": {
+            "status": "RESTORED",
+            "failures": []
+          },
+          "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+          "canvas": {
+            "id": "axiom-sdk-1-svjpci082ue-canonical",
+            "identity": "canvas-1",
+            "width": 2862,
+            "height": 2020
+          },
+          "context": {
+            "identity": "context-2",
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": true,
+              "stencil": true,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 2862,
+            "drawingBufferHeight": 2020,
+            "lost": false
+          },
+          "before": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "rectangle": {
+            "x": 2578,
+            "y": 1258,
+            "width": 4,
+            "height": 4,
+            "origin": "top-left",
+            "readY": 758
+          },
+          "defaultReadBufferBefore": 1029,
+          "defaultReadBufferAfter": 1029,
+          "after": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "finished": 12198
+        },
+        "rgba": [
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255,
+          255,
+          255,
+          128,
+          255
+        ],
+        "state": {
+          "activeContacts": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": false,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "17",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f8313d8efe45db694605ae2eb66a3734",
+            "ordinal": "17",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "eb313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "7",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "00000000000000000000000000000000",
+            "objectId": "00000000000000000000000000000000",
+            "rowId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "at": 12213,
+        "status": "QUALIFIED",
+        "positive": true,
+        "selection": {
+          "actions": [
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              1,
+              1,
+              0.5,
+              1
+            ],
+            "fillEnabled": true,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": true,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            1049,
+            499,
+            1251,
+            701
+          ],
+          "count": 1,
+          "generation": "17",
+          "groupScope": null,
+          "height": 0,
+          "kind": 8,
+          "primary": "eb313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "7",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            1050,
+            500
+          ],
+          "width": 0
+        },
+        "typedTable": null,
+        "discriminator": null,
+        "original": null,
+        "readbackClassification": "VALID"
+      },
+      "basis": {
+        "kind": "sticky",
+        "selected": {
+          "actions": [
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 18,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              1,
+              1,
+              0.5,
+              1
+            ],
+            "fillEnabled": true,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": true,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            1049,
+            499,
+            1251,
+            701
+          ],
+          "count": 1,
+          "generation": "17",
+          "groupScope": null,
+          "height": 0,
+          "kind": 8,
+          "primary": "eb313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "7",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            1050,
+            500
+          ],
+          "width": 0
+        },
+        "typed": {
+          "available": true,
+          "height": 200,
+          "objectId": "eb313d8efe45db694605ae2eb66a377b",
+          "width": 200
+        },
+        "appearance": {
+          "available": true,
+          "eligible": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "excluded": [],
+          "fillEligible": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "fillExcluded": [],
+          "mixed": [],
+          "objects": [
+            {
+              "objectId": "eb313d8efe45db694605ae2eb66a377b",
+              "values": {
+                "angle": -45,
+                "cornerRadius": 0,
+                "dash": [],
+                "dashOffset": 0,
+                "enabled": false,
+                "fill": [
+                  1,
+                  1,
+                  0.5,
+                  1
+                ],
+                "fillKind": "solid",
+                "gap": 8,
+                "hatchWidth": 1,
+                "opacity": 1,
+                "roughness": 1,
+                "seed": null,
+                "stroke": [
+                  0.10000000149011612,
+                  0.20000000298023224,
+                  0.30000001192092896,
+                  1
+                ],
+                "strokeEnabled": true,
+                "strokeWidth": 2,
+                "styleVersion": 1
+              }
+            }
+          ],
+          "radiusEligible": [],
+          "radiusExcluded": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "stamp": {
+            "owner": "axiom-sdk-1-svjpci082ue",
+            "token": [
+              "2",
+              "1",
+              "2",
+              "7",
+              "17",
+              "17",
+              "18",
+              "2"
+            ]
+          },
+          "strokeEligible": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "strokeExcluded": [],
+          "values": {
+            "angle": -45,
+            "cornerRadius": 0,
+            "dash": [],
+            "dashOffset": 0,
+            "enabled": false,
+            "fill": [
+              1,
+              1,
+              0.5,
+              1
+            ],
+            "fillKind": "solid",
+            "gap": 8,
+            "hatchWidth": 1,
+            "opacity": 1,
+            "roughness": 1,
+            "seed": null,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": true,
+            "strokeWidth": 2,
+            "styleVersion": 1
+          },
+          "writable": true
+        },
+        "state": {
+          "activeContacts": 0,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": true,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "17",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f8313d8efe45db694605ae2eb66a3734",
+            "ordinal": "17",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "eb313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "eb313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "7",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "00000000000000000000000000000000",
+            "objectId": "00000000000000000000000000000000",
+            "rowId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "imageResourceSHA": "4ff6ab670a58c14270e034e2090d9a432caa263a14e0a25785386b0c12f880b5",
+        "reference": {
+          "status": "FROZEN_TABLE_REFERENCE_QUALIFIED",
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "oldTransform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "newTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            780
+          ],
+          "tableWidth": 240,
+          "tableHeight": 96,
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ],
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "width": 1
+          },
+          "properties": [],
+          "sketchPresent": false,
+          "rect": {
+            "x": 2098,
+            "y": 1706,
+            "width": 4,
+            "height": 4
+          },
+          "rgba": [
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "oldRGBA": [
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "requiredPixels": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14
+          ],
+          "originalRect": {
+            "x": 2258,
+            "y": 1656,
+            "width": 4,
+            "height": 1
+          },
+          "originalColor": [
+            64,
+            71,
+            82,
+            255
+          ],
+          "originalRule": "independently VALID under captured240x96plain1pxgrid; roughness hypothesis notactualcapturedbasis",
+          "broadRect": {
+            "x": 2196,
+            "y": 1590,
+            "width": 128,
+            "height": 140
+          },
+          "pixelPolicy": "<=2 perchannel only8originalCPUfullpigmentpixels,notAAwidening; oldwhite/blank/HUD/wrongcolor/wrongpose negative",
+          "HUDproof": "point1130,828 >oldright1090+7, newright1170-40; y828 isinternalrowline faroutertop780/bottom876; gridcoreAAabsentCPU",
+          "oracleScope": "localized cache-disabledCPU reference sharespainteralgorithm;independentofGPU/cache/scheduler,emptytext nofont",
+          "referenceSha256": "a9c8e6faaabc31fe29951033cb1a0ae63d7c9609ea13360eb41b6387e702eacd",
+          "oldReferenceSha256": "9519f8d05285b37876fcddcefef557bcac21cff535867f1d927ea17c86e2104d",
+          "oracleSha256": "ba3cd9ed5aae86fe48a951bfbfdccf830ccf59a49d2a11cede09298660be08bb",
+          "sourceSha256": "6a9be4c058ab8fd633bfcbc00d77ea52e00e996b3d8646a76f517817b47f49ad",
+          "maximumDelta": 2,
+          "effectiveDelta": [
+            80,
+            32
+          ],
+          "effectiveTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            782
+          ],
+          "discriminator": {
+            "rect": {
+              "x": 2098,
+              "y": 1753,
+              "width": 4,
+              "height": 1
+            },
+            "requiredPixels": [
+              1,
+              2
+            ],
+            "maximumDelta": 2,
+            "derivation": "internalverticalgrid x=930+120; y=(unsnappedbottom876+snappedbottom878)/2 minus0.5=876.5,1.5pxinside snappedbottom and0.5pxoutside unsnappedbottom; excludes purpleouterline, provenactualnonHUDpigmentagainstCPU",
+            "not_first_frame": true,
+            "rgba": [
+              255,
+              255,
+              255,
+              255,
+              64,
+              71,
+              82,
+              255,
+              64,
+              71,
+              82,
+              255,
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        }
+      },
+      "resourceSHA": null
+    },
+    {
+      "kind": "table",
+      "status": "QUALIFIED",
+      "clock": {
+        "predecessorUpStart": 10454,
+        "downStart": 12425,
+        "lastMoveEnd": 12464.100000023842,
+        "guardPollStart": 12481.800000071526,
+        "firstQualifiedObservation": 12498.600000023842,
+        "limitation": "observation bounds; not physical input-to-photon; required evidence snapshot/readback overhead included"
+      },
+      "sinceDown": 73.60000002384186,
+      "sinceLastMove": 34.5,
+      "sinceMainUp": 2044.6000000238419,
+      "contacts": 1,
+      "finalPose": [
+        1,
+        0,
+        0,
+        1,
+        930,
+        782
+      ],
+      "legitimateUp": {
+        "phase": "up",
+        "x": 960,
+        "y": 802,
+        "start": 12501,
+        "end": 12704.700000047684,
+        "contacts": 0,
+        "generation": "19"
+      },
+      "lastReadback": {
+        "metadata": {
+          "schema": "g5-qualified-default-readback-v1",
+          "id": 8,
+          "role": "canonical",
+          "status": "VALID",
+          "started": 12481.800000071526,
+          "selected": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 1,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "errors": {
+            "preexisting": {
+              "codes": [],
+              "truncated": false
+            },
+            "setup": {
+              "codes": [],
+              "truncated": false
+            },
+            "read": {
+              "codes": [],
+              "truncated": false
+            },
+            "restore": {
+              "codes": [],
+              "truncated": false
+            }
+          },
+          "restoration": {
+            "status": "RESTORED",
+            "failures": []
+          },
+          "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+          "canvas": {
+            "id": "axiom-sdk-1-svjpci082ue-canonical",
+            "identity": "canvas-1",
+            "width": 2862,
+            "height": 2020
+          },
+          "context": {
+            "identity": "context-2",
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": true,
+              "stencil": true,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 2862,
+            "drawingBufferHeight": 2020,
+            "lost": false
+          },
+          "before": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "rectangle": {
+            "x": 2098,
+            "y": 1706,
+            "width": 4,
+            "height": 4,
+            "origin": "top-left",
+            "readY": 310
+          },
+          "defaultReadBufferBefore": 1029,
+          "defaultReadBufferAfter": 1029,
+          "after": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "finished": 12482.5
+        },
+        "rgba": [
+          255,
+          255,
+          255,
+          255,
+          64,
+          71,
+          82,
+          255,
+          64,
+          71,
+          82,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          64,
+          71,
+          82,
+          255,
+          64,
+          71,
+          82,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          64,
+          71,
+          82,
+          255,
+          64,
+          71,
+          82,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          255,
+          64,
+          71,
+          82,
+          255,
+          64,
+          71,
+          82,
+          255,
+          255,
+          255,
+          255,
+          255
+        ],
+        "state": {
+          "activeContacts": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": false,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "18",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "ff313d8efe45dbe94605ae2eb66a3734",
+            "ordinal": "18",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "ea313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "8",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "ec313d8efe45db694605ae2eb66a377b",
+            "objectId": "ea313d8efe45db694605ae2eb66a377b",
+            "rowId": "ed313d8efe45db694605ae2eb66a377b"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "at": 12498.600000023842,
+        "positive": true,
+        "matches": 8,
+        "required": 8,
+        "selection": {
+          "actions": [
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillEnabled": false,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            849.5,
+            749.5,
+            1090.5,
+            846.5
+          ],
+          "count": 1,
+          "generation": "18",
+          "groupScope": null,
+          "height": 0,
+          "kind": 11,
+          "primary": "ea313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "8",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "width": 0
+        },
+        "typedTable": {
+          "available": true,
+          "cells": [
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            }
+          ],
+          "columnId": "ec313d8efe45db694605ae2eb66a377b",
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "editable": true,
+          "generation": "18",
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "version": 1,
+            "width": 1
+          },
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "rowId": "ed313d8efe45db694605ae2eb66a377b",
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ]
+        },
+        "discriminator": {
+          "metadata": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 9,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 12482.700000047684,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "axiom-sdk-1-svjpci082ue-canonical",
+              "identity": "canvas-1",
+              "width": 2862,
+              "height": 2020
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": true,
+                "preserveDrawingBuffer": true,
+                "stencil": true,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 2862,
+              "drawingBufferHeight": 2020,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 2098,
+              "y": 1753,
+              "width": 4,
+              "height": 1,
+              "origin": "top-left",
+              "readY": 266
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 12483.200000047684
+          },
+          "rgba": [
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "state": {
+            "activeContacts": 1,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "canRedo": false,
+            "canUndo": false,
+            "creationMode": false,
+            "data": {
+              "attached": false,
+              "byteCapacity": 33554432,
+              "capacity": 1024,
+              "closing": false,
+              "fault": false,
+              "latest": null,
+              "pending": 0,
+              "pendingBytes": 0,
+              "releasedOrdinal": "0",
+              "statusCapacity": 4096,
+              "statusRecords": 0
+            },
+            "documentId": "99999999999999999999999999999999",
+            "eraserMode": 2,
+            "generation": "18",
+            "lastCommit": {
+              "cloudSynced": 0,
+              "localDurable": 0,
+              "operationId": "ff313d8efe45dbe94605ae2eb66a3734",
+              "ordinal": "18",
+              "presentedGeneration": "7",
+              "runtimeEpoch": "1"
+            },
+            "objects": 44,
+            "primary": "ea313d8efe45db694605ae2eb66a377b",
+            "selected": [
+              "ea313d8efe45db694605ae2eb66a377b"
+            ],
+            "selectionMode": 0,
+            "selectionRevision": "8",
+            "shape": 6,
+            "surface": {
+              "available": true,
+              "height": 1010,
+              "width": 1431
+            },
+            "table": {
+              "columnId": "ec313d8efe45db694605ae2eb66a377b",
+              "objectId": "ea313d8efe45db694605ae2eb66a377b",
+              "rowId": "ed313d8efe45db694605ae2eb66a377b"
+            },
+            "target": {
+              "attachmentEpoch": "2",
+              "runtimeEpoch": "1",
+              "viewEpoch": "1",
+              "viewId": "1"
+            },
+            "text": {
+              "composition": "0",
+              "phase": 0,
+              "selection": [
+                0,
+                0
+              ],
+              "sequence": "1",
+              "session": "0"
+            },
+            "tool": 1
+          },
+          "at": 12483.200000047684
+        },
+        "original": {
+          "metadata": {
+            "schema": "g5-qualified-default-readback-v1",
+            "id": 10,
+            "role": "canonical",
+            "status": "VALID",
+            "started": 12483.5,
+            "selected": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 1,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "errors": {
+              "preexisting": {
+                "codes": [],
+                "truncated": false
+              },
+              "setup": {
+                "codes": [],
+                "truncated": false
+              },
+              "read": {
+                "codes": [],
+                "truncated": false
+              },
+              "restore": {
+                "codes": [],
+                "truncated": false
+              }
+            },
+            "restoration": {
+              "status": "RESTORED",
+              "failures": []
+            },
+            "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+            "canvas": {
+              "id": "axiom-sdk-1-svjpci082ue-canonical",
+              "identity": "canvas-1",
+              "width": 2862,
+              "height": 2020
+            },
+            "context": {
+              "identity": "context-2",
+              "attributes": {
+                "alpha": true,
+                "antialias": false,
+                "depth": true,
+                "desynchronized": false,
+                "failIfMajorPerformanceCaveat": false,
+                "powerPreference": "default",
+                "premultipliedAlpha": true,
+                "preserveDrawingBuffer": true,
+                "stencil": true,
+                "xrCompatible": false
+              },
+              "drawingBufferWidth": 2862,
+              "drawingBufferHeight": 2020,
+              "lost": false
+            },
+            "before": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "rectangle": {
+              "x": 2258,
+              "y": 1656,
+              "width": 4,
+              "height": 1,
+              "origin": "top-left",
+              "readY": 363
+            },
+            "defaultReadBufferBefore": 1029,
+            "defaultReadBufferAfter": 1029,
+            "after": {
+              "readFramebuffer": "DEFAULT",
+              "drawFramebuffer": "DEFAULT",
+              "readBuffer": 1029,
+              "pixelPackBuffer": "NONE",
+              "pack": {
+                "PACK_ALIGNMENT": 4,
+                "PACK_ROW_LENGTH": 0,
+                "PACK_SKIP_ROWS": 0,
+                "PACK_SKIP_PIXELS": 0
+              }
+            },
+            "finished": 12484
+          },
+          "rgba": [
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "state": {
+            "activeContacts": 1,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "canRedo": false,
+            "canUndo": false,
+            "creationMode": false,
+            "data": {
+              "attached": false,
+              "byteCapacity": 33554432,
+              "capacity": 1024,
+              "closing": false,
+              "fault": false,
+              "latest": null,
+              "pending": 0,
+              "pendingBytes": 0,
+              "releasedOrdinal": "0",
+              "statusCapacity": 4096,
+              "statusRecords": 0
+            },
+            "documentId": "99999999999999999999999999999999",
+            "eraserMode": 2,
+            "generation": "18",
+            "lastCommit": {
+              "cloudSynced": 0,
+              "localDurable": 0,
+              "operationId": "ff313d8efe45dbe94605ae2eb66a3734",
+              "ordinal": "18",
+              "presentedGeneration": "7",
+              "runtimeEpoch": "1"
+            },
+            "objects": 44,
+            "primary": "ea313d8efe45db694605ae2eb66a377b",
+            "selected": [
+              "ea313d8efe45db694605ae2eb66a377b"
+            ],
+            "selectionMode": 0,
+            "selectionRevision": "8",
+            "shape": 6,
+            "surface": {
+              "available": true,
+              "height": 1010,
+              "width": 1431
+            },
+            "table": {
+              "columnId": "ec313d8efe45db694605ae2eb66a377b",
+              "objectId": "ea313d8efe45db694605ae2eb66a377b",
+              "rowId": "ed313d8efe45db694605ae2eb66a377b"
+            },
+            "target": {
+              "attachmentEpoch": "2",
+              "runtimeEpoch": "1",
+              "viewEpoch": "1",
+              "viewId": "1"
+            },
+            "text": {
+              "composition": "0",
+              "phase": 0,
+              "selection": [
+                0,
+                0
+              ],
+              "sequence": "1",
+              "session": "0"
+            },
+            "tool": 1
+          },
+          "at": 12484.100000023842
+        },
+        "readbackClassification": "VALID"
+      },
+      "basis": {
+        "kind": "table",
+        "selected": {
+          "actions": [
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 18,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillEnabled": false,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            849.5,
+            749.5,
+            1090.5,
+            846.5
+          ],
+          "count": 1,
+          "generation": "18",
+          "groupScope": null,
+          "height": 0,
+          "kind": 11,
+          "primary": "ea313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "8",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "width": 0
+        },
+        "typed": {
+          "available": true,
+          "cells": [
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            }
+          ],
+          "columnId": "ec313d8efe45db694605ae2eb66a377b",
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "editable": true,
+          "generation": "18",
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "version": 1,
+            "width": 1
+          },
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "rowId": "ed313d8efe45db694605ae2eb66a377b",
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ]
+        },
+        "appearance": {
+          "available": true,
+          "eligible": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "excluded": [],
+          "fillEligible": [],
+          "fillExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "mixed": [],
+          "objects": [
+            {
+              "objectId": "ea313d8efe45db694605ae2eb66a377b",
+              "values": {
+                "angle": -45,
+                "cornerRadius": 0,
+                "dash": [],
+                "dashOffset": 0,
+                "enabled": false,
+                "fill": [
+                  0.25,
+                  0.550000011920929,
+                  0.8500000238418579,
+                  1
+                ],
+                "fillKind": "none",
+                "gap": 8,
+                "hatchWidth": 1,
+                "opacity": 1,
+                "roughness": 1,
+                "seed": null,
+                "stroke": [
+                  0.25,
+                  0.2800000011920929,
+                  0.3199999928474426,
+                  1
+                ],
+                "strokeEnabled": true,
+                "strokeWidth": 1,
+                "styleVersion": 1
+              }
+            }
+          ],
+          "radiusEligible": [],
+          "radiusExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "stamp": {
+            "owner": "axiom-sdk-1-svjpci082ue",
+            "token": [
+              "2",
+              "1",
+              "2",
+              "8",
+              "18",
+              "18",
+              "19",
+              "2"
+            ]
+          },
+          "strokeEligible": [],
+          "strokeExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "values": {
+            "angle": -45,
+            "cornerRadius": 0,
+            "dash": [],
+            "dashOffset": 0,
+            "enabled": false,
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillKind": "none",
+            "gap": 8,
+            "hatchWidth": 1,
+            "opacity": 1,
+            "roughness": 1,
+            "seed": null,
+            "stroke": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "strokeEnabled": true,
+            "strokeWidth": 1,
+            "styleVersion": 1
+          },
+          "writable": true
+        },
+        "state": {
+          "activeContacts": 0,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": true,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "18",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "ff313d8efe45dbe94605ae2eb66a3734",
+            "ordinal": "18",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "ea313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "8",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "ec313d8efe45db694605ae2eb66a377b",
+            "objectId": "ea313d8efe45db694605ae2eb66a377b",
+            "rowId": "ed313d8efe45db694605ae2eb66a377b"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "imageResourceSHA": "4ff6ab670a58c14270e034e2090d9a432caa263a14e0a25785386b0c12f880b5",
+        "reference": {
+          "status": "FROZEN_TABLE_REFERENCE_QUALIFIED",
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "oldTransform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "newTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            780
+          ],
+          "tableWidth": 240,
+          "tableHeight": 96,
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ],
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "width": 1
+          },
+          "properties": [],
+          "sketchPresent": false,
+          "rect": {
+            "x": 2098,
+            "y": 1706,
+            "width": 4,
+            "height": 4
+          },
+          "rgba": [
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "oldRGBA": [
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "requiredPixels": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14
+          ],
+          "originalRect": {
+            "x": 2258,
+            "y": 1656,
+            "width": 4,
+            "height": 1
+          },
+          "originalColor": [
+            64,
+            71,
+            82,
+            255
+          ],
+          "originalRule": "independently VALID under captured240x96plain1pxgrid; roughness hypothesis notactualcapturedbasis",
+          "broadRect": {
+            "x": 2196,
+            "y": 1590,
+            "width": 128,
+            "height": 140
+          },
+          "pixelPolicy": "<=2 perchannel only8originalCPUfullpigmentpixels,notAAwidening; oldwhite/blank/HUD/wrongcolor/wrongpose negative",
+          "HUDproof": "point1130,828 >oldright1090+7, newright1170-40; y828 isinternalrowline faroutertop780/bottom876; gridcoreAAabsentCPU",
+          "oracleScope": "localized cache-disabledCPU reference sharespainteralgorithm;independentofGPU/cache/scheduler,emptytext nofont",
+          "referenceSha256": "a9c8e6faaabc31fe29951033cb1a0ae63d7c9609ea13360eb41b6387e702eacd",
+          "oldReferenceSha256": "9519f8d05285b37876fcddcefef557bcac21cff535867f1d927ea17c86e2104d",
+          "oracleSha256": "ba3cd9ed5aae86fe48a951bfbfdccf830ccf59a49d2a11cede09298660be08bb",
+          "sourceSha256": "6a9be4c058ab8fd633bfcbc00d77ea52e00e996b3d8646a76f517817b47f49ad",
+          "maximumDelta": 2,
+          "effectiveDelta": [
+            80,
+            32
+          ],
+          "effectiveTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            782
+          ],
+          "discriminator": {
+            "rect": {
+              "x": 2098,
+              "y": 1753,
+              "width": 4,
+              "height": 1
+            },
+            "requiredPixels": [
+              1,
+              2
+            ],
+            "maximumDelta": 2,
+            "derivation": "internalverticalgrid x=930+120; y=(unsnappedbottom876+snappedbottom878)/2 minus0.5=876.5,1.5pxinside snappedbottom and0.5pxoutside unsnappedbottom; excludes purpleouterline, provenactualnonHUDpigmentagainstCPU",
+            "not_first_frame": true,
+            "rgba": [
+              255,
+              255,
+              255,
+              255,
+              64,
+              71,
+              82,
+              255,
+              64,
+              71,
+              82,
+              255,
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        },
+        "latestCommittedBasis": {
+          "initialSnapshot": {
+            "started": 1897.1000000238419,
+            "capturedAt": 2180.600000023842,
+            "sha256": "c2027312155e60ad7c9248b9fa3982afa37271ea3f65775c73f25af816e831de",
+            "byteLength": 5469775,
+            "before": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "7",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "e3313d8efe45dbe94605ae2eb66a3734",
+                "ordinal": "7",
+                "presentedGeneration": "7",
+                "runtimeEpoch": "1"
+              },
+              "objects": 44,
+              "primary": "e1313d8efe45db694605ae2eb66a377b",
+              "selected": [
+                "e1313d8efe45db694605ae2eb66a377b"
+              ],
+              "selectionMode": 0,
+              "selectionRevision": "6",
+              "shape": 6,
+              "surface": {
+                "available": true,
+                "height": 1010,
+                "width": 1431
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "after": {
+              "activeContacts": 0,
+              "camera": {
+                "scale": 1,
+                "x": 0,
+                "y": 0
+              },
+              "canRedo": false,
+              "canUndo": true,
+              "creationMode": false,
+              "data": {
+                "attached": false,
+                "byteCapacity": 33554432,
+                "capacity": 1024,
+                "closing": false,
+                "fault": false,
+                "latest": null,
+                "pending": 0,
+                "pendingBytes": 0,
+                "releasedOrdinal": "0",
+                "statusCapacity": 4096,
+                "statusRecords": 0
+              },
+              "documentId": "99999999999999999999999999999999",
+              "eraserMode": 2,
+              "generation": "7",
+              "lastCommit": {
+                "cloudSynced": 0,
+                "localDurable": 0,
+                "operationId": "e3313d8efe45dbe94605ae2eb66a3734",
+                "ordinal": "7",
+                "presentedGeneration": "7",
+                "runtimeEpoch": "1"
+              },
+              "objects": 44,
+              "primary": "e1313d8efe45db694605ae2eb66a377b",
+              "selected": [
+                "e1313d8efe45db694605ae2eb66a377b"
+              ],
+              "selectionMode": 0,
+              "selectionRevision": "6",
+              "shape": 6,
+              "surface": {
+                "available": true,
+                "height": 1010,
+                "width": 1431
+              },
+              "table": {
+                "columnId": "00000000000000000000000000000000",
+                "objectId": "00000000000000000000000000000000",
+                "rowId": "00000000000000000000000000000000"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "1"
+              },
+              "text": {
+                "composition": "0",
+                "phase": 0,
+                "selection": [
+                  0,
+                  0
+                ],
+                "sequence": "1",
+                "session": "0"
+              },
+              "tool": 2
+            },
+            "throughCommit": {
+              "ordinal": "7",
+              "runtimeEpoch": "1"
+            },
+            "frame": {
+              "metadata": {
+                "schema": "g5-qualified-default-readback-v1",
+                "id": 1,
+                "role": "canonical",
+                "status": "VALID",
+                "started": 2164.3000000715256,
+                "selected": {
+                  "readFramebuffer": "DEFAULT",
+                  "drawFramebuffer": "DEFAULT",
+                  "readBuffer": 1029,
+                  "pixelPackBuffer": "NONE",
+                  "pack": {
+                    "PACK_ALIGNMENT": 1,
+                    "PACK_ROW_LENGTH": 0,
+                    "PACK_SKIP_ROWS": 0,
+                    "PACK_SKIP_PIXELS": 0
+                  }
+                },
+                "errors": {
+                  "preexisting": {
+                    "codes": [],
+                    "truncated": false
+                  },
+                  "setup": {
+                    "codes": [],
+                    "truncated": false
+                  },
+                  "read": {
+                    "codes": [],
+                    "truncated": false
+                  },
+                  "restore": {
+                    "codes": [],
+                    "truncated": false
+                  }
+                },
+                "restoration": {
+                  "status": "RESTORED",
+                  "failures": []
+                },
+                "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+                "canvas": {
+                  "id": "axiom-sdk-1-svjpci082ue-canonical",
+                  "identity": "canvas-1",
+                  "width": 2862,
+                  "height": 2020
+                },
+                "context": {
+                  "identity": "context-2",
+                  "attributes": {
+                    "alpha": true,
+                    "antialias": false,
+                    "depth": true,
+                    "desynchronized": false,
+                    "failIfMajorPerformanceCaveat": false,
+                    "powerPreference": "default",
+                    "premultipliedAlpha": true,
+                    "preserveDrawingBuffer": true,
+                    "stencil": true,
+                    "xrCompatible": false
+                  },
+                  "drawingBufferWidth": 2862,
+                  "drawingBufferHeight": 2020,
+                  "lost": false
+                },
+                "before": {
+                  "readFramebuffer": "DEFAULT",
+                  "drawFramebuffer": "DEFAULT",
+                  "readBuffer": 1029,
+                  "pixelPackBuffer": "NONE",
+                  "pack": {
+                    "PACK_ALIGNMENT": 4,
+                    "PACK_ROW_LENGTH": 0,
+                    "PACK_SKIP_ROWS": 0,
+                    "PACK_SKIP_PIXELS": 0
+                  }
+                },
+                "rectangle": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 2862,
+                  "height": 2020,
+                  "origin": "top-left",
+                  "readY": 0
+                },
+                "defaultReadBufferBefore": 1029,
+                "defaultReadBufferAfter": 1029,
+                "after": {
+                  "readFramebuffer": "DEFAULT",
+                  "drawFramebuffer": "DEFAULT",
+                  "readBuffer": 1029,
+                  "pixelPackBuffer": "NONE",
+                  "pack": {
+                    "PACK_ALIGNMENT": 4,
+                    "PACK_ROW_LENGTH": 0,
+                    "PACK_SKIP_ROWS": 0,
+                    "PACK_SKIP_PIXELS": 0
+                  }
+                },
+                "finished": 2180.5
+              },
+              "state": {
+                "activeContacts": 0,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "canRedo": false,
+                "canUndo": true,
+                "creationMode": false,
+                "data": {
+                  "attached": false,
+                  "byteCapacity": 33554432,
+                  "capacity": 1024,
+                  "closing": false,
+                  "fault": false,
+                  "latest": null,
+                  "pending": 0,
+                  "pendingBytes": 0,
+                  "releasedOrdinal": "0",
+                  "statusCapacity": 4096,
+                  "statusRecords": 0
+                },
+                "documentId": "99999999999999999999999999999999",
+                "eraserMode": 2,
+                "generation": "7",
+                "lastCommit": {
+                  "cloudSynced": 0,
+                  "localDurable": 0,
+                  "operationId": "e3313d8efe45dbe94605ae2eb66a3734",
+                  "ordinal": "7",
+                  "presentedGeneration": "7",
+                  "runtimeEpoch": "1"
+                },
+                "objects": 44,
+                "primary": "e1313d8efe45db694605ae2eb66a377b",
+                "selected": [
+                  "e1313d8efe45db694605ae2eb66a377b"
+                ],
+                "selectionMode": 0,
+                "selectionRevision": "6",
+                "shape": 6,
+                "surface": {
+                  "available": true,
+                  "height": 1010,
+                  "width": 1431
+                },
+                "table": {
+                  "columnId": "00000000000000000000000000000000",
+                  "objectId": "00000000000000000000000000000000",
+                  "rowId": "00000000000000000000000000000000"
+                },
+                "target": {
+                  "attachmentEpoch": "2",
+                  "runtimeEpoch": "1",
+                  "viewEpoch": "1",
+                  "viewId": "1"
+                },
+                "text": {
+                  "composition": "0",
+                  "phase": 0,
+                  "selection": [
+                    0,
+                    0
+                  ],
+                  "sequence": "1",
+                  "session": "0"
+                },
+                "tool": 2
+              },
+              "at": 2180.600000023842,
+              "byteLength": 23124960,
+              "sha256": "2e4bbc4838f4e2780bef0a845ea812509593ac7c7d751674f2d8e6f7ae10ebc4"
+            },
+            "persistedAt": 2199.2000000476837
+          },
+          "knownStickyTransform": [
+            1,
+            0,
+            0,
+            1,
+            1130,
+            530
+          ],
+          "completedSticky": {
+            "actions": [
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": false,
+                "reason": 18,
+                "state": 0
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": false,
+                "reason": 12,
+                "state": 0
+              },
+              {
+                "available": true,
+                "reason": 0,
+                "state": 1
+              },
+              {
+                "available": false,
+                "reason": 11,
+                "state": 0
+              },
+              {
+                "available": false,
+                "reason": 12,
+                "state": 0
+              },
+              {
+                "available": false,
+                "reason": 14,
+                "state": 0
+              },
+              {
+                "available": false,
+                "reason": 13,
+                "state": 2
+              },
+              {
+                "available": false,
+                "reason": 13,
+                "state": 2
+              },
+              {
+                "available": false,
+                "reason": 13,
+                "state": 2
+              }
+            ],
+            "appearance": {
+              "fill": [
+                1,
+                1,
+                0.5,
+                1
+              ],
+              "fillEnabled": true,
+              "opacity": 1,
+              "stroke": [
+                0.10000000149011612,
+                0.20000000298023224,
+                0.30000001192092896,
+                1
+              ],
+              "strokeEnabled": true,
+              "strokeWidth": 2
+            },
+            "bounds": [
+              1129,
+              529,
+              1331,
+              731
+            ],
+            "count": 1,
+            "generation": "18",
+            "groupScope": null,
+            "height": 0,
+            "kind": 8,
+            "primary": "eb313d8efe45db694605ae2eb66a377b",
+            "reason": 0,
+            "roots": [
+              "eb313d8efe45db694605ae2eb66a377b"
+            ],
+            "selectionRevision": "7",
+            "status": 1,
+            "transform": [
+              1,
+              0,
+              0,
+              1,
+              1130,
+              530
+            ],
+            "width": 0
+          },
+          "operations": [
+            {
+              "at": 1039.4000000953674,
+              "bytes": 271
+            },
+            {
+              "at": 1093.7000000476837,
+              "bytes": 236
+            },
+            {
+              "at": 1172.9000000953674,
+              "bytes": 465
+            },
+            {
+              "at": 1282.2000000476837,
+              "bytes": 194
+            },
+            {
+              "at": 1282.2000000476837,
+              "bytes": 207
+            },
+            {
+              "at": 1312.6000000238419,
+              "bytes": 88
+            },
+            {
+              "at": 1343,
+              "bytes": 126
+            },
+            {
+              "at": 3807.7000000476837,
+              "bytes": 667892
+            },
+            {
+              "at": 3807.8000000715256,
+              "bytes": 6210
+            },
+            {
+              "at": 5218.600000023842,
+              "bytes": 667892
+            },
+            {
+              "at": 5218.600000023842,
+              "bytes": 6210
+            },
+            {
+              "at": 6637.600000023842,
+              "bytes": 667892
+            },
+            {
+              "at": 8139.800000071526,
+              "bytes": 667892
+            },
+            {
+              "at": 8139.800000071526,
+              "bytes": 6210
+            },
+            {
+              "at": 9666.100000023842,
+              "bytes": 667892
+            },
+            {
+              "at": 9666.100000023842,
+              "bytes": 6210
+            },
+            {
+              "at": 11490.400000095367,
+              "bytes": 667892
+            },
+            {
+              "at": 12415.400000095367,
+              "bytes": 126
+            }
+          ],
+          "state": {
+            "activeContacts": 0,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "canRedo": false,
+            "canUndo": true,
+            "creationMode": false,
+            "data": {
+              "attached": false,
+              "byteCapacity": 33554432,
+              "capacity": 1024,
+              "closing": false,
+              "fault": false,
+              "latest": null,
+              "pending": 0,
+              "pendingBytes": 0,
+              "releasedOrdinal": "0",
+              "statusCapacity": 4096,
+              "statusRecords": 0
+            },
+            "documentId": "99999999999999999999999999999999",
+            "eraserMode": 2,
+            "generation": "18",
+            "lastCommit": {
+              "cloudSynced": 0,
+              "localDurable": 0,
+              "operationId": "ff313d8efe45dbe94605ae2eb66a3734",
+              "ordinal": "18",
+              "presentedGeneration": "7",
+              "runtimeEpoch": "1"
+            },
+            "objects": 44,
+            "primary": "ea313d8efe45db694605ae2eb66a377b",
+            "selected": [
+              "ea313d8efe45db694605ae2eb66a377b"
+            ],
+            "selectionMode": 0,
+            "selectionRevision": "8",
+            "shape": 6,
+            "surface": {
+              "available": true,
+              "height": 1010,
+              "width": 1431
+            },
+            "table": {
+              "columnId": "ec313d8efe45db694605ae2eb66a377b",
+              "objectId": "ea313d8efe45db694605ae2eb66a377b",
+              "rowId": "ed313d8efe45db694605ae2eb66a377b"
+            },
+            "target": {
+              "attachmentEpoch": "2",
+              "runtimeEpoch": "1",
+              "viewEpoch": "1",
+              "viewId": "1"
+            },
+            "text": {
+              "composition": "0",
+              "phase": 0,
+              "selection": [
+                0,
+                0
+              ],
+              "sequence": "1",
+              "session": "0"
+            },
+            "tool": 1
+          },
+          "method": "initialcanonical+legitimatepublicUp+operationandgenerationstamps;offlinecloneanddecode"
+        },
+        "preDownSelected": {
+          "actions": [
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 18,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillEnabled": false,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            849.5,
+            749.5,
+            1090.5,
+            846.5
+          ],
+          "count": 1,
+          "generation": "18",
+          "groupScope": null,
+          "height": 0,
+          "kind": 11,
+          "primary": "ea313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "8",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "width": 0
+        },
+        "preDownTyped": {
+          "available": true,
+          "cells": [
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            },
+            {
+              "fill": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "format": {},
+              "mixedFormat": false,
+              "text": ""
+            }
+          ],
+          "columnId": "ec313d8efe45db694605ae2eb66a377b",
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "editable": true,
+          "generation": "18",
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "version": 1,
+            "width": 1
+          },
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "rowId": "ed313d8efe45db694605ae2eb66a377b",
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ]
+        },
+        "preDownAppearance": {
+          "available": true,
+          "eligible": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "excluded": [],
+          "fillEligible": [],
+          "fillExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "mixed": [],
+          "objects": [
+            {
+              "objectId": "ea313d8efe45db694605ae2eb66a377b",
+              "values": {
+                "angle": -45,
+                "cornerRadius": 0,
+                "dash": [],
+                "dashOffset": 0,
+                "enabled": false,
+                "fill": [
+                  0.25,
+                  0.550000011920929,
+                  0.8500000238418579,
+                  1
+                ],
+                "fillKind": "none",
+                "gap": 8,
+                "hatchWidth": 1,
+                "opacity": 1,
+                "roughness": 1,
+                "seed": null,
+                "stroke": [
+                  0.25,
+                  0.2800000011920929,
+                  0.3199999928474426,
+                  1
+                ],
+                "strokeEnabled": true,
+                "strokeWidth": 1,
+                "styleVersion": 1
+              }
+            }
+          ],
+          "radiusEligible": [],
+          "radiusExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "stamp": {
+            "owner": "axiom-sdk-1-svjpci082ue",
+            "token": [
+              "2",
+              "1",
+              "2",
+              "8",
+              "18",
+              "18",
+              "19",
+              "2"
+            ]
+          },
+          "strokeEligible": [],
+          "strokeExcluded": [
+            "ea313d8efe45db694605ae2eb66a377b"
+          ],
+          "values": {
+            "angle": -45,
+            "cornerRadius": 0,
+            "dash": [],
+            "dashOffset": 0,
+            "enabled": false,
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillKind": "none",
+            "gap": 8,
+            "hatchWidth": 1,
+            "opacity": 1,
+            "roughness": 1,
+            "seed": null,
+            "stroke": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "strokeEnabled": true,
+            "strokeWidth": 1,
+            "styleVersion": 1
+          },
+          "writable": true
+        }
+      },
+      "resourceSHA": null
+    },
+    {
+      "kind": "image",
+      "status": "QUALIFIED",
+      "clock": {
+        "predecessorUpStart": 10454,
+        "downStart": 12712.700000047684,
+        "lastMoveEnd": 12751.100000023842,
+        "guardPollStart": 12770,
+        "firstQualifiedObservation": 12782.5,
+        "limitation": "observation bounds; not physical input-to-photon; required evidence snapshot/readback overhead included"
+      },
+      "sinceDown": 69.79999995231628,
+      "sinceLastMove": 31.399999976158142,
+      "sinceMainUp": 2328.5,
+      "contacts": 1,
+      "finalPose": [
+        1,
+        0,
+        0,
+        1,
+        1230,
+        780
+      ],
+      "legitimateUp": {
+        "phase": "up",
+        "x": 1260,
+        "y": 810,
+        "start": 12782.900000095367,
+        "end": 12982.700000047684,
+        "contacts": 0,
+        "generation": "20"
+      },
+      "lastReadback": {
+        "metadata": {
+          "schema": "g5-qualified-default-readback-v1",
+          "id": 14,
+          "role": "canonical",
+          "status": "VALID",
+          "started": 12770,
+          "selected": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 1,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "errors": {
+            "preexisting": {
+              "codes": [],
+              "truncated": false
+            },
+            "setup": {
+              "codes": [],
+              "truncated": false
+            },
+            "read": {
+              "codes": [],
+              "truncated": false
+            },
+            "restore": {
+              "codes": [],
+              "truncated": false
+            }
+          },
+          "restoration": {
+            "status": "RESTORED",
+            "failures": []
+          },
+          "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+          "canvas": {
+            "id": "axiom-sdk-1-svjpci082ue-canonical",
+            "identity": "canvas-1",
+            "width": 2862,
+            "height": 2020
+          },
+          "context": {
+            "identity": "context-2",
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": true,
+              "stencil": true,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 2862,
+            "drawingBufferHeight": 2020,
+            "lost": false
+          },
+          "before": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "rectangle": {
+            "x": 2538,
+            "y": 1638,
+            "width": 4,
+            "height": 4,
+            "origin": "top-left",
+            "readY": 378
+          },
+          "defaultReadBufferBefore": 1029,
+          "defaultReadBufferAfter": 1029,
+          "after": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "finished": 12770.800000071526
+        },
+        "rgba": [
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255,
+          255,
+          0,
+          0,
+          255
+        ],
+        "state": {
+          "activeContacts": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": false,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "19",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f1313d8efe45dbe94605ae2eb66a3734",
+            "ordinal": "19",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "e1313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "9",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "00000000000000000000000000000000",
+            "objectId": "00000000000000000000000000000000",
+            "rowId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "at": 12782.5,
+        "status": "QUALIFIED",
+        "positive": true,
+        "selection": {
+          "actions": [
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillEnabled": false,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            1150,
+            750,
+            1230,
+            830
+          ],
+          "count": 1,
+          "generation": "19",
+          "groupScope": null,
+          "height": 0,
+          "kind": 2,
+          "primary": "e1313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "9",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            1150,
+            750
+          ],
+          "width": 0
+        },
+        "typedTable": null,
+        "discriminator": null,
+        "original": null,
+        "readbackClassification": "VALID"
+      },
+      "basis": {
+        "kind": "image",
+        "selected": {
+          "actions": [
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 18,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": true,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "available": false,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "available": false,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "appearance": {
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillEnabled": false,
+            "opacity": 1,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2
+          },
+          "bounds": [
+            1150,
+            750,
+            1230,
+            830
+          ],
+          "count": 1,
+          "generation": "19",
+          "groupScope": null,
+          "height": 0,
+          "kind": 2,
+          "primary": "e1313d8efe45db694605ae2eb66a377b",
+          "reason": 0,
+          "roots": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionRevision": "9",
+          "status": 1,
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            1150,
+            750
+          ],
+          "width": 0
+        },
+        "typed": {
+          "available": true,
+          "content": {
+            "height": 80,
+            "intrinsicHeight": 1,
+            "intrinsicWidth": 1,
+            "resourceId": "4ff6ab670a58c14270e034e2090d9a43",
+            "sourceRect": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "width": 80
+          },
+          "editable": true,
+          "objectId": "e1313d8efe45db694605ae2eb66a377b"
+        },
+        "appearance": {
+          "available": true,
+          "eligible": [],
+          "excluded": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "fillEligible": [],
+          "fillExcluded": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "mixed": [],
+          "objects": [],
+          "radiusEligible": [],
+          "radiusExcluded": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "stamp": {
+            "owner": "axiom-sdk-1-svjpci082ue",
+            "token": [
+              "2",
+              "1",
+              "2",
+              "9",
+              "19",
+              "19",
+              "20",
+              "2"
+            ]
+          },
+          "strokeEligible": [],
+          "strokeExcluded": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "values": {
+            "angle": -45,
+            "cornerRadius": 0,
+            "dash": [],
+            "dashOffset": 0,
+            "enabled": false,
+            "fill": [
+              0.25,
+              0.550000011920929,
+              0.8500000238418579,
+              1
+            ],
+            "fillKind": "none",
+            "gap": 8,
+            "hatchWidth": 1,
+            "opacity": 1,
+            "roughness": 1,
+            "seed": null,
+            "stroke": [
+              0.10000000149011612,
+              0.20000000298023224,
+              0.30000001192092896,
+              1
+            ],
+            "strokeEnabled": false,
+            "strokeWidth": 2,
+            "styleVersion": 1
+          },
+          "writable": false
+        },
+        "state": {
+          "activeContacts": 0,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canRedo": false,
+          "canUndo": true,
+          "creationMode": false,
+          "data": {
+            "attached": false,
+            "byteCapacity": 33554432,
+            "capacity": 1024,
+            "closing": false,
+            "fault": false,
+            "latest": null,
+            "pending": 0,
+            "pendingBytes": 0,
+            "releasedOrdinal": "0",
+            "statusCapacity": 4096,
+            "statusRecords": 0
+          },
+          "documentId": "99999999999999999999999999999999",
+          "eraserMode": 2,
+          "generation": "19",
+          "lastCommit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "f1313d8efe45dbe94605ae2eb66a3734",
+            "ordinal": "19",
+            "presentedGeneration": "7",
+            "runtimeEpoch": "1"
+          },
+          "objects": 44,
+          "primary": "e1313d8efe45db694605ae2eb66a377b",
+          "selected": [
+            "e1313d8efe45db694605ae2eb66a377b"
+          ],
+          "selectionMode": 0,
+          "selectionRevision": "9",
+          "shape": 6,
+          "surface": {
+            "available": true,
+            "height": 1010,
+            "width": 1431
+          },
+          "table": {
+            "columnId": "00000000000000000000000000000000",
+            "objectId": "00000000000000000000000000000000",
+            "rowId": "00000000000000000000000000000000"
+          },
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "1"
+          },
+          "text": {
+            "composition": "0",
+            "phase": 0,
+            "selection": [
+              0,
+              0
+            ],
+            "sequence": "1",
+            "session": "0"
+          },
+          "tool": 1
+        },
+        "imageResourceSHA": "4ff6ab670a58c14270e034e2090d9a432caa263a14e0a25785386b0c12f880b5",
+        "reference": {
+          "status": "FROZEN_TABLE_REFERENCE_QUALIFIED",
+          "objectId": "ea313d8efe45db694605ae2eb66a377b",
+          "oldTransform": [
+            1,
+            0,
+            0,
+            1,
+            850,
+            750
+          ],
+          "newTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            780
+          ],
+          "tableWidth": 240,
+          "tableHeight": 96,
+          "rows": [
+            {
+              "id": "ed313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            },
+            {
+              "id": "ef313d8efe45db694605ae2eb66a377b",
+              "size": 48
+            }
+          ],
+          "columns": [
+            {
+              "id": "ec313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            },
+            {
+              "id": "ee313d8efe45db694605ae2eb66a377b",
+              "size": 120
+            }
+          ],
+          "grid": {
+            "color": [
+              0.25,
+              0.2800000011920929,
+              0.3199999928474426,
+              1
+            ],
+            "width": 1
+          },
+          "properties": [],
+          "sketchPresent": false,
+          "rect": {
+            "x": 2098,
+            "y": 1706,
+            "width": 4,
+            "height": 4
+          },
+          "rgba": [
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            64,
+            71,
+            82,
+            255,
+            64,
+            71,
+            82,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "oldRGBA": [
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255,
+            255
+          ],
+          "requiredPixels": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14
+          ],
+          "originalRect": {
+            "x": 2258,
+            "y": 1656,
+            "width": 4,
+            "height": 1
+          },
+          "originalColor": [
+            64,
+            71,
+            82,
+            255
+          ],
+          "originalRule": "independently VALID under captured240x96plain1pxgrid; roughness hypothesis notactualcapturedbasis",
+          "broadRect": {
+            "x": 2196,
+            "y": 1590,
+            "width": 128,
+            "height": 140
+          },
+          "pixelPolicy": "<=2 perchannel only8originalCPUfullpigmentpixels,notAAwidening; oldwhite/blank/HUD/wrongcolor/wrongpose negative",
+          "HUDproof": "point1130,828 >oldright1090+7, newright1170-40; y828 isinternalrowline faroutertop780/bottom876; gridcoreAAabsentCPU",
+          "oracleScope": "localized cache-disabledCPU reference sharespainteralgorithm;independentofGPU/cache/scheduler,emptytext nofont",
+          "referenceSha256": "a9c8e6faaabc31fe29951033cb1a0ae63d7c9609ea13360eb41b6387e702eacd",
+          "oldReferenceSha256": "9519f8d05285b37876fcddcefef557bcac21cff535867f1d927ea17c86e2104d",
+          "oracleSha256": "ba3cd9ed5aae86fe48a951bfbfdccf830ccf59a49d2a11cede09298660be08bb",
+          "sourceSha256": "6a9be4c058ab8fd633bfcbc00d77ea52e00e996b3d8646a76f517817b47f49ad",
+          "maximumDelta": 2,
+          "effectiveDelta": [
+            80,
+            32
+          ],
+          "effectiveTransform": [
+            1,
+            0,
+            0,
+            1,
+            930,
+            782
+          ],
+          "discriminator": {
+            "rect": {
+              "x": 2098,
+              "y": 1753,
+              "width": 4,
+              "height": 1
+            },
+            "requiredPixels": [
+              1,
+              2
+            ],
+            "maximumDelta": 2,
+            "derivation": "internalverticalgrid x=930+120; y=(unsnappedbottom876+snappedbottom878)/2 minus0.5=876.5,1.5pxinside snappedbottom and0.5pxoutside unsnappedbottom; excludes purpleouterline, provenactualnonHUDpigmentagainstCPU",
+            "not_first_frame": true,
+            "rgba": [
+              255,
+              255,
+              255,
+              255,
+              64,
+              71,
+              82,
+              255,
+              64,
+              71,
+              82,
+              255,
+              255,
+              255,
+              255,
+              255
+            ]
+          }
+        }
+      },
+      "resourceSHA": "4ff6ab670a58c14270e034e2090d9a432caa263a14e0a25785386b0c12f880b5"
+    }
+  ],
+  "no_cancel": true,
+  "no_intersettle": true,
+  "no_hostIOtransition": true,
+  "scope": "syntheticfirstqualifiedobservation notphysicalphoton",
+  "snap_reference": ".aegis/results/G5-crossframe-history-pressure-r1/{sticky,table,image}-pose-reference.json"
+}

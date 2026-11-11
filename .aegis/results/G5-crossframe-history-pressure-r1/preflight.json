@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "package_sha256": "4053b72b371c0072b28aa1ed041ee785f4722d68cacafbb4665c2d4841422ca9",
+  "cursor": "EXACT_CURSOR89325c46",
+  "source_delta": " runtime/render/CMakeLists.txt                      |  10 ++\n runtime/render/src/exact_history_path_observer.hpp |   5 +-\n runtime/render/src/selection_region_geometry.cpp   | 108 ++++++++++++++++-----\n runtime/render/src/skia_mask_history.hpp           |  22 ++++-\n 4 files changed, 115 insertions(+), 30 deletions(-)\n",
+  "index_empty": true,
+  "binding": "PackageBindingPreflight.json",
+  "Evidence": "EvidenceContractPreflight.json",
+  "native23pass": true,
+  "numeric634pass": true,
+  "driver": "driver-preflight.json",
+  "SDK": [
+    "normal-sdk-manifest.json",
+    "diagnostic-sdk-manifest.json"
+  ],
+  "browser_starts": 0,
+  "causalRED": "native-red.json",
+  "repairGREEN": "native-green.json",
+  "unresolved_semantic_decisions": []
+}

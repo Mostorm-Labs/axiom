@@ -1,0 +1,45 @@
+{
+  "status": "COMPLETE",
+  "parallelism": 1,
+  "invocations": [
+    {
+      "plan": {
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-final-ink.axsnap",
+        "snapshot_sha256": "65000ba61d84bbfae8e255aea226943ffe033f86c7d2c2bcb3c7119cd673c03e",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "seconds": 60,
+        "rss_mib": 4096
+      },
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "--pixels",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/candidate-mixed-feedback-final-ink.axsnap",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-crossframe-history-pressure-r1/pixels/reference-0/reference"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 10.490376292,
+        "peak_process_family_rss_kib": 279136,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 60,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ]
+}
