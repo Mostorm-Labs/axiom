@@ -1,0 +1,61 @@
+{
+  "status": "RESIDENT_AND_CONSTRUCTION_SEPARATELY_CHARGED",
+  "decision_sha256": "152d06eab31013f643c0bcab47f7d7b94ac45828dcc8f62c9c6ee2fd891fcfcb",
+  "resident_cap": 8388608,
+  "construction_single_item_bound": 8388608,
+  "maxEntries": 512,
+  "global_defaults_unchanged": {
+    "desktop": [
+      256,
+      512,
+      64
+    ],
+    "conservative": [
+      32,
+      96,
+      8
+    ]
+  },
+  "old_aggregate_policy_changed": true,
+  "new_policy": "onefullprechargedRecordedstagingestimate coexistswithresidentcap, independentglobalhardenforced; afterconstructionresidentquotareservedbeforestagingreleased;doublechargeallowed",
+  "long_observed": {
+    "resident_peak": 8383628,
+    "construction_peak": 6747248,
+    "global_construction_peak": 25347652
+  },
+  "growth_observed": {
+    "combined_peak": 9120821,
+    "global_peak": 20450855,
+    "construction_peak": 733808,
+    "final_staging": 0
+  },
+  "memory_cases": {
+    "CPU_not_GPU_epoch": true,
+    "combined_owner_upper_bound": 7143433,
+    "construction_peak": 6747248,
+    "external_pins_clear_fork_release0": true,
+    "global_peak": 7143433,
+    "resident_cap": 8388608,
+    "resident_peak": 396185,
+    "single_construction": true,
+    "staging_peak": 6747248,
+    "staging_to_resident_transfer": true,
+    "status": "PASS",
+    "tiny_global_denial_recovery": true
+  },
+  "noGPU_epochattachment": "RecordedCPUalloc excludedkPixelResourceClasses;testedlivepixelEpochrelease0",
+  "peaklimitation": "localconstructionestimate retains original conservative4096/segment;notguaranteed exactnativeallocator/driverRSS. rawactualbytes vsreserved bothreported;no unchargednewpool",
+  "sourcecloneandCOW": "candidatefullgeometryclone+path sharedcopy covered byconstructionestimate, pathaliasreset beforestagingrelease, residentdoublecharge duringtransfer",
+  "externalpins_afterclear_charged": true,
+  "alllastlease0": true,
+  "long_final_transfer_observed": {
+    "global_peak": 25347652,
+    "construction_peak": 6747248,
+    "combined_peak": 15116631,
+    "final_staging": 0
+  },
+  "transfer_peak_observed": 25347652,
+  "global_peak_label": "maxactualbudgetusedatconstruction/transferguardedevents; allget-pathallocationpeak accounted byfullconservativeestimate,notexactOSRSS",
+  "allowner_conservative_bound": 15268252,
+  "resident_capacity": "8MiB retainedpath/source/proof/metadata incl externalpins; budgetaddendumallowedcoexistingfullyglobalchargedconstruction"
+}

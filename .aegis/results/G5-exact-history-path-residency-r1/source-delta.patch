@@ -1,0 +1,226 @@
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -1,5 +1,6 @@
+ #include "canvas/render/selection_region_geometry.hpp"
+ #include "selection_region_geometry_internal.hpp"
++#include "exact_history_path_observer.hpp"
+ #include "canvas/foundation/internal/g5_observation.hpp"
+ #include "canvas/scene/sketch_geometry.hpp"
+ #include "canvas/ink/compact_geometry.hpp"
+@@ -426,6 +427,10 @@
+     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+     unsigned cohortDepth=0;
++    // Retained CPU representations obey capacity. One synchronous construction
++    // has a separate, fully precharged global staging lease; it is not another
++    // resident cache or a pixel/GPU epoch allocation.
++    bool constructing=false;
+     std::function<void()> cohortPressure;
+     bool cohortPressureAttempted=false;
+     std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
+@@ -458,7 +463,7 @@
+         if(refusal!=refusals.end()&&(victim==entries.end()||(*refusal)->used<(*victim)->used)&&
+            (plan==histories.end()||(*refusal)->used<(*plan)->used)){refusals.erase(refusal);return true;}
+         if(plan!=histories.end()&&(victim==entries.end()||(*plan)->used<(*victim)->used)){histories.erase(plan);return true;}
+-        if(victim!=entries.end()){entries.erase(victim);return true;}
++        if(victim!=entries.end()){HP_OBSERVE(HistoryPathEvent::kEvict,victim->get(),&(*victim)->geometry,usage->bytes,0,(*victim)->bytes,size(),false);entries.erase(victim);return true;}
+         // Retire proven cohort results only after idle paths/proofs/draw plans;
+         // their pins are the currently admitted work, not stale cache entries.
+         if(!cohortQueries.empty()){
+@@ -566,29 +571,57 @@
+     const auto base=sizeof(Entry)+raw+65536;
+     if(!state.budget||base>state.capacity||units>(state.capacity-base)/4096)return denied();
+     const auto estimate=base+units*4096;
++    HP_OBSERVE(HistoryPathEvent::kRequest,nullptr,&geometry,state.usage->bytes,estimate,0,state.size(),historical);
++    if(state.constructing)return denied();
+     std::optional<std::uint64_t> token;
+     for(;;){
+-        if(state.size()<512&&state.usage->bytes<=state.capacity-estimate)
+-            token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);
++        // A large prospective PathOps working set must not evict completed
++        // paths merely to leave the same amount free in the resident cache.
++        // Keep the original per-construction bound/estimate, and charge every
++        // byte to the existing shared hard budget before doing any work.
++        token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true,0);
+         if(token)break;if(!state.evict())return denied();
+     }
+     resources::ResourceLease lease(state.budget,*token);
++    state.constructing=true;
++    struct Construction {
++        bool& active;~Construction(){active=false;}
++    } construction{state.constructing};
++    HP_OBSERVE(HistoryPathEvent::kConstruction,nullptr,&geometry,state.usage->bytes,estimate,state.budget->used(),state.size(),historical);
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     const auto started=std::chrono::steady_clock::now();
+ #endif
+     auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;
+-    const auto path=erasePath(geometry,&unions);
++    auto path=erasePath(geometry,&unions);
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
+         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+ #endif
+     ++(historical?state.stats.history.historyPathBuilds:state.stats.history.queryPathBuilds);
+     if(!path||!path->isFinite())return denied();
++    HP_OBSERVE(HistoryPathEvent::kBuild,nullptr,&geometry,state.usage->bytes,estimate,path->approximateBytesUsed(),state.size(),historical);
+     auto candidate=std::make_shared<Entry>();candidate->geometry=geometry;candidate->path=*path;
+     const auto bytes=sizeof(Entry)+raw+256+path->approximateBytesUsed();
+-    if(bytes>estimate||!lease.shrink(bytes))return denied();
+-    candidate->lease=std::move(lease);candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
+-    state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;return candidate;
++    if(bytes>estimate||bytes>state.capacity)return denied();
++    while(state.size()>=512||state.usage->bytes>state.capacity-bytes)
++        if(!state.evict())return denied();
++    std::optional<std::uint64_t> resident;
++    for(;;){
++        // Both leases overlap until all construction aliases are gone. A
++        // conservative double charge is preferable to prematurely shrinking
++        // staging or treating a retained CPU path as GPU scratch.
++        resident=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
++        if(resident)break;if(!state.evict())return denied();
++    }
++    HP_OBSERVE(HistoryPathEvent::kTransfer,nullptr,&geometry,state.usage->bytes,estimate,state.budget->used(),state.size(),historical);
++    // PathOps temporaries have returned; drop the remaining local COW alias
++    // before releasing its construction lease. The complete geometry/path is
++    // covered throughout, first by staging and then by its resident lease.
++    path.reset();
++    candidate->lease=resources::ResourceLease(state.budget,*resident);
++    lease.reset();
++    candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
++    state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;HP_OBSERVE(HistoryPathEvent::kAdmit,candidate.get(),&geometry,state.usage->bytes,estimate,bytes,state.size(),historical);return candidate;
+ }
+ namespace {
+ bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
+@@ -781,6 +814,7 @@
+     if(!proof||proof->usage!=impl_->usage||index>=proof->records.size())return {};
+     ++impl_->stats.history.exactPathLookups;
+     if(auto known=proof->paths[index].lock()){++impl_->stats.history.exactPathHits;return known;}
++    HP_OBSERVE(HistoryPathEvent::kProofMiss,proof.get(),&std::as_const(proof->records)[index].geometry,impl_->usage->bytes,0,0,impl_->size(),true);
+     auto path=get(std::as_const(proof->records)[index].geometry,true);
+     if(path)proof->paths[index]=path;
+     return path;
+--- /dev/null
++++ b/runtime/render/src/exact_history_path_observer.hpp
+@@ -0,0 +1,20 @@
++#pragma once
++// Bounded native qualification seam only. No consumer API or ordinary tracing.
++#if defined(AXIOM_UR2D_TESTS)
++#include "canvas/semantic/erase_mask.hpp"
++#include <cstddef>
++#include <cstdint>
++namespace canvas::render::internal {
++enum class HistoryPathEvent {kRequest,kEvict,kProofMiss,kBuild,kAdmit,kDeny,kConstruction,kTransfer};
++struct HistoryPathObservation {
++ HistoryPathEvent event;const void* entry=nullptr;const semantic::EraseMaskGeometry* geometry=nullptr;
++ std::size_t local=0,estimate=0,actual=0,cardinality=0;bool historical=false;
++};
++using HistoryPathObserver=void(*)(const HistoryPathObservation&);
++inline thread_local HistoryPathObserver historyPathObserver=nullptr;
++inline void observeHistoryPath(const HistoryPathObservation& o){if(historyPathObserver)historyPathObserver(o);}
++}
++#define HP_OBSERVE(...) ::canvas::render::internal::observeHistoryPath({__VA_ARGS__})
++#else
++#define HP_OBSERVE(...) ((void)0)
++#endif
+--- /dev/null
++++ b/runtime/render/tests/exact_history_path_residency_test.cpp
+@@ -0,0 +1,36 @@
++#define main hpOwnerFixtureMain
++#include "ur2d_selection_up_test.cpp"
++#undef main
++#include "../src/exact_history_path_observer.hpp"
++#include "canvas/semantic/snapshot.hpp"
++#include "../../interaction/src/partial_erase_geometry.hpp"
++#include "../src/skia_ink_layers.hpp"
++#include "include/core/SkSurface.h"
++#include <map>
++namespace {
++std::vector<RuntimeSceneRecord> captured(const char* path){std::ifstream f(path,std::ios::binary);std::vector<std::uint8_t>b{std::istreambuf_iterator<char>(f),{}};auto d=semantic::SnapshotCodec::decode(b,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(d.ok(),"captured canonical source");std::vector<RuntimeSceneRecord>out;for(const auto&o:d.snapshot->objects){RuntimeSceneRecord r;r.objectId=o.id;r.kind=o.kind;r.kindVersion=o.kind_version;r.content=o.content;r.transform=o.transform;r.eraseMasks=o.erase_masks;r.properties=o.properties;out.push_back(r);}return out;}
++json workDelta(const EraseMaskPathCache::Work&a,const EraseMaskPathCache::Work&b){return{{"path_builds",b.builds-a.builds},{"query_unions",b.history.queryUnionOps-a.history.queryUnionOps},{"history_unions",b.history.historyUnionOps-a.history.historyUnionOps},{"local_bytes",b.bytes},{"memo",b.equivalentQueryHits-a.equivalentQueryHits}};}
++json observations=json::array();std::vector<semantic::EraseMaskGeometry> observedGeometries;std::size_t observerDropped=0,globalPeak=0,constructionPeak=0,combinedPeak=0;
++std::string maskKey(const semantic::EraseMaskGeometry& geometry){
++ // Full canonical values remain in the hash-bound snapshot; match by exact
++ // geometry comparison below, never use this diagnostic fingerprint as a key.
++ std::uint64_t h=1469598103934665603ULL;const auto add=[&](const void*p,std::size_t n){for(std::size_t i=0;i<n;++i)h=(h^static_cast<const unsigned char*>(p)[i])*1099511628211ULL;};
++ std::visit([&](const auto& g){if constexpr(requires{g.segments;})for(const auto& s:g.segments){const double a[]={s.p0.position.x,s.p0.position.y,s.p0.radius,s.p1.position.x,s.p1.position.y,s.p1.radius,s.control1.x,s.control1.y,s.control2.x,s.control2.y};add(a,sizeof(a));}else{const auto n=g.path.commands.size();add(&n,sizeof(n));}},geometry);return std::to_string(h);
++}
++void observe(const HistoryPathObservation&o){if(o.event==HistoryPathEvent::kConstruction){globalPeak=std::max(globalPeak,o.actual);constructionPeak=std::max(constructionPeak,o.estimate);combinedPeak=std::max(combinedPeak,o.local+o.estimate);}if(observations.size()>=4096){++observerDropped;return;}const auto units=o.geometry?std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},*o.geometry):0;
++ std::size_t identity=0;if(o.geometry){auto it=std::find(observedGeometries.begin(),observedGeometries.end(),*o.geometry);if(it==observedGeometries.end()){observedGeometries.push_back(*o.geometry);identity=observedGeometries.size();}else identity=std::size_t(it-observedGeometries.begin())+1;}
++ observations.push_back({{"geometry_id",identity},{"kind",unsigned(o.event)},{"entry",reinterpret_cast<std::uintptr_t>(o.entry)},{"geometry",o.geometry?maskKey(*o.geometry):""},{"segments",units},{"local",o.local},{"estimate",o.estimate},{"actual",o.actual},{"cardinality",o.cardinality},{"historical",o.historical}});
++}
++}
++int main(int argc,char**argv){try{
++ require(argc==4,"usage capturedhistory output mode");auto records=captured(argv[1]);auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});auto pool=std::make_shared<SourceRetentionPool>();PreparedGeometryCache bodies;bodies.setRetentionPool(pool);auto paths=std::make_shared<EraseMaskPathCache>();paths->setRetentionPool(pool);RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;
++ auto surface=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));surface->getCanvas()->save();surface->getCanvas()->clipRect(SkRect::MakeEmpty());SkiaInkLayers layers;CompactCoverageTargets targets;targets.budget=budget;RenderCacheWork draw;
++ for(const auto&r:records){ReferenceTraversalEntry e;e.record=r;e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(r.content)};const auto body=bodies.get(e,options,budget,true);require(body&&body->ready(),"body");bool painted=false,pending=false;(void)layers.draw(*surface->getCanvas(),*surface,e,SkMatrix::I(),SkIRect::MakeWH(256,128),nullptr,options,budget,pool,targets,draw,painted,pending,std::shared_ptr<PreparedGeometryCache>(&bodies,[](auto*){}),body,paths);}
++ surface->getCanvas()->restore();json passes=json::array();historyPathObserver=observe;
++ for(unsigned pass=0;pass<3;++pass){const auto before=paths->work();paths->beginCohort([&]{(void)layers.retireIdleHistoryPreparation();});json decisions=json::array();
++ for(const auto&r:records){std::vector<foundation::WorldPoint> trace{{300+float(pass),230},{300+float(pass),242},{300+float(pass),266}};const auto query=interaction::partialEraseGeometry(trace,r.transform,16);require(bool(query),"local query");decisions.push_back(unsigned(paths->query(r,*query,budget,8U*1024U*1024U,&bodies,&options)));}
++ paths->endCohort();const auto after=paths->work();passes.push_back({{"pass",pass},{"work",workDelta(before,after)},{"history_builds",after.history.historyPathBuilds-before.history.historyPathBuilds},{"decisions",decisions},{"global",budget->used()}});}
++ historyPathObserver=nullptr;json full=json::array();for(const auto& geometry:observedGeometries){json row=json::array();std::visit([&](const auto&g){if constexpr(requires{g.segments;})for(const auto&s:g.segments)row.push_back({s.p0.position.x,s.p0.position.y,s.p0.radius,s.p1.position.x,s.p1.position.y,s.p1.radius,s.control1.x,s.control1.y,s.control2.x,s.control2.y});},geometry);full.push_back(row);}
++ json v{{"complete_geometry_values",full},{"passes",passes},{"events",observations},{"observer_dropped",observerDropped},{"sizeofSegment",sizeof(semantic::EraseCubicSegment)},{"global_peak",globalPeak},{"construction_peak",constructionPeak},{"combined_peak",combinedPeak},{"final_staging",budget->snapshot(resources::ResourceClass::kRecorded).staging}};layers.clear();paths->clear();bodies.clear();targets.clear();v["last_release_bytes"]=budget->used();require(budget->used()==0,"lease leak");std::ofstream(argv[2])<<v.dump(2)<<'\n';std::cout<<passes.dump()<<std::endl;
++ if(std::string_view(argv[3])=="--verify")require(passes[2]["history_builds"].get<unsigned>()==0,"RETAINED_EXACT_HISTORY_REBUILT_ON_SUCCESSOR");return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
+--- /dev/null
++++ b/runtime/render/tests/exact_history_path_memory_test.cpp
+@@ -0,0 +1,40 @@
++#define main hpMemoryExistingFixtureMain
++#include "ur2d_selection_up_test.cpp"
++#undef main
++#include "../src/exact_history_path_observer.hpp"
++#include <array>
++namespace {
++std::shared_ptr<resources::ResourceBudgetManager> observedBudget;
++std::size_t residentPeak=0,constructionPeak=0,globalPeak=0,stagingPeak=0,constructions=0;
++void budgetObserve(const HistoryPathObservation& event){
++ if(event.event==HistoryPathEvent::kTransfer){globalPeak=std::max(globalPeak,observedBudget->used());require(observedBudget->snapshot(resources::ResourceClass::kRecorded).staging==event.estimate,"construction quota released before resident transfer");}
++ residentPeak=std::max(residentPeak,event.local);
++ if(event.event==HistoryPathEvent::kConstruction){++constructions;constructionPeak=std::max(constructionPeak,event.estimate);globalPeak=std::max(globalPeak,observedBudget->used());stagingPeak=std::max(stagingPeak,observedBudget->snapshot(resources::ResourceClass::kRecorded).staging);require(stagingPeak>=event.estimate,"full construction not globally precharged");require(observedBudget->used()>=event.estimate+event.local,"resident and staging not charged concurrently");}
++}
++semantic::SweptCircleMask sweep(unsigned count,double offset=0){semantic::SweptCircleMask value;
++ for(unsigned i=0;i<count;++i){const double x=40+offset+7*std::sin(i*.17),y=30.+i*.1;value.segments.push_back({{{x,y},5},{{x+.2,y+.1},5},{x+.07,y+.03},{x+.14,y+.07}});}return value;}
++}
++int main(int argc,char**argv){try{
++ const auto initialize=[](EraseMaskPathCache& cache,const auto& budget,std::size_t capacity){auto record=source(1,0);semantic::FilledPathMask mask;mask.path.commands={semantic::MoveTo{{0,0}},semantic::LineTo{{1,0}},semantic::LineTo{{1,1}},semantic::ClosePath{}};(void)cache.query(record,mask,budget,capacity);cache.clear();};
++ {
++  auto budget=std::make_shared<resources::ResourceBudgetManager>();EraseMaskPathCache cache;initialize(cache,budget,8U*1024U*1024U);observedBudget=budget;historyPathObserver=budgetObserve;
++  const auto geometry=sweep(1600);auto entry=cache.get(geometry,true);require(bool(entry),"charged long history path");require(constructions==1,"single synchronous construction");require(budget->snapshot(resources::ResourceClass::kRecorded).staging==0,"completed resident remains staging");require(residentPeak<=8U*1024U*1024U&&constructionPeak<=8U*1024U*1024U&&globalPeak<=96U*1024U*1024U,"frozen memory bounds");
++  const auto oldBytes=cache.work().bytes,global=budget->used();cache.clear();require(cache.work().bytes==oldBytes&&budget->used()==global,"clear prematurely released externally pinned bytes");auto fork=geometry;fork.segments.back().control2.x+=1;auto different=cache.get(fork,true);require(different&&different!=entry,"same identity geometry fork reused different path");auto original=cache.get(geometry,true);require(original&&original!=different,"full geometry values not qualified");cache.clear();different.reset();original.reset();require(budget->used()>0,"external original pin not valid after fork/clear");entry.reset();require(budget->used()==0&&cache.work().bytes==0,"last external release leaked");historyPathObserver=nullptr;observedBudget.reset();
++ }
++ {
++  // CPU Recorded staging cannot inherit a live pixel GPU epoch or wait for it.
++  auto budget=std::make_shared<resources::ResourceBudgetManager>();EraseMaskPathCache cache;initialize(cache,budget,8U*1024U*1024U);
++  const auto epoch=budget->beginGpuEpoch(resources::kPixelResourceClasses,resources::kPixelResourceClasses);require(bool(epoch),"pixel epoch");auto path=cache.get(sweep(20),true);require(bool(path),"CPU path during pixel epoch");require(budget->endGpuEpoch(*epoch),"end pixel epoch");cache.clear();path.reset();require(budget->used()==0&&budget->snapshot(resources::ResourceClass::kRecorded).pendingRelease==0,"CPU construction unexpectedly waits for GPU");require(budget->completeGpuEpoch(*epoch),"epoch complete");
++ }
++ {
++  auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{512U*1024U,512U*1024U});EraseMaskPathCache cache;initialize(cache,budget,8U*1024U*1024U);
++  require(!cache.get(sweep(1600),true),"global hard denial bypassed");require(budget->used()==0,"denied build leaked");
++  auto tiny=cache.get(sweep(2),true);require(bool(tiny),"global denial failed to recover small work");cache.clear();tiny.reset();require(budget->used()==0,"small recovery lease leak");
++ }
++ {
++  auto budget=std::make_shared<resources::ResourceBudgetManager>();EraseMaskPathCache cache;initialize(cache,budget,128U*1024U);std::vector<std::shared_ptr<const EraseMaskPathCache::Entry>> external;
++  for(unsigned i=0;i<64;++i){auto path=cache.get(sweep(1,i*10),true);if(!path)break;external.push_back(std::move(path));require(cache.work().bytes<=128U*1024U,"external pins exceeded local resident quota");}
++  cache.clear();require(cache.work().bytes<=128U*1024U,"clear forgot externally held quota");external.clear();require(cache.work().bytes==0&&budget->used()==0,"external pressure last release");
++ }
++ json result{{"status","PASS"},{"resident_peak",residentPeak},{"construction_peak",constructionPeak},{"combined_owner_upper_bound",residentPeak+constructionPeak},{"global_peak",globalPeak},{"staging_peak",stagingPeak},{"resident_cap",8388608},{"single_construction",true},{"staging_to_resident_transfer",true},{"external_pins_clear_fork_release0",true},{"tiny_global_denial_recovery",true},{"CPU_not_GPU_epoch",true}};std::cout<<result.dump()<<'\n';if(argc==2)std::ofstream(argv[1])<<result.dump(2)<<'\n';return 0;
++}catch(const std::exception&e){historyPathObserver=nullptr;std::cerr<<e.what()<<'\n';return 1;}}
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -271,6 +271,17 @@
+     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
++    add_executable(axiom_exact_history_path_residency_tests tests/exact_history_path_residency_test.cpp)
++    target_link_libraries(axiom_exact_history_path_residency_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_compile_definitions(axiom_exact_history_path_residency_tests PRIVATE AXIOM_UR2D_TESTS=1)
++    add_executable(axiom_exact_history_path_memory_tests tests/exact_history_path_memory_test.cpp)
++    target_link_libraries(axiom_exact_history_path_memory_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_compile_definitions(axiom_exact_history_path_memory_tests PRIVATE AXIOM_UR2D_TESTS=1)
++    add_test(NAME G5ExactHistoryPathResidency COMMAND axiom_exact_history_path_residency_tests
++      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap"
++      "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-residency.json" --verify)
++    add_test(NAME G5ExactHistoryPathMemory COMMAND axiom_exact_history_path_memory_tests
++      "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-memory.json")
+     add_executable(axiom_exact_owner_residency_tests tests/exact_owner_residency_test.cpp)
+     add_executable(axiom_exact_owner_residency_pixels tests/exact_owner_residency_pixels.cpp)
+     target_link_libraries(axiom_exact_owner_residency_pixels PRIVATE canvas_runtime_render CanvasSkia::Skia)

@@ -1,0 +1,13 @@
+# Exact historical paths: reuse within the existing Render owner
+
+Use controlled worktree/branch, not Desktop ambientcheckout.9ebc3419 is now pushed and includes prior targetactivation order repair+tests+compactevidence. Demo4324/bab6 and userdocuments stay. Frozenrawmaybehardlinked; newoutputs only.
+
+Current same-source measurements: long1600 main4178.9ms includes3733.1pathbuild (16objectlocalqueries×1600sequentialunion,bodycompile0). Immediate shortsuccessor4007.9ms includes3697.8historicalpathbuild/26624unions. Growth10main7727ms includes6529.9historypath (304builds/24192unions)+717.1newquery. Nextshort385.3ms thenmostlyScene295.3ms. Start withhistoryrepeat, notGPUcoverage or totalmemory speculation.
+
+Impl::get reservesEntry+raw+65536+units4096 beforeerasePath andshrinksafterbuild. A1600segment80byte struct implies6747136+Entry transientestimate against8MiB, evenif finalfootprintsmaller. entries holdpaths;ExactHistoryProof.paths areweak; perobjectevaluator pinsendafterquery; cohortpinsresults/proofs; realSkiaInkLayers holdidle drawhistories. R4pressurecallbackcanretireonlyowneridleflattenrefs andinvalidateallmasktileepochs, notbodypixels. Causality fromreservation through actualeviction toweakmiss isstillhypothesis untilnativeRED; auditbeforepolicychange. Strongpinningeverything canstarveadmission, sofreeze peakandprogressproof.
+
+Keepfullvalue/sourceowner/transform/kind/maskhistoryqualification, IDfork/wronggeometryinvalidations andoriginalCPUcomponentoracle. Pathnumerics remainperlocalf32 andsequentialunion; no unprovedworldspaceorbalancedunion. Accountresident/temporary/COW/source/metadata beforeallocation inexistingResourceBudgetManager/localusage. No unboundednewpool/8MiBraise.
+
+Preserveknownfindings: actualmasked/recovery4foreigncontextdeletesandidleactive1011pixelgap. ThisnarrowCPUcachepackageshouldnotturnthemintoall-G5PASSorblockcurrentlongUpworkunlessnewregressioncaused. No threads/asyncUp/backgrounddesign.
+
+Harnesspreviousgrowthrow124MBwasduplicatedbyCDPreturn, hitting4GiBafterrawpersisted. Fixtransportoffline: avoidreturningtracePages twice, onlyselectedUpdiagnosticrounds1/6/10; normalinputwaveformunchanged/noreadbackinside timing. Freezeexact3windows, noautomaticadditionalretries. Nativecause/repair/meaningfulregressions first, then2seedoldnewnormalpairs, currentcandidatephase counts, nextcorrectfeedback witnesses. ReturnmeasuredremainingCPUcandidatefactsforhumancomparison.

@@ -1,0 +1,2046 @@
+{
+  "status": "COMPLETE_SELECTED_UP_ROOTS",
+  "cases": [
+    {
+      "raw": {
+        "path": ".aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-DIAGNOSTIC/long1600/raw-row.json",
+        "sha256": "5a31b19b439e252e0f9fb40b26552b1fd912cb4320b586863734f97c1c7a7ee7",
+        "bytes": 1117798
+      },
+      "pages": 7,
+      "records": 1836,
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "root_begin_count": 2,
+      "root_end_count": 2,
+      "semantic_status": "OBSERVED",
+      "snapshot_roundtrip": {
+        "objects": 40,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 44,
+        "after_revision": 46
+      },
+      "phases": [
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "main",
+          "job": "2",
+          "span": "3",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 4115.600000023842,
+          "root_ns": 4114800000,
+          "direct_children": [
+            {
+              "id": "4",
+              "tag": "exact_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 3703900000,
+              "exclusive_ns": 200000
+            },
+            {
+              "id": "251",
+              "tag": "history_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 200000
+            },
+            {
+              "id": "253",
+              "tag": "publication_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "254",
+              "tag": "semantic_apply",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 4800000,
+              "exclusive_ns": 2500000
+            },
+            {
+              "id": "257",
+              "tag": "history_finalize",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "259",
+              "tag": "observer",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 101700000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "261",
+              "tag": "scene_apply",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 295800000,
+              "exclusive_ns": 295800000
+            }
+          ],
+          "child_inclusive_sum_ns": 4106700000,
+          "residual_ns": 8100000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 4115000000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 4114800000,
+              "exclusive_ns": 8100000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 3703900000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 3703200000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 600000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 4800000,
+              "exclusive_ns": 2500000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 203400000,
+              "exclusive_ns": 101700000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 295800000,
+              "exclusive_ns": 295800000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 500000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 17,
+              "inclusive_ns": 3702300000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 51,
+              "inclusive_ns": 3677900000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 48,
+              "inclusive_ns": 3677500000,
+              "exclusive_ns": 3677500000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 34,
+              "inclusive_ns": 13300000,
+              "exclusive_ns": 13300000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 105,
+              "inclusive_ns": 10400000,
+              "exclusive_ns": 10400000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 196,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_prefix": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 1600000,
+              "exclusive_ns": 1600000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "successor",
+          "job": "262",
+          "span": "263",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 305.2999999523163,
+          "root_ns": 304900000,
+          "direct_children": [
+            {
+              "id": "264",
+              "tag": "exact_prepare",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 6800000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "517",
+              "tag": "history_prepare",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "519",
+              "tag": "publication_prepare",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "520",
+              "tag": "semantic_apply",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 800000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "523",
+              "tag": "history_finalize",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "525",
+              "tag": "observer",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "527",
+              "tag": "scene_apply",
+              "parent": "263",
+              "job": "262",
+              "count": 1,
+              "inclusive_ns": 283300000,
+              "exclusive_ns": 283300000
+            }
+          ],
+          "child_inclusive_sum_ns": 291600000,
+          "residual_ns": 13300000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 304900000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 304900000,
+              "exclusive_ns": 13300000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 6800000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 6700000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 800000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 1400000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 283300000,
+              "exclusive_ns": 283300000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 19,
+              "inclusive_ns": 6100000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 76,
+              "inclusive_ns": 2300000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 16,
+              "inclusive_ns": 2100000,
+              "exclusive_ns": 2100000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 38,
+              "inclusive_ns": 3700000,
+              "exclusive_ns": 3700000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 19,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 259,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        }
+      ],
+      "work": [
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "main",
+          "job": "2",
+          "span": "3",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 5139221,
+          "history_plan_ready": 17,
+          "history_plan_absent": 23,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 25600,
+          "history_union_operations": 1024,
+          "equivalent_memo_cumulative": 23,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 32,
+          "query_path_timed_ns": 3606400000,
+          "history_path_timed_ns": 71100000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "successor",
+          "job": "262",
+          "span": "263",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 5549957,
+          "history_plan_ready": 19,
+          "history_plan_absent": 21,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 144,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 44,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 2100000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        }
+      ]
+    },
+    {
+      "raw": {
+        "path": ".aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-DIAGNOSTIC/growth10/raw-row.json",
+        "sha256": "d16bcb620b14b6587dde29359923a3a38ed51f17e515aa3387e56c6abdd94076",
+        "bytes": 1183820
+      },
+      "pages": 280,
+      "records": 88207,
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "root_begin_count": 6,
+      "root_end_count": 6,
+      "semantic_status": "OBSERVED",
+      "snapshot_roundtrip": {
+        "objects": 40,
+        "total_masks": 840,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 61,
+        "after_revision": 63
+      },
+      "phases": [
+        {
+          "case": "growth10",
+          "round": 1,
+          "gesture": "main",
+          "job": "2",
+          "span": "3",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 906.5999999046326,
+          "root_ns": 905800000,
+          "direct_children": [
+            {
+              "id": "4",
+              "tag": "exact_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 837300000,
+              "exclusive_ns": 200000
+            },
+            {
+              "id": "250",
+              "tag": "history_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "252",
+              "tag": "publication_prepare",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "253",
+              "tag": "semantic_apply",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 2700000,
+              "exclusive_ns": 1600000
+            },
+            {
+              "id": "256",
+              "tag": "history_finalize",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "258",
+              "tag": "observer",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 12100000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "260",
+              "tag": "scene_apply",
+              "parent": "3",
+              "job": "2",
+              "count": 1,
+              "inclusive_ns": 44700000,
+              "exclusive_ns": 44700000
+            }
+          ],
+          "child_inclusive_sum_ns": 896900000,
+          "residual_ns": 8900000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 906100000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 905800000,
+              "exclusive_ns": 8900000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 837300000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 836800000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 2700000,
+              "exclusive_ns": 1600000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 24200000,
+              "exclusive_ns": 12100000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 44700000,
+              "exclusive_ns": 44700000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 17,
+              "inclusive_ns": 836300000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 51,
+              "inclusive_ns": 787700000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 47,
+              "inclusive_ns": 753200000,
+              "exclusive_ns": 753200000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 34,
+              "inclusive_ns": 28600000,
+              "exclusive_ns": 28600000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 107,
+              "inclusive_ns": 19500000,
+              "exclusive_ns": 19500000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 196,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_prefix": {
+              "count": 16,
+              "inclusive_ns": 33900000,
+              "exclusive_ns": 33900000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "growth10",
+          "round": 1,
+          "gesture": "successor",
+          "job": "261",
+          "span": "262",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 63.60000002384186,
+          "root_ns": 63100000,
+          "direct_children": [
+            {
+              "id": "263",
+              "tag": "exact_prepare",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 18600000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "516",
+              "tag": "history_prepare",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "518",
+              "tag": "publication_prepare",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "519",
+              "tag": "semantic_apply",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "522",
+              "tag": "history_finalize",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "524",
+              "tag": "observer",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "526",
+              "tag": "scene_apply",
+              "parent": "262",
+              "job": "261",
+              "count": 1,
+              "inclusive_ns": 33900000,
+              "exclusive_ns": 33900000
+            }
+          ],
+          "child_inclusive_sum_ns": 53400000,
+          "residual_ns": 9700000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 63100000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 63100000,
+              "exclusive_ns": 9700000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 18600000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 18600000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 33900000,
+              "exclusive_ns": 33900000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 19,
+              "inclusive_ns": 17800000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 76,
+              "inclusive_ns": 300000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 16,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 57,
+              "inclusive_ns": 16700000,
+              "exclusive_ns": 16700000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 67,
+              "inclusive_ns": 500000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 259,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "growth10",
+          "round": 6,
+          "gesture": "main",
+          "job": "527",
+          "span": "528",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 4480.0,
+          "root_ns": 4479500000,
+          "direct_children": [
+            {
+              "id": "529",
+              "tag": "exact_prepare",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 4337400000,
+              "exclusive_ns": 300000
+            },
+            {
+              "id": "818",
+              "tag": "history_prepare",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "820",
+              "tag": "publication_prepare",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "821",
+              "tag": "semantic_apply",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 1000000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "824",
+              "tag": "history_finalize",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "826",
+              "tag": "observer",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 10400000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "828",
+              "tag": "scene_apply",
+              "parent": "528",
+              "job": "527",
+              "count": 1,
+              "inclusive_ns": 116300000,
+              "exclusive_ns": 116300000
+            }
+          ],
+          "child_inclusive_sum_ns": 4465200000,
+          "residual_ns": 14300000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 4479500000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 4479500000,
+              "exclusive_ns": 14300000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 4337400000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 4336800000,
+              "exclusive_ns": 2600000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 1000000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 20800000,
+              "exclusive_ns": 10400000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 116300000,
+              "exclusive_ns": 116300000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 28,
+              "inclusive_ns": 4333300000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 336,
+              "inclusive_ns": 4139800000,
+              "exclusive_ns": 10700000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 181,
+              "inclusive_ns": 4129100000,
+              "exclusive_ns": 4129100000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 155,
+              "inclusive_ns": 176200000,
+              "exclusive_ns": 176200000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 58,
+              "inclusive_ns": 17200000,
+              "exclusive_ns": 17200000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 1396,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 700000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 500000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "growth10",
+          "round": 6,
+          "gesture": "successor",
+          "job": "829",
+          "span": "830",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 221.5,
+          "root_ns": 221100000,
+          "direct_children": [
+            {
+              "id": "831",
+              "tag": "exact_prepare",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 69500000,
+              "exclusive_ns": 200000
+            },
+            {
+              "id": "1120",
+              "tag": "history_prepare",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1122",
+              "tag": "publication_prepare",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1123",
+              "tag": "semantic_apply",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 900000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "1126",
+              "tag": "history_finalize",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1128",
+              "tag": "observer",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1130",
+              "tag": "scene_apply",
+              "parent": "830",
+              "job": "829",
+              "count": 1,
+              "inclusive_ns": 135700000,
+              "exclusive_ns": 135700000
+            }
+          ],
+          "child_inclusive_sum_ns": 206300000,
+          "residual_ns": 14800000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 221100000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 221100000,
+              "exclusive_ns": 14800000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 69500000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 69300000,
+              "exclusive_ns": 5000000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 900000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 135700000,
+              "exclusive_ns": 135700000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 28,
+              "inclusive_ns": 62900000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 364,
+              "inclusive_ns": 700000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 16,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 183,
+              "inclusive_ns": 60400000,
+              "exclusive_ns": 60400000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 69,
+              "inclusive_ns": 1700000,
+              "exclusive_ns": 1700000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 1366,
+              "inclusive_ns": 1300000,
+              "exclusive_ns": 1300000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "growth10",
+          "round": 10,
+          "gesture": "main",
+          "job": "1131",
+          "span": "1132",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 7706.200000047684,
+          "root_ns": 7705900000,
+          "direct_children": [
+            {
+              "id": "1133",
+              "tag": "exact_prepare",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 7429400000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "1426",
+              "tag": "history_prepare",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1428",
+              "tag": "publication_prepare",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1429",
+              "tag": "semantic_apply",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 1300000,
+              "exclusive_ns": 100000
+            },
+            {
+              "id": "1432",
+              "tag": "history_finalize",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1434",
+              "tag": "observer",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 10100000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1436",
+              "tag": "scene_apply",
+              "parent": "1132",
+              "job": "1131",
+              "count": 1,
+              "inclusive_ns": 246900000,
+              "exclusive_ns": 246900000
+            }
+          ],
+          "child_inclusive_sum_ns": 7687700000,
+          "residual_ns": 18200000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 7705900000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 7705900000,
+              "exclusive_ns": 18200000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 7429400000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 7429200000,
+              "exclusive_ns": 8600000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 1300000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 20200000,
+              "exclusive_ns": 10100000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 246900000,
+              "exclusive_ns": 246900000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 29,
+              "inclusive_ns": 7419500000,
+              "exclusive_ns": 500000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 580,
+              "inclusive_ns": 7252200000,
+              "exclusive_ns": 22500000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 320,
+              "inclusive_ns": 7229700000,
+              "exclusive_ns": 7229700000,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 87,
+              "inclusive_ns": 134700000,
+              "exclusive_ns": 134700000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 59,
+              "inclusive_ns": 32100000,
+              "exclusive_ns": 32100000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 1641,
+              "inclusive_ns": 900000,
+              "exclusive_ns": 900000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        },
+        {
+          "case": "growth10",
+          "round": 10,
+          "gesture": "successor",
+          "job": "1437",
+          "span": "1438",
+          "status": "COMPLETE_ROOT",
+          "DOM_dispatch_ms": 363.6999999284744,
+          "root_ns": 363300000,
+          "direct_children": [
+            {
+              "id": "1439",
+              "tag": "exact_prepare",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 62200000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1732",
+              "tag": "history_prepare",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1734",
+              "tag": "publication_prepare",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1735",
+              "tag": "semantic_apply",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 1400000,
+              "exclusive_ns": 200000
+            },
+            {
+              "id": "1738",
+              "tag": "history_finalize",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1740",
+              "tag": "observer",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 200000,
+              "exclusive_ns": 0
+            },
+            {
+              "id": "1742",
+              "tag": "scene_apply",
+              "parent": "1438",
+              "job": "1437",
+              "count": 1,
+              "inclusive_ns": 279400000,
+              "exclusive_ns": 279400000
+            }
+          ],
+          "child_inclusive_sum_ns": 343200000,
+          "residual_ns": 20100000,
+          "nested_totals": {
+            "input": {
+              "count": 1,
+              "inclusive_ns": 363300000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "eraser_up": {
+              "count": 1,
+              "inclusive_ns": 363300000,
+              "exclusive_ns": 20100000,
+              "incomplete": 0
+            },
+            "exact_prepare": {
+              "count": 1,
+              "inclusive_ns": 62200000,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "pathops": {
+              "count": 40,
+              "inclusive_ns": 62200000,
+              "exclusive_ns": 3500000,
+              "incomplete": 0
+            },
+            "lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "history_prepare": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "publication_prepare": {
+              "count": 1,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "semantic_apply": {
+              "count": 1,
+              "inclusive_ns": 1400000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "history_finalize": {
+              "count": 2,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "observer": {
+              "count": 2,
+              "inclusive_ns": 400000,
+              "exclusive_ns": 200000,
+              "incomplete": 0
+            },
+            "scene_apply": {
+              "count": 1,
+              "inclusive_ns": 279400000,
+              "exclusive_ns": 279400000,
+              "incomplete": 0
+            },
+            "wa_mask_construct": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_body_lookup": {
+              "count": 40,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_exact_eval": {
+              "count": 29,
+              "inclusive_ns": 57300000,
+              "exclusive_ns": 100000,
+              "incomplete": 0
+            },
+            "wa_path_lookup": {
+              "count": 609,
+              "inclusive_ns": 1100000,
+              "exclusive_ns": 1100000,
+              "incomplete": 0
+            },
+            "wa_path_build": {
+              "count": 16,
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "incomplete": 0
+            },
+            "wa_difference": {
+              "count": 116,
+              "inclusive_ns": 54600000,
+              "exclusive_ns": 54600000,
+              "incomplete": 0
+            },
+            "wa_intersection": {
+              "count": 153,
+              "inclusive_ns": 1500000,
+              "exclusive_ns": 1500000,
+              "incomplete": 0
+            },
+            "wa_history_value": {
+              "count": 1720,
+              "inclusive_ns": 1400000,
+              "exclusive_ns": 1400000,
+              "incomplete": 0
+            },
+            "wa_apply_prepare": {
+              "count": 1,
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            },
+            "wa_atomic_apply": {
+              "count": 1,
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "incomplete": 0
+            }
+          },
+          "rule": "Only direct-child inclusive times reconcile root. Nested totals overlap; never sum them as disjoint phases."
+        }
+      ],
+      "work": [
+        {
+          "case": "growth10",
+          "round": 1,
+          "gesture": "main",
+          "job": "2",
+          "span": "3",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1265492,
+          "history_plan_ready": 17,
+          "history_plan_absent": 23,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2475,
+          "history_union_operations": 1024,
+          "equivalent_memo_cumulative": 23,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 15,
+          "history_path_builds": 32,
+          "query_path_timed_ns": 681800000,
+          "history_path_timed_ns": 71400000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth10",
+          "round": 1,
+          "gesture": "successor",
+          "job": "261",
+          "span": "262",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1423716,
+          "history_plan_ready": 19,
+          "history_plan_absent": 21,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 44,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 200000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth10",
+          "round": 6,
+          "gesture": "main",
+          "job": "527",
+          "span": "528",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8383477,
+          "history_plan_ready": 28,
+          "history_plan_absent": 12,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2560,
+          "history_union_operations": 13020,
+          "equivalent_memo_cumulative": 187,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 165,
+          "query_path_timed_ns": 718400000,
+          "history_path_timed_ns": 3411100000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth10",
+          "round": 6,
+          "gesture": "successor",
+          "job": "829",
+          "span": "830",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8383359,
+          "history_plan_ready": 28,
+          "history_plan_absent": 12,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 199,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 200000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth10",
+          "round": 10,
+          "gesture": "main",
+          "job": "1131",
+          "span": "1132",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8383293,
+          "history_plan_ready": 29,
+          "history_plan_absent": 11,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2560,
+          "history_union_operations": 24192,
+          "equivalent_memo_cumulative": 278,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 304,
+          "query_path_timed_ns": 712400000,
+          "history_path_timed_ns": 6517700000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth10",
+          "round": 10,
+          "gesture": "successor",
+          "job": "1437",
+          "span": "1438",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8382224,
+          "history_plan_ready": 29,
+          "history_plan_absent": 11,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 289,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 0,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        }
+      ]
+    }
+  ],
+  "selection": "longbothUp;growthrounds1/6/10bothUp",
+  "no_duplicate_CDP_trace": true,
+  "diagnostic_not_normal_performance": true
+}

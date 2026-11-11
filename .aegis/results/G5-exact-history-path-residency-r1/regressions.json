@@ -1,0 +1,38 @@
+{
+  "status": "SCOPED_NATIVE_NUMERIC_HELPERS_PASSED_WITH_REQUIRED_WEB_MIXED_GAP",
+  "nativekeepers": {
+    "tests": 19,
+    "failures": 0,
+    "junit": "native-keepers.xml"
+  },
+  "finalmetrics": {
+    "tests": 2,
+    "passed": 2,
+    "junit": "final-metrics-junit.xml"
+  },
+  "exact_decisions": {
+    "rows": 634,
+    "mismatches": 0,
+    "evidence": "exact-parity.json"
+  },
+  "Node": {
+    "passed": 10,
+    "log": "node-final.log"
+  },
+  "Python": {
+    "passed": 4,
+    "log": "python-final.log"
+  },
+  "actualVM": [
+    "up-driver-vm.json",
+    "continuity-vm.json"
+  ],
+  "actualHTTP": "http-preflight.json",
+  "boundary": {
+    "files": 120,
+    "passed": true,
+    "log": "boundaries-final.log"
+  },
+  "knownhistoricalcontextandidlefindings_notclosed": true,
+  "no_fullproject_suitePASS": true
+}

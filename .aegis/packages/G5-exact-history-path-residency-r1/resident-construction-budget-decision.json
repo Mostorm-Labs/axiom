@@ -1,0 +1,50 @@
+{
+  "schema": "axiom-scoped-control-budget-decision-v1",
+  "status": "FROZEN_CONTROL_IMPLEMENTATION_CLARIFICATION",
+  "package": {
+    "path": ".aegis/packages/G5-exact-history-path-residency-r1/package.json",
+    "sha256": "116f41039c4873f958306a4b6b32f721a66e56039f1dd8236fc9489958c81237"
+  },
+  "authority": {
+    "user_request": "提交并修改新增修复，然后进行下一步",
+    "architecture_budget_section": {
+      "path": "docs/planning/G5_UNIFIED_RENDER_EXECUTION_BLUEPRINT_2026_11_08_R3.md",
+      "sha256": "bdb2045428de895a5b4828b14258d2fdfe7455a43f2dcb4b96c0b6afb26fb3be",
+      "statement": "预算分开描述：optional residency目标、shared hard ceiling、entry/count上限、mandatory scratch、staging/replacement、pending GPU release。"
+    },
+    "scope": "Narrow controlled implementation decision after measured reservation/eviction RED, not publicAPI/globalmemorybudget/thread design."
+  },
+  "causal_RED": {
+    "path": ".aegis/results/G5-exact-history-path-residency-r1/cause-audit.json",
+    "sha256": "9778675fd0eb4d335a128cc42a66da6eae04a82b27079cfac1aeefda718aa806"
+  },
+  "supersession": {
+    "target": "Only ambiguous local8MiB aggregate wording in execution-contract/verification HP-MEMORY/authority, as applied to one synchronous path construction estimate. All other frozen obligations/windows/oracles unchanged.",
+    "old_implementation": "Localresident entries plus full prospective constructionestimate had to fit8MiB before computing, even though finalpath~132KiB. That restriction caused measuredLRUthrash.",
+    "explicit_policy_delta": "8MiB remains hard cap for retainedexact-cache/source/proof/metadata/externallyheld allocation accounting. One synchronous construction reservation is separated and may coexist above8MiB localresident, entirely charged to sameexistingglobalResourceBudgetManager. It is a local admission policy change, not a claim previous aggregatecap was unchanged."
+  },
+  "frozen_rules": [
+    "Retained local usage <=8388608 and existing512count, including all oldexternallyheldleases acrossclear/ownerfork; full geometry/source/proof/metadata included exactly once per qualifiedallocation. No uncharged externalpins/newpool.",
+    "Before anypath/clone/PathOpswork, reserve entire existing conservativeconstruction estimate (base+units4096 etc) on existingglobalbudget. Keep existingindividualconstruction admission bound estimate<=localcapacity, so no newoversizedpath availability. Do not lowerestimate or numericunion/float order.",
+    "At most one in-progress synchronous path construction in this owner; no reentrant/recursive parallel builds. Existing thread/Runtimeowner unchanged. Worksetresident+construction <=8388608+admittedestimate AND totalglobalusage<=configuredhard. Audit both maxima explicitly; larger temporarycombined ownerpeak must be reported.",
+    "Construction quota released only after construction temporaries/COW copies are no longer live. Onretainedentry publication accountactualresidentbytes beforeownershiptransfer/retaining; useexistinglease semantics. All overlaps mustremain globallycharged; conservative doublecharge duringtransfer allowed, premature release notallowed.",
+    "CPUconstruction is not GPUwork. Do not accidentally attachtemporary CPUquota to activeGPUepoch or waitforGPUcompletion to reclaim it. IfResourceClass::kScratch would join activepixelGPUepoch, use existingnonpixelRecorded/staging admission or explicitcurrentowner mechanism withoutnewpublicAPI. Snapshot staging/currentusage/leases should reflect chosen semantics and be tested.",
+    "Onactualsharedharddenial, only safeexisting optional eviction or correctexactfallback; no claimallhistorycanstaypinnedunderexhaustion. No earlyreceipt/fakeprogress/hiddenovershoot. Testtinyglobal and externalholds/highlocalpressure, releaseall0.",
+    "Do not changeglobalsoft/hard defaults desktop256/512/64 or conservative32/96/8, localresident8MiB/512 or Brush/PathOpsnumerics. No localrelabeling of savedentrybytes as scratch to evadecap. New code must make distinctionexplicit andobservableinprivateevidence."
+  ],
+  "verification_addendum": {
+    "required": [
+      "OldcausalRED/nativepostchangeGREEN preservingindependentexactdecisions",
+      "residentpeak<=8MiB/currentconstructionestimateprecharged/fullcombined+globalpeak measured",
+      "tinyglobaldenial/externallyhelddata/clear/multipleexistingconsumers oldreferencevalid",
+      "constructiontransfer/COW/liveactualtemporaryaccounting andalllease release0",
+      "normalpaired/diagnostic/continuousfeedback closure unchanged"
+    ],
+    "not_added": [
+      "no newbrowserwindows",
+      "no extrauserapprovalgate",
+      "no broaderconcurrency/UR4 redesign"
+    ]
+  },
+  "execution": "Record design-preflight/amendment binding and continue minimalrepair same turn; all existingpackage terminalscope/return unchanged."
+}

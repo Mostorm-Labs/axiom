@@ -1,0 +1,224 @@
+{
+  "status": "UNKNOWN_TYPED_FEEDBACK_PROOF_INCOMPLETE",
+  "first_failed_stage": "table",
+  "image_status": "NOT_RUN",
+  "sticky_status": "QUALIFIED",
+  "error": "Error: typedcontent\n    at check (http://127.0.0.1:58794/driver.mjs:10:77)\n    at webConsumer (http://127.0.0.1:58794/driver.mjs:75:407)\n    at async eval (eval at evaluate (:311:30), <anonymous>:1:26)\n    at async <anonymous>:337:30",
+  "activeContacts_at_failure": 1,
+  "terminal_presented": "7",
+  "canonical_generation": "18",
+  "table_initial_public_basis": {
+    "kind": "table",
+    "id": "ea313d8efe45db694605ae2eb66a377b",
+    "selection": {
+      "actions": [
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": false,
+          "reason": 18,
+          "state": 0
+        },
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": false,
+          "reason": 12,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 12,
+          "state": 0
+        },
+        {
+          "available": true,
+          "reason": 0,
+          "state": 1
+        },
+        {
+          "available": false,
+          "reason": 11,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 12,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 14,
+          "state": 0
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "available": false,
+          "reason": 13,
+          "state": 2
+        }
+      ],
+      "appearance": {
+        "fill": [
+          0.25,
+          0.550000011920929,
+          0.8500000238418579,
+          1
+        ],
+        "fillEnabled": false,
+        "opacity": 1,
+        "stroke": [
+          0.10000000149011612,
+          0.20000000298023224,
+          0.30000001192092896,
+          1
+        ],
+        "strokeEnabled": false,
+        "strokeWidth": 2
+      },
+      "bounds": [
+        849.5,
+        749.5,
+        1090.5,
+        846.5
+      ],
+      "count": 1,
+      "generation": "3",
+      "groupScope": null,
+      "height": 0,
+      "kind": 11,
+      "primary": "ea313d8efe45db694605ae2eb66a377b",
+      "reason": 0,
+      "roots": [
+        "ea313d8efe45db694605ae2eb66a377b"
+      ],
+      "selectionRevision": "5",
+      "status": 1,
+      "transform": [
+        1,
+        0,
+        0,
+        1,
+        850,
+        750
+      ],
+      "width": 0
+    }
+  },
+  "table_request_trace": [
+    {
+      "phase": "up",
+      "x": 1160,
+      "y": 560,
+      "start": 16503.699999928474,
+      "end": 16702.5,
+      "contacts": 0,
+      "generation": "18"
+    },
+    {
+      "phase": "down",
+      "x": 880,
+      "y": 772,
+      "start": 16704.100000023842,
+      "end": 16706.299999952316,
+      "contacts": 1,
+      "generation": "18"
+    },
+    {
+      "phase": "up",
+      "x": 880,
+      "y": 772,
+      "start": 16706.399999976158,
+      "end": 16706.699999928474,
+      "contacts": 0,
+      "generation": "18"
+    },
+    {
+      "phase": "down",
+      "x": 880,
+      "y": 772,
+      "start": 16708,
+      "end": 16710.299999952316,
+      "contacts": 1,
+      "generation": "18"
+    },
+    {
+      "phase": "move",
+      "x": 888,
+      "y": 776,
+      "start": 16710.299999952316,
+      "end": 16710.5,
+      "contacts": 1,
+      "generation": "18"
+    },
+    {
+      "phase": "move",
+      "x": 920,
+      "y": 788,
+      "start": 16727.100000023842,
+      "end": 16727.399999976158,
+      "contacts": 1,
+      "generation": "18"
+    },
+    {
+      "phase": "move",
+      "x": 960,
+      "y": 802,
+      "start": 16743.399999976158,
+      "end": 16743.600000023842,
+      "contacts": 1,
+      "generation": "18"
+    },
+    {
+      "phase": "cancel",
+      "x": 960,
+      "y": 802,
+      "start": 31776.100000023842,
+      "end": 31776.5,
+      "contacts": 0,
+      "generation": "18"
+    }
+  ],
+  "expected_witness_policy": "ExistingtypedWitness: tablewidth fromcolumns(240),heightrows(96),newposition+80/30; pointx=850+240+40=1130,y=750+30+48=828;4pxwide1pxhighDPR2gridcolor expected full exact",
+  "classification_limit": "driver didnotpersist failedfeedbackvalue/probes/baseline plan untilpositive; feedbackthrowbeforepush losesfullRGBA/typedtablegridstate. Cannotprove independently whether pixelwitnesssubpixelantialias/rowline mismatch oractualstalegraphic. Contact/actualdefaultFBOwrite alone not correctcontent.",
+  "preserved_publicfacts": {
+    "no_FRAME_REJECTED_publicerror": true,
+    "owner_generation": "18",
+    "whileDown": true,
+    "no_aftertablecommit": true,
+    "cancel_cleanup_error": null
+  },
+  "knowncontextwarning_retained": 257,
+  "harness_followup": "Persist baseline/tabletyped/readbackmetadata+everyprobeincludinglastRGBA BEFOREassert; freeze independentexpectedgridnewfootprint. No automatic retry or production/lifecycle expansion.",
+  "no_more_windows_authorized": true
+}

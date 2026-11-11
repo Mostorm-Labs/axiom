@@ -1,0 +1,59 @@
+{
+  "repository": "Mostorm-Labs/axiom",
+  "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "HEAD": "9ebc3419d5a50f492f1072f3b9b51e345a772617",
+  "anchor": "9ebc3419d5a50f492f1072f3b9b51e345a772617",
+  "files": {
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "8667ddc5f0043c2fcfe6a87bcf5657a2cf6d368db1d48206021426d299735a94",
+      "before_sha256": "af88ce4ca8a3e7e9f0c3cf4501e850d66688ee0acd76ad4d8e6ac1eebfe6549f",
+      "postimage": ".aegis/results/G5-exact-history-path-residency-r1/source-postimages/runtime/render/src/selection_region_geometry.cpp",
+      "preimage": ".aegis/results/G5-exact-history-path-residency-r1/source-preimages/runtime/render/src/selection_region_geometry.cpp"
+    },
+    "runtime/render/src/exact_history_path_observer.hpp": {
+      "sha256": "6f7a04dbdabb3544d89941df08c8e5bbbd425a9b8960f80018278157cf9a0790",
+      "before_sha256": null,
+      "postimage": ".aegis/results/G5-exact-history-path-residency-r1/source-postimages/runtime/render/src/exact_history_path_observer.hpp",
+      "preimage": null
+    },
+    "runtime/render/tests/exact_history_path_residency_test.cpp": {
+      "sha256": "5b5476daf7af294a91d2a1f66d02de4202287988ef3d19ad421d913769c5de2b",
+      "before_sha256": null,
+      "postimage": ".aegis/results/G5-exact-history-path-residency-r1/source-postimages/runtime/render/tests/exact_history_path_residency_test.cpp",
+      "preimage": null
+    },
+    "runtime/render/tests/exact_history_path_memory_test.cpp": {
+      "sha256": "3b1c6838cb26851b79bfabaaf244574167cf61f87e39357adb2a7a7a7dd9b8f8",
+      "before_sha256": null,
+      "postimage": ".aegis/results/G5-exact-history-path-residency-r1/source-postimages/runtime/render/tests/exact_history_path_memory_test.cpp",
+      "preimage": null
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "f24faf16e69935e834d870cbd4bbd9b796cf4cad68dd9273619157a0fa07e2f6",
+      "before_sha256": "be5eba33ab3dcdeeedeefb68b373b677c406601d901fc181721175afeae303e3",
+      "postimage": ".aegis/results/G5-exact-history-path-residency-r1/source-postimages/runtime/render/CMakeLists.txt",
+      "preimage": ".aegis/results/G5-exact-history-path-residency-r1/source-preimages/runtime/render/CMakeLists.txt"
+    }
+  },
+  "helpers": {
+    "verification/runners/g5/exact_history_path_reduce.py": "cdf5f310acac1b165d58cac073c0d83ef9056299ebeadae46a613113ce9e5101",
+    "verification/runners/g5/exact_history_path_continuity.mjs": "1f6b117742f94a59491a8e863acf5a1439fa0f446b5d1df1ee44f119f56bbc41",
+    "verification/runners/g5/exact_history_path_runner.py": "7a11f7dd07ec9420309686a75822b9c23e9297a195e8ca8e5e5aa76ef0604e9b",
+    "verification/runners/g5/exact_history_path_up.mjs": "bb2e74562b1f462e3ce4215eb42b4830b40111bacf5decf82c5ad4f19affee07",
+    "verification/runners/g5/exact_history_path_pixels.mjs": "7c82affbc5ecbea0ae94766445cb571ea884c4566d6bc3cf787192595931354d",
+    "verification/tests/g5_exact_history_path_transport.test.mjs": "6a987a979a777faf1a8753db7cc7dbf7831f262fdd18269322c606266916289f",
+    "verification/tests/test_g5_exact_history_path_runner.py": "05855d1e1bc00b793e002d1e67fb8f7a140bd53bb063b3d0078618b507aaeaf8"
+  },
+  "source_delta_sha256": "15675c56017320d4a3b57775b82393f2e54444a2d9b5893592e36a5f8447ed26",
+  "budget_addendum": "152d06eab31013f643c0bcab47f7d7b94ac45828dcc8f62c9c6ee2fd891fcfcb",
+  "resident_capacity_policy_changed_explicitly": true,
+  "unchanged_path_numeric_function": "erasePath function f32/sequentialunionbody notmodified",
+  "noSDK_publicAPI_Brush_Operation_History_globalbudget_changes": true,
+  "unchangeddependencylocks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "no_commitpush": true,
+  "index_empty": true
+}

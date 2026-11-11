@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="2"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="5"
+	timestamp="2026-11-11T12:55:49"
+	>
+	<testcase name="G5ExactHistoryPathResidency" classname="G5ExactHistoryPathResidency" time="4.15437" status="run">
+		<properties/>
+		<system-out>[{"decisions":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"global":18133250,"history_builds":48,"pass":0,"work":{"history_unions":1168,"local_bytes":7906325,"memo":19,"path_builds":64,"query_unions":32}},{"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"global":18372263,"history_builds":16,"pass":1,"work":{"history_unions":25600,"local_bytes":8145338,"memo":19,"path_builds":32,"query_unions":32}},{"decisions":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"global":18382903,"history_builds":0,"pass":2,"work":{"history_unions":0,"local_bytes":8155978,"memo":19,"path_builds":16,"query_unions":32}}]
+</system-out>
+	</testcase>
+	<testcase name="G5ExactHistoryPathMemory" classname="G5ExactHistoryPathMemory" time="1.63703" status="run">
+		<properties/>
+		<system-out>{"CPU_not_GPU_epoch":true,"combined_owner_upper_bound":7143433,"construction_peak":6747248,"external_pins_clear_fork_release0":true,"global_peak":7143433,"resident_cap":8388608,"resident_peak":396185,"single_construction":true,"staging_peak":6747248,"staging_to_resident_transfer":true,"status":"PASS","tiny_global_denial_recovery":true}
+</system-out>
+	</testcase>
+</testsuite>

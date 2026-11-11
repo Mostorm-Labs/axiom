@@ -271,6 +271,17 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
+    add_executable(axiom_exact_history_path_residency_tests tests/exact_history_path_residency_test.cpp)
+    target_link_libraries(axiom_exact_history_path_residency_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    target_compile_definitions(axiom_exact_history_path_residency_tests PRIVATE AXIOM_UR2D_TESTS=1)
+    add_executable(axiom_exact_history_path_memory_tests tests/exact_history_path_memory_test.cpp)
+    target_link_libraries(axiom_exact_history_path_memory_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    target_compile_definitions(axiom_exact_history_path_memory_tests PRIVATE AXIOM_UR2D_TESTS=1)
+    add_test(NAME G5ExactHistoryPathResidency COMMAND axiom_exact_history_path_residency_tests
+      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap"
+      "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-residency.json" --verify)
+    add_test(NAME G5ExactHistoryPathMemory COMMAND axiom_exact_history_path_memory_tests
+      "${CMAKE_CURRENT_BINARY_DIR}/exact-history-path-memory.json")
     add_executable(axiom_exact_owner_residency_tests tests/exact_owner_residency_test.cpp)
     add_executable(axiom_exact_owner_residency_pixels tests/exact_owner_residency_pixels.cpp)
     target_link_libraries(axiom_exact_owner_residency_pixels PRIVATE canvas_runtime_render CanvasSkia::Skia)

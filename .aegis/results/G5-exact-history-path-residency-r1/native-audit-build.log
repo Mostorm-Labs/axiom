@@ -1,0 +1,14 @@
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/exact_history_path_residency_test.cpp:2:
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/exact_owner_residency_test.cpp:2:9: warning: 'main' macro redefined [-Wmacro-redefined]
+    2 | #define main ownerExistingFixtureMain
+      |         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/exact_history_path_residency_test.cpp:1:9: note: previous definition is here
+    1 | #define main hpOwnerFixtureMain
+      |         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/exact_history_path_residency_test.cpp:18:5: error: redefinition of 'main'
+   18 | int main(int argc,char**argv){try{
+      |     ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/tests/exact_owner_residency_test.cpp:17:5: note: previous definition is here
+   17 | int main(int argc,char** argv){try{
+      |     ^
+1 warning and 1 error generated.

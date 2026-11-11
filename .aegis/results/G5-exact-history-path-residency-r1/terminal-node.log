@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: actual WebGL creates and deletes are forwarded and foreign owner is recorded
+ok 1 - actual WebGL creates and deletes are forwarded and foreign owner is recorded
+  ---
+  duration_ms: 1.113667
+  ...
+# Subtest: exact fixtures entropy stays deterministic across candidate comparison
+ok 2 - exact fixtures entropy stays deterministic across candidate comparison
+  ---
+  duration_ms: 0.943958
+  ...
+# Subtest: typed new footprint rejects old frame then qualifies canonical material
+ok 3 - typed new footprint rejects old frame then qualifies canonical material
+  ---
+  duration_ms: 0.286959
+  ...
+# Subtest: DPR aware rectangles, camera and in-canvas empty cleanup
+ok 4 - DPR aware rectangles, camera and in-canvas empty cleanup
+  ---
+  duration_ms: 0.550167
+  ...
+# Subtest: typed sticky/table dimensions and negative expected-color witness
+ok 5 - typed sticky/table dimensions and negative expected-color witness
+  ---
+  duration_ms: 0.198417
+  ...
+# Subtest: typed sticky uses actual yellow200x200 despite shape-only size0
+ok 6 - typed sticky uses actual yellow200x200 despite shape-only size0
+  ---
+  duration_ms: 2.170625
+  ...
+# Subtest: Up-only diagnostic gates trace before/after dispatch and keeps Move unobserved
+ok 7 - Up-only diagnostic gates trace before/after dispatch and keeps Move unobserved
+  ---
+  duration_ms: 0.59025
+  ...
+# Subtest: browser contract has no host imports and phase aggregate implementation is guarded
+ok 8 - browser contract has no host imports and phase aggregate implementation is guarded
+  ---
+  duration_ms: 2.466167
+  ...
+# Subtest: table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+ok 9 - table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+  ---
+  duration_ms: 0.20375
+  ...
+# Subtest: phase reconciliation never double counts inclusive children
+ok 10 - phase reconciliation never double counts inclusive children
+  ---
+  duration_ms: 0.242458
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 50.758709

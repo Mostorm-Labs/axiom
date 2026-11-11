@@ -1,0 +1,5 @@
+import test from'node:test';import assert from'node:assert/strict';
+import{entropyStream}from'../runners/g5/exact_fixed_scene_contract.mjs';
+import{typedWitness,qualifyWitness}from'../runners/g5/exact_query_working_set_contract.mjs';
+test('exact fixtures entropy stays deterministic across candidate comparison',()=>{for(const seed of[0x13579bdf,0x2468ace1]){const a=entropyStream(seed),b=entropyStream(seed);assert.deepEqual(a.fill(new Uint8Array(64)),b.fill(new Uint8Array(64)));assert.deepEqual(a.transcript(),b.transcript());}});
+test('typed new footprint rejects old frame then qualifies canonical material',()=>{const selected={primary:'a',generation:'1',transform:[1,0,0,1,800,500],bounds:[800,500,1000,700],appearance:{fill:[1,1,128/255,1]}};const plan=typedWitness('sticky',selected,{available:true,objectId:'a',width:200,height:200});assert.equal(qualifyWitness(plan,Uint8Array.of(255,255,255,255),[80,30]).positive,0);assert.equal(qualifyWitness(plan,Uint8Array.of(255,255,128,255),[80,30]).status,'QUALIFIED');});

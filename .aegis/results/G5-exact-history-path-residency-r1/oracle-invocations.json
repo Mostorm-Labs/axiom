@@ -1,0 +1,129 @@
+{
+  "status": "COMPLETE",
+  "parallelism": 1,
+  "invocations": [
+    {
+      "plan": {
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-PAIRS/p1-growth-candidate/final.axsnap",
+        "snapshot_sha256": "765b1d49f6d1facbebad3346b4e41912f3f913aa5c8dfb17a02dce41188f1076",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "timeout_seconds": 60,
+        "rss_mib": 4096
+      },
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "--pixels",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-PAIRS/p1-growth-candidate/final.axsnap",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref0/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref0/reference"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 11.987857625,
+        "peak_process_family_rss_kib": 333200,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 60,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref0/reference",
+      "status": "REFERENCE_RENDERED"
+    },
+    {
+      "plan": {
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-PAIRS/p1-long-candidate/final.axsnap",
+        "snapshot_sha256": "a57f690db5a17413576da6ea9d198a0cc8ff9a86611c5efde6a33ba978c54d94",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "timeout_seconds": 60,
+        "rss_mib": 4096
+      },
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "--pixels",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/local-web/G5HP1-PAIRS/p1-long-candidate/final.axsnap",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref1/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref1/reference"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 11.7825985,
+        "peak_process_family_rss_kib": 311840,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 60,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref1/reference",
+      "status": "REFERENCE_RENDERED"
+    },
+    {
+      "plan": {
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/growth-nav-d4-final-ink.axsnap",
+        "snapshot_sha256": "ad523188b13fb00384cafa2fe01e4e57da5887b38410bddb4f4ff007bb1fe942",
+        "request": {
+          "width": 4400,
+          "height": 3040,
+          "logical_width": 1100,
+          "logical_height": 760,
+          "camera": {
+            "scale": 1.2712491750717163,
+            "x": -193.25946044921875,
+            "y": -123.754638671875
+          },
+          "hud_bounds": []
+        },
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "timeout_seconds": 60,
+        "rss_mib": 4096
+      },
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+          "--pixels",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/growth-nav-d4-final-ink.axsnap",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref2/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref2/reference"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 25.727751125,
+        "peak_process_family_rss_kib": 455648,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 60,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-history-path-residency-r1/pixels/ref2/reference",
+      "status": "REFERENCE_RENDERED"
+    }
+  ]
+}

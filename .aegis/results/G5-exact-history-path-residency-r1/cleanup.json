@@ -1,0 +1,42 @@
+{
+  "status": "ALL_THREE_AUTHORIZED_BROWSER_WORKERS_CLOSED",
+  "attempts": [
+    {
+      "id": "G5HP1-PAIRS",
+      "status": "COMPLETED",
+      "guard_reason": "completed",
+      "charged_seconds": 367,
+      "source_stable": true,
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5HP1-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "guard_reason": "completed",
+      "charged_seconds": 92,
+      "source_stable": true,
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5HP1-CONTINUITY",
+      "status": "STOPPED",
+      "guard_reason": "nonzero_exit",
+      "charged_seconds": 115,
+      "source_stable": true,
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    }
+  ],
+  "charged_seconds": 574,
+  "cap_seconds": 1080,
+  "unused_seconds_do_not_authorize_new_starts": 506,
+  "allIDs_consumed": true,
+  "newnormalDemo": "http://127.0.0.1:4325/example.html",
+  "demoIntentionallyAlive": true,
+  "demoPID": 56197,
+  "user4324andhistoricalDemos_preserved": true,
+  "oldhardlinkedraw_never_inplacewritten": true,
+  "no_commit_push": true
+}

@@ -1,5 +1,6 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "selection_region_geometry_internal.hpp"
+#include "exact_history_path_observer.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
 #include "canvas/ink/compact_geometry.hpp"
@@ -426,6 +427,10 @@ struct EraseMaskPathCache::Impl {
     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
     unsigned cohortDepth=0;
+    // Retained CPU representations obey capacity. One synchronous construction
+    // has a separate, fully precharged global staging lease; it is not another
+    // resident cache or a pixel/GPU epoch allocation.
+    bool constructing=false;
     std::function<void()> cohortPressure;
     bool cohortPressureAttempted=false;
     std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
@@ -458,7 +463,7 @@ struct EraseMaskPathCache::Impl {
         if(refusal!=refusals.end()&&(victim==entries.end()||(*refusal)->used<(*victim)->used)&&
            (plan==histories.end()||(*refusal)->used<(*plan)->used)){refusals.erase(refusal);return true;}
         if(plan!=histories.end()&&(victim==entries.end()||(*plan)->used<(*victim)->used)){histories.erase(plan);return true;}
-        if(victim!=entries.end()){entries.erase(victim);return true;}
+        if(victim!=entries.end()){HP_OBSERVE(HistoryPathEvent::kEvict,victim->get(),&(*victim)->geometry,usage->bytes,0,(*victim)->bytes,size(),false);entries.erase(victim);return true;}
         // Retire proven cohort results only after idle paths/proofs/draw plans;
         // their pins are the currently admitted work, not stale cache entries.
         if(!cohortQueries.empty()){
@@ -566,29 +571,57 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
     const auto base=sizeof(Entry)+raw+65536;
     if(!state.budget||base>state.capacity||units>(state.capacity-base)/4096)return denied();
     const auto estimate=base+units*4096;
+    HP_OBSERVE(HistoryPathEvent::kRequest,nullptr,&geometry,state.usage->bytes,estimate,0,state.size(),historical);
+    if(state.constructing)return denied();
     std::optional<std::uint64_t> token;
     for(;;){
-        if(state.size()<512&&state.usage->bytes<=state.capacity-estimate)
-            token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true);
+        // A large prospective PathOps working set must not evict completed
+        // paths merely to leave the same amount free in the resident cache.
+        // Keep the original per-construction bound/estimate, and charge every
+        // byte to the existing shared hard budget before doing any work.
+        token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true,0);
         if(token)break;if(!state.evict())return denied();
     }
     resources::ResourceLease lease(state.budget,*token);
+    state.constructing=true;
+    struct Construction {
+        bool& active;~Construction(){active=false;}
+    } construction{state.constructing};
+    HP_OBSERVE(HistoryPathEvent::kConstruction,nullptr,&geometry,state.usage->bytes,estimate,state.budget->used(),state.size(),historical);
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
     const auto started=std::chrono::steady_clock::now();
 #endif
     auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;
-    const auto path=erasePath(geometry,&unions);
+    auto path=erasePath(geometry,&unions);
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
     (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
         std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
 #endif
     ++(historical?state.stats.history.historyPathBuilds:state.stats.history.queryPathBuilds);
     if(!path||!path->isFinite())return denied();
+    HP_OBSERVE(HistoryPathEvent::kBuild,nullptr,&geometry,state.usage->bytes,estimate,path->approximateBytesUsed(),state.size(),historical);
     auto candidate=std::make_shared<Entry>();candidate->geometry=geometry;candidate->path=*path;
     const auto bytes=sizeof(Entry)+raw+256+path->approximateBytesUsed();
-    if(bytes>estimate||!lease.shrink(bytes))return denied();
-    candidate->lease=std::move(lease);candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
-    state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;return candidate;
+    if(bytes>estimate||bytes>state.capacity)return denied();
+    while(state.size()>=512||state.usage->bytes>state.capacity-bytes)
+        if(!state.evict())return denied();
+    std::optional<std::uint64_t> resident;
+    for(;;){
+        // Both leases overlap until all construction aliases are gone. A
+        // conservative double charge is preferable to prematurely shrinking
+        // staging or treating a retained CPU path as GPU scratch.
+        resident=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
+        if(resident)break;if(!state.evict())return denied();
+    }
+    HP_OBSERVE(HistoryPathEvent::kTransfer,nullptr,&geometry,state.usage->bytes,estimate,state.budget->used(),state.size(),historical);
+    // PathOps temporaries have returned; drop the remaining local COW alias
+    // before releasing its construction lease. The complete geometry/path is
+    // covered throughout, first by staging and then by its resident lease.
+    path.reset();
+    candidate->lease=resources::ResourceLease(state.budget,*resident);
+    lease.reset();
+    candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
+    state.usage->bytes+=bytes;state.entries.push_back(candidate);++state.stats.builds;HP_OBSERVE(HistoryPathEvent::kAdmit,candidate.get(),&geometry,state.usage->bytes,estimate,bytes,state.size(),historical);return candidate;
 }
 namespace {
 bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
@@ -781,6 +814,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::exactHistor
     if(!proof||proof->usage!=impl_->usage||index>=proof->records.size())return {};
     ++impl_->stats.history.exactPathLookups;
     if(auto known=proof->paths[index].lock()){++impl_->stats.history.exactPathHits;return known;}
+    HP_OBSERVE(HistoryPathEvent::kProofMiss,proof.get(),&std::as_const(proof->records)[index].geometry,impl_->usage->bytes,0,0,impl_->size(),true);
     auto path=get(std::as_const(proof->records)[index].geometry,true);
     if(path)proof->paths[index]=path;
     return path;

@@ -1,0 +1,80 @@
+{
+  "status": "INDEPENDENT_SELECTED_ROOTS_VALID",
+  "scope": "Samecandidate8selectedUp roots; no claimall20growthrootscaptured",
+  "cases": [
+    {
+      "case": "long1600",
+      "selected_roots": 2,
+      "all_begin_end_aggregate_match": true,
+      "loss0": true,
+      "trace_sha256": "d2a5ba391f2a9c7eb5ad30392e3f2f9b6620ce9b0bf74c477715dfccf4b2b577",
+      "roots": [
+        {
+          "round": 1,
+          "gesture": "main",
+          "root_ms": 4114.8,
+          "path_ms": 3677.5,
+          "residual_ms": 8.1
+        },
+        {
+          "round": 1,
+          "gesture": "successor",
+          "root_ms": 304.9,
+          "path_ms": 2.1,
+          "residual_ms": 13.3
+        }
+      ]
+    },
+    {
+      "case": "growth10",
+      "selected_roots": 6,
+      "all_begin_end_aggregate_match": true,
+      "loss0": true,
+      "trace_sha256": "f0a2641fb8fb21c7c08d221c0ef31bc58e48d7df8e2301b292483d7bc18f4818",
+      "roots": [
+        {
+          "round": 1,
+          "gesture": "main",
+          "root_ms": 905.8,
+          "path_ms": 753.2,
+          "residual_ms": 8.9
+        },
+        {
+          "round": 1,
+          "gesture": "successor",
+          "root_ms": 63.1,
+          "path_ms": 0.2,
+          "residual_ms": 9.7
+        },
+        {
+          "round": 6,
+          "gesture": "main",
+          "root_ms": 4479.5,
+          "path_ms": 4129.1,
+          "residual_ms": 14.3
+        },
+        {
+          "round": 6,
+          "gesture": "successor",
+          "root_ms": 221.1,
+          "path_ms": 0.2,
+          "residual_ms": 14.8
+        },
+        {
+          "round": 10,
+          "gesture": "main",
+          "root_ms": 7705.9,
+          "path_ms": 7229.7,
+          "residual_ms": 18.2
+        },
+        {
+          "round": 10,
+          "gesture": "successor",
+          "root_ms": 363.3,
+          "path_ms": 0.0,
+          "residual_ms": 20.1
+        }
+      ]
+    }
+  ]
+}

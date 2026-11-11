@@ -1,0 +1,77 @@
+{
+  "status": "FROZEN_OWNER_REUSE_REPAIR_OBLIGATIONS",
+  "obligations": [
+    {
+      "id": "HP-CAUSE",
+      "requirement": "Repeated historical path reconstruction is linked to actual admission/eviction/lifetime policy.",
+      "oracle": "Original9ebc source+actualcapturedhistory/nativeRenderconsumer, bounded per-request lifecycle events with complete geometry/key; independent postbuild actual size.",
+      "acceptance": "RED reveals causal chain or alternative preciseowner cause, not guessedfrom8MiB usage. Include longsuccessor and late growth. No new product mutation before Red.",
+      "evidence_required": [
+        "cause-audit.json",
+        "native-red.json",
+        "implementation-design.json"
+      ]
+    },
+    {
+      "id": "HP-REUSE",
+      "requirement": "Scoped repair removes avoidable historical rebuild within existing lifetime and budget.",
+      "oracle": "Same old/new native realowner/capturedqueries+tracecounts, full exact component independent oracle; same numerical construction.",
+      "acceptance": "Measuredhistoricalbuild/union reduction in longsuccessor and/orlategrowth, no increase fromcohortpins causing globalthrash. Oldbody result memo remainsqualified and bodycompile0 for readybody. Cannot call no-effect policy tweak perfPASS. If admittedworking-set cannotfit honest fallback required; precise structural blocker return.",
+      "evidence_required": [
+        "repair-design.json",
+        "native-green.json",
+        "working-set-accounting.json"
+      ]
+    },
+    {
+      "id": "HP-NUMERIC",
+      "requirement": "Exact hit/no-op/history and rendering unchanged.",
+      "oracle": "Original634 exactquerycorpus and independentnullcache/componentorder reference, finite/fork/pressure/marker/taper/masks; ordinarypairs SnapshotCodec andCPU final/Redo pixels.",
+      "acceptance": "All exact decisions same, canonicalmaskIDs/order/history/UndoRedo same, f32 and sequential Op order unchanged. Source/transform/maskfork cannotreuse; ordinarydomain ownership unchanged. Final andRedo originalAA/tolerance<=2; no widenedAA or hiddenROI.",
+      "evidence_required": [
+        "exact-parity.json",
+        "regressions.json",
+        "canonical-pairs.json",
+        "independent-pixel-proof.json"
+      ]
+    },
+    {
+      "id": "HP-MEMORY",
+      "requirement": "Reuse and scratch peak remain charged and bounded.",
+      "oracle": "RealResourceBudgetManager local/global leases, preallocationreservation/nativefaults/clear/externalheldrefs/exhaustion; sourcefootprint/COW.",
+      "acceptance": "Local8MiB/512 andglobalcaps exact. Peakconstruction reserved beforealloc; immutablepaths/proof lifetime valid; no strongcycle/forcedunpin/untracked scratch. Cachedenial preserves exactfallback and eventualprogress. Externallyhelddata validafterclear and released0whenlastownerends.",
+      "evidence_required": [
+        "working-set-accounting.json",
+        "pressure-recovery.json"
+      ]
+    },
+    {
+      "id": "HP-WEB",
+      "requirement": "Current ordinarylongerasewait improvement verified with exactsame inputs and correctsuccessorfeedback.",
+      "oracle": "8frozenpairednormalrows +candidate2selecteddiagnostic +3continuouscorrectnessrows throughSDK/input; offlineindependent CPUoracle/typedproof, contacts/receipt/History.",
+      "acceptance": "Show old/new pairedlatency andwork reduction, include worstmain/successor/tail, never useinstrumentedtimeasnormal. Allcapturedcorrectfeedbackactualcontent andfinalqualify fornewCPUchange; knownunrelatedidle/context findings not renamedclosed. Materialregression cannotbehiddenbyaverages. >3/5sreportedfindings ifcorrectprogress ratherthanfictionalPASS.",
+      "evidence_required": [
+        "paired-web.json",
+        "current-phase-work.json",
+        "post-erase-feedback.json",
+        "runtime-invariants.json"
+      ]
+    },
+    {
+      "id": "HP-BIND",
+      "requirement": "Controlled finalsource/SDK/evidence with userstop preserved.",
+      "oracle": "Packagepreflights, same-sourceordinary/diagnostic frozenJS/WASM/resources manifests, newnamespaceledger/cleanup.",
+      "acceptance": "Matching36file SDK andqualifiednormalprivateexportsabsent, finalaffectedchecks; nobuild/sourcewritesduringsampling; allfailuresretained. StopwithremainingCPUcost/candidatefacts forusercomparison beforethreading.",
+      "evidence_required": [
+        "preflight.json",
+        "source-manifest.json",
+        "SDK-manifest.json",
+        "sampling-ledger.json",
+        "artifact-manifest.json",
+        "cleanup.json",
+        "next-step-inputs.json",
+        "result.json"
+      ]
+    }
+  ]
+}

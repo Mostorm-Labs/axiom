@@ -1,0 +1,656 @@
+{
+  "status": "ALL_EIGHT_SELECTED_ROOTS_COMPLETE_LOSS0",
+  "rows": [
+    {
+      "case": "long1600",
+      "round": 1,
+      "gesture": "main",
+      "root_ms": 4114.8,
+      "history_path_ms": 71.1,
+      "query_path_ms": 3606.4,
+      "history_path_builds": 32,
+      "query_path_builds": 16,
+      "history_union_ops": 1024,
+      "query_union_ops": 25600,
+      "local_usage": 5139221,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "4",
+          "tag": "exact_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 3703900000,
+          "exclusive_ns": 200000
+        },
+        {
+          "id": "251",
+          "tag": "history_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 400000,
+          "exclusive_ns": 200000
+        },
+        {
+          "id": "253",
+          "tag": "publication_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "254",
+          "tag": "semantic_apply",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 2500000
+        },
+        {
+          "id": "257",
+          "tag": "history_finalize",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "259",
+          "tag": "observer",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 101700000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "261",
+          "tag": "scene_apply",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 295800000,
+          "exclusive_ns": 295800000
+        }
+      ],
+      "exclusive_residual_ns": 8100000
+    },
+    {
+      "case": "long1600",
+      "round": 1,
+      "gesture": "successor",
+      "root_ms": 304.9,
+      "history_path_ms": 0.0,
+      "query_path_ms": 2.1,
+      "history_path_builds": 0,
+      "query_path_builds": 16,
+      "history_union_ops": 0,
+      "query_union_ops": 144,
+      "local_usage": 5549957,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "264",
+          "tag": "exact_prepare",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "517",
+          "tag": "history_prepare",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "519",
+          "tag": "publication_prepare",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "520",
+          "tag": "semantic_apply",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 800000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "523",
+          "tag": "history_finalize",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "525",
+          "tag": "observer",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "527",
+          "tag": "scene_apply",
+          "parent": "263",
+          "job": "262",
+          "count": 1,
+          "inclusive_ns": 283300000,
+          "exclusive_ns": 283300000
+        }
+      ],
+      "exclusive_residual_ns": 13300000
+    },
+    {
+      "case": "growth10",
+      "round": 1,
+      "gesture": "main",
+      "root_ms": 905.8,
+      "history_path_ms": 71.4,
+      "query_path_ms": 681.8,
+      "history_path_builds": 32,
+      "query_path_builds": 15,
+      "history_union_ops": 1024,
+      "query_union_ops": 2475,
+      "local_usage": 1265492,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "4",
+          "tag": "exact_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 837300000,
+          "exclusive_ns": 200000
+        },
+        {
+          "id": "250",
+          "tag": "history_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "252",
+          "tag": "publication_prepare",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "253",
+          "tag": "semantic_apply",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 2700000,
+          "exclusive_ns": 1600000
+        },
+        {
+          "id": "256",
+          "tag": "history_finalize",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "258",
+          "tag": "observer",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 12100000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "260",
+          "tag": "scene_apply",
+          "parent": "3",
+          "job": "2",
+          "count": 1,
+          "inclusive_ns": 44700000,
+          "exclusive_ns": 44700000
+        }
+      ],
+      "exclusive_residual_ns": 8900000
+    },
+    {
+      "case": "growth10",
+      "round": 1,
+      "gesture": "successor",
+      "root_ms": 63.1,
+      "history_path_ms": 0.0,
+      "query_path_ms": 0.2,
+      "history_path_builds": 0,
+      "query_path_builds": 16,
+      "history_union_ops": 0,
+      "query_union_ops": 16,
+      "local_usage": 1423716,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "263",
+          "tag": "exact_prepare",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 18600000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "516",
+          "tag": "history_prepare",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "518",
+          "tag": "publication_prepare",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "519",
+          "tag": "semantic_apply",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "522",
+          "tag": "history_finalize",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "524",
+          "tag": "observer",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "526",
+          "tag": "scene_apply",
+          "parent": "262",
+          "job": "261",
+          "count": 1,
+          "inclusive_ns": 33900000,
+          "exclusive_ns": 33900000
+        }
+      ],
+      "exclusive_residual_ns": 9700000
+    },
+    {
+      "case": "growth10",
+      "round": 6,
+      "gesture": "main",
+      "root_ms": 4479.5,
+      "history_path_ms": 3411.1,
+      "query_path_ms": 718.4,
+      "history_path_builds": 165,
+      "query_path_builds": 16,
+      "history_union_ops": 13020,
+      "query_union_ops": 2560,
+      "local_usage": 8383477,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "529",
+          "tag": "exact_prepare",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 4337400000,
+          "exclusive_ns": 300000
+        },
+        {
+          "id": "818",
+          "tag": "history_prepare",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "820",
+          "tag": "publication_prepare",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "821",
+          "tag": "semantic_apply",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "824",
+          "tag": "history_finalize",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "826",
+          "tag": "observer",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 10400000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "828",
+          "tag": "scene_apply",
+          "parent": "528",
+          "job": "527",
+          "count": 1,
+          "inclusive_ns": 116300000,
+          "exclusive_ns": 116300000
+        }
+      ],
+      "exclusive_residual_ns": 14300000
+    },
+    {
+      "case": "growth10",
+      "round": 6,
+      "gesture": "successor",
+      "root_ms": 221.1,
+      "history_path_ms": 0.0,
+      "query_path_ms": 0.2,
+      "history_path_builds": 0,
+      "query_path_builds": 16,
+      "history_union_ops": 0,
+      "query_union_ops": 16,
+      "local_usage": 8383359,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "831",
+          "tag": "exact_prepare",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 69500000,
+          "exclusive_ns": 200000
+        },
+        {
+          "id": "1120",
+          "tag": "history_prepare",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1122",
+          "tag": "publication_prepare",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1123",
+          "tag": "semantic_apply",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 900000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "1126",
+          "tag": "history_finalize",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1128",
+          "tag": "observer",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1130",
+          "tag": "scene_apply",
+          "parent": "830",
+          "job": "829",
+          "count": 1,
+          "inclusive_ns": 135700000,
+          "exclusive_ns": 135700000
+        }
+      ],
+      "exclusive_residual_ns": 14800000
+    },
+    {
+      "case": "growth10",
+      "round": 10,
+      "gesture": "main",
+      "root_ms": 7705.9,
+      "history_path_ms": 6517.7,
+      "query_path_ms": 712.4,
+      "history_path_builds": 304,
+      "query_path_builds": 16,
+      "history_union_ops": 24192,
+      "query_union_ops": 2560,
+      "local_usage": 8383293,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "1133",
+          "tag": "exact_prepare",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 7429400000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "1426",
+          "tag": "history_prepare",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1428",
+          "tag": "publication_prepare",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1429",
+          "tag": "semantic_apply",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 1300000,
+          "exclusive_ns": 100000
+        },
+        {
+          "id": "1432",
+          "tag": "history_finalize",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1434",
+          "tag": "observer",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 10100000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1436",
+          "tag": "scene_apply",
+          "parent": "1132",
+          "job": "1131",
+          "count": 1,
+          "inclusive_ns": 246900000,
+          "exclusive_ns": 246900000
+        }
+      ],
+      "exclusive_residual_ns": 18200000
+    },
+    {
+      "case": "growth10",
+      "round": 10,
+      "gesture": "successor",
+      "root_ms": 363.3,
+      "history_path_ms": 0.0,
+      "query_path_ms": 0.0,
+      "history_path_builds": 0,
+      "query_path_builds": 16,
+      "history_union_ops": 0,
+      "query_union_ops": 16,
+      "local_usage": 8382224,
+      "body_compile": 0,
+      "prepared_compile": 0,
+      "direct_children": [
+        {
+          "id": "1439",
+          "tag": "exact_prepare",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 62200000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1732",
+          "tag": "history_prepare",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1734",
+          "tag": "publication_prepare",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1735",
+          "tag": "semantic_apply",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 1400000,
+          "exclusive_ns": 200000
+        },
+        {
+          "id": "1738",
+          "tag": "history_finalize",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 0,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1740",
+          "tag": "observer",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0
+        },
+        {
+          "id": "1742",
+          "tag": "scene_apply",
+          "parent": "1438",
+          "job": "1437",
+          "count": 1,
+          "inclusive_ns": 279400000,
+          "exclusive_ns": 279400000
+        }
+      ],
+      "exclusive_residual_ns": 20100000
+    }
+  ],
+  "diagnostic_notordinarylatency": true,
+  "mechanism": "construction-driven eviction removed inlongsuccessor;late main still builds whole historical paths underresidentpressure ornew Renderdrawadmission, precisebetweenUpFramecause not traced by selectedUp-onlylane",
+  "unknowns_not_zero": true
+}
