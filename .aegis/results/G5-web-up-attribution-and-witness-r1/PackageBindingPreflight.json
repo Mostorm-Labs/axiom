@@ -1,0 +1,195 @@
+{
+  "status": "PASS",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "cursor": "EXACT_CURSOR",
+  "head": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "package_sha256": "eacf18b739a6ca6205b747ba5a762807e0eb369de66a1de2cd494f8fc88da5dd",
+  "bindings": {
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/authority.lock.json": "3665c75fbdde8acc2654a870a19b2095bba6815c52a40b21770cf2183c2d1afa",
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/verification.lock.json": "a56a5e5f2a6ac48d635eb9f67e67d04aff7c5b967a4436d5dc7c9ee58614fb80",
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/execution-contract.json": "296000909cb7bd778c4e5a5b3dbfee25c17492db7b5ff7ab50907f2cd303ff30",
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/implementation-context.md": "f2b1cb96999e39111de61bbfe94d84562a269671f62091f6ecc35d07b2eaf153",
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/evidence-contract.json": "b4ad480cd4f698e6b7d264281391f742c6c9117f8974a72dd6eacc7d4cc7297f",
+    ".aegis/packages/G5-web-up-attribution-and-witness-r1/workload.json": "dfafc7a42acc58b8abae401c161774783c795b2087ae994eca0e6a8454a22e93"
+  },
+  "authority_refs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/result.json",
+      "sha256": "12b5d7cd1ef09f9302a8a9f35c37d547174bc719ebae38620bddd1094529b8a0"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/control-review.json",
+      "sha256": "ad8bad54cebccce341bbefcdf5d6c8f6b2e5378e9f1375f64521f1327c292109"
+    },
+    {
+      "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+      "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+    }
+  ],
+  "preimages": {
+    "verification/runners/g5/erase_undo_readiness.mjs": {
+      "sha256": "5e430d7ef01ab4042668555b06eebc42864b5dbf92871a8ac219552a217101d9",
+      "bytes": 21741
+    },
+    "verification/runners/g5/post_erase_interaction_readiness.mjs": {
+      "sha256": "4c10890c9e7253fc3f0590638ec220e3962fad7b96b911157c9702df5ac0a7fb",
+      "bytes": 6177
+    },
+    "verification/runners/g5/post_erase_interaction_readiness_runner.py": {
+      "sha256": "d7b4e07909775cdc7319810b6079a76eed224bd1056ad4ceb52604e3f116110e",
+      "bytes": 3114
+    },
+    "verification/runners/g5/erase_exact_canonical_contract.mjs": {
+      "sha256": "d15a7652bb93fd50c34e46dd233cfa7300b3daeb356b0eae1b61407f312fcc9b",
+      "bytes": 2063
+    },
+    "verification/runners/g5/erase_exact_canonical_runner.py": {
+      "sha256": "92945eff3b2e51041475c901ed661e424487099a1815535e76c15c351cf7415d",
+      "bytes": 6179
+    },
+    "verification/tests/g5_erase_undo_readiness.test.mjs": {
+      "sha256": "334e8aa77fd7652d2622d7a68fa5447d0ac11d9e95a3093c2c9a58e367642f7c",
+      "bytes": 2484
+    },
+    "verification/tests/g5_post_erase_interaction_readiness.test.mjs": {
+      "sha256": "5cfe86f0aab912d25b9be493de3db81ef55356a52f192222fce7e96875f83ecf",
+      "bytes": 1755
+    },
+    "verification/tests/test_g5_post_erase_interaction_readiness.py": {
+      "sha256": "61294b9fa8816d295b1f4321d0cd26fa22a58762df9846d202728c39f61ad97b",
+      "bytes": 636
+    },
+    "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp": {
+      "sha256": "5f912b0a2fe390879f4b41118a8ca972be68ddd9fbc0a0888ed41917d066e30d",
+      "bytes": 8164
+    },
+    "runtime/foundation/src/g5_observation.cpp": {
+      "sha256": "8f53e06160ae369c01d8190eb1c0ee450cf66ff6ee96b68f4645c707f88e4ddc",
+      "bytes": 19366
+    },
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "sha256": "44ba3818b43d6d461d9c64d760ef7dc2f4911df5f6c0ab4e422949cdb9cd30dc",
+      "bytes": 66088
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "sha256": "ff8d1a5c9edcf4a0906dfc6ecfb7de9d49344de8b9120dd0c57853237bee4de7",
+      "bytes": 3169
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "413df6fbb21eb753f8c4d5386b557f266397e4be8a636a34cb89de7fa5dd62a7",
+      "bytes": 101186
+    },
+    "runtime/render/src/skia_render_cache.cpp": {
+      "sha256": "2e6c507bdc3fb07bda7714e6d27a94b94822ea9136a45081f20d92aa0edb3084",
+      "bytes": 88358
+    },
+    "runtime/render/src/skia_ink_layers.cpp": {
+      "sha256": "776605c182296d3e52ae14ae3843b953c1baea6ff4ac33609904798d9a5e89d0",
+      "bytes": 17442
+    },
+    "runtime/render/src/skia_prepared_geometry.cpp": {
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+      "bytes": 37159
+    },
+    "runtime/render/src/source_retention.hpp": {
+      "sha256": "34166388b14044654358980750d14d67dcf361353563a7175c5bd15c02a55a9c",
+      "bytes": 12418
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "04da5c51be16ab6d02ac7d9d1ac6c9f7e7d64730f97cb1a3ce6c88b7f9a52ff9",
+      "bytes": 321043
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "sha256": "f543af86927b449765b0fe878254a529faf6206e0fa42389b6193ae59345139f",
+      "bytes": 4367
+    },
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": {
+      "sha256": "eb021b0b294c91d9c04fc03f42d6c3bb0fa344f0bf41bbdbdb58e26f716b30ac",
+      "bytes": 32153
+    },
+    "runtime/scene/src/runtime_scene_projection.cpp": {
+      "sha256": "cbdbe61d07142e9b50242c78bc9efb9e0611995cbc2d0db6956876c4c06253c1",
+      "bytes": 15784
+    },
+    "runtime/semantic/src/operation_specific_validation.cpp": {
+      "sha256": "a6610dbcdc15fbf5a942e043082e2cd9b6e54435f1174a876364955bfc6d6a83",
+      "bytes": 15429
+    },
+    "runtime/semantic/src/apply_plan.cpp": {
+      "sha256": "0da59b5d1c239405740cbe0b25c64b7a7f4772f67905f78bed982a06fc3cbbf0",
+      "bytes": 15879
+    },
+    "runtime/semantic/src/atomic_apply.cpp": {
+      "sha256": "d7aff7bc617338d68a616bb8f21db0dd7bb8f49de5c402305b96558074390835",
+      "bytes": 5946
+    },
+    "sdk/common/session.cpp": {
+      "sha256": "2a78fdf38c1f54773fac40f3ad2ed2fd877c84f0aa55ace2f383e61d9501d7de",
+      "bytes": 100428
+    },
+    "sdk/web/CMakeLists.txt": {
+      "sha256": "8d5bbedb1db0693ce582068befa92bfad079e10d88c0ddee22631489e960733d",
+      "bytes": 6509
+    },
+    "sdk/web/bridge.cpp": {
+      "sha256": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9",
+      "bytes": 6059
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "5309dfbd77584c17354dc18a626bf94a3c332dea4c3ad93fe51041cc84ae9994",
+      "bytes": 49060
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "sha256": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "bytes": 14086
+    },
+    "runtime/composition/CMakeLists.txt": {
+      "sha256": "11149c2ceb26a6b92c63da90a85e9551d6b2c7ecc2f1d69a5dbc617f7adf4d12",
+      "bytes": 22208
+    }
+  },
+  "normal_SDK": {
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-erase-exact-canonical-r1/final-normal-install/js",
+    "manifest": {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/final-normal-artifacts.json",
+      "sha256": "c3df6e9d7ad1c67fe8b73b70425748b2c5e369b48a64de5272eaab11494cd168"
+    },
+    "wasm_sha256": "1e1c18d14abfb7bcdbb0af47f2df4d723d6517bd11c17481e85e78825e90c109"
+  },
+  "tracked_clean": true
+}

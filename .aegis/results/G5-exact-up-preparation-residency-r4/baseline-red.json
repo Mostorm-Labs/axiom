@@ -1,0 +1,15 @@
+{
+  "status": "ACTUAL_SKIA_INK_LAYERS_OWNER_PIN_RED",
+  "exit_code": 1,
+  "raw": "owner-red.json",
+  "source": "runtime/render/tests/exact_owner_residency_test.cpp",
+  "old_binary_sha256": "d7fae01177d12ce2dd29274b6758cc370b77be60dcd4b7e23cdbc8cfd61bdbff",
+  "not_arbitrary_8pins": true,
+  "expected_repeated_complete_bases": 13,
+  "observed_old_memo_hits": 6,
+  "observed_old_denied": 11,
+  "RED_predicate": "Oldandnewmemo>=13underactual29consumerpins;old6fails. retired_countonlysupportingnotpredicate.",
+  "original_log_retired_interface_predicate": "Supersededbyobservableworkpredicateusingfrozenoldraw; no product or raw rewrite",
+  "observable_rerun": "owner-red-observable.json",
+  "observable_failure": "oldexpected13memorepeats measured6; frozenoldarchive matchespreimages. ExitSIGABRTfromthrowthrough-fnoexceptionscompileflags, expectedasserttext recorded, notenvironment."
+}

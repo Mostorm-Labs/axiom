@@ -1,0 +1,497 @@
+--- a/runtime/composition/CMakeLists.txt
++++ b/runtime/composition/CMakeLists.txt
+@@ -29,6 +29,21 @@
+ endif()
+ 
+ if(BUILD_TESTING)
++  if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND NOT EMSCRIPTEN)
++    add_executable(axiom_ur3_preview_completion_tests
++        tests/ur3_continuous_preview_completion_test.cpp)
++    target_include_directories(axiom_ur3_preview_completion_tests BEFORE PRIVATE
++        ${CMAKE_CURRENT_SOURCE_DIR}/tests/ur3_continuous_stubs)
++    target_link_libraries(axiom_ur3_preview_completion_tests PRIVATE canvas_runtime_composition)
++    target_compile_definitions(axiom_ur3_preview_completion_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
++    target_compile_features(axiom_ur3_preview_completion_tests PRIVATE cxx_std_20)
++    if(MSVC)
++      target_compile_options(axiom_ur3_preview_completion_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
++    else()
++      target_compile_options(axiom_ur3_preview_completion_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
++    endif()
++    add_test(NAME UR3PreviewCompletion COMMAND axiom_ur3_preview_completion_tests)
++  endif()
+   add_executable(axiom_ink_v2_runtime_tests tests/ink_v2_runtime_test.cpp)
+   target_link_libraries(axiom_ink_v2_runtime_tests PRIVATE canvas_runtime_composition)
+   add_test(NAME InkV2Runtime COMMAND axiom_ink_v2_runtime_tests)
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+@@ -84,6 +84,8 @@
+     std::uint64_t contentRevision = 0;
+     std::uint64_t surfaceGeneration = 0;
+     std::uint64_t metricsGeneration = 0;
++    std::uint64_t displayRevision = 0;
++    std::uint64_t attachmentEpoch = 0;
+     bool operator==(const PreviewWork&) const = default;
+   };
+   std::optional<PreviewWork> previewWork;
+@@ -93,6 +95,10 @@
+   std::optional<RuntimeFrameOpportunity::PreviewWork> previewWork;
+   bool platformPresented = false;
+ };
++
++// Private platform handshake. Only exact work issued by this Composition can
++// be superseded; an unknown or altered value remains invalid.
++enum class RuntimePreviewWorkState : std::uint8_t { kInvalid, kCurrent, kSuperseded };
+ 
+ // Composition-owned, read-only surface identity.  This deliberately mirrors
+ // only the public surface facts needed by platform hosts and diagnostics; it
+@@ -179,6 +185,8 @@
+   // acknowledge preview sessions themselves.
+   [[nodiscard]] bool finishFrameOpportunity(
+       const RuntimeFrameCompletion& completion) noexcept;
++  [[nodiscard]] RuntimePreviewWorkState previewWorkState(
++      const RuntimeFrameOpportunity::PreviewWork& work) const noexcept;
+   // The composition owns the single control facade and its queue.  Consumers
+   // may borrow the stable interface, but must not construct a second facade or
+   // attach an alternate owner.
+@@ -292,6 +300,10 @@
+   std::uint64_t pendingPreviewPresentCount_ = 0;
+   std::uint64_t pendingPreviewWorkId_ = 0;
+   std::optional<RuntimeFrameOpportunity::PreviewWork> pendingPreviewIdentity_;
++  // The platform has one in-flight preview slot. Retain its last superseded
++  // identity, without geometry or resources, to distinguish stale from forged.
++  std::optional<RuntimeFrameOpportunity::PreviewWork> supersededPreviewIdentity_;
++  void retirePreviewCapture() noexcept;
+   std::uint64_t nextPreviewWorkId_ = 1;
+   std::uint64_t runtimeInstanceId_ = 0;
+   std::optional<CanonicalWork> pendingCanonicalWork_;
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -72,10 +72,7 @@
+   resources_.invalidate();
+   notifications_.clear();
+   resourceReceipts_.clear();
+-  pendingPreviewCapture_.reset();
+-  pendingPreviewPresentCount_ = 0U;
+-  pendingPreviewWorkId_ = 0U;
+-  pendingPreviewIdentity_.reset();
++  retirePreviewCapture();
+   pendingCanonicalWork_.reset();
+   refreshControlTarget();
+ }
+@@ -489,19 +486,9 @@
+   // obsolete work at the next owner opportunity so it cannot reserve the
+   // single in-flight slot indefinitely.
+   if (pendingPreviewCapture_.has_value()) {
+-    const auto& state = runtime_->previewRenderState();
+-    if (!runtime_->previewActive() ||
+-        !pendingPreviewIdentity_ ||
+-        pendingPreviewIdentity_->lifetimeGeneration != resources_.lifetimeGeneration ||
+-        pendingPreviewIdentity_->metricsGeneration != runtime_->surface().metricsGeneration ||
+-        state.contentRevision != pendingPreviewCapture_->contentRevision || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() ||
+-        runtime_->previewSurfaceGeneration() !=
+-            pendingPreviewCapture_->surfaceGeneration) {
+-      pendingPreviewCapture_.reset();
+-      pendingPreviewPresentCount_ = 0U;
+-      pendingPreviewWorkId_ = 0U;
+-      pendingPreviewIdentity_.reset();
+-    }
++    if (!pendingPreviewIdentity_ ||
++        previewWorkState(*pendingPreviewIdentity_) == RuntimePreviewWorkState::kSuperseded)
++      retirePreviewCapture();
+   }
+   // Consume controls and resource notifications first. Their application may
+   // create a new canonical demand during this same frame opportunity.
+@@ -516,7 +503,7 @@
+   const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
+       runtime_->retryTransientOverlayFrame();
+   if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
+-    pendingPreviewCapture_.reset();pendingPreviewIdentity_.reset();pendingPreviewPresentCount_=0;pendingPreviewWorkId_=0;
++    retirePreviewCapture();
+   }
+   if(shouldCanonical && !forceCanonical && !editingTransient)
+     out.navigationPending=runtime_->serviceNavigationPresentation(
+@@ -550,7 +537,8 @@
+         pendingPreviewIdentity_ = RuntimeFrameOpportunity::PreviewWork{
+             runtimeInstanceId_, viewId_.value(), resources_.lifetimeGeneration,
+             pendingPreviewWorkId_, pendingPreviewCapture_->contentRevision,
+-            pendingPreviewCapture_->surfaceGeneration, runtime_->surface().metricsGeneration};
++            pendingPreviewCapture_->surfaceGeneration, runtime_->surface().metricsGeneration,
++            pendingPreviewCapture_->displayRevision, attachmentEpoch_};
+       } else if (!runtime_->previewPresentationRetryable()) {
+         return false;
+       }
+@@ -577,6 +565,36 @@
+       (editingTransient && runtime_->transientOverlayDirty()) ||
+       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
+   return true;
++}
++void RuntimeCompositionCore::retirePreviewCapture() noexcept {
++  if (pendingPreviewIdentity_) supersededPreviewIdentity_ = pendingPreviewIdentity_;
++  pendingPreviewCapture_.reset();
++  pendingPreviewPresentCount_ = 0U;
++  pendingPreviewWorkId_ = 0U;
++  pendingPreviewIdentity_.reset();
++}
++RuntimePreviewWorkState RuntimeCompositionCore::previewWorkState(
++    const RuntimeFrameOpportunity::PreviewWork& work) const noexcept {
++  if (std::this_thread::get_id() != ownerThread_ ||
++      work.runtimeInstanceId != runtimeInstanceId_ || work.viewId != viewId_.value() ||
++      work.workId == 0U) return RuntimePreviewWorkState::kInvalid;
++  if (supersededPreviewIdentity_ && work == *supersededPreviewIdentity_)
++    return RuntimePreviewWorkState::kSuperseded;
++  if (!pendingPreviewIdentity_ || work != *pendingPreviewIdentity_ ||
++      !pendingPreviewCapture_) return RuntimePreviewWorkState::kInvalid;
++  const auto& capture = *pendingPreviewCapture_;
++  const bool current = canMutate() && runtime_->previewActive() &&
++      work.lifetimeGeneration == resources_.lifetimeGeneration &&
++      work.attachmentEpoch == attachmentEpoch_ &&
++      work.workId == pendingPreviewWorkId_ &&
++      work.contentRevision == capture.contentRevision &&
++      work.contentRevision == runtime_->previewRenderState().contentRevision &&
++      work.displayRevision == capture.displayRevision &&
++      work.displayRevision == runtime_->previewDisplayRevision() &&
++      work.surfaceGeneration == capture.surfaceGeneration &&
++      work.surfaceGeneration == runtime_->previewSurfaceGeneration() &&
++      work.metricsGeneration == runtime_->surface().metricsGeneration;
++  return current ? RuntimePreviewWorkState::kCurrent : RuntimePreviewWorkState::kSuperseded;
+ }
+ bool RuntimeCompositionCore::finishFrameOpportunity(
+     const RuntimeFrameCompletion& completion) noexcept {
+@@ -593,15 +611,8 @@
+       completion.previewWork->metricsGeneration != runtime_->surface().metricsGeneration) {
+     return false;
+   }
+-  const auto& state = runtime_->previewRenderState();
+-  const bool superseded = !runtime_->previewActive() ||
+-      state.contentRevision != pendingPreviewCapture_->contentRevision ||
+-      runtime_->previewSurfaceGeneration() != pendingPreviewCapture_->surfaceGeneration;
+-  if (superseded) {
+-    pendingPreviewCapture_.reset();
+-    pendingPreviewPresentCount_ = 0U;
+-    pendingPreviewWorkId_ = 0U;
+-    pendingPreviewIdentity_.reset();
++  if (previewWorkState(*completion.previewWork) != RuntimePreviewWorkState::kCurrent) {
++    retirePreviewCapture();
+     return false;
+   }
+   if (!completion.platformPresented) return false;
+@@ -707,8 +718,7 @@
+   if (controlFacade_) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});}
+   resources_.invalidate();
+   notifications_.clear();
+-  pendingPreviewCapture_.reset();
+-  pendingPreviewIdentity_.reset();
++  retirePreviewCapture();
+   pendingCanonicalWork_.reset();
+   runtime_->close();
+   return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent);
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -1691,6 +1691,9 @@
+     r={};r.serial=nextDisplaySerial_++;r.session=session;r.kind=kind;r.key=displayInputKey_;
+     r.document=documentId_;r.view=viewId_.value();r.surface=surface_.generation;r.metrics=surface_.metricsGeneration;
+     r.resource=presentationResourceEpoch_;r.camera=cameraGeneration();
++    // Content revisions restart for a new brush session. Its display lifetime
++    // must still differ from a previous GPU capture using the same pointer.
++    if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
+     G5_OBSERVE(g5::Kind::Admission,g5::Tag::display_record,true,r.serial,r.session,static_cast<unsigned>(kind),r.key.source,r.key.pointer,r.key.generation,r.view,r.surface,r.metrics,r.resource,r.camera);
+     return &r;
+   }
+@@ -1698,6 +1701,7 @@
+ }
+ void CanvasEditingRuntime::cancelDisplay(std::uint64_t session,DisplayKind kind) noexcept {
+   if(auto* r=findDisplay(session,kind);r&&!r->sealed){
++    if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
+     G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_record,true,r->serial,3);*r={};
+   }
+ }
+--- a/sdk/web/web_runtime_adapter.cpp
++++ b/sdk/web/web_runtime_adapter.cpp
+@@ -172,9 +172,17 @@
+   if (!canonical || !preview) return rejected("poll GPU fence");
+   if (canonical == 2 || preview == 2) return WebFrameResult::kPending;
+   const auto& work = *impl_->pending;
+-  if (work.previewWork && impl_->core.previewActive() &&
+-      impl_->core.previewRenderState().contentRevision == work.previewWork->contentRevision &&
+-      !impl_->core.finishFrameOpportunity({work.previewWork, true})) return rejected("preview completion");
++  if (work.previewWork) {
++    const auto state = impl_->core.previewWorkState(*work.previewWork);
++    if (state == runtime::RuntimePreviewWorkState::kInvalid)
++      return rejected("preview completion identity");
++    if (state == runtime::RuntimePreviewWorkState::kCurrent &&
++        !impl_->core.finishFrameOpportunity({work.previewWork, true}))
++      return rejected("preview completion");
++    // A known old preview does not qualify the current one. Complete any
++    // independently captured canonical work below before releasing our fences;
++    // the next owner opportunity retires/replaces the obsolete preview capture.
++  }
+   if (work.canonicalWork) {
+     const auto current = impl_->core.lastSubmittedCanonicalWork();
+     if (!current || *current != *work.canonicalWork) {
+--- a/runtime/render/src/webgl_surface_backend.cpp
++++ b/runtime/render/src/webgl_surface_backend.cpp
+@@ -1,5 +1,6 @@
+ #include "canvas/render/webgl_surface_backend.hpp"
+ #include "webgl_context_liveness.hpp"
++#include "ur3_webgl_extensions.hpp"
+ 
+ #include "include/core/SkColorSpace.h"
+ #include "include/core/SkSurface.h"
+@@ -15,6 +16,7 @@
+ #include <limits>
+ #include <utility>
+ #include <cstdio>
++#include <cstdlib>
+ 
+ namespace canvas::render {
+ struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
+@@ -72,6 +74,17 @@
+     EmscriptenWebGLContextAttributes actual;
+     impl_->completionCapable=emscripten_webgl_get_context_attributes(impl_->webgl,&actual)==EMSCRIPTEN_RESULT_SUCCESS&&actual.majorVersion>=2;
+     impl_->retainedContents=impl_->completionCapable&&actual.preserveDrawingBuffer;
++    // WebGL restores keep the app's numeric handle but drop enabled extension
++    // objects. Emscripten's registry can still carry its once-init marker; renew
++    // the actual browser capabilities before Skia probes or creates samplers.
++    char* const supported = emscripten_webgl_get_supported_extensions();
++    if (supported == nullptr) { impl_->error = "WebGL2 capabilities unavailable"; return; }
++    (void)internal::renewWebGlExtensions(impl_->webgl, supported,
++        [](int handle, std::string_view name) {
++            const std::string extension(name);
++            return emscripten_webgl_enable_extension(handle, extension.c_str());
++        });
++    std::free(supported);
+     impl_->context = GrDirectContexts::MakeGL(GrGLMakeNativeInterface());
+     if (!impl_->context) { impl_->error = "Skia WebGL2 context creation failed"; return; }
+     GLint framebuffer = 0; glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer); GrGLFramebufferInfo info{static_cast<GrGLuint>(framebuffer), static_cast<GrGLenum>(GL_RGBA8)};
+--- /dev/null
++++ b/runtime/render/src/ur3_webgl_extensions.hpp
+@@ -0,0 +1,24 @@
++#pragma once
++#include <string_view>
++namespace canvas::render::internal {
++// A browser restore invalidates activation even when the host/glue handle is
++// retained. Request the current context's supported optional capabilities on
++// every new Skia context, without relying on a once-initialized registry bit.
++template<class Enable>
++bool renewWebGlExtensions(int handle,std::string_view supported,Enable enable) {
++ if(handle<=0)return false;
++ while(!supported.empty()){
++  const auto first=supported.find_first_not_of(' ');
++  if(first==std::string_view::npos)break;
++  supported.remove_prefix(first);
++  const auto end=supported.find(' ');
++  const auto name=supported.substr(0,end);
++  // These are diagnostic controls, rather than renderer capabilities.
++  if(name!="WEBGL_lose_context"&&name!="WEBGL_debug_shaders")
++   (void)enable(handle,name); // Optional absence retains the ordinary fallback.
++  if(end==std::string_view::npos)break;
++  supported.remove_prefix(end+1);
++ }
++ return true;
++}
++}
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -194,6 +194,14 @@
+ endif()
+ 
+ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
++    add_executable(axiom_ur3_webgl_extensions_tests tests/ur3_webgl_extensions_test.cpp)
++    target_compile_features(axiom_ur3_webgl_extensions_tests PRIVATE cxx_std_20)
++    if(MSVC)
++        target_compile_options(axiom_ur3_webgl_extensions_tests PRIVATE /W4 /WX /UNDEBUG)
++    else()
++        target_compile_options(axiom_ur3_webgl_extensions_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
++    endif()
++    add_test(NAME UR3WebGlExtensionRenewal COMMAND axiom_ur3_webgl_extensions_tests)
+     add_executable(axiom_gpu_retirement_contract_tests tests/gpu_retirement_contract_test.cpp)
+     target_include_directories(axiom_gpu_retirement_contract_tests PRIVATE src)
+     target_link_libraries(axiom_gpu_retirement_contract_tests PRIVATE canvas_runtime_render)
+--- /dev/null
++++ b/runtime/composition/tests/ur3_continuous_preview_completion_test.cpp
+@@ -0,0 +1,123 @@
++// Executes the actual Web adapter poll/prepare policy. Only WebGL context/fence
++// calls are deterministic stubs; Composition, editing and Skia rendering are real.
++#include "canvas/runtime/runtime_composition.hpp"
++#include "canvas/runtime/internal/runtime_composition_core.hpp"
++#include "canvas/runtime/internal/runtime_platform_access.hpp"
++#include "canvas/render/webgl_surface_backend.hpp"
++#include <cassert>
++#include <iostream>
++#include <string_view>
++#include <functional>
++#include <array>
++#include <thread>
++unsigned ur3FenceResult=2;
++bool ur3ContextLost=false;
++namespace canvas::ink_playground {
++class InkPlaygroundHistoryTestAccess {public:
++ static void retainPreviewForFailure(interaction::CanvasEditingRuntime&r){r.submittedDisplayRoster_.bound=false;}
++};
++}
++namespace canvas::render {
++struct WebGlSurfaceProvider::Impl {RasterSkiaSurfaceProvider raster;WebGlSurfaceConfig config;bool visible=false;};
++WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config):impl_(std::make_shared<Impl>()) {impl_->config=std::move(config);(void)impl_->raster.resize(256,256);}
++WebGlSurfaceProvider::~WebGlSurfaceProvider()=default;
++std::shared_ptr<GpuCompletionService> WebGlSurfaceProvider::gpuCompletionService()const noexcept{return {};}
++bool WebGlSurfaceProvider::ready()const noexcept{return true;}
++const std::string& WebGlSurfaceProvider::error()const noexcept{static const std::string empty;return empty;}
++RenderTargetInfo WebGlSurfaceProvider::describe()const noexcept{return impl_->raster.describe();}
++SkiaSurfaceAcquireResult WebGlSurfaceProvider::acquire()noexcept{return impl_->raster.acquire();}
++void WebGlSurfaceProvider::release()noexcept{impl_->raster.release();}
++BackendSubmissionResult WebGlSurfaceProvider::lose()noexcept{return impl_->raster.lose();}
++BackendSubmissionResult WebGlSurfaceProvider::present()noexcept{return impl_->raster.present();}
++BackendSubmissionResult WebGlSurfaceProvider::resize(std::uint32_t w,std::uint32_t h)noexcept{return impl_->raster.resize(w,h);}
++BackendSubmissionResult WebGlSurfaceProvider::readbackRgba(std::span<std::uint8_t>o)noexcept{return impl_->raster.readbackRgba(o);}
++std::uint64_t WebGlSurfaceProvider::presentCount()const noexcept{return impl_->raster.presentCount();}
++std::uint64_t WebGlSurfaceProvider::generation()const noexcept{return impl_->raster.generation();}
++BackendSubmissionResult WebGlSurfaceProvider::advanceGeneration()noexcept{return impl_->raster.advanceGeneration();}
++void WebGlSurfaceProvider::setOverlayVisible(bool v)noexcept{impl_->visible=v;}
++bool WebGlSurfaceProvider::overlayVisible()const noexcept{return impl_->visible;}
++}
++#include "../../../sdk/web/web_runtime_adapter.cpp"
++using namespace canvas;
++struct Fixture {
++ runtime::RuntimeComposition owner;
++ runtime::RuntimeCompositionCore& core=runtime::RuntimePlatformAccess::core(owner);
++ platform::WebRuntimeAdapter adapter{owner};
++ std::uint64_t seq=0,req=0;
++ Fixture(){ur3FenceResult=GL_ALREADY_SIGNALED;ur3ContextLost=false;assert(owner.open());assert(adapter.bind(1,2,256,256,256,256,1));assert(core.registerSource(71));}
++ void point(input::PointerPhase phase,float x=30,float y=40){input::PlatformPointerSample s{};s.source=71;s.pointer=1;s.sequence=++seq;s.timestampNs=seq*8000000;s.x=x;s.y=y;s.pressure=.5;s.phase=phase;assert(core.submit({{s}}));}
++ void stroke(){point(input::PointerPhase::kDown);point(input::PointerPhase::kMove,80,40);}
++ void control(runtime::CanvasControlPayload p){runtime::CanvasControlRequest q{};q.clientId=72;q.requestId=++req;q.target=core.controlFacade().mountedCanvasTargets().front();q.payload=std::move(p);assert(core.controlFacade().submitCanvasControl(q).state==runtime::ProductControlState::kQueued);assert(core.ownerPump());}
++ void drain(){for(unsigned i=0;i<1000;++i){auto r=adapter.prepareFrame(false);assert(r!=platform::WebFrameResult::kRejected);if(r==platform::WebFrameResult::kPending)assert(adapter.pollFrame()==platform::WebFrameResult::kRetry);else if(r==platform::WebFrameResult::kIdle)return;std::this_thread::sleep_for(std::chrono::milliseconds(1));}std::cerr<<"drain dirty="<<core.canonicalPresentationDirty()<<" previewActive="<<core.previewActive()<<" pDirty="<<core.previewRenderState().dirty<<" displayDirty="<<core.qualificationRuntime().previewDisplayDirty()<<" handoffs="<<core.qualificationRuntime().pendingCanonicalHandoffCount()<<" pending="<<adapter.frameStatus().pending<<" submitted="<<bool(core.lastSubmittedCanonicalWork())<<"\n";assert(false&&"adapter did not progress");}
++};
++void displayOnlyDelayedCallback(){
++ Fixture f;f.stroke();assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);const auto old=f.adapter.frameStatus();assert(old.previewWorkId&&old.canonicalWorkId);
++ const auto revision=f.core.previewRenderState().contentRevision;
++ const auto display=f.core.qualificationRuntime().previewDisplayRevision();
++ assert(f.core.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,-8,4,0,0,1}));
++ assert(f.core.previewRenderState().contentRevision==revision);assert(f.core.qualificationRuntime().previewDisplayRevision()!=display);
++ const auto result=f.adapter.pollFrame();
++ std::cout<<"{\"case\":\"display-only\",\"result\":"<<int(result)<<",\"pending\":"<<f.adapter.frameStatus().pending<<"}\n";
++ assert(result==platform::WebFrameResult::kRetry&&"superseded preview must release adapter slot");assert(!f.adapter.frameStatus().pending);assert(f.adapter.presentedCount()==1);
++ assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);assert(f.adapter.pollFrame()==platform::WebFrameResult::kRetry);assert(f.core.previewActive());assert(!f.core.previewRenderState().dirty);assert(!f.core.qualificationRuntime().previewDisplayDirty());
++}
++
++void contentAndNewGestureCallbacks(){
++ for(bool newGesture:{false,true}){
++  Fixture f;f.stroke();assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);const auto previous=f.core.previewRenderState().contentRevision;
++  if(newGesture){f.point(input::PointerPhase::kCancel,80,40);f.stroke();}else f.point(input::PointerPhase::kMove,90,42);
++  if(!newGesture)assert(f.core.previewRenderState().contentRevision!=previous);
++  assert(f.adapter.pollFrame()==platform::WebFrameResult::kRetry);assert(!f.adapter.frameStatus().pending);
++  auto prepared=f.adapter.prepareFrame(false);assert(prepared==platform::WebFrameResult::kPending);assert(f.adapter.pollFrame()==platform::WebFrameResult::kRetry);
++  assert(f.core.previewActive());assert(!f.core.previewRenderState().dirty);
++ }
++}
++void strictQualification(){
++ Fixture f;f.stroke();runtime::RuntimeFrameOpportunity first;assert(f.core.serviceFrameOpportunity(false,first)&&first.previewWork);
++ const auto old=*first.previewWork;using State=runtime::RuntimePreviewWorkState;
++ assert(f.core.previewWorkState(old)==State::kCurrent);
++ using Work=runtime::RuntimeFrameOpportunity::PreviewWork;
++ const std::array<std::uint64_t Work::*,9> fields={&Work::runtimeInstanceId,&Work::viewId,&Work::lifetimeGeneration,&Work::workId,&Work::contentRevision,&Work::displayRevision,&Work::attachmentEpoch,&Work::surfaceGeneration,&Work::metricsGeneration};
++ for(auto field:fields){auto forged=old;++(forged.*field);assert(f.core.previewWorkState(forged)==State::kInvalid);assert(!f.core.finishFrameOpportunity({forged,true}));assert(f.core.previewWorkState(old)==State::kCurrent);}
++ State wrongThread=State::kCurrent;std::thread t([&]{wrongThread=f.core.previewWorkState(old);});t.join();assert(wrongThread==State::kInvalid);
++ Fixture foreign;assert(foreign.core.previewWorkState(old)==State::kInvalid);
++ assert(!f.core.finishFrameOpportunity({old,false}));assert(f.core.previewWorkState(old)==State::kCurrent);
++ assert(f.core.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,-8,4,0,0,1}));
++ assert(f.core.previewWorkState(old)==State::kSuperseded);assert(!f.core.finishFrameOpportunity({old,true}));
++ runtime::RuntimeFrameOpportunity fresh;assert(f.core.serviceFrameOpportunity(false,fresh)&&fresh.previewWork);assert(fresh.previewWork!=first.previewWork);
++ assert(fresh.previewWork->contentRevision==old.contentRevision&&fresh.previewWork->displayRevision!=old.displayRevision);
++ assert(f.core.previewWorkState(old)==State::kSuperseded);assert(!f.core.finishFrameOpportunity({old,true}));assert(f.core.previewWorkState(*fresh.previewWork)==State::kCurrent);
++ assert(f.core.finishFrameOpportunity({fresh.previewWork,true}));assert(f.core.previewWorkState(*fresh.previewWork)==State::kInvalid);assert(!f.core.finishFrameOpportunity({fresh.previewWork,true}));
++}
++void cancelMetricsLifetime(){
++ using State=runtime::RuntimePreviewWorkState;
++ for(unsigned mode=0;mode<4;++mode){
++  Fixture f;f.stroke();runtime::RuntimeFrameOpportunity old;assert(f.core.serviceFrameOpportunity(false,old)&&old.previewWork);
++  if(mode==0)f.point(input::PointerPhase::kCancel,80,40);
++  if(mode==1)assert(f.core.resizeSurface({256,256,256,256,1,1.1F}));
++  if(mode==2){assert(f.core.loseSurface());assert(f.core.rebindSurface({256,256,256,256,1,1}));}
++  if(mode==3)assert(f.core.close());
++  assert(f.core.previewWorkState(*old.previewWork)==State::kSuperseded);assert(!f.core.finishFrameOpportunity({old.previewWork,true}));
++  if(mode==1){runtime::RuntimeFrameOpportunity fresh;assert(f.core.serviceFrameOpportunity(false,fresh)&&fresh.previewWork);assert(fresh.previewWork->metricsGeneration!=old.previewWork->metricsGeneration);assert(f.core.finishFrameOpportunity({fresh.previewWork,true}));}
++ }
++}
++void creationCancelUndoRedo(){
++ Fixture f;f.stroke();f.point(input::PointerPhase::kUp,80,40);assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);
++ const auto revision=f.core.previewRenderState().contentRevision;
++ runtime::CanvasControlPayload p{};p.kind=runtime::CanvasControlPayloadKind::kPanBy;p.x=8;p.y=4;f.control(p);
++ p={};p.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;p.creationPreset=runtime::CanvasCreationPreset::kRectangle;f.control(p);
++ f.point(input::PointerPhase::kDown,180,120);f.point(input::PointerPhase::kMove,210,150);f.point(input::PointerPhase::kCancel,210,150);
++ p={};p.kind=runtime::CanvasControlPayloadKind::kUndo;f.control(p);p.kind=runtime::CanvasControlPayloadKind::kRedo;f.control(p);
++ assert(f.core.previewRenderState().contentRevision==revision);assert(f.adapter.pollFrame()==platform::WebFrameResult::kRetry);f.drain();assert(f.core.readback().semanticGeneration==3);assert(!f.core.canonicalPresentationDirty());assert(!f.core.previewActive());
++}
++void currentRejectAndGpuFailure(){
++ {Fixture f;f.stroke();assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);ur3FenceResult=GL_WAIT_FAILED;assert(f.adapter.pollFrame()==platform::WebFrameResult::kRejected);assert(f.adapter.frameStatus().pending);assert(f.adapter.presentedCount()==0);}
++ struct RejectSink final:ink::CanonicalVisibilitySink {
++  ink::HandoffResult canonicalCommitted(const ink::CanonicalHandoffIdentity&,const semantic::CanonicalCommitRecord&)noexcept override{return ink::HandoffResult::kAccepted;}
++  ink::HandoffResult canonicalVisible(const ink::CanonicalHandoffIdentity&,const render::FrameState&)noexcept override{return ink::HandoffResult::kRejected;}
++ } sink;
++ {Fixture f;f.stroke();f.point(input::PointerPhase::kUp,80,40);assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);const auto canonical=f.core.lastSubmittedCanonicalWork();assert(canonical);ink_playground::InkPlaygroundHistoryTestAccess::retainPreviewForFailure(f.core.qualificationRuntime());assert(f.core.receivePlatformPresented({*canonical,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}));assert(f.core.previewActive());f.core.qualificationRuntime().setCanonicalVisibilitySink(&sink);assert(f.adapter.pollFrame()==platform::WebFrameResult::kRejected);assert(f.adapter.frameStatus().pending);assert(f.adapter.presentedCount()==0);f.core.qualificationRuntime().setCanonicalVisibilitySink(nullptr);}
++ {Fixture f;f.stroke();assert(f.adapter.prepareFrame(false)==platform::WebFrameResult::kPending);ur3ContextLost=true;assert(f.adapter.pollFrame()==platform::WebFrameResult::kIdle);assert(!f.adapter.frameStatus().pending);assert(f.adapter.presentedCount()==0);ur3ContextLost=false;}
++}
++int main(){displayOnlyDelayedCallback();contentAndNewGestureCallbacks();strictQualification();cancelMetricsLifetime();creationCancelUndoRedo();currentRejectAndGpuFailure();std::cout<<"preview completion: all boundary cases passed\n";}
++
+--- /dev/null
++++ b/runtime/composition/tests/ur3_continuous_stubs/GLES3/gl3.h
+@@ -0,0 +1,9 @@
++#pragma once
++using GLsync = void*;
++inline constexpr unsigned GL_SYNC_GPU_COMMANDS_COMPLETE=1, GL_ALREADY_SIGNALED=2,
++    GL_CONDITION_SATISFIED=3, GL_TIMEOUT_EXPIRED=4, GL_WAIT_FAILED=5;
++extern unsigned ur3FenceResult;
++inline GLsync glFenceSync(unsigned,unsigned){return reinterpret_cast<GLsync>(1);}
++inline void glFlush(){}
++inline void glDeleteSync(GLsync){}
++inline unsigned glClientWaitSync(GLsync,unsigned,unsigned long long){return ur3FenceResult;}
+--- /dev/null
++++ b/runtime/composition/tests/ur3_continuous_stubs/emscripten/html5.h
+@@ -0,0 +1,7 @@
++#pragma once
++using EMSCRIPTEN_WEBGL_CONTEXT_HANDLE=int;
++inline constexpr int EMSCRIPTEN_RESULT_SUCCESS=0;
++extern bool ur3ContextLost;
++inline int emscripten_webgl_make_context_current(int){return 0;}
++inline bool emscripten_is_webgl_context_lost(int){return ur3ContextLost;}
++inline int emscripten_webgl_get_drawing_buffer_size(int,int*w,int*h){*w=256;*h=256;return 0;}
+--- /dev/null
++++ b/runtime/composition/tests/ur3_continuous_stubs/host_font_resources.hpp
+@@ -0,0 +1,6 @@
++#pragma once
++#include <filesystem>
++namespace canvas::runtime {class RuntimeCompositionCore;}
++namespace canvas::minimal_runtime_host {
++inline bool bindHostTextFonts(runtime::RuntimeCompositionCore&,const std::filesystem::path&,const std::filesystem::path&){return false;}
++}
+--- /dev/null
++++ b/runtime/render/tests/ur3_webgl_extensions_test.cpp
+@@ -0,0 +1,28 @@
++#include "../src/ur3_webgl_extensions.hpp"
++#include <cassert>
++#include <string>
++#include <string_view>
++#include <unordered_set>
++#include <vector>
++// The browser drops extension activation on restore. Its application handle
++// and Emscripten's once-initialized registry remain the same.
++struct Context {
++ int handle=7;
++ unsigned generation=1;
++ bool initExtensionsDone=true;
++ std::unordered_set<std::string> active;
++ std::vector<std::pair<int,std::string>> requests;
++ bool enable(int value,std::string_view name){assert(value==handle);requests.emplace_back(value,name);if(name=="not_supported")return false;active.emplace(name);return true;}
++ void restore(){++generation;active.clear();}
++ bool skiaProbeAndSampler()const{return active.contains("WEBGL_debug_renderer_info")&&active.contains("EXT_texture_filter_anisotropic");}
++};
++int main(){
++ using canvas::render::internal::renewWebGlExtensions;
++ Context context;
++ auto renew=[&]{return renewWebGlExtensions(context.handle,"EXT_texture_filter_anisotropic WEBGL_debug_renderer_info not_supported WEBGL_lose_context",[&](int h,std::string_view name){return context.enable(h,name);});};
++ renew();assert(context.skiaProbeAndSampler());context.restore();assert(!context.skiaProbeAndSampler());
++ renew();assert(context.skiaProbeAndSampler());assert(context.generation==2&&context.handle==7&&context.initExtensionsDone);
++ assert(context.requests.size()==6);assert(!context.active.contains("not_supported"));assert(!context.active.contains("WEBGL_lose_context"));
++ auto count=context.requests.size();assert(!renewWebGlExtensions(0,"EXT_texture_filter_anisotropic",[&](int h,std::string_view s){return context.enable(h,s);}));assert(context.requests.size()==count);
++ assert(renewWebGlExtensions(7,"",[](int,std::string_view){assert(false);return false;}));
++}

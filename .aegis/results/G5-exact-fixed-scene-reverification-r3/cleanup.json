@@ -1,0 +1,55 @@
+{
+  "status": "TWO_BROWSER_WINDOWS_AND_27_OFFLINE_FAMILIES_CLEANED",
+  "browser_starts": 2,
+  "charged_browser_seconds": 469,
+  "browser_cap_seconds": 1020,
+  "unused_seconds_not_authorization": 551,
+  "browser_attempts": [
+    {
+      "id": "G5FS3-PILOT-PAIRS",
+      "charged_seconds": 445,
+      "elapsed_seconds": 444.414744708,
+      "peak_rss_kib": 2187488,
+      "freeze": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/local-web/G5FS3-PILOT-PAIRS/freeze.json",
+        "sha256": "522d7d1703a314b8ff3457f5dbd446c2cedac4f0b13a2253aa38cb8c8e158fd5",
+        "bytes": 168243
+      },
+      "inputs_after": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/local-web/G5FS3-PILOT-PAIRS/inputs-after.json",
+        "sha256": "1468a3f0d9ffc0d757bd3b7274d03020b98ee316f708a610efe307cd76f89410",
+        "bytes": 159081
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    },
+    {
+      "id": "G5FS3-ZOOM-TERMINAL",
+      "charged_seconds": 24,
+      "elapsed_seconds": 23.187477042,
+      "peak_rss_kib": 2091664,
+      "freeze": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/local-web/G5FS3-ZOOM-TERMINAL/freeze.json",
+        "sha256": "86f26ce180bb6079c8ea879a698561ec55e3105c70ac4d02db062918eafd0a5b",
+        "bytes": 160001
+      },
+      "inputs_after": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/local-web/G5FS3-ZOOM-TERMINAL/inputs-after.json",
+        "sha256": "bab9eb758cd35b65a5abe5d93231f6eed8bc28a1e8095d76f798197a6625aa95",
+        "bytes": 155353
+      },
+      "cleanup_complete": true,
+      "remaining_owned_pids": []
+    }
+  ],
+  "offline_reference_unique_count": 27,
+  "offline_elapsed_seconds": 305.42307916699997,
+  "offline_max_seconds": 13.690194167,
+  "offline_total_distinct_reference_budget": "60seconds each,4096MiB,parallel1",
+  "offline_cleanup_complete": true,
+  "owned_pids_remaining": [],
+  "no_more_windows": true,
+  "old_user_demos_and_documents_untouched": true,
+  "no_commit_push": true,
+  "index_empty": true
+}

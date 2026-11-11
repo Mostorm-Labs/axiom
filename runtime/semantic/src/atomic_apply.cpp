@@ -1,6 +1,7 @@
 #include "atomic_apply.hpp"
 
 #include "object_store_mutator.hpp"
+#include "canvas/foundation/internal/g5_observation.hpp"
 
 #include <exception>
 #include <new>
@@ -56,6 +57,7 @@ bool preflight(const Store& store, const PreparedApplyPlan& plan) {
 
 template <typename Store>
 AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPlan& plan, bool reserved FC08_CONTEXT_PARAMETER) {
+    G5_SCOPE(g5Atomic,foundation::internal::g5::Tag::wa_atomic_apply,foundation::internal::g5::Purpose::none);
     if (!preflight(store, plan)) {
         return {};
     }

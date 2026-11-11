@@ -1,0 +1,49 @@
+{
+  "id": "reference-026",
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/local-web/G5FS3-ZOOM-TERMINAL/zoom-terminal/final.axsnap",
+    "source_snapshot_sha256": "d7a8d08e140a1aa1622e3916c3d820bd2cd1659cae3fb265559949c66ef1fdd8",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/pixel-completions/r3/G5FS3-ZOOM-TERMINAL/zoom-terminal/ink-final.axsnap",
+    "reference_snapshot_sha256": "6dd6fcecb325be6bf28ab5160a12fce13be4d2c92ce180aa20f7905ca8b4a07f",
+    "document_digest": "8c25d1cf7de885255ea2093725e9c9c1fa059171c0f9f56c603a83560e05f632",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1.2712491750717163,
+        "x": -162.74945068359375,
+        "y": -108.4996337890625
+      },
+      "hud_bounds": []
+    },
+    "projection": {
+      "before": 44,
+      "ink": 40,
+      "status": "PROJECTED"
+    },
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "--pixels",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/pixel-completions/r3/G5FS3-ZOOM-TERMINAL/zoom-terminal/ink-final.axsnap",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-026/request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-026/reference"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 13.690194167,
+    "peak_process_family_rss_kib": 318176,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 60,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "status": "REFERENCE_RENDERED"
+}

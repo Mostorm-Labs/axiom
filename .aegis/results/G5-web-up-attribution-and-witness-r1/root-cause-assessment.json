@@ -1,0 +1,145 @@
+{
+  "status": "MEASURED_LOCAL_ROOT_CAUSES_WITH_ONE_CENSORED_UP",
+  "scope": "Plan steps1\u20132 only; diagnosis and trustworthy witnesses, no ordinary product optimization.",
+  "evidence": [
+    "phase-timing.json",
+    "work-counts.json",
+    "ordinary-baseline.json",
+    "on-off-overhead.json",
+    "baseline-witness-results.json",
+    "snapshots-semantics.json"
+  ],
+  "ordinary_baseline": {
+    "long1600_main_up_ms": 4174.300000071526,
+    "immediate_full_successor_up_ms": 3647.899999976158,
+    "growth6_main_up_ms": [
+      937.1000000238419,
+      943.1999999284744,
+      1085.1000000238419,
+      1237.7999999523163,
+      4399.399999976158,
+      6386.200000047684
+    ],
+    "normal_and_diagnostic_not_paired_performance": true,
+    "old_paced9s_successor_comparison": "Different waveform delivery: old16ms pauses/ROI reads vs synchronous full successor trajectory. Do not label as improvement."
+  },
+  "findings": [
+    {
+      "id": "WA-ROOT1",
+      "confidence": "HIGH_FOR_COMPLETE_LONG1600_MAIN_UP",
+      "trigger": "16 original strokes have different object-local masks;24 new offset0 duplicates can share equivalent query.",
+      "facts": {
+        "root_ms": 4158.5,
+        "exact_ms": 3756.4,
+        "path_build_ms": 3730.6,
+        "path_build_percent_of_root": 89.71023205482747,
+        "query_builds": 16,
+        "query_union_operations": 25600,
+        "historical_path_builds": 32,
+        "memo_hits_cumulative": 24,
+        "body_uses": 40,
+        "unique_prepared_bodies": 1,
+        "body_or_prepared_compile_calls": 0
+      },
+      "source": [
+        "runtime/interaction/src/canvas_partial_erase.cpp:30",
+        "runtime/interaction/src/partial_erase_geometry.hpp:13",
+        "runtime/render/src/selection_region_geometry.cpp:483",
+        "runtime/render/src/selection_region_geometry.cpp:689"
+      ],
+      "mechanism": "partialEraseGeometry inverse-maps confirmed world trace per object transform; complete mask equality at get() cannot alias different local geometry. erasePath unions every swept segment for each distinct query. Actual16queryBuild\u00d71600segments=25600unions. Do not use native40equaltransform/39memo as Web evidence.",
+      "deferred": "World-path union then transform is not yet proven numerically equivalent to the accepted per-local f32 stroke/PathOps oracle; defer cross-transform sharing."
+    },
+    {
+      "id": "WA-ROOT2",
+      "confidence": "HIGH_FOR_COMPLETE_GROWTH12_ROOTS_AND_SOURCE",
+      "trigger": "Accumulated history occupies shared local8MiB; draw flatten admission, exact path retention and memo are coupled.",
+      "facts": {
+        "round6_main_ms": 5521.2,
+        "round6_main_path_build_ms": 5035.9,
+        "round6_main_path_build_calls": 186,
+        "round6_main_plan_ready": 23,
+        "round6_main_plan_denied": 17,
+        "round6_main_primitive_builds": 2278,
+        "round6_main_local_max_bytes": 8290785,
+        "round6_successor_ms": 5319.3,
+        "round6_successor_path_build_ms": 5022.9,
+        "round6_successor_path_build_calls": 173,
+        "round6_successor_plan_ready": 0,
+        "round6_successor_plan_denied": 40,
+        "round6_successor_primitive_builds": 2920,
+        "round6_successor_local_max_bytes": 8214039,
+        "equivalent_memo_cumulative_before_and_after_round6": 40,
+        "body_uses_each_up": 40,
+        "body_or_prepared_compile_calls": 0
+      },
+      "source": [
+        "runtime/render/src/selection_region_geometry.cpp:550",
+        "runtime/render/src/selection_region_geometry.cpp:604",
+        "runtime/render/src/selection_region_geometry.cpp:736",
+        "runtime/render/src/selection_region_geometry.cpp:744",
+        "runtime/render/src/selection_region_geometry.cpp:758",
+        "runtime/render/src/selection_region_geometry.cpp:257"
+      ],
+      "mechanism": "query() first requests full MaskHistoryPlan including prepared draw primitives. Its local/global leases and path allocations share usage. Memo admission requires empty history or a nonnull full historyPlan. Repeated flattened-history preparation near capacity denies plans, disables memo and evicts/refuses exact paths; pathFor() falls through to uncached erasePath() for historical paths. wa_path_build measures uncached builds while query/historyBuild counters omit them, so cached counter0 never means no path construction.",
+      "not_a_budget_increase_request": "The issue is representation/lifetime coupling within the admitted working set. Raising global memory has not been shown necessary; do not change8MiB/global/cardinality by inference."
+    },
+    {
+      "id": "WA-SECONDARY",
+      "confidence": "MEASURED_DIAGNOSTIC_ONLY",
+      "facts": {
+        "long1600_scene_ms": 285.1,
+        "long1600_observer_ms": 102.5,
+        "long1600_semantic_apply_ms": 4.3,
+        "long1600_history_prepare_ms": 0.1,
+        "long1600_residual_ms": 10.1
+      },
+      "interpretation": "OperationEngine/History mutation is not the dominant measured root. Root residual is exclusive and direct children reconcile. Inner observer/apply spans are nested; never sum inclusive parent+child."
+    }
+  ],
+  "minimal_step3_proposal": {
+    "owner": "Existing Render EraseMaskPathCache; keep PreparedGeometryCache/SourceRetentionPool/ResourceBudgetManager owners.",
+    "primary_files": [
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp"
+    ],
+    "conditional_private_wiring": [
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp"
+    ],
+    "design": [
+      "Separate exact-history complete proof/lazy exactPaths/memo from draw MaskHistoryPlan flattened primitives.",
+      "Retain complete canonical mask records/source lease; owner+pointee and complete values qualify reuse. Include body identity+full validation, query geometry, transform, kind version, complete history; hash/IDs alone insufficient.",
+      "Use a private per-Up query cohort/lifetime to pin current query path, exact history proof and body. Avoid repeated union for same local geometry among equivalent copies; do not reset cohort for every object.",
+      "Keep actual local8MiB/global/512 accounting; prioritize stale draw flatten/cache eviction without discarding active exact progress/proofs. Unknown/denied proofs retain independent exact fallback; no falsehit/noop.",
+      "Cross-transform world geometry reuse remains DEFERRED until separate numeric oracle proves the accepted local algorithm; no requirement16\u21921 in first repair."
+    ],
+    "tests": [
+      "Native actual16differenttransform+24equivalentcopy fixture,1600segments,6continuousrounds and following shorterase.",
+      "Complete source/owner/content/history fork invalidation, oldmask ID/value preservation, no-op/cancel/UndoRedo.",
+      "Quota denial/recovery/eviction and current leases, geometry body compile0 on ready body; independent null-cache/null-prepared query oracle.",
+      "Same ordinary Web confirmed waveform + immediate successor pacing before/after; diagnostic counts separate; preserve pixels/atomic mutation/receipt."
+    ],
+    "unchanged": [
+      "SDK/publicAPI",
+      "Operation/History/Scene/ARC contracts",
+      "brush algorithm",
+      "AA/GPU strategy",
+      "memory defaults and quotas",
+      "sync Up admission"
+    ],
+    "no_threading_or_background_prototype": true
+  },
+  "limits": [
+    "Long1600 successor Up span340 End and some aggregates/counters missing, statistical31412/critical0. DOM3.9558s and critical exact child3.6527s observed; no complete root residual or detailed path totals claimed.",
+    "Final Up-only data observes synchronous input work, not post-Up canonical frame tile cardinality. Prior diagnostic canonical coverage counter rows missing; mark MISSING, not0.",
+    "Single OFF/ON800 pair describes+15.1ms mainUp (0.81%) and+15ms successor. No uncertainty bound or ordinary latency correction.",
+    "Diagnostic growth and normal growth timing differ; no paired relative performance PASS.",
+    "Typed witness checks prove actual beforeUp content at sampled time, not instantaneous generation+selection UI response or physical input-to-photon.",
+    "Userprivate document/recording not replayed; broader interaction belongs next scopedstep4."
+  ],
+  "terminal": "BOUNDED_PROOF_INCOMPLETE",
+  "use_for_next_step": "15 complete Up roots and counter/source evidence support independently scoped step3 without claiming full phase proof. Do not reopen observation window.",
+  "human_pause": "Beforeplanstep5backgroundcompute evaluation",
+  "official_G5_P34_performance_PASS": false
+}

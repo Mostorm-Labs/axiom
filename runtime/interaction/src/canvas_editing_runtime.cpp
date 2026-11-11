@@ -1691,6 +1691,9 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
     r={};r.serial=nextDisplaySerial_++;r.session=session;r.kind=kind;r.key=displayInputKey_;
     r.document=documentId_;r.view=viewId_.value();r.surface=surface_.generation;r.metrics=surface_.metricsGeneration;
     r.resource=presentationResourceEpoch_;r.camera=cameraGeneration();
+    // Content revisions restart for a new brush session. Its display lifetime
+    // must still differ from a previous GPU capture using the same pointer.
+    if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
     G5_OBSERVE(g5::Kind::Admission,g5::Tag::display_record,true,r.serial,r.session,static_cast<unsigned>(kind),r.key.source,r.key.pointer,r.key.generation,r.view,r.surface,r.metrics,r.resource,r.camera);
     return &r;
   }
@@ -1698,6 +1701,7 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
 }
 void CanvasEditingRuntime::cancelDisplay(std::uint64_t session,DisplayKind kind) noexcept {
   if(auto* r=findDisplay(session,kind);r&&!r->sealed){
+    if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
     G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_record,true,r->serial,3);*r={};
   }
 }
@@ -3361,7 +3365,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   auto* display=findDisplay(pointerId,DisplayKind::kErase);
   if(!display){(void)eraserCancel(pointerId);return false;}
   UR2D_PHASE(upHistory,history);
+  G5_SCOPE(g5HistoryRecord,g5::Tag::history_prepare,g5::Purpose::none);
   auto historyEntry=history_.prepareRecord(operation,{std::move(inverse)},{},{});
+  G5_SCOPE_END(g5HistoryRecord);
   UR2D_END(upHistory);
   if(!historyEntry){(void)eraserCancel(pointerId);return false;}
   UR2D_PHASE(upPublication,publication);
@@ -3385,11 +3391,15 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
   committed=true;
   UR2D_PHASE(upFinalize,finalize);
+  G5_SCOPE(g5Finalize,g5::Tag::history_finalize,g5::Purpose::none);
   history_.commitPrepared(std::move(*historyEntry));
   sealDisplay(*display,*applied.commit_record);
+  G5_SCOPE_END(g5Finalize);
   UR2D_END(upFinalize);
   UR2D_PHASE(upObserver,observer);
+  G5_SCOPE(g5ObserveApplied,g5::Tag::observer,g5::Purpose::none);
   observeApplied(operation,std::move(applied));
+  G5_SCOPE_END(g5ObserveApplied);
   UR2D_END(upObserver);
   ++submittedOperationCount_;
   if (lastAppliedCommit_.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {

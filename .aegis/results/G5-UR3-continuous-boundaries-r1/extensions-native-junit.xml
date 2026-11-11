@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="4"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="0"
+	timestamp="2026-11-11T06:13:00"
+	>
+	<testcase name="UR3WebGlExtensionRenewal" classname="UR3WebGlExtensionRenewal" time="0.259232" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G5GpuRetirementContract" classname="G5GpuRetirementContract" time="0.0153785" status="run">
+		<properties/>
+		<system-out>{"case":"webgl_loss_quota_admitted","pass":true}
+{"case":"registered_lost_context_with_zero_buffer_is_physical_loss","pass":true}
+{"case":"physical_loss_releases_affected_lifetime_without_owner_close","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"deleted_or_invalid_handle_reported_lost_remains_unknown","pass":true}
+{"case":"unknown_registry_cannot_grant_physical_completion","pass":true}
+{"case":"unknown_old_callback_does_not_release_quota","pass":true}
+{"case":"logical_resize_and_zero_dimensions_do_not_imply_context_loss","pass":true}
+{"case":"healthy_context_keeps_normal_callback_completion","pass":tru...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="G5GpuResourceRecovery" classname="G5GpuResourceRecovery" time="0.13793" status="run">
+		<properties/>
+		<system-out>{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_target_pixels","pass":true}
+{"case":"idle_retirement_converges_without_edit","pass":true}
+{"case":"actual_navigation_retained_world_preparation","pass":true}
+{"case":"temporary_target_denial","pass":true}
+{"case":"temporary_target_denial_keeps_navigation_owner","pass":true}
+{"case":"logical_resize_preserves_context_lifetime","pass":true}
+{"case":"old_surface_generation_never_presents","pass":true}
+{"case":"rebind_draws_current_generation","pass":true}
+{"case":"resize_preserves_canonical_pixels","pass":true}
+{"case":"present_failure_not_success","pass":true}
+{"case":"preview_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_actual_GPU_lifetime","pass":true}
+{"case":"preview_clear_transparent_pixels","pass":true}
+{"case":"actual_Metal_context","pass":true}
+{"case":"physical_target","pass":true}
+{"case":"actual_canonical_submission","pass":true}
+{"case":"cold_...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="UR3PreviewCompletion" classname="UR3PreviewCompletion" time="0.140913" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+Axiom Web frame rejected: poll GPU fence
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+Axiom Web frame rejected: preview c...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

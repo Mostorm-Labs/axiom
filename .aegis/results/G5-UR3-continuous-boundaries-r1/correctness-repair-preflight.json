@@ -1,0 +1,23 @@
+{
+  "status": "FROZEN_READY_FOUR_ROW_CORRECTNESS_ONLY",
+  "supplement_sha256": "30beb4a7c69890dd698605831b039130398830af7e288a3e76960cf1c25fbab2",
+  "id": "G5U3C1-CORRECTNESS-REPAIR",
+  "limit_seconds": 420,
+  "rss_mib": 4096,
+  "cases": [
+    "masked-affine-d2",
+    "masked-affine-d4",
+    "navigation-recovery-d4",
+    "foreground-idle-d4"
+  ],
+  "files": {
+    "verification/runners/g5/ur3_continuous_correctness_completion.mjs": "38307401737d91890beb20612d740a324b8f61ce21de52beebe2df9ea5231d06",
+    "verification/runners/g5/ur3_continuous_correctness_runner.py": "286ea8a3576a2651f585af2fd920c106eea3deddc3759f5503395fb6bea0543b",
+    "out/G5-UR3-continuous-boundaries-r1/correctness-completion-request.json": "c09e3884b3a7e41c718e6149b2c2b6e3bac3e3dbdc2bbffb8900717adccd4609",
+    "out/G5-UR3-continuous-boundaries-r1/expected-dom": "aeaad44daebc87a691cbc9e2c4dce62cbbb831087046f4eee4839d0d9d230abf"
+  },
+  "SDK": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+  "actual_vm_preflight": "correctness-repair-vm.json",
+  "product_source_unchanged": true,
+  "postrestoreprobe": "Originalreadbackhelper records and consumes any preexisting error explicitly as INVALID; never qualification. Final fresh readback must independently VALID; nohelperchange."
+}

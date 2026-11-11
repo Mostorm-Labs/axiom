@@ -1,0 +1,45 @@
+{
+  "stage": "final",
+  "status": "QUALIFIED",
+  "compared_pixels": 5079493,
+  "aa_boundary_pixels": 701747,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair2-old-growth/final.axsnap",
+    "source_snapshot_sha256": "0b7ab69bd74b5d15649aff5e3ae278cbac3450727c66a35b198a3fd8f77d4a91",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair2-old-growth/final.axsnap",
+    "reference_snapshot_sha256": "0b7ab69bd74b5d15649aff5e3ae278cbac3450727c66a35b198a3fd8f77d4a91",
+    "document_digest": "10ad9e4f271e5ec1048ad91b68ed21f4c93c6f439f1a57c4d7eaafb59332ee28",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": null,
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "reuseProof": null,
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-010/reference.rgba",
+    "sha256": "63b98b56f44a3a1f60260e199b9b275aef0ea1bc723e7c5ed47af4225155e88a"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-010/reference.edge",
+    "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+  },
+  "actual_sha256": "f2af39444563e19c4d2953d543f51526122a87a83d2d396bda0c99904e77cbe2"
+}

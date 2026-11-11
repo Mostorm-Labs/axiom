@@ -1,0 +1,11 @@
+# Owner-coordinated exact-Up preparation residency
+
+Current2f1bcandidate is correct but strictly slower underfixed40samecanonical: continuous6thmain7969vsold5825ms, successor8632vs5609ms; long4.13s unchanged. R3independent35rows/70pixelsqualified; verificationbasisnowtrusted.
+
+EraseMaskPathCache ownsdrawhistoryLRU+exactproof/resultmemo within8MiB/512. SkiaInkLayers::Source.history strongMaskHistoryPlan persists acrossframes, preventingLRUeviction. GPUresidentWeb admitteddrawplans consumequota neededforexactquerypaths. Queryget worstcasereservationdenial causesuncachedhistoryreplay.
+
+ActualRenderconsumer mayreleaseownidlehistoryrefs for exact-Up pressure. Nevermutateexternallyheldplan contents. Source.history resetMUSTexplicitlyinvalidateALLmaskresultqualification(epoch/applied/basis); nullhistoryPrefix otherwise treats stale resultasvalid. Keepbodypixels/preparedbodygeometry/lastsuccessdisplayandGPUleases. Rebuildhistory/resultfrombody asneeded.
+
+Readr3next-scope-readonly-feasibilityandcontrolreview. NativeREDactualownerbeforemutation; no Movecohort/globalflush. Preferpressuretriggered/boundedonecohortreclamation,weakcallbacklifetimescope. Fullypinnedforeigncasecorrectfallback.
+
+Newr4build/installandseparateimmutableSDKarchivebeforebrowser; prior1e1c/2f1b/rawuntouched. Continueentirefrozenclosureafternativewithoutapprovalwait. Userapproved1-4; stopBEFOREstep5backgroundcompute. No commitpush.

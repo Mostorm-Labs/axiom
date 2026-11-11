@@ -1,0 +1,38 @@
+{
+  "status": "ALL_OWNED_BROWSER_FAMILIES_CLEANED",
+  "ledgers": [
+    {
+      "path": ".aegis/results/G5-exact-query-working-set-r1/sampling-ledger.json",
+      "sha256": "9783511837671c5f08903ca9861c6478f959d9589c81d9659ea305a161a0c998",
+      "bytes": 2255
+    },
+    {
+      "path": ".aegis/results/G5-exact-query-working-set-web-r2/sampling-ledger.json",
+      "sha256": "c6bcae60cb29e46ee9861b8a9d0bee0ab983ced3ce68e995c191b7f00c8aecb9",
+      "bytes": 2254
+    }
+  ],
+  "r1_starts": 2,
+  "r1_charged_seconds": 505,
+  "r2_starts": 2,
+  "r2_charged_seconds": 797,
+  "r2_cap": 1320,
+  "r2_remaining_seconds_not_new_authorization": 523,
+  "windows_remaining": [],
+  "r1_unused_windows_closed": [
+    "G5QW1-BASELINE-DIAGNOSTIC",
+    "G5QW1-CONTINUOUS"
+  ],
+  "r2_continuous": "STOPPED/PARTIALfromzoomterminalharnessfailure; guardreasonnonzero_exit, no timeout/crash/OOM",
+  "old_user_demo_ports_untouched": [
+    4298,
+    4319,
+    4318,
+    4317,
+    4316
+  ],
+  "no_user_document_or_tabs_touched": true,
+  "new4320": "Candidateevaluationserveronly,notacceptedperformanceupgrade; noautomaticbrowsernavigation",
+  "no_commit_push": true,
+  "index_empty": true
+}

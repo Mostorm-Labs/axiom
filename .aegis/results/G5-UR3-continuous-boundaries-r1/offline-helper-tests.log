@@ -1,0 +1,31 @@
+TAP version 13
+# Subtest: DPR aware rectangles, camera and in-canvas empty cleanup
+not ok 1 - DPR aware rectangles, camera and in-canvas empty cleanup
+  ---
+  duration_ms: 0.446208
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur3_continuous.test.mjs:3:1'
+  failureType: 'testCodeFailure'
+  error: 'camera lacks in-canvas cleanup proof'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    cleanupPoint (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous_contract.mjs:10:89)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_ur3_continuous.test.mjs:6:85)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.start (node:internal/test_runner/test:877:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: typed sticky/table dimensions and negative expected-color witness
+ok 2 - typed sticky/table dimensions and negative expected-color witness
+  ---
+  duration_ms: 0.168125
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 37.975541

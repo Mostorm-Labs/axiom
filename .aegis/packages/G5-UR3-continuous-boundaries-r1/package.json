@@ -1,0 +1,65 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-UR3-continuous-boundaries-r1",
+  "status": "FROZEN_AUTHORIZED_STEP4_THEN_STOP_BEFORE_STEP5",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "completed_through": [
+      "checkpointpushed",
+      "step1_2attribution",
+      "step3r4acceptedmeasuredfix"
+    ],
+    "next_action": "Focusedstep4continuousroute/oraclepreflight,extraexistingnativekeepers,10primary+10correctness,smallownerfixonlyifproven; mandatoryhumanstopbefore5"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-UR3-continuous-boundaries-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "558a2443c4049de9fd661c1400003b84cdf9a172ec47be589ea893f260df8752"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "dcdd49da62b1743eb429549d804f50cb923afd2fa79a1c5e97f85a06cde896b0"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "8c836886c2e375674284eb05e58715cb56f34196f923d9f234ab0edcf4b77f46"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "956697eaa053c0977b9023cef4e44f408f8e85bbaf56f4b2ddb55e41668f1114"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "73e1c40b1854f0f65e5cb4db3b4ac77727a39ece0ab0ac5484dc70e9e84419c7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "c032639b26959ecd561c497209173943addef6c63737257cca8c159fe546e45e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "e7d70a6fec9e6954ce1404e3b03285358c5a8d1948929c6373c3716057536b86"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "human_stop": "MANDATORY_STOP_BEFORE_STEP5_BACKGROUND_COMPUTE_EVALUATION"
+}

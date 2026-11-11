@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-web-up-attribution-and-witness-r1",
+  "status": "FROZEN_AUTHORIZED_STEPS1_2",
+  "stage": "P31 userapproved1–4; firststep1witness+step2Webattribution",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "completed_through": [
+      "existingreviewedsourcecheckpoint80335dd0pushed",
+      "oldlongtailandmissingproofpreserved"
+    ],
+    "next_action": "Offlinecompletewitness/drivernegativepreflight thennormalmissing3cases/privateWebphaseattribution"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-web-up-attribution-and-witness-r1"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "3665c75fbdde8acc2654a870a19b2095bba6815c52a40b21770cf2183c2d1afa"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "a56a5e5f2a6ac48d635eb9f67e67d04aff7c5b967a4436d5dc7c9ee58614fb80"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "296000909cb7bd778c4e5a5b3dbfee25c17492db7b5ff7ab50907f2cd303ff30"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "f2b1cb96999e39111de61bbfe94d84562a269671f62091f6ecc35d07b2eaf153"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "b4ad480cd4f698e6b7d264281391f742c6c9117f8974a72dd6eacc7d4cc7297f"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "dfafc7a42acc58b8abae401c161774783c795b2087ae994eca0e6a8454a22e93"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "human_pause_boundary": "BEFORE_PLAN_STEP5_BACKGROUND_COMPUTE_EVALUATION",
+  "authorized_next_steps": "Control prepares measuredstep3 and scopedUR3step4 withoutfurtherhumanpermission; do notstartstep5."
+}

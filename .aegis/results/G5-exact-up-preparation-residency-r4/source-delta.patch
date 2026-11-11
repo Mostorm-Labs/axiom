@@ -1,0 +1,572 @@
+--- a/runtime/render/src/skia_ink_layers.hpp
++++ b/runtime/render/src/skia_ink_layers.hpp
+@@ -19,6 +19,9 @@
+         const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={},PreparationAllowance* allowance=nullptr);
+     void clear()noexcept;
+     void prune(std::span<const ReferenceTraversalEntry>);
++    // Owner-thread preparation opportunity only. Plan values and pixel/GPU
++    // leases remain valid; every retained mask result loses qualification.
++    std::size_t retireIdleHistoryPreparation() noexcept;
+  private:
+     using MaskPrimitive=std::variant<semantic::EraseCubicSegment,semantic::FilledPathMask>;
+     struct Source {
+@@ -42,6 +45,7 @@
+     std::shared_ptr<EraseMaskPathCache> histories_;
+     std::size_t bytes_=0;
+     std::uint64_t tick_=0;
++    unsigned drawDepth_=0;
+     bool reserve(std::size_t,const Key&,const RenderCacheOptions&,
+         const std::shared_ptr<resources::ResourceBudgetManager>&,resources::ResourceLease&);
+     void eraseSource(foundation::ObjectId);
+--- a/runtime/render/src/skia_ink_layers.cpp
++++ b/runtime/render/src/skia_ink_layers.cpp
+@@ -10,6 +10,16 @@
+ 
+ namespace canvas::render::internal {
+ void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
++std::size_t SkiaInkLayers::retireIdleHistoryPreparation()noexcept{
++    if(drawDepth_)return 0;
++    std::size_t retired=0;
++    for(auto& [id,source]:sources_)if(source.history){
++        source.history.reset();++retired;
++        source.epoch=source.epoch==UINT64_MAX?1:source.epoch+1;
++        for(auto& [key,tile]:tiles_)if(key.id==id){tile.epoch=0;tile.applied=0;}
++    }
++    return retired;
++}
+ void SkiaInkLayers::eraseSource(foundation::ObjectId id){
+     for(auto it=tiles_.begin();it!=tiles_.end();)if(it->first.id==id){bytes_-=it->second.bytes;it=tiles_.erase(it);}else ++it;
+     sources_.erase(id);
+@@ -39,6 +49,7 @@
+     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
+     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+     const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories,PreparationAllowance* allowance){
++    struct DrawScope {unsigned& depth;explicit DrawScope(unsigned& value):depth(value){++depth;}~DrawScope(){--depth;}} drawScope{drawDepth_};
+     if(prepared)geometry_=std::move(prepared);
+     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
+     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);
+--- a/runtime/render/src/skia_render_cache_internal.hpp
++++ b/runtime/render/src/skia_render_cache_internal.hpp
+@@ -80,6 +80,7 @@
+     // Entering live erasure changes the useful representation. Retire old
+     // complete masked sources before the next GPU epoch pins their leases.
+     void releaseMaterialSources(bool releaseWorkSurfaces=true)noexcept;
++    std::size_t retireIdleHistoryPreparation() noexcept {return inkLayers_.retireIdleHistoryPreparation();}
+     // Keep matching exact work resumable; obsolete camera/target work cannot
+     // reserve the buffers needed by a renewed navigation demand.
+     bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -762,12 +762,14 @@
+     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+ }
+ void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+-SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort();}
++SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
+ SkiaRenderer::ExactQueryCohort::~ExactQueryCohort(){if(owner_)owner_->endCohort();}
+ SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const noexcept{
+     if(!active)return ExactQueryCohort({});
+     if(renderCacheOptions_.enabled&&!eraseQueries_)try{eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();}catch(const std::bad_alloc&){}
+-    return ExactQueryCohort(eraseQueries_);
++    const auto cache=std::weak_ptr<internal::SkiaRenderCache>(renderCache_);
++    try{return ExactQueryCohort(eraseQueries_,[cache]{if(const auto owner=cache.lock())owner->retireIdleHistoryPreparation();});}
++    catch(const std::bad_alloc&){return ExactQueryCohort(eraseQueries_);}
+ }
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -100,7 +100,7 @@
+     class ExactQueryCohort final {
+         friend class SkiaRenderer;
+         std::shared_ptr<internal::EraseMaskPathCache> owner_;
+-        explicit ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache>) noexcept;
++        explicit ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache>,std::function<void()> = {}) noexcept;
+       public:
+         ~ExactQueryCohort();
+         ExactQueryCohort(const ExactQueryCohort&)=delete;
+--- a/runtime/render/src/selection_region_geometry_internal.hpp
++++ b/runtime/render/src/selection_region_geometry_internal.hpp
+@@ -2,6 +2,7 @@
+ #include "canvas/render/selection_region_geometry.hpp"
+ #include "canvas/resources/resource_budget_manager.hpp"
+ #include "canvas/render/render_cache.hpp"
++#include <functional>
+ namespace canvas::render::internal {
+ class PreparedGeometryCache;
+ class SourceRetentionPool;
+@@ -39,7 +40,7 @@
+     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
+     std::shared_ptr<const Entry> exactHistoricalPath(const std::shared_ptr<ExactHistoryProof>&,std::size_t index);
+     // Private owner-thread scope: bounded current query, no document ownership.
+-    void beginCohort() noexcept;
++    void beginCohort(std::function<void()> pressure={}) noexcept;
+     void endCohort() noexcept;
+     // Private Render translation units only; returned pins retain their quota.
+     std::shared_ptr<const Entry> get(const semantic::EraseMaskGeometry&,bool historical=false);
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -426,10 +426,15 @@
+     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+     unsigned cohortDepth=0;
++    std::function<void()> cohortPressure;
++    bool cohortPressureAttempted=false;
+     std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
+         std::size_t(lastQuery&&std::find(cohortQueries.begin(),cohortQueries.end(),lastQuery)==cohortQueries.end())+std::size_t(bool(queryPrefix));}
+     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
+     bool evict(){
++        if(cohortDepth&&!cohortPressureAttempted&&cohortPressure){
++            cohortPressureAttempted=true;cohortPressure();
++        }
+         // Draw flattening is optional to exact work. Active draw pins keep
+         // their leases; only idle plans are reclaimed here.
+         if(cohortDepth){
+@@ -484,8 +489,11 @@
+ EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
+ EraseMaskPathCache::~EraseMaskPathCache()=default;
+ void EraseMaskPathCache::clear()noexcept{impl_->queryPrefix.reset();impl_->queryPrefixSegments=0;impl_->lastQuery.reset();impl_->cohortQueries.clear();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<ExactHistoryProof>>{}.swap(impl_->exactHistories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+-void EraseMaskPathCache::beginCohort()noexcept{++impl_->cohortDepth;}
+-void EraseMaskPathCache::endCohort()noexcept{if(impl_->cohortDepth&&!--impl_->cohortDepth)impl_->cohortQueries.clear();}
++void EraseMaskPathCache::beginCohort(std::function<void()> pressure)noexcept{
++    if(!impl_->cohortDepth){impl_->cohortPressure=std::move(pressure);impl_->cohortPressureAttempted=false;}
++    ++impl_->cohortDepth;
++}
++void EraseMaskPathCache::endCohort()noexcept{if(impl_->cohortDepth&&!--impl_->cohortDepth){impl_->cohortQueries.clear();impl_->cohortPressure={};impl_->cohortPressureAttempted=false;}}
+ void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+ EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+ void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& geometry,
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -263,6 +263,16 @@
+     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
++    add_executable(axiom_exact_owner_residency_tests tests/exact_owner_residency_test.cpp)
++    add_executable(axiom_exact_owner_residency_pixels tests/exact_owner_residency_pixels.cpp)
++    target_link_libraries(axiom_exact_owner_residency_pixels PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    add_test(NAME G5ExactOwnerResidencyPixels COMMAND axiom_exact_owner_residency_pixels)
++    target_compile_definitions(axiom_exact_owner_residency_tests PRIVATE AXIOM_EXACT_OWNER_RESIDENCY=1)
++    target_link_libraries(axiom_exact_owner_residency_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    add_test(NAME G5ExactOwnerResidency COMMAND axiom_exact_owner_residency_tests
++      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
++      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/final.axsnap"
++      "${CMAKE_CURRENT_BINARY_DIR}/exact-owner-residency.json")
+     target_compile_definitions(axiom_exact_query_working_set_tests PRIVATE AXIOM_EXACT_QUERY_WORKING_SET=1)
+     target_link_libraries(axiom_exact_query_working_set_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     add_test(NAME G5ExactQueryWorkingSet COMMAND axiom_exact_query_working_set_tests --verify
+--- /dev/null
++++ b/runtime/render/tests/exact_owner_residency_pixels.cpp
+@@ -0,0 +1,49 @@
++#define main ownerPixelFixtureMain
++#include "canonical_prepared_body_test.cpp"
++#undef main
++#include "../src/skia_ink_layers.hpp"
++#include "../src/skia_mask_history.hpp"
++#include <nlohmann/json.hpp>
++#include <iostream>
++int main(){try{
++#if defined(__APPLE__)
++ auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");
++ {auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");auto completion=std::make_shared<NativeMetalCompletion>();
++  GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"owner native GPU");
++  for(unsigned variant=0;variant<3;++variant){
++   auto budget=std::make_shared<resources::ResourceBudgetManager>();auto sources=std::make_shared<SourceRetentionPool>();auto geometry=std::make_shared<PreparedGeometryCache>();geometry->setRetentionPool(sources);
++   auto histories=std::make_shared<EraseMaskPathCache>();histories->setRetentionPool(sources);RenderCacheOptions options;
++   auto e=source();e.record.kind=semantic::ObjectKind::kVectorStroke;e.record.kindVersion=3;
++   e.record.content.update([&](auto&v){auto&s=std::get<semantic::CompactStrokeContent>(v).stroke;s.config.opacity=variant?.55:1;s.knots={{20,64,32768},{236,64,32768}};});
++   e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(e.record.content)};
++   semantic::FilledPathMask strip;strip.path.commands={semantic::MoveTo{{80,0}},semantic::LineTo{{96,0}},semantic::LineTo{{96,128}},semantic::LineTo{{80,128}},semantic::ClosePath{}};
++   auto rightStrip=strip;rightStrip.path.commands={semantic::MoveTo{{180,0}},semantic::LineTo{{196,0}},semantic::LineTo{{196,128}},semantic::LineTo{{180,128}},semantic::ClosePath{}};
++   e.record.eraseMasks={{ObjectId::fromUint64(900),strip},{ObjectId::fromUint64(901),rightStrip}};
++   auto surface=SkSurfaces::RenderTarget(completion->context.get(),skgpu::Budgeted::kNo,SkImageInfo::MakeN32Premul(256,128));require(bool(surface),"owner pixels target");
++   CompactCoverageTargets targets;targets.budget=budget;SkiaInkLayers layers;RenderCacheWork work;
++   auto body=geometry->get(e,options,budget,true);require(body&&body->ready(),"owner pixels body");
++   const auto info=SkImageInfo::Make(256,128,kRGBA_8888_SkColorType,kPremul_SkAlphaType);
++   auto draw=[&](bool narrow){surface->getCanvas()->clear(variant==2?SK_ColorBLUE:SK_ColorWHITE);surface->getCanvas()->save();if(narrow)surface->getCanvas()->clipRect(SkRect::MakeXYWH(0,0,128,128));
++    bool painted=false,pending=false;require(layers.draw(*surface->getCanvas(),*surface,e,SkMatrix::I(),SkIRect::MakeWH(256,128),nullptr,options,budget,sources,targets,work,painted,pending,geometry,body,histories)&&!pending,"owner pixels draw");surface->getCanvas()->restore();completion->context->flushAndSubmit(GrSyncCpu::kYes);
++    std::vector<std::uint8_t> bytes(256*128*4);require(surface->readPixels(info,bytes.data(),info.minRowBytes(),0,0),"owner pixels read");return bytes;};
++   const auto original=draw(false);auto external=histories->history(e.record.eraseMasks,budget,8*1024*1024);require(external&&external->primitives.size()==2,"external plan fixture");
++   auto primitive=external->primitives.front();const auto externalBytes=external->bytes;const auto beforeBody=work.bodyTileBuilds;
++   require(layers.retireIdleHistoryPreparation()==1,"owner pixel retirement");
++   require(external->primitives.size()==2&&external->primitives.front()==primitive&&external->bytes==externalBytes,"externally held plan mutated");
++   require(draw(false)==original&&work.bodyTileBuilds==beforeBody,"same history retirement pixels/body changed");
++   // The right tile is offscreen during the first rebuild. It must lose mask
++   // qualification too, otherwise null-prefix would preserve stale clears.
++   require(layers.retireIdleHistoryPreparation()==1,"second owner retirement");e.record.eraseMasks.clear();(void)draw(true);
++   const auto revealed=draw(false);require(revealed!=original,"removed history retained stale masked pixels");require(work.bodyTileBuilds==beforeBody,"offscreen retirement discarded body");
++   e.record.eraseMasks={{ObjectId::fromUint64(900),strip},{ObjectId::fromUint64(901),rightStrip}};require(draw(false)==original,"history redo after owner retirement");
++   layers.clear();histories->clear();body.reset();geometry->clear();targets.clear();external.reset();
++   // A foreign pin remains valid/charged even after both owners clear.
++   require(primitive->path.isFinite(),"foreign prepared primitive invalidated");
++   primitive.reset();require(budget->used()==0,"owner pixel last foreign/GPU lease leak");
++   completion->context->flushAndSubmit(GrSyncCpu::kYes);
++   std::cout<<nlohmann::json{{"variant",variant},{"external_plan_immutable",true},{"all_tiles_requalified",true},{"body_builds_retained",true},{"undo_redo_pixels",true}}.dump()<<'\n';
++  }
++ }message(pool,"drain");
++#endif
++ return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
+--- /dev/null
++++ b/runtime/render/tests/exact_owner_residency_test.cpp
+@@ -0,0 +1,57 @@
++// Actual SkiaInkLayers owns the draw-preparation pins in this regression.
++#define main ownerExistingFixtureMain
++#include "ur2d_selection_up_test.cpp"
++#undef main
++#include "canvas/semantic/snapshot.hpp"
++#include "../../interaction/src/partial_erase_geometry.hpp"
++#include "../src/skia_mask_history.hpp"
++namespace {
++std::vector<RuntimeSceneRecord> captured(const std::filesystem::path& p){std::ifstream f(p,std::ios::binary);std::vector<std::uint8_t>b{std::istreambuf_iterator<char>(f),{}};auto d=semantic::SnapshotCodec::decode(b,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(d.ok(),"captured actual source");std::vector<RuntimeSceneRecord>out;for(const auto&o:d.snapshot->objects){RuntimeSceneRecord r;r.objectId=o.id;r.kind=o.kind;r.kindVersion=o.kind_version;r.content=o.content;r.transform=o.transform;r.eraseMasks=o.erase_masks;r.properties=o.properties;out.push_back(r);}return out;}
++semantic::EraseMaskGeometry queryFor(const RuntimeSceneRecord&r,unsigned n,unsigned round){std::vector<foundation::WorldPoint> trace{{float(420-round*18),160}};for(unsigned i=1;i<=n;++i)trace.push_back({float(420-round*18+7*std::sin(i*.17)),float(160+170.*i/n)});return *interaction::partialEraseGeometry(trace,r.transform,16);}
++json workDelta(const EraseMaskPathCache::Work&a,const EraseMaskPathCache::Work&b){return{{"memo_hits",b.equivalentQueryHits-a.equivalentQueryHits},{"history_denied",b.history.denied-a.history.denied},{"path_builds",b.builds-a.builds},{"query_unions",b.history.queryUnionOps-a.history.queryUnionOps},{"history_unions",b.history.historyUnionOps-a.history.historyUnionOps},{"local_bytes",b.bytes}};}
++}
++#include "../src/skia_ink_layers.hpp"
++#include "include/core/SkSurface.h"
++#include "include/core/SkCanvas.h"
++#include "include/core/SkColorSpace.h"
++int main(int argc,char** argv){try{
++ require(argc==4,"usage initial history output");
++ auto records=captured(argv[2]);
++ auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});
++ auto pool=std::make_shared<SourceRetentionPool>();auto geometry=std::make_shared<PreparedGeometryCache>();geometry->setRetentionPool(pool);
++ auto histories=std::make_shared<EraseMaskPathCache>();histories->setRetentionPool(pool);
++ RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;
++ auto surface=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(256,128));require(bool(surface),"owner raster target");
++ SkiaInkLayers layers;CompactCoverageTargets targets;targets.budget=budget;RenderCacheWork work;
++ // Empty clip still enters the real source/history admission owner, while
++ // avoiding an unrelated full forty-object pixel workload for pressure RED.
++ surface->getCanvas()->save();surface->getCanvas()->clipRect(SkRect::MakeEmpty());
++ unsigned admitted=0;for(const auto& record:records){ReferenceTraversalEntry e;e.record=record;e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
++  bool painted=false,pending=false;const auto body=geometry->get(e,options,budget,true);require(body&&body->ready(),"actual body warm");
++  if(layers.draw(*surface->getCanvas(),*surface,e,SkMatrix::I(),SkIRect::MakeWH(256,128),nullptr,options,budget,pool,targets,work,painted,pending,geometry,body,histories))++admitted;
++ }
++ surface->getCanvas()->restore();require(admitted>=16,"real consumer did not retain history pressure");
++ const auto localBefore=histories->work();
++#if defined(AXIOM_EXACT_OWNER_RESIDENCY)
++ std::size_t retired=0,callbacks=0;
++ histories->beginCohort([&]{++callbacks;retired=layers.retireIdleHistoryPreparation();});
++#else
++ const auto retired=0U;
++ const auto callbacks=0U;
++ histories->beginCohort();
++#endif
++ json decisions=json::array();const auto start=std::chrono::steady_clock::now();
++ for(const auto& record:records){auto query=queryFor(record,160,5);decisions.push_back(unsigned(histories->query(record,query,budget,8U*1024U*1024U,geometry.get(),&options)));}
++ histories->endCohort();const auto after=histories->work();
++#if defined(AXIOM_EXACT_OWNER_RESIDENCY)
++ require(callbacks==1,"pressure retirement was not once per cohort");
++#endif
++ json result{{"admitted_draw_owners",admitted},{"retired_owner_refs",retired},{"pressure_callbacks",callbacks},{"local_before",localBefore.bytes},{"local_after",after.bytes},
++  {"query_work",workDelta(localBefore,after)},{"decisions",decisions},{"query_ms",std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count()}};
++ layers.clear();histories->clear();geometry->clear();targets.clear();require(budget->used()==0,"real owner last lease leak");result["last_release_bytes"]=budget->used();
++ std::ofstream(argv[3])<<result.dump(2)<<'\n';std::cout<<result.dump()<<'\n';
++ // The captured final history has13 complete repeated bases. The old actual
++ // owner measured6hits/11denials; this is the same observable target on both
++ // versions, independent of whether a retirement method exists.
++ require(after.equivalentQueryHits-localBefore.equivalentQueryHits>=13,"real owner pressure still loses equivalent exact results");return 0;
++}catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}}
+--- /dev/null
++++ b/verification/runners/g5/exact_owner_residency.mjs
+@@ -0,0 +1,152 @@
++import fs from'node:fs/promises';import path from'node:path';import http from'node:http';
++import{chromium}from'../../node_modules/playwright/index.mjs';import{execFileSync}from'node:child_process';
++import{createHash}from'node:crypto';import{validateChunk}from'./ur2d_selection_up_contract.mjs';
++import{entropyStream,installEntropy}from'./exact_fixed_scene_contract.mjs';
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export async function webConsumer(c){
++ const{createRuntime}=await import('/sdk/axiom.mjs');
++ const{installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++ const{readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++ const{sendBinaryChunks}=await import('/g5/ur2d_selection_up_contract.mjs');
++ const{typedWitness,qualifyWitness,navigationWitness}=await import('/g5/exact_query_working_set_contract.mjs');
++ const{observeCorrectFeedback}=await import('/g5/erase_exact_canonical_contract.mjs');
++ const{emptyViewPoint}=await import('/g5/exact_fixed_scene_contract.mjs');
++ const row={kind:c.kind,mode:c.mode,rounds:[],errors:[],operations:[],frames:[],events:[]};window.waPartial=row;
++ const pause=ms=>new Promise(r=>setTimeout(r,ms)),check=(v,m)=>{if(!v)throw Error(m);};let sdk,clock=90000000000;
++ const digest=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
++ const observer=installNavigationObserver(()=>sdk?.canvas),state=()=>sdk.readState();let observing=false;
++ const begin=()=>{observer.begin(row.observation={});observing=true;};const end=()=>{if(observing){observer.end(row.observation);observing=false;}};
++ const pointer=(phase,x,y)=>{clock+=8000000;const rect=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:clock/1e6});const start=performance.now();observer.dispatch(sdk.canvas,e);const s=state();const r={phase,x,y,start,end:performance.now(),contacts:s.activeContacts,generation:s.generation};row.events.push(r);return r;};
++ const settle=async()=>{const start=performance.now();for(;;){const s=state();if(!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending)return performance.now();check(performance.now()-start<25000,'stable exact tail exceeded25s');await pause(20);}};
++ const snapshot=async label=>{const s=state(),v=await sdk.captureSnapshot({generation:s.generation,documentRevision:(BigInt(c.fixture.metadata.documentRevision)+BigInt(s.generation)).toString(),recoveryFrontier:c.fixture.metadata.recoveryFrontier});await sendBinaryChunks(label+'.axsnap',v.bytes,window.waChunk);const p=readWebGLTarget(sdk.canvas,{role:'canonical'});check(p.metadata.status==='VALID','target readback');await sendBinaryChunks(label+'.rgba',p.bytes,window.waChunk);return{sha256:await digest(v.bytes),byteLength:v.bytes.length,state:s,rgba_sha256:await digest(p.bytes),readback:p.metadata};};
++ const erase=async(moves,round=0)=>{const before=state(),r={moves,round,before,events:[]};let x=420-round*18,y=160;r.down=pointer('down',x,y);check(r.down.contacts===1,'Down rejected');
++  for(let i=1;i<=moves;++i){x=420-round*18+7*Math.sin(i*.17);y=160+170*i/moves;r.events.push(pointer('move',x,y));if(i%8===0)await pause(0);}
++  if(c.diagnostic)window.waTrace.enable(c.traceOn!==false);
++  r.up=pointer('up',x,y);if(c.diagnostic)window.waTrace.enable(false);r.afterUp=state();const sx=c.mode==='growth'?x+1:300,sy=c.mode==='growth'?y+1:230;
++  r.nextDown=pointer('down',sx,sy);r.nextMove=pointer('move',c.mode==='growth'?sx+1:300,c.mode==='growth'?sy+3:242);
++  if(c.mode!=='growth')for(let i=1;i<=8;++i)r.events.push(pointer('move',300,242+i*3));
++  if(c.diagnostic)window.waTrace.enable(c.traceOn!==false);
++  r.nextUp=pointer('up',c.mode==='growth'?sx+1:300,c.mode==='growth'?sy+3:266);if(c.diagnostic)window.waTrace.enable(false);r.afterNext=state();
++  if(c.diagnostic)row.tracePages=(row.tracePages??[]).concat(window.waTrace.take());row.rounds.push(r);return r;};
++ try{
++  const bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());check(await digest(bytes)===c.fixture.sha256,'fixture identity');
++  sdk=await createRuntime({mount:document.getElementById('mount'),documentId:c.fixture.documentId,restore:{bytes,metadata:c.fixture.metadata},builtinFonts:false,permission:'localSingleUser',onError:e=>row.errors.push({code:e.code,message:String(e.message??e)}),onOperation:b=>row.operations.push({at:performance.now(),bytes:b.length}),onFrame:f=>row.frames.push({at:performance.now(),presented:f.presented})});
++  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settle();check(state().objects===40,'fixed40 restore');
++  const imageBytes=Uint8Array.from([0x89,0x50,0x4e,0x47,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,13,73,68,65,84,120,156,99,248,207,192,240,31,0,5,0,1,255,137,153,61,29,0,0,0,0,73,69,78,68,174,66,96,130]);
++  if(c.mode==='witness'||c.mode==='action'){
++   await sdk.appearance.setDefaults({enabled:false});row.witnessAppearancePolicy=sdk.appearance.readDefaults();
++   row.preseed=[];
++   for(const[kind,x,y]of[['rectangle',850,500],['sticky',1050,500],['table',850,750]]){if(kind==='rectangle')await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});await sdk.selectShape(kind);pointer('move',x,y);pointer('down',x,y);pointer('up',x,y);await settle();row.preseed.push({kind,id:sdk.readSelection().primary});}
++   const image=await sdk.importImage(imageBytes,'image/png');await sdk.resizeImage(image.objectId,80,80,true);await sdk.transformSelection([1,0,0,1,1150,750]);await settle();row.preseed.push({kind:'image',id:image.objectId});
++   check(state().objects===44,'44mixedfixture');row.imageResourceSHA=await digest(imageBytes);
++  }
++  await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();row.initial=state();row.initialSnapshot=await snapshot('initial');
++  if(c.mode==='witness'||c.mode==='action'){
++   let eraseBaseline,navPlan,navBaseline;
++   if(c.kind==='pan'||c.kind==='zoom'){navPlan=navigationWitness(c.kind,state().camera);const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:navPlan.rect});check(p.metadata.status==='VALID','navigation baseline');navBaseline=Array.from(p.bytes);check(!navBaseline.some((_,i)=>i%4===0&&navPlan.color.every((v,c)=>Math.abs(navBaseline[i+c]-v)<=2)),'navigation baseline already qualifies');}
++   if(c.kind==='erase'){const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:{x:592,y:482,width:16,height:16}});check(p.metadata.status==='VALID','erase baseline');eraseBaseline=Array.from(p.bytes);}
++   begin();let x=420,y=160;pointer('down',x,y);
++   for(let i=1;i<=1600;++i){x=420+7*Math.sin(i*.17);y=160+170*i/1600;pointer('move',x,y);if(i%8===0)await pause(0);}
++   row.mainUp=pointer('up',x,y);const generationAfterErase=state().generation;
++   if(c.mode==='action'){
++    row.action={kind:c.kind,before:state()};
++    if(c.kind==='ready'){row.action.readyAt=await settle();row.action.qualified=state().canUndo;}
++    else if(c.kind==='erase'){
++     const rect={x:592,y:482,width:16,height:16};const baseline={bytes:eraseBaseline};row.action.baseline=eraseBaseline;
++     row.action.down=pointer('down',300,230);row.action.first=pointer('move',300,242);check(row.action.down.contacts===1&&row.action.first.contacts===1,'successor admission');
++     for(let i=1;i<=8;++i){pointer('move',300,242+i*3);await pause(16);}
++     const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect});check(p.metadata.status==='VALID','erase active');let positive=0;for(let i=0;i<p.bytes.length;i+=4)if(baseline.bytes[i]<100&&baseline.bytes[i+1]<100&&baseline.bytes[i+2]<150&&p.bytes[i]>=250&&p.bytes[i+1]>=250&&p.bytes[i+2]>=250)++positive;return{positive,rgba:Array.from(p.bytes)};},pause,now:()=>performance.now(),timeoutMs:15000});
++     row.action.feedback=feedback;row.action.activeBeforeUp=true;row.action.up=pointer('up',300,266);row.action.qualified=feedback.status==='QUALIFIED';
++    }else{
++     const old=state().camera;for(let i=0;i<3;++i){const rect=sdk.canvas.getBoundingClientRect();const event=new WheelEvent('wheel',{clientX:rect.left+600,clientY:rect.top+400,ctrlKey:c.kind==='zoom',deltaX:c.kind==='pan'?8:0,deltaY:c.kind==='pan'?4:-8,bubbles:true,cancelable:true});sdk.canvas.dispatchEvent(event);await pause(32);}
++     const expected=navPlan.expected;row.action.witness=navPlan;row.action.baseline=navBaseline;
++     row.action.expected=expected;check(['scale','x','y'].every(k=>Math.abs(state().camera[k]-expected[k])<.01),'navigation camera');
++     // An analytic preseed rectangle interior follows the actual camera.
++     const rect=navPlan.rect;
++     const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect});check(p.metadata.status==='VALID','navigation expected pixels');let positive=0;for(let i=0;i<p.bytes.length;i+=4)if([51,128,204,255].every((v,c)=>Math.abs(v-p.bytes[i+c])<=2))++positive;return{positive,rgba:Array.from(p.bytes)};},pause,now:()=>performance.now(),timeoutMs:15000});row.action.feedback=feedback;row.action.qualified=feedback.status==='QUALIFIED';
++    }
++    check(row.action.qualified,'actual successor feedback');row.readyAt=await settle();end();
++   }else{
++   if(c.kind==='image'){await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',1190,790);pointer('up',1190,790);check(sdk.readSelection().primary===row.preseed.find(x=>x.kind==='image').id,'image primary');}
++   else{if(c.kind==='rectangle')await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});await sdk.selectShape(c.kind);pointer('move',900,300);pointer('down',900,300);pointer('up',900,300);check(sdk.readSelection().count===1,'created selected');}
++   const s=sdk.readSelection();let typed;
++   if(c.kind==='sticky')typed=sdk.readSelectedSticky();else if(c.kind==='table')typed=sdk.table.read(s.primary);else if(c.kind==='image')typed=sdk.readSelectedImage();else typed={available:true,objectId:s.primary,width:s.width,height:s.height};
++   row.typed=typed;row.selected=s;row.plan=typedWitness(c.kind,s,typed,row.imageResourceSHA);
++   if(c.kind==='image'){row.imageResourceToken=sdk.resources.token(typed.content.resourceId);row.imageActualSHA=await digest(sdk.resources.readBytes(row.imageResourceToken));check(row.imageActualSHA===row.imageResourceSHA,'image resource SHA');}
++   const baseline=readWebGLTarget(sdk.canvas,{role:'canonical',rect:row.plan.rect});check(baseline.metadata.status==='VALID','witness baseline');row.baseline={rgba:Array.from(baseline.bytes),at:performance.now(),metadata:baseline.metadata};
++   check(qualifyWitness(row.plan,baseline.bytes,[80,30]).positive===0,'baseline ROI already matches expected material');
++   // Tablepick remains far from row/column resize edges (5px tolerance).
++   const px=s.transform[4]+30,py=s.transform[5]+(c.kind==='table'?22:30);row.dragDown=pointer('down',px,py);check(row.dragDown.contacts===1,'drag admission');
++   for(const[dx,dy]of[[8,4],[40,16],[80,30]]){pointer('move',px+dx,py+dy);await pause(16);}
++   const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:row.plan.rect});check(p.metadata.status==='VALID','witness active capture');const q=qualifyWitness(row.plan,p.bytes,[80,30]);return{positive:q.positive,rgba:Array.from(p.bytes),metadata:p.metadata};},pause,now:()=>performance.now(),timeoutMs:15000});
++   row.feedback=feedback;row.activePixels={rect:row.plan.rect,rgba:feedback.value.rgba,at:feedback.firstCorrectAt,beforeUp:true};row.dragUp=pointer('up',px+80,py+30);row.afterSelection=sdk.readSelection();
++   row.poseDelta=[row.afterSelection.transform[4]-s.transform[4],row.afterSelection.transform[5]-s.transform[5]];
++   check(row.poseDelta.every((x,i)=>Math.abs(x-[80,30][i])<.1),'wrong committed pose');check(feedback.status==='QUALIFIED','active witness missing');
++   const expected=BigInt(generationAfterErase)+(c.kind==='image'?1n:2n);check(BigInt(state().generation)===expected,'create/transform commit cardinality');row.readyAt=await settle();end();
++   }
++  }else{
++   begin();const count=c.mode==='growth'?(c.roundCount??6):1;
++   for(let round=0;round<count;++round)await erase(c.moves??160,round);
++   row.readyAt=await settle();end();
++  }
++  if(c.diagnostic){window.waTrace.enable(false);row.tracePages=(row.tracePages??[]).concat(window.waTrace.take());row.traceEndAt=performance.now();}
++  await sdk.selectTool('select');const cleanup=emptyViewPoint(state().camera);row.cleanup=cleanup;pointer('down',...cleanup.view);pointer('up',...cleanup.view);await settle();check(sdk.readSelection().count===0,'snapshot HUD must be absent');
++  row.final=await snapshot('final');await sdk.undo();await settle();row.undo=await snapshot('undo');await sdk.redo();await settle();row.redo=await snapshot('redo');
++  row.entropy=globalThis.exactFixtureEntropy.transcript();row.end=state();row.activity=observer.activity();check(row.end.activeContacts===0&&row.end.generation===row.end.lastCommit.presentedGeneration,'terminal receipt');check(row.errors.length===0,'public errors');
++  row.status='OBSERVED';return row;
++ }catch(e){row.status='FAILED';row.error=String(e.stack??e);throw e;}
++ finally{end();observer.restore();if(sdk)await sdk.close();await window.waMetadata(row);}
++}
++const qualificationFactory=`import factory from '/engine/internal/axiom.mjs';export default async function(options){const m=await factory(options);if(m._axiom_g5_trace_control(2,731)!==0)throw Error('private trace initialization');
++const drain=()=>{const pages=[];for(let i=0;i<1024;++i){if(m._axiom_g5_trace_control(4,0)!==0)throw Error('trace drain');const p=m._axiom_g5_trace_bytes(),n=m._axiom_g5_trace_size(),v=JSON.parse(new TextDecoder().decode(m.HEAPU8.subarray(p,p+n)));pages.push(v);if(v.finished)return pages;}throw Error('trace drain pages exhausted');};
++const collected=[];window.waTrace={before(moves,round){collected.push(...drain());},after(moves,round){collected.push(...drain());},enable(on){if(m._axiom_g5_trace_control(on?1:0,0)!==0)throw Error('trace toggle');},take(){collected.push(...drain());return collected.splice(0);}};return m;}`;
++export async function runWindow(request,out){
++ const root=path.resolve(new URL('../../..',import.meta.url).pathname);await fs.mkdir(out,{recursive:true});let server,browser,page,activeSDK;
++ const result={id:request.id,status:'STARTED',rows:[],errors:[],pilot:null,pairComparisons:[]};
++ try{
++  server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://local').pathname);let file;
++   if(name==='/'){res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}</style><div id="mount" style="width:1431px;height:1010px"></div><script type="module">import{webConsumer}from"/driver.mjs";window.run=webConsumer;</script>');return;}
++   if(name==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+webConsumer.toString());return;}
++   if(request.qualification&&name==='/sdk/internal/axiom.mjs'){res.setHeader('Content-Type','text/javascript');res.end(qualificationFactory);return;}
++   if(name==='/fixture.axsnap')file=request.fixture.path;else if(name.startsWith('/sdk/'))file=path.join(activeSDK,name.slice(5));else if(name.startsWith('/engine/'))file=path.join(activeSDK,name.slice(8));else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));
++   if(!file)throw Error('unknown HTTPpath');res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const spec of request.cases){activeSDK=spec.sdk??request.sdk;const name=spec.id,directory=path.join(out,name);await fs.mkdir(directory);page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});await page.addInitScript({content:entropyStream.toString()+';'+installEntropy.toString()+';installEntropy('+spec.seed+');'});const transfers=new Map();page.on('pageerror',e=>result.errors.push(String(e)));
++   await page.exposeFunction('waMetadata',v=>fs.writeFile(path.join(directory,'raw-row.json'),JSON.stringify(v,null,2)+'\n'));
++   await page.exposeFunction('waChunk',async c=>{const old=transfers.get(c.name);if(old?.complete)throw Error('completed buffer replay');const next=validateChunk(c,old),bytes=Buffer.from(c.base64,'base64'),p=path.join(directory,c.name+'.partial'),h=await fs.open(p,c.offset?'r+':'wx');try{const n=await h.write(bytes,0,bytes.length,c.offset);if(n.bytesWritten!==bytes.length)throw Error('shortwrite');}finally{await h.close();}if(next.complete)await fs.rename(p,path.join(directory,c.name));transfers.set(c.name,next);return{nextOffset:next.nextOffset};});
++   console.log(JSON.stringify({stage:'case-start',id:name,...spec}));
++   try{
++    await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>window.run);
++    // The factory is initialized inside createRuntime. Enable only when the
++    // consumer reaches the measured gesture after setup.
++    const row=await page.evaluate(config=>window.run(config),{...spec,fixture:request.fixture,diagnostic:request.qualification});
++    if(request.qualification)row.traceAfterClose=await page.evaluate(()=>window.waTrace?.take());
++    const checker=path.join(root,'.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip');row.snapshotRoundtrip=JSON.parse(execFileSync(checker,[path.join(directory,'final.axsnap'),path.join(directory,'redo.axsnap')],{encoding:'utf8',timeout:10000}));
++    if(!row.snapshotRoundtrip.objects_equal||!row.snapshotRoundtrip.document_digest_equal)throw Error('canonical UndoRedo mismatch');row.status='QUALIFIED';await fs.writeFile(path.join(directory,'qualified-row.json'),JSON.stringify(row,null,2)+'\n');result.rows.push({...row,id:name});
++   }catch(e){const failure={id:name,status:'FAILED',error:String(e.stack??e)};try{failure.partial=await page.evaluate(()=>window.waPartial);}catch{}await fs.writeFile(path.join(directory,'failure.json'),JSON.stringify(failure,null,2)+'\n');result.rows.push(failure);
++    // Verification-row bugs are isolated and do not hide independent kinds.
++    if(/Target crashed|browser.*closed|canonical UndoRedo mismatch|OUT_OF_MEMORY/.test(failure.error))throw e;
++   }finally{if(page){await page.close();page=null;}}
++   console.log(JSON.stringify({stage:'case-end',id:name,status:result.rows.at(-1).status}));
++   if(spec.variant==='previous'||spec.variant==='candidate'){
++    const oldSpec=request.cases.find(x=>x.variant==='old'&&x.pair===spec.pair&&x.mode===spec.mode);
++    if(oldSpec){const proof={pair:spec.pair,mode:spec.mode,old:oldSpec.id,candidate:spec.id,variant:spec.variant,stages:{},entropy_equal:false};
++     const oldDir=path.join(out,oldSpec.id),nextDir=path.join(out,spec.id);
++     for(const stage of['initial','final','undo','redo'])proof.stages[stage]=JSON.parse(execFileSync(path.join(root,'.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip'),[path.join(oldDir,stage+'.axsnap'),path.join(nextDir,stage+'.axsnap')],{encoding:'utf8',timeout:10000}));
++     const a=JSON.parse(await fs.readFile(path.join(oldDir,'qualified-row.json'),'utf8')),b=JSON.parse(await fs.readFile(path.join(nextDir,'qualified-row.json'),'utf8'));
++     proof.entropy_equal=JSON.stringify(a.entropy)===JSON.stringify(b.entropy);
++     proof.status=Object.values(proof.stages).every(x=>x.objects_equal&&x.manifest_background_equal&&x.document_digest_equal)&&proof.entropy_equal?'QUALIFIED':'EXACT_CANONICAL_MISMATCH';
++     await fs.writeFile(path.join(out,spec.pilot?'pilot.json':`pair${spec.pair}-${spec.variant}-${spec.mode}-canonical.json`),JSON.stringify(proof,null,2)+'\n');
++     if(spec.pilot)result.pilot=proof;else result.pairComparisons.push(proof);
++     if(proof.status!=='QUALIFIED')throw Error('EXACT_FIXED_SCENE_PILOT_MISMATCH');
++    }
++   }
++   if(spec.pilot&&result.rows.at(-1).status!=='QUALIFIED')throw Error('EXACT_FIXED_SCENE_PILOT_MISMATCH');
++
++  }
++  result.status=result.rows.every(r=>r.status==='QUALIFIED')&&!result.errors.length?'OBSERVED':'PARTIAL';
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}
++ return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const r=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await runWindow(r,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/exact_owner_residency_pixels.mjs
+@@ -0,0 +1,76 @@
++// Verification-only offline completion. Original oracle/comparator unchanged.
++import fs from'node:fs/promises';import path from'node:path';import{execFileSync}from'node:child_process';import{createHash}from'node:crypto';
++import{comparePixels}from'./ur0/pixel_oracle.mjs';
++const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
++function documentDigest(bytes){
++ let offset=0;const variable=()=>{let value=0n,shift=0n;for(;;){const b=bytes[offset++];value|=BigInt(b&127)<<shift;if(b<128)return value;shift+=7n;}};
++ while(offset<bytes.length){const key=variable(),field=Number(key>>3n),wire=Number(key&7n);if(wire===0){variable();continue;}if(wire!==2)throw Error('unsupported canonical wire');const n=Number(variable()),value=bytes.subarray(offset,offset+n);offset+=n;if(field===8)return Buffer.from(value).toString('hex');}throw Error('canonical digest absent');
++}
++export async function completePixels(root){
++ const result=path.join(root,'.aegis/results/G5-exact-up-preparation-residency-r4');
++ const projector=path.join(root,'out/G5-exact-query-working-set-web-r2/offline-snapshot');
++ const checker=path.join(root,'.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip');
++ const oracle=path.join(root,'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle');
++ const guard=path.join(root,'verification/runners/g5/bounded_worker.py');
++ if(sha(await fs.readFile(oracle))!=='ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105')throw Error('foreign oracle');
++ const refs=path.join(result,'references');await fs.mkdir(refs,{recursive:true});
++ const cache=new Map(),invocations=[],rows=[];
++ const equal=(a,b)=>{const v=JSON.parse(execFileSync(checker,[a,b],{encoding:'utf8',timeout:10000}));if(!v.objects_equal||!v.manifest_background_equal||!v.document_digest_equal)throw Error('reference reuse canonical mismatch');return v;};
++ const control=path.join(root,'.aegis/results/G5-exact-query-working-set-control-r1/oracle-offline-qualification-r1');
++ const controlPlan=JSON.parse(await fs.readFile(path.join(control,'plan.json'),'utf8')),controlResult=JSON.parse(await fs.readFile(path.join(control,'result.json'),'utf8'));
++ for(const file of['reference.rgba','reference.edge'])if(sha(await fs.readFile(path.join(control,file)))!==controlResult.files[file].sha256)throw Error('control reference bytes changed');
++ const sources=[{label:'r4',base:path.join(result,'local-web/G5OR4-FINAL-COMPARE')},{label:'r4',base:path.join(result,'local-web/G5OR4-CONTINUITY')}];
++ // Seed reusable references from r3 only after their immutable files and
++ // current input's complete canonical/camera identity qualify below.
++ const previous=JSON.parse(await fs.readFile(path.join(root,'.aegis/results/G5-exact-fixed-scene-reverification-r3/independent-pixel-proof.json'),'utf8'));
++ for(const row of previous.rows)for(const proof of row.proofs)if(proof.status==='QUALIFIED'){
++  const input=proof.plan.reference_snapshot;
++  const referencePath=proof.reference.path,bandPath=proof.band.path;
++  if(sha(await fs.readFile(referencePath))!==proof.reference.sha256||sha(await fs.readFile(bandPath))!==proof.band.sha256)throw Error('prior reference hash mismatch');
++  cache.set(proof.plan.document_digest+'/'+JSON.stringify(proof.plan.request),{input,referencePath,bandPath});
++ }
++ for(const source of sources)for(const name of(await fs.readdir(source.base)).sort()){
++  const original=path.join(source.base,name);let row;try{row=JSON.parse(await fs.readFile(path.join(original,'qualified-row.json'),'utf8'));}catch{continue;}
++  const directory=path.join(result,'pixel-completions',source.label,path.basename(source.base),name);await fs.mkdir(directory,{recursive:true});const proofs=[];
++  for(const stage of['final','redo']){
++   const snapshot=path.join(original,stage+'.axsnap'),actual=await fs.readFile(path.join(original,stage+'.rgba'));let input=snapshot,projection=null;
++   const mixed=['witness','action'].includes(row.mode);
++   if(mixed){input=path.join(directory,'ink-'+stage+'.axsnap');projection=JSON.parse(execFileSync(projector,['--project',snapshot,input],{encoding:'utf8',timeout:10000}));}
++   const metadata=row[stage],request={width:metadata.readback.canvas.width,height:metadata.readback.canvas.height,logical_width:1431,logical_height:1010,camera:metadata.state.camera,hud_bounds:[]};
++   const bytes=await fs.readFile(input),key=documentDigest(bytes)+'/'+JSON.stringify(request);
++   const plan={source_snapshot:snapshot,source_snapshot_sha256:sha(await fs.readFile(snapshot)),reference_snapshot:input,reference_snapshot_sha256:sha(bytes),document_digest:documentDigest(bytes),request,projection,timeout_seconds:60,rss_mib:4096,oracle_sha256:'ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105'};
++   let referencePath,bandPath,reuseProof=null;
++   if(sha(bytes)===controlPlan.snapshot.sha256&&JSON.stringify(request)===JSON.stringify(controlPlan.request)){
++    referencePath=path.join(control,'reference.rgba');bandPath=path.join(control,'reference.edge');reuseProof=equal(input,controlPlan.snapshot.path);cache.set(key,{input,referencePath,bandPath});plan.reuse='Qualifiedcontrolworststress10exactinput/request';
++   }else if(cache.has(key)){
++    const known=cache.get(key);reuseProof=equal(input,known.input);referencePath=known.referencePath;bandPath=known.bandPath;plan.reuse='Completeobjects/background/manifest/digest+cameraequal';
++   }else{
++    const id='reference-'+String(invocations.length).padStart(3,'0'),directory=path.join(refs,id);await fs.mkdir(directory);
++    const requestFile=path.join(directory,'request.json'),prefix=path.join(directory,'reference');await fs.writeFile(requestFile,JSON.stringify(request));await fs.writeFile(path.join(directory,'plan.json'),JSON.stringify(plan,null,2)+'\n');
++    const args=[guard,'--prefix',path.join(directory,'guard'),'--timeout','60','--rss-mib','4096','--',oracle,'--pixels',input,requestFile,prefix];
++    let error;try{execFileSync('python3',args,{encoding:'utf8',timeout:70000,maxBuffer:1024*1024});}catch(e){error=String(e);}
++    const observed=JSON.parse(await fs.readFile(path.join(directory,'guard.worker.json'),'utf8'));
++    const invocation={id,plan,guard:observed,status:observed.reason==='completed'&&observed.cleanup_complete?'REFERENCE_RENDERED':'FAILED',error};invocations.push(invocation);
++    await fs.writeFile(path.join(directory,'invocation.json'),JSON.stringify(invocation,null,2)+'\n');
++    if(invocation.status!=='REFERENCE_RENDERED'){proofs.push({stage,status:'MISSING_REFERENCE',invocation});break;}
++    const output=JSON.parse(await fs.readFile(path.join(directory,'guard.stdout.log'),'utf8'));if(output.status!=='REFERENCE_RENDERED')throw Error('oracle output invalid');
++    referencePath=prefix+'.rgba';bandPath=prefix+'.edge';cache.set(key,{input,referencePath,bandPath});
++   }
++   const reference=await fs.readFile(referencePath),band=await fs.readFile(bandPath);let a=actual,b=reference,e=band,roi=null;
++   if(mixed){roi={x:0,y:0,width:1600,height:800};a=new Uint8Array(roi.width*roi.height*4);b=new Uint8Array(a.length);e=new Uint8Array(roi.width*roi.height);
++    for(let y=0;y<roi.height;++y){a.set(actual.subarray(y*request.width*4,y*request.width*4+roi.width*4),y*roi.width*4);b.set(reference.subarray(y*request.width*4,y*request.width*4+roi.width*4),y*roi.width*4);e.set(band.subarray(y*request.width,y*request.width+roi.width),y*roi.width);}}
++   const comparison=comparePixels(a,b,e);const proof={stage,...comparison,roi,plan,reuseProof,reference:{path:referencePath,sha256:sha(reference)},band:{path:bandPath,sha256:sha(band)},actual_sha256:sha(actual)};proofs.push(proof);
++   await fs.writeFile(path.join(directory,stage+'-proof.json'),JSON.stringify(proof,null,2)+'\n');
++   if(proof.status==='FAILED'){
++    rows.push({source:source.label,window:path.basename(source.base),case:name,status:'FROZEN_INDEPENDENT_PIXEL_MISMATCH',proofs});await fs.writeFile(path.join(result,'independent-pixel-proof.json'),JSON.stringify({status:'FROZEN_INDEPENDENT_PIXEL_MISMATCH',rows},null,2)+'\n');throw Error('FROZEN_INDEPENDENT_PIXEL_MISMATCH');
++   }
++  }
++  const observation={source:source.label,window:path.basename(source.base),case:name,status:proofs.length===2&&proofs.every(v=>v.status==='QUALIFIED')?'QUALIFIED':'MISSING_REFERENCE',proofs};rows.push(observation);await fs.writeFile(path.join(directory,'row-proof.json'),JSON.stringify(observation,null,2)+'\n');
++  await fs.writeFile(path.join(result,'oracle-invocations.json'),JSON.stringify({status:'IN_PROGRESS',unique:invocations.length,invocations},null,2)+'\n');console.log(JSON.stringify({source:source.label,case:name,status:observation.status,unique:invocations.length}));
++ }
++ const status=rows.every(v=>v.status==='QUALIFIED')?'QUALIFIED_AVAILABLE_FINAL_REDO':'BOUNDED_REQUIRED_PROOF_INCOMPLETE';
++ await fs.writeFile(path.join(result,'independent-pixel-proof.json'),JSON.stringify({status,rows,old_missing_records_unchanged:true,original_AA_comparator_unchanged:true,required_r4_rows:21,completed_r4_rows:rows.filter(v=>v.status==='QUALIFIED').length},null,2)+'\n');
++ await fs.writeFile(path.join(result,'oracle-invocations.json'),JSON.stringify({status:'COMPLETE',unique:invocations.length,invocations,qualified_control_reference_reused:true,parallelism:1},null,2)+'\n');
++ return status;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname)await completePixels(process.cwd());
+--- /dev/null
++++ b/verification/runners/g5/exact_owner_residency_runner.py
+@@ -0,0 +1,41 @@
++"""Four frozen windows; only new namespace, source/SDK guarded during sampling."""
++from pathlib import Path
++import hashlib, importlib.util, json, math, subprocess, sys
++ROOT=Path(__file__).resolve().parents[3]
++RESULT=ROOT/'.aegis/results/G5-exact-up-preparation-residency-r4'
++LIMITS={'G5OR4-FINAL-COMPARE':900,'G5OR4-CONTINUITY':300}
++def sha(p):
++ h=hashlib.sha256()
++ with Path(p).open('rb')as f:
++  for b in iter(lambda:f.read(1048576),b''):h.update(b)
++ return h.hexdigest()
++def read(p):return json.loads(Path(p).read_text())
++def write(p,v):Path(p).parent.mkdir(parents=True,exist_ok=True);Path(p).write_text(json.dumps(v,indent=2)+'\n')
++def inventory(p):
++ p=Path(p);return{str(q.relative_to(p)):sha(q)for q in sorted(p.rglob('*'))if q.is_file()}
++def reserve(ledger,name):
++ if name not in LIMITS or any(x['id']==name or x['status']=='STARTED'for x in ledger['attempts']):raise ValueError('foreign/repeated/concurrent window')
++ if ledger['charged_seconds']+LIMITS[name]>1200:raise ValueError('allowance exhausted')
++ ledger['attempts'].append(dict(id=name,status='STARTED',limit_seconds=LIMITS[name],rss_mib=4096))
++def inputs(request):
++ names=subprocess.check_output(['git','ls-files','-z','--cached','--others','--exclude-standard'],cwd=ROOT).decode().split('\0')
++ source={n:sha(ROOT/n)for n in sorted(set(names))if n and(ROOT/n).is_file()and n.startswith(('runtime/','sdk/','cmake/','verification/runners/g5/','verification/tests/'))and Path(n).suffix in('.cpp','.h','.hpp','.mjs','.cmake','.json','.py','.txt')}
++ if sha(request['fixture']['path'])!=request['fixture']['sha256']:raise ValueError('fixture bytes changed')
++ baseline=read(ROOT/'.aegis/results/G5-erase-exact-canonical-r1/final-normal-artifacts.json')
++ if inventory(baseline['root'])!=baseline['files']:raise ValueError('normal4319 SDK changed')
++ immutable=read(ROOT/'.aegis/results/G5-exact-query-working-set-control-r1/immutable-sdk-manifest.json')
++ for archive in immutable['archives']:
++  if inventory(archive['root'])!=archive['files']:raise ValueError('immutable SDK mutated')
++ return dict(immutable=immutable,source=source,SDKs={v:inventory(v)for v in sorted({request['sdk']}|{c.get('sdk',request['sdk'])for c in request['cases']})},normal=baseline,fixture=request['fixture'])
++def execute(request_path):
++ req=read(request_path);ledger_path=RESULT/'sampling-ledger.json';ledger=read(ledger_path)if ledger_path.exists()else dict(schema='g5-qw-window-ledger-v1',charged_seconds=0,cap_seconds=1200,attempts=[])
++ reserve(ledger,req['id']);before=inputs(req);out=RESULT/'local-web'/req['id'];out.mkdir(parents=True,exist_ok=False)
++ write(out/'freeze.json',dict(request=req,request_sha256=sha(request_path),inputs=before));write(ledger_path,ledger)
++ spec=importlib.util.spec_from_file_location('guard',Path(__file__).with_name('bounded_worker.py'));m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++ guard=m.run(['node',str(Path(__file__).with_name('exact_owner_residency.mjs')),str(request_path),str(out)],out,LIMITS[req['id']],4096*1024)
++ after=inputs(req);write(out/'inputs-after.json',after);worker=read(out/'worker-result.json')if(out/'worker-result.json').exists()else{}
++ elapsed=guard.get('elapsed_s');charged=math.ceil(elapsed)if isinstance(elapsed,(int,float))and math.isfinite(elapsed)and 0<=elapsed<=LIMITS[req['id']]+5 else LIMITS[req['id']]
++ completed=guard['reason']=='completed'and guard['cleanup_complete']and not guard['remaining_owned_pids']and before==after and worker.get('status')=='OBSERVED'and len(worker.get('rows',[]))==len(req['cases'])
++ ledger['attempts'][-1].update(status='COMPLETED'if completed else'STOPPED',guard=guard,source_stable=before==after,charged_seconds=charged,worker_status=worker.get('status'))
++ ledger['charged_seconds']+=charged;write(ledger_path,ledger);print(json.dumps(ledger),flush=True);return 0 if completed else 1
++if __name__=='__main__':raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/tests/g5_exact_owner_residency.test.mjs
+@@ -0,0 +1,9 @@
++import test from'node:test';import assert from'node:assert/strict';import vm from'node:vm';
++import{webConsumer}from'../runners/g5/exact_owner_residency.mjs';
++import{entropyStream,installEntropy,emptyViewPoint}from'../runners/g5/exact_fixed_scene_contract.mjs';
++test('new owner verification retains fixed40 and valid isolated entropy init',()=>{
++ new vm.Script('('+webConsumer.toString()+')');
++ const sandbox={crypto:{getRandomValues:v=>v.fill(42)},ArrayBuffer,Uint8Array,Uint32Array,Float32Array,Float64Array,DataView};sandbox.globalThis=sandbox;
++ vm.runInNewContext(entropyStream.toString()+';'+installEntropy.toString()+';installEntropy(123);',sandbox);const view=new Uint8Array(16);sandbox.crypto.getRandomValues(view);assert.equal(sandbox.exactFixtureEntropy.transcript().byte_count,16);
++ const point=emptyViewPoint({scale:Math.exp(.24),x:600-Math.exp(.24)*600,y:400-Math.exp(.24)*400});assert(point.world[1]>840&&point.view[1]<1010);
++});
+--- /dev/null
++++ b/verification/tests/test_g5_exact_owner_residency.py
+@@ -0,0 +1,10 @@
++import importlib.util
++from pathlib import Path
++import unittest
++class GuardTest(unittest.TestCase):
++    def test_two_owned_windows_cannot_repeat_or_overlap(self):
++        p=Path(__file__).parents[1]/'runners/g5/exact_owner_residency_runner.py';spec=importlib.util.spec_from_file_location('r4',p);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++        ledger={'charged_seconds':0,'attempts':[]};m.reserve(ledger,'G5OR4-FINAL-COMPARE')
++        self.assertEqual(ledger['attempts'][0]['limit_seconds'],900)
++        for name in ['G5OR4-FINAL-COMPARE','G5OR4-CONTINUITY','foreign']:
++            with self.assertRaises(ValueError):m.reserve(ledger,name)

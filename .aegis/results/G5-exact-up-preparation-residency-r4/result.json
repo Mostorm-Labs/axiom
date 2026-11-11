@@ -1,0 +1,219 @@
+{
+  "schema": "g5-exact-owner-residency-r4-result-v1",
+  "task_id": "G5-exact-up-preparation-residency-r4",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_MEASURED_PERFORMANCE",
+  "return_surface": "CONTROL_REVIEW",
+  "source_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "package": {
+    "path": ".aegis/packages/G5-exact-up-preparation-residency-r4/package.json",
+    "sha256": "3537580d31e6221b48ca87d24be84e7f3947239fc84f543ed94e619e7aa120c1",
+    "bytes": 2454
+  },
+  "source_manifest": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/source-manifest.json",
+    "sha256": "7c0123c065791789d0fd7761cce0c44fa89d8837c66d1c542dd192abb5e4aac8",
+    "bytes": 13592
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/source-delta.patch",
+    "sha256": "6d4fe6338186fb640828e94f16fbd1e5887894e65bfe7a1732b0f20dde2b6210",
+    "bytes": 59321
+  },
+  "artifact_manifest": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/artifact-manifest.json",
+    "sha256": "569dacde59458e6a75b2e0842a69ff63265eae999018097a263c8eebbfa7285c",
+    "bytes": 159003
+  },
+  "normal_SDK_manifest": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/normal-sdk-manifest.json",
+    "sha256": "37dc5afe4fe8bfa6f0cd7ca7572c40fb76780d8caa2e80269f692f6aa646c911",
+    "bytes": 4090
+  },
+  "normal_wasm_sha256": "4742609124ef9123951f0e654e008ef1cd55dc09d1f6c01acd74cba8acf54f41",
+  "driver": {
+    "path": "verification/runners/g5/exact_owner_residency.mjs",
+    "sha256": "a27c52ee099cb93ea4b5fc01a16391a8e4e2239ad7e5ba66e545c8e1e6191d42",
+    "bytes": 21218
+  },
+  "obligations": {
+    "R4-RED": {
+      "status": "QUALIFIED_OBSERVABLE_ACTUAL_OWNER_RED_GREEN",
+      "basis": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/baseline-red.json",
+        "sha256": "af56bce3c7551badcb09df9857b7a334a1f42f5dcaa5fb92ad1baa7d0253e666",
+        "bytes": 886
+      },
+      "old": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/owner-red-observable.json",
+        "sha256": "a6f511be7f84cfa1a1ee236d23795368dc1d1e73c3bd3780807e8496b795ef33",
+        "bytes": 661
+      },
+      "new": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/owner-lifetime.json",
+        "sha256": "26fd9ae5e0eb1d43fd28ccba3063cfdef5317dceb6f0f99ffe00dfd1380364ea",
+        "bytes": 2511
+      },
+      "target": "Full13equivalentrepeatbasesunderactual29SkiaInkLayersconsumerpins;old6memo/11denials,new13/0. No missinginterfacepredicate."
+    },
+    "R4-OWNER": {
+      "status": "QUALIFIED",
+      "owner": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/owner-lifetime.json",
+        "sha256": "26fd9ae5e0eb1d43fd28ccba3063cfdef5317dceb6f0f99ffe00dfd1380364ea",
+        "bytes": 2511
+      },
+      "pixels_history": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/pixel-and-history.json",
+        "sha256": "725dd4fd34d14b2482fa6fc29a18e4802c34975d03feddc8a30de00b150371da",
+        "bytes": 946
+      },
+      "leases": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/lease-accounting.json",
+        "sha256": "8cfab36d51c37ad840a4f325a6546e4b7b2be5d4fbd4edf35797baee429bb41b",
+        "bytes": 742
+      },
+      "change": "WeakpressurecallbackonceexactUpcohortreleasesownidleSource.historyonly;DrawScoperefusesmiddraw;ALLtilemaskqualificationepoch0/applied0;body/images/lastprovider/GPUleasesretained;externalplanunchanged."
+    },
+    "R4-EXACT": {
+      "status": "QUALIFIED",
+      "parity": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/exact-parity.json",
+        "sha256": "6e0399d01f5edb7ad4aa843544aef874bf15bc0cb57310d8f33cc148ecd5404f",
+        "bytes": 663
+      },
+      "regressions": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/regressions.json",
+        "sha256": "b5606be5a413b9395799345ec2c3b147206e92fa869fdb4259790ece6fe8c8f4",
+        "bytes": 1482
+      },
+      "rows634": 634,
+      "mismatches": 0,
+      "native60": 60,
+      "Node58": 58,
+      "Python37": 37,
+      "boundaries120": 120,
+      "no_numeric_Operation_History_API_budget_changes": true
+    },
+    "R4-WEB": {
+      "status": "QUALIFIED_WITH_LONG_TAIL_FINDINGS",
+      "pairs": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/paired-web.json",
+        "sha256": "da52bb6f46514035d845eb8a781dd69d73a228d151d0d8a5a009ffdde55b837f",
+        "bytes": 23910
+      },
+      "stress": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/continuous-stress.json",
+        "sha256": "d1de2c0a144f897897a8a9b2ed8134e50a6eb8444bfc5797133cc6bc6d4723ef",
+        "bytes": 1561
+      },
+      "actions": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/post-erase-action-matrix.json",
+        "sha256": "69b94540514e526da6f8127df4c89d4625e0e56bc5688159302a3a9df6e89033",
+        "bytes": 17170
+      },
+      "semantics": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/runtime-semantics.json",
+        "sha256": "0970df31c964a72191fdb9dbfdafbe666cc23a90773f4d51f5495b563a889305",
+        "bytes": 26652
+      },
+      "pixels": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/independent-pixel-proof.json",
+        "sha256": "f5df44aa1ffc1f114ee0621cfddc3b423ce64cd85fa2aee1a4f1241dad5ec889",
+        "bytes": 123426
+      },
+      "rows": 21,
+      "independent_final_redo_comparisons": 42,
+      "complete_four_phase_canonical_triple_comparisons": 8,
+      "new_unique_CPU_references": 4,
+      "original_ab7a_AA_tolerance": true
+    },
+    "R4-BIND": {
+      "status": "QUALIFIED",
+      "normal_archived_before_browser": true,
+      "source": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/source-manifest.json",
+        "sha256": "7c0123c065791789d0fd7761cce0c44fa89d8837c66d1c542dd192abb5e4aac8",
+        "bytes": 13592
+      },
+      "cleanup": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/cleanup.json",
+        "sha256": "a26a7dcb4cb957be5e2ae8070b8c09565748640e65a9b3d2bc7a2a0a35e39f41",
+        "bytes": 3946
+      },
+      "new_root_build_install_only": true,
+      "old_1e1c_2f1b_archives_raw_preserved": true
+    }
+  },
+  "performance": {
+    "interpretation": "Threefixedseeds/samefixed40/complete4canonicalstagesandentropyexact. Samplesdescriptive;nomorephysicalMacinput/Gateclaim. Confirmed2f1bcontinuousregressionclosedonthisfixture.",
+    "round6_main_ms": {
+      "old_p50": 5815.600000023842,
+      "previous_p50": 8020.600000023842,
+      "new_p50": 4524.900000095367
+    },
+    "round6_next_up_ms": {
+      "old_p50": 5644.200000047684,
+      "previous_p50": 8636.600000023842,
+      "new_p50": 138.19999992847443
+    },
+    "new_vs_previous": {
+      "main_p50_ratio": 0.5641597885547113,
+      "next_p50_ratio": 0.016001667314463206
+    },
+    "new_vs_old": {
+      "main_p50_ratio": 0.7780624527266004,
+      "next_p50_ratio": 0.024485312343167656
+    },
+    "long1600": "Main~4128ms,next~3977msessentiallyunchangedvsprevious;oldlongonly1sample~4853/4638notbroadclaim.",
+    "stress10_final_round": {
+      "main_up_ms": 7738.899999976158,
+      "next_up_ms": 365.60000002384186
+    },
+    "eight_endpoint_actual_feedback_from_predecessor_up_ms": {
+      "ready": 4847,
+      "erase": 6596,
+      "pan": 5015,
+      "zoom": 5121,
+      "rectangle": 5207,
+      "sticky": 5230,
+      "table": 5216,
+      "image": 4915
+    },
+    "goals": "3sgoal/5sreferencepartiallyunmet;mainUplongtailremains. NotclaimallG5/physicalinputphoton/Vibeparity."
+  },
+  "remaining_findings": [
+    "TenroundmainUpstillgrows~7.739s;global3s/5stargetnotclosed.",
+    "Livev4previewstabletail/maskedaffinenavigationrecoverycontinuityremainUR3scope, notcoveredbyall8noninkdragendpoints.",
+    "CallbackreleasesCPUdrawpreparation;GPUmaskreplaytradeoffmeasuredwithinthismatrixbutallplatform/highDPR/large-scaleunverified."
+  ],
+  "blocking_gaps_in_frozen_scope": [],
+  "ledger": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/sampling-ledger.json",
+    "sha256": "90f1af6ef867c6738e51c00da079dcbb22a2c292283cee76e51a3b0b28305fbb",
+    "bytes": 2264
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/cleanup.json",
+    "sha256": "a26a7dcb4cb957be5e2ae8070b8c09565748640e65a9b3d2bc7a2a0a35e39f41",
+    "bytes": 3946
+  },
+  "browser_starts": 2,
+  "charged_browser_seconds": 689,
+  "cap_browser_seconds": 1200,
+  "remaining_windows": [],
+  "evaluation_demo": "http://127.0.0.1:4321/example.html",
+  "old_user_demos_and_documents_untouched": true,
+  "next_UR3_readonly_appendix": {
+    "path": ".aegis/results/G5-exact-up-preparation-residency-r4/next-ur3-readonly-points.json",
+    "sha256": "50546ffbd2820a37f9f97e06fb142f73ddd6822e8274d9f974ec999e6661f322",
+    "bytes": 3796
+  },
+  "UR3_implemented": false,
+  "human_stop_before_step5": true,
+  "no_commit_push": true,
+  "index_empty": true,
+  "official_G5_P34_PASS": false,
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+}

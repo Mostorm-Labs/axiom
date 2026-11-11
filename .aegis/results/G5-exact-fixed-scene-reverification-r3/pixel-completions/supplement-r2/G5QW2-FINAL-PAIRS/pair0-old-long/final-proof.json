@@ -1,0 +1,45 @@
+{
+  "stage": "final",
+  "status": "QUALIFIED",
+  "compared_pixels": 5079493,
+  "aa_boundary_pixels": 701747,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair0-old-long/final.axsnap",
+    "source_snapshot_sha256": "bf8df27efb1697b854b11b991f844cd42ba86194a7bb70367eca191bd3c56d35",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair0-old-long/final.axsnap",
+    "reference_snapshot_sha256": "bf8df27efb1697b854b11b991f844cd42ba86194a7bb70367eca191bd3c56d35",
+    "document_digest": "dbc1dda17ded576c8519c74a67cdef22a129c06f29beaf46f1adf76751ddf196",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": null,
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "reuseProof": null,
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-003/reference.rgba",
+    "sha256": "fcdbdac56aad7dc80edaf855116d72669541f120571e54ddf12e3af89685fe51"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-003/reference.edge",
+    "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+  },
+  "actual_sha256": "627d882d2107eb744f1f79c43198a899115c03f6a4d25b0fe98832ecbb27c106"
+}

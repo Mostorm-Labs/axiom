@@ -1,0 +1,61 @@
+{
+  "status": "READ_ONLY_NEXT_UR3_INPUT_NOT_IMPLEMENTED",
+  "scope": "Requestedterminalappendixonly; no product/verificationexpansion",
+  "priorities": [
+    {
+      "point": "v4 live preview stable prefix/tail resource and final handoff",
+      "owner": "BrushSession/PreviewSurfaceController/SkiaRendererCompactCache",
+      "code": [
+        "runtime/ink/src/brush_session.cpp:54",
+        "runtime/render/src/skia_renderer.cpp:1214",
+        "runtime/render/src/skia_renderer.cpp:1240"
+      ],
+      "confirmed": "v4compactpreviewusesownviewboundstableprefix+scratch32MiBbranch; gpuMaterialonlyalgorithm5/6, v4entrysurfacestillRaster path. Oversizedviewgatherschunksandreconstructsfullstroke. Productioncanonicalpreparedbodyownerexistsseparately.",
+      "existing_tests": [
+        "runtime/render/tests/preview_surface_test.cpp",
+        "G5CanonicalPreparedBody/G5CanonicalPreparedBodyPixels",
+        "BrushSessioncompactconfirmed/predictedtailtests"
+      ],
+      "remaining": "r4erase-aftersealedink8endpointdoesnotproveactivev4drawingstable-tail->seal->canonicalhandoffDPR/lost/resize continuity. Needfocusedlivebrushcaseonexistingowner before optimizingcachepolicy; no claimnewrendererneeded."
+    },
+    {
+      "point": "Masked object affine transform after exact owner retirement",
+      "owner": "Interactionselectiontransform\u2192Scene recordtransform\u2192SkiaInkLayers grid/context/source validity\u2192canonical",
+      "code": [
+        "runtime/render/src/skia_ink_layers.cpp:58",
+        "runtime/render/src/skia_ink_layers.cpp:102",
+        "runtime/render/tests/render_cache_test.cpp:3309"
+      ],
+      "confirmed": "Sourcecommand/matrix/viewport/context/gridchangeseraseoldsource; permanentmask localgeometry andactualdevicegridapply. r4retiresCPUhistoryonly+ALLtileepoch0/applied0, preservesbodyandnextreplaysorderedmask.",
+      "existing_tests": [
+        "G5TranslatedV4Drag",
+        "G5InkBodyMaskReuse",
+        "G5UR2CHistoryExactParity",
+        "G5TransientDisplayContinuity",
+        "runtime/render/tests/render_cache_test.cpp affine sample cases"
+      ],
+      "remaining": "r4all8dragtargetsnonink. RealWeb maskedlongline affine move/rotate/nonuniformscale immediatelyaftererase/cancel andUndoRedo underDPR2/4 notnewlysampled. Verifybodyreuse/maskmaterialorigin/seams/cancelreceipts withfocusedcase, notrepeatallGates."
+    },
+    {
+      "point": "Navigation coarse/fine and canonical Undo/recovery while retired mask preparation reloads",
+      "owner": "SkiaRenderer navigationTiles/RenderCache/GpuResourceRetirement; RuntimeHistory+Scene derivedhandoff",
+      "code": [
+        "runtime/render/src/skia_renderer.cpp:600",
+        "runtime/render/src/skia_renderer.cpp:752",
+        "runtime/render/src/skia_render_cache.cpp:134",
+        "runtime/render/tests/transient_display_retry_test.cpp:502"
+      ],
+      "confirmed": "r4posterasepan/zoomactualnewfootprintnegative/terminalpixelsHistoryreceiptpass, canonicallastsuccessmaintained. Existingseparatenavigationcoarse/fineandcanonicalresourcejobs maycarryolderbasis duringcamera/newHistory transition.",
+      "existing_tests": [
+        "G5MaskedNavigationProgress",
+        "G5ErasedMixedNavigation",
+        "G5RetainedZoomReentry",
+        "G5MixedNavigationReentry",
+        "G5UR2ANavigationSafety",
+        "G5TransientDisplayRecovery/G5GpuResourceRecovery"
+      ],
+      "remaining": "Fixedscenecontinuousnavigation\u2192Undo/Redo\u2192maskedworldcoarse/fine\u2192contextrestore/idlefirstactionunderresourcepressure notcoveredbyr4singlepan/zoom. Routefocusedmixedsequencepreservingreceipt/lastsuccess, countfirstactualcontentgap ratherthanRAFonly."
+    }
+  ],
+  "not_authorized_in_r4": "NoUR3implementation/newsamplinghere;controlfreezeP31next. Stopbeforestep5backgroundcompute."
+}

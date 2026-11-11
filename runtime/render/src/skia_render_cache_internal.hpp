@@ -80,6 +80,7 @@ class SkiaRenderCache final {
     // Entering live erasure changes the useful representation. Retire old
     // complete masked sources before the next GPU epoch pins their leases.
     void releaseMaterialSources(bool releaseWorkSurfaces=true)noexcept;
+    std::size_t retireIdleHistoryPreparation() noexcept {return inkLayers_.retireIdleHistoryPreparation();}
     // Keep matching exact work resumable; obsolete camera/target work cannot
     // reserve the buffers needed by a renewed navigation demand.
     bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,

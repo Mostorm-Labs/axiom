@@ -1,0 +1,45 @@
+{
+  "id": "reference-009",
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair2-candidate-long/final.axsnap",
+    "source_snapshot_sha256": "00bf1a218c00b0f922fe01300949d0bca8c7170cbd1290b71642f89de52688dc",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair2-candidate-long/final.axsnap",
+    "reference_snapshot_sha256": "00bf1a218c00b0f922fe01300949d0bca8c7170cbd1290b71642f89de52688dc",
+    "document_digest": "38f48d47acffbc89a52c4ec00dbf8742f98d905afba0ed8af4d5253c3dff079a",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": null,
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "--pixels",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair2-candidate-long/final.axsnap",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-009/request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-009/reference"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 11.904633,
+    "peak_process_family_rss_kib": 312528,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 60,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "status": "REFERENCE_RENDERED"
+}

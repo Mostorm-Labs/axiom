@@ -1,0 +1,54 @@
+{
+  "stage": "redo",
+  "status": "QUALIFIED",
+  "compared_pixels": 5079493,
+  "aa_boundary_pixels": 701747,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair0-candidate-growth/redo.axsnap",
+    "source_snapshot_sha256": "724788206c7413fc0e078cb104e47ad415d4685ca6afa17313771a15dd3f3eb2",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair0-candidate-growth/redo.axsnap",
+    "reference_snapshot_sha256": "724788206c7413fc0e078cb104e47ad415d4685ca6afa17313771a15dd3f3eb2",
+    "document_digest": "4c271e297c8a1438c8c5dc51ec466d2b1263e9ead3a77ca7bc735e046133ba41",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": null,
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "reuse": "Completeobjects/background/manifest/digest+cameraequal"
+  },
+  "reuseProof": {
+    "objects": 40,
+    "total_masks": 520,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 55,
+    "after_revision": 53
+  },
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-000/reference.rgba",
+    "sha256": "98fd94beb19c95128735fb8369d00ac9829e8164d973df6863a8c35981f20b0a"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-000/reference.edge",
+    "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+  },
+  "actual_sha256": "5ed400eec6407a9654ff2ca402e094a63dd76d2d21b3ea68f4b36ff86c692e53"
+}

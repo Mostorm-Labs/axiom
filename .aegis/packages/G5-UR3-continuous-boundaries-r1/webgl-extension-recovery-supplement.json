@@ -1,0 +1,59 @@
+{
+  "schema": "g5-existing-provider-extension-recovery-v1",
+  "status": "AUTHORIZED_OWNER_LOCAL_CONTEXT_RECOVERY_FIX",
+  "parent": {
+    "path": ".aegis/packages/G5-UR3-continuous-boundaries-r1/package.json",
+    "sha256": "c82c668d3bec1dfc2e8b8a07a3023c01a1563b0265b0210732db985ece32617c"
+  },
+  "actual_red_console": {
+    "path": ".aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS-REPAIR/navigation-recovery-d4/console.json",
+    "sha256": "b7ba64f5d63a085b4c2afb33f2e091f532ca359e957493bd9db06d95bef12542"
+  },
+  "actual_red_metadata": {
+    "path": ".aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS-REPAIR/navigation-recovery-d4/failure.json",
+    "sha256": "db23b8b9a68fb30f6850fdb2560bd050dd3c85ea6643ca893f0dec33f726e20a"
+  },
+  "confirmed_static_chain": "EmscriptenGL.initExtensions has once-initguardpercontext;browserrestoreinvalidatesoptionalextensionactivationwhileappownedhandle/gluecachedcapabilitystringspersist. WebGlSurfaceProvider re-MakeGL queriesSkia capabilities/anisotropysamplerwithout explicitrenewal. Actualconsole afterrestore has unsupportedanisotropicgetParameter+samplerParameter, finalpreexistingINVALID_ENUM1280. Needprovefixatprovider,notignoreGLerror.",
+  "additional_allowed_existing": [
+    "runtime/render/src/webgl_surface_backend.cpp",
+    "runtime/render/CMakeLists.txt"
+  ],
+  "additional_allowed_new_prefixes": [
+    "runtime/render/src/ur3_webgl_extensions",
+    "runtime/render/tests/ur3_webgl_extensions",
+    "verification/runners/g5/ur3_continuous",
+    "verification/tests/g5_ur3_continuous",
+    "verification/tests/test_g5_ur3_continuous"
+  ],
+  "required": [
+    "Keepallb692oldsource/archiveandfailedrowsimmutable. No additionalgenericdiagnostic/newAPI/dependencybuild.",
+    "ExistingWebGlSurfaceProvider contextinitialization/rebind mustrequestactualsupportedextensions beforeGrGLMakeNativeInterface/MakeGL. UsepublishedEmscriptenexistingextensionenableAPI/per-contextnativecapabilityfacts; no directmutableGLinternalcachehack, productSDKJSglobalpatch, hardcodedassertalloptionalextensionssupported. Missingoptionalextensionusesoriginalsafeunsupportedpath, notfalsecapability.",
+    "NativeorVMRED models once-initializedhandle\u2192browserrestoreextensionlost\u2192capabilityprobe/draw; independenthelpertestsprove optionalcapabilityrenewalbeforeSkia constructionandcontextgenerationbinding. Do notchangeSkiaAPI/brush/math/AA/unconditionallyglGetErrordrain tohidefailure.",
+    "RebuildmatchingnewSDKinnewbuild/install/separateimmutablearchive/newDemo>=4323; oldb692and474untouched. AffectedGPUlifetime/nativepreviewcompletion/resourcekeepers appropriateonce,normalrootwrapper/types/APInochanges.",
+    "OnefocusedWebqualificationwindow actualcontextloss/restoredraw mustprove no postrestoreINVALID_ENUM/getParameter/samplerParameterunsupportedwarnings, originalreadbackhelperVALID final/Redo andCPUab7apixels. Includeactualgeneration/manifest/contacts/History andfirstactionfeedback. No clearingGLerrorjustbeforefinal toturnoldinvalidgreen.",
+    "WindowalsoincludesnewSDK live-prefix-d2 andmasked-affine-d2 primary+correctnesssmoke toprotectpreviewcompletionandmask; no whole10primarymatrixresample. Existing9completecorrectnessoracles canreusebyexactsemanticbasis/sourcechangeimpactdocumented;context/providerchangeddoesnotinvalidateCPUreferencegeometry.",
+    "Finishparentstep4scopewithknownlatency/CPUpreviewfindings thenmandatoryhumanstopBEFOREstep5. No newconcurrencyorlongtailoptimizationproject."
+  ],
+  "window": {
+    "id": "G5U3C1-RECOVERY-FINAL",
+    "seconds": 300,
+    "rss_mib": 4096,
+    "max_starts": 1,
+    "cases": [
+      "navigation-recovery-d4",
+      "live-prefix-d2",
+      "masked-affine-d2"
+    ],
+    "role": "Focusedproviderrecoverycorrectnessandregressionqualification,notcomparativeperformance"
+  },
+  "forbidden": [
+    "No publicSDKAPI/exports/ABI/schema/versionchange",
+    "No helperAA/errorqualificationrelaxation/hiddenerrorqueueconsumption",
+    "No systemdependencyorSkia/Emscriptenrebuild",
+    "No frameworkbudget/thread/worker/asyncUp/newowner",
+    "No commitpush/rawbinaryoverwrite/userpagechanges",
+    "No furtherbrowserIDsorretrieswithoutcontrol"
+  ],
+  "mutex": "Notifycontrolbeforeafterbrowser, no source/build/native/CPUoracle/GPU/video concurrentbrowser.",
+  "return_policy": "NativeREDGREENandmatchingfinalSDK thenfrozenfocusedwindow+offlineCPU, precisecompleteorblocker. Controlreviewandstop5. Requiredclosureunchangedexcepttargetedrootrepair/qualification."
+}

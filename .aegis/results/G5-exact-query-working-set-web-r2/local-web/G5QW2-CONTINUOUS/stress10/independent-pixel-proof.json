@@ -1,0 +1,32 @@
+{
+  "window": "G5QW2-CONTINUOUS",
+  "case": "stress10",
+  "status": "MISSING_OR_FAILED",
+  "proofs": [
+    {
+      "stage": "final",
+      "status": "MISSING_REFERENCE",
+      "invocation": {
+        "snapshot_sha256": "af0a3a16d6c64a87824535b85bb58b51355c6ab7d3cf0c488c37d21b7d9f471f",
+        "original_snapshot_sha256": "af0a3a16d6c64a87824535b85bb58b51355c6ab7d3cf0c488c37d21b7d9f471f",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "projection": null,
+        "timeout_ms": 10000,
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "status": "FAILED",
+        "error": "Error: spawnSync /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle ETIMEDOUT"
+      }
+    }
+  ]
+}

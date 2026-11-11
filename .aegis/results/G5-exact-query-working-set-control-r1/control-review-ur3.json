@@ -1,0 +1,64 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "status": "PARTIAL_FIXES_ACCEPTED_STEP4_ACTIVE_IDLE_PROOF_NOT_CLOSED",
+  "execution_result": {
+    "path": ".aegis/results/G5-UR3-continuous-boundaries-r1/result.json",
+    "sha256": "223ffd85ebbd0b8941e504e23c1c54ac757aefd210e2b1f08c0d8e349be66a9e"
+  },
+  "artifact_audit": {
+    "path": ".aegis/results/G5-exact-query-working-set-control-r1/ur3-full-artifact-audit.json",
+    "sha256": "75a11bade663a811621da6ed790b9a663e9ca0e2be64438cc84a85c22f2a967e"
+  },
+  "independent_native": [
+    {
+      "path": ".aegis/results/G5-exact-query-working-set-control-r1/ur3-independent-native.xml",
+      "sha256": "9b1a795920609cdffb724594bb80bf5dd7b7fba0ec2861c562e212a53f210586"
+    },
+    {
+      "path": ".aegis/results/G5-exact-query-working-set-control-r1/ur3-independent-extension.xml",
+      "sha256": "84bd7050fd8faf644b98f5e4697cd3270433fd092cbff9af30b60b1d2c123c95"
+    }
+  ],
+  "accepted_fixes": [
+    "FullComposition-ownedpreviewworkqualification:runtime/view/lifetime/attachment/work/content/display/surface/metrics;staleadapterpendingretired,realcanonicalcompletionindependent; strictforeign/currentfailurestillrejected",
+    "Brushnew/cancelsessionadvancesexistingdisplayidentity so reusedcontentRevisioncannotclearnewpreview",
+    "ExistingWebGLproviderre-requestsactualsupportedextensionsbeforeMakeGL,noerrorqueuedrain; actualrestorehelperVALID/noextensionwarnings/CPUfinalRedopixelsqualified"
+  ],
+  "evidence": [
+    "Finalreadbackfreeb692primary10/10,sourcebound; final1c5816focused3/3",
+    "Union10scenariosterminal20finalRedopixelcomparisonsoriginalAAqualified; mixedusesdisjointinkROI+typedproof,notfullmixedallpixeloracle",
+    "Live721confirmedsamples\u2192712knots/configexact,9activepreviewROIsqualified",
+    "Nativeeffective84pass/1inheritedFC00X519oldsourceexactfingerprint;finalprovider4/4, controlUR3PreviewCompletionandExtensionRenewalindependentbothpass",
+    "1094artifact/source/currentSDKhashchecksmatch;ownedbrowserPIDsclosed"
+  ],
+  "not_closed": [
+    {
+      "id": "IDLE_DPR4_ACTIVE",
+      "finding": "CapturedoldposeatpreUp,29479interiormismatch,finalRedoqualified; nofirstcurrentposeguardonthisidlecase. Cannotreplacewithdifferentmaskedcase.",
+      "classification": "REQUIRED_EVIDENCE_GAP"
+    },
+    {
+      "id": "DPR4_FEEDBACK_DELAY",
+      "finding": "Knownmaskedcasecurrentpose~1927.7/2015.4msafterlastMove,stillDown; substantialdelaynotinteractiveperformancepass.",
+      "classification": "PERFORMANCE_FINDING"
+    },
+    {
+      "id": "GPU_CONTEXT_DELETE",
+      "finding": "6foreigncontextdeletewarningswithcorrectpixels/VALIDreadback; resourcesafetynotproven.",
+      "classification": "RESOURCE_LIFECYCLE_FINDING"
+    }
+  ],
+  "user_checkpoint": {
+    "status": "STOPPED_BEFORE_STEP5_BACKGROUND_COMPUTE",
+    "background_design_or_prototype": false,
+    "next_discussion": "PrioritizeclosingGPUcontextownershipand idlefeedback versus planningisolatedCPUjobs; no autonomouscontinuationuntilhumansteerscheckpoint."
+  },
+  "git": {
+    "published_checkpoint": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "HEAD_origin_match": true,
+    "new_optimization_committed_or_pushed": false,
+    "dirty_work_preserved": true
+  },
+  "demo": "http://127.0.0.1:4323/example.html",
+  "officialGate": false
+}

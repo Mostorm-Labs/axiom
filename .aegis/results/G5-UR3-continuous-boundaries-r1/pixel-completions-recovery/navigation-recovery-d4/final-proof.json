@@ -1,0 +1,52 @@
+{
+  "status": "QUALIFIED",
+  "compared_pixels": 10586844,
+  "aa_boundary_pixels": 2789156,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "request": {
+    "width": 4400,
+    "height": 3040,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1,
+      "x": -29.2861328125,
+      "y": -14.64306640625
+    },
+    "hud_bounds": []
+  },
+  "actual_sha256": "fad6814e13ddc85a987c2653e8b3d63503638ad831d7f2a56170067569b1b20e",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-recovery/reference-000/reference.rgba",
+    "sha256": "718ff52e735fc4b42ef5bbd333e712138b324cdb410be3b791efc414564311c4",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-RECOVERY-FINAL/navigation-recovery-d4/final.axsnap",
+    "plan": {
+      "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-RECOVERY-FINAL/navigation-recovery-d4/final.axsnap",
+      "snapshot_sha256": "069c32a0e49136e7c7c41025acc239ec1aa29b5c0e83acdbbccd40a73452e4dc",
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1,
+          "x": -29.2861328125,
+          "y": -14.64306640625
+        },
+        "hud_bounds": []
+      },
+      "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+      "timeout_seconds": 60,
+      "rss_mib": 4096
+    }
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-recovery/reference-000/reference.edge",
+    "sha256": "51328aed5790b671ff20120d964b63d0a7a7e651d80f329aebde89c39c96855d"
+  }
+}

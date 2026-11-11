@@ -2,10 +2,12 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/render_cache.hpp"
+#include <functional>
 namespace canvas::render::internal {
 class PreparedGeometryCache;
 class SourceRetentionPool;
 struct MaskHistoryPlan;
+struct ExactHistoryProof;
 class PreparedNavigationGeometry;
 enum class MaskHistoryAdmission { kReady, kNotAdmitted, kResourcePending };
 // Independent component-order oracle retained for fallback qualification.
@@ -36,6 +38,10 @@ class EraseMaskPathCache final {
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         const std::shared_ptr<MaskHistoryPlan>& previous={},MaskHistoryAdmission* admission=nullptr);
     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
+    std::shared_ptr<const Entry> exactHistoricalPath(const std::shared_ptr<ExactHistoryProof>&,std::size_t index);
+    // Private owner-thread scope: bounded current query, no document ownership.
+    void beginCohort(std::function<void()> pressure={}) noexcept;
+    void endCohort() noexcept;
     // Private Render translation units only; returned pins retain their quota.
     std::shared_ptr<const Entry> get(const semantic::EraseMaskGeometry&,bool historical=false);
     // Optional sequential PathOps prefix advanced by the existing live frame.
@@ -47,6 +53,7 @@ class EraseMaskPathCache final {
     Work work()const noexcept;
  private:
     struct Impl;
+    std::shared_ptr<ExactHistoryProof> exactHistory(const scene::SharedVector<semantic::EraseMaskRecord>&);
     std::unique_ptr<Impl> impl_;
 };
 }

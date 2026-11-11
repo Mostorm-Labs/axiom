@@ -1,0 +1,24 @@
+{
+  "status": "FAILED",
+  "checker": "verification/runners/g5/web_up_attribution_snapshot_check.cpp",
+  "checks": [
+    {
+      "kind": "sticky",
+      "exit_code": -6,
+      "result": null,
+      "stderr": "libc++abi: terminating due to uncaught exception of type std::runtime_error: historical mask identities or geometry changed\n"
+    },
+    {
+      "kind": "table",
+      "exit_code": -6,
+      "result": null,
+      "stderr": "libc++abi: terminating due to uncaught exception of type std::runtime_error: historical mask identities or geometry changed\n"
+    },
+    {
+      "kind": "image",
+      "exit_code": -6,
+      "result": null,
+      "stderr": "libc++abi: terminating due to uncaught exception of type std::runtime_error: historical mask identities or geometry changed\n"
+    }
+  ]
+}

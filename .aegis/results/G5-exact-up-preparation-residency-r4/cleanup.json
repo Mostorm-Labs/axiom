@@ -1,0 +1,95 @@
+{
+  "status": "ALL_OWNED_BROWSER_AND_OFFLINE_REFERENCE_FAMILIES_CLEANED",
+  "browser_starts": 2,
+  "charged_seconds": 689,
+  "cap_seconds": 1200,
+  "remaining_seconds_not_new_authorization": 511,
+  "remaining_windows": [],
+  "attempts": [
+    {
+      "id": "G5OR4-FINAL-COMPARE",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_owner_residency.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exact-up-preparation-residency-r4/compare-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-FINAL-COMPARE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 496.36994566699997,
+        "peak_process_family_rss_kib": 2127344,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 900,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "freeze": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-FINAL-COMPARE/freeze.json",
+        "sha256": "1ea52df3b3ee09f0b7bcc867a334202e0f88c81634e075e401fb5621b217813b",
+        "bytes": 172629
+      },
+      "inputs_after": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-FINAL-COMPARE/inputs-after.json",
+        "sha256": "96251119ce15f8a9c9e465912e38d02364b287dcfd7b94b253d9932d85efd689",
+        "bytes": 163702
+      }
+    },
+    {
+      "id": "G5OR4-CONTINUITY",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_owner_residency.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exact-up-preparation-residency-r4/continuity-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-CONTINUITY"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 191.263911083,
+        "peak_process_family_rss_kib": 1915088,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 300,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "freeze": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-CONTINUITY/freeze.json",
+        "sha256": "ae72e68abca37e752a1cf38f015e492c53e8b16d434e6a826d547d3ffd9cbc26",
+        "bytes": 162880
+      },
+      "inputs_after": {
+        "path": ".aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-CONTINUITY/inputs-after.json",
+        "sha256": "27216933dd07fdef7ceb90dc978a3222982b4eeca91885b99670e5169ca6a30a",
+        "bytes": 156245
+      }
+    }
+  ],
+  "offline_unique_reference_invocations": 4,
+  "offline_elapsed_seconds": 47.682616333999995,
+  "offline_max_seconds": 11.988907125,
+  "all_offline_cleanup_complete": true,
+  "remaining_owned_pids": [],
+  "new_demo": "http://127.0.0.1:4321/example.html",
+  "demo_server_intentionally_retained": {
+    "url": "http://127.0.0.1:4321/example.html",
+    "pid": 79063,
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exact-up-preparation-residency-r4/normal-install/js",
+    "evaluation_only": true,
+    "archive": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/immutable-sdk/candidate-r4",
+    "browser_started": false
+  },
+  "old_demos_user_tabs_documents_untouched": true,
+  "no_commit_push": true,
+  "index_empty": true
+}

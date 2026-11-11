@@ -10,6 +10,16 @@ namespace g5 = canvas::foundation::internal::g5;
 
 namespace canvas::render::internal {
 void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
+std::size_t SkiaInkLayers::retireIdleHistoryPreparation()noexcept{
+    if(drawDepth_)return 0;
+    std::size_t retired=0;
+    for(auto& [id,source]:sources_)if(source.history){
+        source.history.reset();++retired;
+        source.epoch=source.epoch==UINT64_MAX?1:source.epoch+1;
+        for(auto& [key,tile]:tiles_)if(key.id==id){tile.epoch=0;tile.applied=0;}
+    }
+    return retired;
+}
 void SkiaInkLayers::eraseSource(foundation::ObjectId id){
     for(auto it=tiles_.begin();it!=tiles_.end();)if(it->first.id==id){bytes_-=it->second.bytes;it=tiles_.erase(it);}else ++it;
     sources_.erase(id);
@@ -39,6 +49,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     const SkMatrix& matrix,const SkIRect& viewport,const CompactDeviceGrid* originalGrid,
     const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
     const std::shared_ptr<SourceRetentionPool>& pool,CompactCoverageTargets& targets,RenderCacheWork& work,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared,std::shared_ptr<const PreparedNavigationGeometry> ready,std::shared_ptr<EraseMaskPathCache> histories,PreparationAllowance* allowance){
+    struct DrawScope {unsigned& depth;explicit DrawScope(unsigned& value):depth(value){++depth;}~DrawScope(){--depth;}} drawScope{drawDepth_};
     if(prepared)geometry_=std::move(prepared);
     G5_ROUTE(g5LayersRoute,g5::Route::erase_layers);
     G5_SCOPE(g5Layers,g5::Tag::mask,g5::Purpose::none);

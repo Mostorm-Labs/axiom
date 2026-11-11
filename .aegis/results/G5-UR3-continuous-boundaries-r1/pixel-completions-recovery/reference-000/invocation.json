@@ -1,0 +1,41 @@
+{
+  "plan": {
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-RECOVERY-FINAL/navigation-recovery-d4/final.axsnap",
+    "snapshot_sha256": "069c32a0e49136e7c7c41025acc239ec1aa29b5c0e83acdbbccd40a73452e4dc",
+    "request": {
+      "width": 4400,
+      "height": 3040,
+      "logical_width": 1100,
+      "logical_height": 760,
+      "camera": {
+        "scale": 1,
+        "x": -29.2861328125,
+        "y": -14.64306640625
+      },
+      "hud_bounds": []
+    },
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "timeout_seconds": 60,
+    "rss_mib": 4096
+  },
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "--pixels",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-RECOVERY-FINAL/navigation-recovery-d4/final.axsnap",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-recovery/reference-000/request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-recovery/reference-000/reference"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 17.546071084,
+    "peak_process_family_rss_kib": 389312,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 60,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "status": "REFERENCE_RENDERED",
+  "prefix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-recovery/reference-000/reference"
+}

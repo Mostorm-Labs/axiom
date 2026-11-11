@@ -4,6 +4,7 @@
 #include "canvas/semantic/staged_object_view.hpp"
 #include "sha256_internal.hpp"
 #include "container_operation_internal.hpp"
+#include "canvas/foundation/internal/g5_observation.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -51,6 +52,7 @@ bool referencesResource(const ObjectRecord& object, const ResourceId& resource) 
 }
 
 PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidationContext& context) {
+    G5_SCOPE(g5ApplyPrepare,foundation::internal::g5::Tag::wa_apply_prepare,foundation::internal::g5::Purpose::none);
     const auto idempotency = classifyOperation(operation, context.applied_operations);
     if (idempotency.disposition == IdempotencyDisposition::kAlreadyApplied)
         return {PrepareDisposition::kAlreadyApplied, {}, std::nullopt};

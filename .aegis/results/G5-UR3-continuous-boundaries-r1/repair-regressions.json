@@ -1,0 +1,34 @@
+{
+  "status": "OWNED_SCOPE_PASSED_WITH_INHERITED_EXTRA_FAILURE",
+  "primary_native": {
+    "tests": 85,
+    "passed": 82,
+    "failed": [
+      "FC00XRuntimeComposition:canonicalFeedbackCannotQualifyAnotherInstance:519"
+    ],
+    "not_run_then_completed": [
+      "FC00XMinimalRuntimeHost",
+      "FC00XMinimalPresentationCache"
+    ]
+  },
+  "effective_after_minimal": {
+    "passed": 84,
+    "failed": 1
+  },
+  "baseline_reproduction": {
+    "core_source_sha256": "abe34d15a52e25054fae31b521ce0bf3ae4d07413003f27bddb32d780b9ed9a8",
+    "interaction_source_sha256": "a85ec1930940975dfd94dbee2fc07966b3e66a84ba22e8418bd983a6f0db9e70",
+    "same_failure": true,
+    "log": ".aegis/results/G5-UR3-continuous-boundaries-r1/baseline-extra-regression.log"
+  },
+  "new_test": {
+    "CTest": "UR3PreviewCompletion",
+    "passed": true,
+    "red_log": "preview-completion-red.log",
+    "green_log": "preview-completion-green8.log"
+  },
+  "node_passed": 9,
+  "python_passed": 4,
+  "runtime_boundary_files": 120,
+  "exact634": "unchanged math and exact owner tests passed; reuse accepted r4 exact-parity identity"
+}

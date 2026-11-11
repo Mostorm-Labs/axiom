@@ -1,0 +1,161 @@
+{
+  "schema": "g5-fixed-scene-r3-result-v1",
+  "task_id": "G5-exact-fixed-scene-reverification-r3",
+  "status": "READY_FOR_CONTROL_REVIEW_VERIFICATION_REPAIRED_WITH_PERFORMANCE_FINDINGS",
+  "return_surface": "CONTROL_REVIEW",
+  "source_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/geometry-navigation-integration",
+  "package": {
+    "path": ".aegis/packages/G5-exact-fixed-scene-reverification-r3/package.json",
+    "sha256": "08b936bb3413a4dedfd12cadbe225928cf5e52b0d90eaf8a3aa64356892c4e12",
+    "bytes": 2515
+  },
+  "artifact_manifest": {
+    "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/artifact-manifest.json",
+    "sha256": "98111f744e31162675daaaecb16b48324cbfaaa7f2f11bbe718f81e7cf7914cc",
+    "bytes": 185058
+  },
+  "source_and_SDK_binding": {
+    "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/source-and-sdk-binding.json",
+    "sha256": "ab28530263010b3ce438af2dfe3a8c7ee12e9552f13a97c177b8398da3bc6c4b",
+    "bytes": 17277
+  },
+  "obligations": {
+    "FS-COMPARE": {
+      "status": "QUALIFIED",
+      "fixture": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/fixed-fixture.json",
+        "sha256": "f819c0dc0f8df5fc823855fa9ac685813323e17c39f3b8119b2bb869d10104a8",
+        "bytes": 1049
+      },
+      "entropy": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/entropy-preflight.json",
+        "sha256": "3baa4204f2528ba1c4c77d3657abf71bbe90b6afb4a16bf18e07f341c80b7933",
+        "bytes": 5272
+      },
+      "pilot": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/pilot.json",
+        "sha256": "92c4081f19ab32a279c437b40c3413ab61299b2c4d60017792901df758b44729",
+        "bytes": 1086
+      },
+      "pairs": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/paired-web.json",
+        "sha256": "7f583c4e43916601a40662082835c537073eb1aad8c2dcd14d1cb728b5f92a6f",
+        "bytes": 21253
+      },
+      "evidence": "pilotand6pairwaveformsallfourcanonicalstagescompleteobjects/IDs/order/geometry/body/config/transforms/manifest/background/digestequal. Samefrozenseedmatched4x4byteentropy. Initialfixed40restore,nonewduplicate. Roundadmission/generation/count/contactstatesmatch."
+    },
+    "FS-PIXEL": {
+      "status": "QUALIFIED_AVAILABLE_REQUIRED_FINAL_REDO",
+      "proof": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/independent-pixel-proof.json",
+        "sha256": "ff92361fefd3b138224b03d9be9ed5b78a64ea914415a7951d7715aca0131efd",
+        "bytes": 196487
+      },
+      "invocations": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/oracle-invocations.json",
+        "sha256": "f7cc1db6e29823e5469280657dd2fb6747e5b512574622061c751729caba9fdf",
+        "bytes": 63605
+      },
+      "rows": 35,
+      "comparisons": 70,
+      "r2_missing_rows_supplemented": 20,
+      "r3_rows": 15,
+      "new_unique_CPU_references": 27,
+      "reference_limit_seconds": 60,
+      "rule": "Sameab7aCPU/perprimitiveAA+<=2channeloutsideband,nostretch. Reuseonlycompletecanonical/background/manifest+cameraexact. Old20timeoutsunchanged."
+    },
+    "FS-ZOOM": {
+      "status": "QUALIFIED_TERMINAL_SNAPSHOT_HISTORY_RECEIPT_PIXELS",
+      "proof": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/zoom-terminal.json",
+        "sha256": "d8a61d226ce4475895bbff3d2aaf9195ee7a33811903e5f3101e1ab27940c804",
+        "bytes": 12982
+      },
+      "semantics": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/runtime-semantics.json",
+        "sha256": "540de96029c49d7343143bb91893fdf501bd0b3c862ab2f2c8fddc88cc2649b7",
+        "bytes": 22062
+      },
+      "cleanup": "Insidecanvas[24,986],worldy>840/x<800outsidecontent; actualreadSelection0beforecapture. Correctnewfootprintnegative/16bluepixels,camera,contacts0/receipt/UndoRedocomplete."
+    },
+    "FS-BIND": {
+      "status": "QUALIFIED",
+      "source": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/source-and-sdk-binding.json",
+        "sha256": "ab28530263010b3ce438af2dfe3a8c7ee12e9552f13a97c177b8398da3bc6c4b",
+        "bytes": 17277
+      },
+      "cleanup": {
+        "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/cleanup.json",
+        "sha256": "9f169e38df4fcf60a770790f962e588bd856b64ae3ccdf6e8dc2de88c2fbad7d",
+        "bytes": 2082
+      },
+      "no_product_source_or_build_changes": true,
+      "immutable_SDK_files": 72,
+      "current_product_postimages": 12
+    }
+  },
+  "performance_findings": {
+    "qualification": "COMPARABLE_DESCRIPTIVE_THREE_PAIR_SAMPLES_NOT_GATEPASS",
+    "long": {
+      "baseline_main_p50_ms": 4137.600000023842,
+      "candidate_main_p50_ms": 4130.400000095367,
+      "baseline_successor_p50_ms": 3962.0,
+      "candidate_successor_p50_ms": 3975.0,
+      "conclusion": "Essentiallyunchanged"
+    },
+    "growth_round6": {
+      "baseline_main_p50_ms": 5825.100000023842,
+      "candidate_main_p50_ms": 7969.100000023842,
+      "main_ratio": 1.368062350859423,
+      "baseline_successor_p50_ms": 5608.799999952316,
+      "candidate_successor_p50_ms": 8632.300000071526,
+      "successor_ratio": 1.5390636143461907,
+      "candidate_successor_max_ms": 11240,
+      "conclusion": "Current2f1bcandidateworsenslatecontinuousUptimeundersamefixedcanonicalscene; notapprovedoptimization."
+    },
+    "previous_absolute_stress10": "R2actual18.693smain/18.471ssuccessorremainsrealunresolvedlongtail; notre-runr3.",
+    "goal_3s_reference_5s": "UNMET_FINDINGS",
+    "official_performance_PASS": false
+  },
+  "preserved_boundaries": [
+    "R2oldincomparablepairedtimingsremaininvalidforcausalcomparison; r3newfixedseed/completestateproofownsnewcomparison.",
+    "R2old20CPUtimeoutsandzoomfailureunchanged; r3supplementsrequiredproofwithoutrewritinghistory.",
+    "R1c3bcordinarybinarylossunrecoverablefindingremains; baseline1e1c/candidate2f1buseindependentreadonlyarchives.",
+    "Production12postimages/runtimeSDKquotas/brush/AA/Operation/History/inputownersunchanged."
+  ],
+  "remaining_product_work": [
+    "Step3notacceptedasperformanceoptimization; controlchoosesnextownerlocalscopeusingtrustedfixedsceneevidence.",
+    "NoUR3/step4productionuntilcontrolpackage;mandatoryhumanstopbeforestep5backgroundcompute."
+  ],
+  "blocking_gaps_in_this_verification_package": [],
+  "ledger": {
+    "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/sampling-ledger.json",
+    "sha256": "91b25c4209e51a551487fddc42593fd39cc6c81ede3b573aa82ee99ccd2f2093",
+    "bytes": 2251
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/cleanup.json",
+    "sha256": "9f169e38df4fcf60a770790f962e588bd856b64ae3ccdf6e8dc2de88c2fbad7d",
+    "bytes": 2082
+  },
+  "browser_starts": 2,
+  "browser_charged_seconds": 469,
+  "browser_cap_seconds": 1020,
+  "offline_unique_references": 27,
+  "offline_elapsed_seconds": 305.42307916699997,
+  "offline_max_seconds": 13.690194167,
+  "remaining_windows": [],
+  "readonly_next_scope_appendix": {
+    "path": ".aegis/results/G5-exact-fixed-scene-reverification-r3/next-scope-readonly-feasibility.json",
+    "sha256": "cad577e5d029c2cd4e56852bcab29de7aba66334a16659dc62e0abd6edde0b2a",
+    "bytes": 3622
+  },
+  "next_scope_implemented": false,
+  "no_commit_push": true,
+  "index_empty": true,
+  "official_G5_P34_PASS": false,
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+}

@@ -1,0 +1,74 @@
+{
+  "status": "QUALIFIED",
+  "checker": "verification/runners/g5/web_up_attribution_snapshot_check.cpp",
+  "mask_order_policy": "Complete historical ID/geometry membership, independent of canonical ordering.",
+  "default_material_policy": "Sticky absent fill resolves current1,1,.5,1; image manifest uses canonical sha256: prefix. Invalid checker assumptions retained separately, no raw/product change.",
+  "checks": [
+    {
+      "kind": "sticky",
+      "exit_code": 0,
+      "result": {
+        "confirmed_points_per_new_mask": 1601,
+        "final_masks": 120,
+        "final_objects": 45,
+        "generation_delta": 3,
+        "historical_masks_preserved": 80,
+        "initial_objects": 44,
+        "kind": "sticky",
+        "new_mask_waveform_verified": true,
+        "redo_canonical_equal": true,
+        "status": "QUALIFIED",
+        "target": "70cd4c9351dfccce80733b62c80ee2bf",
+        "target_material_resource": "canonical/default yellow 200x200",
+        "unchanged_long_bodies": 40,
+        "undo_restores_pose_only": true,
+        "unrelated_mixed_unchanged": 4
+      },
+      "stderr": ""
+    },
+    {
+      "kind": "table",
+      "exit_code": 0,
+      "result": {
+        "confirmed_points_per_new_mask": 1601,
+        "final_masks": 120,
+        "final_objects": 45,
+        "generation_delta": 3,
+        "historical_masks_preserved": 80,
+        "initial_objects": 44,
+        "kind": "table",
+        "new_mask_waveform_verified": true,
+        "redo_canonical_equal": true,
+        "status": "QUALIFIED",
+        "target": "019b97c99dcf73b567a8c001b4d75840",
+        "target_material_resource": "canonical 2x2 grid 240x96",
+        "unchanged_long_bodies": 40,
+        "undo_restores_pose_only": true,
+        "unrelated_mixed_unchanged": 4
+      },
+      "stderr": ""
+    },
+    {
+      "kind": "image",
+      "exit_code": 0,
+      "result": {
+        "confirmed_points_per_new_mask": 1601,
+        "final_masks": 120,
+        "final_objects": 44,
+        "generation_delta": 2,
+        "historical_masks_preserved": 80,
+        "initial_objects": 44,
+        "kind": "image",
+        "new_mask_waveform_verified": true,
+        "redo_canonical_equal": true,
+        "status": "QUALIFIED",
+        "target": "b232286a47d360690f5e473ceff7d2dd",
+        "target_material_resource": "sha256:4ff6ab670a58c14270e034e2090d9a432caa263a14e0a25785386b0c12f880b5",
+        "unchanged_long_bodies": 40,
+        "undo_restores_pose_only": true,
+        "unrelated_mixed_unchanged": 3
+      },
+      "stderr": ""
+    }
+  ]
+}

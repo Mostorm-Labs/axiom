@@ -1,0 +1,92 @@
+{
+  "schema": "g5-ur3-final-source-manifest-v1",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "HEAD": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "basis": "80335dd0+acceptedr4dirty; UR3 isolateddelta",
+  "files": {
+    "runtime/composition/CMakeLists.txt": {
+      "current_sha256": "eb273ebe1926999c5ccc0c3ad4fffb9824ed589dce649b57b00f8df12faabbc1",
+      "baseline_sha256": "11149c2ceb26a6b92c63da90a85e9551d6b2c7ecc2f1d69a5dbc617f7adf4d12",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/CMakeLists.txt",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/composition/CMakeLists.txt"
+    },
+    "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": {
+      "current_sha256": "8a23cb0b211832992d9d79865d22a93693b2586d048bfc51aada4feb77f6ee7d",
+      "baseline_sha256": "d83f55dab54603692668262adb675e9829e951a2d1b1f32ddfa1f053dbc9c996",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp"
+    },
+    "runtime/composition/src/runtime_composition.cpp": {
+      "current_sha256": "c86620a95cd34cbd7e9b4c2fde6e39df8cec0825a625fed79854b00021c923a7",
+      "baseline_sha256": "abe34d15a52e25054fae31b521ce0bf3ae4d07413003f27bddb32d780b9ed9a8",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/src/runtime_composition.cpp",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/composition/src/runtime_composition.cpp"
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "current_sha256": "ef884db841f7cc701d9aeeaf5f70a244737c52c8debba1fd48858b1feff0cf8b",
+      "baseline_sha256": "a85ec1930940975dfd94dbee2fc07966b3e66a84ba22e8418bd983a6f0db9e70",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/interaction/src/canvas_editing_runtime.cpp",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/interaction/src/canvas_editing_runtime.cpp"
+    },
+    "sdk/web/web_runtime_adapter.cpp": {
+      "current_sha256": "8e2f18d1f6219ac92285befac80cbe67eab9df8cc3c4ef8424dd5f5ecb0de46a",
+      "baseline_sha256": "9f6fa43b6fcc6e21c8c9d8c5f6048abbf0cb28ae087e9c60b1326973658c462a",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/sdk/web/web_runtime_adapter.cpp",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/sdk/web/web_runtime_adapter.cpp"
+    },
+    "runtime/render/src/webgl_surface_backend.cpp": {
+      "current_sha256": "7aec2f13075f033436d4016a6ae21583b90a6e4444ab240a10faa9c5785acae3",
+      "baseline_sha256": "7eae5ff82734ce5caa32b544b3aa82dbf421cbe0818619044a4fad0328023870",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/render/src/webgl_surface_backend.cpp",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/render/src/webgl_surface_backend.cpp"
+    },
+    "runtime/render/src/ur3_webgl_extensions.hpp": {
+      "current_sha256": "58ede9a78f1e363ee7c46638da91712071853bbe568c6690edd23a44ab3f72a5",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/render/src/ur3_webgl_extensions.hpp"
+    },
+    "runtime/render/CMakeLists.txt": {
+      "current_sha256": "1abd1eb64ab465d6cd2310755ba508e02d9fcfa8b60b588d7c97acd2a9199c64",
+      "baseline_sha256": "d69731c5764a2c42edb6d2d65bdffe9855931941c0b0998fbc9357148d7391d6",
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/render/CMakeLists.txt",
+      "preimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-preimages/runtime/render/CMakeLists.txt"
+    },
+    "runtime/composition/tests/ur3_continuous_preview_completion_test.cpp": {
+      "current_sha256": "d2469bcbf19f69abe008e53094b45ed5c9e8397a8b7e55057fc8aa5439bf100b",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/tests/ur3_continuous_preview_completion_test.cpp"
+    },
+    "runtime/composition/tests/ur3_continuous_stubs/GLES3/gl3.h": {
+      "current_sha256": "90dba97ac80452b8012beedac806e30d0ffce1317a0b8cd74b5ec3a45e114591",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/tests/ur3_continuous_stubs/GLES3/gl3.h"
+    },
+    "runtime/composition/tests/ur3_continuous_stubs/emscripten/html5.h": {
+      "current_sha256": "e823e024978d17f70334e1af98bdd490f35326313de7d595121f52644d5332c8",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/tests/ur3_continuous_stubs/emscripten/html5.h"
+    },
+    "runtime/composition/tests/ur3_continuous_stubs/host_font_resources.hpp": {
+      "current_sha256": "fbff91a877d4f1d22b2e76aac60da1dde840439e07d2b3651e3fb9dea8c11109",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/composition/tests/ur3_continuous_stubs/host_font_resources.hpp"
+    },
+    "runtime/render/tests/ur3_webgl_extensions_test.cpp": {
+      "current_sha256": "cdd21c850dfc59990f48dcbeb51bb94c398cfddb605cb08b75f806f1a9b3b953",
+      "baseline_sha256": null,
+      "postimage": ".aegis/results/G5-UR3-continuous-boundaries-r1/final-source-postimages/runtime/render/tests/ur3_webgl_extensions_test.cpp"
+    }
+  },
+  "delta_sha256": "c74cccce4f11921108e1d006086de7c89cda72901af0fd2f1587b997297877b7",
+  "no_commit_push": true,
+  "index_empty": true,
+  "dependency_locks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "private_handshake_only": true,
+  "final_SDK_manifest": "recovery-normal-sdk-manifest.json",
+  "SDK_WASM": "1c5816eccc1f15175545d0f460fceff8899266632e1ec773650e7d91362872ad"
+}

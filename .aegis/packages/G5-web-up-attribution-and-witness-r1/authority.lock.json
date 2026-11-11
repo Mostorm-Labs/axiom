@@ -1,0 +1,62 @@
+{
+  "status": "CURRENT_EXPLICIT_HUMAN_AUTHORIZATION_AFTER_CHECKPOINT",
+  "execution_authority_mode": "repo_materialized",
+  "human_request": "我同意按照这个顺序推进，推进到5的时候要评估后台计算的地方停下来和我对照吧，开始前先提交并推送已有改动",
+  "current_authority": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/02-operation-model/operation-structural-semantics-v1-closure-v0.1.md",
+      "sha256": "dbef1ac6b227d717f3972831d7c30678ea14d72ffb3988fe7a77d5d722078114"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "baseline_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "baseline_result": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/result.json",
+    "sha256": "12b5d7cd1ef09f9302a8a9f35c37d547174bc719ebae38620bddd1094529b8a0"
+  },
+  "control_review": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/control-review.json",
+    "sha256": "ad8bad54cebccce341bbefcdf5d6c8f6b2e5378e9f1375f64521f1327c292109"
+  },
+  "timing_policy": {
+    "path": ".aegis/results/G5-erase-exact-canonical-control-r1/timing-target-3s-5s-supersession.json",
+    "sha256": "4b19f7fac06b8a543b1578d215f3c27bf657d890030413ee289e3bcea3cc923e"
+  },
+  "statements": [
+    "Human authorized plan steps1–4. This package completes steps1–2; measured optimization step3 and UR3 step4 will be scoped by control using actual attribution. No renewed human approval required within1–4.",
+    "MANDATORY_HUMAN_CHECKPOINT before step5 background-compute evaluation: stop and report measured CPU candidates/ownership/lifetime/toolchain/alternatives. No worker/concurrency prototype, asyncUp or migration before that discussion.",
+    "Use existing Runtime/OperationEngine/History/Scene/Render owners. Preserve exact target decisions,canonical IDs/payload/maskorder,atomicapply and receipt semantics.",
+    "Only verification repair and qualification-only observations inthispackage. No ordinary product algorithm/routing/cachebudget/scene change.",
+    "Latest3sgoal5sreference are engineering findings, no mechanical performance blocker. Actual successor content/pixels/pose,exact semantics/resources remain required.",
+    "Desktop256/512/64MiB,conservative32/96/8,localexact/history8MiB unchanged. Investigate quota as hypothesis only.",
+    "Retain original failed windows/ledgers/SDKs/user pages4319/4318/4317/4316; newtask owns new ledger, oldcap neverreset.",
+    "Existingcheckpoint80335dd0 publication already completed; no further commit/push inthispackage unlessnewuserinstruction."
+  ]
+}

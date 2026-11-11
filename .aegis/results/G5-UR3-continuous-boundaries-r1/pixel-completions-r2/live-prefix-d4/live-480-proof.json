@@ -1,0 +1,38 @@
+{
+  "label": "live-480",
+  "confirmed": 481,
+  "rect": {
+    "x": 2220,
+    "y": 2600,
+    "width": 16,
+    "height": 16
+  },
+  "preview_visibility": "visible",
+  "status": "QUALIFIED",
+  "compared_pixels": 256,
+  "aa_boundary_pixels": 0,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "composite_sha256": "1f01b5f2123ae98fed193971a836e7aafa44e24abdc71d41651c6d37516e5de4",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-r2/reference-007/reference.rgba",
+    "sha256": "4c7888dad12f6fe531f147f92ce96ad9a171769c2739e6d67371efc880032c4d",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-r2/live-prefix-d4/live-480-expected.axsnap"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-r2/reference-007/reference.edge",
+    "sha256": "1c6c216c04d5a6beb2d63018e68dfb9f3dc1a3cc12c10e32655c5daa49917377"
+  },
+  "paint": {
+    "rgb": [
+      1,
+      0.62,
+      0.04
+    ],
+    "opacity": 0.92
+  },
+  "css_composition": "premultiplied source-over canonical+preview"
+}

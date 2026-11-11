@@ -1,0 +1,40 @@
+{
+  "status": "FOCUSED_THREE_ROUTE_BOUNDARIES_FROZEN",
+  "routes": [
+    {
+      "route": "v4livepreview",
+      "entry": "publicSDKselectBrush+PointerInput\u2192BrushSession\u2192compactChunks\u2192PreviewSurfaceController\u2192SkiaRenderer::renderPreview",
+      "owner_files": [
+        "runtime/ink/src/brush_session.cpp:54",
+        "runtime/render/src/skia_renderer.cpp:1214"
+      ],
+      "classification": "KEEP_COMPATIBILITY_CPU_WITH_FINDINGS",
+      "facts": "algorithm4stableprefixsurfaceRaster,tailcombinedRaster; >8MiBviewreconstructsconfirmedchunksequence. DPR1 CSS1100x7603.34MiBfitsstable;DPR2/4exceeds8MiB,explicitreconstruction. NoGPUinferencefromprovider.",
+      "scope": "Observeactualstable/tailprogressandcorrectexpectedpixels, nofullGPUrewrite."
+    },
+    {
+      "route": "maskedaffine",
+      "entry": "RuntimeSelection\u2192OperationEngineTransform\u2192Scene\u2192RenderCacheSkiaInkLayers\u2192Provider",
+      "owner_files": [
+        "runtime/interaction/src/canvas_editing_runtime.cpp:2834",
+        "runtime/render/src/skia_ink_layers.cpp:58",
+        "runtime/render/src/skia_renderer.cpp:768"
+      ],
+      "classification": "KEEP_VERIFY_SEQUENCE",
+      "facts": "bodycommand/matrix/context/gridvalidity;permanentlocalmasksordered; r4exactcohortpressureownerretirementkeepsbody/requalifiesallmaskresulttiles."
+    },
+    {
+      "route": "navigationrecovery",
+      "entry": "publicwheel\u2192Runtimecamera\u2192navigationcoarsefine/retained\u2192canonicalreceipt;HistoryUndoRedo\u2192Scene derivedbasis;contextrebindProvider",
+      "owner_files": [
+        "sdk/web/axiom.mjs:188",
+        "runtime/render/src/skia_renderer.cpp:600",
+        "runtime/render/src/skia_navigation_tiles.cpp"
+      ],
+      "classification": "KEEP_VERIFY_LATEST_BASIS_AND_PROGRESS",
+      "facts": "Cameraonlynotsemanticmutation;lastsuccessfulpixelsretained;contextloss/restoreeventand eventualreceiptobserved;idle30sfiniteonly."
+    }
+  ],
+  "no_global_UR0_reaudit": true,
+  "step5_stop": true
+}

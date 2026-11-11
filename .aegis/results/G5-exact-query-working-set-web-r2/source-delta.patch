@@ -1,0 +1,904 @@
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -19,6 +19,7 @@
+ #include <cmath>
+ #include <chrono>
+ #include <new>
++#include <list>
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+ #include <cstdio>
+ #endif
+@@ -29,6 +30,16 @@
+     semantic::EraseMaskGeometry geometry;SkPath path;resources::ResourceLease lease;
+     std::shared_ptr<ErasePathUsage> usage;std::size_t bytes=0;std::uint64_t used=0;
+     ~Entry(){if(usage)usage->bytes-=bytes;}
++};
++struct ExactHistoryProof final {
++    scene::SharedVector<semantic::EraseMaskRecord> records;
++    std::vector<std::weak_ptr<const EraseMaskPathCache::Entry>> paths;
++    std::shared_ptr<MaskHistorySourceCharge> source;
++    resources::ResourceLease metadata;
++    std::shared_ptr<MaskHistoryUsage> usage;
++    std::size_t bytes=0;
++    std::uint64_t used=0,identity=0;
++    ~ExactHistoryProof(){if(usage)usage->bytes-=bytes;}
+ };
+ }
+ namespace {
+@@ -251,7 +262,7 @@
+ }
+ }
+ namespace {
+-SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::MaskHistoryPlan>& history={},MaskHistoryWork* historyWork=nullptr) noexcept {
++SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::ExactHistoryProof>& history={},MaskHistoryWork* historyWork=nullptr) noexcept {
+     G5_SCOPE(g5Evaluate,foundation::internal::g5::Tag::wa_exact_eval,foundation::internal::g5::Purpose::none);
+     try {
+         std::vector<std::shared_ptr<const internal::EraseMaskPathCache::Entry>> pins;
+@@ -260,7 +271,7 @@
+             return erasePath(geometry);
+         };
+         const auto historicalPath=[&](std::size_t i){
+-            if(pathCache&&history)if(auto entry=pathCache->historicalPath(history,i)){
++            if(pathCache&&history)if(auto entry=pathCache->exactHistoricalPath(history,i)){
+                 pins.push_back(entry);return std::optional<SkPath>{entry->path};
+             }
+             return pathFor(record.eraseMasks[i].geometry,true);
+@@ -379,8 +390,8 @@
+     std::size_t queryPrefixSegments=0;
+     struct QueryResult {
+         std::shared_ptr<const PreparedNavigationGeometry> body;
+-        std::shared_ptr<const Entry> query;
+-        std::shared_ptr<MaskHistoryPlan> history;
++        semantic::EraseMaskGeometry query;
++        std::shared_ptr<ExactHistoryProof> history;
+         semantic::Transform2D transform{};
+         std::uint32_t version=0;
+         Hit result=Hit::kInvalid;
+@@ -388,16 +399,18 @@
+         std::shared_ptr<ErasePathUsage> usage;
+         std::size_t bytes=0;
+         ~QueryResult(){if(usage)usage->bytes-=bytes;}
+-        QueryResult(std::shared_ptr<const PreparedNavigationGeometry> b,std::shared_ptr<const Entry> q,
+-            std::shared_ptr<MaskHistoryPlan> h,semantic::Transform2D t,std::uint32_t v,Hit r,
++        QueryResult(std::shared_ptr<const PreparedNavigationGeometry> b,const semantic::EraseMaskGeometry& q,
++            std::shared_ptr<ExactHistoryProof> h,semantic::Transform2D t,std::uint32_t v,Hit r,
+             resources::ResourceLease lease,std::shared_ptr<ErasePathUsage> u,std::size_t n)
+-            :body(std::move(b)),query(std::move(q)),history(std::move(h)),transform(t),version(v),result(r),metadata(std::move(lease)),usage(std::move(u)),bytes(n){usage->bytes+=bytes;}
++            :body(std::move(b)),query(q),history(std::move(h)),transform(t),version(v),result(r),metadata(std::move(lease)),usage(std::move(u)),bytes(n){usage->bytes+=bytes;}
+     };
+-    std::optional<QueryResult> lastQuery;
++    std::shared_ptr<QueryResult> lastQuery;
++    std::list<std::shared_ptr<QueryResult>> cohortQueries;
+     struct Refusal {
+         std::weak_ptr<const std::vector<semantic::EraseMaskRecord>> owner;
+         const void* pointee=nullptr;
+         std::shared_ptr<const SourceRetention> source;
++        std::shared_ptr<MaskHistorySourceCharge> localSource;
+         resources::ResourceLease metadata;
+         std::shared_ptr<ErasePathUsage> usage;
+         std::size_t bytes=0,pathBytes=0;
+@@ -408,30 +421,71 @@
+     std::shared_ptr<resources::ResourceBudgetManager> budget;
+     std::vector<std::shared_ptr<Entry>> entries;
+     std::vector<std::shared_ptr<MaskHistoryPlan>> histories;
++    std::vector<std::shared_ptr<ExactHistoryProof>> exactHistories;
+     std::vector<std::shared_ptr<Refusal>> refusals;
+     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
+     std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+-    std::size_t size()const noexcept{return entries.size()+histories.size()+refusals.size()+std::size_t(lastQuery.has_value())+std::size_t(bool(queryPrefix));}
++    unsigned cohortDepth=0;
++    std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
++        std::size_t(lastQuery&&std::find(cohortQueries.begin(),cohortQueries.end(),lastQuery)==cohortQueries.end())+std::size_t(bool(queryPrefix));}
+     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
+     bool evict(){
++        // Draw flattening is optional to exact work. Active draw pins keep
++        // their leases; only idle plans are reclaimed here.
++        if(cohortDepth){
++            auto draw=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
++                if(it->use_count()==1&&(draw==histories.end()||(*it)->used<(*draw)->used))draw=it;
++            if(draw!=histories.end()){histories.erase(draw);return true;}
++        }
+         // A one-query memo is optional and can pin paths/body/history. Drop it
+         // first on actual quota pressure so existing work remains reclaimable.
+-        if(lastQuery){lastQuery.reset();return true;}
++        if(lastQuery&&!cohortDepth){lastQuery.reset();return true;}
+         if(queryPrefix){queryPrefix.reset();queryPrefixSegments=0;return true;}
+         auto victim=entries.end();for(auto it=entries.begin();it!=entries.end();++it)
+             if(it->use_count()==1&&(victim==entries.end()||(*it)->used<(*victim)->used))victim=it;
+         auto plan=histories.end();for(auto it=histories.begin();it!=histories.end();++it)
+             if(it->use_count()==1&&(plan==histories.end()||(*it)->used<(*plan)->used))plan=it;
++        auto exact=exactHistories.end();for(auto it=exactHistories.begin();it!=exactHistories.end();++it)
++            if(it->use_count()==1&&(exact==exactHistories.end()||(*it)->used<(*exact)->used))exact=it;
++        if(exact!=exactHistories.end()&&(victim==entries.end()||(*exact)->used<(*victim)->used)&&
++           (plan==histories.end()||(*exact)->used<(*plan)->used)){exactHistories.erase(exact);return true;}
+         auto refusal=std::min_element(refusals.begin(),refusals.end(),[](const auto& a,const auto& b){return a->used<b->used;});
+         if(refusal!=refusals.end()&&(victim==entries.end()||(*refusal)->used<(*victim)->used)&&
+            (plan==histories.end()||(*refusal)->used<(*plan)->used)){refusals.erase(refusal);return true;}
+         if(plan!=histories.end()&&(victim==entries.end()||(*plan)->used<(*victim)->used)){histories.erase(plan);return true;}
+-        if(victim==entries.end())return false;entries.erase(victim);return true;
++        if(victim!=entries.end()){entries.erase(victim);return true;}
++        // Retire proven cohort results only after idle paths/proofs/draw plans;
++        // their pins are the currently admitted work, not stale cache entries.
++        if(!cohortQueries.empty()){
++            auto it=std::find_if(cohortQueries.begin(),cohortQueries.end(),[&](const auto& q){return q!=lastQuery;});
++            if(it!=cohortQueries.end()){cohortQueries.erase(it);return true;}
++        }
++        return false;
++    }
++    std::shared_ptr<MaskHistorySourceCharge> sourceCharge(const std::shared_ptr<const SourceRetention>& source){
++        // Weak discoverability belongs to the same local accounting lifetime,
++        // including externally held plans surviving clear(). It owns no source.
++        if(const auto it=usage->sources.find(source.get());it!=usage->sources.end())
++            if(auto known=it->second.lock();known&&known->source==source)return known;
++        constexpr auto metadata=sizeof(MaskHistorySourceCharge)+256;
++        if(!source||source->bytes>capacity||source->indexBytes>capacity-source->bytes||
++           metadata>capacity-source->bytes-source->indexBytes)return {};
++        const auto weight=source->bytes+source->indexBytes+metadata;
++        std::optional<std::uint64_t> token;
++        for(;;){
++            if(usage->bytes<=capacity-weight)token=budget->reserve(resources::ResourceClass::kRecorded,metadata,true);
++            if(token)break;if(!evict())return {};
++        }
++        resources::ResourceLease reservation(budget,*token);
++        auto charge=std::make_shared<MaskHistorySourceCharge>();charge->source=source;charge->metadata=std::move(reservation);
++        charge->usage=usage;charge->bytes=weight;usage->bytes+=weight;usage->sources.insert_or_assign(source.get(),charge);return charge;
+     }
+ };
+ EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
+ EraseMaskPathCache::~EraseMaskPathCache()=default;
+-void EraseMaskPathCache::clear()noexcept{impl_->queryPrefix.reset();impl_->queryPrefixSegments=0;impl_->lastQuery.reset();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
++void EraseMaskPathCache::clear()noexcept{impl_->queryPrefix.reset();impl_->queryPrefixSegments=0;impl_->lastQuery.reset();impl_->cohortQueries.clear();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<ExactHistoryProof>>{}.swap(impl_->exactHistories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
++void EraseMaskPathCache::beginCohort()noexcept{++impl_->cohortDepth;}
++void EraseMaskPathCache::endCohort()noexcept{if(impl_->cohortDepth&&!--impl_->cohortDepth)impl_->cohortQueries.clear();}
+ void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+ EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+ void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& geometry,
+@@ -598,8 +652,8 @@
+         if(state.sources->statistics().quotaDenials!=quotaDenials)status=MaskHistoryAdmission::kResourcePending;
+         return denied();
+     }
+-    if(retention->bytes>state.capacity||metadata>state.capacity-retention->bytes)return denied();
+-    const auto accounted=metadata+retention->bytes;
++    auto sourceCharge=state.sourceCharge(retention);if(!sourceCharge)return denied();
++    const auto accounted=metadata;
+     const auto reserve=[&](std::size_t bytes,std::size_t weight)->std::optional<std::uint64_t>{
+         if(weight>state.capacity)return {};
+         for(;;){
+@@ -611,7 +665,7 @@
+     };
+     auto token=reserve(metadata,accounted);if(!token)return denied();resources::ResourceLease lease(state.budget,*token);
+     auto result=std::make_shared<MaskHistoryPlan>();result->records=records;result->metadata=std::move(lease);
+-    result->source=std::move(retention);result->usage=state.usage;result->bytes=accounted;state.usage->bytes+=accounted;
++    result->source=std::move(retention);result->localSource=std::move(sourceCharge);result->usage=state.usage;result->bytes=accounted;state.usage->bytes+=accounted;
+     result->identity=++state.nextHistory;result->used=++state.tick;
+     result->primitives.reserve(count);result->primitiveEnds.reserve(records.size());result->exactPaths.resize(records.size());
+     if(prefix){
+@@ -661,7 +715,8 @@
+         if(!refusalHit&&!structural&&state.budget&&bytes<=capacity){
+             auto retained=state.sources->getMasks(records,state.budget,true);
+             if(!retained||retained->bytes>capacity-bytes){if(admission)*admission=status;return result;}
+-            const auto weight=bytes+retained->bytes;
++            auto sourceCharge=state.sourceCharge(retained);if(!sourceCharge){if(admission)*admission=status;return result;}
++            const auto weight=bytes;
+             std::optional<std::uint64_t> token;
+             for(;;){
+                 if(state.size()<512&&state.usage->bytes<=capacity-weight)
+@@ -670,7 +725,7 @@
+             }
+             if(token){
+                 auto r=std::make_shared<Impl::Refusal>();r->owner=storage;r->pointee=storage.get();r->pathBytes=state.pathBytes();
+-                r->source=std::move(retained);r->metadata=resources::ResourceLease(state.budget,*token);r->usage=state.usage;r->bytes=weight;r->used=++state.tick;
++                r->source=std::move(retained);r->localSource=std::move(sourceCharge);r->metadata=resources::ResourceLease(state.budget,*token);r->usage=state.usage;r->bytes=weight;r->used=++state.tick;
+                 state.usage->bytes+=weight;state.refusals.push_back(std::move(r));
+             }
+         }
+@@ -684,13 +739,53 @@
+     if(plan->exactPaths[index]){++impl_->stats.history.exactPathHits;return std::static_pointer_cast<const Entry>(plan->exactPaths[index]);}
+     auto built=get(std::as_const(plan->records)[index].geometry,true);if(built)plan->exactPaths[index]=built;return built;
+ }
++std::shared_ptr<ExactHistoryProof> EraseMaskPathCache::exactHistory(const scene::SharedVector<semantic::EraseMaskRecord>& records){
++    auto& state=*impl_;if(records.empty())return {};
++    const auto owner=records.storage();
++    for(auto& proof:state.exactHistories){const auto known=proof->records.storage();
++        if(known.get()==owner.get()&&!known.owner_before(owner)&&!owner.owner_before(known)){
++            ++state.stats.history.identityHits;proof->used=++state.tick;return proof;
++        }
++        const auto& old=std::as_const(proof->records);
++        if(old.size()==records.size()&&std::equal(old.begin(),old.end(),records.begin(),
++            [&](const auto& a,const auto& b){return equalMask(a,b,state.stats.history);})){
++            proof->used=++state.tick;return proof;
++        }
++    }
++    const auto denied=[&]()->std::shared_ptr<ExactHistoryProof>{++state.stats.history.denied;return {};};
++    const auto count=records.size();
++    if(!state.budget||!state.capacity||count>(state.capacity-std::min(state.capacity,sizeof(ExactHistoryProof)+256))/sizeof(std::shared_ptr<const Entry>))return denied();
++    auto retained=state.sources->getMasks(records,state.budget,true);if(!retained)return denied();
++    auto sourceCharge=state.sourceCharge(retained);if(!sourceCharge)return denied();
++    const auto bytes=sizeof(ExactHistoryProof)+256+count*sizeof(std::shared_ptr<const Entry>);
++    std::optional<std::uint64_t> token;
++    for(;;){
++        if(bytes<=state.capacity&&state.size()<512&&state.usage->bytes<=state.capacity-bytes)
++            token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
++        if(token)break;if(!state.evict())return denied();
++    }
++    resources::ResourceLease lease(state.budget,*token);
++    auto proof=std::make_shared<ExactHistoryProof>();proof->records=records;proof->paths.resize(count);
++    proof->source=std::move(sourceCharge);proof->metadata=std::move(lease);proof->usage=state.usage;proof->bytes=bytes;
++    proof->used=++state.tick;proof->identity=++state.nextHistory;state.usage->bytes+=bytes;state.exactHistories.push_back(proof);return proof;
++}
++std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::exactHistoricalPath(const std::shared_ptr<ExactHistoryProof>& proof,std::size_t index){
++    if(!proof||proof->usage!=impl_->usage||index>=proof->records.size())return {};
++    ++impl_->stats.history.exactPathLookups;
++    if(auto known=proof->paths[index].lock()){++impl_->stats.history.exactPathHits;return known;}
++    auto path=get(std::as_const(proof->records)[index].geometry,true);
++    if(path)proof->paths[index]=path;
++    return path;
++}
+ 
+ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,
+     std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options)noexcept{
+     capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+     [[maybe_unused]]const auto historyBefore=impl_->stats.history;
+-    std::shared_ptr<MaskHistoryPlan> historyPlan;
+-    try{historyPlan=history(record.eraseMasks,std::move(budget),capacity);}
++    std::shared_ptr<ExactHistoryProof> historyPlan;
++    try{
++        if(impl_->budget!=budget||impl_->capacity!=capacity){clear();impl_->usage=std::make_shared<ErasePathUsage>();impl_->budget=std::move(budget);impl_->capacity=capacity;}
++    }
+     catch(const std::bad_alloc&){++impl_->stats.history.denied;}
+     EraseGeometryWork pathOps;
+     auto& cost=impl_->stats.exact;[[maybe_unused]]const auto before=cost;++cost.queries;cost.bodyIdentity=0;cost.fallbackReason=0;
+@@ -738,27 +833,48 @@
+             // canonical query path/history, plus charged metadata. IDs alone
+             // never qualify equality. Unknown allocations still go through
+             // PreparedGeometryCache's complete body comparison above.
+-            auto queryPath=body?get(mask):nullptr;
+             const auto sameHistory=[&](const auto& old){
+-                if(bool(old)!=bool(historyPlan))return false;
+-                if(!old)return true;
+-                const auto& a=std::as_const(old->records);const auto& b=std::as_const(historyPlan->records);
++                if(!old)return record.eraseMasks.empty();
++                const auto& a=std::as_const(old->records);const auto& b=record.eraseMasks;
+                 return a.size()==b.size()&&std::equal(a.begin(),a.end(),b.begin(),[&](const auto& x,const auto& y){
+                     return equalMask(x,y,impl_->stats.history);});
+             };
+-            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&impl_->lastQuery){const auto& old=*impl_->lastQuery;
+-                if(old.body==body&&old.query==queryPath&&old.transform==record.transform&&old.version==record.kindVersion&&sameHistory(old.history)){
+-                    ++impl_->stats.equivalentQueryHits;UR2D_COUNT(equivalentHits);return old.result;
++            // Prove a repeat before requesting any new draw/history/path
++            // allocation. Otherwise the reservation itself can evict the result
++            // that would have avoided all of this work under local pressure.
++            const auto equivalent=[&](const auto& old){return old&&old->body==body&&old->query==mask&&
++                old->transform==record.transform&&old->version==record.kindVersion&&sameHistory(old->history);};
++            if(body){
++                if(equivalent(impl_->lastQuery)){
++                    ++impl_->stats.equivalentQueryHits;UR2D_COUNT(equivalentHits);return impl_->lastQuery->result;
+                 }
+-            }
++                for(const auto& old:impl_->cohortQueries)if(equivalent(old)){
++                    impl_->lastQuery=old;++impl_->stats.equivalentQueryHits;UR2D_COUNT(equivalentHits);return old->result;
++                }
++            }
++            historyPlan=exactHistory(record.eraseMasks);
+             const auto result=eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
+-            if(body&&queryPath&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
++            if(body&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
+                 impl_->lastQuery.reset();
+-                constexpr auto bytes=sizeof(Impl::QueryResult)+256;
+-                const auto token=impl_->usage->bytes<=impl_->capacity&&bytes<=impl_->capacity-impl_->usage->bytes?
+-                    impl_->budget->reserve(resources::ResourceClass::kRecorded,bytes,true):std::optional<std::uint64_t>{};
+-                if(token)impl_->lastQuery.emplace(body,queryPath,historyPlan,record.transform,record.kindVersion,result,
+-                    resources::ResourceLease(impl_->budget,*token),impl_->usage,bytes);
++                const auto raw=std::visit([](const auto& g)->std::size_t{
++                    if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);
++                    else return g.path.commands.size()*sizeof(semantic::PathCommand);
++                },mask);
++                const auto bytes=sizeof(Impl::QueryResult)+256+raw;
++                std::optional<std::uint64_t> token;
++                for(;;){
++                    if(impl_->size()<512&&bytes<=impl_->capacity&&impl_->usage->bytes<=impl_->capacity-bytes)
++                        token=impl_->budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
++                    if(token||!impl_->evict())break;
++                }
++                if(token){
++                    resources::ResourceLease lease(impl_->budget,*token);
++                    impl_->lastQuery=std::make_shared<Impl::QueryResult>(body,mask,historyPlan,record.transform,record.kindVersion,result,
++                        std::move(lease),impl_->usage,bytes);
++                    // The per-result256-byte allowance includes the list node
++                    // and shared control block, released with that result.
++                    if(impl_->cohortDepth)impl_->cohortQueries.push_back(impl_->lastQuery);
++                }
+             }
+             return result;
+         }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost);}
+--- a/runtime/render/src/selection_region_geometry_internal.hpp
++++ b/runtime/render/src/selection_region_geometry_internal.hpp
+@@ -6,6 +6,7 @@
+ class PreparedGeometryCache;
+ class SourceRetentionPool;
+ struct MaskHistoryPlan;
++struct ExactHistoryProof;
+ class PreparedNavigationGeometry;
+ enum class MaskHistoryAdmission { kReady, kNotAdmitted, kResourcePending };
+ // Independent component-order oracle retained for fallback qualification.
+@@ -36,6 +37,10 @@
+         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
+         const std::shared_ptr<MaskHistoryPlan>& previous={},MaskHistoryAdmission* admission=nullptr);
+     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
++    std::shared_ptr<const Entry> exactHistoricalPath(const std::shared_ptr<ExactHistoryProof>&,std::size_t index);
++    // Private owner-thread scope: bounded current query, no document ownership.
++    void beginCohort() noexcept;
++    void endCohort() noexcept;
+     // Private Render translation units only; returned pins retain their quota.
+     std::shared_ptr<const Entry> get(const semantic::EraseMaskGeometry&,bool historical=false);
+     // Optional sequential PathOps prefix advanced by the existing live frame.
+@@ -47,6 +52,7 @@
+     Work work()const noexcept;
+  private:
+     struct Impl;
++    std::shared_ptr<ExactHistoryProof> exactHistory(const scene::SharedVector<semantic::EraseMaskRecord>&);
+     std::unique_ptr<Impl> impl_;
+ };
+ }
+--- a/runtime/render/src/skia_mask_history.hpp
++++ b/runtime/render/src/skia_mask_history.hpp
+@@ -6,7 +6,20 @@
+ #include "include/core/SkPaint.h"
+ 
+ namespace canvas::render::internal {
+-struct MaskHistoryUsage {std::size_t bytes=0;};
++struct MaskHistorySourceCharge;
++struct MaskHistoryUsage {
++    std::size_t bytes=0;
++    std::map<const SourceRetention*,std::weak_ptr<MaskHistorySourceCharge>> sources;
++};
++// One local charge for a source allocation shared by draw and exact views.
++// The existing SourceRetention owns its single global reservation.
++struct MaskHistorySourceCharge final {
++    std::shared_ptr<const SourceRetention> source;
++    resources::ResourceLease metadata;
++    std::shared_ptr<MaskHistoryUsage> usage;
++    std::size_t bytes=0;
++    ~MaskHistorySourceCharge(){if(usage){usage->bytes-=bytes;usage->sources.erase(source.get());}}
++};
+ struct PreparedMaskPrimitive final {
+     SkPath path;
+     SkRect bounds{};
+@@ -30,6 +43,7 @@
+     std::vector<std::size_t> primitiveEnds;
+     std::vector<std::shared_ptr<const void>> exactPaths;
+     std::shared_ptr<const SourceRetention> source;
++    std::shared_ptr<MaskHistorySourceCharge> localSource;
+     resources::ResourceLease metadata;
+     std::shared_ptr<MaskHistoryUsage> usage;
+     std::size_t bytes=0,prefixPrimitives=0;
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -762,6 +762,13 @@
+     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+ }
+ void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
++SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort();}
++SkiaRenderer::ExactQueryCohort::~ExactQueryCohort(){if(owner_)owner_->endCohort();}
++SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const noexcept{
++    if(!active)return ExactQueryCohort({});
++    if(renderCacheOptions_.enabled&&!eraseQueries_)try{eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();}catch(const std::bad_alloc&){}
++    return ExactQueryCohort(eraseQueries_);
++}
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
+     try{
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -97,6 +97,17 @@
+     // canonical target selection still belongs to the interaction owner.
+     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
+         const semantic::EraseMaskGeometry&) const noexcept;
++    class ExactQueryCohort final {
++        friend class SkiaRenderer;
++        std::shared_ptr<internal::EraseMaskPathCache> owner_;
++        explicit ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache>) noexcept;
++      public:
++        ~ExactQueryCohort();
++        ExactQueryCohort(const ExactQueryCohort&)=delete;
++        ExactQueryCohort& operator=(const ExactQueryCohort&)=delete;
++    };
++    // Private source profile only; not installed/exported in consumer SDKs.
++    [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
+     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
+         std::span<const foundation::WorldPoint>) const noexcept;
+     [[nodiscard]] RenderDamage renderDamage() const;
+--- a/runtime/interaction/src/canvas_partial_erase.cpp
++++ b/runtime/interaction/src/canvas_partial_erase.cpp
+@@ -20,6 +20,7 @@
+     if(!runtimeSceneHost_)return std::nullopt;
+     const auto candidates=runtimeSceneHost_->query(canvas::SceneQuery{{float(left-radius),float(top-radius),float(right+radius),float(bottom+radius)}});
+     if(!candidates)return std::nullopt;
++    const auto cohort=skiaRenderer_.exactQueryCohort(exactHit);
+     for(const auto id:candidates.value().backToFront) {
+         const auto* found=sceneCoordinator_->runtimeScene().find(id);if(!found)return std::nullopt;
+         const auto& record=*found;
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -262,6 +262,13 @@
+     add_executable(axiom_erase_exact_canonical_tests tests/erase_exact_canonical_test.cpp)
+     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
++    add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
++    target_compile_definitions(axiom_exact_query_working_set_tests PRIVATE AXIOM_EXACT_QUERY_WORKING_SET=1)
++    target_link_libraries(axiom_exact_query_working_set_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    add_test(NAME G5ExactQueryWorkingSet COMMAND axiom_exact_query_working_set_tests --verify
++      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
++      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/final.axsnap"
++      "${CMAKE_CURRENT_BINARY_DIR}/exact-query-working-set.json")
+     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
+     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
+     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)
+--- /dev/null
++++ b/runtime/render/tests/exact_query_working_set_test.cpp
+@@ -0,0 +1,163 @@
++// Regresses the dependency of semantic exact queries on draw-history flattening.
++// The fixture is the captured public-Web 16-transform +24copy canonical state.
++#define main qwExistingFixtureMain
++#include "ur2d_selection_up_test.cpp"
++#undef main
++#include "canvas/semantic/snapshot.hpp"
++#include "../../interaction/src/partial_erase_geometry.hpp"
++#include "../src/skia_mask_history.hpp"
++#include <set>
++#include <cstdlib>
++
++namespace {
++std::vector<RuntimeSceneRecord> captured(const std::filesystem::path& path) {
++    std::ifstream input(path,std::ios::binary);require(bool(input),"actual canonical fixture absent");
++    std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(input),{}};
++    auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);
++    require(decoded.ok(),"actual canonical fixture decode");std::vector<RuntimeSceneRecord> records;
++    for(const auto& object:decoded.snapshot->objects) {
++        RuntimeSceneRecord record;record.objectId=object.id;record.kind=object.kind;record.kindVersion=object.kind_version;
++        record.content=object.content;record.transform=object.transform;record.properties=object.properties;record.eraseMasks=object.erase_masks;
++        records.push_back(std::move(record));
++    }
++    require(records.size()==40,"actual forty canonical objects");return records;
++}
++semantic::EraseMaskGeometry queryFor(const RuntimeSceneRecord& record,unsigned moves,unsigned round=0) {
++    std::vector<foundation::WorldPoint> trace{{float(420-round*18),160}};
++    for(unsigned i=1;i<=moves;++i)trace.push_back({float(420-round*18+7*std::sin(i*.17)),float(160+170.*i/moves)});
++    auto mask=interaction::partialEraseGeometry(trace,record.transform,16);require(bool(mask),"fixture invertible transform");return *mask;
++}
++json workDelta(const EraseMaskPathCache::Work& before,const EraseMaskPathCache::Work& after) {
++    return {{"memo_hits",after.equivalentQueryHits-before.equivalentQueryHits},
++        {"draw_primitive_builds",after.history.primitiveBuilds-before.history.primitiveBuilds},
++        {"history_denied",after.history.denied-before.history.denied},{"path_builds",after.builds-before.builds},
++        {"query_unions",after.history.queryUnionOps-before.history.queryUnionOps},
++        {"history_unions",after.history.historyUnionOps-before.history.historyUnionOps},
++        {"body_uses",after.exact.bodyUses-before.exact.bodyUses},
++        {"body_compile",after.exact.compileCalls-before.exact.compileCalls},
++        {"prepared_compile",after.exact.preparedCompileCalls-before.exact.preparedCompileCalls},
++        {"local_bytes",after.bytes}};
++}
++}
++int main(int argc,char** argv) {
++    try {
++        require(argc==5,"usage mode initial.axsnap growth-final.axsnap output.json");
++        const std::string mode=argv[1];const bool oracle=mode=="--oracle",verify=mode=="--verify";
++        auto initial=captured(argv[2]),history=captured(argv[3]);
++        std::set<std::array<double,6>> transforms;for(const auto& record:initial){const auto& t=record.transform;transforms.insert({t.a,t.b,t.c,t.d,t.tx,t.ty});}
++        require(transforms.size()==16,"actual sixteen local transforms");
++        json output={{"mode",mode},{"objects",40},{"transforms",16},{"cases",json::array()}};
++        bool structural=true;
++        for(unsigned scenario=0;scenario<2;++scenario) {
++            auto& records=scenario?history:initial;
++            std::size_t equivalentPairs=0;
++            for(std::size_t i=0;i<records.size();++i)for(std::size_t j=0;j<i;++j){
++                const auto& a=records[i];const auto& b=records[j];
++                if(a.transform!=b.transform||a.kindVersion!=b.kindVersion||a.content!=b.content||a.eraseMasks.size()!=b.eraseMasks.size())continue;
++                bool same=true;for(std::size_t h=0;h<a.eraseMasks.size();++h)if(a.eraseMasks[h].geometry!=b.eraseMasks[h].geometry)same=false;
++                if(same){++equivalentPairs;break;}
++            }
++            auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});
++            EraseMaskPathCache cache;PreparedGeometryCache bodies;RenderCacheOptions options;
++            options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;
++            std::vector<std::shared_ptr<MaskHistoryPlan>> drawPins;
++            if(!oracle) {
++                // Match the live renderer: admitted draw plans may remain
++                // pinned by resident canonical/edit pixels while Up queries run.
++                for(const auto& record:records)if(auto plan=cache.history(record.eraseMasks,budget,8U*1024U*1024U)) {
++                    // A bounded active draw working set; stale resident plans
++                    // remain reclaimable. Fully pinned exhaustion is a distinct
++                    // correctness fallback case, not an impossible reuse claim.
++                    const auto maxPins=std::getenv("QW_DRAW_PINS")?std::strtoul(std::getenv("QW_DRAW_PINS"),nullptr,10):8;
++                    if(drawPins.size()<maxPins)drawPins.push_back(std::move(plan));
++                }
++                for(const auto& record:records){ReferenceTraversalEntry entry;entry.record.content=record.content;
++                    entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
++                    const auto body=bodies.get(entry,options,budget,true,PreparedConsumer::kExact);require(body&&body->ready(),"warm actual exact body");}
++            }
++            const unsigned moves=scenario?160U:1600U;auto before=cache.work();json decisions=json::array();
++#if defined(AXIOM_EXACT_QUERY_WORKING_SET)
++            cache.beginCohort();
++#endif
++            const auto start=std::chrono::steady_clock::now();
++            for(const auto& record:records){const auto mask=queryFor(record,moves,scenario?5:0);
++                decisions.push_back(unsigned(oracle?intersectEraseGeometryComponentOracle(record,mask):cache.query(record,mask,budget,8U*1024U*1024U,&bodies,&options)));}
++#if defined(AXIOM_EXACT_QUERY_WORKING_SET)
++            cache.endCohort();
++#endif
++            const auto after=cache.work();const auto elapsed=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
++            output["cases"].push_back({{"scenario",scenario?"actual-growth-history":"actual1600"},{"moves",moves},
++                {"decisions",decisions},{"work",workDelta(before,after)},{"ms",elapsed},{"draw_pins",drawPins.size()},{"equivalent_repeated_bases",equivalentPairs}});
++            if(scenario)structural=after.history.primitiveBuilds==before.history.primitiveBuilds &&
++                // Captured six-round canonical history has13 repeated complete
++                // bases; no-op rounds leave other copies with different history.
++                // The prechange capture independently proves that cardinality.
++                after.equivalentQueryHits-before.equivalentQueryHits>=equivalentPairs;
++            require(after.bytes<=8U*1024U*1024U&&budget->used()<=512U*1024U*1024U,"working set exceeded existing quotas");
++            drawPins.clear();cache.clear();bodies.clear();require(budget->used()==0,"actual working set leaked leases");
++        }
++        output["exact_queries_independent_of_draw_flattening"]=structural;
++#if defined(AXIOM_EXACT_QUERY_WORKING_SET)
++        if(mode=="--dynamic"){
++            auto records=initial;auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});
++            EraseMaskPathCache cache;PreparedGeometryCache bodies;RenderCacheOptions options;options.maxBytes=256U*1024U*1024U;options.sharedMaxBytes=512U*1024U*1024U;options.maxEntryBytes=64U*1024U*1024U;
++            std::vector<std::shared_ptr<MaskHistoryPlan>> pins(records.size());json rounds=json::array();
++            const auto draw=[&]{for(std::size_t i=0;i<records.size();++i)pins[i]=cache.history(records[i].eraseMasks,budget,8U*1024U*1024U,pins[i]);};
++            draw();
++            for(unsigned round=0;round<6;++round)for(unsigned tiny=0;tiny<2;++tiny){
++                const auto before=cache.work();const auto start=std::chrono::steady_clock::now();json decisions=json::array();cache.beginCohort();
++                for(std::size_t i=0;i<records.size();++i){
++                    auto& record=records[i];auto mask=queryFor(record,160,round);
++                    if(tiny){const float x=420-round*18+7*std::sin(160*.17),y=330;const std::vector<foundation::WorldPoint> trace{{x+1,y+1},{x+2,y+4}};mask=*interaction::partialEraseGeometry(trace,record.transform,16);}
++                    const auto hit=cache.query(record,mask,budget,8U*1024U*1024U,&bodies,&options);decisions.push_back(unsigned(hit));
++                    require(hit!=SelectionGeometryHit::kInvalid,"dynamic query invalid");
++                    if(hit==SelectionGeometryHit::kHit)record.eraseMasks.push_back({ObjectId::fromUint64(100000+round*1000+tiny*100+i),std::move(mask)});
++                }
++                cache.endCohort();const auto after=cache.work();rounds.push_back({{"round",round},{"tiny",tiny},{"decisions",decisions},{"ms",std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count()},{"work",workDelta(before,after)}});draw();
++            }
++            output["dynamic6"]=rounds;pins.clear();cache.clear();bodies.clear();require(budget->used()==0,"dynamic leases");
++        }
++        if(!oracle){
++            auto budget=std::make_shared<resources::ResourceBudgetManager>();
++            EraseMaskPathCache paths;PreparedGeometryCache bodies;RenderCacheOptions options;
++            auto record=source(512,2);const auto mask=queryFor(record,80);
++            paths.beginCohort();
++            const auto expected=intersectEraseGeometryComponentOracle(record,mask);
++            require(paths.query(record,mask,budget,8*1024*1024,&bodies,&options)==expected,"cohort exact oracle");
++            const auto before=paths.work();
++            auto alias=record;for(auto& old:alias.eraseMasks)old.id=ObjectId::fromUint64(1000+old.id.bytes[0]);
++            require(paths.query(alias,mask,budget,8*1024*1024,&bodies,&options)==expected,"canonical ID fork decision");
++            require(paths.work().equivalentQueryHits==before.equivalentQueryHits+1,"complete geometry ID fork missed memo");
++            auto fork=alias;std::get<semantic::SweptCircleMask>(fork.eraseMasks.back().geometry).segments.back().control2.x+=.1;
++            const auto memoBefore=paths.work().equivalentQueryHits;
++            require(paths.query(fork,mask,budget,8*1024*1024,&bodies,&options)==intersectEraseGeometryComponentOracle(fork,mask),"history content fork");
++            require(paths.work().equivalentQueryHits==memoBefore,"same ID geometry fork aliased");
++            paths.endCohort();
++            // Query geometry/proof fits but the old full-path estimate does
++            // not. A proven result must remain reusable without a SkPath pin.
++            paths.clear();auto pressureRecord=source(512,2);const auto longQuery=queryFor(pressureRecord,160);
++            paths.beginCohort();const auto pressureExpected=intersectEraseGeometryComponentOracle(pressureRecord,longQuery);
++            require(paths.query(pressureRecord,longQuery,budget,128*1024,&bodies,&options)==pressureExpected,"path denial reference");
++            const auto deniedBefore=paths.work();
++            require(paths.query(pressureRecord,longQuery,budget,128*1024,&bodies,&options)==pressureExpected,"denied path repeat");
++            require(paths.work().equivalentQueryHits==deniedBefore.equivalentQueryHits+1&&paths.work().builds==deniedBefore.builds,
++                    "complete result still depends on path residency");paths.endCohort();paths.clear();
++            // clear with an externally held draw plan must not double-charge
++            // its source when the same allocation is discovered again.
++            auto held=paths.history(record.eraseMasks,budget,8*1024*1024);require(bool(held),"held draw plan");
++            paths.clear();const auto retained=budget->used();auto repeated=paths.history(record.eraseMasks,budget,8*1024*1024);
++            require(repeated&&repeated->localSource==held->localSource,"clear duplicated local source charge");
++            paths.beginCohort();paths.clear();paths.endCohort();held.reset();repeated.reset();bodies.clear();
++            require(budget->used()==0,"cohort clear/unwind source lease leak");
++            (void)retained;
++            auto tiny=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
++            paths.beginCohort();require(paths.query(record,mask,tiny,128,&bodies,&options)==expected,"insufficient quota changed reference result");paths.endCohort();paths.clear();bodies.clear();require(tiny->used()==0,"tiny quota leaked");
++            output["lifecycle"]={{"canonical_ID_fork",true},{"geometry_fork",true},{"held_source_clear_shared",true},{"tiny_reference_parity",true},{"result_reuse_without_path_residency",true},{"all_leases_released",true}};
++        }
++#endif
++        std::ofstream(argv[4])<<output.dump(2)<<'\n';std::cout<<output.dump()<<'\n';
++        // Old production fails here because query() rebuilds the draw plan.
++        if(verify&&!structural){std::cerr<<"exact query rebuilt draw-history primitives\n";return 1;}
++        return 0;
++    }catch(const std::exception& error){std::cerr<<error.what()<<'\n';return 1;}
++}
+--- /dev/null
++++ b/verification/runners/g5/exact_query_working_set.mjs
+@@ -0,0 +1,136 @@
++import fs from'node:fs/promises';import path from'node:path';import http from'node:http';
++import{chromium}from'../../node_modules/playwright/index.mjs';import{execFileSync}from'node:child_process';
++import{createHash}from'node:crypto';import{validateChunk}from'./ur2d_selection_up_contract.mjs';
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export async function webConsumer(c){
++ const{createRuntime}=await import('/sdk/axiom.mjs');
++ const{installNavigationObserver}=await import('/g5/navigation_observer.mjs');
++ const{readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++ const{sendBinaryChunks}=await import('/g5/ur2d_selection_up_contract.mjs');
++ const{typedWitness,qualifyWitness,navigationWitness}=await import('/g5/exact_query_working_set_contract.mjs');
++ const{observeCorrectFeedback}=await import('/g5/erase_exact_canonical_contract.mjs');
++ const row={kind:c.kind,mode:c.mode,rounds:[],errors:[],operations:[],frames:[],events:[]};window.waPartial=row;
++ const pause=ms=>new Promise(r=>setTimeout(r,ms)),check=(v,m)=>{if(!v)throw Error(m);};let sdk,clock=90000000000;
++ const digest=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
++ const observer=installNavigationObserver(()=>sdk?.canvas),state=()=>sdk.readState();let observing=false;
++ const begin=()=>{observer.begin(row.observation={});observing=true;};const end=()=>{if(observing){observer.end(row.observation);observing=false;}};
++ const pointer=(phase,x,y)=>{clock+=8000000;const rect=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:phase==='up'?0:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:clock/1e6});const start=performance.now();observer.dispatch(sdk.canvas,e);const s=state();const r={phase,x,y,start,end:performance.now(),contacts:s.activeContacts,generation:s.generation};row.events.push(r);return r;};
++ const settle=async()=>{const start=performance.now();for(;;){const s=state();if(!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending)return performance.now();check(performance.now()-start<25000,'stable exact tail exceeded25s');await pause(20);}};
++ const snapshot=async label=>{const s=state(),v=await sdk.captureSnapshot({generation:s.generation,documentRevision:(BigInt(c.fixture.metadata.documentRevision)+BigInt(s.generation)).toString(),recoveryFrontier:c.fixture.metadata.recoveryFrontier});await sendBinaryChunks(label+'.axsnap',v.bytes,window.waChunk);const p=readWebGLTarget(sdk.canvas,{role:'canonical'});check(p.metadata.status==='VALID','target readback');await sendBinaryChunks(label+'.rgba',p.bytes,window.waChunk);return{sha256:await digest(v.bytes),byteLength:v.bytes.length,state:s,rgba_sha256:await digest(p.bytes),readback:p.metadata};};
++ const erase=async(moves,round=0)=>{const before=state(),r={moves,round,before,events:[]};let x=420-round*18,y=160;r.down=pointer('down',x,y);check(r.down.contacts===1,'Down rejected');
++  for(let i=1;i<=moves;++i){x=420-round*18+7*Math.sin(i*.17);y=160+170*i/moves;r.events.push(pointer('move',x,y));if(i%8===0)await pause(0);}
++  if(c.diagnostic)window.waTrace.enable(c.traceOn!==false);
++  r.up=pointer('up',x,y);if(c.diagnostic)window.waTrace.enable(false);r.afterUp=state();const sx=c.mode==='growth'?x+1:300,sy=c.mode==='growth'?y+1:230;
++  r.nextDown=pointer('down',sx,sy);r.nextMove=pointer('move',c.mode==='growth'?sx+1:300,c.mode==='growth'?sy+3:242);
++  if(c.mode!=='growth')for(let i=1;i<=8;++i)r.events.push(pointer('move',300,242+i*3));
++  if(c.diagnostic)window.waTrace.enable(c.traceOn!==false);
++  r.nextUp=pointer('up',c.mode==='growth'?sx+1:300,c.mode==='growth'?sy+3:266);if(c.diagnostic)window.waTrace.enable(false);r.afterNext=state();
++  if(c.diagnostic)row.tracePages=(row.tracePages??[]).concat(window.waTrace.take());row.rounds.push(r);return r;};
++ try{
++  const bytes=new Uint8Array(await(await fetch('/fixture.axsnap')).arrayBuffer());check(await digest(bytes)===c.fixture.sha256,'fixture identity');
++  sdk=await createRuntime({mount:document.getElementById('mount'),documentId:c.fixture.documentId,restore:{bytes,metadata:c.fixture.metadata},builtinFonts:false,permission:'localSingleUser',onError:e=>row.errors.push({code:e.code,message:String(e.message??e)}),onOperation:b=>row.operations.push({at:performance.now(),bytes:b.length}),onFrame:f=>row.frames.push({at:performance.now(),presented:f.presented})});
++  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;await settle();await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',400,120);pointer('up',400,120);await settle();check(sdk.readSelection().count===1,'source selection');
++  for(let i=0;i<24;++i)await sdk.duplicateSelection({offset:[0,0]});await settle();check(state().objects===40,'40densecopies');
++  const imageBytes=Uint8Array.from([0x89,0x50,0x4e,0x47,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,6,0,0,0,31,21,196,137,0,0,0,13,73,68,65,84,120,156,99,248,207,192,240,31,0,5,0,1,255,137,153,61,29,0,0,0,0,73,69,78,68,174,66,96,130]);
++  if(c.mode==='witness'||c.mode==='action'){
++   await sdk.appearance.setDefaults({enabled:false});row.witnessAppearancePolicy=sdk.appearance.readDefaults();
++   row.preseed=[];
++   for(const[kind,x,y]of[['rectangle',850,500],['sticky',1050,500],['table',850,750]]){if(kind==='rectangle')await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});await sdk.selectShape(kind);pointer('move',x,y);pointer('down',x,y);pointer('up',x,y);await settle();row.preseed.push({kind,id:sdk.readSelection().primary});}
++   const image=await sdk.importImage(imageBytes,'image/png');await sdk.resizeImage(image.objectId,80,80,true);await sdk.transformSelection([1,0,0,1,1150,750]);await settle();row.preseed.push({kind:'image',id:image.objectId});
++   check(state().objects===44,'44mixedfixture');row.imageResourceSHA=await digest(imageBytes);
++  }
++  await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();row.initial=state();row.initialSnapshot=await snapshot('initial');
++  if(c.mode==='witness'||c.mode==='action'){
++   let eraseBaseline,navPlan,navBaseline;
++   if(c.kind==='pan'||c.kind==='zoom'){navPlan=navigationWitness(c.kind,state().camera);const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:navPlan.rect});check(p.metadata.status==='VALID','navigation baseline');navBaseline=Array.from(p.bytes);check(!navBaseline.some((_,i)=>i%4===0&&navPlan.color.every((v,c)=>Math.abs(navBaseline[i+c]-v)<=2)),'navigation baseline already qualifies');}
++   if(c.kind==='erase'){const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:{x:592,y:482,width:16,height:16}});check(p.metadata.status==='VALID','erase baseline');eraseBaseline=Array.from(p.bytes);}
++   begin();let x=420,y=160;pointer('down',x,y);
++   for(let i=1;i<=1600;++i){x=420+7*Math.sin(i*.17);y=160+170*i/1600;pointer('move',x,y);if(i%8===0)await pause(0);}
++   row.mainUp=pointer('up',x,y);const generationAfterErase=state().generation;
++   if(c.mode==='action'){
++    row.action={kind:c.kind,before:state()};
++    if(c.kind==='ready'){row.action.readyAt=await settle();row.action.qualified=state().canUndo;}
++    else if(c.kind==='erase'){
++     const rect={x:592,y:482,width:16,height:16};const baseline={bytes:eraseBaseline};row.action.baseline=eraseBaseline;
++     row.action.down=pointer('down',300,230);row.action.first=pointer('move',300,242);check(row.action.down.contacts===1&&row.action.first.contacts===1,'successor admission');
++     for(let i=1;i<=8;++i){pointer('move',300,242+i*3);await pause(16);}
++     const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect});check(p.metadata.status==='VALID','erase active');let positive=0;for(let i=0;i<p.bytes.length;i+=4)if(baseline.bytes[i]<100&&baseline.bytes[i+1]<100&&baseline.bytes[i+2]<150&&p.bytes[i]>=250&&p.bytes[i+1]>=250&&p.bytes[i+2]>=250)++positive;return{positive,rgba:Array.from(p.bytes)};},pause,now:()=>performance.now(),timeoutMs:15000});
++     row.action.feedback=feedback;row.action.activeBeforeUp=true;row.action.up=pointer('up',300,266);row.action.qualified=feedback.status==='QUALIFIED';
++    }else{
++     const old=state().camera;for(let i=0;i<3;++i){const rect=sdk.canvas.getBoundingClientRect();const event=new WheelEvent('wheel',{clientX:rect.left+600,clientY:rect.top+400,ctrlKey:c.kind==='zoom',deltaX:c.kind==='pan'?8:0,deltaY:c.kind==='pan'?4:-8,bubbles:true,cancelable:true});sdk.canvas.dispatchEvent(event);await pause(32);}
++     const expected=navPlan.expected;row.action.witness=navPlan;row.action.baseline=navBaseline;
++     row.action.expected=expected;check(['scale','x','y'].every(k=>Math.abs(state().camera[k]-expected[k])<.01),'navigation camera');
++     // An analytic preseed rectangle interior follows the actual camera.
++     const rect=navPlan.rect;
++     const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect});check(p.metadata.status==='VALID','navigation expected pixels');let positive=0;for(let i=0;i<p.bytes.length;i+=4)if([51,128,204,255].every((v,c)=>Math.abs(v-p.bytes[i+c])<=2))++positive;return{positive,rgba:Array.from(p.bytes)};},pause,now:()=>performance.now(),timeoutMs:15000});row.action.feedback=feedback;row.action.qualified=feedback.status==='QUALIFIED';
++    }
++    check(row.action.qualified,'actual successor feedback');row.readyAt=await settle();end();
++   }else{
++   if(c.kind==='image'){await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',1190,790);pointer('up',1190,790);check(sdk.readSelection().primary===row.preseed.find(x=>x.kind==='image').id,'image primary');}
++   else{if(c.kind==='rectangle')await sdk.setAppearance({selected:false,fillEnabled:true,fill:[.2,.5,.8,1],strokeEnabled:true});await sdk.selectShape(c.kind);pointer('move',900,300);pointer('down',900,300);pointer('up',900,300);check(sdk.readSelection().count===1,'created selected');}
++   const s=sdk.readSelection();let typed;
++   if(c.kind==='sticky')typed=sdk.readSelectedSticky();else if(c.kind==='table')typed=sdk.table.read(s.primary);else if(c.kind==='image')typed=sdk.readSelectedImage();else typed={available:true,objectId:s.primary,width:s.width,height:s.height};
++   row.typed=typed;row.selected=s;row.plan=typedWitness(c.kind,s,typed,row.imageResourceSHA);
++   if(c.kind==='image'){row.imageResourceToken=sdk.resources.token(typed.content.resourceId);row.imageActualSHA=await digest(sdk.resources.readBytes(row.imageResourceToken));check(row.imageActualSHA===row.imageResourceSHA,'image resource SHA');}
++   const baseline=readWebGLTarget(sdk.canvas,{role:'canonical',rect:row.plan.rect});check(baseline.metadata.status==='VALID','witness baseline');row.baseline={rgba:Array.from(baseline.bytes),at:performance.now(),metadata:baseline.metadata};
++   check(qualifyWitness(row.plan,baseline.bytes,[80,30]).positive===0,'baseline ROI already matches expected material');
++   // Tablepick remains far from row/column resize edges (5px tolerance).
++   const px=s.transform[4]+30,py=s.transform[5]+(c.kind==='table'?22:30);row.dragDown=pointer('down',px,py);check(row.dragDown.contacts===1,'drag admission');
++   for(const[dx,dy]of[[8,4],[40,16],[80,30]]){pointer('move',px+dx,py+dy);await pause(16);}
++   const feedback=await observeCorrectFeedback({probe:()=>{const p=readWebGLTarget(sdk.canvas,{role:'canonical',rect:row.plan.rect});check(p.metadata.status==='VALID','witness active capture');const q=qualifyWitness(row.plan,p.bytes,[80,30]);return{positive:q.positive,rgba:Array.from(p.bytes),metadata:p.metadata};},pause,now:()=>performance.now(),timeoutMs:15000});
++   row.feedback=feedback;row.activePixels={rect:row.plan.rect,rgba:feedback.value.rgba,at:feedback.firstCorrectAt,beforeUp:true};row.dragUp=pointer('up',px+80,py+30);row.afterSelection=sdk.readSelection();
++   row.poseDelta=[row.afterSelection.transform[4]-s.transform[4],row.afterSelection.transform[5]-s.transform[5]];
++   check(row.poseDelta.every((x,i)=>Math.abs(x-[80,30][i])<.1),'wrong committed pose');check(feedback.status==='QUALIFIED','active witness missing');
++   const expected=BigInt(generationAfterErase)+(c.kind==='image'?1n:2n);check(BigInt(state().generation)===expected,'create/transform commit cardinality');row.readyAt=await settle();end();
++   }
++  }else{
++   begin();const count=c.mode==='growth'?(c.roundCount??6):1;
++   for(let round=0;round<count;++round)await erase(c.moves??160,round);
++   row.readyAt=await settle();end();
++  }
++  if(c.diagnostic){window.waTrace.enable(false);row.tracePages=(row.tracePages??[]).concat(window.waTrace.take());row.traceEndAt=performance.now();}
++  await sdk.selectTool('select');pointer('down',1300,900);pointer('up',1300,900);await settle();check(sdk.readSelection().count===0,'snapshot HUD must be absent');
++  row.final=await snapshot('final');await sdk.undo();await settle();row.undo=await snapshot('undo');await sdk.redo();await settle();row.redo=await snapshot('redo');
++  row.end=state();row.activity=observer.activity();check(row.end.activeContacts===0&&row.end.generation===row.end.lastCommit.presentedGeneration,'terminal receipt');check(row.errors.length===0,'public errors');
++  row.status='OBSERVED';return row;
++ }catch(e){row.status='FAILED';row.error=String(e.stack??e);throw e;}
++ finally{end();observer.restore();if(sdk)await sdk.close();await window.waMetadata(row);}
++}
++const qualificationFactory=`import factory from '/engine/internal/axiom.mjs';export default async function(options){const m=await factory(options);if(m._axiom_g5_trace_control(2,731)!==0)throw Error('private trace initialization');
++const drain=()=>{const pages=[];for(let i=0;i<1024;++i){if(m._axiom_g5_trace_control(4,0)!==0)throw Error('trace drain');const p=m._axiom_g5_trace_bytes(),n=m._axiom_g5_trace_size(),v=JSON.parse(new TextDecoder().decode(m.HEAPU8.subarray(p,p+n)));pages.push(v);if(v.finished)return pages;}throw Error('trace drain pages exhausted');};
++const collected=[];window.waTrace={before(moves,round){collected.push(...drain());},after(moves,round){collected.push(...drain());},enable(on){if(m._axiom_g5_trace_control(on?1:0,0)!==0)throw Error('trace toggle');},take(){collected.push(...drain());return collected.splice(0);}};return m;}`;
++export async function runWindow(request,out){
++ const root=path.resolve(new URL('../../..',import.meta.url).pathname);await fs.mkdir(out,{recursive:true});let server,browser,page,activeSDK;
++ const result={id:request.id,status:'STARTED',rows:[],errors:[]};
++ try{
++  server=http.createServer(async(req,res)=>{try{const name=decodeURIComponent(new URL(req.url,'http://local').pathname);let file;
++   if(name==='/'){res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}</style><div id="mount" style="width:1431px;height:1010px"></div><script type="module">import{webConsumer}from"/driver.mjs";window.run=webConsumer;</script>');return;}
++   if(name==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+webConsumer.toString());return;}
++   if(request.qualification&&name==='/sdk/internal/axiom.mjs'){res.setHeader('Content-Type','text/javascript');res.end(qualificationFactory);return;}
++   if(name==='/fixture.axsnap')file=request.fixture.path;else if(name.startsWith('/sdk/'))file=path.join(activeSDK,name.slice(5));else if(name.startsWith('/engine/'))file=path.join(activeSDK,name.slice(8));else if(name.startsWith('/g5/'))file=path.join(root,'verification/runners/g5',name.slice(4));
++   if(!file)throw Error('unknown HTTPpath');res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const spec of request.cases){activeSDK=spec.sdk??request.sdk;const name=spec.id,directory=path.join(out,name);await fs.mkdir(directory);page=await browser.newPage({viewport:{width:1431,height:1010},deviceScaleFactor:2});const transfers=new Map();page.on('pageerror',e=>result.errors.push(String(e)));
++   await page.exposeFunction('waMetadata',v=>fs.writeFile(path.join(directory,'raw-row.json'),JSON.stringify(v,null,2)+'\n'));
++   await page.exposeFunction('waChunk',async c=>{const old=transfers.get(c.name);if(old?.complete)throw Error('completed buffer replay');const next=validateChunk(c,old),bytes=Buffer.from(c.base64,'base64'),p=path.join(directory,c.name+'.partial'),h=await fs.open(p,c.offset?'r+':'wx');try{const n=await h.write(bytes,0,bytes.length,c.offset);if(n.bytesWritten!==bytes.length)throw Error('shortwrite');}finally{await h.close();}if(next.complete)await fs.rename(p,path.join(directory,c.name));transfers.set(c.name,next);return{nextOffset:next.nextOffset};});
++   console.log(JSON.stringify({stage:'case-start',id:name,...spec}));
++   try{
++    await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>window.run);
++    // The factory is initialized inside createRuntime. Enable only when the
++    // consumer reaches the measured gesture after setup.
++    const row=await page.evaluate(config=>window.run(config),{...spec,fixture:request.fixture,diagnostic:request.qualification});
++    if(request.qualification)row.traceAfterClose=await page.evaluate(()=>window.waTrace?.take());
++    const checker=path.join(root,'.aegis/results/G5-UR2d-control-r1/snapshot-roundtrip');row.snapshotRoundtrip=JSON.parse(execFileSync(checker,[path.join(directory,'final.axsnap'),path.join(directory,'redo.axsnap')],{encoding:'utf8',timeout:10000}));
++    if(!row.snapshotRoundtrip.objects_equal||!row.snapshotRoundtrip.document_digest_equal)throw Error('canonical UndoRedo mismatch');row.status='QUALIFIED';await fs.writeFile(path.join(directory,'qualified-row.json'),JSON.stringify(row,null,2)+'\n');result.rows.push({...row,id:name});
++   }catch(e){const failure={id:name,status:'FAILED',error:String(e.stack??e)};try{failure.partial=await page.evaluate(()=>window.waPartial);}catch{}await fs.writeFile(path.join(directory,'failure.json'),JSON.stringify(failure,null,2)+'\n');result.rows.push(failure);
++    // Verification-row bugs are isolated and do not hide independent kinds.
++    if(/Target crashed|browser.*closed|canonical UndoRedo mismatch|OUT_OF_MEMORY/.test(failure.error))throw e;
++   }finally{if(page){await page.close();page=null;}}
++   console.log(JSON.stringify({stage:'case-end',id:name,status:result.rows.at(-1).status}));
++  }
++  result.status=result.rows.every(r=>r.status==='QUALIFIED')&&!result.errors.length?'OBSERVED':'PARTIAL';
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status,error:result.error}));}
++ return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const r=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await runWindow(r,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+--- /dev/null
++++ b/verification/runners/g5/exact_query_working_set_pixels.mjs
+@@ -0,0 +1,48 @@
++// Offline only: never launches a browser or changes the production/oracle.
++import fs from'node:fs/promises';import path from'node:path';import{execFileSync}from'node:child_process';import{createHash}from'node:crypto';
++import{comparePixels}from'./ur0/pixel_oracle.mjs';
++const sha=b=>createHash('sha256').update(b).digest('hex');
++export async function qualifyStoredRows(root){
++ const result=path.join(root,'.aegis/results/G5-exact-query-working-set-web-r2');
++ const projector=path.join(root,'out/G5-exact-query-working-set-web-r2/offline-snapshot');
++ const oracle=path.join(root,'out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle');
++ if(sha(await fs.readFile(oracle))!=='ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105')throw Error('foreign frozen oracle');
++ const rows=[],referenceCache=new Map();
++ for(const window of['G5QW2-FINAL-PAIRS','G5QW2-CONTINUOUS']){
++  const base=path.join(result,'local-web',window);
++  for(const name of(await fs.readdir(base)).sort()){
++   const directory=path.join(base,name);let row;try{row=JSON.parse(await fs.readFile(path.join(directory,'qualified-row.json'),'utf8'));}catch{continue;}
++   const proofs=[];
++   for(const stage of['final','redo']){
++    const snapshot=path.join(directory,stage+'.axsnap'),actual=await fs.readFile(path.join(directory,stage+'.rgba'));
++    const mixed=['witness','action'].includes(row.mode),projected=path.join(directory,'ink-'+stage+'.axsnap');
++    let input=snapshot,projection=null;
++    if(mixed){projection=JSON.parse(execFileSync(projector,['--project',snapshot,projected],{encoding:'utf8',timeout:10000}));input=projected;}
++    const metadata=row[stage],camera=metadata.state.camera,width=metadata.readback.canvas.width,height=metadata.readback.canvas.height;
++    const request={width,height,logical_width:1431,logical_height:1010,camera,hud_bounds:[]};
++    const requestFile=path.join(directory,stage+'-independent.request.json');await fs.writeFile(requestFile,JSON.stringify(request));
++    const bytes=await fs.readFile(input),prefix=path.join(directory,stage+'-independent');
++    const key=sha(bytes)+'/'+JSON.stringify(request),invocation={snapshot_sha256:sha(bytes),original_snapshot_sha256:sha(await fs.readFile(snapshot)),request,projection,timeout_ms:10000,oracle_sha256:'ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105'};
++    let reference,band;
++    try{
++     if(referenceCache.has(key)){const cached=referenceCache.get(key);reference=await fs.readFile(cached+'.rgba');band=await fs.readFile(cached+'.edge');invocation.reused_exact_reference=cached;}
++     else{invocation.reference=JSON.parse(execFileSync(oracle,['--pixels',input,requestFile,prefix],{encoding:'utf8',timeout:10000,maxBuffer:1024*1024}));if(invocation.reference.status!=='REFERENCE_RENDERED')throw Error('reference absent');reference=await fs.readFile(prefix+'.rgba');band=await fs.readFile(prefix+'.edge');referenceCache.set(key,prefix);}
++     invocation.status='REFERENCE_RENDERED';
++    }catch(error){invocation.status='FAILED';invocation.error=String(error);await fs.writeFile(prefix+'-invocation.json',JSON.stringify(invocation,null,2)+'\n');proofs.push({stage,status:'MISSING_REFERENCE',invocation});break;}
++    await fs.writeFile(prefix+'-invocation.json',JSON.stringify(invocation,null,2)+'\n');
++    // Mixed-object kinds are validated separately by typed canonical source,
++    // active pixels and snapshot semantics. Limit the ink comparison to a
++    // fixed physical ROI whose world footprint cannot overlap these objects.
++    let a=actual,b=reference,e=band,rect=null;
++    if(mixed){rect={x:0,y:0,width:1600,height:800};a=new Uint8Array(rect.width*rect.height*4);b=new Uint8Array(a.length);e=new Uint8Array(rect.width*rect.height);
++     for(let y=0;y<rect.height;++y){a.set(actual.subarray(y*width*4,y*width*4+rect.width*4),y*rect.width*4);b.set(reference.subarray(y*width*4,y*width*4+rect.width*4),y*rect.width*4);e.set(band.subarray(y*width,y*width+rect.width),y*rect.width);}}
++    proofs.push({stage,...comparePixels(a,b,e),roi:rect,identity:{snapshot_sha256:sha(bytes),actual_sha256:sha(actual),reference_sha256:sha(reference),band_sha256:sha(band)},invocation_file:prefix+'-invocation.json'});
++   }
++   const status=proofs.length===2&&proofs.every(v=>v.status==='QUALIFIED')?'QUALIFIED':'MISSING_OR_FAILED';rows.push({window,case:name,status,proofs});
++   await fs.writeFile(path.join(directory,'independent-pixel-proof.json'),JSON.stringify(rows.at(-1),null,2)+'\n');console.log(JSON.stringify({case:name,status}));
++  }
++ }
++ const proof={status:rows.every(v=>v.status==='QUALIFIED')?'QUALIFIED_AVAILABLE_ROWS':'MISSING_OR_FAILED',rows,reference_invocations:referenceCache.size,missing:['action-zoom final/redo captures absent; no oracle invocation substituted'],rule:'Frozen CPU/per-primitive AA boundary; <=2 outside. Mixed pureink projection removes only nonink objects/resources in oracle-owned clone; fixed disjoint ROI plus typed nonink proof, no candidate-based band.'};
++ await fs.writeFile(path.join(result,'independent-pixel-proof.json'),JSON.stringify(proof,null,2)+'\n');return proof;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname)await qualifyStoredRows(process.cwd());
+--- /dev/null
++++ b/verification/runners/g5/exact_query_working_set_runner.py
+@@ -0,0 +1,38 @@
++"""Four frozen windows; only new namespace, source/SDK guarded during sampling."""
++from pathlib import Path
++import hashlib, importlib.util, json, math, subprocess, sys
++ROOT=Path(__file__).resolve().parents[3]
++RESULT=ROOT/'.aegis/results/G5-exact-query-working-set-web-r2'
++LIMITS={'G5QW2-FINAL-PAIRS':720,'G5QW2-CONTINUOUS':600}
++def sha(p):
++ h=hashlib.sha256()
++ with Path(p).open('rb')as f:
++  for b in iter(lambda:f.read(1048576),b''):h.update(b)
++ return h.hexdigest()
++def read(p):return json.loads(Path(p).read_text())
++def write(p,v):Path(p).parent.mkdir(parents=True,exist_ok=True);Path(p).write_text(json.dumps(v,indent=2)+'\n')
++def inventory(p):
++ p=Path(p);return{str(q.relative_to(p)):sha(q)for q in sorted(p.rglob('*'))if q.is_file()}
++def reserve(ledger,name):
++ if name not in LIMITS or any(x['id']==name or x['status']=='STARTED'for x in ledger['attempts']):raise ValueError('foreign/repeated/concurrent window')
++ if ledger['charged_seconds']+LIMITS[name]>1320:raise ValueError('allowance exhausted')
++ ledger['attempts'].append(dict(id=name,status='STARTED',limit_seconds=LIMITS[name],rss_mib=4096))
++def inputs(request):
++ names=subprocess.check_output(['git','ls-files','-z','--cached','--others','--exclude-standard'],cwd=ROOT).decode().split('\0')
++ source={n:sha(ROOT/n)for n in sorted(set(names))if n and(ROOT/n).is_file()and n.startswith(('runtime/','sdk/','cmake/','verification/runners/g5/','verification/tests/'))and Path(n).suffix in('.cpp','.h','.hpp','.mjs','.cmake','.json','.py','.txt')}
++ if sha(request['fixture']['path'])!=request['fixture']['sha256']:raise ValueError('fixture bytes changed')
++ baseline=read(ROOT/'.aegis/results/G5-erase-exact-canonical-r1/final-normal-artifacts.json')
++ if inventory(baseline['root'])!=baseline['files']:raise ValueError('normal4319 SDK changed')
++ return dict(source=source,SDKs={v:inventory(v)for v in sorted({request['sdk']}|{c.get('sdk',request['sdk'])for c in request['cases']})},normal=baseline,fixture=request['fixture'])
++def execute(request_path):
++ req=read(request_path);ledger_path=RESULT/'sampling-ledger.json';ledger=read(ledger_path)if ledger_path.exists()else dict(schema='g5-qw-window-ledger-v1',charged_seconds=0,cap_seconds=1320,attempts=[])
++ reserve(ledger,req['id']);before=inputs(req);out=RESULT/'local-web'/req['id'];out.mkdir(parents=True,exist_ok=False)
++ write(out/'freeze.json',dict(request=req,request_sha256=sha(request_path),inputs=before));write(ledger_path,ledger)
++ spec=importlib.util.spec_from_file_location('guard',Path(__file__).with_name('bounded_worker.py'));m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++ guard=m.run(['node',str(Path(__file__).with_name('exact_query_working_set.mjs')),str(request_path),str(out)],out,LIMITS[req['id']],4096*1024)
++ after=inputs(req);write(out/'inputs-after.json',after);worker=read(out/'worker-result.json')if(out/'worker-result.json').exists()else{}
++ elapsed=guard.get('elapsed_s');charged=math.ceil(elapsed)if isinstance(elapsed,(int,float))and math.isfinite(elapsed)and 0<=elapsed<=LIMITS[req['id']]+5 else LIMITS[req['id']]
++ completed=guard['reason']=='completed'and guard['cleanup_complete']and not guard['remaining_owned_pids']and before==after and worker.get('status')=='OBSERVED'and len(worker.get('rows',[]))==len(req['cases'])
++ ledger['attempts'][-1].update(status='COMPLETED'if completed else'STOPPED',guard=guard,source_stable=before==after,charged_seconds=charged,worker_status=worker.get('status'))
++ ledger['charged_seconds']+=charged;write(ledger_path,ledger);print(json.dumps(ledger),flush=True);return 0 if completed else 1
++if __name__=='__main__':raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+--- /dev/null
++++ b/verification/runners/g5/exact_query_working_set_contract.mjs
+@@ -0,0 +1,29 @@
++import {typedWitness as existingWitness,qualifyWitness} from './web_up_attribution_contract.mjs';
++export {qualifyWitness};
++export const WINDOWS=Object.freeze({'G5QW1-BASELINE-DIAGNOSTIC':240,'G5QW1-FINAL-PAIRS':720,'G5QW1-CONTINUOUS':360,'G5QW1-FINAL-DIAGNOSTIC':240});
++export function typedWitness(kind,selection,typed,resourceHash){
++ if(kind!=='rectangle')return existingWitness(kind,selection,typed,resourceHash);
++ // The same rectangular analytic witness policy, actual public dimensions,
++ // explicit canonical material. No shape-only dimensions for sticky/table.
++ const result=existingWitness('sticky',selection,typed,resourceHash);
++ return {...result,kind:'rectangle'};
++}
++export function navigationWitness(kind,camera){
++ if(!['pan','zoom'].includes(kind)||!camera||camera.scale!==1||camera.x!==0||camera.y!==0)throw Error('unsupported navigation witness basis');
++ const expected=kind==='pan'?{scale:1,x:-24,y:-12}:{scale:Math.exp(.24),x:600-Math.exp(.24)*600,y:400-Math.exp(.24)*400};
++ // Known analytic preseed: world rectangle850,500..970,580.
++ // Pan enters its left strip; zoom moves its right edge past the old footprint.
++ const point=kind==='pan'?[835,540]:[1060,570];
++ const old=[850,500,970,580],next=[850*expected.scale+expected.x,500*expected.scale+expected.y,970*expected.scale+expected.x,580*expected.scale+expected.y];
++ if(point[0]>=old[0]-7&&point[0]<=old[2]+7&&point[1]>=old[1]-7&&point[1]<=old[3]+7)throw Error('navigation point intersects old footprint');
++ if(point[0]<=next[0]+7||point[0]>=next[2]-7||point[1]<=next[1]+7||point[1]>=next[3]-7)throw Error('navigation point outside new interior');
++ return{kind,expected,point,old,next,color:[51,128,204,255],rect:{x:Math.round(point[0]*2)-2,y:Math.round(point[1]*2)-2,width:4,height:4}};
++}
++export function plannedCases(windowId,baseline,candidate){
++ if(['G5QW1-FINAL-PAIRS','G5QW2-FINAL-PAIRS'].includes(windowId))return[0,1,2].flatMap(pair=>[
++  ...['old','candidate'].flatMap(variant=>['long','growth'].map(mode=>({id:`pair${pair}-${variant}-${mode}`,pair,variant,sdk:variant==='old'?baseline:candidate,mode,moves:mode==='long'?1600:160})))
++ ]);
++ if(['G5QW1-CONTINUOUS','G5QW2-CONTINUOUS'].includes(windowId))return[{id:'stress10',mode:'growth',moves:160,roundCount:10,sdk:candidate},
++  ...['ready','erase','pan','zoom','rectangle','sticky','table','image'].map(kind=>({id:'action-'+kind,mode:['rectangle','sticky','table','image'].includes(kind)?'witness':'action',kind,sdk:candidate}))];
++ throw Error('diagnostic roster requires explicit scope');
++}
+--- /dev/null
++++ b/verification/tests/g5_exact_query_working_set.test.mjs
+@@ -0,0 +1,19 @@
++import test from 'node:test';import assert from 'node:assert/strict';
++import {plannedCases,typedWitness,qualifyWitness,navigationWitness} from '../runners/g5/exact_query_working_set_contract.mjs';
++test('three paired waveforms use matching ordinary variants and isolated pages',()=>{
++ const rows=plannedCases('G5QW1-FINAL-PAIRS','oldSDK','newSDK');assert.equal(rows.length,12);assert.equal(new Set(rows.map(v=>v.id)).size,12);
++ for(const pair of[0,1,2])for(const mode of['long','growth']){const a=rows.filter(v=>v.pair===pair&&v.mode===mode);assert.equal(a.length,2);assert.deepEqual(a.map(v=>v.variant),['old','candidate']);assert.equal(a[0].moves,a[1].moves);}
++ assert.throws(()=>plannedCases('foreign','old','new'));
++});
++test('pan and zoom witnesses cannot match an unchanged old footprint',()=>{
++ for(const kind of['pan','zoom']){const w=navigationWitness(kind,{scale:1,x:0,y:0});assert(w.point[0]<w.old[0]-7||w.point[0]>w.old[2]+7);assert(w.point[0]>w.next[0]+7&&w.point[0]<w.next[2]-7);}
++ assert.throws(()=>navigationWitness('pan',{scale:2,x:0,y:0}));
++});
++test('ten rounds plus all eight successors are finite and retain typed geometry',()=>{
++ const rows=plannedCases('G5QW1-CONTINUOUS','old','new');assert.equal(rows.length,9);assert.equal(rows[0].roundCount,10);
++ assert.deepEqual(rows.slice(1).map(v=>v.kind),['ready','erase','pan','zoom','rectangle','sticky','table','image']);
++ const s={primary:'a',generation:'1',bounds:[899,299,1021,381],transform:[1,0,0,1,900,300],appearance:{fill:[.2,.5,.8,1]}};
++ const w=typedWitness('rectangle',s,{available:true,objectId:'a',width:120,height:80});assert.deepEqual(w.color,[51,128,204,255]);
++ assert.equal(qualifyWitness(w,new Uint8Array([255,255,128,255]),[80,30]).status,'FAILED');
++ assert.equal(qualifyWitness(w,new Uint8Array([51,128,204,255]),[80,30]).status,'QUALIFIED');
++});
+--- /dev/null
++++ b/verification/tests/test_g5_exact_query_working_set.py
+@@ -0,0 +1,14 @@
++import importlib.util
++from pathlib import Path
++import unittest
++
++class WindowGuardTest(unittest.TestCase):
++    def test_frozen_windows_reject_repeat_foreign_and_concurrent(self):
++        path=Path(__file__).parents[1]/'runners/g5/exact_query_working_set_runner.py'
++        spec=importlib.util.spec_from_file_location('working_set_guard',path)
++        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
++        ledger={'charged_seconds':0,'attempts':[]}
++        module.reserve(ledger,'G5QW2-FINAL-PAIRS')
++        self.assertEqual(ledger['attempts'][0]['limit_seconds'],720)
++        for name in ['G5QW2-FINAL-PAIRS','G5QW2-CONTINUOUS','foreign']:
++            with self.assertRaises(ValueError):module.reserve(ledger,name)

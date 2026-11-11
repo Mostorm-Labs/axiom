@@ -1,0 +1,140 @@
+Start testing: Nov 11 04:26 CST
+----------------------------------------------------------
+619/863 Testing: G5CanonicalPreparedBodyPixels
+619/863 Test: G5CanonicalPreparedBodyPixels
+Command: "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_canonical_prepared_body_tests" "--pixels"
+Directory: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render
+"G5CanonicalPreparedBodyPixels" start time: Nov 11 04:26 CST
+Output:
+----------------------------------------------------------
+pixel mismatch dpr=1 variant=2 channels=1 max=1
+pixel mismatch dpr=2 variant=1 channels=12 max=22
+pixel mismatch dpr=2 variant=2 channels=12 max=22
+pixel mismatch dpr=4 variant=2 channels=2 max=1
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":0,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":1,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":1,"variant":2,"one_step_attempts":682}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":0,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":1,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":2,"variant":2,"one_step_attempts":702}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":0,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":1,"one_step_attempts":790}
+{"native_gpu_pixel_parity":true,"dpr":4,"variant":2,"one_step_attempts":790}
+<end of output>
+Test time =   0.25 sec
+----------------------------------------------------------
+Test Passed.
+"G5CanonicalPreparedBodyPixels" end time: Nov 11 04:26 CST
+"G5CanonicalPreparedBodyPixels" time elapsed: 00:00:00
+----------------------------------------------------------
+
+642/863 Testing: G5ExactOwnerResidencyPixels
+642/863 Test: G5ExactOwnerResidencyPixels
+Command: "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_exact_owner_residency_pixels"
+Directory: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render
+"G5ExactOwnerResidencyPixels" start time: Nov 11 04:26 CST
+Output:
+----------------------------------------------------------
+{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":0}
+{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":1}
+{"all_tiles_requalified":true,"body_builds_retained":true,"external_plan_immutable":true,"undo_redo_pixels":true,"variant":2}
+<end of output>
+Test time =   0.08 sec
+----------------------------------------------------------
+Test Passed.
+"G5ExactOwnerResidencyPixels" end time: Nov 11 04:26 CST
+"G5ExactOwnerResidencyPixels" time elapsed: 00:00:00
+----------------------------------------------------------
+
+643/863 Testing: G5ExactOwnerResidency
+643/863 Test: G5ExactOwnerResidency
+Command: "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_exact_owner_residency_tests" "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap" "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/final.axsnap" "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/exact-owner-residency.json"
+Directory: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render
+"G5ExactOwnerResidency" start time: Nov 11 04:26 CST
+Output:
+----------------------------------------------------------
+{"admitted_draw_owners":29,"decisions":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"last_release_bytes":0,"local_after":7674965,"local_before":8313784,"pressure_callbacks":1,"query_ms":1871.232417,"query_work":{"history_denied":0,"history_unions":5005,"local_bytes":7674965,"memo_hits":13,"path_builds":92,"query_unions":2560},"retired_owner_refs":29}
+<end of output>
+Test time =   2.35 sec
+----------------------------------------------------------
+Test Passed.
+"G5ExactOwnerResidency" end time: Nov 11 04:26 CST
+"G5ExactOwnerResidency" time elapsed: 00:00:02
+----------------------------------------------------------
+
+718/863 Testing: G5TransientDisplayRetryPixels
+718/863 Test: G5TransientDisplayRetryPixels
+Command: "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/axiom_transient_display_retry_tests" "--pixels" "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/transient-display-pixels"
+Directory: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render
+"G5TransientDisplayRetryPixels" start time: Nov 11 04:26 CST
+Output:
+----------------------------------------------------------
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":320,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":352,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":384,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":416,"changed_pixels":0,"generation":1,"message":"erase feedback allocation unavailable","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":448,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":480,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":1,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":2,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":3,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":4,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":5,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":6,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":0,"after_present":1,"attempt":7,"before_present":1,"body_builds":1,"budget_kib":512,"changed_pixels":0,"generation":1,"message":"coverage target pending","status":2}
+{"CPU_tiles":0,"GPU_tiles":1,"after_present":2,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":576,"changed_pixels":68,"generation":1,"message":"","status":0}
+{"CPU_tiles":0,"GPU_tiles":1,"after_present":2,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":640,"changed_pixels":68,"generation":1,"message":"","status":0}
+{"CPU_tiles":0,"GPU_tiles":2,"after_present":2,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":1024,"changed_pixels":68,"generation":1,"message":"","status":0}
+{"CPU_tiles":0,"GPU_tiles":2,"after_present":2,"attempt":0,"before_present":1,"body_builds":1,"budget_kib":2048,"changed_pixels":68,"generation":1,"message":"","status":0}
+<end of output>
+Test time =   0.13 sec
+----------------------------------------------------------
+Test Passed.
+"G5TransientDisplayRetryPixels" end time: Nov 11 04:26 CST
+"G5TransientDisplayRetryPixels" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Nov 11 04:26 CST

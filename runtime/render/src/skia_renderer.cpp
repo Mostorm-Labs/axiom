@@ -762,6 +762,15 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
 void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
+SkiaRenderer::ExactQueryCohort::~ExactQueryCohort(){if(owner_)owner_->endCohort();}
+SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const noexcept{
+    if(!active)return ExactQueryCohort({});
+    if(renderCacheOptions_.enabled&&!eraseQueries_)try{eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();}catch(const std::bad_alloc&){}
+    const auto cache=std::weak_ptr<internal::SkiaRenderCache>(renderCache_);
+    try{return ExactQueryCohort(eraseQueries_,[cache]{if(const auto owner=cache.lock())owner->retireIdleHistoryPreparation();});}
+    catch(const std::bad_alloc&){return ExactQueryCohort(eraseQueries_);}
+}
 SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
     try{

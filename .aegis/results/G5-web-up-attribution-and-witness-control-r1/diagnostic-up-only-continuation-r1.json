@@ -1,0 +1,43 @@
+{
+  "schema": "g5-web-observation-repair-authorization-v1",
+  "created_utc": "2026-11-10T16:36:19.059701+00:00",
+  "status": "AUTHORIZED_ONCE_FROZEN_ATTRIBUTION_PROOF_REPAIR",
+  "package": {
+    "path": ".aegis/packages/G5-web-up-attribution-and-witness-r1/package.json",
+    "sha256": "eacf18b739a6ca6205b747ba5a762807e0eb369de66a1de2cd494f8fc88da5dd"
+  },
+  "prior": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-DIAGNOSTIC/worker-result.json",
+    "sha256": "f2a436827659e00cf0dc343f01dca5a12bdb46f7ef4bfbb75649945a0e4f4db6"
+  },
+  "classification": "Collector capacity saturation with missing criticalrootUp records; functional rowsqualified doesnotqualify attribution. Preserve oldCOMPLETEDcontainment state withtraceproofMISSINGexplicit.",
+  "repair_scope": [
+    "Host diagnostics toggle onlyactualUp pair then disable/drain; Moves untraced topreventunrelatedbufferfill; no ordinary product change.",
+    "Preserve exact confirmedwaveform andsameDOMtask mainUp\u2192nextDown; no await/drain betweenmainUp andnextDown. Anytogglemicrocost/gap recordedandcalibrated.",
+    "Offline repeatedUp trace capacity/BeginEnd/aggregate/critical0 tests, not merelysinglecase; r.n/drain lifetime mustbeunderstood.",
+    "Retain allrootstagechild/residual, counts/cap/prefix/memo and full semantic results; do not pretend missing record zero."
+  ],
+  "continuation": {
+    "id": "G5WA1-DIAGNOSTIC-UP-ONLY-R1",
+    "starts": 1,
+    "seconds": 236,
+    "rss_mib": 4096,
+    "cases": [
+      "800MoveUp+successor",
+      "1600MoveUp+successor",
+      "6roundcumulativehistoryUp pairs"
+    ],
+    "allowance": "OriginalDIAGNOSTIC360minusconsumed124; no combinedcapincrease"
+  },
+  "remaining_original_window": {
+    "id": "G5WA1-OVERHEAD",
+    "seconds": 180,
+    "purpose": "SamefinalqualificationbinaryOFF/ON800 freshpage; Up-only observation overhead."
+  },
+  "max_total_seconds": 1080,
+  "charged_so_far_seconds": 267,
+  "no_extra_continuations": "This single finalcapacityrepair; any remaining trace proofmissing returnedexplicit. No arbitrarynewIDs/retryloop.",
+  "freeze": "No source/runner/SDKwrites duringwindows. NewrunnerIDallowedonlyboundthisrecordhash; oldledgersrawSDKremainimmutable.",
+  "no_threading": "Stopbeforeplanstep5; no backgroundcomputeprototype",
+  "return_policy": "Continue exactauthorizedremainingproof withoutnewhumanpermission, proactivecallbacks, thencontrolstep3."
+}

@@ -1,0 +1,619 @@
+{
+  "id": "mixed-continuous-d4",
+  "status": "QUALIFIED",
+  "final": [
+    {
+      "stage": "final",
+      "projection": {
+        "before": 45,
+        "ink": 40,
+        "status": "PROJECTED"
+      },
+      "status": "QUALIFIED",
+      "compared_pixels": 2323095,
+      "aa_boundary_pixels": 1324905,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": {
+        "x": 0,
+        "y": 0,
+        "width": 1200,
+        "height": 3040
+      },
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1.0408108234405518,
+          "x": -30.7724609375,
+          "y": -19.671356201171875
+        },
+        "hud_bounds": []
+      },
+      "actual_sha256": "133565574ec1b5926e2f5c3e29fda21acc7c273b3f21c29f090fe6a82be42bb9",
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-004/reference.rgba",
+        "sha256": "1138f1c914f41a877ee93fe1ab0e8675e816bb09a559c5bb120d795bd386cb10",
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d4/ink-final.axsnap",
+        "plan": {
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d4/ink-final.axsnap",
+          "snapshot_sha256": "125f283cf4335b051777c34a397de4a348574b30f551be9ba9270aef6bc56ac7",
+          "request": {
+            "width": 4400,
+            "height": 3040,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1.0408108234405518,
+              "x": -30.7724609375,
+              "y": -19.671356201171875
+            },
+            "hud_bounds": []
+          },
+          "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+          "timeout_seconds": 60,
+          "rss_mib": 4096
+        }
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-004/reference.edge",
+        "sha256": "1170d3e969c5f6814a976db6b12eda0e9d08bc80f3729d3a34a2b5e4741d1f3a"
+      }
+    },
+    {
+      "stage": "redo",
+      "projection": {
+        "before": 45,
+        "ink": 40,
+        "status": "PROJECTED"
+      },
+      "status": "QUALIFIED",
+      "compared_pixels": 2323095,
+      "aa_boundary_pixels": 1324905,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": {
+        "x": 0,
+        "y": 0,
+        "width": 1200,
+        "height": 3040
+      },
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1.0408108234405518,
+          "x": -30.7724609375,
+          "y": -19.671356201171875
+        },
+        "hud_bounds": []
+      },
+      "actual_sha256": "cc63b3218b1d14d87484c720f4da17e17a6782323206c5e95a995faf7372f476",
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-005/reference.rgba",
+        "sha256": "1138f1c914f41a877ee93fe1ab0e8675e816bb09a559c5bb120d795bd386cb10",
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d4/ink-redo.axsnap",
+        "plan": {
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d4/ink-redo.axsnap",
+          "snapshot_sha256": "08ddae80b5edc6123a6948d48393cd6b32aaf6b626a9c88a5fb65d4e3561ce52",
+          "request": {
+            "width": 4400,
+            "height": 3040,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1.0408108234405518,
+              "x": -30.7724609375,
+              "y": -19.671356201171875
+            },
+            "hud_bounds": []
+          },
+          "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+          "timeout_seconds": 60,
+          "rss_mib": 4096
+        }
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-005/reference.edge",
+        "sha256": "1170d3e969c5f6814a976db6b12eda0e9d08bc80f3729d3a34a2b5e4741d1f3a"
+      }
+    }
+  ],
+  "active": [
+    {
+      "label": "rectangle",
+      "status": "QUALIFIED",
+      "positive": 16,
+      "beforeUp": true,
+      "rect": {
+        "x": 3054,
+        "y": 1478,
+        "width": 4,
+        "height": 4
+      },
+      "color": [
+        51,
+        128,
+        204,
+        255
+      ],
+      "metadata": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 29,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 17178.5,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-qqoyef1el-canonical",
+          "identity": "canvas-1",
+          "width": 4400,
+          "height": 3040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 4400,
+          "drawingBufferHeight": 3040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 3054,
+          "y": 1478,
+          "width": 4,
+          "height": 4,
+          "origin": "top-left",
+          "readY": 1558
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 17224.200000047684
+      }
+    },
+    {
+      "label": "sticky",
+      "status": "QUALIFIED",
+      "positive": 16,
+      "beforeUp": true,
+      "rect": {
+        "x": 4254,
+        "y": 2518,
+        "width": 4,
+        "height": 4
+      },
+      "color": [
+        255,
+        255,
+        128,
+        255
+      ],
+      "metadata": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 59,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 19118.399999976158,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-qqoyef1el-canonical",
+          "identity": "canvas-1",
+          "width": 4400,
+          "height": 3040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 4400,
+          "drawingBufferHeight": 3040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 4254,
+          "y": 2518,
+          "width": 4,
+          "height": 4,
+          "origin": "top-left",
+          "readY": 518
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 19141.899999976158
+      }
+    },
+    {
+      "label": "table",
+      "status": "QUALIFIED",
+      "positive": 4,
+      "beforeUp": true,
+      "rect": {
+        "x": 3054,
+        "y": 2312,
+        "width": 4,
+        "height": 1
+      },
+      "color": [
+        64,
+        71,
+        82,
+        255
+      ],
+      "metadata": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 87,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 20945.600000023842,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-qqoyef1el-canonical",
+          "identity": "canvas-1",
+          "width": 4400,
+          "height": 3040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 4400,
+          "drawingBufferHeight": 3040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 3054,
+          "y": 2312,
+          "width": 4,
+          "height": 1,
+          "origin": "top-left",
+          "readY": 727
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 21031.200000047684
+      }
+    },
+    {
+      "label": "image",
+      "status": "QUALIFIED",
+      "positive": 16,
+      "beforeUp": true,
+      "rect": {
+        "x": 1814,
+        "y": 2358,
+        "width": 4,
+        "height": 4
+      },
+      "color": [
+        255,
+        0,
+        0,
+        255
+      ],
+      "metadata": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 115,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 22926.200000047684,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-qqoyef1el-canonical",
+          "identity": "canvas-1",
+          "width": 4400,
+          "height": 3040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 4400,
+          "drawingBufferHeight": 3040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 1814,
+          "y": 2358,
+          "width": 4,
+          "height": 4,
+          "origin": "top-left",
+          "readY": 678
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 22949.899999976158
+      }
+    }
+  ],
+  "roundtrip": {
+    "objects": 45,
+    "total_masks": 120,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 57,
+    "after_revision": 59
+  }
+}

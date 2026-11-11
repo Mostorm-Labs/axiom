@@ -1,0 +1,2628 @@
+{
+  "status": "COMPLETE_FOR_15_ROOTS_CENSORED_FOR_ONE",
+  "cases": [
+    {
+      "raw": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-DIAGNOSTIC-UP-ONLY-R1/long800/qualified-row.json",
+        "sha256": "127fb61445ef1f2c44a3124fea0bf34ef31c349172062ba67683f195ab56ba19",
+        "bytes": 14539721
+      },
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "work": [
+        {
+          "case": "long800",
+          "round": 1,
+          "gesture": "main",
+          "job": "3",
+          "span": "4",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1754213,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 12399,
+          "history_union_operations": 1024,
+          "equivalent_memo_cumulative": 18,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 15,
+          "history_path_builds": 32,
+          "query_path_timed_ns": 1485800000,
+          "history_path_timed_ns": 73400000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "long800",
+          "round": 1,
+          "gesture": "successor",
+          "job": "363",
+          "span": "364",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8159813,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 14208,
+          "query_union_operations": 144,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 35,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 1700000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        }
+      ]
+    },
+    {
+      "raw": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-DIAGNOSTIC-UP-ONLY-R1/long1600/qualified-row.json",
+        "sha256": "1704d94c264a0b439bdac77a084a6fc2a9f474de7bdff2ad29ca2f45f485a15c",
+        "bytes": 34574923
+      },
+      "loss": {
+        "critical": 0,
+        "statistical": 31412
+      },
+      "work": [
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "main",
+          "job": "3",
+          "span": "4",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1782303,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 25600,
+          "history_union_operations": 1024,
+          "equivalent_memo_cumulative": 24,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 32,
+          "query_path_timed_ns": 3658300000,
+          "history_path_timed_ns": 72400000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "long1600",
+          "round": 1,
+          "gesture": "successor",
+          "job": "339",
+          "span": "340",
+          "status": "CENSORED_PARTIAL_COUNTERS",
+          "targets_observed": 11,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1707479,
+          "history_plan_ready": 11,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 17600,
+          "query_union_operations": 99,
+          "history_union_operations": 17600,
+          "equivalent_memo_cumulative": 24,
+          "body_uses": 11,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 11
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 11,
+          "history_path_builds": 11,
+          "query_path_timed_ns": 1400000,
+          "history_path_timed_ns": 2478500000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        }
+      ]
+    },
+    {
+      "raw": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-DIAGNOSTIC-UP-ONLY-R1/growth6/qualified-row.json",
+        "sha256": "d234b3bdecf894b6e7918431401b0da3327141a475628bb9484a874d396455e1",
+        "bytes": 74380933
+      },
+      "loss": {
+        "critical": 0,
+        "statistical": 0
+      },
+      "work": [
+        {
+          "case": "growth6",
+          "round": 1,
+          "gesture": "main",
+          "job": "3",
+          "span": "4",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 1003428,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2476,
+          "history_union_operations": 1024,
+          "equivalent_memo_cumulative": 5,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 15,
+          "history_path_builds": 32,
+          "query_path_timed_ns": 686400000,
+          "history_path_timed_ns": 73400000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 1,
+          "gesture": "successor",
+          "job": "415",
+          "span": "416",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 2547940,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 3104,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 10,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 0,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 2,
+          "gesture": "main",
+          "job": "850",
+          "span": "851",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 4545555,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2536,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 15,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 15,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 685900000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 2,
+          "gesture": "successor",
+          "job": "1245",
+          "span": "1246",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 7443123,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 6448,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 20,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 300000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 3,
+          "gesture": "main",
+          "job": "1680",
+          "span": "1681",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 7667150,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2560,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 25,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 725000000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 3,
+          "gesture": "successor",
+          "job": "2075",
+          "span": "2076",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8386676,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 9344,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 26,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 0,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 4,
+          "gesture": "main",
+          "job": "2457",
+          "span": "2458",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 7669207,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2560,
+          "history_union_operations": 800,
+          "equivalent_memo_cumulative": 30,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 5,
+          "query_path_timed_ns": 729400000,
+          "history_path_timed_ns": 227400000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 4,
+          "gesture": "successor",
+          "job": "2861",
+          "span": "2862",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8384739,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 4448,
+          "query_union_operations": 16,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 33,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 100000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 5,
+          "gesture": "main",
+          "job": "3289",
+          "span": "3290",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 7675677,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 0,
+          "query_union_operations": 2560,
+          "history_union_operations": 2832,
+          "equivalent_memo_cumulative": 37,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 40,
+          "query_path_timed_ns": 725100000,
+          "history_path_timed_ns": 742800000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 5,
+          "gesture": "successor",
+          "job": "3704",
+          "span": "3705",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8370908,
+          "history_plan_ready": 40,
+          "history_plan_absent": 0,
+          "history_denied_delta": 0,
+          "history_primitive_builds": 11314,
+          "query_union_operations": 16,
+          "history_union_operations": 2080,
+          "equivalent_memo_cumulative": 40,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 16,
+          "history_path_builds": 13,
+          "query_path_timed_ns": 0,
+          "history_path_timed_ns": 596600000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 6,
+          "gesture": "main",
+          "job": "4151",
+          "span": "4152",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8290785,
+          "history_plan_ready": 23,
+          "history_plan_absent": 17,
+          "history_denied_delta": 17,
+          "history_primitive_builds": 2278,
+          "query_union_operations": 0,
+          "history_union_operations": 270,
+          "equivalent_memo_cumulative": 40,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 0,
+          "history_path_builds": 53,
+          "query_path_timed_ns": 0,
+          "history_path_timed_ns": 15900000,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        },
+        {
+          "case": "growth6",
+          "round": 6,
+          "gesture": "successor",
+          "job": "4600",
+          "span": "4601",
+          "status": "COMPLETE_40_TARGET_COUNTERS",
+          "targets_observed": 40,
+          "targets_expected": 40,
+          "local_capacity_bytes": [
+            8388608
+          ],
+          "local_usage_max_bytes": 8214039,
+          "history_plan_ready": 0,
+          "history_plan_absent": 40,
+          "history_denied_delta": 40,
+          "history_primitive_builds": 2920,
+          "query_union_operations": 40,
+          "history_union_operations": 0,
+          "equivalent_memo_cumulative": 40,
+          "body_uses": 40,
+          "body_identities": [
+            "1"
+          ],
+          "body_fallback_reason_counts": {
+            "0": 40
+          },
+          "body_full_validation_knots": 0,
+          "body_full_compile_calls": 0,
+          "body_full_compile_inputs": 0,
+          "prepared_compile_calls": 0,
+          "prepared_compile_inputs": 0,
+          "exact_materialized_paths": 0,
+          "exact_replay_knots": 0,
+          "query_path_builds": 40,
+          "history_path_builds": 0,
+          "query_path_timed_ns": 600000,
+          "history_path_timed_ns": 0,
+          "fallback_erasePath_note": "Cached-path counters exclude uncached erasePath calls after get denies. wa_path_build inclusive/exclusive still includes those calls when trace records survive."
+        }
+      ]
+    }
+  ],
+  "render_cardinality": {
+    "status": "CORROBORATIVE_PRIOR_DIAGNOSTIC_ONLY",
+    "scope": "Final Up-only trace intentionally does not observe post-input canonical frames. Original diagnostic long800 has loss0; coverage counters below measure that separate lane only.",
+    "rows": [],
+    "raw": {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-DIAGNOSTIC/long800/qualified-row.json",
+      "sha256": "d9865816c445d4ffb4087c615076d3fc25b8866cb6cba856736804fc66ce4aa1",
+      "bytes": 35092041
+    },
+    "canonical_status": "MISSING_COUNTER_ROWS_NOT_ZERO",
+    "canonical_note": "Canonical scope/receipt records exist but no coverage marker4 counter rows in that purpose. Do not infer tile cardinality0. No post-Up canonical cardinality claim.",
+    "separately_observed_transient_rows": [
+      {
+        "job": "14",
+        "values": [
+          "4",
+          "800",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "76",
+        "values": [
+          "4",
+          "40",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "310",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "461",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "575",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "705",
+        "values": [
+          "4",
+          "40",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "952",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1080",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1234",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1392",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1534",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1667",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1809",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "1959",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2111",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2254",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2391",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2554",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2678",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2809",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "2936",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3067",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3194",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3317",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3444",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3574",
+        "values": [
+          "4",
+          "40",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3813",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "3977",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4115",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4265",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4408",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4557",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4690",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4827",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "4973",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5112",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5267",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5395",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5525",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5655",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5784",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "5910",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6038",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6161",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6284",
+        "values": [
+          "4",
+          "40",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6537",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6684",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6834",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "6972",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "7122",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "7278",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "7425",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      },
+      {
+        "job": "7572",
+        "values": [
+          "4",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "23124960"
+        ]
+      }
+    ],
+    "prefix_observations": [
+      {
+        "seq": "401",
+        "at_ns": "3159100000",
+        "event": "0",
+        "job": "14",
+        "attempt": "14",
+        "basis": "14",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "19",
+          "17",
+          "1",
+          "2700000",
+          "2700000"
+        ]
+      },
+      {
+        "seq": "953",
+        "at_ns": "3308600000",
+        "event": "0",
+        "job": "76",
+        "attempt": "76",
+        "basis": "76",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "81",
+          "79",
+          "1",
+          "2100000",
+          "2100000"
+        ]
+      },
+      {
+        "seq": "1759",
+        "at_ns": "3316900000",
+        "event": "0",
+        "job": "310",
+        "attempt": "310",
+        "basis": "310",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "315",
+          "313",
+          "1",
+          "1500000",
+          "1500000"
+        ]
+      },
+      {
+        "seq": "2536",
+        "at_ns": "3328500000",
+        "event": "0",
+        "job": "461",
+        "attempt": "461",
+        "basis": "461",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "466",
+          "464",
+          "1",
+          "1500000",
+          "1500000"
+        ]
+      },
+      {
+        "seq": "3307",
+        "at_ns": "3344700000",
+        "event": "0",
+        "job": "575",
+        "attempt": "575",
+        "basis": "575",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "580",
+          "578",
+          "1",
+          "1500000",
+          "1500000"
+        ]
+      },
+      {
+        "seq": "4260",
+        "at_ns": "3387200000",
+        "event": "0",
+        "job": "705",
+        "attempt": "705",
+        "basis": "705",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "710",
+          "708",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "5261",
+        "at_ns": "3416200000",
+        "event": "0",
+        "job": "952",
+        "attempt": "952",
+        "basis": "952",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "957",
+          "955",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "6124",
+        "at_ns": "3430500000",
+        "event": "0",
+        "job": "1080",
+        "attempt": "1080",
+        "basis": "1080",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1085",
+          "1083",
+          "1",
+          "2300000",
+          "2300000"
+        ]
+      },
+      {
+        "seq": "7045",
+        "at_ns": "3443500000",
+        "event": "0",
+        "job": "1234",
+        "attempt": "1234",
+        "basis": "1234",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1239",
+          "1237",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "8074",
+        "at_ns": "3461500000",
+        "event": "0",
+        "job": "1392",
+        "attempt": "1392",
+        "basis": "1392",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1397",
+          "1395",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "8984",
+        "at_ns": "3477900000",
+        "event": "0",
+        "job": "1534",
+        "attempt": "1534",
+        "basis": "1534",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1539",
+          "1537",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "9903",
+        "at_ns": "3494000000",
+        "event": "0",
+        "job": "1667",
+        "attempt": "1667",
+        "basis": "1667",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1672",
+          "1670",
+          "1",
+          "800000",
+          "800000"
+        ]
+      },
+      {
+        "seq": "10863",
+        "at_ns": "3514800000",
+        "event": "0",
+        "job": "1809",
+        "attempt": "1809",
+        "basis": "1809",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1814",
+          "1812",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "11683",
+        "at_ns": "3526400000",
+        "event": "0",
+        "job": "1959",
+        "attempt": "1959",
+        "basis": "1959",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "1964",
+          "1962",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "12708",
+        "at_ns": "3544200000",
+        "event": "0",
+        "job": "2111",
+        "attempt": "2111",
+        "basis": "2111",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2116",
+          "2114",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "13627",
+        "at_ns": "3560500000",
+        "event": "0",
+        "job": "2254",
+        "attempt": "2254",
+        "basis": "2254",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2259",
+          "2257",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "14592",
+        "at_ns": "3577100000",
+        "event": "0",
+        "job": "2391",
+        "attempt": "2391",
+        "basis": "2391",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2396",
+          "2394",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "15425",
+        "at_ns": "3591900000",
+        "event": "0",
+        "job": "2554",
+        "attempt": "2554",
+        "basis": "2554",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2559",
+          "2557",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "16193",
+        "at_ns": "3608500000",
+        "event": "0",
+        "job": "2678",
+        "attempt": "2678",
+        "basis": "2678",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2683",
+          "2681",
+          "1",
+          "800000",
+          "800000"
+        ]
+      },
+      {
+        "seq": "16960",
+        "at_ns": "3625300000",
+        "event": "0",
+        "job": "2809",
+        "attempt": "2809",
+        "basis": "2809",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2814",
+          "2812",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "17731",
+        "at_ns": "3642200000",
+        "event": "0",
+        "job": "2936",
+        "attempt": "2936",
+        "basis": "2936",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "2941",
+          "2939",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "18498",
+        "at_ns": "3658900000",
+        "event": "0",
+        "job": "3067",
+        "attempt": "3067",
+        "basis": "3067",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3072",
+          "3070",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "19253",
+        "at_ns": "3675400000",
+        "event": "0",
+        "job": "3194",
+        "attempt": "3194",
+        "basis": "3194",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3199",
+          "3197",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "20012",
+        "at_ns": "3692200000",
+        "event": "0",
+        "job": "3317",
+        "attempt": "3317",
+        "basis": "3317",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3322",
+          "3320",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "20781",
+        "at_ns": "3708800000",
+        "event": "0",
+        "job": "3444",
+        "attempt": "3444",
+        "basis": "3444",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3449",
+          "3447",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "21705",
+        "at_ns": "3747300000",
+        "event": "0",
+        "job": "3574",
+        "attempt": "3574",
+        "basis": "3574",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3579",
+          "3577",
+          "1",
+          "900000",
+          "900000"
+        ]
+      },
+      {
+        "seq": "22642",
+        "at_ns": "3761000000",
+        "event": "0",
+        "job": "3813",
+        "attempt": "3813",
+        "basis": "3813",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3818",
+          "3816",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "23504",
+        "at_ns": "3778400000",
+        "event": "0",
+        "job": "3977",
+        "attempt": "3977",
+        "basis": "3977",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "3982",
+          "3980",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "24494",
+        "at_ns": "3794900000",
+        "event": "0",
+        "job": "4115",
+        "attempt": "4115",
+        "basis": "4115",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4120",
+          "4118",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "25437",
+        "at_ns": "3811200000",
+        "event": "0",
+        "job": "4265",
+        "attempt": "4265",
+        "basis": "4265",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4270",
+          "4268",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "26465",
+        "at_ns": "3827800000",
+        "event": "0",
+        "job": "4408",
+        "attempt": "4408",
+        "basis": "4408",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4413",
+          "4411",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "27382",
+        "at_ns": "3844100000",
+        "event": "0",
+        "job": "4557",
+        "attempt": "4557",
+        "basis": "4557",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4562",
+          "4560",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "28291",
+        "at_ns": "3861100000",
+        "event": "0",
+        "job": "4690",
+        "attempt": "4690",
+        "basis": "4690",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4695",
+          "4693",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "29222",
+        "at_ns": "3877200000",
+        "event": "0",
+        "job": "4827",
+        "attempt": "4827",
+        "basis": "4827",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4832",
+          "4830",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "30148",
+        "at_ns": "3894300000",
+        "event": "0",
+        "job": "4973",
+        "attempt": "4973",
+        "basis": "4973",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "4978",
+          "4976",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "31099",
+        "at_ns": "3910900000",
+        "event": "0",
+        "job": "5112",
+        "attempt": "5112",
+        "basis": "5112",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5117",
+          "5115",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "31932",
+        "at_ns": "3926100000",
+        "event": "0",
+        "job": "5267",
+        "attempt": "5267",
+        "basis": "5267",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5272",
+          "5270",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "32702",
+        "at_ns": "3942700000",
+        "event": "0",
+        "job": "5395",
+        "attempt": "5395",
+        "basis": "5395",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5400",
+          "5398",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "33474",
+        "at_ns": "3958300000",
+        "event": "0",
+        "job": "5525",
+        "attempt": "5525",
+        "basis": "5525",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5530",
+          "5528",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "34244",
+        "at_ns": "3976000000",
+        "event": "0",
+        "job": "5655",
+        "attempt": "5655",
+        "basis": "5655",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5660",
+          "5658",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "35007",
+        "at_ns": "3992600000",
+        "event": "0",
+        "job": "5784",
+        "attempt": "5784",
+        "basis": "5784",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5789",
+          "5787",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "35771",
+        "at_ns": "4009400000",
+        "event": "0",
+        "job": "5910",
+        "attempt": "5910",
+        "basis": "5910",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "5915",
+          "5913",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "36527",
+        "at_ns": "4026500000",
+        "event": "0",
+        "job": "6038",
+        "attempt": "6038",
+        "basis": "6038",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6043",
+          "6041",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "37278",
+        "at_ns": "4042800000",
+        "event": "0",
+        "job": "6161",
+        "attempt": "6161",
+        "basis": "6161",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6166",
+          "6164",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "38207",
+        "at_ns": "4078200000",
+        "event": "0",
+        "job": "6284",
+        "attempt": "6284",
+        "basis": "6284",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6289",
+          "6287",
+          "1",
+          "1000000",
+          "1000000"
+        ]
+      },
+      {
+        "seq": "39180",
+        "at_ns": "4095700000",
+        "event": "0",
+        "job": "6537",
+        "attempt": "6537",
+        "basis": "6537",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6542",
+          "6540",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "40049",
+        "at_ns": "4113800000",
+        "event": "0",
+        "job": "6684",
+        "attempt": "6684",
+        "basis": "6684",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6689",
+          "6687",
+          "1",
+          "1300000",
+          "1300000"
+        ]
+      },
+      {
+        "seq": "41043",
+        "at_ns": "4131400000",
+        "event": "0",
+        "job": "6834",
+        "attempt": "6834",
+        "basis": "6834",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6839",
+          "6837",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "41932",
+        "at_ns": "4144600000",
+        "event": "0",
+        "job": "6972",
+        "attempt": "6972",
+        "basis": "6972",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "6977",
+          "6975",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "42981",
+        "at_ns": "4161700000",
+        "event": "0",
+        "job": "7122",
+        "attempt": "7122",
+        "basis": "7122",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "7127",
+          "7125",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "43933",
+        "at_ns": "4178300000",
+        "event": "0",
+        "job": "7278",
+        "attempt": "7278",
+        "basis": "7278",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "7283",
+          "7281",
+          "1",
+          "1100000",
+          "1100000"
+        ]
+      },
+      {
+        "seq": "44876",
+        "at_ns": "4194900000",
+        "event": "0",
+        "job": "7425",
+        "attempt": "7425",
+        "basis": "7425",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "7430",
+          "7428",
+          "1",
+          "1300000",
+          "1300000"
+        ]
+      },
+      {
+        "seq": "45825",
+        "at_ns": "4212400000",
+        "event": "0",
+        "job": "7572",
+        "attempt": "7572",
+        "basis": "7572",
+        "purpose": 3,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "7577",
+          "7575",
+          "1",
+          "1200000",
+          "1200000"
+        ]
+      },
+      {
+        "seq": "46932",
+        "at_ns": "6077700000",
+        "event": "0",
+        "job": "7706",
+        "attempt": "7706",
+        "basis": "7706",
+        "purpose": 1,
+        "route": 0,
+        "kind": 10,
+        "tag": 63,
+        "values": [
+          "9",
+          "7880",
+          "7879",
+          "30",
+          "61100000",
+          "61100000"
+        ]
+      }
+    ]
+  }
+}

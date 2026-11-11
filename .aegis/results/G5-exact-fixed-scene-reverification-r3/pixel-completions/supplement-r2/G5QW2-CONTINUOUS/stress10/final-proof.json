@@ -1,0 +1,54 @@
+{
+  "stage": "final",
+  "status": "QUALIFIED",
+  "compared_pixels": 5079493,
+  "aa_boundary_pixels": 701747,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/stress10/final.axsnap",
+    "source_snapshot_sha256": "af0a3a16d6c64a87824535b85bb58b51355c6ab7d3cf0c488c37d21b7d9f471f",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/stress10/final.axsnap",
+    "reference_snapshot_sha256": "af0a3a16d6c64a87824535b85bb58b51355c6ab7d3cf0c488c37d21b7d9f471f",
+    "document_digest": "3d498e8e67a4dc92d07131c5ee3017e9a319e47d9e32accb8dfd59f751ec17eb",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": null,
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "reuse": "Qualifiedcontrolworststress10exactinput/request"
+  },
+  "reuseProof": {
+    "objects": 40,
+    "total_masks": 840,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 61,
+    "after_revision": 61
+  },
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-control-r1/oracle-offline-qualification-r1/reference.rgba",
+    "sha256": "bee1714838eb0435d1fa72c2b4af38cf52ba5d9d3e2d63921c19a789a626e3f4"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-control-r1/oracle-offline-qualification-r1/reference.edge",
+    "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+  },
+  "actual_sha256": "3d722456c3b46446ba1c9f700cc484c122679e8329faff6e0c0615bec143146c"
+}

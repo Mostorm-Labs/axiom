@@ -1,0 +1,164 @@
+{
+  "schema": "g5-wa-result-v1",
+  "task_id": "G5-web-up-attribution-and-witness-r1",
+  "status": "BOUNDED_PROOF_INCOMPLETE",
+  "completed_stage": "PLAN_STEPS1_2_LOCAL_FINDINGS_RETURN_TO_CONTROL",
+  "return_surface": "CONTROL_REVIEW",
+  "package": {
+    "path": ".aegis/packages/G5-web-up-attribution-and-witness-r1/package.json",
+    "sha256": "eacf18b739a6ca6205b747ba5a762807e0eb369de66a1de2cd494f8fc88da5dd",
+    "bytes": 2617
+  },
+  "source_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "source_manifest": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/source-manifest.json",
+    "sha256": "d1e2f8b80fd60bb8d2f8eebc309c99e5bfc62913d7237a27dd6e8a8f9d9f6e88",
+    "bytes": 6395
+  },
+  "delta_manifest": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/delta-manifest.json",
+    "sha256": "c0ade3f4f7bfc3d3d4fc9201dc0f6a6aadef6cff3bc25c86f0cfc3646d0c82d7",
+    "bytes": 2922
+  },
+  "artifact_manifest": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/artifact-manifest.json",
+    "sha256": "f68fb7938f391470c53a777210cbea4aa408c683dfb3290a04e452682204cdc3",
+    "bytes": 71205
+  },
+  "normal_SDK_manifest": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/final-normal-artifacts.json",
+    "sha256": "c3df6e9d7ad1c67fe8b73b70425748b2c5e369b48a64de5272eaab11494cd168",
+    "bytes": 3738
+  },
+  "normal_wasm_sha256": "1e1c18d14abfb7bcdbb0af47f2df4d723d6517bd11c17481e85e78825e90c109",
+  "qualification_SDK": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/diagnostic-build-binding.json",
+    "sha256": "725a9f180d48d7296186a691076d64a35c51754d0debbe545daa6cfdf4261fe8",
+    "bytes": 11933
+  },
+  "qualification_wasm_sha256": "6d40ad7ca7eb7fd9b5b4975d90d27c9ab9b84555f960d3ecdf3bdcf27167f439",
+  "driver": {
+    "path": "verification/runners/g5/web_up_attribution.mjs",
+    "sha256": "a33b136c814a8cf18e4520f034a7f9c7fa3e7d8668fd221cb65885cf68932b3a",
+    "bytes": 15981
+  },
+  "obligations": {
+    "WA-WITNESS": {
+      "status": "QUALIFIED",
+      "proof": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/baseline-witness-results.json",
+        "sha256": "2016dfa4dfe27471599a95d84bcfbb1bbc5a24b016cf20ac6442b00a544ad645",
+        "bytes": 6041
+      },
+      "semantics": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/snapshots-semantics.json",
+        "sha256": "9fc58d3ca2b162cfb46f903d462a6224d391a14a4689e80585046c83353c830e",
+        "bytes": 2537
+      },
+      "result": "3actualbeforeUptypedsticky/table/imagewitnesses;oldinvalidwitnessesnotrewritten;body/mask/target/UndoRedo/resourcewaveformcheckscomplete."
+    },
+    "WA-ATTRIBUTION": {
+      "status": "PARTIAL_BOUNDED",
+      "proof": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/phase-timing.json",
+        "sha256": "2fff6e2df9868c94ee7992a9cb65665b5653bfe6bad720b1f9c2fdc674286c5e",
+        "bytes": 98391
+      },
+      "work": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/work-counts.json",
+        "sha256": "321e6ce11403347d4c2798dc653a892c473df87f025b0cc018924cbdafdcfbde",
+        "bytes": 59052
+      },
+      "complete_up_roots": 15,
+      "expected_up_roots": 16,
+      "remaining": "long1600successorEnd/statistical31412anddetailedaggregateslost;post-Upcanonicaltilecounterrowsunavailable. No furtherrepair/windowauthorized.",
+      "assessment": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/root-cause-assessment.json",
+        "sha256": "def3d7275dec8c037c3268b06c806c26931098be6501a328f7eb5d4a5c6dc0be",
+        "bytes": 8644
+      },
+      "ordinary": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/ordinary-baseline.json",
+        "sha256": "59bd8fb70189f85dbe21af8b469f19ad6eab699adb946d205e1c4728d10a7673",
+        "bytes": 3280
+      },
+      "overhead": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/on-off-overhead.json",
+        "sha256": "2ab5aaf8f7f7998666260b05e3cfb3bf668e969008fe511818f09847dc519f15",
+        "bytes": 17106
+      }
+    },
+    "WA-INVARIANTS": {
+      "status": "AFFECTED_CHECKS_PASSED",
+      "proof": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/regressions.json",
+        "sha256": "15f7d6343f3c4caae76a4f6c6e86ca953e94157f26bce305f9999266e83046fa",
+        "bytes": 4077
+      },
+      "normal_boundary": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/normal-boundary.json",
+        "sha256": "b81defefaa5c32affe1655452e7b07ee0a06ca20c6c1ccd9c1791d4f45dcb21d",
+        "bytes": 6493
+      },
+      "ordinary_product_behavior_changed": false
+    }
+  },
+  "blocking_gaps": [
+    {
+      "classification": "BOUNDED_PROOF_INCOMPLETE",
+      "scope": "Fullphaseanddetailedcountercompletenessonly",
+      "gap": "Long1600successoreraser_upEnd/aggregate/counterloss;15of16rootscomplete. critical0doesnotimplyeraser_upEndcritical.",
+      "independent_step3_use": "Completegrowth12rootsandlongmain+sourcearevalidlocalrootcauses;controlscopecanfollowwithoutclaimfullphaseclosure."
+    },
+    {
+      "classification": "MISSING_OBSERVATION",
+      "scope": "post-Upcanonicalcoveragecardinality",
+      "gap": "No marker4canonicalcoveragecounterrowsinpriorloss0long800lane;retainMISSINGratherthan0."
+    }
+  ],
+  "findings": [
+    "Long1600main4158.5ms:queryunion/pathbuild3730.6ms(89.71%),16distinctlocalqueries/25600unionops;body40uses/compile0.",
+    "Growthround6main5521.2ms/successor5319.3ms:pathbuild5035.9/5022.9ms;historyPlans23ready17deniedthen0ready40denied;memo40unchanged;body40uses/compile0.",
+    "Primaryordinarylong1600Up4174.3msandimmediatesuccessor3647.9ms;ordinary6roundgrows6386.2ms.Nooptimizationinthispackage."
+  ],
+  "next_step": {
+    "authority": "OnlynextmeasuredP31productionpackage",
+    "proposal": {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/root-cause-assessment.json",
+      "sha256": "def3d7275dec8c037c3268b06c806c26931098be6501a328f7eb5d4a5c6dc0be",
+      "bytes": 8644
+    },
+    "minimal_scope": "Decoupleexacthistoryproof/lazypath/memofromdrawflattenandprotectcurrentUpworking-setleasesunderexistingquota. Cross-transformworldpathreuseDEFERRED.",
+    "step5_human_pause": true
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/sampling-ledger.json",
+    "sha256": "2d055d6baa01a912e4d96e47a32c099d762a47d09bcf15af0723d232eb361910",
+    "bytes": 5479
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/cleanup.json",
+    "sha256": "4d3a6ac65845049aa96872c4e3e87886e435b0bbfdfeaeadb32aafe341266c8f",
+    "bytes": 5584
+  },
+  "browser_starts": 5,
+  "charged_seconds": 423,
+  "cap_seconds": 1080,
+  "unused_seconds_not_new_authorization": 657,
+  "windows_remaining": [],
+  "normal_demo": "http://127.0.0.1:4319/example.html",
+  "protected_demos": [
+    "http://127.0.0.1:4298/example.html",
+    "http://127.0.0.1:4318/example.html",
+    "http://127.0.0.1:4317/example.html",
+    "http://127.0.0.1:4316/example.html"
+  ],
+  "old_result_and_frozen_evidence_unchanged": true,
+  "no_commit_push": true,
+  "index_empty": true,
+  "official_G5_P34_performance_PASS": false,
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "execution_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

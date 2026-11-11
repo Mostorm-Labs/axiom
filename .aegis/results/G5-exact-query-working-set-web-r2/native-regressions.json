@@ -1,0 +1,72 @@
+{
+  "status": "58_KEEPERS_634_REFERENCE_DECISIONS_PASSED",
+  "native_junit": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/keepers-junit.xml",
+    "sha256": "f903de647b3930fb47ee8de63848b40428ac0fd0377949cdabf859cb76fba176",
+    "bytes": 42803
+  },
+  "log": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/keepers.log",
+    "sha256": "0c37fadc4c785139cec710d6e101136bd83e2d13f30bc19c107be01d75353206",
+    "bytes": 7462
+  },
+  "native_total": 58,
+  "passed": 58,
+  "independent_exact_corpus_rows": 634,
+  "mismatches": 0,
+  "candidate634": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/candidate634.json",
+    "sha256": "771795a04c52ab0cc6084083e5fe61d4a23b8ae522ae87464ce687abc4101363",
+    "bytes": 94378
+  },
+  "working_set_lifecycle": {
+    "all_leases_released": true,
+    "canonical_ID_fork": true,
+    "geometry_fork": true,
+    "held_source_clear_shared": true,
+    "result_reuse_without_path_residency": true,
+    "tiny_reference_parity": true
+  },
+  "boundary": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/boundary.log",
+    "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+    "bytes": 58
+  },
+  "node_driver": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/continuous-driver-node.log",
+    "sha256": "6a60da46c7a9d4f7fd1c505e43494e7347e180be5b71606627711e2f76eb0348",
+    "bytes": 700
+  },
+  "python_driver": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/driver-python.log",
+    "sha256": "2299339565fdc7c4fedeb54e99b181ba53b821f77194926422cc7df3301ba0ee",
+    "bytes": 98
+  },
+  "no_full_suite_PASS": true,
+  "Node_final": {
+    "tests": 60,
+    "passed": 60,
+    "log": {
+      "path": ".aegis/results/G5-exact-query-working-set-web-r2/final-related-node.log",
+      "sha256": "9ff6f4103a9b0428e9a971aab0cb4b77ff3438b52094b0d20f57114a03537ff6",
+      "bytes": 12456
+    }
+  },
+  "Python_final": {
+    "tests": 37,
+    "passed": 37,
+    "log": {
+      "path": ".aegis/results/G5-exact-query-working-set-web-r2/final-related-python.log",
+      "sha256": "8e7b25a840d26f5d65f37ecbfb8f22acd539811415f776f20c16d7f92fff33ff",
+      "bytes": 136
+    }
+  },
+  "boundary_final": {
+    "files": 120,
+    "log": {
+      "path": ".aegis/results/G5-exact-query-working-set-web-r2/final-boundary.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d",
+      "bytes": 58
+    }
+  }
+}

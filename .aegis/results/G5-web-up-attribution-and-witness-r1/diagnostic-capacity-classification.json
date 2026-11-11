@@ -1,0 +1,51 @@
+{
+  "classification": "VERIFICATION_OBSERVATION_VOLUME_EXCEEDS_FROZEN_16MiB_COLLECTOR",
+  "rows": [
+    {
+      "id": "long800",
+      "semantic_status": "QUALIFIED",
+      "raw_sha256": "d9865816c445d4ffb4087c615076d3fc25b8866cb6cba856736804fc66ce4aa1",
+      "record_count": 78138,
+      "loss": {
+        "statistical": 58815,
+        "critical": 0
+      },
+      "observedUpBegin": 2,
+      "completeUpPairs": 2,
+      "expectedUpCount": 2,
+      "attribution_status": "ROOTS_COMPLETE_WITH_STATISTICAL_LOSS"
+    },
+    {
+      "id": "long1600",
+      "semantic_status": "QUALIFIED",
+      "raw_sha256": "8d20b7683dd29c1dd606a51848003c5c315271b61c874915c80c36c4727bf3de",
+      "record_count": 78138,
+      "loss": {
+        "statistical": 220918,
+        "critical": 930
+      },
+      "observedUpBegin": 0,
+      "completeUpPairs": 0,
+      "expectedUpCount": 2,
+      "attribution_status": "PARTIAL"
+    },
+    {
+      "id": "growth6",
+      "semantic_status": "QUALIFIED",
+      "raw_sha256": "dc10fcfc0bb165b553b90e52d9183ed4b32bb12317a5d403ee513280004a615e",
+      "record_count": 78138,
+      "loss": {
+        "statistical": 193971,
+        "critical": 4634
+      },
+      "observedUpBegin": 6,
+      "completeUpPairs": 6,
+      "expectedUpCount": 12,
+      "attribution_status": "PARTIAL"
+    }
+  ],
+  "not_product_failure": true,
+  "preserve_old_raw": true,
+  "repair": "Onlyenableexistingprivatecollector immediatelybeforemeasuredUp, disable/drainrightafterreturn; eachmain/tinyUpseparately. Keepordinarywaveform/semantics; noeventrecordMove/GPUtraffic. Newwindowonlyexplicitleftoverdiagallowance.",
+  "critical_missing_not_zero": true
+}

@@ -1,0 +1,179 @@
+{
+  "schema": "g5-qw-r2-result-v1",
+  "task_id": "G5-exact-query-working-set-web-r2",
+  "status": "BOUNDED_REQUIRED_PROOF_INCOMPLETE",
+  "return_surface": "CONTROL_REVIEW",
+  "source_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "package": {
+    "path": ".aegis/packages/G5-exact-query-working-set-web-r2/package.json",
+    "sha256": "27d1ffd72133a391fcaeced17fbc057df01e755a4f34947bb65f2ba59815b201",
+    "bytes": 2524
+  },
+  "production_scope_package": {
+    "path": ".aegis/packages/G5-exact-query-working-set-r1/package.json",
+    "sha256": "6c34d133ee554fc489a9706c6880628715021f9df47313175dd81e4f5664094a",
+    "bytes": 2587
+  },
+  "source_manifest": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/source-manifest.json",
+    "sha256": "6293a8343fd0c640f7b570b931218b839020a366a954340926d1458165b33f6f",
+    "bytes": 10657
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/source-delta.patch",
+    "sha256": "019a12ca2478c8ec246ee29f6fe0e4ec5321062d13eb157b459498c32324b47f",
+    "bytes": 78131
+  },
+  "artifact_manifest": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/artifact-manifest.json",
+    "sha256": "0b4b25a29b7efdc36717f22df7bd8a5233382300cf8359a6e4168cc8cccf0dec",
+    "bytes": 151508
+  },
+  "normal_SDK": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/normal-sdk-manifest.json",
+    "sha256": "7e69728f8bb558ac3902db5e5fe8ce1e721ed989ae54339ff906a5e5e0b1175e",
+    "bytes": 3797
+  },
+  "normal_wasm_sha256": "2f1bc92e7cd379b60a8deb1283f9fe760c9b27ea45930eb746f2a86b8205a360",
+  "driver_current": {
+    "path": "verification/runners/g5/exact_query_working_set.mjs",
+    "sha256": "8988301615638ba2cc71ad023c62f9c9b098995fdd71efa278ad012c8bf1dee9",
+    "bytes": 19500
+  },
+  "ledger": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/sampling-ledger.json",
+    "sha256": "c6bcae60cb29e46ee9861b8a9d0bee0ab983ced3ce68e995c191b7f00c8aecb9",
+    "bytes": 2254
+  },
+  "cleanup": {
+    "path": ".aegis/results/G5-exact-query-working-set-web-r2/cleanup.json",
+    "sha256": "7eddeb22531cfc284d9efee974addd98e5b8377f994f414f0df335701277a550",
+    "bytes": 1166
+  },
+  "obligations": {
+    "QW-R2-ROOT": {
+      "status": "LOCAL_IMPLEMENTATION_AND_NATIVE_PROOF_WITH_WEB_LIMITS",
+      "evidence": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/root-repair.json",
+        "sha256": "1ea564c785fe6065d327718f2132287ed967ef58aa52cbdc74860ba01dce2390",
+        "bytes": 2555
+      },
+      "native": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/native-regressions.json",
+        "sha256": "ce3a9746a3f2c3ba375da79ab121105c494e1a7be54327da8f501c71a0620660",
+        "bytes": 2452
+      },
+      "ablation": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/ablation-comparison.json",
+        "sha256": "3eb08474a506947d437a993b7af931e728a694fb6da4c26f095eeb5c658ceee9",
+        "bytes": 59169
+      },
+      "note": "Exactproof/drawflattenandresult/SkPathresidencydecoupled; existingquota/algorithmownersunchanged. No claimabsoluteWebwaitsolved."
+    },
+    "QW-R2-PAIRS": {
+      "status": "OBSERVED_BUT_NOT_CAUSALLY_COMPARABLE",
+      "evidence": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/paired-web.json",
+        "sha256": "71fb3674eb48375a6256be2a85f11c2295259f3028c4a1ade320e01177bb9c1e",
+        "bytes": 7226
+      },
+      "scene_comparability": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/paired-scene-comparability.json",
+        "sha256": "f441915e675e540f25803e16812bf0b9c89cffe92e5d4b0c642eb1d4afc08ec8",
+        "bytes": 105285
+      },
+      "rows": 12,
+      "business_qualified": 12,
+      "limitation": "SamewaveformpagescreatedfreshIDsanddifferentcanonicalobject/historygeometryorder. NorelativeperformancePASSorcausalregressionconclusion."
+    },
+    "QW-R2-CONTINUOUS": {
+      "status": "BOUNDED_INCOMPLETE",
+      "stress": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/continuous-stress.json",
+        "sha256": "0c2b5ac44fd5f3a109af248e3a2ea2a652e6f8f11260854066ea02e88be5c195",
+        "bytes": 2843
+      },
+      "actions": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/post-erase-action-matrix.json",
+        "sha256": "4e88d70c7ae27d5133061e7833ef1b3aba6c6bd7bcf703954c48a523a65eeafc",
+        "bytes": 10717
+      },
+      "semantics": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/runtime-semantics.json",
+        "sha256": "407cc4309b3654b4ecbfa37dc4d58cb2ce393dcb58b21e9996bbbc0c3384a3f6",
+        "bytes": 14470
+      },
+      "pixels": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/independent-pixel-proof.json",
+        "sha256": "c2cbd8cecc36a87294a90292c23ba05cec6346a38241f3c94a7c9267d9f5ee6d",
+        "bytes": 24987
+      },
+      "note": "10roundbusinesscomplete18.7sUp;8actualfeedbackobserved,7fullterminalendpointrows;zoomterminalmissingharness;20CPUreferences10stimeout."
+    },
+    "QW-R2-BIND": {
+      "status": "FINAL_SOURCE_SDK_EXACT_WITH_PRIOR_CANDIDATE_LOSS",
+      "prior_loss": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/prior-candidate-preservation-finding.json",
+        "sha256": "8f04626c7b8fbb0624db11a8d8a8d4bc3859077236b871005a51aeb18b2c4cc3",
+        "bytes": 773
+      },
+      "source": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/sampled-production-source.json",
+        "sha256": "eeb1a3c320530d2b6659b24f31719816c14c1cab2aedf8e0d068272860c1c9e3",
+        "bytes": 5463
+      },
+      "note": "Final2f1b36SDKand12productionpostimagesexact; r1c3bcordinarycandidateWASMwasoverwrittenandnotrecoverable. Noidentitysubstitution."
+    }
+  },
+  "unclosed": [
+    {
+      "class": "PAIRED_SCENE_IDENTITY_MISMATCH",
+      "detail": "All12initial/finalorderedscenecomparisonsdifferafterIDnormalization; mostmultisetsdifferbecauseorderedhistorygeometryvaries. Samewaveformtimingsaredescriptiveonly."
+    },
+    {
+      "class": "MISSING_INDEPENDENT_REFERENCE",
+      "detail": "20availablefinaldenseCPUoracleinvocationsETIMEDOUTat10000ms; savedallinvocations/partialcoldbuffers, no retry/AArelaxation. Redoreferencesnotreinvokedafterfinalfailure; notpixelmismatch."
+    },
+    {
+      "class": "HARNESS_TERMINAL_PROOF_MISSING",
+      "detail": "actionzoomcorrectcamera/newfootprint16pixelbeforeterminalobserved;fixed1300,900HUDclearselectscontentsofinal/Undo/Redo notcaptured."
+    },
+    {
+      "class": "PRIOR_CANDIDATE_BINARY_LOSS",
+      "detail": "R1c3bcandearlyd3normalWASMnotpreservedbeforereusinginstall/buildoutputfor2f1brepair. Old1e1cbase/new2f1bandrawfreezesremain."
+    },
+    {
+      "class": "PERFORMANCE_LONG_TAIL_UNRESOLVED",
+      "detail": "Actualcandidate10roundlastmain18693ms/next18471ms;3sgoal5sreferenceunmet. Notacceptedoptimization. Contextscenevariationprecludescausalnew/olddifferenceclaim."
+    }
+  ],
+  "counters": {
+    "r1_browser_starts": 2,
+    "r1_charged_seconds": 505,
+    "r1_unused_windows_closed": true,
+    "r2_browser_starts": 2,
+    "r2_charged_seconds": 797,
+    "r2_cap_seconds": 1320,
+    "r2_remaining_not_authorization": 523,
+    "all_cleanup_complete": true
+  },
+  "preserved": [
+    "Original1e1cordinarybaseline4319andotheruserdemos/documents",
+    "WAresult15/16rootlimitsandfrozenobservations",
+    "r1/r2allrawfailures/negativeobservations/ledgers",
+    "Finalsampled2f1bproductionpostimagesunchanged"
+  ],
+  "demo": {
+    "candidate_evaluation": "http://127.0.0.1:4320/example.html",
+    "accepted_user_baseline": "http://127.0.0.1:4319/example.html",
+    "upgrade_or_release_approved": false,
+    "user_tabs_navigated": false
+  },
+  "next_action": "CONTROL_REVIEWdecidesverificationdesignrepairbeforeanyfurtherproduction/UR3; no more sampling/experimentsauthorizedhere. Mandatoryhumanstopbeforestep5.",
+  "no_commit_push": true,
+  "index_empty": true,
+  "official_G5_P34_performance_PASS": false,
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+}

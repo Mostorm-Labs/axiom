@@ -1,0 +1,12 @@
+{
+  "status": "FROZEN_BEFORE_PRODUCTION_MUTATION",
+  "flow": "partialEraseTargets(exactHit) -> SkiaRenderer::exactQueryCohort -> EraseMaskPathCache once-on-pressure weakcallback -> owning SkiaRenderCache/SkiaInkLayers releases idle Source.history -> oldLRUreclaims unpinnedplans -> originalexactpath/memo admissible.",
+  "safe_point": "Ownerthread synchronous Up, no drawstack. SkiaInkLayers drawDepth guard refuses during draw/reentry. callback weak cache lifetime, stored only inside cohort, one attempt even if no bytes reclaimable; clear/end/unwind lifetime reset.",
+  "invalidation": "Source epoch advances; ALL existing tilemaskresults set epoch0/applied0 (including offscreen), keeping tilebody/resultSkImages/building/raster. Nextdraw cannot use sameHistory/prefix toskip becausetileepoch differs; requiresfullorderedhistory thenfrombodymaskrebuild. Plancontentsneverchanged.",
+  "resource": "OnlySource.history.reset, no body/prepared/cache/pixels/lastproviderclear, no forcedGPUrelease. Plan/source leases stay until lastref; pixelGPUepochleasesuntouched. 8MiB/512/global unchanged. Callbackpressure path first, notMove/generalflush.",
+  "RED": "ActualSkiaInkLayersdraw consumer with40canonicalrecords/actualhistory,29admittedpins,8.31MiB,11queryproofdenied/6memo/0cachepathbuilds, alloriginaldecisions/lastlease0.",
+  "oracles": "Oldindependent634finite/fork/leasekeepers+original58oncefinal, newexternallyheldplanimmutability/offscreenalltileinvalidation/GPUcompletion/pixel parity. Webfixed40/3seeds/oldpreviousnew completefourphaseproof +candidate10round +8typedendpoint +CPUab7a60s.",
+  "tradeoff": "RetireidleCPUdrawpreparationunderactualpressure; laterGPUmaskrebuildmayincreasecost, measurewholepredecessorUp->nextfeedback andtail. CannotacceptCPU-onlygain.",
+  "unresolved_semantic_decisions": [],
+  "clear_policy": "Cacheclear/pool/budgetrebindpreserveslifetimeoftheexistingUpcohortdepthandweakcallback until RAIIend; cannotinvokeoldcache afterowner expires, atmostoneattempt. Rebindclearsallold proof/entries/usage but activequery remains synchronous in same owningRenderer. end/resetunwinds callback. std::functionallocationbad_alloc in noexceptRenderercohortcreation fallsbackemptycallback, no terminate."
+}

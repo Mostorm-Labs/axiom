@@ -1,0 +1,39 @@
+{
+  "status": "LOCAL_COMPLETION_WITH_REQUIRED_PROOF_GAP",
+  "items": [
+    {
+      "id": "U3-IDLE-DPR4-ACTIVE",
+      "classification": "BLOCKED_EVIDENCE",
+      "scope": "foreground-idle-d4 preUp masked drag",
+      "observation": "Single earlycapture retains oldpose;29479 interiorpixels mismatched. Final/Redo correct. No guard/poll qualified currentpose for this idlecase; masked othercase guard cannot substitute.",
+      "next_owner": "Control/human checkpoint",
+      "source": "pixel-completions-repair/foreground-idle-d4/ink-drag-proof.json",
+      "no_further_execution_authorized": true
+    },
+    {
+      "id": "GPU-FOREIGN-CONTEXT-DELETE",
+      "classification": "UNRESOLVED_RESOURCE_LIFECYCLE_FINDING",
+      "observation": "6 WebGL INVALID_OPERATION delete object does not belong to this context warnings during maskedDPR4 preparation. Active/final/Redo readbacksVALID and independentpixels correct; cleanupnoerror. No proof resource lifetime fully safe.",
+      "source": "local-web/G5U3C1-RECOVERY-FINAL/masked-affine-d4/console.json",
+      "not_fixed": true
+    },
+    {
+      "id": "HIGH-DPR-FEEDBACK-LATENCY",
+      "classification": "SEVERE_LATENCY_FINDING",
+      "observation": "Firstcurrentpose fromlastMove1927.7/2015.4ms, predecessorUpStart6425.3/14731.4ms;15sprogress guard passed, nointeractiveSLO claim.",
+      "source": "latency-findings.json"
+    },
+    {
+      "id": "INHERITED-FC00X-519",
+      "classification": "INHERITED_TEST_CONTRACT_FAILURE",
+      "observation": "FC00XRuntimeComposition canonicalFeedbackCannotQualifyAnotherInstance line519 exactsamefailure with accepted baselineCore+Interaction; no test/product workaround.",
+      "source": "baseline-extra-regression.log"
+    },
+    {
+      "id": "EXACT-WAIT-TIMESTAMP",
+      "classification": "MEASUREMENT_LIMITATION",
+      "observation": "Primary observerrecordscontentops/framecallbacks but not terminalsettleendseparately; cannot invent exactreceiptwait milliseconds.",
+      "source": "latency-findings.json"
+    }
+  ]
+}

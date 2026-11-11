@@ -72,10 +72,7 @@ void RuntimeCompositionCore::surfaceBindingChanged() noexcept {
   resources_.invalidate();
   notifications_.clear();
   resourceReceipts_.clear();
-  pendingPreviewCapture_.reset();
-  pendingPreviewPresentCount_ = 0U;
-  pendingPreviewWorkId_ = 0U;
-  pendingPreviewIdentity_.reset();
+  retirePreviewCapture();
   pendingCanonicalWork_.reset();
   refreshControlTarget();
 }
@@ -489,19 +486,9 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   // obsolete work at the next owner opportunity so it cannot reserve the
   // single in-flight slot indefinitely.
   if (pendingPreviewCapture_.has_value()) {
-    const auto& state = runtime_->previewRenderState();
-    if (!runtime_->previewActive() ||
-        !pendingPreviewIdentity_ ||
-        pendingPreviewIdentity_->lifetimeGeneration != resources_.lifetimeGeneration ||
-        pendingPreviewIdentity_->metricsGeneration != runtime_->surface().metricsGeneration ||
-        state.contentRevision != pendingPreviewCapture_->contentRevision || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() || pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision() ||
-        runtime_->previewSurfaceGeneration() !=
-            pendingPreviewCapture_->surfaceGeneration) {
-      pendingPreviewCapture_.reset();
-      pendingPreviewPresentCount_ = 0U;
-      pendingPreviewWorkId_ = 0U;
-      pendingPreviewIdentity_.reset();
-    }
+    if (!pendingPreviewIdentity_ ||
+        previewWorkState(*pendingPreviewIdentity_) == RuntimePreviewWorkState::kSuperseded)
+      retirePreviewCapture();
   }
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
@@ -516,7 +503,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
       runtime_->retryTransientOverlayFrame();
   if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
-    pendingPreviewCapture_.reset();pendingPreviewIdentity_.reset();pendingPreviewPresentCount_=0;pendingPreviewWorkId_=0;
+    retirePreviewCapture();
   }
   if(shouldCanonical && !forceCanonical && !editingTransient)
     out.navigationPending=runtime_->serviceNavigationPresentation(
@@ -550,7 +537,8 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
         pendingPreviewIdentity_ = RuntimeFrameOpportunity::PreviewWork{
             runtimeInstanceId_, viewId_.value(), resources_.lifetimeGeneration,
             pendingPreviewWorkId_, pendingPreviewCapture_->contentRevision,
-            pendingPreviewCapture_->surfaceGeneration, runtime_->surface().metricsGeneration};
+            pendingPreviewCapture_->surfaceGeneration, runtime_->surface().metricsGeneration,
+            pendingPreviewCapture_->displayRevision, attachmentEpoch_};
       } else if (!runtime_->previewPresentationRetryable()) {
         return false;
       }
@@ -578,6 +566,36 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
   return true;
 }
+void RuntimeCompositionCore::retirePreviewCapture() noexcept {
+  if (pendingPreviewIdentity_) supersededPreviewIdentity_ = pendingPreviewIdentity_;
+  pendingPreviewCapture_.reset();
+  pendingPreviewPresentCount_ = 0U;
+  pendingPreviewWorkId_ = 0U;
+  pendingPreviewIdentity_.reset();
+}
+RuntimePreviewWorkState RuntimeCompositionCore::previewWorkState(
+    const RuntimeFrameOpportunity::PreviewWork& work) const noexcept {
+  if (std::this_thread::get_id() != ownerThread_ ||
+      work.runtimeInstanceId != runtimeInstanceId_ || work.viewId != viewId_.value() ||
+      work.workId == 0U) return RuntimePreviewWorkState::kInvalid;
+  if (supersededPreviewIdentity_ && work == *supersededPreviewIdentity_)
+    return RuntimePreviewWorkState::kSuperseded;
+  if (!pendingPreviewIdentity_ || work != *pendingPreviewIdentity_ ||
+      !pendingPreviewCapture_) return RuntimePreviewWorkState::kInvalid;
+  const auto& capture = *pendingPreviewCapture_;
+  const bool current = canMutate() && runtime_->previewActive() &&
+      work.lifetimeGeneration == resources_.lifetimeGeneration &&
+      work.attachmentEpoch == attachmentEpoch_ &&
+      work.workId == pendingPreviewWorkId_ &&
+      work.contentRevision == capture.contentRevision &&
+      work.contentRevision == runtime_->previewRenderState().contentRevision &&
+      work.displayRevision == capture.displayRevision &&
+      work.displayRevision == runtime_->previewDisplayRevision() &&
+      work.surfaceGeneration == capture.surfaceGeneration &&
+      work.surfaceGeneration == runtime_->previewSurfaceGeneration() &&
+      work.metricsGeneration == runtime_->surface().metricsGeneration;
+  return current ? RuntimePreviewWorkState::kCurrent : RuntimePreviewWorkState::kSuperseded;
+}
 bool RuntimeCompositionCore::finishFrameOpportunity(
     const RuntimeFrameCompletion& completion) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
@@ -593,15 +611,8 @@ bool RuntimeCompositionCore::finishFrameOpportunity(
       completion.previewWork->metricsGeneration != runtime_->surface().metricsGeneration) {
     return false;
   }
-  const auto& state = runtime_->previewRenderState();
-  const bool superseded = !runtime_->previewActive() ||
-      state.contentRevision != pendingPreviewCapture_->contentRevision ||
-      runtime_->previewSurfaceGeneration() != pendingPreviewCapture_->surfaceGeneration;
-  if (superseded) {
-    pendingPreviewCapture_.reset();
-    pendingPreviewPresentCount_ = 0U;
-    pendingPreviewWorkId_ = 0U;
-    pendingPreviewIdentity_.reset();
+  if (previewWorkState(*completion.previewWork) != RuntimePreviewWorkState::kCurrent) {
+    retirePreviewCapture();
     return false;
   }
   if (!completion.platformPresented) return false;
@@ -707,8 +718,7 @@ bool RuntimeCompositionCore::stop() noexcept {
   if (controlFacade_) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});}
   resources_.invalidate();
   notifications_.clear();
-  pendingPreviewCapture_.reset();
-  pendingPreviewIdentity_.reset();
+  retirePreviewCapture();
   pendingCanonicalWork_.reset();
   runtime_->close();
   return transition(RuntimeCompositionState::kStopping) && transition(RuntimeCompositionState::kQuiescent);

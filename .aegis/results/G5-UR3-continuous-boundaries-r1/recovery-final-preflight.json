@@ -1,0 +1,22 @@
+{
+  "status": "READY_FOCUSED_FINAL_BOUND_WINDOW",
+  "scope": "3case exact supplementary provider renewal qualification; no extra performance sampling",
+  "supplement_sha256": "93d6723a209cc234afff7f2bfd169f5c0475f56b61d4a4ee2b0cccfdae12d6ac",
+  "amendment_sha256": "dcbd39febfe221c115c26cb475c04ba33b381a6926d4301f263752ff6791369d",
+  "files": {
+    "runtime/render/src/webgl_surface_backend.cpp": "7aec2f13075f033436d4016a6ae21583b90a6e4444ab240a10faa9c5785acae3",
+    "runtime/render/src/ur3_webgl_extensions.hpp": "58ede9a78f1e363ee7c46638da91712071853bbe568c6690edd23a44ab3f72a5",
+    "runtime/render/CMakeLists.txt": "1abd1eb64ab465d6cd2310755ba508e02d9fcfa8b60b588d7c97acd2a9199c64",
+    "verification/runners/g5/ur3_continuous_recovery_final.mjs": "3eb2090e7d6219feeabb0b0c1b8f7a243e9387d8890371b829bc713bc66e20a5",
+    "verification/runners/g5/ur3_continuous_recovery_runner.py": "44a3b6cae1d2675fb19ba42e8e0e7d9690c31254a8d5c03363dbeb464cf380e3",
+    "out/G5-UR3-continuous-boundaries-r1/recovery-final-request.json": "ff6825b5f7b691a30e424d0ac0fde5a536e777ad3a7f5e88a81a77f639c86694"
+  },
+  "SDK_manifest": "recovery-normal-sdk-manifest.json",
+  "WASM": "1c5816eccc1f15175545d0f460fceff8899266632e1ec773650e7d91362872ad",
+  "native4keepers": "extensions-native-junit.xml",
+  "actual_branch_VM": "recovery-focused-vm.json",
+  "DPR4_witness": "active-dpr4-witness-preflight.json",
+  "malloc_free": "accepted html5_webgl_get_supported_extensions is stringToNewUTF8 malloc; provider frees after request; no registry cache reset or getError",
+  "preserve_early_failed_frames": true,
+  "no_CPU_process_running": true
+}

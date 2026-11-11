@@ -1,0 +1,49 @@
+{
+  "id": "reference-017",
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-sticky/final.axsnap",
+    "source_snapshot_sha256": "ddd2b31609aeec44136064be07e1508ee25649b9b0bf9f77b77dd1af239b84bf",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/pixel-completions/supplement-r2/G5QW2-CONTINUOUS/action-sticky/ink-final.axsnap",
+    "reference_snapshot_sha256": "3f6f5aad3ee0f922d7850c040898fb2ab41186abd4543fb1ac0468052a006de2",
+    "document_digest": "554d5a0c6e85050e2716c3fdafa7204b584a069b30cd9e6a55ae040456a61181",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": {
+      "before": 45,
+      "ink": 40,
+      "status": "PROJECTED"
+    },
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+      "--pixels",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/pixel-completions/supplement-r2/G5QW2-CONTINUOUS/action-sticky/ink-final.axsnap",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-017/request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-017/reference"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 11.773140042000001,
+    "peak_process_family_rss_kib": 312096,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 60,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "status": "REFERENCE_RENDERED"
+}

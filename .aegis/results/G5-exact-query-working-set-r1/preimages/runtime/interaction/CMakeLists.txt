@@ -1,0 +1,250 @@
+add_library(canvas_runtime_interaction STATIC
+    src/creation_session.cpp
+    src/eraser_session.cpp
+    src/editor_session.cpp
+    src/text_edit_session.cpp
+    src/hit_test_service.cpp
+    src/interaction_runtime.cpp
+    src/interaction_dispatch_runtime.cpp
+    src/selection_session.cpp
+    src/region_selection_session.cpp
+    src/transform_session.cpp
+    src/transform_handle_drag.cpp
+    src/session_manager.cpp
+    src/editor_history.cpp
+    src/undoable_command.cpp
+    src/interaction_dependency_footprint.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/multi_contact_coordinator.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/canvas_interaction_coordinator.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/viewport_interaction_controller.cpp)
+target_sources(canvas_runtime_interaction PRIVATE src/viewport_constraints.cpp)
+
+target_include_directories(canvas_runtime_interaction PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(canvas_runtime_interaction PUBLIC canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_input)
+target_compile_features(canvas_runtime_interaction PUBLIC cxx_std_20)
+
+if(MSVC)
+    target_compile_options(canvas_runtime_interaction PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_runtime_interaction PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+# Runtime editor composition is separate from the leaf interaction library so
+# Scene/Render remain consumers of interaction primitives without a dependency
+# cycle. It never includes Playground or Debug UI.
+add_library(canvas_runtime_editor STATIC
+    src/canvas_editing_runtime.cpp
+    src/canvas_appearance.cpp
+    src/canvas_table.cpp
+    src/canvas_placement.cpp
+    src/canvas_creation_hover.cpp
+    src/canvas_object_clipboard.cpp
+    src/canvas_partial_erase.cpp
+    src/canvas_image_export.cpp
+    src/canvas_section_commands.cpp
+    src/canvas_region_selection.cpp
+    src/canvas_selection_summary.cpp
+    src/region_selection_geometry.cpp
+    src/canvas_text_geometry.cpp
+    src/canvas_connector_routing.cpp
+    src/brush_commit_adapter.cpp)
+if(MSVC)
+    set_property(SOURCE src/canvas_section_commands.cpp APPEND PROPERTY COMPILE_OPTIONS /fp:strict)
+else()
+    set_property(SOURCE src/canvas_section_commands.cpp APPEND PROPERTY COMPILE_OPTIONS -ffp-contract=off)
+endif()
+target_include_directories(canvas_runtime_editor PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/text/include)
+target_link_libraries(canvas_runtime_editor PUBLIC canvas_runtime_interaction
+    canvas_runtime_render canvas_runtime_ink canvas_runtime_scene)
+target_compile_features(canvas_runtime_editor PUBLIC cxx_std_20)
+if(BUILD_TESTING AND AXIOM_BUILD_RUNTIME_QUALIFICATION)
+    target_compile_definitions(canvas_runtime_editor PRIVATE AXIOM_UR2D_TESTS=1)
+endif()
+if(MSVC)
+    target_compile_options(canvas_runtime_editor PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_runtime_editor PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+if(BUILD_TESTING)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME F08FrameQualificationBoundary
+        COMMAND "${Python3_EXECUTABLE}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/f08_frame_qualification_boundary_test.py")
+    add_executable(axiom_interaction_session_tests
+        tests/session_manager_test.cpp)
+    target_link_libraries(axiom_interaction_session_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_interaction_session_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_interaction_session_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_interaction_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4InteractionSessionManager COMMAND axiom_interaction_session_tests)
+
+    add_executable(axiom_selection_session_tests
+        tests/selection_session_test.cpp)
+    target_link_libraries(axiom_selection_session_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_selection_session_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_selection_session_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_selection_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME G4SelectionSession COMMAND axiom_selection_session_tests)
+    add_executable(axiom_transform_session_tests tests/transform_session_test.cpp)
+    target_link_libraries(axiom_transform_session_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_transform_session_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_transform_session_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_transform_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4TransformSession COMMAND axiom_transform_session_tests)
+    add_executable(axiom_transform_handle_drag_tests
+        tests/transform_handle_drag_test.cpp)
+    target_link_libraries(axiom_transform_handle_drag_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_transform_handle_drag_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_transform_handle_drag_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46TransformHandleDrag COMMAND axiom_transform_handle_drag_tests)
+    add_executable(axiom_eraser_session_tests tests/eraser_session_test.cpp)
+    target_link_libraries(axiom_eraser_session_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_eraser_session_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_eraser_session_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_eraser_session_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4EraserSession COMMAND axiom_eraser_session_tests)
+
+    add_executable(axiom_editor_history_tests tests/editor_history_test.cpp)
+    target_link_libraries(axiom_editor_history_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_editor_history_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_editor_history_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_editor_history_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4EditorHistory COMMAND axiom_editor_history_tests)
+    add_test(NAME FC01EditorHistoryInverseFamilies COMMAND axiom_editor_history_tests fc01)
+
+    add_executable(axiom_session_conflict_tests tests/session_conflict_test.cpp)
+    target_link_libraries(axiom_session_conflict_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_session_conflict_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_session_conflict_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_session_conflict_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4SessionConflict COMMAND axiom_session_conflict_tests)
+    add_executable(axiom_session_lifecycle_tests tests/session_lifecycle_test.cpp)
+    target_link_libraries(axiom_session_lifecycle_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_session_lifecycle_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_session_lifecycle_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_session_lifecycle_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4SessionLifecycle COMMAND axiom_session_lifecycle_tests)
+    add_executable(axiom_gesture_arbiter_tests tests/gesture_arbiter_test.cpp)
+    target_link_libraries(axiom_gesture_arbiter_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_gesture_arbiter_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_gesture_arbiter_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_gesture_arbiter_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4GestureArbiter COMMAND axiom_gesture_arbiter_tests)
+    add_executable(axiom_multi_contact_coordinator_tests
+        tests/multi_contact_coordinator_test.cpp)
+    target_link_libraries(axiom_multi_contact_coordinator_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_multi_contact_coordinator_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_multi_contact_coordinator_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_multi_contact_coordinator_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4MultiContactCoordinator COMMAND axiom_multi_contact_coordinator_tests)
+    add_executable(axiom_viewport_gesture_tests tests/viewport_gesture_test.cpp)
+    target_link_libraries(axiom_viewport_gesture_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_viewport_gesture_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_viewport_gesture_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_viewport_gesture_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G4ViewportGesture COMMAND axiom_viewport_gesture_tests)
+    add_executable(axiom_c0_canvas_interaction_coordinator_tests
+      tests/canvas_interaction_coordinator_test.cpp)
+    target_link_libraries(axiom_c0_canvas_interaction_coordinator_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_c0_canvas_interaction_coordinator_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_c0_canvas_interaction_coordinator_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_c0_canvas_interaction_coordinator_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME C0CanvasInteractionCoordinator COMMAND axiom_c0_canvas_interaction_coordinator_tests)
+    add_executable(axiom_c0_viewport_interaction_controller_tests
+      tests/viewport_interaction_controller_test.cpp)
+    target_link_libraries(axiom_c0_viewport_interaction_controller_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_c0_viewport_interaction_controller_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_c0_viewport_interaction_controller_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_c0_viewport_interaction_controller_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME C0ViewportInteractionController COMMAND axiom_c0_viewport_interaction_controller_tests)
+    add_executable(axiom_g46_viewport_constraints_tests tests/viewport_constraints_test.cpp)
+    target_link_libraries(axiom_g46_viewport_constraints_tests PRIVATE canvas_runtime_interaction)
+    target_compile_features(axiom_g46_viewport_constraints_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_g46_viewport_constraints_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_g46_viewport_constraints_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46BViewportConstraints COMMAND axiom_g46_viewport_constraints_tests)
+
+    add_executable(axiom_content_revision_style_tests
+      tests/content_revision_style_test.cpp)
+    target_link_libraries(axiom_content_revision_style_tests PRIVATE canvas_runtime_editor)
+    target_compile_features(axiom_content_revision_style_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_content_revision_style_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_content_revision_style_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME FC00XContentRevisionStyle COMMAND axiom_content_revision_style_tests)
+endif()
+
+if(BUILD_TESTING)
+    add_executable(axiom_region_selection_tests tests/region_selection_session_test.cpp)
+    target_link_libraries(axiom_region_selection_tests PRIVATE canvas_runtime_editor)
+    target_compile_features(axiom_region_selection_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_region_selection_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_region_selection_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME FC01ARegionSelection COMMAND axiom_region_selection_tests)
+endif()
+
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_selection_coverage_tests tests/selection_coverage_test.cpp)
+    target_link_libraries(axiom_selection_coverage_tests PRIVATE canvas_runtime_editor GTest::gtest_main)
+    target_compile_features(axiom_selection_coverage_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_selection_coverage_tests PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_selection_coverage_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME SelectionBatch2Coverage COMMAND axiom_selection_coverage_tests)
+endif()

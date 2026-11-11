@@ -1,0 +1,128 @@
+{
+  "status": "WEB_PREVIEW_COMPLETION_NO_PROGRESS_CONFIRMED",
+  "supplement_sha256": "bd7557634b1e59cc4ed8d0403f4790d819467a60be20236406520a8f1ef1f406",
+  "native_console_stages": [
+    "Axiom Web frame rejected: preview completion",
+    "Axiom Web frame rejected: preview completion"
+  ],
+  "terminal": {
+    "failureState": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1.0408108234405518,
+        "x": -30.7724609375,
+        "y": -19.671356201171875
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": true,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "3",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45dbe94605ae2eb66a3734",
+        "ordinal": "3",
+        "presentedGeneration": "0",
+        "runtimeEpoch": "1"
+      },
+      "objects": 41,
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 760,
+        "width": 1100
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 0
+    },
+    "failureActivity": {
+      "sdkRequests": 66,
+      "sdkCallbacks": 66,
+      "pending": 0,
+      "lastSdkActivity": 2203.0999999046326,
+      "at": 32216.799999952316
+    },
+    "failureAt": 32216.799999952316,
+    "liveUp": {
+      "phase": "up",
+      "x": 803.05,
+      "y": 661.5488030885654,
+      "timestampNs": "95768000000",
+      "start": 2154.399999976158,
+      "end": 2160.5999999046326,
+      "contacts": 0,
+      "generation": "1"
+    },
+    "error": "Error: terminal exact no progress30s\n    at check (http://127.0.0.1:56221/driver.mjs:5:77)\n    at settle (http://127.0.0.1:56221/driver.mjs:12:186)\n    at async consumer (http://127.0.0.1:56221/driver.mjs:44:139)\n    at async <anonymous>:337:30"
+  },
+  "source_stable": true,
+  "guard": {
+    "command": [
+      "node",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous_localize.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-UR3-continuous-boundaries-r1/localize-request.json",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-LOCALIZE"
+    ],
+    "reason": "nonzero_exit",
+    "returncode": 1,
+    "elapsed_s": 33.978977042,
+    "peak_process_family_rss_kib": 1171504,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 120,
+    "last_stage": {
+      "stage": "closed",
+      "status": "PARTIAL"
+    },
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "charged_seconds": 34,
+  "paired_performance": false,
+  "new_product_source_edits": false,
+  "files": {
+    ".aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-LOCALIZE/live-prefix-d1/console.json": "0ba6dfb8bcb2af9f90348e2a1ac16cc727e47d939e2a6ca8d51c236dd36cede0",
+    ".aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-LOCALIZE/live-prefix-d1/raw-row.json": "1996c05e2fb22bb6cd286c5fe10b4d85c0987ace666b5ce239ef36fc1f4232c8",
+    ".aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-LOCALIZE/live-prefix-d1/failure.json": "c5ec93c0c80549197359620698f7da5a13357a4c14cfbb04e116e9b6a8937167",
+    ".aegis/results/G5-UR3-continuous-boundaries-r1/localize-vm-preflight.json": "3a24bad65d131ff1cd42d2d6501ae5276591075170ecf55341a4af16e7b2df0a"
+  },
+  "next_action": "Native actual deferred Web adapter identity RED, minimal scope supplement required before adapter production repair"
+}

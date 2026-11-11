@@ -138,7 +138,7 @@ Scope::Scope(Tag tag,Purpose purpose) noexcept {
  if(!enabled()||(purpose==Purpose::none&&tag==Tag::input))return;
  ++scopeDepth;previous_=local;tag_=static_cast<unsigned>(tag);root_=purpose!=Purpose::none;
  previousScope_=activeScope;activeScope=this;started_=nowNs();
- if(!root_&&(tag==Tag::coverage||tag==Tag::geometry_replay)){
+ if(!root_&&(tag==Tag::coverage||tag==Tag::geometry_replay||tag>=Tag::wa_mask_construct)){
   auto& run=*current;std::size_t available=run.aggregateHighWater;
   for(std::size_t i=0;i<run.aggregateHighWater;++i){const auto& a=run.aggregates[i];
    if(a.id&&a.job==local.job&&a.parent==previous_.span&&a.tag==tag_){aggregate_=static_cast<int>(i);break;}
@@ -258,7 +258,12 @@ int control(std::uint32_t opcode,std::uint32_t value) noexcept {
   add("%s{\"seq\":\"%llu\",\"at_ns\":\"%llu\",\"event\":\"%llu\",\"job\":\"%llu\",\"attempt\":\"%llu\",\"basis\":\"%llu\",\"purpose\":%u,\"route\":%u,\"kind\":%u,\"tag\":%u,\"values\":[",first?"":",",static_cast<unsigned long long>(row.sequence),static_cast<unsigned long long>(row.time),static_cast<unsigned long long>(row.context.event),static_cast<unsigned long long>(row.context.job),static_cast<unsigned long long>(row.context.attempt),static_cast<unsigned long long>(row.context.basis),static_cast<unsigned>(row.context.purpose),static_cast<unsigned>(row.context.route),row.kind,row.tag);
   first=false;for(unsigned i=0;i<row.count;++i)add("%s\"%llu\"",i?",":"",static_cast<unsigned long long>(row.values[i]));add("%s","]}");
  }
- add("],\"loss\":{\"statistical\":%llu,\"critical\":%llu},\"pending_gpu\":%llu,\"finished\":%s}",static_cast<unsigned long long>(r.lostNormal.load()),static_cast<unsigned long long>(r.lostCritical.load()),static_cast<unsigned long long>(r.pending.load()),r.dn==r.n&&r.dc==r.c?"true":"false");
+ const bool finished=r.dn==r.n&&r.dc==r.c;
+ add("],\"loss\":{\"statistical\":%llu,\"critical\":%llu},\"pending_gpu\":%llu,\"finished\":%s}",static_cast<unsigned long long>(r.lostNormal.load()),static_cast<unsigned long long>(r.lostCritical.load()),static_cast<unsigned long long>(r.pending.load()),finished?"true":"false");
+ // Drain runs out of band with no live owner scope and holds the writer lock.
+ // Reuse only fully copied record slots; sequence/loss/GPU identities persist.
+ // This keeps the same fixed allocation rather than a lifetime record limit.
+ if(finished){r.n=r.c=r.dn=r.dc=r.evictionCursor=0;r.normalSorted=true;}
  r.length=static_cast<std::uint32_t>(offset);r.writing.clear(std::memory_order_release);return 0;
 }
 const char* bytes() noexcept {return current?current->buffer.data():nullptr;}

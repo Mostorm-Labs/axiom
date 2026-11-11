@@ -1,0 +1,17 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:23:49: error: no member named 'kSelectShape' in 'canvas::runtime::CanvasControlPayloadKind'
+   23 |  p={};p.kind=runtime::CanvasControlPayloadKind::kSelectShape;p.shape=runtime::CanvasShapeKind::kRectangle;control(p);pointer(input::PointerPhase::kDown,900,250);pointer(input::PointerPhase::kMove,930,280);pointer(input::PointerPhase::kCancel,930,280);
+      |                                                 ^~~~~~~~~~~~
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:23:64: error: no member named 'shape' in 'canvas::runtime::CanvasControlPayload'
+   23 |  p={};p.kind=runtime::CanvasControlPayloadKind::kSelectShape;p.shape=runtime::CanvasShapeKind::kRectangle;control(p);pointer(input::PointerPhase::kDown,900,250);pointer(input::PointerPhase::kMove,930,280);pointer(input::PointerPhase::kCancel,930,280);
+      |                                                              ~ ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:23:79: error: no member named 'CanvasShapeKind' in namespace 'canvas::runtime'; did you mean 'CanvasToolKind'?
+   23 |  p={};p.kind=runtime::CanvasControlPayloadKind::kSelectShape;p.shape=runtime::CanvasShapeKind::kRectangle;control(p);pointer(input::PointerPhase::kDown,900,250);pointer(input::PointerPhase::kMove,930,280);pointer(input::PointerPhase::kCancel,930,280);
+      |                                                                      ~~~~~~~~~^~~~~~~~~~~~~~~
+      |                                                                               CanvasToolKind
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include/canvas/runtime/canvas_control_types.hpp:19:12: note: 'CanvasToolKind' declared here
+   19 | enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan, kText };
+      |            ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:23:96: error: no member named 'kRectangle' in 'canvas::runtime::CanvasToolKind'
+   23 |  p={};p.kind=runtime::CanvasControlPayloadKind::kSelectShape;p.shape=runtime::CanvasShapeKind::kRectangle;control(p);pointer(input::PointerPhase::kDown,900,250);pointer(input::PointerPhase::kMove,930,280);pointer(input::PointerPhase::kCancel,930,280);
+      |                                                                                                ^~~~~~~~~~
+4 errors generated.

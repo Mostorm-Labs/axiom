@@ -1,0 +1,172 @@
+{
+  "schema": "g5-web-up-attribution-execution-v1",
+  "continue_until_terminal_state": true,
+  "scope": {
+    "verification_existing": [
+      "verification/runners/g5/erase_undo_readiness.mjs",
+      "verification/runners/g5/post_erase_interaction_readiness.mjs",
+      "verification/runners/g5/post_erase_interaction_readiness_runner.py",
+      "verification/runners/g5/erase_exact_canonical_contract.mjs",
+      "verification/runners/g5/erase_exact_canonical_runner.py",
+      "verification/tests/g5_erase_undo_readiness.test.mjs",
+      "verification/tests/g5_post_erase_interaction_readiness.test.mjs",
+      "verification/tests/test_g5_post_erase_interaction_readiness.py"
+    ],
+    "new_prefixes": [
+      "verification/runners/g5/web_up_attribution",
+      "verification/tests/g5_web_up_attribution",
+      "verification/tests/test_g5_web_up_attribution"
+    ],
+    "qualification_observation_only": [
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "runtime/foundation/src/g5_observation.cpp",
+      "runtime/render/src/selection_region_geometry.cpp",
+      "runtime/render/src/selection_region_geometry_internal.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_ink_layers.cpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/source_retention.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/canvas_partial_erase.cpp",
+      "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "runtime/scene/src/runtime_scene_projection.cpp",
+      "runtime/semantic/src/operation_specific_validation.cpp",
+      "runtime/semantic/src/apply_plan.cpp",
+      "runtime/semantic/src/atomic_apply.cpp",
+      "sdk/common/session.cpp",
+      "sdk/web/CMakeLists.txt",
+      "sdk/web/bridge.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/interaction/CMakeLists.txt",
+      "runtime/composition/CMakeLists.txt"
+    ],
+    "observation_rule": "Allbehavioralobservablechanges must be guardonlyinexistingnoninstalled AXIOM_G5_UR0_DIAGNOSTICS or qualifiedtestbuild; no businessfunction/mutation transport inprivateprobe. Existingtraceexports only; no newnormalAPI/HEAPseam. Extendexistingaggregateowner; no newrenderer/documentowner.",
+    "result_root": ".aegis/results/G5-web-up-attribution-and-witness-r1",
+    "output_root": "out/G5-web-up-attribution-and-witness-r1"
+  },
+  "required_changes": [
+    "Beforebrowserverify pure dependencyclosure+actualHTTPpaths and VMtests ofallbrowserhelpers,asynccommandgenerationawait,toolselected:false semantics,typedbounds/material/image/tablewitnesses andstale/static/blank/NaN/hudnegatives.",
+    "Usepublicselectionbounds typedreadback notshape-onlywidth,height forsticky/table. Capture actualbeforeUp correctobjectcontent+expectedpose, old/newfootprints guard/hud proof, and finaldoc/History/receipt. KeepuserDemosanddocumentsunchanged.",
+    "Do notstopwholematrixatoneverificationrowbug: persistfailedraw,classify itandcontinueindependentremainingkindsonfreshpages ifnoproductcorrectnessorcontainmentrisk. NeverrerunfailedcaseIDoroverwritefailedraw.",
+    "Freeze baseline normalSDK andsame-sourcequalificationbuild before phase sampling. ExactmatchingWASM symbols only iftheactualsampledbinaryhasmatchingsymbolmap; otherwise use privateaggregatephase spans.",
+    "Separateordinarylatencyvsdiagnostic attribution; record root andresidual/disjoint child phases+work,queryprefix8step/local8MiB/memo proof behavior andcanonicaltilecardinality as measuredobservations notassumedroot.",
+    "Complete steps1+2 and reportconcrete dominantphase/root with confidence, proposed minimalstep3 files/tests and knownlimits; proactively notifycontrol andreturnreview. Do notimplementstep3algorithmhere."
+  ],
+  "forbidden": [
+    "Noordinaryproductoptimization/routing/AA/semantic/publicAPI/version/brush/dependencylocks/resourcebudgets/admission/asyncUpchanges.",
+    "No workers/pthreads/OffscreenCanvas/newRuntimeowner/newGPUowner/backgroundcomputeprototype. Stopbeforestep5 forhuman.",
+    "Noalteration oldpackages/results/ledgers/oraclebytes,noreset/stash/clean/newworktree/merge/commit/push.",
+    "No two sourcewriters,nosourcewrites/build/nativeGPUheavywork whileanybrowserwindowrunning; notifycontrolbefore/after.",
+    "No infinite retries/newIDs/noarbitrarysmoke; preserveallfailedraw and missingproof, dontcountfinalpixelsasbeforeUp."
+  ],
+  "stages": [
+    "PREFLIGHT offline driver/reference repair",
+    "BASELINE reliableordinarymissingwitness+tail",
+    "PRIVATE_WEB_PHASE_TIMING build/attribution",
+    "OVERHEAD calibration andimmutablebundle",
+    "CONTROL_REVIEW phase2result; continue3–4 onlynextmeasuredpackage"
+  ],
+  "design_preflight": {
+    "required": true,
+    "must_include": [
+      "existingowner/command/commit flow",
+      "witnessgeometry/typedappearance andcompleteoracle mapping",
+      "privatephaseclock/nesting/overheadmap",
+      "qualificationnormalexportboundary andfrozenbuildinputs",
+      "semantics/conflictslist"
+    ],
+    "auto_continue_if_clear": true
+  },
+  "oracle_precondition": {
+    "required": "Offline RED oldstickywidth0/wrongcolor andasync/import/earlyprobefailures; no productionchangesbeforequalificationbasis exact.",
+    "do_not_require": "Do notdemand3sperformancebeforebaseline/optimization;realexistinglongtailvalidRED."
+  },
+  "tests": {
+    "required": [
+      "WA-WITNESS",
+      "WA-ATTRIBUTION",
+      "WA-INVARIANTS"
+    ],
+    "reuse_native_names": [
+      "G5UR2DSelectionLocality",
+      "G5UR2DUpRuntime",
+      "G5EraseExactCanonical",
+      "G5EraseExactCanonicalRuntime",
+      "G5UR2BExactInvalidation",
+      "G5UR2BExactPressure",
+      "G5UR2CHistoryExactParity",
+      "G5UR2CLeaseAccounting",
+      "G5CanonicalPreparedBodyPixels",
+      "G5TransientDisplayRetryPixels",
+      "G5ObjectInteractionLayoutIdentity",
+      "G5ObjectInteractionStaticOracle",
+      "G5RenderMemoryBudget",
+      "FC01ASelectionInputIntegration"
+    ],
+    "native_policy": "Onlyaffectedtargets rebuild+tests matchingfinalsource. Oldcheckpoint56knownnotlastsource; do notrunallprojectknownfailures.",
+    "normal_boundary": "Samewrapper/types/WASM/resources hashmanifest; no_ur0exports normal; diagnosticnoninstalledonly.",
+    "hosted_required": []
+  },
+  "sampling": {
+    "windows": [
+      {
+        "id": "G5WA1-BASELINE-WITNESS",
+        "seconds": 240,
+        "purpose": "4319unchangedordinarySDK;onlymissingsticky/table/image3cases;wholecanvasreference/snapshotsoutsidetimedinput; actualfastpreflightmustnotconsume browser."
+      },
+      {
+        "id": "G5WA1-BASELINE-TAIL",
+        "seconds": 300,
+        "purpose": "ordinarybaseline1600Move→immediateshorterase+6continuous160Moverounds; no primaryreadback/profile; functionalcapturesafterinput only."
+      },
+      {
+        "id": "G5WA1-DIAGNOSTIC",
+        "seconds": 360,
+        "purpose": "same-sourceprivatephase/counters;800/1600and6roundgrowthtargeted; diagnose notprimaryperformance; sourcefrozen; existingnative/capturedrawrefreuse."
+      },
+      {
+        "id": "G5WA1-OVERHEAD",
+        "seconds": 180,
+        "purpose": "samequalificationbinaryOFF/ON short800case withsemanticproof, observability overhead estimate; no claiminstrumentedtimeisnormalperformance."
+      }
+    ],
+    "rss_mib": 4096,
+    "max_starts": 4,
+    "max_total_seconds": 1080,
+    "ledger": ".aegis/results/G5-web-up-attribution-and-witness-r1/sampling-ledger.json",
+    "per_case_deadlines": "Separate setup/dispatch/feedback/tail. Budgettotalincludesallwithinwindow;no150scombinationwithpredicted>150srun. Ifinputblocker stillbusy savecensoredstateand exactplanned/actual clock; nofalsecrash/OOMclassification fromguardkill.",
+    "offline_first": "No realbrowserbefore typedwitnessgeometry/material/HTTP/import checks. Eachwindowstarts1, allrows/failurespersist; noextraIDatturnend."
+  },
+  "evidence": {
+    "blocking": [
+      "Reliableactualsticky/table/imagefeedbackandsemanticresults",
+      "Webrootstageattributionwithtrustworthyidentity andexplicitresidual/overhead",
+      "Freshaffectedchecks/sourceSDKmanifest/ledger/cleanup androotassessment"
+    ],
+    "corroborative": [
+      "Userprivateexactdocument",
+      "officialG5/P34/Vibeparity",
+      "physicalinput-to-photon",
+      "full100K1M",
+      "tenroundfinalperformanceafterfix"
+    ]
+  },
+  "terminal_success": "READY_FOR_CONTROL_REVIEW_WITH_PERFORMANCE_FINDINGS onlyifproofcomplete; >3/5s aloneisnotblocker. Resultisdiagnosis/preconditionfornextpackage, notwholeG5PASS.",
+  "terminal_blockers": [
+    "AUTHORITY_OR_PUBLIC_CONTRACT_CONFLICT",
+    "MISSING_ORACLE_OR_IDENTITY",
+    "NEW_GENUINE_PRODUCT_CORRECTNESS_OR_RESOURCE_LIFETIME_FAILURE",
+    "ENVIRONMENT_UNAVAILABLE",
+    "BOUNDED_PROOF_INCOMPLETE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "milestone": "offlinewitnessfixed andphaseattribution completionnotifycontrol",
+    "notify": "proactive callbacks onmilestone/demo/windowstart-end/final/blocker; userauthorizedmessagingcontrol",
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "materialization": "hashboundsharedcontrolledlocalbundle;nextpublicationnotrequired",
+    "no_approval_loop": "PREFLIGHT allclear continues, no waitingcontrolmerelyforofflinecheckpoint. Newroot evidence reportstep3 scopecontrol; humanalreadyapproved1–4."
+  }
+}

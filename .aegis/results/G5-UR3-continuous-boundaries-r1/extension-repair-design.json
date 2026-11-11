@@ -1,0 +1,23 @@
+{
+  "status": "AUTHORIZED_OWNER_LOCAL_REPAIR_IN_PROGRESS",
+  "supplement_sha256": "93d6723a209cc234afff7f2bfd169f5c0475f56b61d4a4ee2b0cccfdae12d6ac",
+  "owner": "existing WebGlSurfaceProvider constructs a new Skia context against borrowed current WebGL handle",
+  "before": "browser resets extension activation; Emscripten GL.initExtensionsDone retains true, Skia sees supported strings; anisotropy sampler and debug enum queries INVALID_ENUM",
+  "after": "fresh current getSupportedExtensions via existing Emscripten API, renew each supported renderer optional extension via existing enable API BEFORE GrGLMakeNativeInterface/MakeGL; preserve explicit unavailable fallback",
+  "forbidden_avoided": [
+    "No glue cache mutation",
+    "No getError drain",
+    "No global SDK JS changes",
+    "No dependency rebuild",
+    "No public API/Brush/numeric/budget/receipt changes"
+  ],
+  "native_model": "runtime/render/tests/ur3_webgl_extensions_test.cpp; same handle+once marker, physical activation cleared, renew before probe/sampler; unsupported false retained",
+  "actual_web_red": "recovery-extension-classification.json",
+  "prior_active_dpr4_mismatch": "Kept as independent actual preUp stale pose finding; final/Redo pixels qualified, no AA/HUD relaxation",
+  "files": {
+    "runtime/render/src/webgl_surface_backend.cpp": "7aec2f13075f033436d4016a6ae21583b90a6e4444ab240a10faa9c5785acae3",
+    "runtime/render/src/ur3_webgl_extensions.hpp": "58ede9a78f1e363ee7c46638da91712071853bbe568c6690edd23a44ab3f72a5",
+    "runtime/render/tests/ur3_webgl_extensions_test.cpp": "cdd21c850dfc59990f48dcbeb51bb94c398cfddb605cb08b75f806f1a9b3b953"
+  },
+  "unresolved_semantic_decisions": []
+}

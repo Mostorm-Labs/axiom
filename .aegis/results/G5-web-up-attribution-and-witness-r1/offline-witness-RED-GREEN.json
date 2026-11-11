@@ -1,0 +1,28 @@
+{
+  "status": "OFFLINE_RED_GREEN_AND_BROWSER_PREFLIGHT_COMPLETE",
+  "RED": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/offline-RED.log",
+    "sha256": "dbfc50d1fdd12b81d4585b387314f1682c1ea6b5396a60f3cb98b640c07ffc0e"
+  },
+  "GREEN": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/offline-witness-tests.log",
+    "sha256": "54d1a7214b5e2636287b11f8bbf4456e0c72c368d96f7e8dba703de58cd4c118"
+  },
+  "HTTP_VM": "offline-http-vm.json",
+  "typed_witness": "witness-plan.json",
+  "negativecases": [
+    "shapeonlySticky0",
+    "bluevsactualyellow",
+    "foreignprimary",
+    "nonfinitecoordinates",
+    "blankimage",
+    "staticsamedelta0",
+    "invalidexclusiveNaN",
+    "wrongdelta",
+    "asyncUIgenerationwait",
+    "browserhostimportclosure",
+    "fixedearlyprobevsdelayedfeedback"
+  ],
+  "initial_pixels_validate_empty_expected": true,
+  "threshold_unchanged_2channel": true
+}

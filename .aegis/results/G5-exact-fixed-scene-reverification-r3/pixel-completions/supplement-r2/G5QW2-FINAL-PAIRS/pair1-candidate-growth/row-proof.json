@@ -1,0 +1,107 @@
+{
+  "source": "supplement-r2",
+  "window": "G5QW2-FINAL-PAIRS",
+  "case": "pair1-candidate-growth",
+  "status": "QUALIFIED",
+  "proofs": [
+    {
+      "stage": "final",
+      "status": "QUALIFIED",
+      "compared_pixels": 5079493,
+      "aa_boundary_pixels": 701747,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": null,
+      "plan": {
+        "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair1-candidate-growth/final.axsnap",
+        "source_snapshot_sha256": "093b2c5cef969eca0131d61b518f4162842e31a4be0180d42614db79e1a312c0",
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair1-candidate-growth/final.axsnap",
+        "reference_snapshot_sha256": "093b2c5cef969eca0131d61b518f4162842e31a4be0180d42614db79e1a312c0",
+        "document_digest": "7bcdcd0f4a04688cb8da6050791f7515ed33fc83557461d74fd39a0289ba22d0",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "projection": null,
+        "timeout_seconds": 60,
+        "rss_mib": 4096,
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+      },
+      "reuseProof": null,
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-004/reference.rgba",
+        "sha256": "f69a8910d416d9798183b8972bbc0fac8e7de86ba58544b533ee1f2919e1b082"
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-004/reference.edge",
+        "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+      },
+      "actual_sha256": "8ca2f3d5b5879111e22b3da8fc349ccbc7399159bce6e81ced2031237a9219c1"
+    },
+    {
+      "stage": "redo",
+      "status": "QUALIFIED",
+      "compared_pixels": 5079493,
+      "aa_boundary_pixels": 701747,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": null,
+      "plan": {
+        "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair1-candidate-growth/redo.axsnap",
+        "source_snapshot_sha256": "cd5e3bfcc65f6bd9425e4e052660482b5ca03de47f51cd1cdb5654f8c8599fa4",
+        "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-FINAL-PAIRS/pair1-candidate-growth/redo.axsnap",
+        "reference_snapshot_sha256": "cd5e3bfcc65f6bd9425e4e052660482b5ca03de47f51cd1cdb5654f8c8599fa4",
+        "document_digest": "7bcdcd0f4a04688cb8da6050791f7515ed33fc83557461d74fd39a0289ba22d0",
+        "request": {
+          "width": 2862,
+          "height": 2020,
+          "logical_width": 1431,
+          "logical_height": 1010,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "hud_bounds": []
+        },
+        "projection": null,
+        "timeout_seconds": 60,
+        "rss_mib": 4096,
+        "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+        "reuse": "Completeobjects/background/manifest/digest+cameraequal"
+      },
+      "reuseProof": {
+        "objects": 40,
+        "total_masks": 520,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 55,
+        "after_revision": 53
+      },
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-004/reference.rgba",
+        "sha256": "f69a8910d416d9798183b8972bbc0fac8e7de86ba58544b533ee1f2919e1b082"
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-fixed-scene-reverification-r3/references/reference-004/reference.edge",
+        "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+      },
+      "actual_sha256": "902830c7d47a0430929c8629162e8ea91b6a35d0e1b996eba12b843956ddd9e9"
+    }
+  ]
+}

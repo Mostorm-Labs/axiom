@@ -1,0 +1,28 @@
+[
+  [
+    "/usr/bin/c++",
+    "-std=c++20",
+    "-O2",
+    "-DAXIOM_G5_UR0_DIAGNOSTICS=1",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/src/g5_observation.cpp",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/web_up_attribution_collector_test.cpp",
+    "-o",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-web-up-attribution-and-witness-r1/collector-final-capacity"
+  ],
+  [
+    "/usr/bin/c++",
+    "-std=c++20",
+    "-O2",
+    "-DAXIOM_G5_UR0_DIAGNOSTICS=1",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include",
+    "-I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/src/g5_observation.cpp",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/tests/g5_observation_test.cpp",
+    "-o",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-web-up-attribution-and-witness-r1/collector-final-original"
+  ]
+]

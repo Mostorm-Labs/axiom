@@ -1,0 +1,50 @@
+{
+  "status": "STOP_BEFORE_STEP5_HUMAN_CHECKPOINT",
+  "step5_started": false,
+  "concurrency_design_or_prototype": false,
+  "facts_only": [
+    {
+      "owner": "runtime/render/src/skia_renderer.cpp:renderPreview",
+      "phase": "algorithm4 CPU Raster stableprefix/tail;DPR2/4 previewview exceeds8MiB resulting clippedreconstruction",
+      "evidence": "route-boundaries.json",
+      "note": "known compatibility route, no GPUrewrite authorized"
+    },
+    {
+      "owner": "runtime/composition/src/runtime_composition.cpp:serviceFrameOpportunity",
+      "phase": "canonical working-set/exactcachepending cooperative opportunities",
+      "evidence": "local-web/G5U3C1-RECOVERY-FINAL/masked-affine-d4/console.json",
+      "observation": "many pending canonical opportunities before newpose feedback;no addedcollectorphaseattribution"
+    },
+    {
+      "owner": "runtime/interaction/src/canvas_partial_erase.cpp; runtime/render/src/selection_region_geometry.cpp",
+      "phase": "synchronous exactUp existing acceptedr4",
+      "evidence": "../G5-exact-up-preparation-residency-r4/result.json",
+      "observed_previous_up_ms": [
+        4525,
+        7739
+      ],
+      "not_remeasured_relative_performance": true
+    },
+    {
+      "owner": "runtime/render/src/webgl_surface_backend.cpp",
+      "phase": "provider restore and resources",
+      "evidence": "recovery-independent-pixel-proof.json",
+      "observation": "extensionactivationfixed; foreigncontextdeletewarning remains"
+    }
+  ],
+  "resource_isolation_inputs": {
+    "unchanged_desktop_mib": [
+      256,
+      512,
+      64
+    ],
+    "oldSDKs_retained": [
+      "4742609",
+      "b69207"
+    ],
+    "lastSDK": "1c5816",
+    "no_budgetraise": true
+  },
+  "blocking_review_inputs": "remaining-items.json",
+  "next_action": "Human/control decides next authorizedscope; noautomaticthread/workerdevelopment"
+}

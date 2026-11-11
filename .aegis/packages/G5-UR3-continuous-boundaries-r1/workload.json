@@ -1,0 +1,80 @@
+{
+  "fixture": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "css": [
+    1100,
+    760
+  ],
+  "seed": 324508639,
+  "cases": [
+    {
+      "id": "masked-affine-d2",
+      "dpr": 2,
+      "kind": "masked-affine"
+    },
+    {
+      "id": "masked-affine-d4",
+      "dpr": 4,
+      "kind": "masked-affine"
+    },
+    {
+      "id": "navigation-reentry-d2",
+      "dpr": 2,
+      "kind": "navigation-reentry"
+    },
+    {
+      "id": "navigation-recovery-d4",
+      "dpr": 4,
+      "kind": "navigation-recovery"
+    },
+    {
+      "id": "mixed-continuous-d2",
+      "dpr": 2,
+      "kind": "mixed-continuous"
+    },
+    {
+      "id": "mixed-continuous-d4",
+      "dpr": 4,
+      "kind": "mixed-continuous"
+    },
+    {
+      "id": "live-prefix-d1",
+      "dpr": 1,
+      "kind": "live-prefix"
+    },
+    {
+      "id": "live-prefix-d2",
+      "dpr": 2,
+      "kind": "live-prefix"
+    },
+    {
+      "id": "live-prefix-d4",
+      "dpr": 4,
+      "kind": "live-prefix"
+    },
+    {
+      "id": "foreground-idle-d4",
+      "dpr": 4,
+      "kind": "foreground-idle",
+      "idle_seconds": 30
+    }
+  ],
+  "physical_max": [
+    4400,
+    3040
+  ],
+  "pixel_count_max": 13376000,
+  "protocols": {
+    "masked-affine": "Restore40/setpartialeraserdiam32/160confirmedMoves samex420+7sin17/y160..330 ->Up ->selectpoint400120 usingexistingpublicselectioninput ->3Movesdrag(8,4),(40,16),(80,30),Cancel ->samepointdragcommit ->publictransformSelectionrotation~0.15radandnonuniformscale .9/1.1 absoluteaffine retaininglocalmaskgeometry ->immediatewheelpan/zoom ->Undo/Redo. Publiccontrolawaitonly, no settlebetween transitions. Fixedtargetexactoracle andpredeterminedtransform required; activepixelscorrectnesssubrun beforeUp.",
+    "navigation-reentry": "Restore40->160MoveeraseUp->3ctrlwheelzoom->pause1000ms->3pan->reversezoom->Undo/Redo->immediatecameraaction. Actualnewfootprintcontent/camera expected, no settle inserted. Pause1000ms isoriginalregressionreentry condition not settle.",
+    "navigation-recovery": "SameDPR4navigation chain pluscontrolledcanonicalWEBGL_lose_context/restore once usingexistingbrowserextension; loss event awaitednotcanonicalsettle. Preservecanonical/historicalpayload, newgeneration eventualfullframe, firstactionfeedback, oldgenerationcompletioncannotclearnew. Ifextensionunsupportedrecordenvironmentgap, no fakepass. NativeGpuResourceRecoveryindependentkeeper.",
+    "mixed-continuous": "Preseedrectangle[840400],sticky[840500],table[500500],image[350520] consistentactualtypedresourcesandappearanceenabledfalse beforeprimary. Erase160Up->rectcreation+drag->sticky/table/imageexistingdrag immediately ->Undo/Redo->pan/zoom. Do notrerunwholeindependent8endpointset; testonecontinuousmixedsequence. Correctnesssubrun pre-Upnewfootprintnegative samples perkind typedactualDPRawaregeometry (notshape-onlywidth0).",
+    "live-prefix": "Restore40->defaultv4rounddrawing720confirmedsamples paced8pause0 (accelerated input, not30secondphysicaldrawing) ->Up ->immediatepan/zoom/create rectangleCancel ->Undo/Redo. Duringdrawingstableprefix/tailprogress recorded and activebeforeUpcorrectpreviewcontent. Repeatedframesmustnotwaitforidlepointer. Confirmedonlysemanticinkpayload/no predictedcommit viaoriginalBrushSessionoracle. Nativeprediction/cancel/surfacehandofftestsreused.",
+    "foreground-idle": "DPR4mixed+maskscene foregound30secondsboundedidle thenfirstpan/zoom->selectmaskedstroke drag->shorterase ->Undo/Redo withoutinteractionssettle. Explicit30scoverage,notclaimlongminutesuseridle."
+  },
+  "primary_vs_correctness": "Run10primaryreadback-freesequences then10freshcorrectnesssamefixedfixture+seedreplays insecondwindow. Initial/coldfinal/UndoRedocapturesoutsideprimary; correctnessROIallowedandneverusedasprimarytime. MeasureUp/Down/Move/Cancelcommandduration,actualcanvascoloropgaps/qualifiedfeedback/terminal. Controlcapturesoutsideprimary mustnotforceGPUflushbetween transitions.",
+  "analytical_empty_cleanup": "Within1100x760viewport chooseknownemptyworldpointbelowfixturesgeometryandleftofmixed; projectwithactualcamera andverifypublicselection0. Do notreuse1431x1010fixedviewpoint986outsidethisviewport.",
+  "fixture_preflight": "Derivefixed40restoremetadat afromactualsnapshot revision42/checkpoint/frontier/resourcebinding. No publicduplicate/newrandomnamespace variance; isolatedpageentropy helperr3 reused. Freezeallroutes/rosters/transforms/typedROIs/cameraexpected/oraclebasis beforebrowser."
+}

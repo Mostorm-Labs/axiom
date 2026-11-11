@@ -1,0 +1,53 @@
+{
+  "status": "PARTIAL_REQUIRED_CORRECTNESS_HARNESS_BLOCKER",
+  "rows": [
+    {
+      "case": "masked-affine-d2",
+      "classification": "VERIFICATION_DRIVER_ACTIVE_SNAPSHOT_REJECTED",
+      "inner_error": "AxiomError: SNAPSHOT_REJECTED\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at http://127.0.0.1:57380/sdk/axiom.mjs:360:59\n    at http://127.0.0.1:57380/sdk/axiom.mjs:99:129",
+      "outer_cleanup_error": "page.evaluate: AxiomError: BUSY\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at Object.close (http://127.0.0.1:57380/sdk/axiom.mjs:366:44)\n    at async consumer (http://127.0.0.1:57380/driver.mjs:46:84)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "active_contacts": 1,
+      "generation": "1",
+      "not_product_drag_failure": true,
+      "required_repair": "Capture committed pre-drag expected-state snapshot while contacts0, retain through active drag; read actual pixels before Up; preserve terminal cancel/metadata even on failure"
+    },
+    {
+      "case": "masked-affine-d4",
+      "classification": "VERIFICATION_DRIVER_ACTIVE_SNAPSHOT_REJECTED",
+      "inner_error": "AxiomError: SNAPSHOT_REJECTED\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at http://127.0.0.1:57380/sdk/axiom.mjs:360:59\n    at http://127.0.0.1:57380/sdk/axiom.mjs:99:129",
+      "outer_cleanup_error": "page.evaluate: AxiomError: BUSY\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at Object.close (http://127.0.0.1:57380/sdk/axiom.mjs:366:44)\n    at async consumer (http://127.0.0.1:57380/driver.mjs:46:84)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "active_contacts": 1,
+      "generation": "1",
+      "not_product_drag_failure": true,
+      "required_repair": "Capture committed pre-drag expected-state snapshot while contacts0, retain through active drag; read actual pixels before Up; preserve terminal cancel/metadata even on failure"
+    },
+    {
+      "case": "foreground-idle-d4",
+      "classification": "VERIFICATION_DRIVER_ACTIVE_SNAPSHOT_REJECTED",
+      "inner_error": "AxiomError: SNAPSHOT_REJECTED\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at http://127.0.0.1:57380/sdk/axiom.mjs:360:59\n    at http://127.0.0.1:57380/sdk/axiom.mjs:99:129",
+      "outer_cleanup_error": "page.evaluate: AxiomError: BUSY\n    at call (http://127.0.0.1:57380/sdk/axiom.mjs:50:29)\n    at Object.close (http://127.0.0.1:57380/sdk/axiom.mjs:366:44)\n    at async consumer (http://127.0.0.1:57380/driver.mjs:46:84)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "active_contacts": 1,
+      "generation": "8",
+      "not_product_drag_failure": true,
+      "required_repair": "Capture committed pre-drag expected-state snapshot while contacts0, retain through active drag; read actual pixels before Up; preserve terminal cancel/metadata even on failure"
+    },
+    {
+      "case": "navigation-recovery-d4",
+      "classification": "READBACK_FAILURE_REASON_MISSING",
+      "error": "Error: canonical capture\n    at check (http://127.0.0.1:57380/driver.mjs:5:77)\n    at capture (http://127.0.0.1:57380/driver.mjs:13:481)\n    at async consumer (http://127.0.0.1:57380/driver.mjs:44:396)\n    at async <anonymous>:337:30",
+      "generation": "3",
+      "presented": "3",
+      "restored": 9691.200000047684,
+      "last_valid_context": {
+        "attachmentEpoch": "4",
+        "runtimeEpoch": "3",
+        "viewEpoch": "2",
+        "viewId": "1"
+      },
+      "missing_metadata": "canonical capture helper asserted before saving readback metadata",
+      "required_repair": "Persist full INVALID readback metadata and buffers before assert; do not consume or tolerate unexpected GL errors"
+    }
+  ],
+  "no_product_edits_after_final_windows": true,
+  "no_resampling_authorized_yet": true
+}

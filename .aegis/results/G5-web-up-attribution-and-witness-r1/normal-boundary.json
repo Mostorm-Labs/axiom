@@ -1,0 +1,37 @@
+{
+  "status": "NORMAL_UNCHANGED_AND_PRIVATE_OBSERVATIONS_DISABLED",
+  "normal_manifest_sha256": "c3df6e9d7ad1c67fe8b73b70425748b2c5e369b48a64de5272eaab11494cd168",
+  "normal36_exact": true,
+  "normal_private_exports_found": [],
+  "normal_wasm": "1e1c18d14abfb7bcdbb0af47f2df4d723d6517bd11c17481e85e78825e90c109",
+  "normal_macros_noops": "Header nonqualification branch defines G5_SCOPE/OBSERVE/END as ((void)0); final affected native build has no diagnostic macro.",
+  "normal_compile_flags": {
+    "runtime/render/src/selection_region_geometry.cpp": "/usr/bin/c++ -DAXIOM_RENDER_CACHE_MIB=32 -DAXIOM_RENDER_ENTRY_MIB=8 -DAXIOM_RENDER_SHARED_MIB=96 -DAXIOM_TRANSIENT_DISPLAY_TESTS=1 -DAXIOM_UR2D_TESTS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_ENABLE_PARAGRAPH -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/render/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -isystem /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -o runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/src/selection_region_geometry.cpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "/usr/bin/c++ -DAXIOM_UR2D_TESTS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -o runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/semantic/src/apply_plan.cpp": "/usr/bin/c++ -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/semantic/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -isystem \"/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4/include\" -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/src/apply_plan.cpp",
+    "runtime/semantic/src/atomic_apply.cpp": "/usr/bin/c++ -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native/runtime/semantic/generated -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -isystem \"/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4/include\" -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/atomic_apply.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/src/atomic_apply.cpp"
+  },
+  "demo_ports_preserved": {
+    "4298": {
+      "status": "LISTENING",
+      "inventory": "COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nPython  21037 qing    3u  IPv4 0x87dddbf63fdf9403      0t0  TCP 127.0.0.1:4298 (LISTEN)\n"
+    },
+    "4319": {
+      "status": "LISTENING",
+      "inventory": "COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nPython  15893 qing    3u  IPv4 0x6c733a5f287aa04a      0t0  TCP 127.0.0.1:4319 (LISTEN)\n"
+    },
+    "4318": {
+      "status": "LISTENING",
+      "inventory": "COMMAND  PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nPython  1380 qing    3u  IPv4 0x6523f848b177acf6      0t0  TCP 127.0.0.1:4318 (LISTEN)\n"
+    },
+    "4317": {
+      "status": "LISTENING",
+      "inventory": "COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nPython  86930 qing    3u  IPv4 0xef8f194d1ec38230      0t0  TCP 127.0.0.1:4317 (LISTEN)\n"
+    },
+    "4316": {
+      "status": "LISTENING",
+      "inventory": "COMMAND   PID USER   FD   TYPE            DEVICE SIZE/OFF NODE NAME\nPython  78968 qing    3u  IPv4 0xd87c9ed9f44c79e      0t0  TCP 127.0.0.1:4316 (LISTEN)\n"
+    }
+  },
+  "browser_pages_or_documents_touched": false
+}

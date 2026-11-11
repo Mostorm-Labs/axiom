@@ -1,0 +1,39 @@
+{
+  "status": "OWNED_REPAIRS_VERIFIED_WITH_ONE_INHERITED_EXTRA_FAILURE",
+  "native_affected": {
+    "expanded_initial_tests": 85,
+    "initial_pass": 82,
+    "initial_fail": 1,
+    "initial_not_run": 2,
+    "minimal_followup_pass": 2,
+    "effective_unique_pass": 84,
+    "effective_unique_fail": 1,
+    "failure": "FC00XRuntimeComposition line519",
+    "independent_baseline_samefingerprint": "baseline-extra-regression.log",
+    "log": "repair-native-junit.xml"
+  },
+  "provider_final_native": {
+    "tests": 4,
+    "passed": 4,
+    "junit": "extensions-native-junit.xml"
+  },
+  "Node_helpers": {
+    "passed": 9,
+    "log": "repair-node.log"
+  },
+  "Python_helpers": {
+    "passed": 4,
+    "log": "repair-python.log"
+  },
+  "VM_actual_branches": [
+    "final-driver-vm-preflight.json",
+    "correctness-repair-vm.json",
+    "recovery-focused-vm.json"
+  ],
+  "boundary": {
+    "files": 120,
+    "passed": true,
+    "log": "recovery-boundaries.log"
+  },
+  "no_full_suite_PASS": true
+}

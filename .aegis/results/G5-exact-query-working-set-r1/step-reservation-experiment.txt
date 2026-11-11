@@ -1,0 +1,46 @@
+    if(state.cohortDepth&&std::holds_alternative<semantic::SweptCircleMask>(geometry)){
+        // Identical sequential stroke/union, with one bounded next-step peak
+        // rather than reserving all segments' worst-case storage at once.
+        // Each old path remains charged until the replacement is complete.
+        const auto& swept=std::get<semantic::SweptCircleMask>(geometry);
+        auto inputToken=state.reservePath(base);if(!inputToken)return denied();
+        resources::ResourceLease inputLease(state.budget,*inputToken);state.usage->bytes+=base;
+        struct TemporaryCharge {std::shared_ptr<ErasePathUsage> usage;std::size_t bytes;
+            ~TemporaryCharge(){usage->bytes-=bytes;}} inputCharge{state.usage,base};
+        SkPath path;resources::ResourceLease pathLease;std::size_t pathBytes=0;
+        struct PathCharge {std::shared_ptr<ErasePathUsage> usage;std::size_t& bytes;
+            ~PathCharge(){usage->bytes-=bytes;}} pathCharge{state.usage,pathBytes};
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+        const auto started=std::chrono::steady_clock::now();
+#endif
+        G5_SCOPE(g5Build,foundation::internal::g5::Tag::wa_path_build,foundation::internal::g5::Purpose::none);
+        for(const auto& segment:swept.segments){
+            const auto storage=path.approximateBytesUsed();
+            if(storage>(state.capacity-std::min(state.capacity,std::size_t(65536+4096)))/4)return denied();
+            const auto peak=65536+4096+4*storage;
+            auto token=state.reservePath(peak);if(!token)return denied();
+            resources::ResourceLease next(state.budget,*token);state.usage->bytes+=peak;
+            TemporaryCharge nextCharge{state.usage,peak};
+            SkPathBuilder builder;builder.moveTo(f(segment.p0.position.x),f(segment.p0.position.y));
+            builder.cubicTo(f(segment.control1.x),f(segment.control1.y),f(segment.control2.x),f(segment.control2.y),f(segment.p1.position.x),f(segment.p1.position.y));
+            auto piece=stroke(builder.detach(),2*std::max(segment.p0.radius,segment.p1.radius),SkPaint::kRound_Cap);
+            auto& unions=historical?state.stats.history.historyUnionOps:state.stats.history.queryUnionOps;++unions;
+            if(!unite(path,piece)||!path.isFinite())return denied();
+            const auto bytes=path.approximateBytesUsed();if(bytes>peak||!next.shrink(bytes))return denied();
+            state.usage->bytes-=pathBytes;pathBytes=bytes;pathLease=std::move(next);
+            state.usage->bytes+=bytes;
+        }
+#if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+        (historical?state.stats.history.historyPathNanoseconds:state.stats.history.queryPathNanoseconds)+=
+            std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();
+#endif
+        ++(historical?state.stats.history.historyPathBuilds:state.stats.history.queryPathBuilds);
+        auto candidate=std::make_shared<Entry>();candidate->geometry=geometry;candidate->path=std::move(path);
+        // Transfer the still-charged input metadata and final path into one
+        // retained entry reservation, retaining both leases until it succeeds.
+        const auto bytes=sizeof(Entry)+raw+256+candidate->path.approximateBytesUsed();
+        auto token=state.reservePath(bytes);if(!token)return denied();
+        candidate->lease=resources::ResourceLease(state.budget,*token);candidate->usage=state.usage;
+        candidate->bytes=bytes;candidate->used=++state.tick;state.usage->bytes+=bytes;
+        state.entries.push_back(candidate);++state.stats.builds;return candidate;
+    }

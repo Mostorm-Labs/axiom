@@ -84,6 +84,8 @@ struct RuntimeFrameOpportunity final {
     std::uint64_t contentRevision = 0;
     std::uint64_t surfaceGeneration = 0;
     std::uint64_t metricsGeneration = 0;
+    std::uint64_t displayRevision = 0;
+    std::uint64_t attachmentEpoch = 0;
     bool operator==(const PreviewWork&) const = default;
   };
   std::optional<PreviewWork> previewWork;
@@ -93,6 +95,10 @@ struct RuntimeFrameCompletion final {
   std::optional<RuntimeFrameOpportunity::PreviewWork> previewWork;
   bool platformPresented = false;
 };
+
+// Private platform handshake. Only exact work issued by this Composition can
+// be superseded; an unknown or altered value remains invalid.
+enum class RuntimePreviewWorkState : std::uint8_t { kInvalid, kCurrent, kSuperseded };
 
 // Composition-owned, read-only surface identity.  This deliberately mirrors
 // only the public surface facts needed by platform hosts and diagnostics; it
@@ -179,6 +185,8 @@ class RuntimeCompositionCore final {
   // acknowledge preview sessions themselves.
   [[nodiscard]] bool finishFrameOpportunity(
       const RuntimeFrameCompletion& completion) noexcept;
+  [[nodiscard]] RuntimePreviewWorkState previewWorkState(
+      const RuntimeFrameOpportunity::PreviewWork& work) const noexcept;
   // The composition owns the single control facade and its queue.  Consumers
   // may borrow the stable interface, but must not construct a second facade or
   // attach an alternate owner.
@@ -292,6 +300,10 @@ class RuntimeCompositionCore final {
   std::uint64_t pendingPreviewPresentCount_ = 0;
   std::uint64_t pendingPreviewWorkId_ = 0;
   std::optional<RuntimeFrameOpportunity::PreviewWork> pendingPreviewIdentity_;
+  // The platform has one in-flight preview slot. Retain its last superseded
+  // identity, without geometry or resources, to distinguish stale from forged.
+  std::optional<RuntimeFrameOpportunity::PreviewWork> supersededPreviewIdentity_;
+  void retirePreviewCapture() noexcept;
   std::uint64_t nextPreviewWorkId_ = 1;
   std::uint64_t runtimeInstanceId_ = 0;
   std::optional<CanonicalWork> pendingCanonicalWork_;

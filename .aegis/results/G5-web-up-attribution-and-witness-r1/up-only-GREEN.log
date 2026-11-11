@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: typed sticky uses actual yellow200x200 despite shape-only size0
+ok 1 - typed sticky uses actual yellow200x200 despite shape-only size0
+  ---
+  duration_ms: 1.035833
+  ...
+# Subtest: Up-only diagnostic gates trace before/after dispatch and keeps Move unobserved
+ok 2 - Up-only diagnostic gates trace before/after dispatch and keeps Move unobserved
+  ---
+  duration_ms: 0.237875
+  ...
+# Subtest: browser contract has no host imports and phase aggregate implementation is guarded
+not ok 3 - browser contract has no host imports and phase aggregate implementation is guarded
+  ---
+  duration_ms: 8.35975
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_web_up_attribution.test.mjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(driver.includes('window.waTrace.enable(false);row.tracePages=window.waTrace.take()'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_web_up_attribution.test.mjs:23:103)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:979:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:677:18)
+    Test.postRun (node:internal/test_runner/test:1090:19)
+    Test.run (node:internal/test_runner/test:1018:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+# Subtest: table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+ok 4 - table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+  ---
+  duration_ms: 0.180625
+  ...
+# Subtest: phase reconciliation never double counts inclusive children
+ok 5 - phase reconciliation never double counts inclusive children
+  ---
+  duration_ms: 0.253166
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49.661833

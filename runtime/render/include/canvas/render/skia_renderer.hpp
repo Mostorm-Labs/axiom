@@ -97,6 +97,17 @@ class SkiaRenderer final {
     // canonical target selection still belongs to the interaction owner.
     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
         const semantic::EraseMaskGeometry&) const noexcept;
+    class ExactQueryCohort final {
+        friend class SkiaRenderer;
+        std::shared_ptr<internal::EraseMaskPathCache> owner_;
+        explicit ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache>,std::function<void()> = {}) noexcept;
+      public:
+        ~ExactQueryCohort();
+        ExactQueryCohort(const ExactQueryCohort&)=delete;
+        ExactQueryCohort& operator=(const ExactQueryCohort&)=delete;
+    };
+    // Private source profile only; not installed/exported in consumer SDKs.
+    [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
         std::span<const foundation::WorldPoint>) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;

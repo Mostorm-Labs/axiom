@@ -1,0 +1,367 @@
+{
+  "status": "ACTUAL_FEEDBACK_EIGHT_OBSERVED_SEVEN_TERMINAL_ROWS_QUALIFIED",
+  "rows": [
+    {
+      "kind": "ready",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-ready/qualified-row.json",
+        "sha256": "0d086f9d62d648b3234f35738ab0f53f9e03a902880b839346a8137478e872cd",
+        "bytes": 607606
+      },
+      "terminal_generation": "34",
+      "terminal_presented": "34",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "actual_feedback": true,
+      "feedback_from_main_up_ms": 4821.399999976158,
+      "witness": null,
+      "baseline_negative": null
+    },
+    {
+      "kind": "erase",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-erase/qualified-row.json",
+        "sha256": "a47a46dbaf264c4f2e22f5cecf0d473a13c216d8549b3d49a918efcc23840298",
+        "bytes": 643796
+      },
+      "terminal_generation": "35",
+      "terminal_presented": "35",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 51,
+        "after_revision": 53
+      },
+      "actual_feedback": true,
+      "feedback_from_main_up_ms": 6063.400000095367,
+      "witness": null,
+      "baseline_negative": true
+    },
+    {
+      "kind": "pan",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-pan/qualified-row.json",
+        "sha256": "d2002d775c7b6766cb2adf3f2a746da425f143d27edb31ce106e7661c98f5717",
+        "bytes": 617298
+      },
+      "terminal_generation": "34",
+      "terminal_presented": "34",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 50,
+        "after_revision": 52
+      },
+      "actual_feedback": true,
+      "feedback_from_main_up_ms": 5058.399999976158,
+      "witness": {
+        "kind": "pan",
+        "expected": {
+          "scale": 1,
+          "x": -24,
+          "y": -12
+        },
+        "point": [
+          835,
+          540
+        ],
+        "old": [
+          850,
+          500,
+          970,
+          580
+        ],
+        "next": [
+          826,
+          488,
+          946,
+          568
+        ],
+        "color": [
+          51,
+          128,
+          204,
+          255
+        ],
+        "rect": {
+          "x": 1668,
+          "y": 1078,
+          "width": 4,
+          "height": 4
+        }
+      },
+      "baseline_negative": true
+    },
+    {
+      "kind": "zoom",
+      "row_status": "HARNESS_TERMINAL_PROOF_MISSING",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-zoom/failure.json",
+        "sha256": "8e0a010ae900ac47c50f68792339228bc7ffda2b974407a2ae6bd8e6c0caae0c",
+        "bytes": 654390
+      },
+      "actual_feedback": "QUALIFIED",
+      "positive_pixels": 16,
+      "camera_correct": true,
+      "baseline_negative": true,
+      "missing": "Finalsnapshot/UndoRedo/receipt after fixed1300,900 hitsactualzoomedcontent; no productfailureclaimed",
+      "error": "page.evaluate: Error: snapshot HUD must be absent\n    at check (http://127.0.0.1:61869/driver.mjs:9:77)\n    at webConsumer (http://127.0.0.1:61869/driver.mjs:88:97)\n    at async <anonymous>:337:30\n    at runWindow (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_query_working_set.mjs:121:26)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_query_working_set.mjs:136:123"
+    },
+    {
+      "kind": "rectangle",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-rectangle/qualified-row.json",
+        "sha256": "09efc192b701dd27054f7bc7c684779fb2962f7f28f5ff4874758a8ad5b477b5",
+        "bytes": 618221
+      },
+      "terminal_generation": "36",
+      "terminal_presented": "36",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 45,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 52,
+        "after_revision": 54
+      },
+      "actual_feedback": "QUALIFIED",
+      "positive_pixels": 16,
+      "before_up": true,
+      "pose_delta": [
+        80,
+        30
+      ],
+      "feedback_from_main_up_ms": 5213.600000023842,
+      "typed": {
+        "available": true,
+        "objectId": "1412eb6f2281bbcccd094224092335af",
+        "width": 120,
+        "height": 80
+      },
+      "baseline_negative": true
+    },
+    {
+      "kind": "sticky",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-sticky/qualified-row.json",
+        "sha256": "8ad4c819fc04dc99d6e5e9453ff5ae662ef5dca55a0a073887c401ddb86bea3e",
+        "bytes": 619063
+      },
+      "terminal_generation": "36",
+      "terminal_presented": "36",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 45,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 52,
+        "after_revision": 54
+      },
+      "actual_feedback": "QUALIFIED",
+      "positive_pixels": 16,
+      "before_up": true,
+      "pose_delta": [
+        80,
+        30
+      ],
+      "feedback_from_main_up_ms": 5221.699999928474,
+      "typed": {
+        "available": true,
+        "height": 200,
+        "objectId": "49d08cf0f83bd9a15f2fedcc4970f10b",
+        "width": 200
+      },
+      "baseline_negative": true
+    },
+    {
+      "kind": "table",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-table/qualified-row.json",
+        "sha256": "845d98221d3024e6a1dca7fdaf36834d2ed28d2c78749afc2a9632bab00afb25",
+        "bytes": 617530
+      },
+      "terminal_generation": "36",
+      "terminal_presented": "36",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 45,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 52,
+        "after_revision": 54
+      },
+      "actual_feedback": "QUALIFIED",
+      "positive_pixels": 4,
+      "before_up": true,
+      "pose_delta": [
+        80,
+        30
+      ],
+      "feedback_from_main_up_ms": 5243.699999928474,
+      "typed": {
+        "available": true,
+        "cells": [
+          {
+            "fill": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "format": {},
+            "mixedFormat": false,
+            "text": ""
+          },
+          {
+            "fill": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "format": {},
+            "mixedFormat": false,
+            "text": ""
+          },
+          {
+            "fill": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "format": {},
+            "mixedFormat": false,
+            "text": ""
+          },
+          {
+            "fill": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "format": {},
+            "mixedFormat": false,
+            "text": ""
+          }
+        ],
+        "columnId": "7b2d483f0ab6ebd108f4639990a4f5fb",
+        "columns": [
+          {
+            "id": "7b2d483f0ab6ebd108f4639990a4f5fb",
+            "size": 120
+          },
+          {
+            "id": "7d2d483f0ab6ebd108f4639990a4f5fb",
+            "size": 120
+          }
+        ],
+        "editable": true,
+        "generation": "33",
+        "grid": {
+          "color": [
+            0.25,
+            0.2800000011920929,
+            0.3199999928474426,
+            1
+          ],
+          "version": 1,
+          "width": 1
+        },
+        "objectId": "792d483f0ab6ebd108f4639990a4f5fb",
+        "rowId": "7a2d483f0ab6ebd108f4639990a4f5fb",
+        "rows": [
+          {
+            "id": "7a2d483f0ab6ebd108f4639990a4f5fb",
+            "size": 48
+          },
+          {
+            "id": "7c2d483f0ab6ebd108f4639990a4f5fb",
+            "size": 48
+          }
+        ]
+      },
+      "baseline_negative": true
+    },
+    {
+      "kind": "image",
+      "row_status": "QUALIFIED",
+      "raw": {
+        "path": ".aegis/results/G5-exact-query-working-set-web-r2/local-web/G5QW2-CONTINUOUS/action-image/qualified-row.json",
+        "sha256": "11ee19002ec11278618da18daf8abde2f99346be76484c23b3d98392c0e44483",
+        "bytes": 619080
+      },
+      "terminal_generation": "35",
+      "terminal_presented": "35",
+      "contacts": 0,
+      "snapshot_roundtrip": {
+        "objects": 44,
+        "total_masks": 120,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 51,
+        "after_revision": 53
+      },
+      "actual_feedback": "QUALIFIED",
+      "positive_pixels": 16,
+      "before_up": true,
+      "pose_delta": [
+        80,
+        30
+      ],
+      "feedback_from_main_up_ms": 4939.199999928474,
+      "typed": {
+        "available": true,
+        "content": {
+          "height": 80,
+          "intrinsicHeight": 1,
+          "intrinsicWidth": 1,
+          "resourceId": "4ff6ab670a58c14270e034e2090d9a43",
+          "sourceRect": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "width": 80
+        },
+        "editable": true,
+        "objectId": "6e78118310e320bfc006ae6ed6e635d5"
+      },
+      "baseline_negative": true
+    }
+  ],
+  "strict_beforeUp_ties": "Synchronousprobeawait/storedactivepixelsbeforedispatchUp; beforeUptrue +time<= handlesclockquantization(tableequalat).",
+  "zoom_terminal_missing": true,
+  "pixel_reference": "AllavailablefinalCPUreferencesmissingtimeout; typedsource/pixels separateproof."
+}

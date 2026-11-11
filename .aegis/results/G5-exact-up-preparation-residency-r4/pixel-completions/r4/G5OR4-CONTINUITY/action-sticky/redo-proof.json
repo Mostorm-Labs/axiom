@@ -1,0 +1,63 @@
+{
+  "stage": "redo",
+  "status": "QUALIFIED",
+  "compared_pixels": 702434,
+  "aa_boundary_pixels": 577566,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": {
+    "x": 0,
+    "y": 0,
+    "width": 1600,
+    "height": 800
+  },
+  "plan": {
+    "source_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-CONTINUITY/action-sticky/redo.axsnap",
+    "source_snapshot_sha256": "874f1c842fde490109de2a0a0c0edc89a25aad42fd743f1c4532b694624e29ba",
+    "reference_snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/pixel-completions/r4/G5OR4-CONTINUITY/action-sticky/ink-redo.axsnap",
+    "reference_snapshot_sha256": "76cba5fc7f053ddbbd650162337c4da6f8931ed3d80dfd0fffb1bf9d3b660d27",
+    "document_digest": "8c25d1cf7de885255ea2093725e9c9c1fa059171c0f9f56c603a83560e05f632",
+    "request": {
+      "width": 2862,
+      "height": 2020,
+      "logical_width": 1431,
+      "logical_height": 1010,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "hud_bounds": []
+    },
+    "projection": {
+      "before": 45,
+      "ink": 40,
+      "status": "PROJECTED"
+    },
+    "timeout_seconds": 60,
+    "rss_mib": 4096,
+    "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+    "reuse": "Completeobjects/background/manifest/digest+cameraequal"
+  },
+  "reuseProof": {
+    "objects": 40,
+    "total_masks": 120,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 54,
+    "after_revision": 51
+  },
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/references/reference-002/reference.rgba",
+    "sha256": "036f81c3fa4508987f6345444d7578392b9a30db9cb7d947b2ed01c461ce1218"
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/references/reference-002/reference.edge",
+    "sha256": "dfe05e33519a33caf9d50437f10aaf302bf6f2af4ece37838fcf5efc38c3771c"
+  },
+  "actual_sha256": "ec18be351d85fabab0c76871786cc980cdfbc1d39e3da89f85ebf19983caf9f2"
+}

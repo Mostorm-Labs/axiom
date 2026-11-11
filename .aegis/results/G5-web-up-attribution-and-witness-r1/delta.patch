@@ -1,0 +1,204 @@
+diff --git a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+index 60a967e2..506afed5 100644
+--- a/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
++++ b/runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp
+@@ -23,7 +23,7 @@ struct UpTimer {UpPhase phase;std::chrono::steady_clock::time_point start=std::c
+ #endif
+ namespace canvas::foundation::internal::g5 {
+ enum class Kind : unsigned { Stage=1, Begin, End, Admission, Basis, Commit, Scene, Decision, Leaf, Counter, Submit, Complete, GpuSubmit, GpuComplete, GpuRetire, Terminal };
+-enum class Tag : unsigned { input=1, eraser_begin, eraser_up, exact_prepare, publication_prepare, semantic_apply, observer, history, scene_apply, canonical, transient, navigation, preview, reference_build, reference_encode, reference_digest, coverage, material, provider, lookup, geometry_build, geometry_replay, copy, target, pointer_identity, canonical_basis, canonical_commit, input_result, canonical_receipt, cached_pixels, erase_damage, mask, prepare, render_direct, record_commands, routed_sample, eraser_revision, history_prepare, history_finalize, pathops, navigation_basis, brush_revision, resource_lease, control_result, display_record, display_roster, composition_proof, exact_body, mask_history, mask_scene, moving_erase_progress };
++enum class Tag : unsigned { input=1, eraser_begin, eraser_up, exact_prepare, publication_prepare, semantic_apply, observer, history, scene_apply, canonical, transient, navigation, preview, reference_build, reference_encode, reference_digest, coverage, material, provider, lookup, geometry_build, geometry_replay, copy, target, pointer_identity, canonical_basis, canonical_commit, input_result, canonical_receipt, cached_pixels, erase_damage, mask, prepare, render_direct, record_commands, routed_sample, eraser_revision, history_prepare, history_finalize, pathops, navigation_basis, brush_revision, resource_lease, control_result, display_record, display_roster, composition_proof, exact_body, mask_history, mask_scene, moving_erase_progress, wa_mask_construct, wa_history_lookup, wa_body_lookup, wa_path_lookup, wa_path_build, wa_exact_eval, wa_difference, wa_intersection, wa_apply_prepare, wa_atomic_apply, wa_history_value, wa_prefix };
+ enum class Route : unsigned { none, canonical_prepared, canonical_direct, edit_plain, edit_mask_isolated, edit_mask_direct, erase_layers, erase_resident, erase_miss, nav_coarse_gpu, nav_coarse_cpu, nav_unprepared, nav_retained, preview_prefix, preview_tail, creation_canonical, creation_transient, recording };
+ enum class Purpose : unsigned { none, input, canonical, transient, navigation, preview, exact_query, export_oracle };
+ }
+diff --git a/runtime/foundation/src/g5_observation.cpp b/runtime/foundation/src/g5_observation.cpp
+index ff01a406..a12faf31 100644
+--- a/runtime/foundation/src/g5_observation.cpp
++++ b/runtime/foundation/src/g5_observation.cpp
+@@ -138,7 +138,7 @@ Scope::Scope(Tag tag,Purpose purpose) noexcept {
+  if(!enabled()||(purpose==Purpose::none&&tag==Tag::input))return;
+  ++scopeDepth;previous_=local;tag_=static_cast<unsigned>(tag);root_=purpose!=Purpose::none;
+  previousScope_=activeScope;activeScope=this;started_=nowNs();
+- if(!root_&&(tag==Tag::coverage||tag==Tag::geometry_replay)){
++ if(!root_&&(tag==Tag::coverage||tag==Tag::geometry_replay||tag>=Tag::wa_mask_construct)){
+   auto& run=*current;std::size_t available=run.aggregateHighWater;
+   for(std::size_t i=0;i<run.aggregateHighWater;++i){const auto& a=run.aggregates[i];
+    if(a.id&&a.job==local.job&&a.parent==previous_.span&&a.tag==tag_){aggregate_=static_cast<int>(i);break;}
+@@ -258,7 +258,12 @@ int control(std::uint32_t opcode,std::uint32_t value) noexcept {
+   add("%s{\"seq\":\"%llu\",\"at_ns\":\"%llu\",\"event\":\"%llu\",\"job\":\"%llu\",\"attempt\":\"%llu\",\"basis\":\"%llu\",\"purpose\":%u,\"route\":%u,\"kind\":%u,\"tag\":%u,\"values\":[",first?"":",",static_cast<unsigned long long>(row.sequence),static_cast<unsigned long long>(row.time),static_cast<unsigned long long>(row.context.event),static_cast<unsigned long long>(row.context.job),static_cast<unsigned long long>(row.context.attempt),static_cast<unsigned long long>(row.context.basis),static_cast<unsigned>(row.context.purpose),static_cast<unsigned>(row.context.route),row.kind,row.tag);
+   first=false;for(unsigned i=0;i<row.count;++i)add("%s\"%llu\"",i?",":"",static_cast<unsigned long long>(row.values[i]));add("%s","]}");
+  }
+- add("],\"loss\":{\"statistical\":%llu,\"critical\":%llu},\"pending_gpu\":%llu,\"finished\":%s}",static_cast<unsigned long long>(r.lostNormal.load()),static_cast<unsigned long long>(r.lostCritical.load()),static_cast<unsigned long long>(r.pending.load()),r.dn==r.n&&r.dc==r.c?"true":"false");
++ const bool finished=r.dn==r.n&&r.dc==r.c;
++ add("],\"loss\":{\"statistical\":%llu,\"critical\":%llu},\"pending_gpu\":%llu,\"finished\":%s}",static_cast<unsigned long long>(r.lostNormal.load()),static_cast<unsigned long long>(r.lostCritical.load()),static_cast<unsigned long long>(r.pending.load()),finished?"true":"false");
++ // Drain runs out of band with no live owner scope and holds the writer lock.
++ // Reuse only fully copied record slots; sequence/loss/GPU identities persist.
++ // This keeps the same fixed allocation rather than a lifetime record limit.
++ if(finished){r.n=r.c=r.dn=r.dc=r.evictionCursor=0;r.normalSorted=true;}
+  r.length=static_cast<std::uint32_t>(offset);r.writing.clear(std::memory_order_release);return 0;
+ }
+ const char* bytes() noexcept {return current?current->buffer.data():nullptr;}
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index 6ce021f2..01dc8694 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -3361,7 +3361,9 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   auto* display=findDisplay(pointerId,DisplayKind::kErase);
+   if(!display){(void)eraserCancel(pointerId);return false;}
+   UR2D_PHASE(upHistory,history);
++  G5_SCOPE(g5HistoryRecord,g5::Tag::history_prepare,g5::Purpose::none);
+   auto historyEntry=history_.prepareRecord(operation,{std::move(inverse)},{},{});
++  G5_SCOPE_END(g5HistoryRecord);
+   UR2D_END(upHistory);
+   if(!historyEntry){(void)eraserCancel(pointerId);return false;}
+   UR2D_PHASE(upPublication,publication);
+@@ -3385,11 +3387,15 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
+   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
+   committed=true;
+   UR2D_PHASE(upFinalize,finalize);
++  G5_SCOPE(g5Finalize,g5::Tag::history_finalize,g5::Purpose::none);
+   history_.commitPrepared(std::move(*historyEntry));
+   sealDisplay(*display,*applied.commit_record);
++  G5_SCOPE_END(g5Finalize);
+   UR2D_END(upFinalize);
+   UR2D_PHASE(upObserver,observer);
++  G5_SCOPE(g5ObserveApplied,g5::Tag::observer,g5::Purpose::none);
+   observeApplied(operation,std::move(applied));
++  G5_SCOPE_END(g5ObserveApplied);
+   UR2D_END(upObserver);
+   ++submittedOperationCount_;
+   if (lastAppliedCommit_.has_value() && sceneCoordinator_ != nullptr && sceneCompiler_ != nullptr) {
+diff --git a/runtime/interaction/src/canvas_partial_erase.cpp b/runtime/interaction/src/canvas_partial_erase.cpp
+index d373649f..2e802a8e 100644
+--- a/runtime/interaction/src/canvas_partial_erase.cpp
++++ b/runtime/interaction/src/canvas_partial_erase.cpp
+@@ -27,7 +27,9 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
+         if(!textWritable(record.objectId))continue;
+         const auto& b=record.worldBounds;
+         if(b.right<left-radius||b.left>right+radius||b.bottom<top-radius||b.top>bottom+radius)continue;
++        G5_SCOPE(g5MaskConstruct,g5::Tag::wa_mask_construct,g5::Purpose::none);
+         auto mask=partialEraseGeometry(trace,record.transform,radius);
++        G5_SCOPE_END(g5MaskConstruct);
+         UR2D_COUNT(masksBuilt);
+         if(!mask)return std::nullopt;
+         if(exactHit) {
+diff --git a/runtime/render/src/selection_region_geometry.cpp b/runtime/render/src/selection_region_geometry.cpp
+index 3b530d5b..5a629e30 100644
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -35,6 +35,7 @@ namespace {
+ using Hit=SelectionGeometryHit;
+ float f(double v){return static_cast<float>(v);}
+ std::optional<SkPath> timedQueryOp(const SkPath& a,const SkPath& b,SkPathOp op,std::uint64_t* nanoseconds){
++    G5_SCOPE(g5ExactOp,op==kDifference_SkPathOp?foundation::internal::g5::Tag::wa_difference:foundation::internal::g5::Tag::wa_intersection,foundation::internal::g5::Purpose::none);
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS) || defined(AXIOM_UR2D_TESTS)
+     const auto started=std::chrono::steady_clock::now();const auto result=Op(a,b,op);
+     if(nanoseconds)*nanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count();return result;
+@@ -51,6 +52,7 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
+ }
+ bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
+ std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask,std::uint64_t* unions=nullptr) {
++        G5_SCOPE(g5Build,foundation::internal::g5::Tag::wa_path_build,foundation::internal::g5::Purpose::none);
+         SkPath eraser;
+         if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
+         else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
+@@ -250,6 +252,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
+ }
+ namespace {
+ SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::MaskHistoryPlan>& history={},MaskHistoryWork* historyWork=nullptr) noexcept {
++    G5_SCOPE(g5Evaluate,foundation::internal::g5::Tag::wa_exact_eval,foundation::internal::g5::Purpose::none);
+     try {
+         std::vector<std::shared_ptr<const internal::EraseMaskPathCache::Entry>> pins;
+         const auto pathFor=[&](const semantic::EraseMaskGeometry& geometry,bool historical=false){
+@@ -433,6 +436,7 @@ void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> p
+ EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
+ void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& geometry,
+     std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,std::size_t maxSegments)noexcept {
++    G5_SCOPE(g5Prefix,foundation::internal::g5::Tag::wa_prefix,foundation::internal::g5::Purpose::none);
+     try{
+         auto& s=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+         if(s.budget!=budget||s.capacity!=capacity){clear();s.usage=std::make_shared<ErasePathUsage>();s.budget=std::move(budget);s.capacity=capacity;}
+@@ -476,6 +480,7 @@ void EraseMaskPathCache::prepareQueryPrefix(const semantic::EraseMaskGeometry& g
+     }catch(const std::bad_alloc&){}
+ }
+ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
++    G5_SCOPE(g5PathLookup,foundation::internal::g5::Tag::wa_path_lookup,foundation::internal::g5::Purpose::none);
+     auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
+     if(!historical&&state.queryPrefix){
+         const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
+@@ -525,6 +530,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
+ }
+ namespace {
+ bool equalMask(const semantic::EraseMaskRecord& a,const semantic::EraseMaskRecord& b,MaskHistoryWork& work){
++    G5_SCOPE(g5Value,foundation::internal::g5::Tag::wa_history_value,foundation::internal::g5::Purpose::none);
+     // This proves derived geometry only. Each plan retains its own complete
+     // canonical records/source lease; mask IDs never alias canonical payloads.
+     ++work.valueRecords;if(a.geometry.index()!=b.geometry.index())return false;
+@@ -543,6 +549,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
+     const scene::SharedVector<semantic::EraseMaskRecord>& records,
+     std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,
+     const std::shared_ptr<MaskHistoryPlan>& previous,MaskHistoryAdmission* admission){
++    G5_SCOPE(g5HistoryLookup,foundation::internal::g5::Tag::wa_history_lookup,foundation::internal::g5::Purpose::none);
+     auto& state=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+     if(state.budget!=budget||state.capacity!=capacity){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}
+     auto status=MaskHistoryAdmission::kNotAdmitted;
+@@ -696,6 +703,7 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
+                 compact->stroke.config.algorithmVersion==4&&
+                 (compact->stroke.config.family==foundation::InkFamily::kRound||compact->stroke.config.family==foundation::InkFamily::kMarker)&&
+                 compact->stroke.config.opacity*compact->stroke.config.color[3]>0){
++                G5_SCOPE(g5BodyLookup,foundation::internal::g5::Tag::wa_body_lookup,foundation::internal::g5::Purpose::none);
+                 // The source lease is O(1), not a record/history/geometry clone.
+                 ReferenceTraversalEntry entry;entry.record.content=record.content;
+                 entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
+@@ -758,6 +766,11 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
+     const auto result=run();
+     impl_->stats.history.historicalDifferences+=pathOps.historicalDifferences;
+     impl_->stats.history.componentIntersections+=pathOps.componentIntersections;
++    G5_OBSERVE(foundation::internal::g5::Kind::Counter,foundation::internal::g5::Tag::wa_history_lookup,false,
++        1,impl_->capacity,impl_->usage->bytes,historyPlan?1ULL:0ULL,record.eraseMasks.size(),
++        impl_->stats.history.denied-historyBefore.denied,impl_->stats.history.primitiveBuilds-historyBefore.primitiveBuilds,
++        impl_->stats.history.queryUnionOps-historyBefore.queryUnionOps,impl_->stats.history.historyUnionOps-historyBefore.historyUnionOps,
++        impl_->stats.equivalentQueryHits,cost.fallbackReason);
+     namespace g5=foundation::internal::g5;
+     [[maybe_unused]]const auto historyAfter=impl_->stats.history;
+     G5_OBSERVE(g5::Kind::Counter,g5::Tag::mask_history,false,2,g5::word(record.objectId,0),g5::word(record.objectId,1),
+diff --git a/runtime/semantic/src/apply_plan.cpp b/runtime/semantic/src/apply_plan.cpp
+index 82121291..f1d4be65 100644
+--- a/runtime/semantic/src/apply_plan.cpp
++++ b/runtime/semantic/src/apply_plan.cpp
+@@ -4,6 +4,7 @@
+ #include "canvas/semantic/staged_object_view.hpp"
+ #include "sha256_internal.hpp"
+ #include "container_operation_internal.hpp"
++#include "canvas/foundation/internal/g5_observation.hpp"
+ 
+ #include <algorithm>
+ #include <limits>
+@@ -51,6 +52,7 @@ bool referencesResource(const ObjectRecord& object, const ResourceId& resource)
+ }
+ 
+ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidationContext& context) {
++    G5_SCOPE(g5ApplyPrepare,foundation::internal::g5::Tag::wa_apply_prepare,foundation::internal::g5::Purpose::none);
+     const auto idempotency = classifyOperation(operation, context.applied_operations);
+     if (idempotency.disposition == IdempotencyDisposition::kAlreadyApplied)
+         return {PrepareDisposition::kAlreadyApplied, {}, std::nullopt};
+diff --git a/runtime/semantic/src/atomic_apply.cpp b/runtime/semantic/src/atomic_apply.cpp
+index 3c5e67cc..85b9f18a 100644
+--- a/runtime/semantic/src/atomic_apply.cpp
++++ b/runtime/semantic/src/atomic_apply.cpp
+@@ -1,6 +1,7 @@
+ #include "atomic_apply.hpp"
+ 
+ #include "object_store_mutator.hpp"
++#include "canvas/foundation/internal/g5_observation.hpp"
+ 
+ #include <exception>
+ #include <new>
+@@ -56,6 +57,7 @@ bool preflight(const Store& store, const PreparedApplyPlan& plan) {
+ 
+ template <typename Store>
+ AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPlan& plan, bool reserved FC08_CONTEXT_PARAMETER) {
++    G5_SCOPE(g5Atomic,foundation::internal::g5::Tag::wa_atomic_apply,foundation::internal::g5::Purpose::none);
+     if (!preflight(store, plan)) {
+         return {};
+     }

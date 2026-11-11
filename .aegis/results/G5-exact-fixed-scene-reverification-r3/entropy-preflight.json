@@ -1,0 +1,239 @@
+{
+  "status": "QUALIFIED_ACTUAL_UNMODIFIED_WEB_FACTORY_NAMESPACE",
+  "facts": [
+    {
+      "sdk": "baseline-1e1c",
+      "glue_sha256": "9710705c00ebec0e4554839be640f8cdf178f1d831b5e3b6f1641f05fe30145e",
+      "random_get_to_crypto": true
+    },
+    {
+      "sdk": "candidate-2f1b",
+      "glue_sha256": "619c23eaca1e259f7d2b1a36bcb67e672ed229b7ecfa4614fbdc9e4172cf66fd",
+      "random_get_to_crypto": true
+    }
+  ],
+  "native": "runtime/composition/src/runtime_composition.cpp:101 4random_devicewords formsnamespace",
+  "host_hook": "newisolatedfreshpageinitScriptbeforeSDKfactory,crypto.getRandomValuesonly,xorshift32-byte-v1threefixedseeds",
+  "seeds": [
+    324508639,
+    610839777,
+    1831565813
+  ],
+  "tests": "offline-helper-tests.log",
+  "actual_browser_pilot_pending": false,
+  "no_product_or_userpage_override": true,
+  "actual_browser_transcripts": [
+    {
+      "case": "pair0-candidate-growth",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "case": "pair0-candidate-long",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "case": "pair0-old-growth",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "case": "pair0-old-long",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "case": "pair1-candidate-growth",
+      "entropy": {
+        "seed": 610839777,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 1920335295
+      }
+    },
+    {
+      "case": "pair1-candidate-long",
+      "entropy": {
+        "seed": 610839777,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 1920335295
+      }
+    },
+    {
+      "case": "pair1-old-growth",
+      "entropy": {
+        "seed": 610839777,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 1920335295
+      }
+    },
+    {
+      "case": "pair1-old-long",
+      "entropy": {
+        "seed": 610839777,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 1920335295
+      }
+    },
+    {
+      "case": "pair2-candidate-growth",
+      "entropy": {
+        "seed": 1831565813,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 3764213483
+      }
+    },
+    {
+      "case": "pair2-candidate-long",
+      "entropy": {
+        "seed": 1831565813,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 3764213483
+      }
+    },
+    {
+      "case": "pair2-old-growth",
+      "entropy": {
+        "seed": 1831565813,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 3764213483
+      }
+    },
+    {
+      "case": "pair2-old-long",
+      "entropy": {
+        "seed": 1831565813,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 3764213483
+      }
+    },
+    {
+      "case": "pilot-candidate",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    },
+    {
+      "case": "pilot-old",
+      "entropy": {
+        "seed": 324508639,
+        "algorithm": "xorshift32-byte-v1-fixture-only",
+        "call_lengths": [
+          4,
+          4,
+          4,
+          4
+        ],
+        "byte_count": 16,
+        "stream_fnv1a32": 2536440519
+      }
+    }
+  ],
+  "pilot_all_four_stages_equal": true,
+  "product_override": false
+}

@@ -172,9 +172,17 @@ WebFrameResult WebRuntimeAdapter::pollFrame() noexcept {
   if (!canonical || !preview) return rejected("poll GPU fence");
   if (canonical == 2 || preview == 2) return WebFrameResult::kPending;
   const auto& work = *impl_->pending;
-  if (work.previewWork && impl_->core.previewActive() &&
-      impl_->core.previewRenderState().contentRevision == work.previewWork->contentRevision &&
-      !impl_->core.finishFrameOpportunity({work.previewWork, true})) return rejected("preview completion");
+  if (work.previewWork) {
+    const auto state = impl_->core.previewWorkState(*work.previewWork);
+    if (state == runtime::RuntimePreviewWorkState::kInvalid)
+      return rejected("preview completion identity");
+    if (state == runtime::RuntimePreviewWorkState::kCurrent &&
+        !impl_->core.finishFrameOpportunity({work.previewWork, true}))
+      return rejected("preview completion");
+    // A known old preview does not qualify the current one. Complete any
+    // independently captured canonical work below before releasing our fences;
+    // the next owner opportunity retires/replaces the obsolete preview capture.
+  }
   if (work.canonicalWork) {
     const auto current = impl_->core.lastSubmittedCanonicalWork();
     if (!current || *current != *work.canonicalWork) {

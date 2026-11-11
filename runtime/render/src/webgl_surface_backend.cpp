@@ -1,5 +1,6 @@
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "webgl_context_liveness.hpp"
+#include "ur3_webgl_extensions.hpp"
 
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkSurface.h"
@@ -15,6 +16,7 @@
 #include <limits>
 #include <utility>
 #include <cstdio>
+#include <cstdlib>
 
 namespace canvas::render {
 struct WebGlSurfaceProvider::Impl final : GpuCompletionService {
@@ -72,6 +74,17 @@ WebGlSurfaceProvider::WebGlSurfaceProvider(WebGlSurfaceConfig config) : impl_(st
     EmscriptenWebGLContextAttributes actual;
     impl_->completionCapable=emscripten_webgl_get_context_attributes(impl_->webgl,&actual)==EMSCRIPTEN_RESULT_SUCCESS&&actual.majorVersion>=2;
     impl_->retainedContents=impl_->completionCapable&&actual.preserveDrawingBuffer;
+    // WebGL restores keep the app's numeric handle but drop enabled extension
+    // objects. Emscripten's registry can still carry its once-init marker; renew
+    // the actual browser capabilities before Skia probes or creates samplers.
+    char* const supported = emscripten_webgl_get_supported_extensions();
+    if (supported == nullptr) { impl_->error = "WebGL2 capabilities unavailable"; return; }
+    (void)internal::renewWebGlExtensions(impl_->webgl, supported,
+        [](int handle, std::string_view name) {
+            const std::string extension(name);
+            return emscripten_webgl_enable_extension(handle, extension.c_str());
+        });
+    std::free(supported);
     impl_->context = GrDirectContexts::MakeGL(GrGLMakeNativeInterface());
     if (!impl_->context) { impl_->error = "Skia WebGL2 context creation failed"; return; }
     GLint framebuffer = 0; glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer); GrGLFramebufferInfo info{static_cast<GrGLuint>(framebuffer), static_cast<GrGLenum>(GL_RGBA8)};

@@ -1,0 +1,65 @@
+{
+  "schema": "g5-qw-window-ledger-v1",
+  "charged_seconds": 689,
+  "cap_seconds": 1200,
+  "attempts": [
+    {
+      "id": "G5OR4-FINAL-COMPARE",
+      "status": "COMPLETED",
+      "limit_seconds": 900,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_owner_residency.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exact-up-preparation-residency-r4/compare-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-FINAL-COMPARE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 496.36994566699997,
+        "peak_process_family_rss_kib": 2127344,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 900,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 497,
+      "worker_status": "OBSERVED"
+    },
+    {
+      "id": "G5OR4-CONTINUITY",
+      "status": "COMPLETED",
+      "limit_seconds": 300,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_owner_residency.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exact-up-preparation-residency-r4/continuity-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exact-up-preparation-residency-r4/local-web/G5OR4-CONTINUITY"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 191.263911083,
+        "peak_process_family_rss_kib": 1915088,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 300,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 192,
+      "worker_status": "OBSERVED"
+    }
+  ]
+}

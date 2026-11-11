@@ -1,0 +1,39 @@
+{
+  "status": "FAILED",
+  "checker": "verification/runners/g5/web_up_attribution_snapshot_check.cpp",
+  "mask_order_policy": "Compare complete historical records by identity/content, independent of canonical snapshot order. Old checker incorrectly required vector prefix; failed log retained as invalid checker assumption.",
+  "checks": [
+    {
+      "kind": "sticky",
+      "exit_code": 1,
+      "result": null,
+      "stderr": "sticky fill absent\n"
+    },
+    {
+      "kind": "table",
+      "exit_code": 0,
+      "result": {
+        "final_masks": 120,
+        "final_objects": 45,
+        "generation_delta": 3,
+        "historical_masks_preserved": 80,
+        "initial_objects": 44,
+        "kind": "table",
+        "redo_canonical_equal": true,
+        "status": "QUALIFIED",
+        "target": "019b97c99dcf73b567a8c001b4d75840",
+        "target_material_resource": "canonical 2x2 grid 240x96",
+        "unchanged_long_bodies": 40,
+        "undo_restores_pose_only": true,
+        "unrelated_mixed_unchanged": 4
+      },
+      "stderr": ""
+    },
+    {
+      "kind": "image",
+      "exit_code": 1,
+      "result": null,
+      "stderr": "image manifest hash\n"
+    }
+  ]
+}

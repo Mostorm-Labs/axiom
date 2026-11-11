@@ -6,7 +6,20 @@
 #include "include/core/SkPaint.h"
 
 namespace canvas::render::internal {
-struct MaskHistoryUsage {std::size_t bytes=0;};
+struct MaskHistorySourceCharge;
+struct MaskHistoryUsage {
+    std::size_t bytes=0;
+    std::map<const SourceRetention*,std::weak_ptr<MaskHistorySourceCharge>> sources;
+};
+// One local charge for a source allocation shared by draw and exact views.
+// The existing SourceRetention owns its single global reservation.
+struct MaskHistorySourceCharge final {
+    std::shared_ptr<const SourceRetention> source;
+    resources::ResourceLease metadata;
+    std::shared_ptr<MaskHistoryUsage> usage;
+    std::size_t bytes=0;
+    ~MaskHistorySourceCharge(){if(usage){usage->bytes-=bytes;usage->sources.erase(source.get());}}
+};
 struct PreparedMaskPrimitive final {
     SkPath path;
     SkRect bounds{};
@@ -30,6 +43,7 @@ struct MaskHistoryPlan final {
     std::vector<std::size_t> primitiveEnds;
     std::vector<std::shared_ptr<const void>> exactPaths;
     std::shared_ptr<const SourceRetention> source;
+    std::shared_ptr<MaskHistorySourceCharge> localSource;
     resources::ResourceLease metadata;
     std::shared_ptr<MaskHistoryUsage> usage;
     std::size_t bytes=0,prefixPrimitives=0;

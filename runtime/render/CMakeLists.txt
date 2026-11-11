@@ -194,6 +194,14 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_ur3_webgl_extensions_tests tests/ur3_webgl_extensions_test.cpp)
+    target_compile_features(axiom_ur3_webgl_extensions_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_ur3_webgl_extensions_tests PRIVATE /W4 /WX /UNDEBUG)
+    else()
+        target_compile_options(axiom_ur3_webgl_extensions_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME UR3WebGlExtensionRenewal COMMAND axiom_ur3_webgl_extensions_tests)
     add_executable(axiom_gpu_retirement_contract_tests tests/gpu_retirement_contract_test.cpp)
     target_include_directories(axiom_gpu_retirement_contract_tests PRIVATE src)
     target_link_libraries(axiom_gpu_retirement_contract_tests PRIVATE canvas_runtime_render)
@@ -262,6 +270,23 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_erase_exact_canonical_tests tests/erase_exact_canonical_test.cpp)
     target_link_libraries(axiom_erase_exact_canonical_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+    add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
+    add_executable(axiom_exact_owner_residency_tests tests/exact_owner_residency_test.cpp)
+    add_executable(axiom_exact_owner_residency_pixels tests/exact_owner_residency_pixels.cpp)
+    target_link_libraries(axiom_exact_owner_residency_pixels PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    add_test(NAME G5ExactOwnerResidencyPixels COMMAND axiom_exact_owner_residency_pixels)
+    target_compile_definitions(axiom_exact_owner_residency_tests PRIVATE AXIOM_EXACT_OWNER_RESIDENCY=1)
+    target_link_libraries(axiom_exact_owner_residency_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    add_test(NAME G5ExactOwnerResidency COMMAND axiom_exact_owner_residency_tests
+      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
+      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/final.axsnap"
+      "${CMAKE_CURRENT_BINARY_DIR}/exact-owner-residency.json")
+    target_compile_definitions(axiom_exact_query_working_set_tests PRIVATE AXIOM_EXACT_QUERY_WORKING_SET=1)
+    target_link_libraries(axiom_exact_query_working_set_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    add_test(NAME G5ExactQueryWorkingSet COMMAND axiom_exact_query_working_set_tests --verify
+      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap"
+      "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/final.axsnap"
+      "${CMAKE_CURRENT_BINARY_DIR}/exact-query-working-set.json")
     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)

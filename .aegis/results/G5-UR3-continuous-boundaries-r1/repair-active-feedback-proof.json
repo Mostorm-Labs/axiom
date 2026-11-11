@@ -1,0 +1,731 @@
+{
+  "status": "BOUNDED_REQUIRED_PROOF_INCOMPLETE",
+  "rows": [
+    {
+      "id": "masked-affine-d2",
+      "status": "QUALIFIED",
+      "active": [
+        {
+          "label": "ink-cancel",
+          "status": "QUALIFIED",
+          "compared_pixels": 2466831,
+          "aa_boundary_pixels": 778777,
+          "hud_excluded_pixels": 98392,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "request": {
+            "width": 2200,
+            "height": 1520,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": [
+              [
+                179.0670394897461,
+                149.05681610107422,
+                690.9158325195312,
+                500.8218688964844
+              ]
+            ]
+          },
+          "actual_sha256": "794c0333446593c96c6a9eda9812dfded1866e5dd60252fb5d31ce5aaf0b98b9",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-002/reference.rgba",
+            "sha256": "87a6d36697b629da6cd7955a9d1403b1549b6126db8700fe5ad85d7ca152dc8b",
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d2/ink-cancel-expected.axsnap",
+            "plan": {
+              "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d2/ink-cancel-expected.axsnap",
+              "snapshot_sha256": "d30c952872d9606b5d23bc1d71c055ab7b77a490d52e5dcee10ddaf434f67962",
+              "request": {
+                "width": 2200,
+                "height": 1520,
+                "logical_width": 1100,
+                "logical_height": 760,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "hud_bounds": [
+                  [
+                    179.0670394897461,
+                    149.05681610107422,
+                    690.9158325195312,
+                    500.8218688964844
+                  ]
+                ]
+              },
+              "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+              "timeout_seconds": 60,
+              "rss_mib": 4096
+            }
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-002/reference.edge",
+            "sha256": "34563d167b25491515cf58780a0e8e2ec5c3e2204bca97916f8b17be1cee8772"
+          }
+        },
+        {
+          "label": "ink-drag",
+          "status": "QUALIFIED",
+          "compared_pixels": 2466831,
+          "aa_boundary_pixels": 778777,
+          "hud_excluded_pixels": 98392,
+          "interior_mismatched_pixels": 0,
+          "max_interior_delta": 0,
+          "witnesses": [],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "request": {
+            "width": 2200,
+            "height": 1520,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": [
+              [
+                179.0670394897461,
+                149.05681610107422,
+                690.9158325195312,
+                500.8218688964844
+              ]
+            ]
+          },
+          "actual_sha256": "794c0333446593c96c6a9eda9812dfded1866e5dd60252fb5d31ce5aaf0b98b9",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-002/reference.rgba",
+            "sha256": "87a6d36697b629da6cd7955a9d1403b1549b6126db8700fe5ad85d7ca152dc8b",
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d2/ink-drag-expected.axsnap",
+            "plan": {
+              "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d2/ink-cancel-expected.axsnap",
+              "snapshot_sha256": "d30c952872d9606b5d23bc1d71c055ab7b77a490d52e5dcee10ddaf434f67962",
+              "request": {
+                "width": 2200,
+                "height": 1520,
+                "logical_width": 1100,
+                "logical_height": 760,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "hud_bounds": [
+                  [
+                    179.0670394897461,
+                    149.05681610107422,
+                    690.9158325195312,
+                    500.8218688964844
+                  ]
+                ]
+              },
+              "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+              "timeout_seconds": 60,
+              "rss_mib": 4096
+            }
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-002/reference.edge",
+            "sha256": "34563d167b25491515cf58780a0e8e2ec5c3e2204bca97916f8b17be1cee8772"
+          }
+        }
+      ]
+    },
+    {
+      "id": "masked-affine-d4",
+      "status": "FROZEN_PIXEL_OR_FEEDBACK_FAILURE",
+      "active": [
+        {
+          "label": "ink-cancel",
+          "status": "FAILED",
+          "compared_pixels": 10022599,
+          "aa_boundary_pixels": 2959609,
+          "hud_excluded_pixels": 393792,
+          "interior_mismatched_pixels": 271291,
+          "max_interior_delta": 242,
+          "witnesses": [
+            {
+              "pixel": 1449049,
+              "actual": [
+                238,
+                238,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449050,
+              "actual": [
+                223,
+                222,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449051,
+              "actual": [
+                215,
+                214,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449052,
+              "actual": [
+                215,
+                214,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449053,
+              "actual": [
+                223,
+                223,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449054,
+              "actual": [
+                240,
+                239,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1453445,
+              "actual": [
+                235,
+                235,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1453446,
+              "actual": [
+                188,
+                186,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            }
+          ],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "request": {
+            "width": 4400,
+            "height": 3040,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": [
+              [
+                179.0670394897461,
+                149.05681610107422,
+                690.9158325195312,
+                500.8218688964844
+              ]
+            ]
+          },
+          "actual_sha256": "434837802b0bb06f14c4a15f522bfb583b428f2083b5b1216f70c43066c7d46b",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-005/reference.rgba",
+            "sha256": "17d0a82b147a016aa7e4f5863383f6dc3c9e6b5b2048e9191cf362c4eab30dc9",
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d4/ink-cancel-expected.axsnap",
+            "plan": {
+              "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d4/ink-cancel-expected.axsnap",
+              "snapshot_sha256": "d30c952872d9606b5d23bc1d71c055ab7b77a490d52e5dcee10ddaf434f67962",
+              "request": {
+                "width": 4400,
+                "height": 3040,
+                "logical_width": 1100,
+                "logical_height": 760,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "hud_bounds": [
+                  [
+                    179.0670394897461,
+                    149.05681610107422,
+                    690.9158325195312,
+                    500.8218688964844
+                  ]
+                ]
+              },
+              "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+              "timeout_seconds": 60,
+              "rss_mib": 4096
+            }
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-005/reference.edge",
+            "sha256": "1c9eb6a05e934251024b2e322325accf0d643828304ded496a5b8978272b9112"
+          }
+        },
+        {
+          "label": "ink-drag",
+          "status": "FAILED",
+          "compared_pixels": 10022599,
+          "aa_boundary_pixels": 2959609,
+          "hud_excluded_pixels": 393792,
+          "interior_mismatched_pixels": 284002,
+          "max_interior_delta": 242,
+          "witnesses": [
+            {
+              "pixel": 1449017,
+              "actual": [
+                238,
+                238,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449018,
+              "actual": [
+                223,
+                222,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449019,
+              "actual": [
+                215,
+                214,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449020,
+              "actual": [
+                215,
+                214,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449021,
+              "actual": [
+                223,
+                223,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1449022,
+              "actual": [
+                240,
+                239,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1453413,
+              "actual": [
+                235,
+                235,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 1453414,
+              "actual": [
+                188,
+                186,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            }
+          ],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": null,
+          "request": {
+            "width": 4400,
+            "height": 3040,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": [
+              [
+                179.0670394897461,
+                149.05681610107422,
+                690.9158325195312,
+                500.8218688964844
+              ]
+            ]
+          },
+          "actual_sha256": "6b5bebc0fd634f31e68793f6346fcfe39ff679f05f7965705d33a7e42b10d9d6",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-005/reference.rgba",
+            "sha256": "17d0a82b147a016aa7e4f5863383f6dc3c9e6b5b2048e9191cf362c4eab30dc9",
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d4/ink-drag-expected.axsnap",
+            "plan": {
+              "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/masked-affine-d4/ink-cancel-expected.axsnap",
+              "snapshot_sha256": "d30c952872d9606b5d23bc1d71c055ab7b77a490d52e5dcee10ddaf434f67962",
+              "request": {
+                "width": 4400,
+                "height": 3040,
+                "logical_width": 1100,
+                "logical_height": 760,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "hud_bounds": [
+                  [
+                    179.0670394897461,
+                    149.05681610107422,
+                    690.9158325195312,
+                    500.8218688964844
+                  ]
+                ]
+              },
+              "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+              "timeout_seconds": 60,
+              "rss_mib": 4096
+            }
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-005/reference.edge",
+            "sha256": "1c9eb6a05e934251024b2e322325accf0d643828304ded496a5b8978272b9112"
+          }
+        }
+      ]
+    },
+    {
+      "id": "navigation-recovery-d4",
+      "status": "FAILED_WEB_ROW",
+      "active": []
+    },
+    {
+      "id": "foreground-idle-d4",
+      "status": "FROZEN_PIXEL_OR_FEEDBACK_FAILURE",
+      "active": [
+        {
+          "label": "ink-drag",
+          "status": "FAILED",
+          "compared_pixels": 2454996,
+          "aa_boundary_pixels": 1060116,
+          "hud_excluded_pixels": 132888,
+          "interior_mismatched_pixels": 29479,
+          "max_interior_delta": 242,
+          "witnesses": [
+            {
+              "pixel": 548818,
+              "actual": [
+                236,
+                235,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548819,
+              "actual": [
+                218,
+                217,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548820,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548821,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548822,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548823,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548824,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            },
+            {
+              "pixel": 548825,
+              "actual": [
+                214,
+                213,
+                255,
+                255
+              ],
+              "reference": [
+                255,
+                255,
+                255,
+                255
+              ]
+            }
+          ],
+          "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+          "roi": {
+            "x": 0,
+            "y": 0,
+            "width": 1200,
+            "height": 3040
+          },
+          "request": {
+            "width": 4400,
+            "height": 3040,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": 0,
+              "y": 0
+            },
+            "hud_bounds": [
+              [
+                179.0670394897461,
+                149.05681610107422,
+                690.9158325195312,
+                500.8218688964844
+              ]
+            ]
+          },
+          "actual_sha256": "c08d9c0473e001fc0de7248b0db41ef86d1f0f1f60198f80f4c4978ec6b4e859",
+          "reference": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-008/reference.rgba",
+            "sha256": "4abd5c9fb05667edcdcb3663f7f404cc78e06256b5b5a5a8044ed8295eb75ad5",
+            "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/foreground-idle-d4/ink-drag-expected.axsnap",
+            "plan": {
+              "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/foreground-idle-d4/ink-drag-expected.axsnap",
+              "snapshot_sha256": "d031f269fee2c381c79340d5d63be24ae570399180934e116b08e2ae8aca0387",
+              "request": {
+                "width": 4400,
+                "height": 3040,
+                "logical_width": 1100,
+                "logical_height": 760,
+                "camera": {
+                  "scale": 1,
+                  "x": 0,
+                  "y": 0
+                },
+                "hud_bounds": [
+                  [
+                    179.0670394897461,
+                    149.05681610107422,
+                    690.9158325195312,
+                    500.8218688964844
+                  ]
+                ]
+              },
+              "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+              "timeout_seconds": 60,
+              "rss_mib": 4096
+            }
+          },
+          "band": {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-008/reference.edge",
+            "sha256": "1c9eb6a05e934251024b2e322325accf0d643828304ded496a5b8978272b9112"
+          }
+        }
+      ]
+    }
+  ]
+}

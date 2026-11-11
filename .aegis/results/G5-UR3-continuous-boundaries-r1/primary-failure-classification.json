@@ -1,0 +1,239 @@
+{
+  "status": "REQUIRES_OWNER_OR_HARNESS_CLASSIFICATION",
+  "rows": [
+    {
+      "case": "live-prefix-d1",
+      "error": "page.evaluate: Error: terminal exact no progress30s\n    at check (http://127.0.0.1:55168/driver.mjs:5:77)\n    at settle (http://127.0.0.1:55168/driver.mjs:12:186)\n    at async consumer (http://127.0.0.1:55168/driver.mjs:44:139)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "errors": [
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        },
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        }
+      ],
+      "liveUp": {
+        "phase": "up",
+        "x": 803.05,
+        "y": 661.5488030885654,
+        "timestampNs": "95768000000",
+        "start": 2028.5999999046326,
+        "end": 2035.5999999046326,
+        "contacts": 0,
+        "generation": "1"
+      },
+      "final_commands": [
+        {
+          "name": "wheel",
+          "ctrl": true,
+          "dx": 0,
+          "dy": -4,
+          "start": 2065.5,
+          "end": 2065.7999999523163,
+          "camera": {
+            "scale": 1.0408108234405518,
+            "x": -30.7724609375,
+            "y": -19.671356201171875
+          }
+        },
+        {
+          "name": "selectShape",
+          "args": [
+            "rectangle"
+          ],
+          "start": 2082.5999999046326,
+          "end": 2082.7999999523163,
+          "generation": "1"
+        },
+        {
+          "name": "undo",
+          "args": [],
+          "start": 2085.2999999523163,
+          "end": 2088.399999976158,
+          "generation": "2"
+        },
+        {
+          "name": "redo",
+          "args": [],
+          "start": 2088.6999999284744,
+          "end": 2090.5999999046326,
+          "generation": "3"
+        }
+      ]
+    },
+    {
+      "case": "navigation-recovery-d4",
+      "error": "page.evaluate: Error: contextrestoretimeout\n    at http://127.0.0.1:55168/driver.mjs:37:577\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "errors": [],
+      "liveUp": null,
+      "final_commands": [
+        {
+          "name": "wheel",
+          "ctrl": true,
+          "dx": 0,
+          "dy": 4,
+          "start": 7149.200000047684,
+          "end": 7149.600000023842,
+          "camera": {
+            "scale": 1,
+            "x": -21.2861328125,
+            "y": -10.64306640625
+          }
+        },
+        {
+          "name": "undo",
+          "args": [],
+          "start": 7168,
+          "end": 7174.200000047684,
+          "generation": "2"
+        },
+        {
+          "name": "redo",
+          "args": [],
+          "start": 7174.300000071526,
+          "end": 7220.100000023842,
+          "generation": "3"
+        },
+        {
+          "name": "wheel",
+          "ctrl": false,
+          "dx": 4,
+          "dy": 2,
+          "start": 7220.300000071526,
+          "end": 7220.600000023842,
+          "camera": {
+            "scale": 1,
+            "x": -25.2861328125,
+            "y": -12.64306640625
+          }
+        }
+      ]
+    },
+    {
+      "case": "live-prefix-d2",
+      "error": "page.evaluate: Error: terminal exact no progress30s\n    at check (http://127.0.0.1:55168/driver.mjs:5:77)\n    at settle (http://127.0.0.1:55168/driver.mjs:12:186)\n    at async consumer (http://127.0.0.1:55168/driver.mjs:44:139)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "errors": [
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        },
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        }
+      ],
+      "liveUp": {
+        "phase": "up",
+        "x": 803.05,
+        "y": 661.5488030885654,
+        "timestampNs": "95768000000",
+        "start": 2240.1999999284744,
+        "end": 2246.5,
+        "contacts": 0,
+        "generation": "1"
+      },
+      "final_commands": [
+        {
+          "name": "wheel",
+          "ctrl": true,
+          "dx": 0,
+          "dy": -4,
+          "start": 2265.7999999523163,
+          "end": 2266,
+          "camera": {
+            "scale": 1.0408108234405518,
+            "x": -30.7724609375,
+            "y": -19.671356201171875
+          }
+        },
+        {
+          "name": "selectShape",
+          "args": [
+            "rectangle"
+          ],
+          "start": 2283.899999976158,
+          "end": 2284.100000023842,
+          "generation": "1"
+        },
+        {
+          "name": "undo",
+          "args": [],
+          "start": 2286.5,
+          "end": 2288.5,
+          "generation": "2"
+        },
+        {
+          "name": "redo",
+          "args": [],
+          "start": 2288.5,
+          "end": 2289.399999976158,
+          "generation": "3"
+        }
+      ]
+    },
+    {
+      "case": "live-prefix-d4",
+      "error": "page.evaluate: Error: terminal exact no progress30s\n    at check (http://127.0.0.1:55168/driver.mjs:5:77)\n    at settle (http://127.0.0.1:55168/driver.mjs:12:186)\n    at async consumer (http://127.0.0.1:55168/driver.mjs:44:139)\n    at async <anonymous>:337:30\n    at worker (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:55:135)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/ur3_continuous.mjs:62:129",
+      "errors": [
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        },
+        {
+          "code": "FRAME_REJECTED",
+          "message": "FRAME_REJECTED"
+        }
+      ],
+      "liveUp": {
+        "phase": "up",
+        "x": 803.05,
+        "y": 661.5488030885654,
+        "timestampNs": "95768000000",
+        "start": 3755,
+        "end": 3761.600000023842,
+        "contacts": 0,
+        "generation": "1"
+      },
+      "final_commands": [
+        {
+          "name": "wheel",
+          "ctrl": true,
+          "dx": 0,
+          "dy": -4,
+          "start": 3791.2999999523163,
+          "end": 3791.7000000476837,
+          "camera": {
+            "scale": 1.0408108234405518,
+            "x": -30.7724609375,
+            "y": -19.671356201171875
+          }
+        },
+        {
+          "name": "selectShape",
+          "args": [
+            "rectangle"
+          ],
+          "start": 3809.100000023842,
+          "end": 3809.399999976158,
+          "generation": "1"
+        },
+        {
+          "name": "undo",
+          "args": [],
+          "start": 3812,
+          "end": 3814.399999976158,
+          "generation": "2"
+        },
+        {
+          "name": "redo",
+          "args": [],
+          "start": 3814.5,
+          "end": 3815.7000000476837,
+          "generation": "3"
+        }
+      ]
+    }
+  ]
+}

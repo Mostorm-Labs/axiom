@@ -1,0 +1,64 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-exact-fixed-scene-reverification-r3",
+  "status": "FROZEN_AUTHORIZED_VERIFICATION_DESIGN_REPAIR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+    "completed_through": [
+      "checkpointpushed",
+      "step1_2localrootproof",
+      "step3nativepartial",
+      "r2terminalincomplete/controlreview",
+      "immutableSDK72files",
+      "controlworstCPUreferencequalified"
+    ],
+    "next_action": "Verification-onlynewfixedscene/entropy/offlinereference/zoomrepair; no productionedits"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-exact-fixed-scene-reverification-r3"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b510b863859eb09ee2f57dfa409e294b3f77df99f09f3b7e3cdb3b72a63400c5"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "7e91e618619e26cc6b655aac0dc117af7777ff7fe8ddd60797b1bc0a43b10f72"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "cea1c6e256ea2131761816f8bbd51a9490fa5df7f70826c89f588a46a3c78d77"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "e4ed87b5b1b72e8c22d612760e0352cf36938dca018a4d7dff0aab640ce4b91e"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "8a3e83b09266e88777781c7fbf98218cd81d07b222ef34c3325bd66825801ef9"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "b03e97e9719d61e76c9baa447a4bc80b62c1e69199fb4c66f045343d300712f4"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "human_stop": "Beforestep5backgroundcomputeevaluation"
+}

@@ -1,0 +1,52 @@
+{
+  "status": "QUALIFIED",
+  "compared_pixels": 9959068,
+  "aa_boundary_pixels": 3416932,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": null,
+  "request": {
+    "width": 4400,
+    "height": 3040,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1.0408108234405518,
+      "x": -30.7724609375,
+      "y": -19.671356201171875
+    },
+    "hud_bounds": []
+  },
+  "actual_sha256": "1cfd4b2ffc8c2b769a6ff888b8ad40de73af51cafc33eabcc90030e21357d3e9",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-004/reference.rgba",
+    "sha256": "925d552484a4e9c484ebbd016cb8267e7cc5f2e1dbd2a2d76670ffb4e6b14109",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS-REPAIR/masked-affine-d4/redo.axsnap",
+    "plan": {
+      "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS-REPAIR/masked-affine-d4/redo.axsnap",
+      "snapshot_sha256": "0268b97faa79fbcbe2ced4d5a18a190b27542e8687bb8afe1fdaae991decd842",
+      "request": {
+        "width": 4400,
+        "height": 3040,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1.0408108234405518,
+          "x": -30.7724609375,
+          "y": -19.671356201171875
+        },
+        "hud_bounds": []
+      },
+      "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+      "timeout_seconds": 60,
+      "rss_mib": 4096
+    }
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions-repair/reference-004/reference.edge",
+    "sha256": "ecea27f1199cf995e0f4acb96566bcfa62ed6653d9510b28017e1690c255fe8c"
+  }
+}

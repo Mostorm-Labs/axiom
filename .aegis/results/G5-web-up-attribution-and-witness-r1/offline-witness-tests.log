@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: separates blocked Up, stale DOM and real busy history without inventing readiness
+ok 1 - separates blocked Up, stale DOM and real busy history without inventing readiness
+  ---
+  duration_ms: 0.515167
+  ...
+# Subtest: browser wait helper executes without host imports or runtime dependencies
+ok 2 - browser wait helper executes without host imports or runtime dependencies
+  ---
+  duration_ms: 1.092666
+  ...
+# Subtest: actual UI asynchronous Undo must advance generation before settle and capture metadata
+ok 3 - actual UI asynchronous Undo must advance generation before settle and capture metadata
+  ---
+  duration_ms: 0.350667
+  ...
+# Subtest: candidate operation roster and three baseline families are complete
+ok 4 - candidate operation roster and three baseline families are complete
+  ---
+  duration_ms: 0.4315
+  ...
+# Subtest: feedback observer records delayed correct pixels instead of failing a fixed early probe
+ok 5 - feedback observer records delayed correct pixels instead of failing a fixed early probe
+  ---
+  duration_ms: 0.162792
+  ...
+# Subtest: T0 includes blocked Up; timings remain findings while actual positive pixels are required
+ok 6 - T0 includes blocked Up; timings remain findings while actual positive pixels are required
+  ---
+  duration_ms: 0.191625
+  ...
+# Subtest: typed sticky uses actual yellow200x200 despite shape-only size0
+ok 7 - typed sticky uses actual yellow200x200 despite shape-only size0
+  ---
+  duration_ms: 0.8535
+  ...
+# Subtest: table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+ok 8 - table grid and image resource typed sources, nonfinite/blank/HUD/stale guards
+  ---
+  duration_ms: 0.159291
+  ...
+# Subtest: phase reconciliation never double counts inclusive children
+ok 9 - phase reconciliation never double counts inclusive children
+  ---
+  duration_ms: 0.194791
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 257.91725

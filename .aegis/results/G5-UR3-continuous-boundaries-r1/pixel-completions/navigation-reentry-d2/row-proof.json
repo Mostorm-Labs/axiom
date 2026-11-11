@@ -1,0 +1,124 @@
+{
+  "id": "navigation-reentry-d2",
+  "status": "QUALIFIED",
+  "final": [
+    {
+      "stage": "final",
+      "projection": null,
+      "status": "QUALIFIED",
+      "compared_pixels": 2642179,
+      "aa_boundary_pixels": 701821,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": null,
+      "request": {
+        "width": 2200,
+        "height": 1520,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1,
+          "x": -25.2861328125,
+          "y": -12.64306640625
+        },
+        "hud_bounds": []
+      },
+      "actual_sha256": "1f3db02fbe5198263a89ee1ce198a73da8af53602e8992abed61657af5e7d6bb",
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-000/reference.rgba",
+        "sha256": "0b6e232850dcbf0e965a057f6755e3b928f7ff5cd9a81211deb44f2c236a6fc5",
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS/navigation-reentry-d2/final.axsnap",
+        "plan": {
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS/navigation-reentry-d2/final.axsnap",
+          "snapshot_sha256": "069c32a0e49136e7c7c41025acc239ec1aa29b5c0e83acdbbccd40a73452e4dc",
+          "request": {
+            "width": 2200,
+            "height": 1520,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": -25.2861328125,
+              "y": -12.64306640625
+            },
+            "hud_bounds": []
+          },
+          "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+          "timeout_seconds": 60,
+          "rss_mib": 4096
+        }
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-000/reference.edge",
+        "sha256": "2ee7dc9c97bd0e2991f5b3e5356bc2859520ebd67408260736d85ae0e6d506a4"
+      }
+    },
+    {
+      "stage": "redo",
+      "projection": null,
+      "status": "QUALIFIED",
+      "compared_pixels": 2642179,
+      "aa_boundary_pixels": 701821,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "roi": null,
+      "request": {
+        "width": 2200,
+        "height": 1520,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1,
+          "x": -25.2861328125,
+          "y": -12.64306640625
+        },
+        "hud_bounds": []
+      },
+      "actual_sha256": "e74d986c985b4c3a7cc6e6001b71d0ebb15c938c3fa92826e59603447efc06f8",
+      "reference": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-001/reference.rgba",
+        "sha256": "0b6e232850dcbf0e965a057f6755e3b928f7ff5cd9a81211deb44f2c236a6fc5",
+        "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS/navigation-reentry-d2/redo.axsnap",
+        "plan": {
+          "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/local-web/G5U3C1-CORRECTNESS/navigation-reentry-d2/redo.axsnap",
+          "snapshot_sha256": "8d9ef4d4ea770286189b79382806a5ae2e8fc2de1540d5f546cb872f4d95df48",
+          "request": {
+            "width": 2200,
+            "height": 1520,
+            "logical_width": 1100,
+            "logical_height": 760,
+            "camera": {
+              "scale": 1,
+              "x": -25.2861328125,
+              "y": -12.64306640625
+            },
+            "hud_bounds": []
+          },
+          "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+          "timeout_seconds": 60,
+          "rss_mib": 4096
+        }
+      },
+      "band": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-001/reference.edge",
+        "sha256": "2ee7dc9c97bd0e2991f5b3e5356bc2859520ebd67408260736d85ae0e6d506a4"
+      }
+    }
+  ],
+  "active": [],
+  "roundtrip": {
+    "objects": 40,
+    "total_masks": 120,
+    "objects_equal": true,
+    "manifest_background_equal": true,
+    "document_digest_equal": true,
+    "before_revision": 45,
+    "after_revision": 47
+  }
+}

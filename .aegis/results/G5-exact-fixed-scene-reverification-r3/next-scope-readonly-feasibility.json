@@ -1,0 +1,58 @@
+{
+  "status": "READ_ONLY_FEASIBILITY_NOT_IMPLEMENTED",
+  "scope": "RequestedterminalappendixfornextP31;no production edits inr3",
+  "possible_owner_path": "Interaction partialEraseTargets exactHit\u2192SkiaRenderer::exactQueryCohort\u2192existingSkiaRenderCache\u2192private SkiaInkLayers owned preparation references.",
+  "holders": [
+    {
+      "owner": "EraseMaskPathCache::Impl::histories",
+      "path": "runtime/render/src/selection_region_geometry.cpp:423",
+      "holds": "LRU strongMaskHistoryPlan; evictiononlyuse_count1. ExactHistoryProof/resultindependentstrongsources; exactlazypathsweak."
+    },
+    {
+      "owner": "SkiaInkLayers::Source.history",
+      "path": "runtime/render/src/skia_ink_layers.hpp:29",
+      "holds": "One per retainedsource strongdrawplan; bodygeometry/pixels/resultseparate. PersistentconsumerpinpreventsLRUeviction."
+    },
+    {
+      "owner": "SkiaInkLayers::draw local history",
+      "path": "runtime/render/src/skia_ink_layers.cpp:75",
+      "holds": "Owner-thread stackstrongrefduringdraw andprimitivedraw; cannotsilentlyinvalidatewhileinuse."
+    },
+    {
+      "owner": "SkiaRenderCache::drawHistoricalMasks localplan",
+      "path": "runtime/render/src/skia_render_cache.cpp:109",
+      "holds": "Synchronouslocalstrongrefuntilallpreparedprimitivecommandsencoded."
+    },
+    {
+      "owner": "MaskHistoryPlan::primitives/exactPaths/source/metadata",
+      "path": "runtime/render/src/skia_mask_history.hpp",
+      "holds": "Completepreparedviewleases. Sourceallocationmaybesharedwithindependentproof; releasing1planonlyreleasesunsharedrefs; no forcedGPUticketrelease."
+    }
+  ],
+  "critical_invalidation": [
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp:102",
+      "rule": "sameHistorypointer/prefix proofusesSource.history; simplyresettingit makeshistoryPrefix=true andmaypreservestaleresult qualification."
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp:122",
+      "rule": "Epochonlyincrementswhen!sameHistoryand!historyPrefix/...; nulloldhistorywitholdresult couldskipreset. Mustexplicitlyretiremaskresultqualification orretaincompleteindependentorderedhistoryproof."
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp:166",
+      "rule": "Tile.bodyispreeraseandcanstay; resultrequiresmatchingSource.epoch+applied maskcount; invalidateresultepoch/applied orresultpixelswithoutdiscardingbody/rasterprogress."
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp:199",
+      "rule": "Rebuildresultfrombodywithoriginalorderedhistory afterreacquisition; alltiles includingoffscreenmustnotreuseoldresultprefixuntilqualified."
+    }
+  ],
+  "feasibility": "Narrowowner-opportunityreleaseofSource.history+drawLRUpinsisfeasibleifnoactivedraw/reentry. KeepMaskHistoryPlan immutable and current/foreignexternallyheldrefsuntouched. Reclaimonlyactualownerreference; source+GPUleasesfreedonlylastrelease/existingcompletion. Preservelastsuccessproviderimage/canonicaldocument/bodypixels.",
+  "required_guards": [
+    "Ownerthread no draw inprogress/reentrantcallback; exactcohortonly",
+    "Sourcehistoryretirementexplicitresultinvalid/independentcompleteproof; camera/grid/material/opacity/z-orderunchanged",
+    "GPUusage/callbackticket leases preserved; CPUplan object lifetime distinct fromSkiarecordedGPUresources; verifyactualSkiaresourceownership beforefreeingrecordeddata",
+    "Nativeactual40/dynamic6/heldplan+receipt/pixeloracle andmatchingfixedsceneWeb beforeacceptance"
+  ],
+  "not_done": "No newmethodorparamcode; thisisreadonlyinputforcontrolpackage, notapprovedfutureimplementationorGateevidence."
+}

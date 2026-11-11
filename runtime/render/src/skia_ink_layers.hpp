@@ -19,6 +19,9 @@ class SkiaInkLayers final {
         const std::shared_ptr<SourceRetentionPool>&,CompactCoverageTargets&,RenderCacheWork&,bool& painted,bool& resourcePending,std::shared_ptr<PreparedGeometryCache> prepared={},std::shared_ptr<const PreparedNavigationGeometry> ready={},std::shared_ptr<EraseMaskPathCache> histories={},PreparationAllowance* allowance=nullptr);
     void clear()noexcept;
     void prune(std::span<const ReferenceTraversalEntry>);
+    // Owner-thread preparation opportunity only. Plan values and pixel/GPU
+    // leases remain valid; every retained mask result loses qualification.
+    std::size_t retireIdleHistoryPreparation() noexcept;
  private:
     using MaskPrimitive=std::variant<semantic::EraseCubicSegment,semantic::FilledPathMask>;
     struct Source {
@@ -42,6 +45,7 @@ class SkiaInkLayers final {
     std::shared_ptr<EraseMaskPathCache> histories_;
     std::size_t bytes_=0;
     std::uint64_t tick_=0;
+    unsigned drawDepth_=0;
     bool reserve(std::size_t,const Key&,const RenderCacheOptions&,
         const std::shared_ptr<resources::ResourceBudgetManager>&,resources::ResourceLease&);
     void eraseSource(foundation::ObjectId);

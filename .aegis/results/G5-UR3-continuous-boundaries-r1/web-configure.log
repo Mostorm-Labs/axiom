@@ -1,0 +1,26 @@
+CMake Error at /Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake:103 (message):
+  Failed to fetch Emscripten version information with command
+  "'/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/emcc'
+  -v"!
+
+  Process returned with error code 1.
+
+  Output:
+
+  Traceback (most recent call last):
+
+    File "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/emsdk/upstream/emscripten/emcc.py", line 37, in <module>
+      assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+
+  AssertionError: emscripten requires python 3.10 or above
+  (/Applications/Xcode-27.0.0.app/Contents/Developer/usr/bin/python3 3.9.6
+  (default, Aug 25 2026, 21:26:21)
+
+  [Clang 21.0.0 (clang-2100.3.34.2)])
+
+Call Stack (most recent call first):
+  /opt/homebrew/share/cmake/Modules/CMakeDetermineSystem.cmake:146 (include)
+  CMakeLists.txt:3 (project)
+
+
+-- Configuring incomplete, errors occurred!

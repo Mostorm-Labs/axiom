@@ -1,0 +1,39 @@
+{
+  "status": "NARROW_OWNER_FIXES_WITH_REMAINING_ACTIVE_EVIDENCE_GAP",
+  "fixes": [
+    {
+      "id": "PREVIEW_COMPLETION",
+      "red": "localization-result.json",
+      "native_red": "preview-completion-red.log",
+      "native_green": "extensions-native-junit.xml",
+      "behavior": "known superseded preview cannot pin Webpending slot or qualify newer preview; combinedcanonical independent",
+      "source_files": [
+        "runtime/composition/CMakeLists.txt",
+        "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+        "runtime/composition/src/runtime_composition.cpp",
+        "runtime/interaction/src/canvas_editing_runtime.cpp",
+        "sdk/web/web_runtime_adapter.cpp"
+      ]
+    },
+    {
+      "id": "RESTORED_WEBGL_EXTENSIONS",
+      "red": "recovery-extension-classification.json",
+      "native_red": "extensions-red.log",
+      "web_green": "recovery-independent-pixel-proof.json",
+      "behavior": "renew actual supported optional capabilities before new Skia context; noerror drain",
+      "source_files": [
+        "runtime/render/src/webgl_surface_backend.cpp",
+        "runtime/render/src/ur3_webgl_extensions.hpp",
+        "runtime/render/CMakeLists.txt"
+      ]
+    }
+  ],
+  "harness_repairs": [
+    "contacts0 canonical snapshot beforeDown; activepixelsonly",
+    "state/GLmetadata beforeassert; separatecloseerror",
+    "restore oneRAF event turn",
+    "expectedinput floatnormalization matching publicSDK seam"
+  ],
+  "old_failures_preserved": true,
+  "no_Brush_Operation_History_budget_API_AA_changes": true
+}

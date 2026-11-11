@@ -1,0 +1,57 @@
+{
+  "status": "QUALIFIED",
+  "compared_pixels": 578578,
+  "aa_boundary_pixels": 333422,
+  "hud_excluded_pixels": 0,
+  "interior_mismatched_pixels": 0,
+  "max_interior_delta": 0,
+  "witnesses": [],
+  "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+  "roi": {
+    "x": 0,
+    "y": 0,
+    "width": 600,
+    "height": 1520
+  },
+  "request": {
+    "width": 2200,
+    "height": 1520,
+    "logical_width": 1100,
+    "logical_height": 760,
+    "camera": {
+      "scale": 1.0408108234405518,
+      "x": -30.7724609375,
+      "y": -19.671356201171875
+    },
+    "hud_bounds": []
+  },
+  "actual_sha256": "eb9374df4ad136025734950dd14dd213495a5ba04e532877329211a16a36bdee",
+  "reference": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-002/reference.rgba",
+    "sha256": "f0912761b6d41894d239f4679157f1a35391367d87ea7c6d4c1bd15c4b815f98",
+    "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d2/ink-final.axsnap",
+    "plan": {
+      "snapshot": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/mixed-continuous-d2/ink-final.axsnap",
+      "snapshot_sha256": "125f283cf4335b051777c34a397de4a348574b30f551be9ba9270aef6bc56ac7",
+      "request": {
+        "width": 2200,
+        "height": 1520,
+        "logical_width": 1100,
+        "logical_height": 760,
+        "camera": {
+          "scale": 1.0408108234405518,
+          "x": -30.7724609375,
+          "y": -19.671356201171875
+        },
+        "hud_bounds": []
+      },
+      "oracle_sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105",
+      "timeout_seconds": 60,
+      "rss_mib": 4096
+    }
+  },
+  "band": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-UR3-continuous-boundaries-r1/pixel-completions/reference-002/reference.edge",
+    "sha256": "18cd265425cd1ffd1245161a2cc2aaedc4ea0151f5f0b452b341c1977fd78df8"
+  }
+}

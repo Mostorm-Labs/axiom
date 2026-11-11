@@ -1,0 +1,112 @@
+{
+  "status": "PARTIAL_REQUIRED_ACTIVE_IDLE_BOUNDARY",
+  "rows": [
+    {
+      "id": "masked-affine-d2",
+      "kind": "masked-affine",
+      "dpr": 2,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "masked-affine-d4",
+      "kind": "masked-affine",
+      "dpr": 4,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "navigation-reentry-d2",
+      "kind": "navigation-reentry",
+      "dpr": 2,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "navigation-recovery-d4",
+      "kind": "navigation-recovery",
+      "dpr": 4,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "mixed-continuous-d2",
+      "kind": "mixed-continuous",
+      "dpr": 2,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "mixed-continuous-d4",
+      "kind": "mixed-continuous",
+      "dpr": 4,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "live-prefix-d1",
+      "kind": "live-prefix",
+      "dpr": 1,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "live-prefix-d2",
+      "kind": "live-prefix",
+      "dpr": 2,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "live-prefix-d4",
+      "kind": "live-prefix",
+      "dpr": 4,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "QUALIFIED_WHERE_REQUIRED",
+      "full_step4_PASS": false
+    },
+    {
+      "id": "foreground-idle-d4",
+      "kind": "foreground-idle",
+      "dpr": 4,
+      "primary_status": "QUALIFIED",
+      "primary_source": "b69207acfabe5754e2e283ded2abb0fb654d04e0d053f53524c87c6d14de7f63",
+      "terminal_final_redo_pixels": "QUALIFIED",
+      "active_status": "INCOMPLETE_EARLY_OLD_POSE",
+      "full_step4_PASS": false
+    }
+  ],
+  "latest_focused_window": "G5U3C1-RECOVERY-FINAL",
+  "latest_focused_cases": [
+    "navigation-recovery-d4",
+    "live-prefix-d2",
+    "masked-affine-d4"
+  ],
+  "no_allroutes_or_performance_PASS": true
+}

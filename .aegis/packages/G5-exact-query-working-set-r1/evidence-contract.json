@@ -1,0 +1,32 @@
+{
+  "required": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "baseline-red.json",
+    "baseline-native-work.json",
+    "frozen-oracles.json",
+    "working-set-reduction.json",
+    "exact-parity.json",
+    "fork-and-pressure.json",
+    "runtime-semantics.json",
+    "lease-accounting.json",
+    "paired-web.json",
+    "post-erase-action-matrix.json",
+    "continuous-stress.json",
+    "independent-pixel-proof.json",
+    "regressions.json",
+    "normal-sdk-manifest.json",
+    "source-manifest.json",
+    "source-delta.patch",
+    "sampling-ledger.json",
+    "cleanup.json",
+    "artifact-manifest.json",
+    "result.json"
+  ],
+  "exact_bindings": "sourcebefore/after/publicationbase,old/newSDK36 files/WASMresources/compilerflags,fixturehashes,oldoraclebinaryhashes,allrawfailedsamplesandstatfindings",
+  "review": "sharedcontrolledlocalreview independentlyresolvable withSHA256; no liveHTTPlogs/selfhashloops; officialGatefalse",
+  "performance": "Allpairedraw+descriptivep50/max, nofilterfailures; stage3/5targetunmetfinding. Differentdeliverywaveformsnevercomparativeresults.",
+  "preservation": "priorWA/ECpackagesresultsrawanduserdocsuntouched; sourcepostimagesfrozen; generatedbinaries/outdatahashmanifest",
+  "git": "noautomaticnewcommitpush,usercheckpoint80335dd0alreadydone"
+}

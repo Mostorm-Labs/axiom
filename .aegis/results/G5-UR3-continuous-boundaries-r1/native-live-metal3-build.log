@@ -1,0 +1,34 @@
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:16:7: warning: abstract class is marked 'final' [-Wabstract-final-class]
+   16 | class ReproMetalTarget final:public render::SkiaSurfaceProvider {
+      |       ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/skia_surface_provider.hpp:100:41: note: unimplemented pure virtual method 'readbackCount' in 'ReproMetalTarget'
+  100 |     [[nodiscard]] virtual std::uint64_t readbackCount() const noexcept = 0;
+      |                                         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/skia_surface_provider.hpp:101:41: note: unimplemented pure virtual method 'cpuCopyCount' in 'ReproMetalTarget'
+  101 |     [[nodiscard]] virtual std::uint64_t cpuCopyCount() const noexcept = 0;
+      |                                         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/skia_surface_provider.hpp:102:41: note: unimplemented pure virtual method 'presentCount' in 'ReproMetalTarget'
+  102 |     [[nodiscard]] virtual std::uint64_t presentCount() const noexcept = 0;
+      |                                         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:19:96: error: object of type 'SurfaceMetrics' cannot be assigned because its copy assignment operator is implicitly deleted
+   19 |  render::RenderTargetInfo describe()const noexcept override{auto i=target_.describe();i.metrics={1100,760,1100,760,1,1};return i;}
+      |                                                                                                ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include/canvas/render/surface_metrics.hpp:9:17: note: copy assignment operator of 'SurfaceMetrics' is implicitly deleted because field 'logicalWidth' is of const-qualified type 'const float'
+    9 |     const float logicalWidth = 0.0F;
+      |                 ^
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:1:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp:3:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp:2:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include/canvas/runtime/object_clipboard.hpp:2:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include/canvas/runtime/multi_selection.hpp:3:
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include/canvas/foundation/object_id.hpp:3:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/array:600:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm:1865:
+In file included from /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/inplace_merge.h:27:
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/unique_ptr.h:761:30: error: allocating an object of abstract class type 'ReproMetalTarget'
+  761 |   return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...));
+      |                              ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/ur3_continuous_live_repro.cpp:31:22: note: in instantiation of function template specialization 'std::make_unique<ReproMetalTarget, std::shared_ptr<(anonymous namespace)::NativeMetalCompletion> &, 0>' requested here
+   31 |  auto canonical=std::make_unique<ReproMetalTarget>(completion),preview=std::make_unique<ReproMetalTarget>(completion);need(canonical->resize(1100,760).code==render::BackendSubmissionCode::kAccepted&&preview->resize(1100,760).code==render::BackendSubmissionCode::kAccepted,"resize");need(core.registerSurfaceProvider("u3repro-c",std::move(canonical)),"registercanonical");need(core.registerPreviewSurfaceProvider("u3repro-p",std::move(preview)),"registerpreview");need(core.bindSurface(1100,760),"bindsurface");need(core.registerSource(71),"registerinput");need(core.setPlatformPresentationDeferred(true),"deferred");ink_playground::InkPlaygroundHistoryTestAccess::desktop(core.qualificationRuntime());
+      |                      ^
+1 warning and 2 errors generated.

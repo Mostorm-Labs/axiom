@@ -1,0 +1,60 @@
+{
+  "baseline_revision": "80335dd0e858ee682c016def4f6b5c57233a5ff3",
+  "tracked_patch": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/delta.patch",
+    "sha256": "3fd027096080a11ef82e8bc61bcdce08671f25f44b17952072ef6758ad206904",
+    "bytes": 17229
+  },
+  "new_files": [
+    {
+      "path": "verification/runners/g5/web_up_attribution_contract.mjs",
+      "sha256": "b80e7fb62dc3b4e58ccca67fc1903c9b6fe71be4970f17576b9629917e28a093",
+      "bytes": 3026,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/runners/g5/web_up_attribution_contract.mjs"
+    },
+    {
+      "path": "verification/runners/g5/web_up_attribution_runner.py",
+      "sha256": "3b80ba3e36699ac1d31470f542484d340f2637010513eb830e121025dd414602",
+      "bytes": 3979,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/runners/g5/web_up_attribution_runner.py"
+    },
+    {
+      "path": "verification/runners/g5/web_up_attribution.mjs",
+      "sha256": "a33b136c814a8cf18e4520f034a7f9c7fa3e7d8668fd221cb65885cf68932b3a",
+      "bytes": 15981,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/runners/g5/web_up_attribution.mjs"
+    },
+    {
+      "path": "verification/runners/g5/web_up_attribution_snapshot_check.cpp",
+      "sha256": "6449ff58cccc14c4df18c87b46ce35998b5e8151b5b27b38390edafc92c07e3c",
+      "bytes": 12109,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/runners/g5/web_up_attribution_snapshot_check.cpp"
+    },
+    {
+      "path": "verification/runners/g5/web_up_attribution_collector_test.cpp",
+      "sha256": "a95cb6af480ea801b7b159716cfc13172a4cdf5c863c8a68395db06eaafe76f9",
+      "bytes": 2451,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/runners/g5/web_up_attribution_collector_test.cpp"
+    },
+    {
+      "path": "verification/tests/test_g5_web_up_attribution.py",
+      "sha256": "2703e3fcc852e6f3b0924efb186ce3990b6ff76c84d04870608d15583629e59e",
+      "bytes": 772,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/tests/test_g5_web_up_attribution.py"
+    },
+    {
+      "path": "verification/tests/g5_web_up_attribution.test.mjs",
+      "sha256": "214acfde8c93f33f09a2f1ca598e20af0c1224d17ca545f7769abcc979985568",
+      "bytes": 4348,
+      "preimage_sha256": null,
+      "postimage": ".aegis/results/G5-web-up-attribution-and-witness-r1/postimages/verification/tests/g5_web_up_attribution.test.mjs"
+    }
+  ],
+  "patch_excludes_new_files": "Newfiles deliveredexactlythroughpostimages/manifest, notpretendedpresentinGitdiff."
+}

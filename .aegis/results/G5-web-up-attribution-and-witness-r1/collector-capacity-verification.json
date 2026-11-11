@@ -1,0 +1,13 @@
+{
+  "status": "12_UP_ROOTS_CAPACITY_GREEN",
+  "original_RED": "collector-capacity-result.log",
+  "GREEN": "collector-capacity-GREEN.log",
+  "original_collector_regression": "original-collector-result.log",
+  "actual12roots": true,
+  "recordtotal": 81192,
+  "critical_loss": 0,
+  "statistical_loss": 0,
+  "description_correction": "GREENlogarray_slots_reused_by_drain:falsewasstalehardcodedlabel; implementationdoesreusefullydrainedslots, sourceflagcorrected,countsandassertionsunchanged.",
+  "fixed_capacity_bytes": 16777216,
+  "buffer_stability": "DrainJSON copiedtoRun.buffer separatefromrecordslots; slotsreuseafterfinishedwithwriterlock/scopeDepth0; nextcontrolownsbufferlifetime. Sequence/loss/GPU/leaseidentitiesnotreset."
+}

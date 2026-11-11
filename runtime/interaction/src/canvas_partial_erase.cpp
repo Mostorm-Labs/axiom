@@ -20,6 +20,7 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
     if(!runtimeSceneHost_)return std::nullopt;
     const auto candidates=runtimeSceneHost_->query(canvas::SceneQuery{{float(left-radius),float(top-radius),float(right+radius),float(bottom+radius)}});
     if(!candidates)return std::nullopt;
+    const auto cohort=skiaRenderer_.exactQueryCohort(exactHit);
     for(const auto id:candidates.value().backToFront) {
         const auto* found=sceneCoordinator_->runtimeScene().find(id);if(!found)return std::nullopt;
         const auto& record=*found;
@@ -27,7 +28,9 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
         if(!textWritable(record.objectId))continue;
         const auto& b=record.worldBounds;
         if(b.right<left-radius||b.left>right+radius||b.bottom<top-radius||b.top>bottom+radius)continue;
+        G5_SCOPE(g5MaskConstruct,g5::Tag::wa_mask_construct,g5::Purpose::none);
         auto mask=partialEraseGeometry(trace,record.transform,radius);
+        G5_SCOPE_END(g5MaskConstruct);
         UR2D_COUNT(masksBuilt);
         if(!mask)return std::nullopt;
         if(exactHit) {

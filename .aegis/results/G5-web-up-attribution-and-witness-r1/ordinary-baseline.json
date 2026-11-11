@@ -1,0 +1,97 @@
+{
+  "status": "OBSERVED_NOT_OPTIMIZED",
+  "rows": [
+    {
+      "case": "long1600",
+      "raw": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/long1600/qualified-row.json",
+        "sha256": "caf24d5fa5bea957122034e6361d21e3f92ef915f01c5520463e7bbabee78f6d",
+        "bytes": 986301
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "main_up_ms": 4174.300000071526,
+          "successor_up_ms": 3647.899999976158,
+          "successor_down_ms": 1.2999999523162842,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        }
+      ],
+      "ready_from_first_main_up_ms": 8528.300000071526,
+      "snapshot_roundtrip": {
+        "objects": 40,
+        "total_masks": 160,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 44,
+        "after_revision": 46
+      },
+      "errors": []
+    },
+    {
+      "case": "growth6",
+      "raw": {
+        "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/qualified-row.json",
+        "sha256": "9e4e3e77031eb233253ebf9e928559e6303c8b59e7b6895a38fd5d658b85dd53",
+        "bytes": 641054
+      },
+      "rounds": [
+        {
+          "round": 1,
+          "main_up_ms": 937.1000000238419,
+          "successor_up_ms": 62.699999928474426,
+          "successor_down_ms": 1.0,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        },
+        {
+          "round": 2,
+          "main_up_ms": 943.1999999284744,
+          "successor_up_ms": 126.29999995231628,
+          "successor_down_ms": 1.0,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        },
+        {
+          "round": 3,
+          "main_up_ms": 1085.1000000238419,
+          "successor_up_ms": 75.30000007152557,
+          "successor_down_ms": 1.600000023841858,
+          "main_to_next_down_gap_ms": 0.0
+        },
+        {
+          "round": 4,
+          "main_up_ms": 1237.7999999523163,
+          "successor_up_ms": 161.79999995231628,
+          "successor_down_ms": 1.5,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        },
+        {
+          "round": 5,
+          "main_up_ms": 4399.399999976158,
+          "successor_up_ms": 4436.600000023842,
+          "successor_down_ms": 1.2999999523162842,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        },
+        {
+          "round": 6,
+          "main_up_ms": 6386.200000047684,
+          "successor_up_ms": 6063.800000071526,
+          "successor_down_ms": 1.600000023841858,
+          "main_to_next_down_gap_ms": 0.10000002384185791
+        }
+      ],
+      "ready_from_first_main_up_ms": 30542.5,
+      "snapshot_roundtrip": {
+        "objects": 40,
+        "total_masks": 520,
+        "objects_equal": true,
+        "manifest_background_equal": true,
+        "document_digest_equal": true,
+        "before_revision": 53,
+        "after_revision": 55
+      },
+      "errors": []
+    }
+  ],
+  "distinction": "New immediate full successor dispatch uses no16ms pauses/ROI between moves. Old~9.2s paced successor and this~3.65s successor are different pacing, not an optimization comparison. Growth normal and diagnostic vary; no paired relative PASS."
+}
