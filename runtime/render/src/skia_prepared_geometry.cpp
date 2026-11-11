@@ -267,8 +267,8 @@ std::uint64_t fingerprint(const ReferenceCommand& command,PreparedGeometryStatis
         const auto& knots=c->content.get().stroke.knots;add(knots.size());
         if(!knots.empty()){std::size_t previous=~std::size_t{0};for(auto i:{std::size_t{0},knots.size()/2,knots.size()-1})if(i!=previous){
             const auto& k=knots[i];add(k.x);add(k.y);add(k.pressure);previous=i;}}
-    }else if(const auto* c=std::get_if<BrushStrokeReferenceCommand>(&command)){
-        const auto& outline=c->content.get().stroke.vector_output.outline;add(outline.size());
+    }else if(const auto* brush=std::get_if<BrushStrokeReferenceCommand>(&command)){
+        const auto& outline=brush->content.get().stroke.vector_output.outline;add(outline.size());
         if(!outline.empty()){std::size_t previous=~std::size_t{0};for(auto i:{std::size_t{0},outline.size()/2,outline.size()-1})if(i!=previous){
             const auto& point=outline[i];add(point.x);add(point.y);previous=i;}}
     }

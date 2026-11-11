@@ -1004,8 +1004,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                     transientDisplay_.reset();provider.release();return BackendSubmissionResult::retry("transient display target pending");
                 }
             }else{
-                const auto info=acquired.frame.surface->imageInfo();const auto bytes=std::size_t(info.width())*info.height()*4;
-                const auto pixels=resourceBudget_->reserve(resources::ResourceClass::kCanonicalFrame,bytes,true);
+                const auto info=acquired.frame.surface->imageInfo();const auto pixelBytes=std::size_t(info.width())*info.height()*4;
+                const auto pixels=resourceBudget_->reserve(resources::ResourceClass::kCanonicalFrame,pixelBytes,true);
                 if(!pixels){transientDisplay_.reset();provider.release();return BackendSubmissionResult::retry("transient display target pending");}
                 transientDisplay_->pixels=resources::ResourceLease(resourceBudget_,*pixels);
                 transientDisplay_->surface=canvas->makeSurface(info);

@@ -890,7 +890,6 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         // A nonresident body is still part of the live GPU presentation path.
         // Preserve the qualified v4 coverage policy instead of silently using
         // the CPU Direct oracle on every damage frame under cache pressure.
-        const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source.command);
         const bool gpuV4=options.gpuCoverageCandidate&&compact&&compact->content.get().stroke.config.algorithmVersion==4&&isolated->recordingContext();
         CompactRasterWork rasterWork;
         drawInkBodyToSkCanvas(*isolated,source,images,text,grid,&rasterWork,gpuV4,gpuV4?&coverageTargets_:nullptr,true,readyBody(source,PreparedConsumer::kDirect).get());

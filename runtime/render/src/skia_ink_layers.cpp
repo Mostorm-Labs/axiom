@@ -73,8 +73,8 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     if(found==sources_.end()){
         if(sources_.size()>=limits.maxEntries)return false;
         if(!geometry_)return false;
-        geometry_->setRetentionPool(pool);auto prepared=ready?std::move(ready):geometry_->get(entry,limits,budget,true,PreparedConsumer::kRetainedInk);if(!prepared)return false;
-        Source source;source.command=entry.command;source.geometry=std::move(prepared);source.matrix=matrix;source.viewport=viewport;
+        geometry_->setRetentionPool(pool);auto preparedBody=ready?std::move(ready):geometry_->get(entry,limits,budget,true,PreparedConsumer::kRetainedInk);if(!preparedBody)return false;
+        Source source;source.command=entry.command;source.geometry=std::move(preparedBody);source.matrix=matrix;source.viewport=viewport;
         source.context=destination.recordingContext();source.grid=gridBasis;
         found=sources_.emplace(id,std::move(source)).first;
     }
@@ -144,8 +144,8 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         const Key key{id,x,y};auto tile=tiles_.find(key);const auto bytes=std::size_t(crop.width())*crop.height()*4;
         if(allowance&&allowance->exhausted())return pending();
         if(tile==tiles_.end()){
-            constexpr auto metadataBytes=sizeof(Tile)+sizeof(Key)+sizeof(CompactStrokeRasterJob)+128;
-            resources::ResourceLease lease;if(!reserve(bytes+metadataBytes,key,limits,budget,lease))return pending();
+            constexpr auto tileMetadataBytes=sizeof(Tile)+sizeof(Key)+sizeof(CompactStrokeRasterJob)+128;
+            resources::ResourceLease lease;if(!reserve(bytes+tileMetadataBytes,key,limits,budget,lease))return pending();
             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width(),crop.height()));if(!target)return pending();
             G5_TARGET(target,true);
             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
@@ -207,7 +207,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             auto target=destination.makeSurface(scratch.imageInfo().makeWH(crop.width()+2*guard,crop.height()+2*guard));if(!target)return pending();
             G5_TARGET(target,true);
             auto* canvas=target->getCanvas();canvas->clear(SK_ColorTRANSPARENT);
-            SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);canvas->drawImage(base,prefix?0:guard,prefix?0:guard,SkSamplingOptions{},&copy);
+            SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);canvas->drawImage(base,SkScalar(prefix?0:guard),SkScalar(prefix?0:guard),SkSamplingOptions{},&copy);
             canvas->translate(float(guard-x),float(guard-y));canvas->clipIRect(viewport);canvas->concat(matrix);
             for(auto i=first;i<maskCount;++i){
                 if(i<historical){
