@@ -52,6 +52,8 @@ struct CpuPendingEraseState final {
   semantic::EraseMaskGeometry geometry,jobGeometry;
   bool historyJob=false,reuseTarget=false;
   render::SkiaRenderer::CpuPathPin currentPath;
+  render::SkiaRenderer::CpuDecisionPin decision;
+  bool decisionRequest=false,fullFallback=false;
   std::vector<render::SkiaRenderer::CpuPathPin> pathPins;
   std::optional<RuntimeSceneRecord> target;
   std::array<std::uint64_t,8> identity{};

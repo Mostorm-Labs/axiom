@@ -1,0 +1,129 @@
+{
+  "native_logs": [
+    "native-focused-r1.log",
+    "native-focused-r2.log",
+    "native-compatibility-final.log",
+    "ur2-regressions.log",
+    "ur2-runtime-r3.log"
+  ],
+  "final_focused": {
+    "tests": 13,
+    "passed": 13
+  },
+  "ur2_render": {
+    "tests": 13,
+    "passed": 13,
+    "notrun_missingbinary_initial": 2,
+    "after_build_runtime_tests_passed": 2
+  },
+  "kernel_prefix_history": "baseline compatibility core tests passed; oldfullnumericalkernelunchanged",
+  "Node": {
+    "tests": 31,
+    "passed": 31
+  },
+  "driver": {
+    "tests": 2,
+    "passed": 2
+  },
+  "SDK_error": {
+    "tests": 1,
+    "passed": 1
+  },
+  "boundaries": 120,
+  "initial_failures": "first activecancel/activepaced expected eager full union; tests updated to absence of eager union plus input/cancel ownership; retainedlogs; initialtwo notbuiltUR2 laterbuiltpassed",
+  "all_logs": {
+    "native-focused-r1.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/native-focused-r1.log",
+      "sha256": "d06e3360ffcf23ac5288eca4c1ff2ca1da64afb4e21f3af3d4e69230f3f0bb19"
+    },
+    "native-focused-r2.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/native-focused-r2.log",
+      "sha256": "b4b11dbed8e43c7c1f8441cff5fea16b1052dfb6d911543aa7098b33c5ca6b68"
+    },
+    "ur2-runtime-r3.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/ur2-runtime-r3.log",
+      "sha256": "e243928c31305e8e22f91f299f9160b73d6270e77f2f9b7c2deed161f9ea51d3"
+    },
+    "ur2-runtime-r2.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/ur2-runtime-r2.log",
+      "sha256": "f25f8a3b7745d4e0817a5ca9839ba7c803977493e245d097dec82d4e4a130398"
+    },
+    "api-final.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/api-final.log",
+      "sha256": "9b2064c17da39cb0d6d60779e8b6ffc4251b49d4a9267ab30d5fc35a86f5592d"
+    },
+    "driver-tests.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/driver-tests.log",
+      "sha256": "d45239f88f2f338446b5bbc1bf68427cc6e15fabad9015a56a6a6f514238e961"
+    },
+    "node-r1.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/node-r1.log",
+      "sha256": "a623a7ecc1884759ff24954b431a340efee1c74ed90381256ad05289455bf225"
+    },
+    "ur2-regressions.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/ur2-regressions.log",
+      "sha256": "abdd79ab86d67eb0569239519965f33ffa9a31774f97aa7afaf98b3d3dbc13a0"
+    },
+    "boundaries-post-compatibility.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/boundaries-post-compatibility.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    "boundaries-r1.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/boundaries-r1.log",
+      "sha256": "075dfe2e6037c39fda68e8284811852435629eacba823c9e58ce7959fa820352"
+    },
+    "boundaries-r2.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/boundaries-r2.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    "node-final.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/node-final.log",
+      "sha256": "0c8c3c7f145ef922f5a8d1fd413c0ff5a537ce75d50592bc09a8b40c61b1b932"
+    },
+    "api-r1.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/api-r1.log",
+      "sha256": "d960f3de4735a782cd904b2638f098d382eb603aaf9a7a866ceba6bfe700ce3c"
+    },
+    "boundaries-final.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/boundaries-final.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    "build-native-tests.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/build-native-tests.log",
+      "sha256": "ba8170705ae4d4b504e2237257539b90e91b386db2d003db13a7228ba726833e"
+    },
+    "build-ur2-runtime.log": {
+      "path": "out/G5-CPUW6b-local-exact-union-r1/build-ur2-runtime.log",
+      "sha256": "00f062c6de0a57cbcd5522d74b92c8828de882e9cc22923174a504b8cffd7164"
+    }
+  },
+  "final_compatibility_native": {
+    "identity": {
+      "pass": 1,
+      "log": "native-final-boundaries.log"
+    },
+    "compatibility": {
+      "pass": 1,
+      "log": "native-final-compatibility-r2.log"
+    },
+    "initial_legacy_test_expectation": "assumed Unsupported; original actualInvalid for algorithm3/config4contradiction; now compares existing originalstatus, no productionchange"
+  },
+  "terminal_node": {
+    "pass": 31,
+    "fail": 0,
+    "log": "node-terminal.log"
+  },
+  "terminal_boundaries": 120,
+  "roundjoin_control_review": {
+    "native_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "boundary_contracts": 120,
+    "logs": [
+      "corner-red.log",
+      "corner-ctest.log",
+      "boundaries-roundjoin.log"
+    ],
+    "no_browser_rerun": true
+  }
+}

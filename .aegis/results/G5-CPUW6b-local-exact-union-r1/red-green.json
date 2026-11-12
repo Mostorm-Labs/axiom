@@ -1,0 +1,14 @@
+{
+  "red": {
+    "returncode": -6,
+    "stdout": "actual_requested_segments=7200\n",
+    "stderr": "libc++abi: terminating due to uncaught exception of type std::runtime_error: LOCAL_EXACT_REQUEST_REBUILT_FULL_7200_UNION\n",
+    "baseline": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "expected": "LOCAL_EXACT_REQUEST_REBUILT_FULL_7200_UNION"
+  },
+  "green": {
+    "returncode": 0,
+    "stdout": "actual_requested_segments=32\n",
+    "stderr": ""
+  }
+}

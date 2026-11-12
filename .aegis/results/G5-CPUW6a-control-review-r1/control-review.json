@@ -1,0 +1,80 @@
+{
+  "schema": "axiom-cpuw6a-independent-review-v1",
+  "reviewed_at_utc": "2026-11-12T17:39:01.403967+00:00",
+  "reviewer_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "producer_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "repository": {
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "origin": "git@github.com:Mostorm-Labs/axiom.git",
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "c5ba55996319e96c801f4e275814473137d7e85c"
+  },
+  "subject": {
+    "result_sha256": "19c349168a53e89f49c6db24181d893545adf4d43ef5bfca40e9ab6cdbd7fb8a",
+    "package_sha256": "726e7a1232c1de61107d8f33bfa9367b3921b23406108a7c4bbb534b8db833d9",
+    "attribution_sha256": "1b0cc1952ab28108aa55de75dabf285ce09e29da03ae216fbe599b401396afe9",
+    "job_ledger_sha256": "53f015702b401e22ec8b5501e9ae0ff48dfa72b266edb4ce596532d065cf4f5e"
+  },
+  "binding_errors": [],
+  "readonly_build_inputs_verified": 116,
+  "job_groups_independently_recounted": [
+    {
+      "serial": 1,
+      "historical": false,
+      "segments_per_job": 7200,
+      "jobs": 16,
+      "union_steps": 115200,
+      "advance_ns": 35699325219,
+      "unique_geometry_hashes": 16
+    },
+    {
+      "serial": 1,
+      "historical": true,
+      "segments_per_job": 32,
+      "jobs": 32,
+      "union_steps": 1024,
+      "advance_ns": 57920038,
+      "unique_geometry_hashes": 32
+    },
+    {
+      "serial": 2,
+      "historical": false,
+      "segments_per_job": 1,
+      "jobs": 16,
+      "union_steps": 16,
+      "advance_ns": 95582,
+      "unique_geometry_hashes": 16
+    }
+  ],
+  "totals": {
+    "drain_wall_ns": 38377229291,
+    "kernel_advance_ns": 35757340839,
+    "kernel_fraction": 0.9317332569234121,
+    "owner_service_ns": 2432826577,
+    "owner_opportunities": 405,
+    "Scene_stamp_ns_nested_in_commit": 1684912533,
+    "target_prepare_ns_nested_in_commit": 536865710,
+    "exact_ns": 119607037,
+    "canonical_applies": 2,
+    "failed": 0,
+    "owner_new_query_union_delta": 0
+  },
+  "qualification_limits": [
+    "Native synchronous surrogate with burstA7200/B1; historicalWebB8 andpacedinput differ, do not claim freshbrowser30s reproduction.",
+    "Actual C++ exact PathOps kernel and Runtime owner used; noJStransfer/yield/RAF/canonicalrender/GPU measure.",
+    "PrepareNs31.3ms andexact119.6ms are not the dominant measuredkernel35.76s.",
+    "Translated local paths have differing verb/point topology. Wholeworldpath-transform reuse or changedunionordering requires a separately frozen numerical/semantic oracle.",
+    "Native measurement implemented no productionoptimization."
+  ],
+  "repository_reality": {
+    "pushed_commit": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "HEAD": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "remote_HEAD": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "tracked_diff_empty": true,
+    "index_empty": true
+  },
+  "verdict": "ACCEPT_MEASURED_NATIVE_ATTRIBUTION_WITH_LIMITS",
+  "user_tail_fixed": false,
+  "official_G5_P34_performance_PASS": false,
+  "next_scope": "Evaluate numerical-correct union work reuse/algorithm within existing C++ Worker owner, then Scene mask stamp preparation. Prioritize measured16longlocalbuilds rather than generictransport/framebudget."
+}

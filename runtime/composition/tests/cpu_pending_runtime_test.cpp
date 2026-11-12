@@ -97,17 +97,15 @@ int main(int argc,char**argv){try{
  }
  pointer(input::PointerPhase::kDown,420,160);for(unsigned i=1;i<=length;++i)pointer(input::PointerPhase::kMove,float(420+7*std::sin(i*.17)),float(160+170.*i/length));
  if(mode=="activepaced"){
-  unsigned requests=0,prefixes=0;
-  for(unsigned round=0;round<18;++round){
-   for(unsigned n=0;n<32;++n){editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();if(request.empty())continue;auto decoded=render::internal::cpuDecodeRequest(request);require(bool(decoded),"active request decode");prefixes+=decoded->prefixCount;
-    render::internal::CpuExactPathJob job(decoded->geometry,decoded->prefixCount,decoded->prefixPath);while(!job.ready())require(job.advance(8,2000),"active job advance");const auto size=job.path().writeToMemory(nullptr);std::vector<std::uint8_t> output(128+size);std::copy_n(request.begin(),128,output.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)output[p+i]=v>>(8*i);};word(0,0x31525043);word(4,1);word(96,size);word(100,2);for(unsigned i=104;i<128;++i)output[i]=0;job.path().writeToMemory(output.data()+128);require(core.queueCpuPendingCompletion(decoded->identity.words,output,true),"active completed");++requests;editor.serviceCpuPendingErases();break;
-   }
-   for(unsigned i=0;i<8;++i)pointer(input::PointerPhase::kMove,420+float(i),331+float(i));
-  }
-  require(requests==18&&prefixes>0&&core.cpuPendingFacts().preparedBeforeUp>0,"actual preUp progress missing");pointer(input::PointerPhase::kCancel,0,0);if(auto request=core.takeCpuPendingRequest();!request.empty()){const auto late=render::internal::cpuDecodeRequest(request);require(late&&core.queueCpuPendingCompletion(late->identity.words,{},false),"paced late cancel");}editor.serviceCpuPendingErases();require(core.cpuPendingFacts().reserved==0,"pacedcancel");std::cout<<"active requests="<<requests<<" continued="<<prefixes<<std::endl;return 0;
+  // Active input no longer eagerly unions sixteen whole masks. Cancellation
+  // must release the admitted trace and preserve the canonical generation.
+  const auto activeJobs=core.cpuPendingFacts().jobs;
+  for(unsigned round=0;round<18;++round){editor.serviceCpuPendingErases();require(core.takeCpuPendingRequest().empty(),"active input eagerly prepared full union");for(unsigned i=0;i<8;++i)pointer(input::PointerPhase::kMove,420+float(i),331+float(i));}
+  pointer(input::PointerPhase::kCancel,0,0);editor.serviceCpuPendingErases();
+  require(core.cpuPendingFacts().reserved==0&&core.cpuPendingFacts().jobs==activeJobs,"paced cancellation retained trace or eager job");return 0;
  }
  if(mode=="activecancel"){
-  editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();require(!request.empty(),"active task missing");auto value=render::internal::cpuDecodeRequest(request);require(bool(value),"active decode");pointer(input::PointerPhase::kCancel,0,0);require(!core.bindCpuPendingExecutor(2),"rebind orphaned active job");require(!core.close(),"close orphaned active lease");require(core.queueCpuPendingCompletion(value->identity.words,{},false),"cancel late terminal lost");editor.serviceCpuPendingErases();require(core.cpuPendingFacts().reserved==0,"cancel slot retained");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"cancel lease leaked");require(core.close(),"cancel close");return 0;
+  editor.serviceCpuPendingErases();require(core.takeCpuPendingRequest().empty(),"active eager full job");pointer(input::PointerPhase::kCancel,0,0);editor.serviceCpuPendingErases();require(core.cpuPendingFacts().reserved==0&&editor.semanticGeneration().value()==0,"cancel slot retained or canonical changed");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"cancel lease leaked");require(core.close(),"cancel close");return 0;
  }
  if(mode=="activeprefix"){
   for(unsigned n=0;n<32;++n){editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();if(!request.empty()){std::cout<<"actual_active_request_bytes="<<request.size()<<std::endl;return 0;}}
@@ -200,7 +198,7 @@ int main(int argc,char**argv){try{
   if((mode=="failure"||mode=="fatal"||mode=="failuremixed")&&!faulted){faulted=true;auto wrong=value->identity.words;++wrong[4];require(!core.queueCpuPendingCompletion(wrong,{},false),"foreignfailedbasis accepted");require(core.queueCpuPendingCompletion(value->identity.words,{},false),"failedterminal");jobs.push_back(value->identity.words);continue;}
 render::internal::CpuExactPathJob job(value->geometry,value->prefixCount,value->prefixPath);while(!job.ready())require(job.advance(8,2000),"kernel bounded progress");
   const auto n=job.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+n);std::copy_n(request.begin(),128,result.begin());
-  const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,n);word(100,2);for(unsigned k=104;k<128;++k)result[k]=0;job.path().writeToMemory(result.data()+128);
+  const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,n);word(100,value->piece?3:2);if(!value->piece)for(unsigned k=104;k<128;++k)result[k]=0;job.path().writeToMemory(result.data()+128);
   auto wrong=value->identity.words;++wrong[1];require(!core.queueCpuPendingCompletion(wrong,result,true),"foreignbasis accepted");
   if(mode=="context"&&!contextTested){contextTested=true;const auto gen=editor.semanticGeneration();require(core.loseSurface(),"contextlost");require(core.queueCpuPendingCompletion(value->identity.words,result,true),"holdresultwhilelost");editor.serviceCpuPendingErases();require(editor.semanticGeneration()==gen&&core.cpuPendingFacts().pending==2,"lost intent mutatedorvanished");require(core.rebindSurface({1431,1010,1431,1010,1,1}),"rebind");}
   else require(core.queueCpuPendingCompletion(value->identity.words,result,true),"matchingcompletion");require(!core.queueCpuPendingCompletion(value->identity.words,result,true),"duplicatecompletion");jobs.push_back(value->identity.words);

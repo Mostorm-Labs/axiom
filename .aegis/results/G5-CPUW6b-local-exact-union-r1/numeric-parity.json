@@ -1,0 +1,19 @@
+{
+  "status": "ZERO_MISMATCH",
+  "cases": 101,
+  "mismatches": 0,
+  "full_rows": "numeric-production-fixed40-r1.json",
+  "identity_and_pressure": "identity-r1.json",
+  "compatibility": {
+    "8193_history_and_513_consumers": "native compatibility GREEN",
+    "RED_log": "out/G5-CPUW6b-local-exact-union-r1/compatibility-red.log",
+    "GREEN_log": "out/G5-CPUW6b-local-exact-union-r1/compatibility-green.log"
+  },
+  "corner_contact": {
+    "status": "RED_THEN_GREEN",
+    "original": "Miss",
+    "before": "Hit",
+    "after": "Miss",
+    "oracle": "corner-contact-green.json"
+  }
+}

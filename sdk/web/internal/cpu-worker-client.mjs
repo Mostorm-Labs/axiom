@@ -3,7 +3,7 @@ import {kernelId,limits} from './cpu-worker-build.mjs';
 const magic=0x31575043;
 export function inspectCpuEnvelope(buffer){
  if(!(buffer instanceof ArrayBuffer)||buffer.byteLength<128||buffer.byteLength>limits.inputBytes)throw Error('INPUT_BOUND');
- const v=new DataView(buffer);if(v.getUint32(0,true)!==magic||![1,2].includes(v.getUint32(4,true))||v.getUint32(96,true)!==buffer.byteLength-128)throw Error('INVALID_ENVELOPE');
+ const v=new DataView(buffer);if(v.getUint32(0,true)!==magic||![1,2,3].includes(v.getUint32(4,true))||v.getUint32(96,true)!==buffer.byteLength-128)throw Error('INVALID_ENVELOPE');
  const build=Array.from(new Uint8Array(buffer,16,16),v=>v.toString(16).padStart(2,'0')).join('');if(build!==kernelId)throw Error('KERNEL_BUILD_MISMATCH');
  const words=Array.from({length:8},(_,i)=>v.getBigUint64(32+i*8,true).toString());if([0,1,4,5,6,7].some(i=>words[i]==='0')||(words[2]==='0'&&words[3]==='0'))throw Error('INVALID_IDENTITY');return{words,key:words.join('/')};
 }
@@ -47,7 +47,8 @@ export async function createCpuWorker(runtime,{url}={}){
    const charge=2*bytes.byteLength+2*limits.outputBytes;
    if(transport>limits.transportBytes-charge)throw Error('TRANSPORT_BOUND');
    const grant=owner.reserve(executor,charge);let copy;try{copy=bytes.slice(0);}catch(error){ungrant(grant);throw error;}
-   ++admitted;watermark=jobId;basis??=identityBasis;transport+=charge;let resolve;const promise=new Promise(r=>resolve=r);const job={...envelope,bytes:copy,grant,charge,resolve,terminal:false,started:performance.now()};pending.set(job.key,job);queue.push(job);pump();return{key:job.key,result:promise};
+   const piece=new DataView(bytes).getUint32(4,true)===3,range=piece?Array.from(new Uint8Array(bytes,104,24)):null;
+   ++admitted;watermark=jobId;basis??=identityBasis;transport+=charge;let resolve;const promise=new Promise(r=>resolve=r);const job={...envelope,piece,range,bytes:copy,grant,charge,resolve,terminal:false,started:performance.now()};pending.set(job.key,job);queue.push(job);pump();return{key:job.key,result:promise};
   },
   cancel(key){const job=pending.get(key);if(!job)return false;if(job===active){try{worker.postMessage({type:'cancel',key});}catch(error){stop('POST_MESSAGE_FAILED:'+String(error));}}else{queue.splice(queue.indexOf(job),1);terminal(job,'Cancelled');}return true;},
   release(key){const job=results.get(key);if(!job)return false;try{if(job.resultBuffer.byteLength)job.resultBuffer.transfer(0);}finally{job.resultBuffer=null;results.delete(key);transport-=job.charge;ungrant(job.grant);}return true;},
@@ -67,7 +68,7 @@ export async function createCpuWorker(runtime,{url}={}){
     if(data.status==='Ready'){
      if(!(data.bytes instanceof ArrayBuffer)||data.bytes.byteLength<128||data.bytes.byteLength>limits.outputBytes){stop('RESULT_BOUND');return;}
      const view=new DataView(data.bytes),bytes=new Uint8Array(data.bytes);
-     if(data.bytes.byteLength<128||view.getUint32(0,true)!==0x31525043||view.getUint32(4,true)!==1||view.getUint32(96,true)!==data.bytes.byteLength-128||view.getUint32(100,true)!==2||job.words.some((x,i)=>view.getBigUint64(32+i*8,true).toString()!==x)||Array.from(bytes.subarray(16,32),v=>v.toString(16).padStart(2,'0')).join('')!==kernelId||bytes.subarray(104,128).some(Boolean)){stop('FOREIGN_RESULT');return;}
+     if(data.bytes.byteLength<128||view.getUint32(0,true)!==0x31525043||view.getUint32(4,true)!==1||view.getUint32(96,true)!==data.bytes.byteLength-128||view.getUint32(100,true)!==(job.piece?3:2)||job.words.some((x,i)=>view.getBigUint64(32+i*8,true).toString()!==x)||Array.from(bytes.subarray(16,32),v=>v.toString(16).padStart(2,'0')).join('')!==kernelId||(job.piece?job.range.some((v,i)=>bytes[104+i]!==v):bytes.subarray(104,128).some(Boolean))){stop('FOREIGN_RESULT');return;}
     }
     terminal(job,data.status,{...data,totalMs:performance.now()-job.started});pump();
    }

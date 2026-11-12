@@ -191,6 +191,8 @@ bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionM
     canonicalPresentationDirty_=true;return true;
 }
 void CanvasEditingRuntime::cancelRegionSelection() noexcept {
+    pendingRegionSelection_.reset();
+    skiaRenderer_.clearCpuLocalSelection();
     // The transient surface contains a full scene. Retire it only after a
     // replacement canonical submission, including invalidation during rendering.
     // Do not clear here: renderSelectionOverlay may run under preview locks.
@@ -263,7 +265,10 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
            std::holds_alternative<semantic::CompactStrokeContent>(projection->content.get())){
             std::vector<foundation::WorldPoint> query;query.reserve(world.size());
             for(const auto p:world)query.push_back({float(p.x),float(p.y)});
-            switch(skiaRenderer_.intersectSelectionGeometry(*projection,query)){
+            bool pending=false;
+            const auto hit=skiaRenderer_.intersectSelectionGeometry(*projection,query,&pending);
+            if(pending){result.pending=true;result.publishable=false;continue;}
+            switch(hit){
             case render::SelectionGeometryHit::kHit:intersection=RegionIntersection::kHit;break;
             case render::SelectionGeometryHit::kMiss:intersection=RegionIntersection::kMiss;break;
             case render::SelectionGeometryHit::kUnsupported:intersection=RegionIntersection::kUnsupported;break;
@@ -306,6 +311,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
 bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sample) noexcept {
     using Status=runtime::SelectionQueryStatus;
     if (sample.phase==input::PointerPhase::kDown) {
+        pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();
         if (regionSelection_.active()) return true;
         const auto kind=selectionAcquisitionMode_==runtime::CanvasSelectionMode::kFreeform?RegionSelectionKind::kFreeform:
             selectionAcquisitionMode_==runtime::CanvasSelectionMode::kRectangle?RegionSelectionKind::kRectangle:RegionSelectionKind::kPendingRectangle;
@@ -321,6 +327,7 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionCandidates_.clear();regionUnsupportedKinds_.clear();
         if (result.status==RegionFinishStatus::kReady) {
             const auto query=querySelectionRegion(result.points);regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
+            if(query.pending)pendingRegionSelection_=result;
             if (query.publishable&&(query.status==Status::kComplete||query.status==Status::kPartial)) {
                 if(publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision))snapGuides_.clear();
                 else regionQueryStatus_=Status::kStale;
@@ -339,6 +346,19 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionUnsupportedKinds_=query.unsupportedKinds;regionQueryStatus_=query.status;
     }
     canonicalPresentationDirty_=true;(void)renderSelectionOverlay();(void)presentTransientOverlayFrame(nextCanonicalFrameId());return true;
+}
+void CanvasEditingRuntime::servicePendingRegionSelection()noexcept{
+    if(!pendingRegionSelection_)return;
+    try{
+        const auto& result=*pendingRegionSelection_;
+        if(result.context!=regionContext()){pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();regionQueryStatus_=runtime::SelectionQueryStatus::kStale;return;}
+        const auto query=querySelectionRegion(result.points);
+        if(query.pending){canonicalPresentationDirty_=true;return;}
+        regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
+        if(query.publishable&&(query.status==runtime::SelectionQueryStatus::kComplete||query.status==runtime::SelectionQueryStatus::kPartial))
+            if(!publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision))regionQueryStatus_=runtime::SelectionQueryStatus::kStale;
+        pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();canonicalPresentationDirty_=true;
+    }catch(const std::bad_alloc&){canonicalPresentationDirty_=true;}
 }
 bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample) noexcept {
     if (sample.predicted) return true;

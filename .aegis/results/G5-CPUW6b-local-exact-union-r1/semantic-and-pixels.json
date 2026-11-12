@@ -1,0 +1,18 @@
+{
+  "semantic": {
+    "rows": 14,
+    "all_byte_equal": true,
+    "proof": "semantic-replay.json",
+    "oracle_sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+  },
+  "pixels": {
+    "rows": 14,
+    "all_qualified": true,
+    "max_interior_delta": 0,
+    "proof": "pixel-comparison.json",
+    "rule": "unchanged originalAA; <=2outside independentCPUBoundary"
+  },
+  "primary_pair": "D1 AB/Undo/Redo snapshotbytesidentical; ABpixelsidentical; Undo2channelDelta1,Redo4channelDelta1",
+  "post_window_compatibility": "post-window-compatibility.json preserves sampled identity and narrowed finalSDK delta; no repeated browser claimed",
+  "post_window_roundjoin": "roundjoin-amendment.json; original14canonicalreplay/pixel evidence unchanged; selectioncorner corrected via independentnative regression; no browserrerun"
+}

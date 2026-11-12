@@ -263,7 +263,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool setSelectionAcquisitionMode(runtime::CanvasSelectionMode) noexcept;
   [[nodiscard]] runtime::CanvasSelectionMode selectionAcquisitionMode() const noexcept { return selectionAcquisitionMode_; }
-  [[nodiscard]] bool regionSelectionActive() const noexcept { return regionSelection_.active(); }
+  [[nodiscard]] bool regionSelectionActive() const noexcept { return regionSelection_.active()||pendingRegionSelection_.has_value(); }
+  void servicePendingRegionSelection()noexcept;
   [[nodiscard]] bool pendingViewportGesture() const noexcept {
     return coordinator_ != nullptr && coordinator_->pendingViewportGesture();
   }
@@ -1048,6 +1049,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       pendingCanonicalIdentities_;
   interaction::SelectionSession selection_;
   interaction::RegionSelectionSession regionSelection_;
+  std::optional<RegionSelectionResult> pendingRegionSelection_;
   runtime::CanvasSelectionMode selectionAcquisitionMode_=runtime::CanvasSelectionMode::kPoint;
   runtime::SelectionQueryStatus regionQueryStatus_=runtime::SelectionQueryStatus::kIdle;
   std::vector<foundation::ObjectId> regionCandidates_;
@@ -1057,6 +1059,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   struct RegionQueryResult final {
     runtime::SelectionQueryStatus status=runtime::SelectionQueryStatus::kFailed;
     bool publishable=true;
+    bool pending=false;
     std::vector<foundation::ObjectId> roots;
     std::vector<std::uint32_t> unsupportedKinds;
   };

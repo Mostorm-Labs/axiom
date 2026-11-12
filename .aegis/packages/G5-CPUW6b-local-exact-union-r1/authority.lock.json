@@ -1,0 +1,67 @@
+{
+  "status": "CURRENT_USER_AUTHORIZED_SCOPED_IMPLEMENTATION",
+  "source_identity": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "revision": "c5ba55996319e96c801f4e275814473137d7e85c"
+  },
+  "human_request": "开始下一步吧：先优化长路径 union 的计算复用，再处理 stamp。",
+  "paired_permission": "Human authorizes this control chat to direct axiom gac g5 coding and receive proactive completion/blocker messages.",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "trusted_basis": [
+    {
+      "path": ".aegis/results/G5-CPUW6a-control-review-r1/control-review.json",
+      "sha256": "3de180ad88b5456b8670f602816b412e1405f1ef51912b3ee4d4f0866d966785"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6a-tail-attribution-r1/attribution.json",
+      "sha256": "1b0cc1952ab28108aa55de75dabf285ce09e29da03ae216fbe599b401396afe9"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6a-tail-attribution-r1/job-ledger.json",
+      "sha256": "53f015702b401e22ec8b5501e9ae0ff48dfa72b266edb4ce596532d065cf4f5e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW-checkpoint-20261113/verification.json",
+      "sha256": "26371e6a486a7770dcd516d0ff16273f7f98ca0b74a355b9899f3ddc36ccc1dc"
+    }
+  ],
+  "decisions": [
+    "Existing Interaction/Composition owns pending intents, target validation, order, History, publication and receipts. OperationEngine is the sole atomic canonical writer. Shared Render owns exact derived geometry/index/cache. The independent Worker owns only bounded C++ geometry tasks. No alternate document/history/GPU owner.",
+    "Separate exact Hit/Miss decision preparation from a complete union-path representation. A canonical mask remains the full original object-local geometry. Canonical rendering continues its original per-segment Clear. Neither early hit nor localized preparation may truncate the committed mask.",
+    "Authorize conservative segment/component locality, immutable per-piece preparation reuse, and bounded exact-query cursors inside existing owners, including historical masks and selection consumers. These are derived execution changes, not a new canonical mask format or approximation.",
+    "Keep f32 local construction, radii, segment curves, original segment order within each requested subset, exact PathOps/body/history/selection-contact semantics. Complete validation precedes early Hit. Full-path compatibility kernel and its original parity tests remain valid; local decision results must not masquerade as full paths.",
+    "For the new decision representation, the observable oracle is the original exact evaluator Hit/Miss/Invalid/NoOp, ordered target set, complete canonical geometry, Operation/History/receipt and pixels. Bitwise equality of a different derived intermediate SkPath is not a requirement; exact decisions have no new tolerance. Do not revise old sequential-kernel parity expectations to fit a new kernel.",
+    "Conservative bounds must include stroke caps/control hull/radius and f32 expansion. Unknown/degenerate bounds cannot silently skip geometry. PathOps failure or unsupported numerical case retains an explicitly counted, resumable original full-oracle route; no accepted intent may fall into synchronous full-union work on the main thread.",
+    "The coherent slice includes later erase and selection of a stroke with the newly committed long mask. It must not merely defer the 16 full unions to later operations or construct them eagerly in active-prefix preparation. Reuse remains keyed by complete immutable geometry plus target/history basis and appropriate range/type identity.",
+    "Preserve current capability domain: v4 round/marker and supported similarity transforms. Do not migrate other brush families. One 64MiB Worker, 8 pending intents, 1MiB messages,16MiB transport,512MiB shared desktop/256MiB optional/64MiB entry remain.",
+    "No world-union-then-transform reuse, generic balanced union, path simplification/downsampling, GPU hit tests, relaxed numeric tolerance, or semantic schema/public SDK API changes. Translated local output topology is demonstrably different.",
+    "Current slice ends at demonstrated long-union work reduction and regression closure. Scene stamp optimization is the following package, not a required code change here. Measure its remaining cost honestly.",
+    "Preserve c5ba functional candidate, CPUW6a measurement, 4330/4328/4298 Demos and user documents. No return to withdrawn CPUW5 navigation production changes. Latest human AGENTS version instructions prevail; local build identity remains0.4.3.0."
+  ]
+}

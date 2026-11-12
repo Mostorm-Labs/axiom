@@ -1,0 +1,95 @@
+{
+  "rows": [
+    {
+      "id": "U6B-BASELINE-D1-BURST",
+      "status": "OBSERVED",
+      "actual_down_to_up_ms": 9567.200000047684,
+      "Up_to_drain_ms": 45680.199999928474,
+      "first_A_commit_ms": 40282,
+      "first_A_present_ms": 45637.89999997616,
+      "first_AB_present_ms": 45637.89999997616,
+      "followup_erase_ms": null,
+      "masked_selection_ms": null,
+      "worker_jobs": 89,
+      "worker_compute_total_ms": 43022.300001859665,
+      "errors": [],
+      "closed": true,
+      "raw": "out/G5-CPUW6b-local-exact-union-r1/web/U6B-BASELINE-D1-BURST/raw.json",
+      "raw_sha256": "40a859ea58a69810748cc474ef0b405c69902c94ef95a285b12c8095ba9a16c6",
+      "remaining_unknown": [
+        "ownerexclusive",
+        "render/resourcewaitexclusive",
+        "physicalinput_to_photon"
+      ]
+    },
+    {
+      "id": "U6B-CANDIDATE-D1-BURST",
+      "status": "OBSERVED",
+      "actual_down_to_up_ms": 9582.399999976158,
+      "Up_to_drain_ms": 10311.400000095367,
+      "first_A_commit_ms": 4933,
+      "first_A_present_ms": 10272.300000071526,
+      "first_AB_present_ms": 10272.300000071526,
+      "followup_erase_ms": null,
+      "masked_selection_ms": null,
+      "worker_jobs": 32,
+      "worker_compute_total_ms": 60.19999980926514,
+      "errors": [],
+      "closed": true,
+      "raw": "out/G5-CPUW6b-local-exact-union-r1/web/U6B-CANDIDATE-D1-BURST/raw.json",
+      "raw_sha256": "ac60801482e67ff6ce178b009442a394d74cb4624e7bc840200b0eaebccc2827",
+      "remaining_unknown": [
+        "ownerexclusive",
+        "render/resourcewaitexclusive",
+        "physicalinput_to_photon"
+      ]
+    },
+    {
+      "id": "U6B-CANDIDATE-D1-PACED",
+      "status": "OBSERVED",
+      "actual_down_to_up_ms": 31841.300000071526,
+      "Up_to_drain_ms": 11719.600000023842,
+      "first_A_commit_ms": 5780.199999928474,
+      "first_A_present_ms": 11676.799999952316,
+      "first_AB_present_ms": 11676.799999952316,
+      "followup_erase_ms": 7128.199999928474,
+      "masked_selection_ms": 87.5,
+      "worker_jobs": 76,
+      "worker_compute_total_ms": 147.1000007390976,
+      "errors": [],
+      "closed": true,
+      "raw": "out/G5-CPUW6b-local-exact-union-r1/web/U6B-CANDIDATE-D1-PACED/raw.json",
+      "raw_sha256": "8c7200a69dfcf73d2e56d087d2bf2adc61440dfeb73de40a4df20a6ae6c6ce98",
+      "remaining_unknown": [
+        "ownerexclusive",
+        "render/resourcewaitexclusive",
+        "physicalinput_to_photon"
+      ]
+    },
+    {
+      "id": "U6B-CANDIDATE-D4-BURST",
+      "status": "OBSERVED",
+      "actual_down_to_up_ms": 20621.5,
+      "Up_to_drain_ms": 30906.700000047684,
+      "first_A_commit_ms": 18065.299999952316,
+      "first_A_present_ms": 30858.700000047684,
+      "first_AB_present_ms": 30858.700000047684,
+      "followup_erase_ms": 71849.20000004768,
+      "masked_selection_ms": 172.40000009536743,
+      "worker_jobs": 76,
+      "worker_compute_total_ms": 184.09999990463257,
+      "errors": [],
+      "closed": true,
+      "raw": "out/G5-CPUW6b-local-exact-union-r1/web/U6B-CANDIDATE-D4-BURST/raw.json",
+      "raw_sha256": "9758ac77a66718eeb975bed0fb99001432e089ec2326ea22469e6c1687b9a15a",
+      "remaining_unknown": [
+        "ownerexclusive",
+        "render/resourcewaitexclusive",
+        "physicalinput_to_photon"
+      ]
+    }
+  ],
+  "primary_pair_reduction": 0.7742698149283166,
+  "scope": "one paired run; not overallperformancePASS",
+  "laterDPR4tail": "71.8492s observed; not independently attributed, not repaired"
+}

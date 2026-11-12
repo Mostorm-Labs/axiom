@@ -3,6 +3,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
 #include "cpu_worker_protocol.hpp"
+#include "cpu_local_exact.hpp"
 #include "resource_reclaim.hpp"
 #include "render_execution.hpp"
 #include "render_memory_budget.hpp"
@@ -22,6 +23,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPathBuilder.h"
+#include "include/core/SkPathUtils.h"
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkVertices.h"
@@ -51,7 +53,7 @@ struct ObservationCounters final {
 
 SkiaRenderer::SkiaRenderer():renderCacheOptions_(internal::configuredRenderCacheOptions()){}
 SkiaRenderer::~SkiaRenderer(){
-    cpuPathHandoffs_.clear();eraseQueries_.reset();
+    localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();
     // Seal quota before old contexts can abandon their completion callbacks.
     if(resourceBudget_)resourceBudget_->close();
     clearRenderCache();gpuRetirements_.reset();
@@ -782,9 +784,11 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     // An isolated executor still owns capacity in this budget. Never issue a
     // replacement manager while its permit could remain in use.
     if(!cpuGrants_.empty())return;
-    cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+    localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearCpuLocalSelection()noexcept{localSelection_.clear();}
+bool SkiaRenderer::cpuLocalSelectionPending()const noexcept{return !localSelection_.empty();}
 SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
 SkiaRenderer::ExactQueryCohort::~ExactQueryCohort(){if(owner_)owner_->endCohort();}
 SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const noexcept{
@@ -854,6 +858,23 @@ void SkiaRenderer::setCpuPendingPreparation(bool value)noexcept{
 SkiaRenderer::CpuPathPin SkiaRenderer::lookupCpuPendingPath(const semantic::EraseMaskGeometry& g)const noexcept{
  return eraseQueries_?eraseQueries_->lookup(g):CpuPathPin{};
 }
+SkiaRenderer::CpuDecisionPin SkiaRenderer::requestCpuLocalExact(const RuntimeSceneRecord& r,const semantic::EraseMaskGeometry& g)const{
+ if(!resourceBudget_)return {};
+ if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+ if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
+ preparedGeometry_->setRetentionPool(sourceRetention_);
+ if(!localExact_)localExact_=std::make_shared<internal::LocalExactCache>();
+ auto index=localExact_->request(g,resourceBudget_,renderCacheOptions_.maxEntryBytes);if(!index)return {};
+ return std::make_shared<internal::LocalExactJob>(r,std::move(index),*localExact_,*preparedGeometry_,renderCacheOptions_,resourceBudget_);
+}
+internal::LocalExactStatus SkiaRenderer::advanceCpuLocalExact(const CpuDecisionPin& p)const{
+ if(!p)return internal::LocalExactStatus::kPending;
+ internal::PreparationAllowance allowance;
+ if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
+ return p->advance(allowance);
+}
+std::vector<std::uint8_t> SkiaRenderer::encodeCpuLocalExact(const CpuDecisionPin& p,const std::array<std::uint64_t,8>& token)const{return p?p->encode(token):std::vector<std::uint8_t>{};}
+bool SkiaRenderer::importCpuLocalExact(const CpuDecisionPin& p,std::span<const std::uint8_t> bytes,const std::array<std::uint64_t,8>& token,bool* pending)const{return p&&p->import(bytes,token,pending);}
 std::vector<std::uint8_t> SkiaRenderer::encodeCpuPendingContinuation(
  const semantic::EraseMaskGeometry& geometry,const std::array<std::uint64_t,8>& identity,
  const semantic::EraseMaskGeometry& witness,const CpuPathPin& opaque,std::size_t* prefix)const{
@@ -936,7 +957,59 @@ bool SkiaRenderer::retainCpuPendingHandoff(std::uint64_t serial,const std::vecto
 void SkiaRenderer::retireCpuPendingHandoff(std::uint64_t serial)noexcept{cpuPathHandoffs_.erase(serial);}
 void SkiaRenderer::retireAllCpuPendingHandoffs()noexcept{cpuPathHandoffs_.clear();}
 SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeSceneRecord& record,
-    std::span<const foundation::WorldPoint> points)const noexcept{
+    std::span<const foundation::WorldPoint> points,bool* pending)const noexcept{
+    if(pending)*pending=false;
+    const auto* localCompact=std::get_if<semantic::CompactStrokeContent>(&record.content.get());
+    if(cpuPendingPreparation_&&pending&&localCompact&&localCompact->stroke.config.algorithmVersion==4&&
+       (localCompact->stroke.config.family==foundation::InkFamily::kRound||localCompact->stroke.config.family==foundation::InkFamily::kMarker))try{
+        const auto& t=record.transform;const double det=t.a*t.d-t.b*t.c;
+        if(points.size()<3||!std::isfinite(det)||std::abs(det)<1e-12)return SelectionGeometryHit::kInvalid;
+        semantic::FilledPathMask geometry;geometry.path.fill_rule=semantic::FillRule::kEvenOdd;
+        for(std::size_t i=0;i<points.size();++i){const double x=points[i].x-t.tx,y=points[i].y-t.ty;
+            const semantic::Vec2 p{float((t.d*x-t.c*y)/det),float((t.a*y-t.b*x)/det)};
+            if(i)geometry.path.commands.push_back(semantic::LineTo{p});else geometry.path.commands.push_back(semantic::MoveTo{p});
+        }
+        geometry.path.commands.push_back(semantic::ClosePath{});
+        auto found=localSelection_.find(record.objectId);
+        if(found==localSelection_.end()){
+            if(localSelection_.size()>=512){
+                // Only completed decisions may be retired. Their observable
+                // result can be recomputed from shared ready geometry; keep
+                // every unfinished cursor so quota pressure cannot reset it.
+                auto old=std::find_if(localSelection_.begin(),localSelection_.end(),[](const auto& v){return v.second.complete;});
+                if(old==localSelection_.end()){*pending=true;return SelectionGeometryHit::kInvalid;}
+                localSelection_.erase(old);
+            }
+            auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint),true);
+            if(!token){*pending=true;return SelectionGeometryHit::kInvalid;}
+            CpuLocalSelection candidate;candidate.lease=resources::ResourceLease(resourceBudget_,*token);
+            found=localSelection_.emplace(record.objectId,std::move(candidate)).first;
+        }
+        auto& slot=found->second;
+        if(!slot.job||slot.points.size()!=points.size()||!std::equal(slot.points.begin(),slot.points.end(),points.begin(),[](const auto& a,const auto& b){return a.x==b.x&&a.y==b.y;})||!slot.job->matches(record,geometry)){
+            if(slot.points.size()<points.size()){
+                auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint),true);
+                if(!token){*pending=true;return SelectionGeometryHit::kInvalid;}
+                slot.lease=resources::ResourceLease(resourceBudget_,*token);
+            }
+            slot.points.assign(points.begin(),points.end());slot.job=requestCpuLocalExact(record,geometry);
+            slot.complete=false;
+            if(slot.job){SkPaint paint;paint.setStyle(SkPaint::kStroke_Style);paint.setStrokeWidth(2e-4F);paint.setStrokeJoin(SkPaint::kRound_Join);
+                slot.job->setSelectionContact(skpathutils::FillPathWithPaint(internal::cpuExactFilledPath(geometry.path),paint));}
+        }
+        internal::PreparationAllowance allowance;if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
+        using S=internal::LocalExactStatus;
+        while(slot.job&&!allowance.exhausted()){
+            const auto state=slot.job->advance(allowance);
+            if(state==S::kHit){slot.complete=true;return SelectionGeometryHit::kHit;}
+            if(state==S::kMiss){slot.complete=true;return SelectionGeometryHit::kMiss;}
+            if(state==S::kInvalid){slot.complete=true;return SelectionGeometryHit::kInvalid;}
+            if(state==S::kNeedFull){if(!slot.job->advanceSelectionFallback(allowance))break;continue;}
+            if(state==S::kNeedPiece){if(!slot.job->advanceLocalPiece(allowance))break;}
+            else break;
+        }
+        *pending=true;return SelectionGeometryHit::kInvalid;
+    }catch(const std::bad_alloc&){*pending=true;return SelectionGeometryHit::kInvalid;}
     if(!resourceBudget_||!preparedGeometry_)return canvas::render::intersectVisibleSelectionGeometry(record,points);
     try{
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();

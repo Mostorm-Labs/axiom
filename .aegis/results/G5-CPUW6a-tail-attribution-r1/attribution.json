@@ -1,0 +1,1439 @@
+{
+  "A_up_ns": 1167,
+  "A_up_through_drain_wall_ns": 38377234500,
+  "advance_total_ns": 35757340839,
+  "cleanup": {
+    "closed": true,
+    "worker_grant_bytes": 0
+  },
+  "create_total_ns": 192334,
+  "decode_total_ns": 1126294,
+  "drain_wall_ns": 38377229291,
+  "explicit_observation_total_ns": 184715419,
+  "export_total_ns": 52505,
+  "facts": {
+    "admitted": 2,
+    "allUnionSteps": 116240,
+    "checkpointBytes": 0,
+    "commitNs": 2229454412,
+    "committed": 2,
+    "error": "",
+    "exactCalls": 80,
+    "exactNs": 119607037,
+    "failed": 0,
+    "finishedHits": 616,
+    "finishedImports": 64,
+    "geometryReuse": 48,
+    "historyPrepareNs": 981792,
+    "historyUnions": 0,
+    "importNs": 662751,
+    "jobLedger": [
+      {
+        "historical": false,
+        "importNs": 124541,
+        "inputBytes": 576128,
+        "issuedNs": 838058276462000,
+        "outputBytes": 10628,
+        "returnedNs": 838060532713500,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2459,
+        "inputBytes": 2688,
+        "issuedNs": 838060533046833,
+        "outputBytes": 2584,
+        "returnedNs": 838060534840666,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          2,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 1500,
+        "inputBytes": 2688,
+        "issuedNs": 838060534890625,
+        "outputBytes": 2620,
+        "returnedNs": 838060536719291,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          3,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 20083,
+        "inputBytes": 576128,
+        "issuedNs": 838060542899666,
+        "outputBytes": 10472,
+        "returnedNs": 838062724553166,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          4,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2458,
+        "inputBytes": 2688,
+        "issuedNs": 838062724697500,
+        "outputBytes": 2572,
+        "returnedNs": 838062726476750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          5,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 1625,
+        "inputBytes": 2688,
+        "issuedNs": 838062726536083,
+        "outputBytes": 2620,
+        "returnedNs": 838062728368958,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          6,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 19750,
+        "inputBytes": 576128,
+        "issuedNs": 838062734064083,
+        "outputBytes": 10480,
+        "returnedNs": 838064983904166,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          7,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2250,
+        "inputBytes": 2688,
+        "issuedNs": 838064984042000,
+        "outputBytes": 2620,
+        "returnedNs": 838064985860250,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          8,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 1833,
+        "inputBytes": 2688,
+        "issuedNs": 838064985908333,
+        "outputBytes": 2608,
+        "returnedNs": 838064987748958,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          9,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 33875,
+        "inputBytes": 576128,
+        "issuedNs": 838064993063416,
+        "outputBytes": 10492,
+        "returnedNs": 838067185833333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          10,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2667,
+        "inputBytes": 2688,
+        "issuedNs": 838067185994458,
+        "outputBytes": 2612,
+        "returnedNs": 838067187828875,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          11,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 1792,
+        "inputBytes": 2688,
+        "issuedNs": 838067187876458,
+        "outputBytes": 2628,
+        "returnedNs": 838067189717708,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          12,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 20042,
+        "inputBytes": 576128,
+        "issuedNs": 838067195134791,
+        "outputBytes": 10464,
+        "returnedNs": 838069359916375,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          13,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2416,
+        "inputBytes": 2688,
+        "issuedNs": 838069360061416,
+        "outputBytes": 2604,
+        "returnedNs": 838069361865416,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          14,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 1875,
+        "inputBytes": 2688,
+        "issuedNs": 838069361919416,
+        "outputBytes": 2620,
+        "returnedNs": 838069363755500,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          15,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 22625,
+        "inputBytes": 576128,
+        "issuedNs": 838069368922500,
+        "outputBytes": 10664,
+        "returnedNs": 838071660795916,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          16,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3959,
+        "inputBytes": 2688,
+        "issuedNs": 838071660938250,
+        "outputBytes": 2596,
+        "returnedNs": 838071662737958,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          17,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2292,
+        "inputBytes": 2688,
+        "issuedNs": 838071662791541,
+        "outputBytes": 2620,
+        "returnedNs": 838071664692916,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          18,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 24042,
+        "inputBytes": 576128,
+        "issuedNs": 838071669877916,
+        "outputBytes": 10472,
+        "returnedNs": 838073840163750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          19,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3042,
+        "inputBytes": 2688,
+        "issuedNs": 838073840303833,
+        "outputBytes": 2596,
+        "returnedNs": 838073842116416,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          20,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2209,
+        "inputBytes": 2688,
+        "issuedNs": 838073842170875,
+        "outputBytes": 2620,
+        "returnedNs": 838073844018333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          21,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 32209,
+        "inputBytes": 576128,
+        "issuedNs": 838073849170666,
+        "outputBytes": 10516,
+        "returnedNs": 838076129742541,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          22,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 4375,
+        "inputBytes": 2688,
+        "issuedNs": 838076129913291,
+        "outputBytes": 2604,
+        "returnedNs": 838076131881250,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          23,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2958,
+        "inputBytes": 2688,
+        "issuedNs": 838076131946083,
+        "outputBytes": 2628,
+        "returnedNs": 838076133834958,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          24,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 23083,
+        "inputBytes": 576128,
+        "issuedNs": 838076138845750,
+        "outputBytes": 10472,
+        "returnedNs": 838078314880208,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          25,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3292,
+        "inputBytes": 2688,
+        "issuedNs": 838078315019875,
+        "outputBytes": 2604,
+        "returnedNs": 838078316816416,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          26,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2541,
+        "inputBytes": 2688,
+        "issuedNs": 838078316863833,
+        "outputBytes": 2620,
+        "returnedNs": 838078318702291,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          27,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 48291,
+        "inputBytes": 576128,
+        "issuedNs": 838078323676625,
+        "outputBytes": 10588,
+        "returnedNs": 838080593618458,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          28,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3334,
+        "inputBytes": 2688,
+        "issuedNs": 838080593788583,
+        "outputBytes": 2584,
+        "returnedNs": 838080595580708,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          29,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 5042,
+        "inputBytes": 2688,
+        "issuedNs": 838080595626875,
+        "outputBytes": 2636,
+        "returnedNs": 838080597539083,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          30,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 20791,
+        "inputBytes": 576128,
+        "issuedNs": 838080602845250,
+        "outputBytes": 10476,
+        "returnedNs": 838082807817708,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          31,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3375,
+        "inputBytes": 2688,
+        "issuedNs": 838082807961041,
+        "outputBytes": 2556,
+        "returnedNs": 838082809736750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          32,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2875,
+        "inputBytes": 2688,
+        "issuedNs": 838082809797958,
+        "outputBytes": 2608,
+        "returnedNs": 838082811628250,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          33,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 24000,
+        "inputBytes": 576128,
+        "issuedNs": 838082816467250,
+        "outputBytes": 10492,
+        "returnedNs": 838085046330916,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          34,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 4334,
+        "inputBytes": 2688,
+        "issuedNs": 838085046464333,
+        "outputBytes": 2612,
+        "returnedNs": 838085048279416,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          35,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3041,
+        "inputBytes": 2688,
+        "issuedNs": 838085048327916,
+        "outputBytes": 2628,
+        "returnedNs": 838085050191833,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          36,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 23666,
+        "inputBytes": 576128,
+        "issuedNs": 838085054967708,
+        "outputBytes": 10508,
+        "returnedNs": 838087284228375,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          37,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3708,
+        "inputBytes": 2688,
+        "issuedNs": 838087284370666,
+        "outputBytes": 2572,
+        "returnedNs": 838087286194083,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          38,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 2958,
+        "inputBytes": 2688,
+        "issuedNs": 838087286251791,
+        "outputBytes": 2620,
+        "returnedNs": 838087288153166,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          39,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 40667,
+        "inputBytes": 576128,
+        "issuedNs": 838087293107291,
+        "outputBytes": 10672,
+        "returnedNs": 838089595377541,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          40,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 7000,
+        "inputBytes": 2688,
+        "issuedNs": 838089595540583,
+        "outputBytes": 2596,
+        "returnedNs": 838089597419083,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          41,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 5084,
+        "inputBytes": 2688,
+        "issuedNs": 838089597510666,
+        "outputBytes": 2608,
+        "returnedNs": 838089599486291,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          42,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 22833,
+        "inputBytes": 576128,
+        "issuedNs": 838089604228583,
+        "outputBytes": 10668,
+        "returnedNs": 838091908960916,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          43,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 4833,
+        "inputBytes": 2688,
+        "issuedNs": 838091909099958,
+        "outputBytes": 2556,
+        "returnedNs": 838091910866000,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          44,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3583,
+        "inputBytes": 2688,
+        "issuedNs": 838091910922208,
+        "outputBytes": 2620,
+        "returnedNs": 838091912796291,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          45,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 24125,
+        "inputBytes": 576128,
+        "issuedNs": 838091917523500,
+        "outputBytes": 10528,
+        "returnedNs": 838094181992000,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          46,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 5333,
+        "inputBytes": 2688,
+        "issuedNs": 838094182130375,
+        "outputBytes": 2620,
+        "returnedNs": 838094183992333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          47,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": true,
+        "importNs": 3333,
+        "inputBytes": 2688,
+        "issuedNs": 838094184052375,
+        "outputBytes": 2612,
+        "returnedNs": 838094185843750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          48,
+          1,
+          1
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 4916,
+        "inputBytes": 208,
+        "issuedNs": 838095758781125,
+        "outputBytes": 316,
+        "returnedNs": 838095758819416,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          49,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2584,
+        "inputBytes": 208,
+        "issuedNs": 838095759196875,
+        "outputBytes": 316,
+        "returnedNs": 838095759214875,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          50,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2041,
+        "inputBytes": 208,
+        "issuedNs": 838095759550208,
+        "outputBytes": 316,
+        "returnedNs": 838095759564875,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          51,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1792,
+        "inputBytes": 208,
+        "issuedNs": 838095759865583,
+        "outputBytes": 316,
+        "returnedNs": 838095759879375,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          52,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1750,
+        "inputBytes": 208,
+        "issuedNs": 838095760175708,
+        "outputBytes": 316,
+        "returnedNs": 838095760188750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          53,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1792,
+        "inputBytes": 208,
+        "issuedNs": 838095760480916,
+        "outputBytes": 316,
+        "returnedNs": 838095760493916,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          54,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2084,
+        "inputBytes": 208,
+        "issuedNs": 838095760791083,
+        "outputBytes": 316,
+        "returnedNs": 838095760803666,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          55,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1875,
+        "inputBytes": 208,
+        "issuedNs": 838095761092583,
+        "outputBytes": 316,
+        "returnedNs": 838095761105333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          56,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1916,
+        "inputBytes": 208,
+        "issuedNs": 838095761410333,
+        "outputBytes": 316,
+        "returnedNs": 838095761423041,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          57,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1875,
+        "inputBytes": 208,
+        "issuedNs": 838095761766541,
+        "outputBytes": 316,
+        "returnedNs": 838095761779083,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          58,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1875,
+        "inputBytes": 208,
+        "issuedNs": 838095762070333,
+        "outputBytes": 316,
+        "returnedNs": 838095762083333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          59,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1959,
+        "inputBytes": 208,
+        "issuedNs": 838095762397708,
+        "outputBytes": 316,
+        "returnedNs": 838095762410333,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          60,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2041,
+        "inputBytes": 208,
+        "issuedNs": 838095762736166,
+        "outputBytes": 316,
+        "returnedNs": 838095762748750,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          61,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 1959,
+        "inputBytes": 208,
+        "issuedNs": 838095763059833,
+        "outputBytes": 316,
+        "returnedNs": 838095763072291,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          62,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2209,
+        "inputBytes": 208,
+        "issuedNs": 838095763372333,
+        "outputBytes": 316,
+        "returnedNs": 838095763384666,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          63,
+          1,
+          2
+        ]
+      },
+      {
+        "historical": false,
+        "importNs": 2084,
+        "inputBytes": 208,
+        "issuedNs": 838095763702291,
+        "outputBytes": 316,
+        "returnedNs": 838095763714791,
+        "status": "Ready",
+        "token": [
+          1,
+          1,
+          11068046444225730969,
+          11068046444225730969,
+          1,
+          64,
+          1,
+          2
+        ]
+      }
+    ],
+    "jobs": 64,
+    "maxExactNs": 3528041,
+    "maxOwnerNs": 42736042,
+    "maximumCommitStageNs": 15912042,
+    "newQueryUnions": 0,
+    "noops": 0,
+    "opportunities": 626,
+    "pending": 0,
+    "prepareNs": 31291045,
+    "preparedBeforeUp": 0,
+    "publicationPrepareNs": 292,
+    "publishNs": 6662250,
+    "reserved": 0,
+    "sceneStampPrepareNs": 1684912533,
+    "suffixAfterUp": 115216,
+    "targetPrepareNs": 536865710,
+    "terminals": [
+      {
+        "generation": 1,
+        "jobs": 48,
+        "operationOrdinal": 1,
+        "serial": 1,
+        "session": 1,
+        "status": "Committed"
+      },
+      {
+        "generation": 2,
+        "jobs": 16,
+        "operationOrdinal": 2,
+        "serial": 2,
+        "session": 2,
+        "status": "Committed"
+      }
+    ],
+    "workerWaitNs": 35828732665
+  },
+  "fixture_sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c",
+  "input": {
+    "A_segments": 7200,
+    "A_up": [
+      999,
+      999
+    ],
+    "B_moves": 1,
+    "B_up": [
+      900,
+      900
+    ],
+    "native_B_differs_from_historical_Web_B_moves": 8,
+    "paced": false
+  },
+  "input_ns": 2409292,
+  "main_new_query_union_delta": 0,
+  "measurement": "synchronous native Runtime + CpuExactPathJob surrogate; no frame present",
+  "not_measured": {
+    "GPU_present": null,
+    "JS_transport": null,
+    "RAF": null,
+    "Worker_message_queue": null,
+    "Worker_yield": null,
+    "browser_up_to_settled": null,
+    "canonical_render": null
+  },
+  "owner_counter_semantics": "commitNs includes stage counters; workerWaitNs overlaps synchronous surrogate and is not additive",
+  "owner_service_opportunities": 405,
+  "owner_service_wall_ns": 2432826577,
+  "prepared_operations": [
+    {
+      "encoded_bytes": 29954294,
+      "encoded_sha256": "f42c12196d0538c952f53226ba173352b8bbe3e12bb7d78b7c6cf4a3b21d9a06",
+      "serial": 1
+    },
+    {
+      "encoded_bytes": 6210,
+      "encoded_sha256": "5d6f229993498b2f5cc032a6eb7a004e0c4570cde3a1cc2431461d2ae8fc7c27",
+      "serial": 2
+    }
+  ],
+  "queue_completion_total_ns": 37212,
+  "schema": "axiom-native-cpu-tail-attribution-v1",
+  "setup_ns": 210644792,
+  "status": "MEASURED",
+  "take_total_ns": 25125,
+  "unique_job_geometry_groups": 64,
+  "groups": {
+    "new_A": {
+      "jobs": 16,
+      "unique_full_value_geometries": 16,
+      "segments": 115200,
+      "prefix_segments": 0,
+      "union_steps": 115200,
+      "advance_ns": 35699325219,
+      "request_bytes": 9218048,
+      "output_bytes": 168592,
+      "max_step_ns": 36166542,
+      "max_union_ns": 36166250,
+      "min_advance_ns": 2160358907,
+      "max_advance_ns": 2300411173,
+      "path_point_range": [
+        1002,
+        1023
+      ]
+    },
+    "history": {
+      "jobs": 32,
+      "unique_full_value_geometries": 32,
+      "segments": 1024,
+      "prefix_segments": 0,
+      "union_steps": 1024,
+      "advance_ns": 57920038,
+      "request_bytes": 86016,
+      "output_bytes": 83404,
+      "max_step_ns": 750166,
+      "max_union_ns": 122000,
+      "min_advance_ns": 1734792,
+      "max_advance_ns": 1937708,
+      "path_point_range": [
+        251,
+        261
+      ]
+    },
+    "new_B": {
+      "jobs": 16,
+      "unique_full_value_geometries": 16,
+      "segments": 16,
+      "prefix_segments": 0,
+      "union_steps": 16,
+      "advance_ns": 95582,
+      "request_bytes": 3328,
+      "output_bytes": 5056,
+      "max_step_ns": 22083,
+      "max_union_ns": 22000,
+      "min_advance_ns": 4459,
+      "max_advance_ns": 22083,
+      "path_point_range": [
+        17,
+        17
+      ]
+    }
+  },
+  "exclusive_top_level": {
+    "owner_service_wall_ns": 2432826577,
+    "kernel_decode_ns": 1126294,
+    "kernel_create_with_input_copy_ns": 192334,
+    "kernel_advance_ns": 35757340839,
+    "kernel_export_ns": 52505,
+    "queue_completion_ns": 37212,
+    "take_ns": 25125,
+    "observation_ns": 184715419,
+    "other_loop_and_destruction_ns": 912986
+  },
+  "kernel_advance_fraction_of_drain": 0.9317332569234121,
+  "owner_service_breakdown": {
+    "prepare_ns": 31291045,
+    "import_ns": 662751,
+    "exact_ns": 119607037,
+    "commit_inclusive_ns": 2229454412,
+    "other_service_ns": 51811332,
+    "commit_subcounters_ns": {
+      "targetPrepareNs": 536865710,
+      "sceneStampPrepareNs": 1684912533,
+      "historyPrepareNs": 981792,
+      "publicationPrepareNs": 292,
+      "publishNs": 6662250
+    }
+  },
+  "findings": [
+    {
+      "id": "TA2-KERNEL",
+      "classification": "MEASURED_DOMINANT_CHAIN",
+      "detail": "16 new-A object-local geometries execute 115200 sequential union operations; 35.699s kernel advance. Prefix count zero in this native burst. Same local geometry is reused for duplicate objects; 64 jobs include 32 short historical paths and 16 one-segment B paths, not 64 full 7200-path builds. All 16 translated inputs retain independent current f32 PathOps authority."
+    },
+    {
+      "id": "TA2-STAMP",
+      "classification": "MEASURED_SECONDARY_CHAIN",
+      "detail": "2.433s complete owner service includes 2.229s commit preparation/publication, of which 1.685s Scene stamp and 0.537s target preparation. Full-geometry reuse scans are visible in code but only 31.29ms total prepareNs here; do not describe their static byte count as the dominant measured runtime."
+    },
+    {
+      "id": "TA2-SLICE",
+      "classification": "MEASURED_COOPERATIVE_LIMIT",
+      "detail": "Maximum individual union36.16625ms and enclosing step36.166542ms exceed2ms opportunity: the deadline is checked between indivisible PathOps calls. This is native behavior, not a new browser main-thread stall measurement."
+    }
+  ],
+  "limitations": [
+    "One synchronous native surrogate burst run only; no JS transfers/Worker scheduling/RAF/render/present measurements.",
+    "Native B contains one segment; historical Web B contains eight. No paired browser performance conclusion.",
+    "No production change, pixel verification, or new independent oracle run. Prepared Operation SHA256s identify actual encoded inputs to canonical apply, not a newly proven reference comparison.",
+    "workerWaitNs overlaps surrogate work and observation, commitNs nests stage counters; neither may be added twice.",
+    "Geometry group equality is full C++ value equality; hashes provide input custody and are not the equality oracle.",
+    "No per-union trace or complete cold-prefix path complexity curve; final path counts and maximum call times only."
+  ]
+}

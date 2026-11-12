@@ -29,6 +29,18 @@ if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
 endif()
 
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_CPU_PENDING_ERASE)
+ foreach(kind numeric protocol compatibility)
+  add_executable(axiom_cpu_local_exact_${kind}_tests tests/cpu_local_exact_${kind}_test.cpp)
+  target_link_libraries(axiom_cpu_local_exact_${kind}_tests PRIVATE canvas_runtime_render canvas_runtime_interaction CanvasSkia::Skia)
+  target_include_directories(axiom_cpu_local_exact_${kind}_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+ endforeach()
+ add_test(NAME G5CpuLocalExactNumeric COMMAND axiom_cpu_local_exact_numeric_tests "${CMAKE_CURRENT_BINARY_DIR}/cpu-local-numeric.json")
+ add_test(NAME G5CpuLocalExactCornerContact COMMAND axiom_cpu_local_exact_numeric_tests "${CMAKE_CURRENT_BINARY_DIR}/cpu-local-corner-contact.json" --corner-contact)
+ add_test(NAME G5CpuLocalExactIdentity COMMAND axiom_cpu_local_exact_protocol_tests "${CMAKE_CURRENT_BINARY_DIR}/cpu-local-identity.json")
+ add_test(NAME G5CpuLocalExactCompatibility COMMAND axiom_cpu_local_exact_compatibility_tests)
+endif()
+
 if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH)
     if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
       add_executable(axiom_headless_canvas_demo
@@ -157,7 +169,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp src/render_execution.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
-    target_sources(canvas_runtime_render PRIVATE src/cpu_exact_path_kernel.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/cpu_exact_path_kernel.cpp src/cpu_local_exact.cpp)
     target_sources(canvas_runtime_render PRIVATE src/cpu_worker_protocol.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_ink_layers.cpp src/skia_mask_history.cpp src/skia_navigation_tiles.cpp src/skia_prepared_geometry.cpp

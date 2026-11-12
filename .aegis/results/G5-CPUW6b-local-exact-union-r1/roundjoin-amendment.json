@@ -1,0 +1,107 @@
+{
+  "schema": "axiom-cpuw6b-roundjoin-control-correction-v1",
+  "corrected_utc": "2026-11-12T19:41:51.130890+00:00",
+  "previous_result_sha256": "62ec698d91bd32350db441f4adeda2a0c57050451690e701571dc0f3c4fb036f",
+  "authorization": "control thread01a1c344-e48c-7db3-8c35-39732cb81dc5 finalreview request; same frozen U1 originalcontactsemantic",
+  "production_fix": "SkiaRenderer::intersectSelectionGeometry contactSkPaint setStrokeJoin(kRound_Join); defaultButt cap and2e-4width unchanged",
+  "source_delta": {
+    "runtime/render/src/skia_renderer.cpp": {
+      "previous": "bfda4b1412a89e5fcea903aaf47306a79d82c12d595e5c798b409746fd211aa5",
+      "current": "1d20c3e0c1d9fdbd35b6229418359b1aa611d43a51c8bc7b177fa0cd56a99e5c"
+    },
+    "runtime/render/CMakeLists.txt": {
+      "previous": "2a5c27816a3c60c8bfb6d5e47da4098686e417c328fc12a0cd42203b6afefad4",
+      "current": "958c23598da6cdf55cfb8a70eace1e4be660d2ef364361f921aeb1ae127893fe"
+    },
+    "runtime/render/tests/cpu_local_exact_numeric_test.cpp": {
+      "previous": "53ab1fa7078421c4557d0c2d53a1a4e09ee2a7600c5d3e0141ffb5834f5ba292",
+      "current": "68bffba2fceb739b930f7e532c94388cb68493fbf5d1db28ae941584c84b14cd"
+    }
+  },
+  "oracle": "anchored test-only originalintersectVisibleSelectionGeometry and raw geometry evaluator; no newcache in expecteddecision",
+  "counterexample": {
+    "region": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "body": "v4 round dot radius.01 center(-.007155920844525099,-.007155920844525099)",
+    "gap_to_corner": 0.00012,
+    "original_round_band_radius": 0.0001,
+    "miter_only_false_positive": true,
+    "red_ref": "corner-contact-red.json",
+    "green_ref": "corner-contact-green.json"
+  },
+  "validation": {
+    "native_ctest": {
+      "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native -R G5CpuLocalExact --output-on-failure -j1",
+      "pass": 5,
+      "fail": 0,
+      "log": "out/G5-CPUW6b-local-exact-union-r1/corner-ctest.log"
+    },
+    "boundaries": 120,
+    "new_browser_starts": 0,
+    "sdk_build": "ownRender/JSruntime incremental against same locked publishedSemantic/Skia; dependencies not rebuilt",
+    "http_asset_checks": {
+      "url": "http://127.0.0.1:4331/example.html",
+      "rows": [
+        {
+          "path": "example.html",
+          "status": 200,
+          "content_type": "text/html",
+          "served_sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+          "asset_sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+        },
+        {
+          "path": "internal/axiom.mjs",
+          "status": 200,
+          "content_type": "text/javascript",
+          "served_sha256": "e7cd8238c77ec8c100046ee45c5559a31b1c4e8a4d4443e9a0d2c9f208bec256",
+          "asset_sha256": "e7cd8238c77ec8c100046ee45c5559a31b1c4e8a4d4443e9a0d2c9f208bec256"
+        },
+        {
+          "path": "axiom.wasm",
+          "status": 200,
+          "content_type": "application/wasm",
+          "served_sha256": "cdd399dce7d727ef0b63fdb18a3c6ef78e329c0250f98523fb638e24d00c4da4",
+          "asset_sha256": "cdd399dce7d727ef0b63fdb18a3c6ef78e329c0250f98523fb638e24d00c4da4"
+        },
+        {
+          "path": "internal/cpu-worker-kernel.wasm",
+          "status": 200,
+          "content_type": "application/wasm",
+          "served_sha256": "3f8010f893b134a4d418b3b03ba2e225354f70e7a9582816f5451b28aa0b8cdb",
+          "asset_sha256": "3f8010f893b134a4d418b3b03ba2e225354f70e7a9582816f5451b28aa0b8cdb"
+        }
+      ],
+      "browser_starts": 0
+    }
+  },
+  "SDK_delta": {
+    "axiom.wasm": {
+      "previous": "63821c1bc809d3a182c0ff6cc73f01552eab6ec07611a36888bbfd264d7efcc9",
+      "current": "cdd399dce7d727ef0b63fdb18a3c6ef78e329c0250f98523fb638e24d00c4da4"
+    }
+  },
+  "sampling_dependency": "RoundJoin affects selection contact corner only; union exactdecision, fullmaskcanonicalgeometry, canonicalpixels, frozenperformanceinputs unchanged. Four sampledrows reused with their originalfreeze; finalSDK not described as byte-identical sampledcandidate. Fixed40rectangle selects all40byinterior andcorner-sensitive regression qualifiednative. No newbrowsermatrix.",
+  "demo": "http://127.0.0.1:4331/example.html",
+  "live_log_policy": {
+    "excluded": "out/G5-CPUW6b-local-exact-union-r1/demo-server.log",
+    "immutable_snapshot": "out/G5-CPUW6b-local-exact-union-r1/demo-server-roundjoin-snapshot.log",
+    "reason": "HTTP probes appendto live servinglog; binding immutable snapshot only"
+  },
+  "no_commit_push_tag": true
+}

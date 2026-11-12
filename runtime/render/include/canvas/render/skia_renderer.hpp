@@ -24,6 +24,8 @@ class SkCanvas;
 namespace canvas::render {
 namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
 namespace internal {struct ObjectInteractionWork;}
+namespace internal {class LocalExactJob;class LocalExactCache;
+enum class LocalExactStatus {kPending,kNeedPiece,kNeedFull,kHit,kMiss,kInvalid};}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -104,6 +106,13 @@ class SkiaRenderer final {
     void setCpuPendingPreparation(bool value)noexcept;
     std::optional<resources::ResourceLease> reserveCpuPendingMetadata(std::size_t)noexcept;
     using CpuPathPin=std::shared_ptr<const void>;
+    using CpuDecisionPin=std::shared_ptr<internal::LocalExactJob>;
+    [[nodiscard]] CpuDecisionPin requestCpuLocalExact(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&)const;
+    [[nodiscard]] internal::LocalExactStatus advanceCpuLocalExact(const CpuDecisionPin&)const;
+    [[nodiscard]] std::vector<std::uint8_t> encodeCpuLocalExact(const CpuDecisionPin&,const std::array<std::uint64_t,8>&)const;
+    bool importCpuLocalExact(const CpuDecisionPin&,std::span<const std::uint8_t>,const std::array<std::uint64_t,8>&,bool*)const;
+    void clearCpuLocalSelection()noexcept;
+    [[nodiscard]] bool cpuLocalSelectionPending()const noexcept;
     [[nodiscard]] std::vector<std::uint8_t> encodeCpuPendingContinuation(
         const semantic::EraseMaskGeometry&,const std::array<std::uint64_t,8>&,
         const semantic::EraseMaskGeometry&,const CpuPathPin&,std::size_t* prefix=nullptr)const;
@@ -138,7 +147,7 @@ class SkiaRenderer final {
     bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token) noexcept;
     std::size_t cpuWorkerGrantBytes() const noexcept;
     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
-        std::span<const foundation::WorldPoint>) const noexcept;
+        std::span<const foundation::WorldPoint>,bool* pending=nullptr) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
@@ -155,6 +164,9 @@ class SkiaRenderer final {
     std::map<std::uint64_t,CpuGrant> cpuGrants_;
     std::uint64_t nextCpuGrant_=0;
     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
+    mutable std::shared_ptr<internal::LocalExactCache> localExact_;
+    struct CpuLocalSelection {std::vector<foundation::WorldPoint> points;CpuDecisionPin job;resources::ResourceLease lease;bool complete=false;};
+    mutable std::map<foundation::ObjectId,CpuLocalSelection> localSelection_;
     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
     ImageResourceResolver* images_ = nullptr;

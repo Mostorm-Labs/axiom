@@ -1,5 +1,41 @@
 # G5 independent CPU Worker development checkpoint
 
+## CPUW6b local exact union candidate · 2026-11-13
+
+The current candidate Demo is http://127.0.0.1:4331/example.html (local
+`0.4.3.0`, diagnostics OFF, private pending CPU capability ON). The previous
+4330 Demo and user document remain untouched. The sections below this addition
+are historical checkpoint notes; current ordered editing capabilities are also
+described in `G5_CPU_WORKER_FUNCTIONAL_CANDIDATE_20261112.md`.
+
+Render now separates exact Hit/Miss decisions from complete union paths. It
+validates the complete immutable mask and body, indexes conservative bounds, and
+requests original-order pieces of at most 32 segments from the existing Worker.
+Piece results carry their own type/range/full-input witness and cannot enter the
+complete-path cache. Canonical AddEraseMasks still stores the entire original
+object-local geometry and the renderer clears the original segments. Later
+erasing and selection consume local historical preparation with resumable work.
+Whole-path compatibility tests and the original sequential reference are retained.
+
+The same native Fixed40 A7200+B1 case reduced drain from 38.377s to 2.560s and
+kernel computation from 35.757s to 83.839ms. The matched real Web DPR1 burst
+reduced Up-to-drain from 45.680s to 10.311s. Four finite browser rows completed;
+14 captured snapshots match independent original OperationEngine replay byte for
+byte, and 14 CPU reference pixel comparisons satisfy the existing AA rule.
+
+Remaining delays are material: DPR1 paced follow-up erasing took 7.128s; DPR4
+primary drain took 30.907s and its follow-up took 71.849s. Those waits are not
+independently attributed to stamp versus render/resource work. Scene stamp is
+unchanged. This is scoped union improvement, not complete tail/performance or
+G5/P34 PASS. Native B has one segment; Web B has eight.
+
+Evidence is bound under `.aegis/results/G5-CPUW6b-local-exact-union-r1/`. The
+four sampled rows retain their original source/SDK freeze. The final Demo adds
+a narrow compatibility correction for legal histories above 8192 segments and
+terminal selection-job retirement above 512 consumers; its native RED/GREEN and
+the relationship to sampled artifacts are recorded separately. The browser rows
+were not rerun after that correction. No commit, push, tag or release was made.
+
 Current development branch: `codex/g5-cpu-worker`.
 
 This checkpoint preserves the shared C++ exact-path implementation compiled to

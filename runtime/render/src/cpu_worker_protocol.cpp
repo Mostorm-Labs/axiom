@@ -25,6 +25,16 @@ std::optional<std::size_t> cpuConstructionEstimate(std::size_t count,std::size_t
  return base+count*4096U;
 }
 std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest& r){
+ if(r.piece){
+  const auto* g=std::get_if<semantic::SweptCircleMask>(&r.geometry);
+  if(!g||g->segments.empty()||g->segments.size()>32||r.prefixCount||!r.fullCount||
+     r.first>r.fullCount||g->segments.size()>r.fullCount-r.first)return {};
+  CpuRequest plain;plain.identity=r.identity;plain.geometry=r.geometry;
+  auto bytes=cpuEncodeRequest(plain);if(bytes.empty())return {};
+  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)bytes[p+i]=v>>(8*i);};
+  set(4,3);set(104,r.fullCount);set(108,r.first);set(112,g->segments.size());
+  std::copy(r.fullWitness.begin(),r.fullWitness.end(),bytes.begin()+116);return bytes;
+ }
  if(r.prefixCount){
   const auto* full=std::get_if<semantic::SweptCircleMask>(&r.geometry);
   const auto* witness=r.prefixWitness?std::get_if<semantic::SweptCircleMask>(&*r.prefixWitness):nullptr;
@@ -52,6 +62,15 @@ std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest& r){
 std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>b){
  if(b.size()<cpuHeaderSize||b.size()>cpuInputLimit||read32(b,0)!=0x31575043)return {};
  const auto version=read32(b,4);
+ if(version==3){
+  const auto total=read32(b,104),first=read32(b,108),count=read32(b,112);
+  if(read32(b,8)!=0||!count||count>32||!total||first>total||count>total-first||read32(b,12)!=count)return {};
+  std::vector<std::uint8_t> plain(b.begin(),b.end());plain[4]=1;
+  for(unsigned i=104;i<128;++i)plain[i]=0;
+  auto request=cpuDecodeRequest(plain);if(!request)return {};
+  request->piece=true;request->fullCount=total;request->first=first;
+  std::copy_n(b.begin()+116,12,request->fullWitness.begin());return request;
+ }
  if(version==2){
   const auto count=read32(b,104),pathBytes=read32(b,108),prefixBytes=read32(b,112);
   if(!count||count>cpuSweepLimit||!pathBytes||read32(b,8)!=0||prefixBytes!=count*80U||read32(b,96)!=b.size()-cpuHeaderSize||

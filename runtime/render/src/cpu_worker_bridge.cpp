@@ -30,7 +30,8 @@ int axiom_cpu_step(std::uint32_t token,std::uint32_t steps,std::uint32_t micros)
   if(!job->ready())return 1;
   if(result.empty()){
    const auto size=job->path().writeToMemory(nullptr);if(size>cpuOutputLimit-cpuHeaderSize)return 4;
-   result.resize(cpuHeaderSize+size);std::copy(header.begin(),header.end(),result.begin());set32(result,0,0x31525043);set32(result,4,1);set32(result,96,size);set32(result,100,2);for(unsigned i=104;i<128;++i)result[i]=0;
+   const bool piece=header[4]==3;
+   result.resize(cpuHeaderSize+size);std::copy(header.begin(),header.end(),result.begin());set32(result,0,0x31525043);set32(result,4,1);set32(result,96,size);set32(result,100,piece?3:2);if(!piece)for(unsigned i=104;i<128;++i)result[i]=0;
    job->path().writeToMemory(result.data()+cpuHeaderSize);
    if(!cpuDecodePath({result.data()+cpuHeaderSize,size}))return 4;
   }

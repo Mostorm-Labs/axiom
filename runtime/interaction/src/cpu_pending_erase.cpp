@@ -117,6 +117,14 @@ bool CanvasEditingRuntime::queueCpuPendingCompletion(std::array<std::uint64_t,8>
   return true;}catch(...){p->success=false;p->completion=true;return false;}
 }
 void CanvasEditingRuntime::serviceCpuActivePrefixes(std::chrono::steady_clock::time_point began)noexcept{
+ // Active input is retained, never eagerly expanded to sixteen complete union
+ // paths. The frozen decision job validates and requests only relevant ranges.
+ // Preserve the legacy completion drain below for an already issued job.
+ if(cpuPending_&&!cpuPending_->requestOwner()){
+  // Prepare only the immutable input/index while contact is active. No global
+  // union job is launched ahead of a target decision.
+  return;
+ }
  if(!cpuPending_||!cpuPending_->enabled||!canonicalWriteAdmission()||!sceneCoordinator_)return;
  auto& state=*cpuPending_;
  try{
@@ -175,6 +183,7 @@ void CanvasEditingRuntime::serviceCpuPendingErases()noexcept{
  const auto began=std::chrono::steady_clock::now();
  struct OwnerTurn {std::shared_ptr<CpuPendingEraseState> state;std::chrono::steady_clock::time_point began;
  ~OwnerTurn(){if(state)state->maxOwnerNs=std::max(state->maxOwnerNs,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-began).count()));}} turn{cpuPending_,began};
+ servicePendingRegionSelection();
  serviceCpuActivePrefixes(began);
  if(cpuPending_&&cpuPending_->requestOwner()&&cpuPending_->requestOwner()->activeJob)return;
  if(servicePendingLocalHead())return;
@@ -266,6 +275,14 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
   if(p->phase==CpuPendingEraseState::Phase::Confirming){
    if(!p->success){state.error="CPU_PENDING_WORKER_FAILED";retire(true);return;}
    const auto importAt=std::chrono::steady_clock::now();
+   if(p->decisionRequest){
+    bool pending=false;const bool accepted=skiaRenderer_.importCpuLocalExact(p->decision,p->response,p->identity,&pending);
+    if(pending)return;
+    for(auto& j:state.jobLedger)if(j.token==p->identity){j.importNs=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-importAt).count();j.status=accepted?"ReadyPiece":"RejectedPiece";state.importNs+=j.importNs;break;}
+    if(!accepted){state.error="CPU_PENDING_PIECE_IMPORT_FAILED";retire(true);return;}
+    std::vector<std::uint8_t>{}.swap(p->response);p->completion=false;p->decisionRequest=false;
+    p->phase=CpuPendingEraseState::Phase::ExactReady;return;
+   }
    bool resourcePending=false;const auto pin=skiaRenderer_.importCpuPendingPath(p->jobGeometry,p->response,p->identity,&resourcePending);if(resourcePending)return;
    for(auto& j:state.jobLedger)if(j.token==p->identity){j.importNs=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-importAt).count();j.status=pin?"Ready":"Rejected";state.importNs+=j.importNs;break;}
    if(!pin){state.error="CPU_PENDING_IMPORT_FAILED";retire(true);return;}
@@ -297,6 +314,32 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
    const auto* current=p->target?sceneCoordinator_->runtimeScene().find(p->target->objectId):nullptr;
    if(!current||current->content.shared()!=p->target->content.shared()||current->transform!=p->target->transform||current->eraseMasks.storage()!=p->target->eraseMasks.storage()||!textWritable(current->objectId)){
     state.error="PENDING_TARGET_BASIS_STALE";retire(true);return;
+   }
+   if(!p->fullFallback){
+    if(!p->decision)p->decision=skiaRenderer_.requestCpuLocalExact(*current,p->geometry);
+    if(!p->decision)return;
+    const auto at=std::chrono::steady_clock::now();const auto status=skiaRenderer_.advanceCpuLocalExact(p->decision);
+    state.exactNs+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-at).count();
+    using S=render::internal::LocalExactStatus;
+    if(status==S::kPending)return;
+    if(status==S::kNeedPiece){
+     if(state.nextJob==UINT64_MAX){state.error="CPU_PENDING_JOB_EXHAUSTED";retire(true);return;}
+     p->identity={state.basis[0],state.basis[1],state.basis[2],state.basis[3],state.executor,++state.nextJob,1,p->serial};
+     p->request=skiaRenderer_.encodeCpuLocalExact(p->decision,p->identity);if(p->request.empty()){state.error="CPU_PENDING_PIECE_ENCODE_FAILED";retire(true);return;}
+     const auto count=(p->request.size()-128)/80;state.allUnionSteps+=count;state.suffixAfterUp+=count;
+     p->historyJob=false;p->decisionRequest=true;p->requestTaken=false;p->phase=CpuPendingEraseState::Phase::Waiting;
+     if(state.jobLedger.size()==128)state.jobLedger.erase(state.jobLedger.begin());
+     state.jobLedger.push_back({p->identity,false,p->request.size(),0,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()),0,0,"IssuedPiece"});++state.jobs;++p->jobCount;return;
+    }
+    if(status==S::kInvalid){state.error="CPU_PENDING_LOCAL_EXACT_INVALID";retire(true);return;}
+    if(status==S::kNeedFull){p->fullFallback=true;p->decision.reset();}
+    else{
+     ++state.exactCalls;
+     if(status==S::kHit){p->proofs.push_back(*current);p->hitOrder.push_back(p->next);p->hits.push_back({current->objectId,{{{},p->geometry}}});}
+     p->processed[p->next]=1;p->target.reset();p->decision.reset();p->completion=false;
+     if(!p->reuseTarget){p->retainingResult=true;p->reuseScan=0;}
+     p->reuseTarget=false;p->phase=CpuPendingEraseState::Phase::Preparing;return;
+    }
    }
    if(!p->currentPath){
     p->currentPath=skiaRenderer_.lookupCpuPendingPath(p->geometry);
@@ -336,7 +379,7 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
      if(!local){state.error="PENDING_LOCAL_GEOMETRY_INVALID";retire(true);return;}
      if(*local!=p->geometry)continue;
      ++state.geometryReuse;
-     p->target=*candidate;p->next=index;p->reuseTarget=true;p->phase=CpuPendingEraseState::Phase::ExactReady;return;
+     p->target=*candidate;p->next=index;p->reuseTarget=true;p->decision.reset();p->fullFallback=false;p->phase=CpuPendingEraseState::Phase::ExactReady;return;
     }
     p->retainingResult=false;p->currentPath.reset();std::vector<std::uint8_t>{}.swap(p->response);
     if(p->transportGrant){(void)releaseCpuWorkerGrant(p->transportExecutor,p->transportGrant);p->transportGrant=0;}
@@ -352,6 +395,7 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
     auto local=partialEraseGeometry(p->trace,current->transform,p->radius);
     if(!local){state.error="PENDING_LOCAL_GEOMETRY_INVALID";retire(true);return;}
     p->target=*current;p->geometry=std::move(*local);
+    p->decision.reset();p->fullFallback=false;
     p->currentPath=skiaRenderer_.lookupCpuPendingPath(p->geometry);
     p->phase=CpuPendingEraseState::Phase::ExactReady;return;
    }

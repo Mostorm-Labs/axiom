@@ -25,6 +25,10 @@ struct CpuRequest {
  std::size_t prefixCount=0;
  SkPath prefixPath;
  std::optional<semantic::EraseMaskGeometry> prefixWitness;
+ // A local piece is a different result type, never a completed whole mask.
+ bool piece=false;
+ std::uint32_t fullCount=0,first=0;
+ std::array<std::uint8_t,12> fullWitness{};
 };
 std::array<std::uint8_t,16> cpuKernelId();
 std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest&);
