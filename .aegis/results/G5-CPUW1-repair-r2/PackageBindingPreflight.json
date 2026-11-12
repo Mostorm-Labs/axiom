@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "cursor": "EXACT_CURSOR",
+  "HEAD": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "package_sha256": "98f46cb7e53a91062e65432aa0dcdaf23e3bc9c82972e36d8c6205b9707de237",
+  "refs": [
+    {
+      "key": "authority_lock_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/authority.lock.json",
+      "sha256": "36ff6aecc3d11bf23624acf383ce06bfe65eacbb2351927c6f9bdd7737a455a2"
+    },
+    {
+      "key": "trusted_basis_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/trusted-basis.json",
+      "sha256": "4e703167a5592f2b9241a717b8d5f12e834e3d93b9f55cb878e46b30c90a6bcc"
+    },
+    {
+      "key": "verification_lock_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/verification.lock.json",
+      "sha256": "5dafb91c9afd99e7cb60ae35ab515dbd5ab402fcb22bc2a59507b637e240aefc"
+    },
+    {
+      "key": "workload_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/workload.json",
+      "sha256": "9d6b47a829b0cb5f2b9031c474a7ca7171bdf1de8575a34284f00a0453770d59"
+    },
+    {
+      "key": "execution_contract_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/execution-contract.json",
+      "sha256": "f5e24d48de9b0031ad8e8ea8c26db8ab7059e3f695d12422567082d109f93414"
+    },
+    {
+      "key": "evidence_contract_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/evidence-contract.json",
+      "sha256": "aa67a57aeccf43821cc38719ac7c66343d43b4e953c1bd67fddf5b39134a3dd0"
+    },
+    {
+      "key": "implementation_context_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/implementation-context.md",
+      "sha256": "4a1d55ced80ec36e795ea308f19362d5a883fed02b071777dd22b26a2af9ec8c"
+    },
+    {
+      "key": "verification_correction_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/verification-correction.json",
+      "sha256": "c3c5c87886115830a2df0771da31cbeea77e3609e72490e69ca093777bce79da"
+    },
+    {
+      "key": "supersedes_package_ref",
+      "path": ".aegis/packages/G5-CPUW1-repair-r1/package.json",
+      "sha256": "c3fe4a874af1f03032be00297c77c111336bd90736994ec8c68b3afaa2b725a1"
+    }
+  ],
+  "nested_exact_refs": [
+    {
+      "path": ".aegis/results/G5-CPUW1-control-r1/deadline-verification-decision.json",
+      "sha256": "2aeb9f7862492c10583d4325aa9d652e7c063d0f7d78ca1d8f61208af3d70463"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r1/package.json",
+      "sha256": "c3fe4a874af1f03032be00297c77c111336bd90736994ec8c68b3afaa2b725a1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/result.json",
+      "sha256": "30afd70336a615ba6b0fb24bf87cfdeab1fc1b22edee40299ab40bffee1c3a34"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/source-manifest.json",
+      "sha256": "28b8f2086dd61ea8806d9bf21ef1a4a20e11bfb746b87f5047b77be32e0f2b06"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/result.json",
+      "sha256": "d5f763ad308e5fd0460921bcd2bb4ece26f03140f2fd3801a4bbab333fe82037"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-manifest.json",
+      "sha256": "475cb735ac43d742c6f1a2ddea3bcf760e157f962831ffcccbf4e19b282c678d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-delta.patch",
+      "sha256": "a376eb61ac161d9028b1ac3fb513949fba2e2403cded5e76384b6b7e06f1408e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-control-r1/control-review.json",
+      "sha256": "7cda5c95b3863bd09adba2015e64cd923fdec3eee40bfa3a1be1414d5a94da6a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/normal-sdk-manifest.json",
+      "sha256": "b26306d5f61f82e795e43063f475d263516c42d570b3e7d6350857d46c155608"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-worker-path-audit.json",
+      "sha256": "c87636689449e4097481e9874934ac11b6dbef97e5f6d6be2ec9bc2fc8cd4163"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-latency-audit.json",
+      "sha256": "c1d4aff1ee55c255393bfa4696564e45d2046bd0728aac360cc6bc1001c5a6b6"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-wasm-kernel-r2/package.json",
+      "sha256": "ff4a4a8589c3345f9ca0d91965105c42f603036e16a8775de954198cdea21e99"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-control-r1/control-review.json",
+      "sha256": "7cda5c95b3863bd09adba2015e64cd923fdec3eee40bfa3a1be1414d5a94da6a"
+    }
+  ],
+  "accepted_r1_source_count": 1211,
+  "accepted_r1_source_unchanged": true,
+  "index_empty": true
+}

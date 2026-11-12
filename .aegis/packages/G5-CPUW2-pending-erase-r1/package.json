@@ -1,0 +1,69 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW2-pending-erase-r1",
+  "status": "FROZEN_AUTHORIZED_CANDIDATE_PENDING_UP_INTEGRATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "completed_through": [
+      "checkpointtagpushed",
+      "CW1sharedC++WASMprivateprotocolquotaaccepted",
+      "CWRpostedtaskassetcloserepairscopedaccepted",
+      "independent39paths48terminal27native634originalverified"
+    ],
+    "next_action": "ValidateacceptedCWRdirtysource andcurrentauthority; freezeCW2ownerpending/privatejob/7200import/orderingfeedbackImplementationDesign, proveactualoldUpRED thenimplementactualcandidateendtoend untilfrozenclosure."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW2-pending-erase-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "3f7d8e9d730a0207cae21630247b1f38d2820b4effdc94d5b47e90d9d917cabf"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "61e79bd3123c88677faae8c116bbd399e5a472ac3af9562d2cff338fa4d100d9"
+  },
+  "design_contract_ref": {
+    "path": "design-contract.json",
+    "sha256": "8b15af4e5cebcdf9d20edd0a18826a53b57b17f1a2f06a45f06e1eb773ade2fc"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "bd3599f351d21b2bdc3d27e29aa6d7daddf3d75ae9f9ab72b8c91b812ad20e40"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "c5dcb9c03d543c747852fe97115e7a349b030f5386b8aae19bdf64d968a41730"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "aebb3d5fe3fb82a968e974e1515df64aec3197801f4de989a3eb801eb9906d3e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "72bd13c3ce0123e337adb556316b8fd749ad83b23af12da321fd03f36aa58f5d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "69440b3b5153419ae9c0ec234f0b6c1b97e42a48bb2cae1e69db8842920246ab"
+  }
+}

@@ -60,6 +60,10 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     if (!isTargetCurrent(request.target)) return {CanvasControlError::kStaleTarget, "stale target"};
     auto& runtime = runtime_;
     const auto& p = request.payload;
+    if(runtime_.cpuPendingBusy() && p.kind!=CanvasControlPayloadKind::kPanBy &&
+       p.kind!=CanvasControlPayloadKind::kZoomAt && p.kind!=CanvasControlPayloadKind::kSetZoom &&
+       p.kind!=CanvasControlPayloadKind::kEraserOptions && p.kind!=CanvasControlPayloadKind::kSelectTool)
+      return {CanvasControlError::kBusy,"pending canonical erase"};
     const bool singleObjectEdit=p.kind==CanvasControlPayloadKind::kSelectedAppearance||p.kind==CanvasControlPayloadKind::kSelectedSize||
         p.kind==CanvasControlPayloadKind::kSelectedTransform||p.kind==CanvasControlPayloadKind::kSelectedOrder||
         p.kind==CanvasControlPayloadKind::kSelectedLock||p.kind==CanvasControlPayloadKind::kSelectedVisible||p.kind==CanvasControlPayloadKind::kUnlockSelected;

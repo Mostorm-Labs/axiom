@@ -332,7 +332,7 @@ std::size_t RuntimeCompositionCore::semanticObjectCount() const noexcept {
 }
 semantic::ApplyResult RuntimeCompositionCore::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) noexcept {
-  if (!canMutate() || std::this_thread::get_id() != ownerThread_) return {};
+  if (runtime_->cpuPendingBusy() || !canMutate() || std::this_thread::get_id() != ownerThread_) return {};
   return runtime_->applyExternalOperation(operation, source);
 }
 bool RuntimeCompositionCore::notifyResource(foundation::ObjectId id) noexcept {
@@ -470,6 +470,29 @@ bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
   return runtime_ && runtime_->resourceRetirementPending();
 }
 
+void RuntimeCompositionCore::suspendCpuPendingExecutor()noexcept{if(std::this_thread::get_id()==ownerThread_&&runtime_)runtime_->suspendCpuPendingExecutor();}
+void RuntimeCompositionCore::failCpuPendingExecutor()noexcept{if(std::this_thread::get_id()==ownerThread_&&runtime_)runtime_->failCpuPendingExecutor();}
+bool RuntimeCompositionCore::bindCpuPendingExecutor(std::uint64_t e)noexcept{
+ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return false;
+ const auto doc=runtime_->documentId().value();std::array<std::uint64_t,4> basis{runtimeInstanceId_,resources_.lifetimeGeneration,0,0};
+ for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
+ return runtime_->bindCpuPendingExecutor(basis,e);
+}
+std::vector<std::uint8_t> RuntimeCompositionCore::takeCpuPendingRequest()noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_?runtime_->takeCpuPendingRequest():std::vector<std::uint8_t>{};
+}
+bool RuntimeCompositionCore::queueCpuPendingCompletion(std::array<std::uint64_t,8> j,std::span<const std::uint8_t> b,bool ok)noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->queueCpuPendingCompletion(j,b,ok);
+}
+interaction::CpuPendingEraseFacts RuntimeCompositionCore::cpuPendingFacts()const noexcept{return runtime_?runtime_->cpuPendingFacts():interaction::CpuPendingEraseFacts{};}
+std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
+ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
+ return runtime_->reserveCpuWorkerGrant(e,b);
+}
+bool RuntimeCompositionCore::releaseCpuWorkerGrant(std::uint64_t e,std::uint64_t t)noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->releaseCpuWorkerGrant(e,t);
+}
+std::size_t RuntimeCompositionCore::cpuWorkerGrantBytes()const noexcept{return runtime_?runtime_->cpuWorkerGrantBytes():0;}
 bool RuntimeCompositionCore::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
 
@@ -493,6 +516,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
+  runtime_->serviceCpuPendingErases();
   runtime_->serviceResourceRetirements();
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
@@ -561,7 +585,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if (out.navigationPending || out.navigationPresented) {
     out.canonicalWork.reset();
   }
-  out.needsPaint = out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
+  out.needsPaint = runtime_->cpuPendingBusy() || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
   return true;
@@ -729,7 +753,7 @@ bool RuntimeCompositionCore::detach() noexcept {
   notifications_.clear();
   return true;
 }
-bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if(runtime_&&(runtime_->cpuPendingBusy()||runtime_->cpuWorkerGrantBytes()))return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 std::uint64_t RuntimeCompositionCore::canonicalPresentCount() const noexcept {
   const auto* provider = runtime_->activeSurfaceProvider();
   return provider == nullptr ? 0U : provider->presentCount();

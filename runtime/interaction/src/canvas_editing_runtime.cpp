@@ -2,6 +2,7 @@
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "cpu_pending_erase_state.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "undoable_command.hpp"
 
@@ -552,6 +553,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  skiaRenderer_.retireAllCpuPendingHandoffs();
   clearAppearancePreview();
   abortExplicitIntent();
   cancelConnectorRouting();
@@ -567,6 +569,7 @@ void CanvasEditingRuntime::close() noexcept {
   pendingPreviewProvider_.reset();
   cancelDisplayDemands();
   cancelAllPointers();
+  cpuPending_.reset();
   if (previewController_ != nullptr) (void)previewController_->cancel();
   exactDemand_.reset();
   frameCoordinator_.close();
@@ -875,6 +878,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
       publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
+  if(cpuPendingBusy()&&!panTool_&&(toolMode_!=ToolMode::kPartialEraser||creationMode_||selectionMode_||textTool_))return false;
   exactDemand_.reset();
   const auto source = batch.samples.front().source;
   if (appBinding_ == nullptr) return false;
@@ -953,7 +957,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     if (inkBatch.empty()) return true;
     const bool accepted = dispatchRuntime_.submitBatch(inkBatch);
     if (!accepted) for (const auto& sample : inkBatch)
-      if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel) {
+      if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel ||
+          (cpuPending_&&cpuPending_->error=="ACTIVE_TRACE_CAPACITY_CANCELLED")) {
         baselineDownTimestamps_.erase(sample.key);
         // Dispatch has cancelled the rejected session; retire its exact ingress
         // key too. Other pointers/sources and accepted commits stay untouched.
@@ -1763,6 +1768,7 @@ void CanvasEditingRuntime::completeDisplayWork(const DisplayWorkBasis& work,cons
       pendingCanonicalIdentities_.erase(r.session);
       ++previewDisplayRevision_;previewDisplayDirty_=previewActive();
     }
+    if(r.kind==DisplayKind::kErase)skiaRenderer_.retireCpuPendingHandoff(r.session);
     r={};
   }
   roster={};
@@ -1819,7 +1825,7 @@ void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,
 
 semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) {
-  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
+  if (cpuPendingBusy() || closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
   if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
       operation.document_id != documentId_) return {};
   const auto result = operationEngine_.apply(operation, source, semanticObjects_,
@@ -1839,7 +1845,7 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 }
 
 bool CanvasEditingRuntime::setDocumentBackground(const foundation::DocumentBackground& value) {
-  if (!foundation::validDocumentBackground(value) || !canonicalWriteAdmission() ||
+  if (!foundation::validDocumentBackground(value) || !competingCanonicalAdmission() ||
       explicitIntentActive_ || !historySceneReady() || !snapshotCaptureReady() ||
       (interaction_->textSession() &&
        interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)) return false;
@@ -1855,7 +1861,7 @@ bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
 }
 
 bool CanvasEditingRuntime::beginExplicitIntent() noexcept {
-  if (explicitIntentActive_ || !canonicalWriteAdmission() || !historySceneReady() ||
+  if (explicitIntentActive_ || !competingCanonicalAdmission() || !historySceneReady() ||
       historyPublicationPending_ || !resourceManifestPort_ || !sceneCoordinator_ || !sceneCompiler_)
     return false;
   explicitIntentActive_ = true;
@@ -1870,7 +1876,7 @@ bool CanvasEditingRuntime::prepareExplicitIntent(std::span<const semantic::Opera
 
 bool CanvasEditingRuntime::prepareExplicitIntentInternal(
     std::span<const semantic::Operation> operations, bool recordHistory) try {
-  if (!explicitIntentActive_ || explicitIntent_ || operations.empty() || !canonicalWriteAdmission())
+  if (!explicitIntentActive_ || explicitIntent_ || operations.empty() || !competingCanonicalAdmission())
     return false;
   for (const auto& op : operations) if (op.document_id != documentId_) return false;
   auto prepared = operationEngine_.prepareIntent(operations,
@@ -1936,7 +1942,7 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
 
 bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
   if (!explicitIntentActive_ || !explicitIntent_ || !explicitIntentHistory_ ||
-      !canonicalWriteAdmission() || !sceneCoordinator_->intentBasisMatches()) {
+      !competingCanonicalAdmission() || !sceneCoordinator_->intentBasisMatches()) {
     abortExplicitIntent();
     return false;
   }
@@ -2006,7 +2012,7 @@ bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operati
 }
 
 bool CanvasEditingRuntime::textReady() const noexcept {
-  return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
+  return competingCanonicalAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
          creations_.empty() && !textCreation_ && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
 }
 bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
@@ -2037,7 +2043,7 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
 }
 
 bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
-  if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
+  if (!competingCanonicalAdmission() || !resourceManifestPort_ ||
       operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
   PublicationReservation publication(localOperationSink_, operation);
@@ -2066,7 +2072,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   if (canvas::qualification::observing(fc08Qualification_)) return false;
   canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
 #endif
-  if (!canonicalWriteAdmission()) return false;
+  if (!competingCanonicalAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero()) return false;
   if (interaction::isContainerCommand(forward, semanticObjects_)) return history_.executeUndoable(forward);
   if (inverse.id.isZero()) return false;
@@ -3135,6 +3141,15 @@ void CanvasEditingRuntime::finishObjectEraseFeedback(std::uint64_t pointerId,boo
   if(cancel)transientTrails_.cancel(pointerId);else (void)transientTrails_.end(pointerId);
 }
 void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
+std::uint64_t CanvasEditingRuntime::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
+  if(closed_||publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return 0;
+  return skiaRenderer_.reserveCpuWorkerGrant(executor,bytes);
+}
+bool CanvasEditingRuntime::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
+  if(publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return false;
+  return skiaRenderer_.releaseCpuWorkerGrant(executor,token);
+}
+std::size_t CanvasEditingRuntime::cpuWorkerGrantBytes()const noexcept{return skiaRenderer_.cpuWorkerGrantBytes();}
 void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
 
 bool CanvasEditingRuntime::setEraserDiameterLogicalPx(float diameter) noexcept {
@@ -3214,6 +3229,7 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
   if(!reserveDisplay(pointerId,DisplayKind::kErase))return false;
   std::lock_guard lock(previewStateMutex_);
   eraserTraces_[pointerId] = {};
+  if(!reserveCpuPendingContact(pointerId)){eraserTraces_.erase(pointerId);cancelDisplay(pointerId,DisplayKind::kErase);return false;}
   eraserPreviewRevisions_[pointerId] = 0U;
   if(toolMode_==ToolMode::kPartialEraser) {
     // Partial erase owns replacement frames, never an empty ARC contour.
@@ -3243,6 +3259,10 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
   std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
+  if(cpuPending_&&cpuPending_->enabled&&it->second.size()>=8193){
+    cpuPending_->error="ACTIVE_TRACE_CAPACITY_CANCELLED";
+    (void)eraserCancel(pointerId);return false;
+  }
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
   if(toolMode_==ToolMode::kObjectEraser){
@@ -3277,6 +3297,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
 
   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
+  if(freezeCpuPendingContact(pointerId))return true;
   bool committed=false;
   try {
   const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
@@ -3313,9 +3334,26 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     for (const auto id : tested.value().frontToBack) hit.insert(id);
   }
   }
+  return applyEraserCommit(pointerId,std::move(hit),std::move(partial),objectEraser);
+  } catch(const std::bad_alloc&) {
+    if(committed)return true;
+    (void)eraserCancel(pointerId);return false;
+  }
+}
+
+bool CanvasEditingRuntime::commitPartialEraseItems(std::uint64_t session,std::vector<semantic::EraseMaskAddItem> items)noexcept{
+ try{std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> hits;
+ for(const auto& item:items)hits.insert(item.object_id);
+ return applyEraserCommit(session,std::move(hits),std::move(items),false);
+ }catch(...){return false;}
+}
+bool CanvasEditingRuntime::applyEraserCommit(std::uint64_t pointerId,
+ std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> hit,
+ std::optional<std::vector<semantic::EraseMaskAddItem>> partial,bool objectEraser)noexcept{
+ bool committed=false;try{
   canonicalPresentationDirty_=true;
   if (hit.empty()) {
-    eraserTraces_.erase(it);
+    eraserTraces_.erase(pointerId);
     eraserPreviewRevisions_.erase(pointerId);
     cancelDisplay(pointerId,DisplayKind::kErase);
     return true;
@@ -3327,7 +3365,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
-  if (toolMode_ == ToolMode::kObjectEraser) {
+  if (objectEraser) {
     semantic::DeleteObjectsOp payload;
     payload.object_ids.assign(hit.begin(), hit.end());
     std::sort(payload.object_ids.begin(), payload.object_ids.end());
@@ -3346,7 +3384,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
-  if (toolMode_ == ToolMode::kObjectEraser) {
+  if (objectEraser) {
     semantic::RestoreObjectsOp restore;
     for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
       const auto* record = semanticObjects_.find(id);
@@ -3387,7 +3425,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   G5_SCOPE_END(g5Apply);
   UR2D_END(upApply);
-  eraserTraces_.erase(it);
+  eraserTraces_.erase(pointerId);
   eraserPreviewRevisions_.erase(pointerId);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
   committed=true;
@@ -3422,10 +3460,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     (void)G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
   }
   return true;
-  } catch(const std::bad_alloc&) {
-    if(committed)return true;
-    (void)eraserCancel(pointerId);return false;
-  }
+ }catch(const std::bad_alloc&){if(committed)return true;(void)eraserCancel(pointerId);return false;}
 }
 
 bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
@@ -3436,6 +3471,7 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
   transientOverlayDirty_=false;
   cancelDisplay(pointerId,DisplayKind::kErase);
   const bool erased = eraserTraces_.erase(pointerId) != 0U;
+  cancelCpuPendingContact(pointerId);
   eraserPreviewRevisions_.erase(pointerId);
   // Hide the platform overlay before any clear/retire present. DirectComposition
   // can otherwise expose the last white eraser frame for one refresh interval.
@@ -3602,7 +3638,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
-  if (!canonicalWriteAdmission()) return false;
+  if (!competingCanonicalAdmission()) return false;
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   ink::BrushCommitIntent intent;
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
@@ -3789,6 +3825,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
     submittedDisplayRoster_.bound=false;
   }
   navigationRequested_=true;
+  if(partialEraseFeedbackActive())transientOverlayDirty_=true;
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
@@ -3936,7 +3973,7 @@ semantic::Operation CanvasEditingRuntime::legacyStrokeOperation(
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     const interaction::OperationRequest& request) {
-  if (!canonicalWriteAdmission())
+  if (!competingCanonicalAdmission())
     return interaction::SubmitResult::rejected();
   if (request.operationId == 0U) return interaction::SubmitResult::rejected();
   // Identity alone carries no semantic intent. Legacy Ink supplies its
@@ -3999,7 +4036,7 @@ interaction::SubmitResult CanvasEditingRuntime::submitConditional(
 interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
     const semantic::Operation& operation, semantic::ApplySource source,
     semantic::OperationAdmission& admission) {
-  if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
+  if (historyPublicationPending_ || !competingCanonicalAdmission() || !historySceneReady() ||
       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
@@ -4154,7 +4191,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
-  if (!canonicalWriteAdmission())
+  if (!competingCanonicalAdmission())
     return interaction::SubmitResult::rejected();
   // This host records only one-operation compensation entries. Reject larger
   // batches before mutation; other EditorHistory owners may support them.

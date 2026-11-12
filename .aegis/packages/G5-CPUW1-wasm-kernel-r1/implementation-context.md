@@ -1,0 +1,15 @@
+# CPUW1: shared C++ CPU kernel and actual isolated WASM Worker
+
+Base e275da6e, tag g5-pre-cpu-worker-20261111-e275da6e already pushed. Tracked worktree clean. User explicitly authorized this migration and that ALL geometry/exact computation remains C++→WASM. JS only transport, bounded envelope and scheduling. Control designs/reviews; this chat implements. No need to ask permission again for scope.
+
+First slice only: extract original Render local erase path sequential kernel once; native/main-WASM and CPU-only separate WASM Worker consume same code, task-owned progress/scratch, explicit bounded private protocol/build identity/leases. Actual realChrome compute and installedartifact verification. This is meaningful production foundation, not mocked messaging or asecondrenderer. Normalinteractive Up remains unchanged until CW2; do not claim it already doesn't block.
+
+Current erasePath/stroke/unite in selection_region_geometry.cpp and separate prefix code repeat same f32 stroke/leftfold. Factor primitive-builder once without math change; keep independently anchored monolithic original for expected. FilledPath must keep fillrule/order/empty/finiteness. PreparedNavigationGeometry::replayOutput_ and usage_ are mutable/non-atomic: never sharecurrentobject acrossthreads. ResourceBudgetManager has mutex, but usage/caches/lastrelease needownerboundprotocol. Do not add another cache/stateowner.
+
+Skia accepted Web SDK pthread:false. New CPU-only modular WASM may use ENVIRONMENT=worker (or web,worker for samebuild parity) and locked PathOps, no DOM/GPU/fonts. Different WASM memories do not share SkPath pointers; use fully checked samebuild private bytes (SkPath serialization permitted ephemeralonly) and transfercopies charged. No newpublicAPI/private deep imports required ofconsumer. Includeprivate sidecars inCMakeinstall/npm whitelists/rootassetbase. Missing/foreignsidecar explicitfailure; no silentfullcomputeonmain.
+
+Native budget8MiB512/historypriority and256/512/64desktopprofile unchanged. Jobheap<=64MiB, queue<=8, input/output<=8MiB each, totaltransport<=16MiB; freeze actualchosenvalues beforebrowser, grants/floor/bytes/cancel accounted. IflockedSDK orproof impossible returnconcreteblocker, not budgetraise/newdep. Workercooperativesteps permitcancelmessages; maxsingleOp nonpreemptible disclosed. OneCPUWorker candidate, nofullpool.
+
+Use native build out/G5-object-interaction-continuity-r2/build-native; accepted configure facts from .aegis/results/G5-long-query-preparation-r1/normal-configure-command.json; no newdependency sourcebuild. Nativefixture fixed40alreadytracked. Preserve4325/4326/4327 demos and all frozenraw. LQP missingWebUp remainsFROZEN_PROOF_INCOMPLETE and notprerequisiteforindependentCW1computeproof.
+
+Closure: preflight/design/oldreference+RED -> sharedC++kernel -> realWorkerWASM/protocol/lifecycle -> native634/currentkeepers -> matchingbuild/install -> offlineactualharness -> frozen3browserwindows<=390sec -> hashboundcompleteorblocker -> proactivecontrolreturn. No commit/push, noasyncUp yet, noP34PASS. ControlpreparesCW2 afterreview, useralreadyapprovedoverallnexteditfeedback/order goal.

@@ -1,0 +1,67 @@
+{
+  "git_anchor": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "tag": "g5-pre-cpu-worker-20261111-e275da6e",
+  "accepted_review": {
+    "path": ".aegis/results/G5-CPUW1-repair-control-r2/control-review.json",
+    "sha256": "69ced6aa008a23d7febe6b22a60b911f335b0f34a1b442a3e44346636fa8f0fe"
+  },
+  "accepted_CWR_result": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/result.json",
+    "sha256": "f3bf2d7b2260c131076e37288e5780e0c7d84271329b9ad91ff7ef0ce87d3854"
+  },
+  "source_manifest": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/source-manifest.json",
+    "sha256": "1d9f5223595696c938c69e057cf308284f311e50d7ae31d2f6f5b61bb56930d2"
+  },
+  "accepted_delta": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/source-delta.patch",
+    "sha256": "61202f64866c508d63909f82453fdd3f24fcc8ece31878cc94f5d1acfe3ef711"
+  },
+  "current_source": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "b375052d7cba50d16abfb6c45faff60945422ae066d8e14739babdf455f21cf0",
+    "runtime/interaction/src/canvas_partial_erase.cpp": "7032a9dadf9955919d0c6d1e1888f5455f3e155d9b7d5c8be2dc2d15442251ae",
+    "runtime/interaction/src/partial_erase_geometry.hpp": "714643946001e27d6e7a48451ec8fbfc8055d11e2378abd40f239da6bae2044f",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "772987ee78104ec2f7341dcb88d4039acbfc27a46507382cf7d03d2545529796",
+    "runtime/composition/src/runtime_composition.cpp": "c0eb178969ee6e0a70bec90ba58afdce8ac632d5d990b8d669924cc91138c437",
+    "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": "e29bd7bb3ea0c2140aae58584097925bb6c3f2794694743ab8d1f2d3f46760e9",
+    "runtime/render/src/selection_region_geometry.cpp": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7",
+    "runtime/render/src/selection_region_geometry_internal.hpp": "d44ff10b0dfe4efb22d9cfc264b76b53e0ba7ca5e8af5f6681a78cb71cbb3fdb",
+    "runtime/render/src/skia_renderer.cpp": "67ccd56edcc8f3f7ded806daf777f41ed226fff6f685f81f3d62b498529fe7b1",
+    "runtime/render/include/canvas/render/skia_renderer.hpp": "aeb1cd99faf2967b75708d997723bfa8b945961501e9e0ca6d794868f90bad40",
+    "runtime/render/src/cpu_exact_path_kernel.cpp": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4",
+    "runtime/render/src/cpu_exact_path_kernel.hpp": "5dfcc414fa911faba096e9ce9f8a61b8f87429e2ad58027fd313d5ff2bc9c485",
+    "runtime/render/src/cpu_worker_bridge.cpp": "4c7874bb8651b7a2f164c211abb8b1ccf53d57534f7917ea6ee6048e1ad50d50",
+    "runtime/render/src/cpu_worker_protocol.cpp": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee",
+    "runtime/render/src/cpu_worker_protocol.hpp": "c36ef0665eb00e0c363d058bcd5b9a184a1b3856b62f8b124f7fb659197d92f4",
+    "sdk/web/axiom.mjs": "30d4c4061b90015680885e3b6ee988f4596c7bea38988d60e1b5ba07689bb118",
+    "sdk/web/bridge.cpp": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9",
+    "sdk/common/session.cpp": "e36364e100e7723367dc19ff5c0d2cd55791c8252c405b6f391e64edbeb85ab8",
+    "sdk/web/CMakeLists.txt": "5dee620ffaf204c96e64b624e0976db8371c49d619b4950c0cb60bfd582ad4bb",
+    "sdk/web/cpu-worker.cmake": "42b9ad8714ab12eac3e6978c82c66246ced8a6b9483781caaca347a5ee18b803",
+    "sdk/web/internal/cpu-worker-client.mjs": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8",
+    "sdk/web/internal/cpu-worker-thread.mjs": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69",
+    "sdk/web/internal/cpu-worker-owner.mjs": "0258df91b524f92f548ac16be9c25a6d3a4628bbc0a2b641e0afe24be7780444"
+  },
+  "normal_baseline": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/normal-sdk-manifest.json",
+    "sha256": "c9a135c81a60ecc54a45c41a818465cc14c64962f0bbdde84f2b709e46c69f3c",
+    "WASM": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682"
+  },
+  "worker_WASM": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83",
+  "fixtures": [
+    {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+    },
+    {
+      "path": ".aegis/results/G5-convergence-idle-up-r1/local-web/G5CV1-UP-NORMAL/long1600/final.axsnap",
+      "sha256": "27a7e916fdbd3f2b08744126ee9b249d0c92866cb6d4567e7ebf66486f177f7f"
+    }
+  ],
+  "original_CPU_oracle": {
+    "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "existing_build": "out/G5-object-interaction-continuity-r2/build-native",
+  "accepteddirty": "AllCW1/CWRkernel/protocol/quota/scheduler/verification changes accepted; notatHEAD alone. Noreset/no duplicate discovery. PreferreuseacceptedimmutableSDK."
+}

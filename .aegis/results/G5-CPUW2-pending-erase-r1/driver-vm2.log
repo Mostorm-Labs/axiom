@@ -1,0 +1,60 @@
+TAP version 13
+# (node:38989) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver keeps immediate successor sequence and snapshots after timing
+not ok 1 - actual driver keeps immediate successor sequence and snapshots after timing
+  ---
+  duration_ms: 60347.469583
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:14:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Error: canonical convergence60s
+        at check (vm:module(0):5:83)
+        at stable (vm:module(0):10:441)
+        at runNextTicks (node:internal/process/task_queues:65:5)
+        at process.processTimers (node:internal/timers:526:9)
+        at async Module.consumer (vm:module(0):35:3)
+        at async exercise (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:12:12)
+        at async TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:14:139)
+        at async Test.run (node:internal/test_runner/test:980:9)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+    + actual - expected
+    
+    + 'FAILED'
+    - 'OBSERVED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'OBSERVED'
+  actual: 'FAILED'
+  operator: 'strictEqual'
+  stack: |-
+    check (vm:module(0):5:83)
+    stable (vm:module(0):10:441)
+    runNextTicks (node:internal/process/task_queues:65:5)
+    process.processTimers (node:internal/timers:526:9)
+    async Module.consumer (vm:module(0):35:3)
+    async exercise (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:12:12)
+    async TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:14:139)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs:14:172)
+    runNextTicks (node:internal/process/task_queues:65:5)
+    process.processTimers (node:internal/timers:526:9)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: HTTP qualification module wrap is isolated from ordinary root
+ok 2 - HTTP qualification module wrap is isolated from ordinary root
+  ---
+  duration_ms: 20.943792
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 134828.117084

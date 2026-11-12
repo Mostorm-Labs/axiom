@@ -1,0 +1,55 @@
+{
+  "status": "VALID_PARTIAL_PROOFS_CW1_CLOSURE_BLOCKED",
+  "native": {
+    "tests": 27,
+    "failures": 0,
+    "junit": "native-keepers.xml"
+  },
+  "numeric": {
+    "rows": 634,
+    "mismatches": 0,
+    "proof": "exact-parity.json"
+  },
+  "newNode": {
+    "passed": 5,
+    "log": "node-verified-final.log"
+  },
+  "existingSDKNode": {
+    "scripts": 4,
+    "logs": [
+      "sdk-api.log",
+      "sdk-keepers-node.log"
+    ]
+  },
+  "PythonPackage": {
+    "passed": 8,
+    "log": "package-python.log"
+  },
+  "TypeScript": {
+    "status": "PASS",
+    "log": "sdk-types-final.log",
+    "compiler": "acceptedbundledEmscriptenTypeScript,no newinstall"
+  },
+  "boundary": {
+    "contractFiles": 120,
+    "log": "boundaries-verified-final.log"
+  },
+  "browser": {
+    "windows": 3,
+    "allRaw": "OBSERVED",
+    "charged_seconds": 35,
+    "proof": "sampling-ledger.json",
+    "closureNotImplied": true
+  },
+  "missing": [
+    "assetBase relocation+actualCSP failure proof",
+    "executor1cumulativeadmitted-terminalledgerpersist afterqueuepressure"
+  ],
+  "known_findings": [
+    "LQPpreviousWebUpFROZEN_PROOF_INCOMPLETE notclosed",
+    "root.closeunbindbeforecallclose retrybindingrisk",
+    "count1900not7200longstroke",
+    "step8setTimeout0schedulingoverhead, notworkerspeedup"
+  ],
+  "no_official_G5_P34_performancePASS": true
+}

@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "obligations": [
+    "CWR-SCHED",
+    "CWR-ROOT",
+    "CWR-LEDGER",
+    "CWR-PARITY",
+    "CWR-BIND"
+  ],
+  "required_evidence": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "native-red.json",
+    "native-green.json",
+    "scheduler-pairs.json",
+    "root-lifecycle.json",
+    "package-consumer.json",
+    "protocol-lifecycle.json",
+    "numeric-parity.json",
+    "regressions.json",
+    "source-manifest.json",
+    "SDK-manifest.json",
+    "sampling-plan.json",
+    "sampling-ledger.json",
+    "artifact-manifest.json",
+    "cleanup.json",
+    "next-step-inputs.json",
+    "result.json"
+  ],
+  "unstarted_windows_from_r1": true,
+  "max_starts": 3,
+  "cap_seconds": 420,
+  "unresolved_semantic_decisions": []
+}

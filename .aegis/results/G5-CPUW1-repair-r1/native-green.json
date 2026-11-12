@@ -1,0 +1,29 @@
+{
+  "status": "PARTIAL_BEHAVIOR_GREEN_NATIVE_GATE_FAILED",
+  "behavior": {
+    "passed": 3,
+    "log": "behavior-green.log",
+    "oldRED": "behavior-red.log"
+  },
+  "native": {
+    "tests": 27,
+    "passed": 26,
+    "failed": 1,
+    "failure": "G5LongQueryPreparationPath",
+    "junit": "native-keepers.xml"
+  },
+  "idle_recheck": {
+    "tests": 1,
+    "failed": 1,
+    "junit": "native-prefix-recheck.xml"
+  },
+  "original634": {
+    "rows": 634,
+    "mismatches": 0,
+    "candidate": "candidate634.json",
+    "candidate_sha256": "67319bdb0eed21bba124ea61271bc78aef07af2a2a76345b164cc0ab595b5e9a",
+    "reference": ".aegis/results/G5-erase-exact-canonical-r1/A-original634.json",
+    "reference_sha256": "fba3849e177049c6276736434628f98e0af629aad79015a98136e4f33c30eada"
+  },
+  "no_native_PASS_claim": true
+}

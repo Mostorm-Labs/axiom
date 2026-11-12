@@ -1,0 +1,21 @@
+{
+  "status": "CORRECTED_ORACLE_RED_CONFIRMED",
+  "original_source": {
+    "base": "89325c4648b11c0540fdc859cb0556b945481c1e",
+    "CFH_patch": ".aegis/results/G5-crossframe-history-pressure-r1/source-delta.patch",
+    "exact_original_sha256": "49c16bc7af2b71877ebaba3058b028465a64d87dddc142b5f737b370e370bdd3"
+  },
+  "adapter": {
+    "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/single_slot_observed.cpp",
+    "sha256": "c7fd77b64ee44dbc4e895177f767276a4b20ac8ea509bbea60e69840d7eb336b",
+    "meaning": "Test-only renamed private class/functions; observes actual slot/resumed cursor and query work. No synthetic progress or geometry modification."
+  },
+  "old_binary_sha256": "37e5eee0ef3277493f19a0e5628c84b0adc37a9e0d350334a12ace9c05aadbfc",
+  "test_sha256": "8a241fd54b8e7238a779b80f3e42bff228ededb45a3345571c0597cfa596fa81",
+  "old_final_remainder_unions": 25600,
+  "all16_paths_equal": true,
+  "log": "prefix-old-red.log",
+  "data": "prefix-old-red.json",
+  "compatibility": "Old oracle excludes edgecases requiring newer APIs and monotonic assertion only; all16 get union assertion unchanged",
+  "behavior_red_ref": ".aegis/results/G5-CPUW1-repair-r1/native-red.json"
+}

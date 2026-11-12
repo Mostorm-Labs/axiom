@@ -1,0 +1,14 @@
+In file included from /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_old_up_red.cpp:3:
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/../../render/tests/long_query_preparation_runtime_test.cpp:2:9: warning: 'main' macro redefined [-Wmacro-redefined]
+    2 | #define main longQueryExistingMetalFixtureMain
+      |         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_old_up_red.cpp:2:9: note: previous definition is here
+    2 | #define main cpuPendingPriorFixtureMain
+      |         ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_old_up_red.cpp:5:5: error: redefinition of 'main'
+    5 | int main(int argc,char**argv){try{
+      |     ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/../../render/tests/long_query_preparation_runtime_test.cpp:43:5: note: previous definition is here
+   43 | int main(int argc,char**argv){try{
+      |     ^
+1 warning and 1 error generated.

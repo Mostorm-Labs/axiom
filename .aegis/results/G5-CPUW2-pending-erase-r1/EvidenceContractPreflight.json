@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "obligations": [
+    "CW2-UP",
+    "CW2-NUMERIC",
+    "CW2-ORDER",
+    "CW2-VISUAL",
+    "CW2-BOUNDS",
+    "CW2-SDK",
+    "CW2-BIND"
+  ],
+  "required": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "native-red.json",
+    "native-green.json",
+    "up-admission.json",
+    "numeric-parity.json",
+    "ordered-commit.json",
+    "feedback-navigation.json",
+    "budget-lifecycle.json",
+    "package-consumer.json",
+    "regressions.json",
+    "sampling-plan.json",
+    "sampling-ledger.json",
+    "source-manifest.json",
+    "SDK-manifest.json",
+    "artifact-manifest.json",
+    "cleanup.json",
+    "next-step-inputs.json",
+    "result.json"
+  ],
+  "max_starts": 3,
+  "total_seconds": 600,
+  "semantic_decisions": "Frozen in design-contract; implementation design pending",
+  "no_browser_start": true
+}

@@ -31,6 +31,7 @@ target_link_options(axiom_js_runtime PRIVATE
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/Excalifont@/fonts/Excalifont\"")
 set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/internal")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cpu-worker.cmake")
 add_custom_command(TARGET axiom_js_runtime POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")

@@ -1,0 +1,46 @@
+#pragma once
+#include "canvas/interaction/internal/cpu_pending_erase.hpp"
+#include "canvas/foundation/world_geometry.hpp"
+#include "canvas/scene/scene_types.hpp"
+#include "canvas/semantic/operation.hpp"
+#include <array>
+namespace canvas::interaction {
+struct CpuPendingEraseState final {
+ enum class Phase { Active,Frozen,Preparing,Waiting,Confirming,ExactReady,Ready };
+ struct Intent {
+  Phase phase=Phase::Active;
+  std::uint64_t session=0,serial=0,traceGrant=0,payloadGrant=0,grantExecutor=0,payloadExecutor=0;
+  std::size_t payloadBytes=0;
+  input::PointerKey key{};double radius=0;
+  std::vector<foundation::WorldPoint> trace;
+  std::vector<foundation::ObjectId> candidates;
+  std::size_t next=0;
+  std::vector<semantic::EraseMaskAddItem> hits;
+  std::vector<std::size_t> processed,hitOrder;
+  std::size_t reuseScan=0;bool retainingResult=false;
+  std::vector<RuntimeSceneRecord> proofs;
+  semantic::EraseMaskGeometry geometry,jobGeometry;
+  bool historyJob=false,reuseTarget=false;
+  render::SkiaRenderer::CpuPathPin currentPath;
+  std::vector<render::SkiaRenderer::CpuPathPin> pathPins;
+  std::optional<RuntimeSceneRecord> target;
+  std::array<std::uint64_t,8> identity{};
+  std::uint64_t transportGrant=0,transportExecutor=0,jobCount=0;
+  std::vector<std::uint8_t> request,response;
+  bool requestTaken=false,completion=false,success=false;
+  std::chrono::steady_clock::time_point requestedAt{};
+ };
+ std::array<std::unique_ptr<Intent>,8> slots;
+ std::array<std::uint64_t,4> basis{};
+ std::uint64_t executor=0,nextSerial=0,nextJob=0,admitted=0,committed=0,noops=0,failed=0;
+ std::string error;bool enabled=false,headApplying=false;
+ std::uint64_t prepareNs=0,importNs=0,exactNs=0,commitNs=0,workerWaitNs=0;
+ std::uint64_t jobs=0,geometryReuse=0,exactCalls=0,opportunities=0,maxOwnerNs=0,maxExactNs=0;
+ std::vector<CpuPendingEraseTerminal> terminals;
+ std::vector<CpuPendingJobFact> jobLedger;resources::ResourceLease metadata;
+ std::uint64_t eligibilityScene=UINT64_MAX;bool eligibleScene=false;bool unavailable=false,executorSuspended=false;
+ Intent* head()const noexcept {
+  Intent* out=nullptr;for(const auto& p:slots)if(p&&p->serial&&(!out||p->serial<out->serial))out=p.get();return out;
+ }
+};
+}

@@ -541,3 +541,16 @@ non-ink objects and colored backgrounds remain visible through the cutout. Spars
 pointer samples are joined geometrically. Canonical state/History/publication change
 only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
 uses conservative bounded candidates; the renderer still clips against actual ink.
+
+Private CPU compute assets are shipped under `internal/cpu-worker-*` with a matching build identity. They contain the shared C++ exact-path kernel compiled as an isolated, CPU-only WASM module. Current root editing remains synchronous; these assets do not activate pending Up or change commit/presentation semantics. Consumers continue importing the package root. Partial results are never document data.
+
+
+Private CW2 development profile: `AXIOM_CPU_PENDING_ERASE` defaults OFF. The
+controlled candidate build connects partial-erase DOM Up to the existing Runtime
+pending owner and same-build CPU Worker; readState and operation events remain
+committed-state facts. Candidate pending erase admits subsequent erasing and
+viewport navigation; competing canonical mutations explicitly reject Busy until
+that queue drains. This is an intermediate controlled profile, not general
+mixed-editing activation. Worker construction uses the already charged fixed
+64 MiB heap; the resident8 MiB path cache and normal public exports remain
+unchanged. No private Worker/pending modules are consumer business APIs.

@@ -4,6 +4,7 @@
 #include "canvas/render/render_cache.hpp"
 #include "canvas/render/reference_draw_list.hpp"
 #include <functional>
+class SkPath;
 namespace canvas::render::internal {
 class PreparedGeometryCache;
 class SourceRetentionPool;
@@ -26,12 +27,18 @@ struct ExactQueryWork final {
 class EraseMaskPathCache final {
  public:
     struct Entry;
+    static bool readyMatches(const std::shared_ptr<const Entry>&,const semantic::EraseMaskGeometry&)noexcept;
+    static const SkPath& readyPath(const std::shared_ptr<const Entry>&)noexcept;
+    void setResidentUpperBound(std::size_t)noexcept;
+    std::shared_ptr<const Entry> lookup(const semantic::EraseMaskGeometry&)noexcept;
+    std::shared_ptr<const Entry> publishFinished(const semantic::EraseMaskGeometry&,const SkPath&,
+        std::shared_ptr<resources::ResourceBudgetManager>,std::size_t);
     struct Work {std::uint64_t builds=0,hits=0,denied=0,pathValueComparisons=0,pathPrimitiveComparisons=0;std::size_t bytes=0;ExactQueryWork exact;MaskHistoryWork history;std::uint64_t localRefusals=0,refusalHits=0,resourceWaits=0,equivalentQueryHits=0;};
     EraseMaskPathCache();
     ~EraseMaskPathCache();
     SelectionGeometryHit query(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
-        PreparedGeometryCache* prepared=nullptr,const RenderCacheOptions* options=nullptr)noexcept;
+        PreparedGeometryCache* prepared=nullptr,const RenderCacheOptions* options=nullptr,const SkPath* provenQuery=nullptr,bool strictReady=false)noexcept;
     SelectionGeometryHit selectionQuery(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         PreparedGeometryCache*,const RenderCacheOptions*)noexcept;

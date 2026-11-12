@@ -1,5 +1,6 @@
 #pragma once
 #include "canvas/runtime/object_clipboard.hpp"
+#include "canvas/interaction/internal/cpu_pending_erase.hpp"
 #include "canvas/ink/laser_trail.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
@@ -161,6 +162,21 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public render::SessionCancelSink,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+ public:
+  std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept;
+  bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept;
+  std::size_t cpuWorkerGrantBytes()const noexcept;
+  bool bindCpuPendingExecutor(std::array<std::uint64_t,4>,std::uint64_t) noexcept;
+  std::vector<std::uint8_t> takeCpuPendingRequest() noexcept;
+  bool queueCpuPendingCompletion(std::array<std::uint64_t,8>,std::span<const std::uint8_t>,bool success) noexcept;
+  CpuPendingEraseFacts cpuPendingFacts()const noexcept;
+  bool cpuPendingBusy()const noexcept;
+  void serviceCpuPendingErases()noexcept;
+  bool competingCanonicalAdmission()const noexcept;
+  void failCpuPendingExecutor()noexcept;
+  void suspendCpuPendingExecutor()noexcept;
+
+ private:
   friend class canvas::runtime::CanvasRuntimeFacade;
   friend class canvas::runtime::MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -369,7 +385,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool eraserBegin(std::uint64_t pointerId) noexcept;
   [[nodiscard]] bool eraserSample(std::uint64_t pointerId, double x, double y,
                                   bool renderPreview = true) noexcept;
-  [[nodiscard]] bool partialEraseFeedbackActive() const noexcept { return toolMode_==ToolMode::kPartialEraser && !eraserTraces_.empty(); }
+  [[nodiscard]] bool partialEraseFeedbackActive() const noexcept { return (toolMode_==ToolMode::kPartialEraser && !eraserTraces_.empty()) || cpuPendingBusy(); }
   [[nodiscard]] bool objectEraseFeedbackActive() const noexcept { return !objectEraseCandidates_.empty(); }
   void finishObjectEraseFeedback(std::uint64_t pointerId, bool cancel) noexcept;
   [[nodiscard]] bool eraserFinish(std::uint64_t pointerId) noexcept;
@@ -622,12 +638,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return submittedOperationCount_;
   }
   [[nodiscard]] bool canUndo() const noexcept {
-    return !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !cpuPendingBusy() && !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canUndo();
   }
   [[nodiscard]] bool canRedo() const noexcept {
-    return !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
+    return !cpuPendingBusy() && !closed_ && surface_.available && historySceneReady() && !transformDrag_.active() && !coordinator_->viewportClaimed() &&
            brushSessions_.empty() && eraserTraces_.empty() &&
            keyedStrokeIds_.empty() && history_.canRedo();
   }
@@ -676,6 +692,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] foundation::ObjectId allocateObjectIdentity(foundation::ObjectId legacyIdentity) noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
+  void serviceCpuPendingEraseStep(std::chrono::steady_clock::time_point)noexcept;
+  bool reserveCpuPendingContact(std::uint64_t)noexcept;
+  bool freezeCpuPendingContact(std::uint64_t)noexcept;
+  void cancelCpuPendingContact(std::uint64_t)noexcept;
+  bool applyEraserCommit(std::uint64_t,std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash>,
+      std::optional<std::vector<semantic::EraseMaskAddItem>>,bool)noexcept;
+  bool commitPartialEraseItems(std::uint64_t,std::vector<semantic::EraseMaskAddItem>)noexcept;
+  std::shared_ptr<CpuPendingEraseState> cpuPending_;
   [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
   [[nodiscard]] bool submitHistoryIntent(std::span<const semantic::Operation>,
       std::span<const HistoryExpectation>, EditorHistory::IntentCommit, void*);

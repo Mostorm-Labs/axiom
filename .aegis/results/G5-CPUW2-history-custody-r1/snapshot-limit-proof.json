@@ -1,0 +1,40 @@
+{
+  "conclusion": "encode accepts snapshot largerthan32MiB;decode preflight rejects kLimitExceeded",
+  "decode_error": 7,
+  "decode_ok": false,
+  "encode_ok": true,
+  "encoded_bytes": 35456391,
+  "limit_bytes": 33554432,
+  "objects": 40,
+  "operations": [
+    {
+      "bytes": 29954294,
+      "decode_error": 0,
+      "disposition": 0
+    },
+    {
+      "bytes": 35412,
+      "decode_error": 0,
+      "disposition": 0
+    }
+  ],
+  "status": "REPRODUCED",
+  "causal_binding": {
+    "fixture": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "fixture_sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c",
+    "operations": [
+      {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate7200/operation-0.axsnap",
+        "sha256": "51213879796fc380d3629bb2bf80a0f316d5cf5c1b116e72233ea0eb6b8227f8"
+      },
+      {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate7200/operation-1.axsnap",
+        "sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998"
+      }
+    ],
+    "offline_probe": ".aegis/results/G5-CPUW2-history-custody-r1/offline-snapshot-limit.cpp",
+    "offline_probe_sha256": "8d7c99e32e5468edf1b3b906e9e65a56dbd9092a6ff52fb5e62e0af9aa8aa348",
+    "original_owner": "SnapshotBootstrapper\u2192OperationEngine\u2192SnapshotCodec encode/decode, unchangedSemantic owner",
+    "error_name": "SemanticError::kLimitExceeded"
+  }
+}

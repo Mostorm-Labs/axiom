@@ -63,6 +63,15 @@ class RuntimeComposition::Impl final {
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
 }
+void RuntimePlatformAccess::suspendCpuPendingExecutor(RuntimeComposition& o)noexcept{o.impl_->core.suspendCpuPendingExecutor();}
+void RuntimePlatformAccess::failCpuPendingExecutor(RuntimeComposition& o)noexcept{o.impl_->core.failCpuPendingExecutor();}
+bool RuntimePlatformAccess::bindCpuPendingExecutor(RuntimeComposition& o,std::uint64_t e)noexcept{return o.impl_->core.bindCpuPendingExecutor(e);}
+std::vector<std::uint8_t> RuntimePlatformAccess::takeCpuPendingRequest(RuntimeComposition& o)noexcept{return o.impl_->core.takeCpuPendingRequest();}
+bool RuntimePlatformAccess::queueCpuPendingCompletion(RuntimeComposition& o,std::array<std::uint64_t,8> j,std::span<const std::uint8_t> b,bool ok)noexcept{return o.impl_->core.queueCpuPendingCompletion(j,b,ok);}
+interaction::CpuPendingEraseFacts RuntimePlatformAccess::cpuPendingFacts(RuntimeComposition& o)noexcept{return o.impl_->core.cpuPendingFacts();}
+std::uint64_t RuntimePlatformAccess::reserveCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::size_t b)noexcept{return o.impl_->core.reserveCpuWorkerGrant(e,b);}
+bool RuntimePlatformAccess::releaseCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::uint64_t t)noexcept{return o.impl_->core.releaseCpuWorkerGrant(e,t);}
+std::size_t RuntimePlatformAccess::cpuWorkerGrantBytes(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerGrantBytes();}
 
 RuntimeComposition::RuntimeComposition(std::uint64_t viewId) : impl_(std::make_unique<Impl>(viewId)) {}
 RuntimeComposition::~RuntimeComposition() = default;

@@ -1,0 +1,30 @@
+{
+  "status": "OFFLINE_BEHAVIOR_PROVEN_REAL_BROWSER_NOT_RUN",
+  "repair": {
+    "assetBase": "Existing normalizedassets reused for privateinternal URL",
+    "close": "Root removes CPU owner binding only after canonical callclose succeeds; pendingclose retains binding and originalclosebarrier.",
+    "sessionClosing": "Only basis/observe/release of existingprivateCPUquota allowed, reserve and allnewediting still reject DOCUMENT_CLOSING."
+  },
+  "offline": {
+    "tests": "g5_cpu_worker_repair_root.test.mjs +actual LIFE consumer VM",
+    "logs": [
+      "behavior-red.log",
+      "behavior-green.log",
+      "driver-preflight3.log",
+      "node-final.log"
+    ],
+    "relativeURL_behavior_RED_GREEN": true,
+    "failedclose_binding_RED_GREEN": true,
+    "pending_packet_release_retry_VM_only": true,
+    "CSPheaders_and_actualconsumer_negative_VM_only": true
+  },
+  "real_DataPort_pendingclose": {
+    "status": "NOT_RUN",
+    "not_fake": "Frozen driver builds realrectangle, attaches DataPort, retains packet, expects PUBLICATION_PENDING, releases exactpacket and retries; notexecutedbrowser due nativeblocker."
+  },
+  "realCSP_and_relative_absolute": {
+    "status": "NOT_RUN"
+  },
+  "existingCW1run_preserved": true,
+  "no_runtime_asyncUp": true
+}

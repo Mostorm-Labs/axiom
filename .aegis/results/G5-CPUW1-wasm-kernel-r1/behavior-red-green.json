@@ -1,0 +1,19 @@
+{
+  "status": "EXPECTED_BEHAVIOR_RED_GREEN",
+  "checks": [
+    {
+      "mode": "old_synchronous",
+      "returncode": 1,
+      "stdout": "{\"numeric_correct\":1,\"yielded_before_complete\":false}\n",
+      "stderr": ""
+    },
+    {
+      "mode": "resumable",
+      "returncode": 0,
+      "stdout": "{\"yielded_before_complete\":1,\"cursor\":8}\n",
+      "stderr": ""
+    }
+  ],
+  "numeric_old_correct": true,
+  "not_compile_RED": true
+}

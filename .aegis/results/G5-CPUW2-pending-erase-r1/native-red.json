@@ -1,0 +1,28 @@
+{
+  "status": "ACTUAL_OLD_INPUT_RED_CONFIRMED",
+  "result": {
+    "Up_ms": 3210.058042,
+    "active_contacts_checked_by_existing_dispatch": true,
+    "actual_input": true,
+    "generation_after": 1,
+    "generation_before": 0,
+    "newquery_unions_in_Up": 25600,
+    "operations_after": 1,
+    "operations_before": 0,
+    "status": "RED"
+  },
+  "source_before_production": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/source-manifest.json",
+    "sha256": "1d9f5223595696c938c69e057cf308284f311e50d7ae31d2f6f5b61bb56930d2"
+  },
+  "binary": {
+    "path": "out/G5-CPUW2-pending-erase-r1/old-up",
+    "sha256": "bdf0f3eeca4a07dd4f9e5d31ce51b409c1af6e316e3bf981017faf9af10f4b19"
+  },
+  "fixture": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "oracle": "Actual RuntimeCompositionCore input no intermediateframe/worker; Up unexpectedly performs25600 newquery unions and canonicalapply before deferred executor exists",
+  "expected_original_numeric_unchanged": true
+}

@@ -1,0 +1,706 @@
+{
+  "status": "PARTIAL_FROZEN_TERMINAL_LEDGER_PROOF_INCOMPLETE",
+  "observed": {
+    "actualWorkercancelThenNextReady": [
+      {
+        "key": "1/1/0/72057594037927936/1/1/1/1",
+        "status": "Cancelled"
+      },
+      {
+        "index": 1,
+        "key": "1/1/0/72057594037927936/1/2/1/1",
+        "status": "Ready",
+        "totalMs": 1423.5,
+        "computeMs": 276.49999940395355,
+        "steps": 201,
+        "importMs": 0.40000009536743164,
+        "exportMs": 0.10000002384185791,
+        "maxUnionNs": 600000,
+        "inputBytes": 128128,
+        "outputBytes": 4140,
+        "elapsed": 1423.6999999284744,
+        "nativeSerializedEqual": true
+      }
+    ],
+    "malformedRejected": {
+      "status": "Failed",
+      "kind": "malformed"
+    },
+    "twoRuntimeForeignRejected": true,
+    "queuePressure": {
+      "admitted": 7,
+      "refusal": "Error: TRANSPORT_BOUND"
+    },
+    "missingModule": "Error: WORKER_MODULE_FAILURE:undefined",
+    "finalExecutorGeneration": "3",
+    "mainWorkerParityExecutorLedger": {
+      "executor": "1",
+      "basis": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936"
+      ],
+      "pending": 0,
+      "admitted": 19,
+      "terminals": 19,
+      "transportBytes": 0,
+      "ledger": [
+        {
+          "key": "1/1/0/72057594037927936/1/1/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/2/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/3/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/4/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/5/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/6/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/7/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/8/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/9/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/10/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/11/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/12/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/13/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/14/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/15/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/16/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/17/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/18/1/1",
+          "status": "Ready"
+        },
+        {
+          "key": "1/1/0/72057594037927936/1/19/1/1",
+          "status": "Ready"
+        }
+      ],
+      "heapBytes": 67108864,
+      "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    }
+  },
+  "VM": {
+    "source": "verification/tests/g5_cpu_worker_transport.test.mjs",
+    "thread": "verification/tests/g5_cpu_worker_thread.test.mjs",
+    "log": "node-preflight.log",
+    "tests": 5,
+    "scope": "actualJSsource inmockedenvironment; notactualChromeproof"
+  },
+  "native": "cpu-unit.log",
+  "missing": [
+    "firstexecutoractual cumulativeadmitted/terminalledger afterqueuepressure was notpersisted; awaitingallpromises doesnotreplace independentledger",
+    "actualCSP/assetBase relocation failures notrun inexternalwindow",
+    "browserjobcancel duringstartup/rootcloseinit onlyVM;actualChrome missingmoduletested"
+  ],
+  "rows": [
+    {
+      "window": "G5CPUW1-PARITY",
+      "status": "OBSERVED",
+      "jobs_recorded": 19,
+      "initial_quota": {
+        "bytes": 0,
+        "ok": true
+      },
+      "before": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 0,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 0
+      },
+      "after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 0,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 0
+      },
+      "final_client": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "admitted": 19,
+        "terminals": 19,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/1/1/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/2/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/3/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/4/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/5/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/6/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/7/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/8/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/9/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/10/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/11/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/12/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/13/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/14/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/15/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/16/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/17/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/18/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/19/1/1",
+            "status": "Ready"
+          }
+        ],
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "errors": [],
+      "cleanup": [],
+      "raw": "local-web/G5CPUW1-PARITY/raw.json"
+    },
+    {
+      "window": "G5CPUW1-EXTERNAL",
+      "status": "OBSERVED",
+      "jobs_recorded": 1,
+      "initial_quota": {
+        "bytes": 0,
+        "ok": true
+      },
+      "before": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 0,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 0
+      },
+      "after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "3",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "8dbeab8af3898c45d2423bab00dc3f53",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        },
+        "objects": 1,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "3",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      },
+      "final_client": null,
+      "errors": [],
+      "cleanup": [],
+      "raw": "local-web/G5CPUW1-EXTERNAL/raw.json"
+    },
+    {
+      "window": "G5CPUW1-LIFECYCLE",
+      "status": "OBSERVED",
+      "jobs_recorded": 4,
+      "initial_quota": {
+        "bytes": 0,
+        "ok": true
+      },
+      "before": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 0,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 0
+      },
+      "after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 0,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 0
+      },
+      "final_client": {
+        "executor": "3",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/3/14/1/1",
+            "status": "Ready"
+          }
+        ],
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "errors": [],
+      "cleanup": [],
+      "raw": "local-web/G5CPUW1-LIFECYCLE/raw.json"
+    }
+  ],
+  "all_payload_identity_checked": true,
+  "no_false_zero_for_missing_counters": true
+}

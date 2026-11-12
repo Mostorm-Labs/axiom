@@ -1,0 +1,39 @@
+{
+  "base": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "tag": "g5-pre-cpu-worker-20261111-e275da6e",
+  "prior_result": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/result.json",
+    "sha256": "d5f763ad308e5fd0460921bcd2bb4ece26f03140f2fd3801a4bbab333fe82037"
+  },
+  "prior_source": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-manifest.json",
+    "sha256": "475cb735ac43d742c6f1a2ddea3bcf760e157f962831ffcccbf4e19b282c678d"
+  },
+  "prior_delta": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-delta.patch",
+    "sha256": "a376eb61ac161d9028b1ac3fb513949fba2e2403cded5e76384b6b7e06f1408e"
+  },
+  "review": {
+    "path": ".aegis/results/G5-CPUW1-control-r1/control-review.json",
+    "sha256": "7cda5c95b3863bd09adba2015e64cd923fdec3eee40bfa3a1be1414d5a94da6a"
+  },
+  "old_normal_manifest": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/normal-sdk-manifest.json",
+    "sha256": "b26306d5f61f82e795e43063f475d263516c42d570b3e7d6350857d46c155608"
+  },
+  "independent_paths": {
+    "path": ".aegis/results/G5-CPUW1-control-r1/independent-worker-path-audit.json",
+    "sha256": "c87636689449e4097481e9874934ac11b6dbef97e5f6d6be2ec9bc2fc8cd4163"
+  },
+  "latency_basis": {
+    "path": ".aegis/results/G5-CPUW1-control-r1/independent-latency-audit.json",
+    "sha256": "c1d4aff1ee55c255393bfa4696564e45d2046bd0728aac360cc6bc1001c5a6b6"
+  },
+  "facts": {
+    "old16compute_ms": 4392.1,
+    "old16total_ms": 22850.9,
+    "oldyieldunattributed_ms": 18458.8,
+    "steps": 3220,
+    "oldsource_not_at_HEAD": "AlreadyreviewedhashbounddirtyCW1mustpreserve; doreconcileNOTreset"
+  }
+}

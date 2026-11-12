@@ -1,0 +1,361 @@
+diff --git a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+index d9699d50..4ab4fd59 100644
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+@@ -180,6 +180,9 @@ class RuntimeCompositionCore final {
+   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
+                                               RuntimeFrameOpportunity& out) noexcept;
+   [[nodiscard]] bool resourceRetirementPending() const noexcept;
++  std::uint64_t reserveCpuWorkerGrant(std::uint64_t,std::size_t)noexcept;
++  bool releaseCpuWorkerGrant(std::uint64_t,std::uint64_t)noexcept;
++  std::size_t cpuWorkerGrantBytes()const noexcept;
+   // Completes the Runtime-owned preview handoff after the platform has
+   // supplied its real presentation observation. Hosts do not capture or
+   // acknowledge preview sessions themselves.
+diff --git a/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp b/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
+index b5a8b7c2..633bcb60 100644
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
+@@ -1,4 +1,6 @@
+ #pragma once
++#include <cstddef>
++#include <cstdint>
+ 
+ namespace canvas::runtime {
+ class RuntimeComposition;
+@@ -8,5 +10,8 @@ class RuntimeCompositionCore;
+ class RuntimePlatformAccess final {
+  public:
+   [[nodiscard]] static RuntimeCompositionCore& core(RuntimeComposition&) noexcept;
++  static std::uint64_t reserveCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::size_t)noexcept;
++  static bool releaseCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::uint64_t)noexcept;
++  static std::size_t cpuWorkerGrantBytes(RuntimeComposition&)noexcept;
+ };
+ }  // namespace canvas::runtime
+diff --git a/runtime/composition/src/public_composition.cpp b/runtime/composition/src/public_composition.cpp
+index 6f4f0ba6..01d251c3 100644
+--- a/runtime/composition/src/public_composition.cpp
++++ b/runtime/composition/src/public_composition.cpp
+@@ -63,6 +63,9 @@ class RuntimeComposition::Impl final {
+ RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
+   return owner.impl_->core;
+ }
++std::uint64_t RuntimePlatformAccess::reserveCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::size_t b)noexcept{return o.impl_->core.reserveCpuWorkerGrant(e,b);}
++bool RuntimePlatformAccess::releaseCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::uint64_t t)noexcept{return o.impl_->core.releaseCpuWorkerGrant(e,t);}
++std::size_t RuntimePlatformAccess::cpuWorkerGrantBytes(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerGrantBytes();}
+ 
+ RuntimeComposition::RuntimeComposition(std::uint64_t viewId) : impl_(std::make_unique<Impl>(viewId)) {}
+ RuntimeComposition::~RuntimeComposition() = default;
+diff --git a/runtime/composition/src/runtime_composition.cpp b/runtime/composition/src/runtime_composition.cpp
+index 947ae138..fdc8c07d 100644
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -470,6 +470,14 @@ bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
+   return runtime_ && runtime_->resourceRetirementPending();
+ }
+ 
++std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
++ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
++ return runtime_->reserveCpuWorkerGrant(e,b);
++}
++bool RuntimeCompositionCore::releaseCpuWorkerGrant(std::uint64_t e,std::uint64_t t)noexcept{
++ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->releaseCpuWorkerGrant(e,t);
++}
++std::size_t RuntimeCompositionCore::cpuWorkerGrantBytes()const noexcept{return runtime_?runtime_->cpuWorkerGrantBytes():0;}
+ bool RuntimeCompositionCore::serviceFrameOpportunity(
+     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
+ 
+@@ -729,7 +737,7 @@ bool RuntimeCompositionCore::detach() noexcept {
+   notifications_.clear();
+   return true;
+ }
+-bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
++bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if(runtime_&&runtime_->cpuWorkerGrantBytes())return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+ std::uint64_t RuntimeCompositionCore::canonicalPresentCount() const noexcept {
+   const auto* provider = runtime_->activeSurfaceProvider();
+   return provider == nullptr ? 0U : provider->presentCount();
+diff --git a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+index 1251476c..8c663594 100644
+--- a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
++++ b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+@@ -161,6 +161,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
+                                 public render::SessionCancelSink,
+                                 public interaction::InteractionDispatchPort {
+   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
++ public:
++  std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept;
++  bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept;
++  std::size_t cpuWorkerGrantBytes()const noexcept;
++ private:
+   friend class canvas::runtime::CanvasRuntimeFacade;
+   friend class canvas::runtime::MultiSelectionPort;
+ #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index 0437e5f0..04a5837f 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -3135,6 +3135,15 @@ void CanvasEditingRuntime::finishObjectEraseFeedback(std::uint64_t pointerId,boo
+   if(cancel)transientTrails_.cancel(pointerId);else (void)transientTrails_.end(pointerId);
+ }
+ void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
++std::uint64_t CanvasEditingRuntime::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
++  if(closed_||publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return 0;
++  return skiaRenderer_.reserveCpuWorkerGrant(executor,bytes);
++}
++bool CanvasEditingRuntime::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
++  if(publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return false;
++  return skiaRenderer_.releaseCpuWorkerGrant(executor,token);
++}
++std::size_t CanvasEditingRuntime::cpuWorkerGrantBytes()const noexcept{return skiaRenderer_.cpuWorkerGrantBytes();}
+ void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
+ 
+ bool CanvasEditingRuntime::setEraserDiameterLogicalPx(float diameter) noexcept {
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 27b17e82..c2383a7d 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -157,6 +157,8 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
+     target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp src/render_execution.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
++    target_sources(canvas_runtime_render PRIVATE src/cpu_exact_path_kernel.cpp)
++    target_sources(canvas_runtime_render PRIVATE src/cpu_worker_protocol.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_ink_layers.cpp src/skia_mask_history.cpp src/skia_navigation_tiles.cpp src/skia_prepared_geometry.cpp
+         src/prepared_body_job.cpp src/navigation_pixel_validity.cpp)
+@@ -272,6 +274,15 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
+     add_executable(axiom_long_query_preparation_tests tests/long_query_preparation_test.cpp)
++    add_executable(axiom_cpu_exact_kernel_tests tests/cpu_exact_kernel_test.cpp)
++    add_executable(axiom_cpu_worker_protocol_tests tests/cpu_worker_protocol_test.cpp)
++    add_executable(axiom_cpu_worker_behavior_red tests/cpu_worker_behavior_red.cpp)
++    foreach(cpu_test axiom_cpu_exact_kernel_tests axiom_cpu_worker_protocol_tests axiom_cpu_worker_behavior_red)
++      target_link_libraries(${cpu_test} PRIVATE canvas_runtime_render CanvasSkia::Skia)
++      target_compile_features(${cpu_test} PRIVATE cxx_std_20)
++    endforeach()
++    add_test(NAME G5CpuExactKernel COMMAND axiom_cpu_exact_kernel_tests)
++    add_test(NAME G5CpuWorkerProtocol COMMAND axiom_cpu_worker_protocol_tests)
+     target_link_libraries(axiom_long_query_preparation_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     target_compile_definitions(axiom_long_query_preparation_tests PRIVATE AXIOM_UR2D_TESTS=1)
+     target_compile_features(axiom_long_query_preparation_tests PRIVATE cxx_std_20)
+diff --git a/runtime/render/include/canvas/render/skia_renderer.hpp b/runtime/render/include/canvas/render/skia_renderer.hpp
+index 1a21c2f2..215bdba4 100644
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -17,6 +17,7 @@
+ #include <cstdint>
+ #include <span>
+ #include <vector>
++#include <map>
+ 
+ class SkCanvas;
+ 
+@@ -110,6 +111,10 @@ class SkiaRenderer final {
+     [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
+     // Existing interaction owner cancels disposable partial exact preparation.
+     void discardEraseQueryPreparation() noexcept;
++    // Private platform quota forwarding. No manager/context is returned.
++    std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes) noexcept;
++    bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token) noexcept;
++    std::size_t cpuWorkerGrantBytes() const noexcept;
+     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
+         std::span<const foundation::WorldPoint>) const noexcept;
+     [[nodiscard]] RenderDamage renderDamage() const;
+@@ -124,6 +129,9 @@ class SkiaRenderer final {
+     std::shared_ptr<NavigationCache> navigationCache_;
+     std::shared_ptr<NavigationCache> navigationFallback_;
+     mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
++    struct CpuGrant {std::uint64_t executor;resources::ResourceLease lease;std::size_t bytes;};
++    std::map<std::uint64_t,CpuGrant> cpuGrants_;
++    std::uint64_t nextCpuGrant_=0;
+     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
+     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
+     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
+diff --git a/runtime/render/src/selection_region_geometry.cpp b/runtime/render/src/selection_region_geometry.cpp
+index d81000ac..652b3ba4 100644
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -9,6 +9,7 @@
+ #include "skia_prepared_geometry.hpp"
+ #include "skia_mask_history.hpp"
+ #include "skia_geometry_internal.hpp"
++#include "cpu_exact_path_kernel.hpp"
+ #include "compact_contour_skia_path.hpp"
+ #include "canvas/render/brush_outline_skia_path.hpp"
+ #include "canvas/render/image_crop_geometry.hpp"
+@@ -77,14 +78,7 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
+ bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
+ std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask,std::uint64_t* unions=nullptr) {
+         G5_SCOPE(g5Build,foundation::internal::g5::Tag::wa_path_build,foundation::internal::g5::Purpose::none);
+-        SkPath eraser;
+-        if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
+-        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
+-            SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
+-            if(unions)++*unions;
+-            if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return std::nullopt;
+-        }
+-    return eraser;
++        return internal::cpuExactPath(mask,unions);
+ }
+ bool fillVisible(const RuntimeSceneRecord& r) {
+     for(const auto& p:r.properties.entries)if(p.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&p.value)) {
+@@ -619,10 +613,9 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
+         SkPath path=old?old->path:SkPath{};std::size_t done=first;
+         for(;done<end;++done){
+             if(allowance&&!optionalQueryTime(*allowance))break;
+-            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();SkPathBuilder builder;
+-            builder.moveTo(f(p.p0.position.x),f(p.p0.position.y));builder.cubicTo(f(p.control1.x),f(p.control1.y),f(p.control2.x),f(p.control2.y),f(p.p1.position.x),f(p.p1.position.y));
++            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();
+             ++state.stats.history.queryUnionOps;
+-            if(!unite(path,stroke(builder.detach(),2*std::max(p.p0.radius,p.p1.radius),SkPaint::kRound_Cap))||!path.isFinite())return;
++            if(!cpuExactUnionSegment(path,p)||!path.isFinite())return;
+             ++completedNow;if(allowance)++allowance->steps;
+             maxUnion=std::max(maxUnion,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-unionStart).count()));
+         }
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 4426815f..d39c028f 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -29,6 +29,7 @@ namespace g5 = canvas::foundation::internal::g5;
+ #include <unordered_set>
+ #include <optional>
+ #include <chrono>
++#include <atomic>
+ 
+ #include <cmath>
+ #include <algorithm>
+@@ -775,6 +776,9 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
+     return navigationTiles_?navigationTiles_->work:NavigationWork{};
+ }
+ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
++    // An isolated executor still owns capacity in this budget. Never issue a
++    // replacement manager while its permit could remain in use.
++    if(!cpuGrants_.empty())return;
+     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+ }
+ void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+@@ -788,6 +792,22 @@ SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const
+     catch(const std::bad_alloc&){return ExactQueryCohort(eraseQueries_);}
+ }
+ void SkiaRenderer::discardEraseQueryPreparation()noexcept{if(eraseQueries_)eraseQueries_->discardQueryPrefixes();}
++std::uint64_t SkiaRenderer::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
++    if(!executor||!bytes||bytes>80U*1024U*1024U||nextCpuGrant_==UINT64_MAX||cpuGrants_.size()>=16)return 0;
++    try{
++        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
++        const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return 0;
++        resources::ResourceLease lease(resourceBudget_,*token);
++        static std::atomic<std::uint64_t> serial{0};
++        auto previous=serial.load();do{if(previous==UINT64_MAX)return 0;}while(!serial.compare_exchange_weak(previous,previous+1));
++        const auto id=previous+1;nextCpuGrant_=id;
++        cpuGrants_.emplace(id,CpuGrant{executor,std::move(lease),bytes});return id;
++    }catch(...){return 0;}
++}
++bool SkiaRenderer::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
++    const auto it=cpuGrants_.find(token);if(it==cpuGrants_.end()||it->second.executor!=executor)return false;cpuGrants_.erase(it);return true;
++}
++std::size_t SkiaRenderer::cpuWorkerGrantBytes()const noexcept{std::size_t bytes=0;for(const auto& entry:cpuGrants_)bytes+=entry.second.bytes;return bytes;}
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
+     try{
+diff --git a/sdk/common/session.cpp b/sdk/common/session.cpp
+index 576a8bcb..75ff8c3a 100644
+--- a/sdk/common/session.cpp
++++ b/sdk/common/session.cpp
+@@ -1,3 +1,4 @@
++#include "canvas/runtime/internal/runtime_platform_access.hpp"
+ #include "canvas/foundation/internal/g5_observation.hpp"
+ namespace g5 = canvas::foundation::internal::g5;
+ #include "session.hpp"
+@@ -654,6 +655,8 @@ class Session::Impl {
+         }
+         if (dataPort.closing && command!="state" && command!="frame" && command!="selection" &&
+             command!="resource" && command!="snapshot" && command!="readSection" && command!="presets" &&
++            !(command=="cpuWorkerGrant" && (j.value("action",std::string{})=="observe" ||
++                j.value("action",std::string{})=="basis" || j.value("action",std::string{})=="release")) &&
+             !(command=="text" && j.value("action",std::string{})!="intent"))
+             return error("DOCUMENT_CLOSING");
+         if (command == "resize") {
+@@ -1544,6 +1547,27 @@ class Session::Impl {
+                     {"objectId", hexId(result.objectId)},
+                     {"cropToken", std::to_string(result.cropToken)}};
+         }
++        if(command=="cpuWorkerGrant"){
++            if(!owner)return error("NOT_OPEN");
++            if(j.at("action")=="basis"){
++                const auto stamp=facade().readMultiSelection().stamp;
++                const auto doc=*owner->documentId();std::array<std::uint64_t,2> words{};
++                for(unsigned i=0;i<16;++i)words[i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
++                return {{"ok",true},{"words",J::array({std::to_string(stamp.runtimeInstance),std::to_string(stamp.lifetimeGeneration),std::to_string(words[0]),std::to_string(words[1])})}};
++            }
++            const auto executor=decimal(j.at("executor"));
++            if(j.at("action")=="reserve"){
++                const auto bytes=j.at("bytes").get<std::size_t>();
++                const auto token=runtime::RuntimePlatformAccess::reserveCpuWorkerGrant(*owner,executor,bytes);
++                return {{"ok",token!=0},{"code","CPU_QUOTA_DENIED"},{"token",std::to_string(token)},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            }
++            if(j.at("action")=="release"){
++                const auto token=decimal(j.at("token"));
++                return {{"ok",runtime::RuntimePlatformAccess::releaseCpuWorkerGrant(*owner,executor,token)},{"code","STALE_CPU_GRANT"},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            }
++            if(j.at("action")=="observe")return {{"ok",true},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            return error("INVALID_CPU_GRANT_ACTION");
++        }
+         if (command == "snapshot") {
+             runtime::DocumentSnapshotRequest r;
+             r.expectedSemanticGeneration = decimal(j.at("generation"));
+diff --git a/sdk/web/CMakeLists.txt b/sdk/web/CMakeLists.txt
+index 03144b73..9b3d82b9 100644
+--- a/sdk/web/CMakeLists.txt
++++ b/sdk/web/CMakeLists.txt
+@@ -31,6 +31,7 @@ target_link_options(axiom_js_runtime PRIVATE
+   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/Excalifont@/fonts/Excalifont\"")
+ set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs
+   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/internal")
++include("${CMAKE_CURRENT_SOURCE_DIR}/cpu-worker.cmake")
+ add_custom_command(TARGET axiom_js_runtime POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
+diff --git a/sdk/web/README.md b/sdk/web/README.md
+index 39d8a750..6ec6ecd7 100644
+--- a/sdk/web/README.md
++++ b/sdk/web/README.md
+@@ -541,3 +541,5 @@ non-ink objects and colored backgrounds remain visible through the cutout. Spars
+ pointer samples are joined geometrically. Canonical state/History/publication change
+ only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
+ uses conservative bounded candidates; the renderer still clips against actual ink.
++
++Private CPU compute assets are shipped under `internal/cpu-worker-*` with a matching build identity. They contain the shared C++ exact-path kernel compiled as an isolated, CPU-only WASM module. Current root editing remains synchronous; these assets do not activate pending Up or change commit/presentation semantics. Consumers continue importing the package root. Partial results are never document data.
+diff --git a/sdk/web/axiom.mjs b/sdk/web/axiom.mjs
+index fcc577e0..5dd858ad 100644
+--- a/sdk/web/axiom.mjs
++++ b/sdk/web/axiom.mjs
+@@ -1,3 +1,4 @@
++import {bindCpuWorkerOwner,unbindCpuWorkerOwner} from './internal/cpu-worker-owner.mjs';
+ import {SDK_VERSION, AxiomError} from '../api/axiom.mjs';
+ import {adaptController} from '../api/internal/controller.mjs';
+ export {SDK_VERSION, AxiomError};
+@@ -243,6 +244,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
+       return ()=>{listeners.delete(token);};
+     };
+     if(onChange)subscribe('state',onChange);
++    const cpuWorkers=new Set();
+     const api={
+       version:SDK_VERSION, canvas:canonical,
+       readBuildInfo:()=>call('version'),
+@@ -363,13 +365,14 @@ export async function createRuntime({mount, documentId, restore, initialResource
+       applyReplayOperations:packets=>enqueue(()=>call('replayBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
+       applyRemoteOperations:packets=>enqueue(()=>call('remoteBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
+       async close(){if(closed)return;if(closing)throw new AxiomError('BUSY');closing=true;
+-        try{await tail;await text.finish();call('close');disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
++        try{await tail;await text.finish();for(const worker of [...cpuWorkers])await worker.close();call('close');unbindCpuWorkerOwner(api);disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
+         catch(error){if(['PUBLICATION_PENDING','SHUTDOWN_FAILED','CLOSE_FAILED'].includes(error.code)){closeBarrier=true;disposeInput?.();disposeInput=undefined;text.dispose();}closing=false;schedule();throw error;}}
+     };
+     listen('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing||text.snapshot().phase!==0)return;const t=api.table.read();if(!t.available||!t.editable)return;
+       if(e.key==='Tab'){e.preventDefault();void api.table.navigate(e.shiftKey?-1:1).catch(emitError);}
+       if(e.key==='Enter'){e.preventDefault();void api.table.edit({objectId:t.objectId,rowId:t.rowId,columnId:t.columnId}).catch(emitError);}
+     });
++    bindCpuWorkerOwner(api,{basis:()=>call('cpuWorkerGrant',{action:'basis'}).words,assetBaseURL:new URL('internal/',assets),reserve:(executor,bytes)=>{if(closed||closing)throw new AxiomError('CLOSED');return call('cpuWorkerGrant',{action:'reserve',executor,bytes}).token;},release:(executor,token)=>call('cpuWorkerGrant',{action:'release',executor,token}),observe:()=>call('cpuWorkerGrant',{action:'observe',executor:'1'}),attach:worker=>cpuWorkers.add(worker),detach:worker=>cpuWorkers.delete(worker)});
+     schedule();return Object.freeze(api);
+   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}
+ }

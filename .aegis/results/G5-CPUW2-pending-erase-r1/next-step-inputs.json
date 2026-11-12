@@ -1,0 +1,44 @@
+{
+  "status": "CONTROL_REVIEW_REQUIRED_BLOCKED",
+  "terminal": "FROZEN_VERIFICATION_FAILURE",
+  "first_failed_obligation": "CW2-NUMERIC/CW2-UP end-to-end7200canonicalconvergence60s",
+  "verified_facts": [
+    "candidate7200 AUp0.5msgeneration0/contact0;laterAonOperationat60119.4ms(Up+47751.2),~29.95MB",
+    "failurecapturegeneration1/presented0/canUndoFalse/contacts0",
+    "Bcallbackat132678.1ms(Up+120309.9) duringfailure/cleanup;laterprogress observed, notpermanentdeadlock",
+    "candidate1600 Up\u2192settled11258.7ms vsold5093.9ms; pairedoperation/final/Undo/Redo snapshotbytesidentical",
+    "No primarynormalprivatefacts/Workerterminalledger; cannot reconstruct actualcompletionchain afterfact"
+  ],
+  "control_static_hypothesis": {
+    "source_chain": [
+      "SkiaRenderer::intersectCpuPendingErase decodes andtemporarily passesprovenQuery",
+      "EraseMaskPathCache::query\u2192eraseGeometryQuery usespathonlyfornewmask",
+      "Importedpath isnotpublished toEraseMaskPathCache::entries forlaterhistory lookup",
+      "AfterAcanonicalapply, B exactHistory/exactHistoricalPath\u2192get(mask,true)",
+      "get conservativebase+units4096>8MiB rejects7200residentconstruction",
+      "historicalPath\u2192pathFor fallsback erasePath wholef32 sequentialunion",
+      "PotentialrepeatedhistoricalAconstruction across40targets andcanonicalrender"
+    ],
+    "evidence_classification": "Controlstaticcausalhypothesis consistentwithtiming, notactualWASMhistory-work witness. Needs boundedoffline nativeowner proof andcorrectedpackage beforeproduction repair.",
+    "constraints": "Keep8MiBresident512,64MiBWorkerheap,math/AA/Operation/historyowner; importedpath durableverifiedsharing/criticalcustody needsdesign; no uncounted secondowner orsilentfallback"
+  },
+  "remaining_windows": {
+    "FEEDBACK": "NOT_RUN",
+    "FAILURES": "NOT_RUN",
+    "starts": 2,
+    "seconds": 410,
+    "authority": "Unused allowance isnotretry authorization"
+  },
+  "unfinished_acceptance": [
+    "actualpendingA+B+wheel feedbackpixels",
+    "actualfatalrecovery/context/DataPortclose receiptandterminalledger",
+    "7200webfullcanonical/pixels/receipt",
+    "independentCPUstrictAA coldpixelcomparison",
+    "nativeoversize/radius/mutationownerboundary explicitcases",
+    "externalnpm qualification andcompleteallregressions focus"
+  ],
+  "normal_default_OFF": true,
+  "no_new_Demo_due_blocker": true,
+  "no_commit_push": true,
+  "no_CW3_activation": true
+}

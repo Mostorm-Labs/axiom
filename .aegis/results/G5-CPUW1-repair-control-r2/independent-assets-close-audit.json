@@ -1,0 +1,134 @@
+{
+  "relative-assets": {
+    "status": "OBSERVED",
+    "assetPaths": [
+      "/assets/axiom.data",
+      "/assets/axiom.wasm",
+      "/assets/internal/cpu-worker-thread.mjs",
+      "/assets/internal/cpu-worker-kernel.mjs",
+      "/assets/internal/cpu-worker-build.mjs",
+      "/assets/internal/cpu-worker-kernel.wasm"
+    ],
+    "csp": null,
+    "securityConsole": [],
+    "after": {
+      "objects": 1
+    },
+    "cleanup": []
+  },
+  "absolute-assets": {
+    "status": "OBSERVED",
+    "assetPaths": [
+      "/assets/axiom.data",
+      "/assets/axiom.wasm",
+      "/assets/internal/cpu-worker-thread.mjs",
+      "/assets/internal/cpu-worker-kernel.mjs",
+      "/assets/internal/cpu-worker-build.mjs",
+      "/assets/internal/cpu-worker-kernel.wasm"
+    ],
+    "csp": null,
+    "securityConsole": [],
+    "after": {
+      "objects": 1
+    },
+    "cleanup": []
+  },
+  "csp-none": {
+    "status": "OBSERVED",
+    "assetPaths": [
+      "/assets/axiom.data",
+      "/assets/axiom.wasm"
+    ],
+    "csp": {
+      "elapsedMs": 2.600000023841858,
+      "error": "Error: WORKER_MODULE_FAILURE:undefined",
+      "quotaAfter": {
+        "bytes": 0,
+        "ok": true
+      }
+    },
+    "securityConsole": [
+      {
+        "type": "error",
+        "text": "Creating a worker from 'http://127.0.0.1:57520/assets/internal/cpu-worker-thread.mjs' violates the following Content Security Policy directive: \"worker-src 'none'\". The action has been blocked."
+      }
+    ],
+    "after": {
+      "objects": 1
+    },
+    "cleanup": []
+  },
+  "lifecycle": {
+    "status": "OBSERVED",
+    "cancel": {
+      "label": "started-cancel",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/1/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 187.40000009536743,
+      "startedIdentity": {
+        "key": "1/1/0/72057594037927936/1/1/1/1",
+        "sent": 187.70000004768372,
+        "startedReceivedAt": 189.30000007152557,
+        "workerStartedAt": 14.5
+      },
+      "cancelSentAt": 202.40000009536743,
+      "status": "Cancelled",
+      "terminalReceivedAt": 203.70000004768372,
+      "computeMs": 13.800000190734863,
+      "yieldMs": 0.49999988079071045,
+      "totalMs": 15.799999952316284,
+      "steps": 6,
+      "cursor": 37,
+      "cancelObservedAt": 28.600000023841858,
+      "outputBytes": 0
+    },
+    "pending_close": {
+      "error": {
+        "code": "PUBLICATION_PENDING",
+        "text": "AxiomError: PUBLICATION_PENDING"
+      },
+      "bindingSame": true,
+      "quota": {
+        "bytes": 0,
+        "ok": true
+      },
+      "editBlocked": "DOCUMENT_CLOSING",
+      "grantBlocked": "DOCUMENT_CLOSING"
+    },
+    "retained_packets": 1,
+    "released_packets": 0,
+    "retry": {
+      "bindingAbsent": true,
+      "worker": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "144115188075855872"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/144115188075855872/1/14/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": true,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      }
+    },
+    "initializationClose": {
+      "error": "Error: CLOSED_DURING_STARTUP"
+    }
+  }
+}

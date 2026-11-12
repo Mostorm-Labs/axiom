@@ -248,3 +248,10 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     endif()
     add_test(NAME SelectionBatch2Coverage COMMAND axiom_selection_coverage_tests)
 endif()
+
+# Candidate integration only. Ordinary consumers keep existing synchronous Up.
+option(AXIOM_CPU_PENDING_ERASE "Enable private candidate pending partial-erase Worker integration" OFF)
+target_sources(canvas_runtime_editor PRIVATE src/cpu_pending_erase.cpp)
+if(AXIOM_CPU_PENDING_ERASE)
+ target_compile_definitions(canvas_runtime_editor PUBLIC AXIOM_CPU_PENDING_ERASE=1)
+endif()

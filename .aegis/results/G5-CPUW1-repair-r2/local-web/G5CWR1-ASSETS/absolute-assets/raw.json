@@ -1,0 +1,335 @@
+{
+  "id": "absolute-assets",
+  "status": "OBSERVED",
+  "jobs": [
+    {
+      "label": "absolute-assets-asset",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/1/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 165.89999997615814,
+      "status": "Ready",
+      "terminalReceivedAt": 427.39999997615814,
+      "computeMs": 258.200000166893,
+      "importMs": 0.9000000953674316,
+      "exportMs": 0,
+      "yieldMs": 1.6999999284744263,
+      "totalMs": 261.1999999284744,
+      "steps": 203,
+      "maxUnionNs": 3300000,
+      "outputBytes": 4156,
+      "nativeBytesEqual": true,
+      "heartbeatDuringCompute": [
+        169.60000002384186,
+        175.5,
+        180.60000002384186,
+        185.60000002384186,
+        190.60000002384186,
+        195.60000002384186,
+        200.69999992847443,
+        205.69999992847443,
+        210.79999995231628,
+        215.69999992847443,
+        220.79999995231628,
+        225.79999995231628,
+        229.5,
+        235.79999995231628,
+        239.60000002384186,
+        245.89999997615814,
+        249.60000002384186,
+        255.19999992847443,
+        260.1999999284744,
+        265.2999999523163,
+        269.39999997615814,
+        275.6999999284744,
+        280.6999999284744,
+        285.2999999523163,
+        290.39999997615814,
+        295.39999997615814,
+        300.39999997615814,
+        305.39999997615814,
+        310.2999999523163,
+        315.2999999523163,
+        319.39999997615814,
+        324.60000002384186,
+        330.7999999523163,
+        335.7999999523163,
+        340.7999999523163,
+        344.60000002384186,
+        350.7999999523163,
+        354.60000002384186,
+        360.89999997615814,
+        364.39999997615814,
+        369.39999997615814,
+        375.60000002384186,
+        380.6999999284744,
+        385.6999999284744,
+        390.6999999284744,
+        395.2999999523163,
+        400.2999999523163,
+        405.2999999523163,
+        410.2999999523163,
+        415.2999999523163,
+        419.39999997615814,
+        425.60000002384186,
+        430.10000002384186
+      ]
+    }
+  ],
+  "executors": [
+    {
+      "label": "asset-complete",
+      "before": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/1/1/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": false,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaBefore": {
+        "bytes": 67108864,
+        "ok": true
+      },
+      "capturedAt": 434.2999999523163,
+      "after": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/1/1/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": true,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaAfter": {
+        "bytes": 0,
+        "ok": true
+      }
+    }
+  ],
+  "assertions": [
+    "input fetch",
+    "binary ack",
+    "independent native path equality",
+    "released result detached",
+    "real Worker Ready",
+    "admission list count",
+    "terminal list count",
+    "all accepted exactly one terminal",
+    "no orphaned tasks",
+    "closed quota and transport zero",
+    "canonical receipt bounded",
+    "canonical receipt bounded",
+    "canonical rectangle created",
+    "canonical receipt bounded",
+    "canonical receipt bounded",
+    "asset root Undo",
+    "canonical receipt bounded",
+    "canonical receipt bounded",
+    "asset root Redo"
+  ],
+  "errors": [],
+  "cleanup": [],
+  "failure": null,
+  "ownerBefore": [
+    "1",
+    "1",
+    "0",
+    "72057594037927936"
+  ],
+  "before": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "canRedo": false,
+    "canUndo": false,
+    "creationMode": false,
+    "data": {
+      "attached": false,
+      "byteCapacity": 33554432,
+      "capacity": 1024,
+      "closing": false,
+      "fault": false,
+      "latest": null,
+      "pending": 0,
+      "pendingBytes": 0,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000001",
+    "eraserMode": 2,
+    "generation": "0",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "00000000000000000000000000000000",
+      "ordinal": "0",
+      "presentedGeneration": "0",
+      "runtimeEpoch": "0"
+    },
+    "objects": 0,
+    "primary": "00000000000000000000000000000000",
+    "selected": [],
+    "selectionMode": 0,
+    "selectionRevision": "1",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 700,
+      "width": 900
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        0,
+        0
+      ],
+      "sequence": "1",
+      "session": "0"
+    },
+    "tool": 0
+  },
+  "quotaBefore": {
+    "bytes": 0,
+    "ok": true
+  },
+  "currentExecutor": {
+    "executor": "1",
+    "basis": [
+      "1",
+      "1",
+      "0",
+      "72057594037927936"
+    ],
+    "pending": 0,
+    "active": null,
+    "admitted": 0,
+    "terminals": 0,
+    "transportBytes": 0,
+    "ledger": [],
+    "cleanupErrors": [],
+    "closed": false,
+    "heapBytes": 67108864,
+    "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+  },
+  "after": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": false,
+      "byteCapacity": 33554432,
+      "capacity": 1024,
+      "closing": false,
+      "fault": false,
+      "latest": null,
+      "pending": 0,
+      "pendingBytes": 0,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000001",
+    "eraserMode": 2,
+    "generation": "1",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "4db274182e87d6189405cda85254f944",
+      "ordinal": "1",
+      "presentedGeneration": "1",
+      "runtimeEpoch": "1"
+    },
+    "objects": 1,
+    "primary": "4db274182e87d6189405cda85254f90b",
+    "selected": [
+      "4db274182e87d6189405cda85254f90b"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "2",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 700,
+      "width": 900
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        0,
+        0
+      ],
+      "sequence": "1",
+      "session": "0"
+    },
+    "tool": 1
+  },
+  "completedAt": 587.1999999284744
+}

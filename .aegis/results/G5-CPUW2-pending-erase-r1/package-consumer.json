@@ -1,0 +1,29 @@
+{
+  "status": "MATCHING_BUILDS_VALID_FROZEN_BROWSER_CLOSURE_INCOMPLETE",
+  "normal_manifest": "normal-sdk-manifest.json",
+  "candidate_manifest": "candidate-sdk-manifest.json",
+  "files_each": 42,
+  "private_sidecars": 6,
+  "public_exports_types_version_unchanged": true,
+  "normal_default_OFF": true,
+  "candidate_ON": true,
+  "main_and_worker_kernel_build": "a95f33a1a65aa29e7566ce87b78f3133",
+  "old_baseline": ".aegis/results/G5-CPUW1-repair-r2/normal-sdk-manifest.json",
+  "actualroot_consumer_cases": [
+    "oldnormal1600 OBSERVED",
+    "candidate1600 OBSERVED",
+    "candidate7200 FAILED60s"
+  ],
+  "SDK_node": [
+    "sdk-node2.log",
+    "sdk-controller.log",
+    "sdk-input.log",
+    "sdk-control.log"
+  ],
+  "TypeScript": "sdk-types-final.log",
+  "missing": [
+    "externalextractednpm actualconsumer",
+    "newcandidateclose/context/fatalbrowserproof",
+    "No publicdeepimports usedforprimarybusinessinput, qualificationonlyfactorywrappingnotexecuted"
+  ]
+}

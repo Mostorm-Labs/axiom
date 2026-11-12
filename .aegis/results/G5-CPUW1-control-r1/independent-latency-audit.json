@@ -1,0 +1,15 @@
+{
+  "status": "COMPUTE_ISOLATION_WITH_HIGH_YIELD_OVERHEAD",
+  "requests": 19,
+  "total_ms_sum": 24939.100000023842,
+  "compute_ms_sum": 4770.999999046326,
+  "noncompute_difference_ms_sum": 20168.100000977516,
+  "steps_sum": 3522,
+  "first16_total_ms": 22850.900000095367,
+  "first16_compute_ms": 4392.099999427795,
+  "lifecycle_long_ticks": 287,
+  "long_interval_ms": 1433.4000000953674,
+  "in_interval_gap_max_ms": 6.899999976158142,
+  "in_interval_gap_median_ms": 5.0,
+  "inference": "Workerstep8/time2ms setTimeout(0) scheduling is suspect for noncompute delay; no timingcausalexperimentperformed. NotproductUp/speedup proof."
+}

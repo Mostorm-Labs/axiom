@@ -1,0 +1,70 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW2-history-custody-r1",
+  "status": "FROZEN_AUTHORIZED_CW2_HISTORY_CUSTODY_CORRECTION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "completed_through": [
+      "checkpoint_tag_pushed",
+      "CW1_CWR_scoped_accepted",
+      "CW2_r1_source_preserved_and_failuresealed",
+      "control_386artifact_1223source_84SDK_hashverified",
+      "control_r4_historical_replay_cause_verified"
+    ],
+    "next_action": "ValidatefailedCW2sourceandnewpackage; implementcoherentcandidate64MiBfinishedpathcustodyandstrictWorkerhistorycontinuation;completefrozenCW2scopeorreturnrealblocker."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW2-history-custody-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "7415296366f4db3b0aad6c9d91469582ddbeb6a31ea47ed4c5bdadda35ee58c6"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "fb2851855c5dc667d9c5de35cdd66fd40a535dc7f4342f202a0159d4f762841a"
+  },
+  "design_contract_ref": {
+    "path": "design-contract.json",
+    "sha256": "54eed9ff92f8ecd7c456d364a5a2b60fd5028ac14e84cffc378588fca9b31e39"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "d6e91cb80d6e03a28abc3b3eaff8bc0672adaa5e7e5adebad5f86c6a382e69e3"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "1feb0a68ed44dbcdf3a3a75c2294cc52e5e7aa4e5aa3e34a9df84b3639191e02"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "62fe33ac1dd598cdacb678dfd0876cbec1045a335665f5bbaf6d31cc68344c5f"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "5682f1b7b5cc3b511923b8c9e8b829504178b990974b5cb4d3ffa3dbd70b78b7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0281dcfa2e89f4e02735668811df7153fc80356d993eb834320ae436c8d0a0d4"
+  }
+}

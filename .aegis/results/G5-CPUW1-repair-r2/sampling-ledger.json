@@ -1,0 +1,106 @@
+{
+  "schema": "g5-cpu-worker-repair-three-windows-v1",
+  "status": "COMPLETED_ALL_FROZEN_WINDOWS",
+  "cap_seconds": 420,
+  "charged_seconds": 35,
+  "attempts": [
+    {
+      "id": "G5CWR1-SCHED",
+      "status": "COMPLETED",
+      "limit_seconds": 180,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_repair_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-repair-r2/G5CWR1-SCHED.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 28.875329041,
+        "peak_process_family_rss_kib": 1208560,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 29,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    },
+    {
+      "id": "G5CWR1-LIFE",
+      "status": "COMPLETED",
+      "limit_seconds": 120,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_repair_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-repair-r2/G5CWR1-LIFE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.2505979170000003,
+        "peak_process_family_rss_kib": 1249088,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 120,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 3,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    },
+    {
+      "id": "G5CWR1-ASSETS",
+      "status": "COMPLETED",
+      "limit_seconds": 120,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_repair_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-repair-r2/G5CWR1-ASSETS.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.707183833,
+        "peak_process_family_rss_kib": 1172960,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 120,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 3,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    }
+  ],
+  "browser_starts": 3,
+  "remaining_starts": 0,
+  "prior_r1_starts": 0,
+  "prior_r1_charged_seconds": 0,
+  "no_retry": true,
+  "total_elapsed_seconds": 33.833110791,
+  "accounting": "Sum ceil(actual guard elapsed) per start; no retries",
+  "original_runner_derived_counts": true
+}

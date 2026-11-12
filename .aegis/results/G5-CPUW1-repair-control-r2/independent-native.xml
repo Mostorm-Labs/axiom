@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="15"
+	timestamp="2026-11-11T22:18:19"
+	>
+	<testcase name="G5CpuExactKernel" classname="G5CpuExactKernel" time="8.91507" status="run">
+		<properties/>
+		<system-out>{"original_path_parity":true,"local_queries":16,"segments":1600}
+</system-out>
+	</testcase>
+	<testcase name="G5CpuWorkerProtocol" classname="G5CpuWorkerProtocol" time="0.0115403" status="run">
+		<properties/>
+		<system-out>{"protocol":true,"finite":true,"Filledstep":true,"ownergrant":true}
+</system-out>
+	</testcase>
+	<testcase name="G5LongQueryPreparationPath" classname="G5LongQueryPreparationPath" time="6.41085" status="run">
+		<properties/>
+		<system-out>{"after_append_stored":[1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600,1600],"all16_prepared":true,"extra_rounds":0,"final_remainder_unions":0,"intentional_partial":{"expected_remainder":1599,"get_union_delta":1599,"opportunities":1,"path_equal":true,"prepared":1},"locals":[{"calls":200,"completed_unions":1600,"extra_opportunities":0,"get_union_delta":0,"local":0,"observations":[{"completed":8,"resumed":0,"steps":8,"stored":8},{"completed":8,"resumed":8,"steps":8,"stored":16},{"completed":8,"resumed":16,"steps":8,"stored":24},{"completed":8,"resumed":24,"steps":8,"stored":32},{"completed":8,"resumed":32,"steps":8,"stored":40},{"completed":8,"resumed":40,"steps":8,"stored":48},{"completed":8,"resumed":48,"steps":8,"stored":56},{"completed":8,"resumed":56,"steps":8,"stored":64},{"completed":8,"resumed":64,"steps":8,"stored":72},{"completed":8,"resumed":72,"steps":8,"stored":80},{"completed":8,"resumed":80,"steps":8,"stored":88},{"completed":8,"resumed":88,"steps":8,"stored":96},{"com...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

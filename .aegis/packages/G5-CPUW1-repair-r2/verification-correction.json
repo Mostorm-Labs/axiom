@@ -1,0 +1,30 @@
+{
+  "classification": "VERIFICATION_DESIGN_DEFECT_CORRECTED_ONCE",
+  "decision": {
+    "path": ".aegis/results/G5-CPUW1-control-r1/deadline-verification-decision.json",
+    "sha256": "2aeb9f7862492c10583d4325aa9d652e7c063d0f7d78ca1d8f61208af3d70463"
+  },
+  "old_package": {
+    "path": ".aegis/packages/G5-CPUW1-repair-r1/package.json",
+    "sha256": "c3fe4a874af1f03032be00297c77c111336bd90736994ec8c68b3afaa2b725a1"
+  },
+  "accepted_partial_result": {
+    "path": ".aegis/results/G5-CPUW1-repair-r1/result.json",
+    "sha256": "30afd70336a615ba6b0fb24bf87cfdeab1fc1b22edee40299ab40bffee1c3a34"
+  },
+  "accepted_partial_source": {
+    "path": ".aegis/results/G5-CPUW1-repair-r1/source-manifest.json",
+    "sha256": "28b8f2086dd61ea8806d9bf21ef1a4a20e11bfb746b87f5047b77be32e0f2b06"
+  },
+  "required_test_change": "Only long_query_preparation_test progress oracle: independentofwallclockdeadline minimumwork, boundedgenuinefurtheropportunities beforecheckingall16paths. Fullpathnumeric andbudgetseparate.",
+  "complete_oracle": [
+    "Keep existing append8..1600 interleaved16 sequence andbudget/finite/fork/lease tests. Captureobservations fromexistingtestonlyseam, do not addpublicintrospection.",
+    "After fixedappendsequence, give eachof16fullfinalgeometry demand upto512 realprepareQueryPrefix(max8) opportunities, eachoriginal8ms allowance unchanged. Positivecompleted+resumed counts must show monotonicstoredprefix; no resetorpercallreplay accepted. Terminatewhencomputedprefix==1600, not byunboundedloop orgetfinishinghiddenwork.",
+    "Then geteach16 fullquery andrequire exactly0newunionwork, pathequal independentlyfrozenoriginalforALL16, singleSlotoldmustfailbecausealternatequeriesdiscardeachothersprogress (cannot do get immediatelybeforepreparingthenextlocal tohideone-slot). Atleast2roundrobindistinctlocalsprepared beforefinalgets.",
+    "Separateintentionalpartialquerycase: withmaxSteps1sharedallowance orboundedprepare prefix compute<trace size, require finalget workdelta exactly1600-preparedprogress, finaloriginalpathsame. Thisprovesfinalvalidremainderandnotpartialasfullhit.",
+    "Zeroexpiredtime/noextraunion/sharedsteps0/nonfinite/heldoldpins/fork remainunchanged. Do notraise8ms/8stepslimits, residentquota, finalnumericorperformancecriteria.",
+    "BuildoriginalpreLQPsingle-slot reference fromGit89325c46 + acceptedCFHdeltaor equivalentpinnedsourceoriginal; testscomparecorrectoriginalnumerics and should REDatmulti-localall16zeroUp assertion. Usecompiler/link commands accepted SDK, no newworktree/dependencyrebuild. RetainoldREDandpatchedGREEN withhashes. Ifcannotconstructindependentsingleslotoracle exact, return verificationblocker ratherthanfakingcounts."
+  ],
+  "productionchanges": "No productcode/budget/math changes for thiscorrection. CWRpostedtask/asset/closechanges alreadyacceptedpartialpreserved.",
+  "resume": "AftercorrectedoracleRED/GREEN and27nativekeepers, continuethethreeunstartedCWRwindows sameIDs/420s innewresultsrootG5-CPUW1-repair-r2. Previousr1ledger0/3 explicitnotnewretry. Do notrerunalreadyacceptednative634/SDKtests unlesssourcechangesrequirematching."
+}

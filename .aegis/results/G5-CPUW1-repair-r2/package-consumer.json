@@ -1,0 +1,308 @@
+{
+  "status": "PASS_REAL_RELOCATED_NPM_CONSUMER",
+  "matching42files": true,
+  "six_private_sidecars": true,
+  "public_exports_types_version_unchanged": true,
+  "outside_package_root": "/app/",
+  "assets_root": "/assets/",
+  "relative_and_absolute": true,
+  "real_CSP": true,
+  "cases": [
+    {
+      "case": "relative-assets",
+      "raw": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/relative-assets/raw.json",
+      "http_paths": [
+        "/app/",
+        "/driver.mjs",
+        "/favicon.ico",
+        "/app/axiom.mjs",
+        "/app/internal/cpu-worker-owner.mjs",
+        "/app/api/axiom.mjs",
+        "/app/api/internal/controller.mjs",
+        "/app/api/internal/values.mjs",
+        "/app/internal/cpu-worker-client.mjs",
+        "/app/internal/cpu-worker-build.mjs",
+        "/app/internal/axiom.mjs",
+        "/assets/axiom.data",
+        "/assets/axiom.wasm",
+        "/app/pointer_input.mjs",
+        "/app/text_input.mjs",
+        "/assets/internal/cpu-worker-thread.mjs",
+        "/assets/internal/cpu-worker-kernel.mjs",
+        "/assets/internal/cpu-worker-build.mjs",
+        "/assets/internal/cpu-worker-kernel.wasm",
+        "/requests/0.request",
+        "/requests/0.path"
+      ],
+      "CSP": null,
+      "canonical_after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "1",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "4ee0ccac832e4a3a1487a19e11e50e91",
+          "ordinal": "1",
+          "presentedGeneration": "1",
+          "runtimeEpoch": "1"
+        },
+        "objects": 1,
+        "primary": "4ee0ccac832e4a3a1487a19e11e50ede",
+        "selected": [
+          "4ee0ccac832e4a3a1487a19e11e50ede"
+        ],
+        "selectionMode": 0,
+        "selectionRevision": "2",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      }
+    },
+    {
+      "case": "absolute-assets",
+      "raw": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/absolute-assets/raw.json",
+      "http_paths": [
+        "/app/",
+        "/driver.mjs",
+        "/app/axiom.mjs",
+        "/app/internal/cpu-worker-owner.mjs",
+        "/app/api/axiom.mjs",
+        "/app/api/internal/controller.mjs",
+        "/app/api/internal/values.mjs",
+        "/app/internal/cpu-worker-client.mjs",
+        "/app/internal/cpu-worker-build.mjs",
+        "/app/internal/axiom.mjs",
+        "/assets/axiom.data",
+        "/assets/axiom.wasm",
+        "/app/pointer_input.mjs",
+        "/app/text_input.mjs",
+        "/assets/internal/cpu-worker-thread.mjs",
+        "/assets/internal/cpu-worker-kernel.mjs",
+        "/assets/internal/cpu-worker-build.mjs",
+        "/assets/internal/cpu-worker-kernel.wasm",
+        "/requests/0.request",
+        "/requests/0.path"
+      ],
+      "CSP": null,
+      "canonical_after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "1",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "4db274182e87d6189405cda85254f944",
+          "ordinal": "1",
+          "presentedGeneration": "1",
+          "runtimeEpoch": "1"
+        },
+        "objects": 1,
+        "primary": "4db274182e87d6189405cda85254f90b",
+        "selected": [
+          "4db274182e87d6189405cda85254f90b"
+        ],
+        "selectionMode": 0,
+        "selectionRevision": "2",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      }
+    },
+    {
+      "case": "csp-none",
+      "raw": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/csp-none/raw.json",
+      "http_paths": [
+        "/csp/",
+        "/driver.mjs",
+        "/app/axiom.mjs",
+        "/app/internal/cpu-worker-owner.mjs",
+        "/app/api/axiom.mjs",
+        "/app/api/internal/controller.mjs",
+        "/app/api/internal/values.mjs",
+        "/app/internal/cpu-worker-client.mjs",
+        "/app/internal/cpu-worker-build.mjs",
+        "/app/internal/axiom.mjs",
+        "/assets/axiom.data",
+        "/assets/axiom.wasm",
+        "/app/pointer_input.mjs",
+        "/app/text_input.mjs"
+      ],
+      "CSP": {
+        "elapsedMs": 2.600000023841858,
+        "error": "Error: WORKER_MODULE_FAILURE:undefined",
+        "quotaAfter": {
+          "bytes": 0,
+          "ok": true
+        }
+      },
+      "canonical_after": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "00000000000000000000000000000001",
+        "eraserMode": 2,
+        "generation": "1",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "0c2a7e5bf3e69634179205f7fe781293",
+          "ordinal": "1",
+          "presentedGeneration": "1",
+          "runtimeEpoch": "1"
+        },
+        "objects": 1,
+        "primary": "0c2a7e5bf3e69634179205f7fe7812dc",
+        "selected": [
+          "0c2a7e5bf3e69634179205f7fe7812dc"
+        ],
+        "selectionMode": 0,
+        "selectionRevision": "2",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 700,
+          "width": 900
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 1
+      }
+    }
+  ],
+  "offline_reused": ".aegis/results/G5-CPUW1-repair-r1/package-consumer.json",
+  "no_private_businessAPI_added": true,
+  "no_asyncUp": true
+}

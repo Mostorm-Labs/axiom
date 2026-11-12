@@ -1,0 +1,59 @@
+{
+  "status": "USER_AUTHORIZED_DEVELOPMENT_CHECKPOINT",
+  "branch": "codex/g5-cpu-worker",
+  "base": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "tag_requested": false,
+  "scope": "Publish existing sharedC++/WASM CPUWorker foundation, Runtime-owned pending partial-erase orderedcommit and Render historicalpath custody; startmatchingcandidateDemo. No new productionbehavior or SDKcontractchange.",
+  "implementation": {
+    "CW1": "Accepted CPU-only independent WASM Worker infrastructure",
+    "CW2": "Implemented pendingUp/orderederase/headcommit/historypathreuse; real1600/7200two commits+presents confirmed",
+    "CW3": "Notimplemented: immediate shape/sticky/table/image creation/dragwhilepending. Candidategatescompetingcanonicalmutations; ordinarydefaultOFF."
+  },
+  "known_failures": [
+    "7200Up→settled52.2027s incl16localnewpathWorkercompute44.6765s",
+    "1600total7.1786s vsnormal5.0287s",
+    "Snapshotencoded35,456,391bytes exceedsdecode33,554,432limit",
+    "Heldpendingnavigation/feedback strictpixels andactualfailurebrowserclosure notcomplete"
+  ],
+  "prior_result": {
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1/result.json",
+    "sha256": "e83d3a36bf08a8a3ce00072725d1300b1512682c9ec960005410ad9d411e42de"
+  },
+  "source_preflight": {
+    "files": 1228,
+    "all_hash_match": true
+  },
+  "test_policy": "Freshfocusednative+JS/privateWorker+Python+runtimeboundarychecks; userDemo smoke separate from prior frozen performance sampling, no claims of fullG5completion.",
+  "verification": {
+    "native": {
+      "tests": 4,
+      "failures": 0,
+      "log": "native.log"
+    },
+    "Node": {
+      "tests": 20,
+      "failures": 0,
+      "log": "node.log"
+    },
+    "Python": {
+      "tests": 7,
+      "failures": 0,
+      "log": "python.log"
+    },
+    "runtime_boundaries": {
+      "contracts": 120,
+      "log": "boundaries.log"
+    },
+    "source_added_whitespace": 0,
+    "userDemo": {
+      "url": "http://127.0.0.1:4328/example.html",
+      "actual_IAB_loaded": true,
+      "visible_status": "0 objects · 0 selected · Zoom 1.00",
+      "worker_assets_requested_by_browser": true,
+      "assets_HTTP_hashmatched": true,
+      "formal_perf_acceptance": false
+    },
+    "diff_check": "PASS with cr-at-eol preservingexistinglineendings",
+    "native_build": "native-build.log"
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "schema": "g5-cpu-pending-erase-result-v1",
+  "task_id": "G5-CPUW2-pending-erase-r1",
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "result_revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package": {
+    "path": ".aegis/packages/G5-CPUW2-pending-erase-r1/package.json",
+    "sha256": "1d79529e4c27d864e0a12bd54e1792f0d0a023cd6abb71332bd6e42de07fc241"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1",
+    "artifact_manifest": "artifact-manifest.json"
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/source-delta.patch",
+    "sha256": "9f9243ecbb1ce5fb544eb8cf024b9b3edb97a20e72c024e4b0ad51911abc001b",
+    "includes_accepted_CW1_CWR_dirty": true
+  },
+  "evidence_input_refs": {
+    "PackageBindingPreflight.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/PackageBindingPreflight.json",
+      "sha256": "007181b4a546b32151b8e27f5e539f226efa1c44710b5343909f1f5e06ad496c"
+    },
+    "EvidenceContractPreflight.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/EvidenceContractPreflight.json",
+      "sha256": "d6a8dc4d33ce1eb6d36b40e18f9e18153be870d41ce61045f91db2f177021818"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/implementation-design.json",
+      "sha256": "2f12559c2e31316c6a1ce6599a6e3e7626d8f4c694f8416977f2eea44b9f088d"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/native-red.json",
+      "sha256": "a82ed42eae8a37e156c3fe5891707ed03edef45fc622cd746d06ffd016cce45c"
+    },
+    "native-green.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/native-green.json",
+      "sha256": "d4e0ebfdf16687a5818490ae8591f19a6cc790401affb43fdf2293e6421dc285"
+    },
+    "up-admission.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/up-admission.json",
+      "sha256": "7f76ff35cafe49da10db79252f57eb88232f3196aec9267d9b42160954ab970f"
+    },
+    "numeric-parity.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/numeric-parity.json",
+      "sha256": "777d623488fb48fb37a3b175870d89fd79e212eb758c927c6989f9c8a98883ae"
+    },
+    "ordered-commit.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/ordered-commit.json",
+      "sha256": "6619e2299d2edd4dc3bd03d80284d553bb93cb205096b45ac77ffde6f9dd16ed"
+    },
+    "feedback-navigation.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/feedback-navigation.json",
+      "sha256": "8256dd76ee330f67978b6d185e9bf8a6fce2940f5347aa41742bfa9dc1ec7680"
+    },
+    "budget-lifecycle.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/budget-lifecycle.json",
+      "sha256": "0a7d58d96a03baf2782afae796f902c44ff1b9b5a26ccccb901f384449074451"
+    },
+    "package-consumer.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/package-consumer.json",
+      "sha256": "e1ed416b0d6e9f6d3f186b4d12c103bfad5a8d85e9d3a7d0b019f975894dcd1a"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/regressions.json",
+      "sha256": "59f06c7e26a286ddf1fc95ad37c49bfb954499666c7362f4a1a5109892f7a472"
+    },
+    "sampling-plan.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/sampling-plan.json",
+      "sha256": "66d4d7a04fa50f6344157d3c5520709a2c989f910bf35772cf333d0dc3bee099"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/sampling-ledger.json",
+      "sha256": "dee95918c86787c139f1f54e6ab4e52476185e9c46f45a7876dcffbc9f146cad"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/source-manifest.json",
+      "sha256": "085a6df320fbfd93bb6a72119c023b85165e3612f847daa8ec3b0a53b33f899c"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/SDK-manifest.json",
+      "sha256": "c943e098195ef1c952ae01e6ea17b3e0b69d8ebddd76ce84240de4b83b22d9ca"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/cleanup.json",
+      "sha256": "a90f401f8c6190e003c629b3fde94beac6e349c9e0046004b378abbdbdab21ee"
+    },
+    "next-step-inputs.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/next-step-inputs.json",
+      "sha256": "be79cc0a7b7b30106600e0c81f7feebd928cb381a8044de2b0cc0b6d51651987"
+    },
+    "scheduler-and-tail.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/scheduler-and-tail.json",
+      "sha256": "b1607bb0d159953dc1ec78cde19941c2d10134d13664dd441c731481eaaf97bf"
+    },
+    "fixture.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/fixture.json",
+      "sha256": "f819c0dc0f8df5fc823855fa9ac685813323e17c39f3b8119b2bb869d10104a8"
+    },
+    "prior-freeze-preservation.json": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/prior-freeze-preservation.json",
+      "sha256": "e5f3ca768d0a6e3a30cc364c9c3a7f495b8132fd1e80fbac375b82035910903c"
+    }
+  },
+  "failed": {
+    "window": "G5CPUW2-PAIRS",
+    "case": "candidate7200",
+    "assertion": "canonical convergence60s",
+    "Up_ms": 0.5,
+    "at_failure": {
+      "generation": "1",
+      "presentedGeneration": "0",
+      "contacts": 0,
+      "canUndo": false
+    },
+    "later_progress": "A callbackUp+47.7512s; B callbackUp+120.3099s duringfailure/cleanup andlaterframe. Doesnotestablishpermanentdeadlock; doesnotpass60s.",
+    "capture": "local-web/G5CPUW2-PAIRS/candidate7200/raw.json +failure.rgba",
+    "missing": "No privatefacts/Workerledger/operationbytes savedforprimary7200 failure; donotfabricate fullterminalchain",
+    "remaining_windows": "FEEDBACK/FAILURES NOT_RUN",
+    "decision": "No production/driver/SDK modifications or retry after frozen failure"
+  },
+  "actual_pair1600": {
+    "oldUp_ms": 3957.5,
+    "candidateUp_ms": 0.30000007152557373,
+    "oldUp_to_settled_ms": 5093.899999976158,
+    "candidateUp_to_settled_ms": 11258.700000047684,
+    "tail_ratio": 2.210231845953077,
+    "same_two_operation_bytes": true,
+    "same_final_Undo_Redo_snapshot_bytes": true,
+    "raw_pixels": "Eachpair1pixelabove2 delta14/18/16; unqualifiedwithoutindependentCPUAAoracle",
+    "no_relative_performance_PASS": true
+  },
+  "implemented_partial": [
+    "InternalcandidateOFFdefault gate withrealWorkerready beforebind",
+    "ExistingCanvasEditingRuntime 8slots/8193tracecapacity/Upmove/contactterminal, pendingorderedhead",
+    "C++samekernel8192Sweeptransport and7200originalleftfoldpath;64MiBfixedheapunchanged",
+    "Full8wordownertokenmatch includingfailure, boundedrequest/completioncustody",
+    "TemporarypinnedRenderprovenQueryimport usedbyoriginalexactownerdecision;newquerymainunion0",
+    "40targets/16fullgeometrydistinctjobgrouping perintent, originalfinalcandidateorder",
+    "Sharedbasewrite vscompetingcanonicalBusy, capturedpendingradius, A+Bpendingtransientmask path",
+    "Boundedonceexecutorrestoreattempt andunavailableterminal guard;closepreflightbeforeterminate",
+    "normalOFF/candidateON matching42fileSDKs/publicexports/types/versionlocks unchanged"
+  ],
+  "native_evidence": {
+    "original_UpRED_ms": 3210.058042,
+    "original_Upnewquery_unions": 25600,
+    "newnative7": 7,
+    "additionalfault3": 3,
+    "originalkeepers27": 27,
+    "fresh_exact634_rows": 634,
+    "mismatches": 0,
+    "original7200_path_equal": true,
+    "native_Up_ms_range": [
+      0.000875,
+      0.004167
+    ],
+    "native_mainnewquery_union": 0,
+    "residual_exact_observed_ns": 198957834,
+    "residual_owner_observed_ns": 204467750,
+    "limitations": "FocusednativepassesnotfreshWASMtodefaultactivation; some laterlifecyclechangesrequirematchingfutureregressionclosure"
+  },
+  "sampling": {
+    "starts": 1,
+    "max_starts": 3,
+    "charged_seconds": 190,
+    "cap_seconds": 600,
+    "remaining_starts": 2,
+    "remaining_seconds": 410,
+    "unused_allowance_not_retry_authority": true,
+    "source_stable": true,
+    "driver_sha256": "a912e1da62045e8145c7886ce280c7b2c53b31daf966dba4935fa93ea71877ad",
+    "runner_sha256": "dbed9a0d4d0177518cfdf4e061b8db6dcac13e79478bdeb55d6be1796cfcd05b",
+    "owned_cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "SDK": {
+    "normal_WASM": "46f41f62bdb6a987347568d9d9e07a5c2b8d221244e7c1c8eed0bcd24f2e881a",
+    "candidate_WASM": "89271accb55ec56122701a34dfae37e791ebf5cc527b6e86144d17eec87844f1",
+    "worker_WASM": "4dec26eb6f7e2b2ad8e634fc0b1b7d492b5212cbb0015241e60dc44022037e9f",
+    "kernel": "a95f33a1a65aa29e7566ce87b78f3133",
+    "normal_default_OFF": true,
+    "candidate_not_ready_for_userDemo": true
+  },
+  "hypothesis": "See next-step-inputs: temporaryprovenQuerynotretainedforcanonicalhistory; laterget(true)7200constructiondenied8MiB\u2192mainfullhistoryerasePath possible repeatedwholeunion; controlstatic hypothesis needs offlineownerwitness/repairpackage.",
+  "not_proven": [
+    "ActualpendingA+Bwheelpan/pinchfeedbackandpixels",
+    "Realfatalexecutorrestore/contextloss/DataPortbarrier newcandidate",
+    "IndependentCPUstrictAApixels",
+    "Full7200orderedcanonical/receipt closure",
+    "Alloversize/radius/ownercommandboundary edgecases and externalnpmpackageconsumer"
+  ],
+  "preservation": {
+    "prior_CW1_CWR_results_raw_SDK": true,
+    "accepted_dirty": true,
+    "userDemo4298_and4324_4325_4326_4327": true,
+    "no_existing_tab_document_access": true
+  },
+  "new_Demo": false,
+  "no_commit_push": true,
+  "no_async_default_activation": true,
+  "no_CW3": true,
+  "no_official_G5_P34_or_performance_PASS": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "next": "Await independentcontrolrootcauseclassification andexactrepairpackage; no freshsampling or production repair undersealedrun"
+}

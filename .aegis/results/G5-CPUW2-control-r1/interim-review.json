@@ -1,0 +1,99 @@
+{
+  "status": "INTERIM_REVIEW_NOT_ACCEPTANCE",
+  "paired_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "native_observations": {
+    "runtime-twocommit.json": {
+      "sha256": "faebde464fcbe0bed64ca0736c9d7a7693e8a0eaf1138271c11716228d0c2eec",
+      "observed": {
+        "Up_ms": 0.000958,
+        "committed": 2,
+        "error": "",
+        "failed": 0,
+        "generation": 2,
+        "newquery_unions_main": 0,
+        "noops": 0,
+        "opportunities": 118,
+        "pending": 0,
+        "job_count": 32
+      }
+    },
+    "runtime-noop.json": {
+      "sha256": "9d3556a82487eae4127766e9722c4ddc09f85879068e2928bced9c2f1e2eac4b",
+      "observed": {
+        "Up_ms": 0.000917,
+        "committed": 1,
+        "error": "",
+        "failed": 0,
+        "generation": 1,
+        "newquery_unions_main": 0,
+        "noops": 1,
+        "opportunities": 118,
+        "pending": 0,
+        "job_count": 32
+      }
+    },
+    "runtime-long.json": {
+      "sha256": "94910baa51a6d91a8d5ab0fb36d946f09569e557944f7ddbb4854888de604cd3",
+      "observed": {
+        "Up_ms": 0.001291,
+        "committed": 2,
+        "error": "",
+        "failed": 0,
+        "generation": 2,
+        "newquery_unions_main": 0,
+        "noops": 0,
+        "opportunities": 118,
+        "pending": 0,
+        "job_count": 32
+      }
+    },
+    "runtime-failure.json": {
+      "sha256": "0d506605fce3e98bd1fa68f607733bc651b909cd41cf13e99f58b24194bc96d6",
+      "observed": {
+        "Up_ms": 0.000875,
+        "committed": 1,
+        "error": "CPU_PENDING_WORKER_FAILED",
+        "failed": 1,
+        "generation": 1,
+        "geometry_reuses": 24,
+        "max_exact_ns": 4859667,
+        "max_owner_ns": 17444875,
+        "newquery_unions_main": 0,
+        "noops": 0,
+        "opportunities": 62,
+        "pending": 0,
+        "job_count": 17
+      }
+    },
+    "runtime-context.json": {
+      "sha256": "ce68e54cb575573d972444aefa647b17924ee53b2effce5c5e63b83bdf6d8062",
+      "observed": {
+        "Up_ms": 0.001125,
+        "committed": 2,
+        "error": "",
+        "failed": 0,
+        "generation": 2,
+        "geometry_reuses": 48,
+        "max_exact_ns": 198957834,
+        "max_owner_ns": 204467750,
+        "newquery_unions_main": 0,
+        "noops": 0,
+        "opportunities": 118,
+        "pending": 0,
+        "job_count": 32
+      }
+    }
+  },
+  "independent_verification": {
+    "command": "node --experimental-vm-modules --test verification/tests/g5_cpu_pending_root.test.mjs verification/tests/g5_cpu_worker_repair_root.test.mjs verification/tests/g5_cpu_worker_repair_scheduler.test.mjs verification/tests/g5_cpu_worker_transport.test.mjs",
+    "observed_exit_code": 0,
+    "tests": 8
+  },
+  "remaining": "Frozen native failure/bounds/metadata plus real browser A/B/nav pixels, canonical operation/numeric proof, 3 windows; no claim full CW2 or all-object goal complete.",
+  "test_source_hashes": {
+    "verification/tests/g5_cpu_pending_root.test.mjs": "63ff0e9fe28ebab41aecd01950e0e8c80ae1858ff9976be853f4765d3264b80b",
+    "verification/tests/g5_cpu_worker_repair_root.test.mjs": "d0d94050ff9a7469e2a877795aa881543e67dbb5d6ef09b90f43246fac0f9784",
+    "verification/tests/g5_cpu_worker_repair_scheduler.test.mjs": "2480aa1705e7816c8608030609c2c646bef6457adcd32fd683e5ccb9736ba362",
+    "verification/tests/g5_cpu_worker_transport.test.mjs": "2e2cb4d05cfaa7012bce1ff427376ae18da3a18555923cc00d672100bce5603a"
+  }
+}

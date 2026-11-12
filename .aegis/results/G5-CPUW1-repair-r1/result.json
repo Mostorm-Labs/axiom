@@ -1,0 +1,187 @@
+{
+  "schema": "g5-cpu-worker-repair-result-v1",
+  "task_id": "G5-CPUW1-repair-r1",
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "result_revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package": {
+    "path": ".aegis/packages/G5-CPUW1-repair-r1/package.json",
+    "sha256": "c3fe4a874af1f03032be00297c77c111336bd90736994ec8c68b3afaa2b725a1"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-CPUW1-repair-r1",
+    "artifact_manifest": "artifact-manifest.json"
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-CPUW1-repair-r1/source-delta.patch",
+    "sha256": "e3fa28baccaa710635981ef42bce424753a1b57708944131779154c403d6e1a2",
+    "includes_accepted_CW1_dirty": true
+  },
+  "evidence_input_refs": {
+    "PackageBindingPreflight.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/PackageBindingPreflight.json",
+      "sha256": "2ddd54c403e7e40b8cf426f6a89a7e530c771f5820dbce22d1ed3a06eb47338c"
+    },
+    "EvidenceContractPreflight.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/EvidenceContractPreflight.json",
+      "sha256": "3b540a4aa2fdf83ae40150af680b80ca0fc9680fa0e81ffc7d372be0ccb33f9c"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/implementation-design.json",
+      "sha256": "1b5acace48e9402fb610a152ca7384dd323012e799ee1978e1ae2b618b085e7a"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-red.json",
+      "sha256": "028aa001343ec0c1773ae9bdbf95c39636da46e2643721337b3a217e02523f34"
+    },
+    "native-green.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-green.json",
+      "sha256": "c4e2de35e0fa900a5cb9238c36bb5c5168cea3e054a40a34bc4d706174e6c02c"
+    },
+    "scheduler-pairs.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/scheduler-pairs.json",
+      "sha256": "d0066bed1bbd76561aeb9dbcc2bbcb1099bf7e4325e0adc3bcd568752de89244"
+    },
+    "root-lifecycle.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/root-lifecycle.json",
+      "sha256": "ae0f4b3d33cc2412e0cc92170551fd667729b360cbc7d095bdb180d1f4e4ec36"
+    },
+    "package-consumer.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/package-consumer.json",
+      "sha256": "fbcb67e3c6de18a3dedb92e30104283c75bec97281ea0691a5707b398b297779"
+    },
+    "protocol-lifecycle.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/protocol-lifecycle.json",
+      "sha256": "3ec58eed42a769432a6863db0c1f4fa40c97a53e2466642c7cb74c9b2459a764"
+    },
+    "numeric-parity.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/numeric-parity.json",
+      "sha256": "ebaecba086c0885870f655319c1e70346b92957f028041fc89dbdf93dfbc9089"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/regressions.json",
+      "sha256": "c8a3732ad864e34f2e6e92d1c2a4743fff41b3b4479441b06e4c0341ff7cba5d"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/source-manifest.json",
+      "sha256": "28b8f2086dd61ea8806d9bf21ef1a4a20e11bfb746b87f5047b77be32e0f2b06"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/SDK-manifest.json",
+      "sha256": "cc848a763d76f4fafae90d8c3080071b244405f748b7756ab058fcd45aba1498"
+    },
+    "sampling-plan.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sampling-plan.json",
+      "sha256": "76345cfa592bf37490d525993abc99fb03132a0e19691d6d3270d83854265da1"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sampling-ledger.json",
+      "sha256": "9e74dc21191fb50347303fc0aa29af4cb742eb5a78bd831652e8fcfd015f61f5"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/cleanup.json",
+      "sha256": "0e15e77e97e638beeb2558b37c83df9be9670353ee23b470582ce9324112ea66"
+    },
+    "next-step-inputs.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/next-step-inputs.json",
+      "sha256": "a6655d823faabb23570e43a632c463b6ac25788a2b5a1a19ff60395768df877a"
+    }
+  },
+  "blocking_failure": {
+    "test": "G5LongQueryPreparationPath",
+    "first_attempt": {
+      "suite_tests": 27,
+      "passed": 26,
+      "failed": 1,
+      "final_remainder_unions": 7,
+      "prepared_segments": 25433,
+      "path_equal": true,
+      "log": "native-keepers.log",
+      "junit": "native-keepers.xml"
+    },
+    "one_idle_serial_recheck": {
+      "tests": 1,
+      "failed": 1,
+      "final_remainder_unions": 3,
+      "prepared_segments": 25597,
+      "path_equal": true,
+      "log": "native-prefix-recheck.log",
+      "junit": "native-prefix-recheck.xml"
+    },
+    "meaning": "The existing frozen mechanical assertion requires zero remaining unions after fixed wall-clock-bounded preparation opportunities. It failed while the resulting path still equals the independent original.",
+    "source_fact": "Existing exact-query/kernel/test hashes unchanged from accepted CW1. No claim the repair introduced the failure or that it is resolved.",
+    "control_baseline_audit": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/deadline-test-cause-audit.json",
+      "sha256": "f00389da531e3e544e8b423c530e32912b776ad491e15bfae36ca03719f0e150",
+      "finding": "Old frozen binary prepared25589<25600 but local0 happened complete. This suggests an oracle precondition problem; no verification correction applied here."
+    },
+    "decision": "Stop after the single idle recheck, preserve both failures, do not relax test/algorithm/budget or rerun until green. Control is preparing an exact verification correction separately."
+  },
+  "valid_partial_scope": {
+    "production_delta_from_accepted_CW1": [
+      "sdk/common/session.cpp",
+      "sdk/web/axiom.mjs",
+      "sdk/web/internal/cpu-worker-client.mjs",
+      "sdk/web/internal/cpu-worker-thread.mjs"
+    ],
+    "scheduler": "Worker MessageChannel posted tasks replace nested per-step setTimeout; same8segment/2ms kernel slice, each task bound to job handle/key, starts and partial cancellation observed by sparse messages. No microtask drain or full synchronous path loop.",
+    "root_assets": "Private Worker base uses existing normalized absolute assets. Root private binding removed only after canonical close succeeds.",
+    "close_barrier": "PUBLICATION_PENDING preserves original DOCUMENT_CLOSING semantics. Private basis/observe/release of existing grants allowed; reserve and new edits remain denied.",
+    "cleanup": "Best-effort per-custody cleanup preserves other releases on individual exceptions; executor is terminated before grant release.",
+    "behavior_RED_GREEN": "Actual old source failed relativeURL, pendingclose binding and posted-task assertions; same source oracles pass after repairs.",
+    "offline_tests": "14 Node tests including actual client/thread/root/consumer VM, HTTP mapping and CSP header; 11 Python tests; SDK TypeScript;4 existing SDK scripts;120 boundaries.",
+    "numeric": "634 original exact decisions unchanged;26 other native keepers passed; CPU kernel and exact-query/test source and Worker WASM unchanged from accepted CW1.",
+    "package": "New42-file matching installed/npm package built and hashed. Public root exports/types/version and dependency locks unchanged. No fresh real browser consumer qualification."
+  },
+  "not_proven_in_this_run": [
+    "Fresh paired old/new16query total<=70% baseline and unchanged path bytes under posted-task scheduling.",
+    "Real browser cancellation fairness and complete all-generation admission/terminal ledger.",
+    "Real DataPort PUBLICATION_PENDING close, exact packet release, retained binding and successful retry.",
+    "Outside /app with /assets using relative and absolute assetBaseURL, plus real CSP worker-src none failure with quota0 and usable canonical root."
+  ],
+  "sampling": {
+    "starts": 0,
+    "max_starts": 3,
+    "charged_seconds": 0,
+    "cap_seconds": 420,
+    "all_planned_windows": "NOT_RUN_NATIVE_PREFLIGHT_BLOCKED",
+    "no_retry": true
+  },
+  "SDK": {
+    "main_WASM_sha256": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682",
+    "worker_WASM_sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83",
+    "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc",
+    "new_assets_freshly_built_but_not_browser_qualified": true
+  },
+  "retained_limits": [
+    "8steps/2ms",
+    "fixed64MiBWorkerheap",
+    "1MiBinput/output",
+    "16MiBtransport",
+    "queue8",
+    "resident8MiB/512",
+    "desktop256/512/64"
+  ],
+  "remaining_authorized_goal": {
+    "CW2": "Nonblocking Up / immutable pending intent / owner-validated ordered atomic commit remains unimplemented.",
+    "CW3": "Immediate subsequent erase/navigation/shape/sticky/table/image editing feedback with ordered canonical handoff remains unimplemented."
+  },
+  "prior_findings_preserved": [
+    "CW1 assetBase/CSP and first-executor terminal proof gaps not backfilled",
+    "1900primitivecap and no7200/largeFilled support claim",
+    "independent800request is not cross-message append/resident reuse",
+    "LQP prior diagnostic gap and known context/idle findings unchanged"
+  ],
+  "all_old_raw_SDK_Demos_preserved": true,
+  "new_Demo": false,
+  "no_commit_push": true,
+  "no_asyncUp_activation": true,
+  "no_official_G5_P34_or_performance_PASS": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "next": "Independent control review and exact verification correction; do not edit the frozen test or start a browser without that subsequent package."
+}

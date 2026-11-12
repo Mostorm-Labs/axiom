@@ -1,0 +1,63 @@
+{
+  "status": "EXACT_PRODUCTION_REUSE",
+  "delta": {
+    "runtime/render/tests/long_query_preparation_test.cpp": {
+      "accepted": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5",
+      "current": "8a241fd54b8e7238a779b80f3e42bff228ededb45a3345571c0597cfa596fa81"
+    },
+    "verification/runners/g5/cpu_worker_repair_runner.py": {
+      "accepted": "947e1af47b4728c26fa75624dab085154df54fcccd74b663225a6c032b7046cc",
+      "current": "44d3fd538f819707ee81b88635ddbbd266b8c7518ab8e3c79d63a7723090899f"
+    }
+  },
+  "reused_evidence": {
+    "numeric-parity.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/numeric-parity.json",
+      "sha256": "ebaecba086c0885870f655319c1e70346b92957f028041fc89dbdf93dfbc9089"
+    },
+    "package-consumer.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/package-consumer.json",
+      "sha256": "fbcb67e3c6de18a3dedb92e30104283c75bec97281ea0691a5707b398b297779"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/implementation-design.json",
+      "sha256": "1b5acace48e9402fb610a152ca7384dd323012e799ee1978e1ae2b618b085e7a"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/regressions.json",
+      "sha256": "c8a3732ad864e34f2e6e92d1c2a4743fff41b3b4479441b06e4c0341ff7cba5d"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/SDK-manifest.json",
+      "sha256": "cc848a763d76f4fafae90d8c3080071b244405f748b7756ab058fcd45aba1498"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-red.json",
+      "sha256": "028aa001343ec0c1773ae9bdbf95c39636da46e2643721337b3a217e02523f34"
+    },
+    "node-final.log": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/node-final.log",
+      "sha256": "c0f4daf8af36e726be73d3f4dfc87cd70d9231873e3c0c654cae2926f48a6d6a"
+    },
+    "python-final.log": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/python-final.log",
+      "sha256": "378835dfcd1a3745d724bbc79aa32b8ce02046db20c8d9d4d5c73615d1fe5954"
+    },
+    "sdk-node.log": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sdk-node.log",
+      "sha256": "6efd8b356f5ee96db903d761b02dc189e80a2dff9b9328c7c8c1c296a5892422"
+    },
+    "sdk-types.log": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sdk-types.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "boundaries-final.log": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/boundaries-final.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  },
+  "production_unchanged": true,
+  "main_wasm_exact": true,
+  "worker_wasm_exact": true,
+  "reason": "Only native progress test and Python runner package/root identity changed since accepted repair r1; all production and SDK evidence exact"
+}

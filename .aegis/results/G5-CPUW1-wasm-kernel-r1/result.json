@@ -1,0 +1,169 @@
+{
+  "schema": "g5-cpu-worker-result-v1",
+  "task_id": "G5-CPUW1-wasm-kernel-r1",
+  "status": "BLOCKED",
+  "blocker": "FROZEN_PROOF_INCOMPLETE",
+  "result_revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package": {
+    "path": ".aegis/packages/G5-CPUW1-wasm-kernel-r2/package.json",
+    "sha256": "ff4a4a8589c3345f9ca0d91965105c42f603036e16a8775de954198cdea21e99"
+  },
+  "scope_correction": {
+    "path": ".aegis/packages/G5-CPUW1-wasm-kernel-r2/scope-correction.json",
+    "sha256": "47d5b0fc75f3e3469dd3f1cf4902a5988af9b03eb866fffc219a5a73d08f4f7b"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1",
+    "artifact_manifest": "artifact-manifest.json"
+  },
+  "delta": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-delta.patch",
+    "sha256": "a376eb61ac161d9028b1ac3fb513949fba2e2403cded5e76384b6b7e06f1408e"
+  },
+  "evidence_input_refs": {
+    "PackageBindingPreflight.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/PackageBindingPreflight.json",
+      "sha256": "9a7f3f14030ca09717e63211b9404e1c8be582597ceed6008d281cbc9536ed82"
+    },
+    "EvidenceContractPreflight.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/EvidenceContractPreflight.json",
+      "sha256": "8349b5987ea595e80d807d521414233c97a5ce96a174db6b79d5db02b1a229bb"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/implementation-design.json",
+      "sha256": "99ad173b514167b3f9fea813d704855c101760cb9e4a40dafcfe4718afa41d06"
+    },
+    "cause-audit.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/cause-audit.json",
+      "sha256": "7e6a4b0239a79f444f479b88a2678cf2e1f852fe37f4423ad7a5829888a1a97a"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/native-red.json",
+      "sha256": "8b87c49e45fdb0950dba0d0c24b4e95779d26dbf0b0a5ec3f5296ebc51536b68"
+    },
+    "native-green.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/native-green.json",
+      "sha256": "8ca6d33ca021c11b31f71fcf57034cf5e161966c558eaa6ae7e7011f8ca8570b"
+    },
+    "numeric-parity.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/numeric-parity.json",
+      "sha256": "f2a6901b8ab9bc1c91853911df8ffddaa24bc06e8db1bc57b35d03c20c7be7df"
+    },
+    "exact-parity.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/exact-parity.json",
+      "sha256": "2305ca26eb841641618148afbbe3660260f1ad7b74a3ed982c732f6f13530551"
+    },
+    "protocol-lifecycle.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/protocol-lifecycle.json",
+      "sha256": "1dac20641b467795357ab3d2ce86afdabe0b7a579e70dbd841f226c2db74d402"
+    },
+    "budget-accounting.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/budget-accounting.json",
+      "sha256": "2cdd5b25af0df8dfc4fb86fcf4f9181bfb07a845570f3bff49decd6f7ee3d41b"
+    },
+    "web-isolation.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/web-isolation.json",
+      "sha256": "53666d33f786814aaeab95013127cc386d4e63d1f1811667e3942c823c59f650"
+    },
+    "package-consumer.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/package-consumer.json",
+      "sha256": "886f7c9128ae207e8830f13aa1b1a1058a0d23896ce6539b491ebf8870ad5fc1"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/regressions.json",
+      "sha256": "733d20493d4a868fb562535f90adc38eab162f5a567e315a44d9775c91ae0699"
+    },
+    "sampling-plan.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/sampling-plan.json",
+      "sha256": "80b1f13b484d59e32bb8a220a7e4e5b76154c244d52dee41e4c3f59fd8f22f2c"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/sampling-ledger.json",
+      "sha256": "d8520da81b2db94dbe02591be306615d6ccb283ae89f6adf723f8500f9b0a9a2"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/cleanup.json",
+      "sha256": "ca9747a4c07e21c150d8d58a34c5db51e17dd050ce6b942707338dc6292c2eaf"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/source-manifest.json",
+      "sha256": "475cb735ac43d742c6f1a2ddea3bcf760e157f962831ffcccbf4e19b282c678d"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/SDK-manifest.json",
+      "sha256": "a11687a730b1c84ff57166b1277be747509c664c7fef653987476c5ae335964d"
+    },
+    "next-step-inputs.json": {
+      "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/next-step-inputs.json",
+      "sha256": "87a4afcf0bb4d37ba19b57a4ccc0c4168471e919084ab4b96d792cb4ba204147"
+    }
+  },
+  "blocking_missing_proofs": [
+    {
+      "obligation": "CW1-PACKAGE",
+      "missing": [
+        "explicit assetBaseURL relocation",
+        "real CSP worker/module-blocked failure"
+      ],
+      "actual": "outside-repository npm package at default asset base and missing-module 404 were exercised; those do not replace the missing cases"
+    },
+    {
+      "obligation": "CW1-BIND",
+      "missing": [
+        "first lifecycle executor cumulative admitted/terminal ledger after queue pressure"
+      ],
+      "actual": "queue promises were awaited but its cumulative ledger was not saved; executor3 and parity executor1 have complete persisted ledgers"
+    }
+  ],
+  "valid_partial_scope": {
+    "production": "Original Render erase monolithic and stable-prefix builders consume shared C++ f32 segment stroke and sequential left-fold kernel. Separate CPU-only WASM has independent task-owned immutable input/cursor/path.",
+    "numeric": "19 actual Chrome Worker results match independently anchored native path bytes; 1 paired main-WASM result matches Worker/native; 634 original exact decisions unchanged.",
+    "ownership": "Active root Runtime private value bridge reserves existing SkiaRenderer ResourceBudgetManager heap/transport grants; no Worker Runtime, Scene, document, GPU or operation owner.",
+    "protocol": "Real cancellation then successor Ready, malformed request Failed, two-runtime foreign rejection, bounded transport refusal, missing module failure/recovery; VM covers initialization custody and cancelled old timer.",
+    "verification": "27 native keepers; 5 new client/thread Node tests; 4 existing SDK scripts; 8 Python package tests; SDK TypeScript and 120 boundaries.",
+    "package": "Matching 42-file normal installation/npm package including 6 private sidecars; root exports/types/version unchanged; outside-repository root create/Undo/Redo exercised.",
+    "sampling": "Exactly 3 frozen windows, 35/390 charged seconds, source/SDK stable, all owned browser workers cleaned."
+  },
+  "actual_costs": {
+    "sixteen_1600_segment_queries_compute_sum_ms": 4392.099999427795,
+    "sixteen_queries_total_sum_ms": 22850.900000095367,
+    "unattributed_yield_transfer_schedule_difference_ms": 18458.800000667572,
+    "median_compute_ms": 273.3500000834465,
+    "median_total_ms": 1421.6499999761581,
+    "actual_long_worker_main_heartbeat_ticks": 287,
+    "main_heartbeat_max_gap_ms": 6.899999976158142,
+    "max_observed_single_union_ns": 3700000,
+    "timer_clamping": "Hypothesis, not established cause: setTimeout(0) between approximately200 eight-segment steps. No total-speedup or async-Up claim."
+  },
+  "implementation_risks_and_remaining": [
+    "root.close unbinds private owner before canonical close; PUBLICATION_PENDING/CLOSE_FAILED retry may lose private binding. Frozen source unchanged; follow-up required.",
+    "Sidecar count<=1900 and original8MiB construction admission do not cover 7200-sample30s strokes or large nonuniform Filled command expansion.",
+    "Request16 is an independent800-segment complete request. Cross-message append, source-resident dedup and incremental reuse are not implemented.",
+    "Result-custody/import contract and transfer-to-another-consumer lifetime need follow-up; logical grant release does not prove physical GC/heap retirement.",
+    "Main-WASM reference owns an additional64MiB grant but physical retirement after dropping its reference was not independently observed.",
+    "Cancel during real module initialization/root close and actual allocation exhaustion were not fully exercised in Chrome; VM/native scope is stated separately.",
+    "Prior LQP FROZEN_PROOF_INCOMPLETE and known context/idle findings are preserved, not retrospectively closed."
+  ],
+  "CW2": {
+    "implemented": false,
+    "goal": "Nonblocking Up with immutable pending intent and owner-validated ordered atomic commits; input terminal is not commit/presentation."
+  },
+  "CW3": {
+    "implemented": false,
+    "goal": "Immediate subsequent erase/navigation/shape/sticky/table/image feedback with ordered canonical handoff."
+  },
+  "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc",
+  "main_WASM_sha256": "05bcebc366962ca4efa4a01ce5958d45653a6157aae1a0f5f0d1e6d80c5a9bff",
+  "worker_WASM_sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83",
+  "source_frozen_no_postsample_product_changes": true,
+  "no_commit_push": true,
+  "no_official_G5_P34_or_performance_PASS": true,
+  "all_user_Demos4325_4326_4327_preserved": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "next": "Independent control review of valid partial scope and missing proofs, then controlled scheduling/lifecycle/proof follow-up before CW2. No additional browser, product mutation or activation in this frozen run."
+}

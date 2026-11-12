@@ -1,0 +1,51 @@
+{
+  "obligations": [
+    {
+      "id": "CWR-SCHED",
+      "requirement": "Removeavoidableperstepschedulerwaiting withoutblockingmainorcancel",
+      "oracle": "ActualoldimmutablevsnewWorker16requests sameC++geometry/8segment2mscaps realChrome paired, jobtimestampscomplete; retainoldsetTimeout source asreference, no tuneafterrun",
+      "acceptance": "Fullpathbyteparity16; candidatemainheartbeat andcancelcontrolcontinues; total16querytime <=70%pairedold (oldknown22.85sbutusefreshpair) ORexplicitPERFORMANCE_UNMETblocker. Recordqueue/compute/yield/import/export/endtoend; simpleclockgapnotpurenativetimerproof. No strictCPUdeadlineclaimbeyondindividualOp.",
+      "evidence_required": [
+        "scheduler-pairs.json"
+      ]
+    },
+    {
+      "id": "CWR-ROOT",
+      "requirement": "Privateassets andownercloseconsistent acrossrelocation/failure",
+      "oracle": "Realrootoutsidepackage atseparateapp/assetsURL path, bothrelativeandabsoluteassetBase; moduleworkerblockedbyCSP; rootclose actualLocalOperationSinkpendingpublication andsubsequentrelease/retry",
+      "acceptance": "Relative/absolutefullysamebuildpass; CSPfailswithin5sstartupbound,grant0/noinfinitepromise; failedclosepreservesprivatebinding andcanretryaftercustodyrelease, no fake canonicalcommit/durability. Workerterminatedbeforefloorrelease.",
+      "evidence_required": [
+        "root-lifecycle.json",
+        "package-consumer.json"
+      ]
+    },
+    {
+      "id": "CWR-LEDGER",
+      "requirement": "Everyacceptedtaskallgenerations hasexactlyoneterminal",
+      "oracle": "Fullboundedperexecutoradmittedjobs/outcomes beforeclientclose/beforenextexecutor,actualcancelqueue7andmalformed+error; driverofflinetestsforcingunexpectedterminal/missingmessage",
+      "acceptance": "actualacceptedIDs list equals terminalIDs unique; allgrants/resourcesclosed; foreign/stale/doublecomplete noeffect, unknown/missingrecords block. Recentledger cap64 remains enoughforfrozen<=32case, no unboundedgrow.",
+      "evidence_required": [
+        "protocol-lifecycle.json"
+      ]
+    },
+    {
+      "id": "CWR-PARITY",
+      "requirement": "KeepC++kernelandexistingRender behaviorcorrect",
+      "oracle": "CurrentCW1native27+634originalexact+independent19pathreference+package/TS/120boundaries; affectedactualVMtests",
+      "acceptance": "Originalf32leftfoldandpathbytesunchanged, no publicexports/types/versions/lock/budgetchange; normalUpstillunchanged pendingCW2.",
+      "evidence_required": [
+        "regressions.json",
+        "numeric-parity.json"
+      ]
+    },
+    {
+      "id": "CWR-BIND",
+      "requirement": "Truthfullycompletefinitefreshrepairproof",
+      "oracle": "Frozenpreflight/design/sourceSDKrequestwindowledger/artifactgraph andfailureoutcome",
+      "acceptance": "All3windowsonce, stablehashes,ownedPIDcleanup; allrequiredprovenorstopwithrootcause. PreserveCW1/LQPincompletereports unchanged.",
+      "evidence_required": [
+        "result.json"
+      ]
+    }
+  ]
+}

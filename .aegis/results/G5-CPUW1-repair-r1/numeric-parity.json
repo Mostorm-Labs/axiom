@@ -1,0 +1,41 @@
+{
+  "status": "CURRENT_634_AND_UNCHANGED_KERNEL_QUALIFIED_FRESH_BROWSER_NOT_RUN",
+  "original634_rows": 634,
+  "mismatches": 0,
+  "candidate": {
+    "path": "candidate634.json",
+    "sha256": "67319bdb0eed21bba124ea61271bc78aef07af2a2a76345b164cc0ab595b5e9a"
+  },
+  "original_reference": {
+    "path": ".aegis/results/G5-erase-exact-canonical-r1/A-original634.json",
+    "sha256": "fba3849e177049c6276736434628f98e0af629aad79015a98136e4f33c30eada"
+  },
+  "kernel_and_query_hashes": {
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "accepted": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7",
+      "current": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7"
+    },
+    "runtime/render/src/cpu_exact_path_kernel.cpp": {
+      "accepted": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4",
+      "current": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4"
+    },
+    "runtime/render/src/cpu_worker_protocol.cpp": {
+      "accepted": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee",
+      "current": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee"
+    },
+    "runtime/render/tests/long_query_preparation_test.cpp": {
+      "accepted": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5",
+      "current": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5"
+    }
+  },
+  "sidecar_WASM_unchanged": true,
+  "prior_independent19path_reference": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/numeric-parity.json",
+    "sha256": "f2a6901b8ab9bc1c91853911df8ffddaa24bc06e8db1bc57b35d03c20c7be7df",
+    "scope": "PrioractualWorker originalpaths remain bound; not fresh schedulerpairproof."
+  },
+  "new_pair_pathbytes": {
+    "status": "NOT_RUN"
+  },
+  "path_failure_has_numeric_equality": true
+}

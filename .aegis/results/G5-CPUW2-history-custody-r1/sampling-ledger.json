@@ -1,0 +1,47 @@
+{
+  "schema": "g5-cwh-three-windows-v1",
+  "cap_seconds": 600,
+  "charged_seconds": 126,
+  "attempts": [
+    {
+      "id": "G5CWH-PAIRS",
+      "status": "STOPPED",
+      "limit_seconds": 300,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_pending_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW2-history-custody-r1/G5CWH-PAIRS.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 125.96365220899999,
+        "peak_process_family_rss_kib": 1785616,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 300,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FAILED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 126,
+      "worker_status": "FAILED",
+      "hard_stop": false
+    }
+  ],
+  "no_retry": true,
+  "status": "BLOCKED_AFTER_FIRST_WINDOW",
+  "browser_starts": 1,
+  "remaining_starts": 2,
+  "remaining_seconds": 474,
+  "remaining_windows": [
+    "G5CWH-FEEDBACK NOT_RUN",
+    "G5CWH-FAILURES NOT_RUN"
+  ],
+  "old410_carried": false
+}

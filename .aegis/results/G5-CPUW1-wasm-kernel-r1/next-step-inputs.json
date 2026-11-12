@@ -1,0 +1,63 @@
+{
+  "status": "CW1_FROZEN_PROOF_INCOMPLETE_CONTROL_REVIEW_REQUIRED",
+  "missing_proofs": [
+    {
+      "obligation": "CW1-PACKAGE",
+      "items": [
+        "explicitassetBaseURLrelocation notexecuted",
+        "realCSPworker/modulefailure notexecuted"
+      ],
+      "cannot_substitute": "plainoutsidepackagewithdefaultbase/missingmodule404"
+    },
+    {
+      "obligation": "CW1-BIND",
+      "items": [
+        "firstexecutorLIFECYCLE cumulativeadmitted/terminalledgernotpersisted forqueuepressurejobs"
+      ],
+      "cannot_substitute": "awaitalljobpromises/finalexecutor3ledger/nativeVM"
+    }
+  ],
+  "scope_proven": [
+    "sharedRenderC++primitive/fullpath/prefix+resumablejob",
+    "realSeparateCPU-onlyWASMChromeWorker19numericrequests",
+    "sameactiveRootRuntimeRenderbudgetfloorandtransportgrant",
+    "actualcancel→nextjob/twoRuntimeforeign/malformed/modulefailure/queuepressure",
+    "outside42-filepackage rootcreate/UndoRedo andsidecar compute"
+  ],
+  "implementation_risks": [
+    {
+      "file": "sdk/web/axiom.mjs",
+      "risk": "unbindCpuWorkerOwner executesbeforecallclose; PUBLICATION_PENDING/CLOSE_FAILEDretry canloseprivatebinding",
+      "action": "controlledfollowupbeforeCW2; sourcefrozenunchanged"
+    },
+    {
+      "files": [
+        "runtime/render/src/cpu_worker_protocol.cpp",
+        "runtime/render/src/cpu_worker_bridge.cpp"
+      ],
+      "risk": "<=1900primitives /8MiBconstructionestimate excludes7200sample30sSweeps andlarge nonuniformFilled",
+      "action": "measure/defineboundedchunk/residentjobcontracts; do notraisebudgets silently"
+    },
+    {
+      "file": "sdk/web/internal/cpu-worker-client.mjs",
+      "risk": "resultArrayBuffertransfer byconsumer andnewconsumer-ownedbuffer lifetime notproven byoriginaldetach; logicalquota release notphysicalheapinstantretirement",
+      "action": "clarifyexplicitresultcustody/importandreleasebeforeactivation"
+    },
+    {
+      "file": "sdk/web/internal/cpu-worker-thread.mjs",
+      "risk": "201steps per1600Sweep, setTimeout0schedulingdifference dominates, currentresultis isolation notoveralllatencygain",
+      "action": "measurecontrolmessage-task scheduling/granularity whilepreservingcancel/fairness, no longblockingdrain"
+    }
+  ],
+  "measured_cost": "budget-accounting.json",
+  "source_reuse": "No source-resident/dedup orcross-messageappend implemented; index16 is independentcomplete800-segmentrequest, do notclaimappendreuse",
+  "CW2": {
+    "not_implemented": true,
+    "required": "existingRuntimependingintent/Upterminalclearscontacts/fullimmutablebasis/ownerorderedvalidateatomiccommit andfailureUndoRedo/remoteordering; nofakecommit/receipt"
+  },
+  "CW3": {
+    "not_implemented": true,
+    "required": "immediateeraser/nav/shape/sticky/table/image feedback withorderedcanonicalhandoff; standaloneWorkerproofdoesnotclose"
+  },
+  "stop": "No productionchanges/newwindows/commitpushunderthispackage; independentControlReviewandnextscope required"
+}

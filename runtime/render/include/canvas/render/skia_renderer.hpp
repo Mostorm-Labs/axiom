@@ -17,6 +17,7 @@
 #include <cstdint>
 #include <span>
 #include <vector>
+#include <map>
 
 class SkCanvas;
 
@@ -97,6 +98,25 @@ class SkiaRenderer final {
     // canonical target selection still belongs to the interaction owner.
     [[nodiscard]] SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,
         const semantic::EraseMaskGeometry&) const noexcept;
+    [[nodiscard]] std::vector<std::uint8_t> encodeCpuPendingRequest(
+        const semantic::EraseMaskGeometry&,const std::array<std::uint64_t,8>&)const;
+    void beginCpuPendingOpportunity()noexcept;
+    void setCpuPendingPreparation(bool value)noexcept;
+    std::optional<resources::ResourceLease> reserveCpuPendingMetadata(std::size_t)noexcept;
+    using CpuPathPin=std::shared_ptr<const void>;
+    [[nodiscard]] CpuPathPin lookupCpuPendingPath(const semantic::EraseMaskGeometry&)const noexcept;
+    [[nodiscard]] CpuPathPin importCpuPendingPath(const semantic::EraseMaskGeometry&,
+        std::span<const std::uint8_t>,const std::array<std::uint64_t,8>&)const noexcept;
+    [[nodiscard]] SelectionGeometryHit confirmCpuPendingErase(const RuntimeSceneRecord&,
+        const semantic::EraseMaskGeometry&,const CpuPathPin&)const noexcept;
+    bool retainCpuPendingHandoff(std::uint64_t,const std::vector<CpuPathPin>&)noexcept;
+    void retireCpuPendingHandoff(std::uint64_t)noexcept;
+    void retireAllCpuPendingHandoffs()noexcept;
+    // Private same-build result consumer; bytes stay pinned by the owner until
+    // this decision returns. No raw Skia object crosses the transport.
+    [[nodiscard]] SelectionGeometryHit intersectCpuPendingErase(const RuntimeSceneRecord&,
+        const semantic::EraseMaskGeometry&,std::span<const std::uint8_t>,
+        const std::array<std::uint64_t,8>&) const noexcept;
     class ExactQueryCohort final {
         friend class SkiaRenderer;
         std::shared_ptr<internal::EraseMaskPathCache> owner_;
@@ -110,6 +130,10 @@ class SkiaRenderer final {
     [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
     // Existing interaction owner cancels disposable partial exact preparation.
     void discardEraseQueryPreparation() noexcept;
+    // Private platform quota forwarding. No manager/context is returned.
+    std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes) noexcept;
+    bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token) noexcept;
+    std::size_t cpuWorkerGrantBytes() const noexcept;
     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
         std::span<const foundation::WorldPoint>) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;
@@ -124,6 +148,9 @@ class SkiaRenderer final {
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;
     mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
+    struct CpuGrant {std::uint64_t executor;resources::ResourceLease lease;std::size_t bytes;};
+    std::map<std::uint64_t,CpuGrant> cpuGrants_;
+    std::uint64_t nextCpuGrant_=0;
     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
@@ -139,6 +166,10 @@ class SkiaRenderer final {
     RenderCacheOptions renderCacheOptions_{};
     std::uint64_t resourceEpoch_=0;
     bool preserveWorldPreparation_=false;
+    bool cpuPendingPreparation_=false;
+    struct CpuPathHandoff {std::vector<CpuPathPin> pins;resources::ResourceLease metadata;};
+    std::map<std::uint64_t,CpuPathHandoff> cpuPathHandoffs_;
+    std::optional<std::chrono::steady_clock::time_point> cpuPendingOpportunity_;
 };
 
 } // namespace canvas::render

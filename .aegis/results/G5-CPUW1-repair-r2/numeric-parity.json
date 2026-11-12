@@ -1,0 +1,27 @@
+{
+  "status": "PASS_FROZEN_NUMERIC_PARITY",
+  "original634": {
+    "path": ".aegis/results/G5-CPUW1-repair-r1/candidate634.json",
+    "sha256": "67319bdb0eed21bba124ea61271bc78aef07af2a2a76345b164cc0ab595b5e9a",
+    "reference": ".aegis/results/G5-erase-exact-canonical-r1/A-original634.json",
+    "reference_sha256": "fba3849e177049c6276736434628f98e0af629aad79015a98136e4f33c30eada",
+    "comparison_reused_from": {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/numeric-parity.json",
+      "sha256": "ebaecba086c0885870f655319c1e70346b92957f028041fc89dbdf93dfbc9089"
+    },
+    "rows": 634,
+    "mismatches": 0
+  },
+  "unchanged_math_sources": {
+    "runtime/render/src/cpu_exact_path_kernel.cpp": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4",
+    "runtime/render/src/cpu_worker_protocol.cpp": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee",
+    "runtime/render/src/selection_region_geometry.cpp": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7"
+  },
+  "new_ready39_reference_proof": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/browser-path-parity.json",
+    "sha256": "83fb8c55a54084b70251f0a2f9fd2a368030b3df8ff7200b6c3ac16203bc44b1"
+  },
+  "corrected_native_oracle": "native-green.json",
+  "same_worker_WASM": true,
+  "no_current_CPU_GPU_pixel_claim": true
+}

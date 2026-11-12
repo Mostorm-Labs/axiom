@@ -1,3 +1,4 @@
+#include "canvas/runtime/internal/runtime_platform_access.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "session.hpp"
@@ -635,6 +636,7 @@ class Session::Impl {
             return error("UNSUPPORTED");
         }
         if (command == "close") {
+            if(runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending)return error("BUSY");
             if ((!contacts.empty() || adapter->activeContacts() != 0) ||
                 facade().readTextEditor().phase != runtime::TextPhase::kClosed)
                 return error("BUSY");
@@ -654,8 +656,16 @@ class Session::Impl {
         }
         if (dataPort.closing && command!="state" && command!="frame" && command!="selection" &&
             command!="resource" && command!="snapshot" && command!="readSection" && command!="presets" &&
+            !(command=="cpuWorkerGrant" && (j.value("action",std::string{})=="observe" ||
+                j.value("action",std::string{})=="basis" || j.value("action",std::string{})=="release")) &&
             !(command=="text" && j.value("action",std::string{})!="intent"))
             return error("DOCUMENT_CLOSING");
+        if(runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending){
+            const bool readCommand=command=="state"||command=="frame"||command=="selection"||command=="presets"||command=="hover"||command=="cpuPending"||command=="cpuWorkerGrant"||command=="resize"||command=="lose";
+            const auto action=j.value("action",std::string{});
+            const bool readOnlyAction=action=="read"||action=="snapshot"||action=="fonts"||action=="fontStatus"||action=="status";
+            if(!readCommand&&command!="control"&&command!="pointer"&&!readOnlyAction)return error("BUSY");
+        }
         if (command == "resize") {
             if (!contacts.empty() || adapter->activeContacts() != 0)
                 return error("BUSY");
@@ -689,7 +699,7 @@ class Session::Impl {
             if (lost)
                 return {{"ok", true}, {"pending", false}, {"lost", true}};
             auto result=adapter->frame(j.value("force", false));
-            if(facade().transientInkActive())result["retry"]=true;
+            if(facade().transientInkActive()||runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending)result["retry"]=true;
             return result;
         }
         if (command == "state")
@@ -1543,6 +1553,57 @@ class Session::Impl {
                     {"reason", result.reason},
                     {"objectId", hexId(result.objectId)},
                     {"cropToken", std::to_string(result.cropToken)}};
+        }
+        if(command=="cpuPending"){
+            if(!owner)return error("NOT_OPEN");
+            const auto action=j.value("action",std::string{"facts"});
+            if(action=="suspend"){runtime::RuntimePlatformAccess::suspendCpuPendingExecutor(*owner);return {{"ok",true}};}
+            if(action=="unavailable"){runtime::RuntimePlatformAccess::failCpuPendingExecutor(*owner);return {{"ok",true}};}
+            if(action=="bind")return {{"ok",runtime::RuntimePlatformAccess::bindCpuPendingExecutor(*owner,decimal(j.at("executor")))},{"code","CPU_PENDING_BIND_REJECTED"}};
+            if(action=="take"){
+                outputBytes=runtime::RuntimePlatformAccess::takeCpuPendingRequest(*owner);
+                return {{"ok",true},{"bytes",outputBytes.size()}};
+            }
+            if(action=="complete"){
+                if(!j.at("token").is_array()||j.at("token").size()!=8)return error("CPU_PENDING_TOKEN_INVALID");
+                std::array<std::uint64_t,8> token{};for(unsigned i=0;i<8;++i)token[i]=decimal(j.at("token")[i]);
+                return {{"ok",runtime::RuntimePlatformAccess::queueCpuPendingCompletion(*owner,token,bytes,j.value("success",false))},{"code","CPU_PENDING_STALE_COMPLETION"}};
+            }
+            const auto f=runtime::RuntimePlatformAccess::cpuPendingFacts(*owner);
+            J terminals=J::array();for(const auto& t:f.terminals){
+                J token=J::array();for(const auto w:t.token)token.push_back(std::to_string(w));
+                terminals.push_back({{"serial",std::to_string(t.serial)},{"session",std::to_string(t.session)},{"jobs",std::to_string(t.jobs)},{"operationOrdinal",std::to_string(t.operationOrdinal)},{"token",token},{"status",t.status}});
+            }
+            J jobs=J::array();for(const auto& j:f.jobLedger){J token=J::array();for(const auto w:j.token)token.push_back(std::to_string(w));jobs.push_back({{"token",token},{"historical",j.historical},{"inputBytes",j.inputBytes},{"outputBytes",j.outputBytes},{"issuedNs",std::to_string(j.issuedNs)},{"returnedNs",std::to_string(j.returnedNs)},{"importNs",std::to_string(j.importNs)},{"status",j.status}});}
+            if(action=="closePreflight")return {{"ok",f.reserved==0&&!f.suspended&&contacts.empty()&&adapter->activeContacts()==0},{"code","BUSY"}};
+            return {{"ok",true},{"capability",f.capability},{"enabled",f.enabled},{"requestReady",f.requestReady},{"suspended",f.suspended},{"historyJob",f.historyJob},{"newQueryUnions",std::to_string(f.newQueryUnions)},{"historyUnions",std::to_string(f.historyUnions)},{"retainedPathBytes",std::to_string(f.retainedPathBytes)},{"finishedImports",std::to_string(f.finishedImports)},{"finishedHits",std::to_string(f.finishedHits)},
+                {"token",J::array({std::to_string(f.token[0]),std::to_string(f.token[1]),std::to_string(f.token[2]),std::to_string(f.token[3]),std::to_string(f.token[4]),std::to_string(f.token[5]),std::to_string(f.token[6]),std::to_string(f.token[7])})},
+                {"pending",f.pending},{"reserved",f.reserved},{"head",std::to_string(f.head)},{"job",std::to_string(f.job)},
+                {"admitted",std::to_string(f.admitted)},{"committed",std::to_string(f.committed)},
+                {"jobs",std::to_string(f.jobs)},{"geometryReuse",std::to_string(f.geometryReuse)},{"exactCalls",std::to_string(f.exactCalls)},
+                {"prepareNs",std::to_string(f.prepareNs)},{"importNs",std::to_string(f.importNs)},{"exactNs",std::to_string(f.exactNs)},{"commitNs",std::to_string(f.commitNs)},{"workerWaitNs",std::to_string(f.workerWaitNs)},{"opportunities",std::to_string(f.opportunities)},{"maxOwnerNs",std::to_string(f.maxOwnerNs)},{"maxExactNs",std::to_string(f.maxExactNs)},
+                {"noops",std::to_string(f.noops)},{"failed",std::to_string(f.failed)},{"error",f.error},{"state",f.state},{"terminals",terminals},{"jobLedger",jobs}};
+        }
+        if(command=="cpuWorkerGrant"){
+            if(!owner)return error("NOT_OPEN");
+            if(j.at("action")=="basis"){
+                const auto stamp=facade().readMultiSelection().stamp;
+                const auto doc=*owner->documentId();std::array<std::uint64_t,2> words{};
+                for(unsigned i=0;i<16;++i)words[i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
+                return {{"ok",true},{"words",J::array({std::to_string(stamp.runtimeInstance),std::to_string(stamp.lifetimeGeneration),std::to_string(words[0]),std::to_string(words[1])})}};
+            }
+            const auto executor=decimal(j.at("executor"));
+            if(j.at("action")=="reserve"){
+                const auto bytes=j.at("bytes").get<std::size_t>();
+                const auto token=runtime::RuntimePlatformAccess::reserveCpuWorkerGrant(*owner,executor,bytes);
+                return {{"ok",token!=0},{"code","CPU_QUOTA_DENIED"},{"token",std::to_string(token)},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
+            }
+            if(j.at("action")=="release"){
+                const auto token=decimal(j.at("token"));
+                return {{"ok",runtime::RuntimePlatformAccess::releaseCpuWorkerGrant(*owner,executor,token)},{"code","STALE_CPU_GRANT"},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
+            }
+            if(j.at("action")=="observe")return {{"ok",true},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
+            return error("INVALID_CPU_GRANT_ACTION");
         }
         if (command == "snapshot") {
             runtime::DocumentSnapshotRequest r;

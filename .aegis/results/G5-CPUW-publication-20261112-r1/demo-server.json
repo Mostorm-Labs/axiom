@@ -1,0 +1,49 @@
+{
+  "pid": 72206,
+  "url": "http://127.0.0.1:4328/example.html",
+  "port": 4328,
+  "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW-user-demo-20261112-r1/js",
+  "command": [
+    "/opt/homebrew/bin/python3.12",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW-user-demo-20261112-r1/js/serve.py",
+    "--directory",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW-user-demo-20261112-r1/js",
+    "--port",
+    "4328"
+  ],
+  "html_title": "Axiom · CPU Worker 候选版 · g5-cpu-worker",
+  "files": {
+    "axiom.mjs": {
+      "status": 200,
+      "content_type": "text/javascript",
+      "sha256": "29f22857b6ed9e02d116f365568e529dfe6f169508679a372ac6fe929279eee3",
+      "matching": true
+    },
+    "axiom.wasm": {
+      "status": 200,
+      "content_type": "application/wasm",
+      "sha256": "a526131d485391b60d0ce25098a48431585112c19e71da24f917a49c44193ee6",
+      "matching": true
+    },
+    "internal/cpu-worker-thread.mjs": {
+      "status": 200,
+      "content_type": "text/javascript",
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69",
+      "matching": true
+    },
+    "internal/cpu-worker-kernel.wasm": {
+      "status": 200,
+      "content_type": "application/wasm",
+      "sha256": "f9af13b0221446871f158fca9bb9a62f6ec0eb8badc86043b40a9f3ede72c580",
+      "matching": true
+    },
+    "internal/cpu-worker-build.mjs": {
+      "status": 200,
+      "content_type": "text/javascript",
+      "sha256": "2c33e7a12d38f693420e07cca250434cc9df38bed3b9b845d5a6a7d959a55ce8",
+      "matching": true
+    }
+  },
+  "expected_branch": "codex/g5-cpu-worker",
+  "purpose": "UserrequestedcandidateDemo, no formalperformancesamplingreuse"
+}

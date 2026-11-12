@@ -1,0 +1,1004 @@
+{
+  "id": "candidate-life",
+  "status": "OBSERVED",
+  "jobs": [
+    {
+      "label": "started-cancel",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/1/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 187.40000009536743,
+      "startedIdentity": {
+        "key": "1/1/0/72057594037927936/1/1/1/1",
+        "sent": 187.70000004768372,
+        "startedReceivedAt": 189.30000007152557,
+        "workerStartedAt": 14.5
+      },
+      "cancelSentAt": 202.40000009536743,
+      "status": "Cancelled",
+      "terminalReceivedAt": 203.70000004768372,
+      "computeMs": 13.800000190734863,
+      "yieldMs": 0.49999988079071045,
+      "totalMs": 15.799999952316284,
+      "steps": 6,
+      "cursor": 37,
+      "cancelObservedAt": 28.600000023841858,
+      "outputBytes": 0
+    },
+    {
+      "label": "after-cancel",
+      "index": 1,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/2/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 209.60000002384186,
+      "status": "Ready",
+      "terminalReceivedAt": 460.8000000715256,
+      "computeMs": 249.09999990463257,
+      "importMs": 0.10000002384185791,
+      "exportMs": 0,
+      "yieldMs": 1.600000023841858,
+      "totalMs": 251.10000002384186,
+      "steps": 200,
+      "maxUnionNs": 500000,
+      "outputBytes": 4140,
+      "nativeBytesEqual": true,
+      "heartbeatDuringCompute": [
+        211.30000007152557,
+        217.5,
+        222.60000002384186,
+        227.5,
+        232.60000002384186,
+        237.60000002384186,
+        242.70000004768372,
+        247.70000004768372,
+        252.80000007152557,
+        257.8000000715256,
+        262.7000000476837,
+        267.8000000715256,
+        272.10000002384186,
+        277.10000002384186,
+        282.10000002384186,
+        287.10000002384186,
+        292.2000000476837,
+        296.3000000715256,
+        302.7000000476837,
+        307.7000000476837,
+        312.7000000476837,
+        317.8000000715256,
+        322.8000000715256,
+        327.8000000715256,
+        331.60000002384186,
+        336.40000009536743,
+        342.7000000476837,
+        347.7000000476837,
+        352.7000000476837,
+        357.7000000476837,
+        362.7000000476837,
+        367.8000000715256,
+        372.8000000715256,
+        377.8000000715256,
+        382.8000000715256,
+        387.8000000715256,
+        392.8000000715256,
+        397.8000000715256,
+        402.8000000715256,
+        406.60000002384186,
+        412.90000009536743,
+        416.2000000476837,
+        422.5,
+        427.40000009536743,
+        432.5,
+        437.40000009536743,
+        442.5,
+        447.5,
+        452.5,
+        456.8000000715256,
+        460.90000009536743,
+        466.2000000476837
+      ]
+    },
+    {
+      "label": "malformed",
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/4/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "status": "Failed",
+      "terminalReceivedAt": 467.8000000715256,
+      "yieldMs": null,
+      "totalMs": 0,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-0",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/5/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 469.8000000715256,
+      "status": "Cancelled",
+      "terminalReceivedAt": 473.3000000715256,
+      "computeMs": 3.100000023841858,
+      "yieldMs": 0,
+      "totalMs": 3.3000000715255737,
+      "steps": 5,
+      "cursor": 40,
+      "cancelObservedAt": 298.5,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-1",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/6/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470,
+      "status": "Cancelled",
+      "terminalReceivedAt": 475.3000000715256,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-2",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/7/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470.2000000476837,
+      "status": "Cancelled",
+      "terminalReceivedAt": 477.3000000715256,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-3",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/8/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470.2000000476837,
+      "status": "Cancelled",
+      "terminalReceivedAt": 479.2000000476837,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-4",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/9/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470.2000000476837,
+      "status": "Cancelled",
+      "terminalReceivedAt": 480.90000009536743,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-5",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/10/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470.3000000715256,
+      "status": "Cancelled",
+      "terminalReceivedAt": 482.90000009536743,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "queued-6",
+      "index": 0,
+      "executor": "1",
+      "key": "1/1/0/72057594037927936/1/11/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 470.40000009536743,
+      "status": "Cancelled",
+      "terminalReceivedAt": 485.5,
+      "yieldMs": null,
+      "outputBytes": 0
+    },
+    {
+      "label": "generation-two",
+      "index": 2,
+      "executor": "2",
+      "key": "1/1/0/72057594037927936/2/13/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 505,
+      "status": "Ready",
+      "terminalReceivedAt": 754.3000000715256,
+      "computeMs": 246.29999995231628,
+      "importMs": 1,
+      "exportMs": 0,
+      "yieldMs": 1.399999976158142,
+      "totalMs": 249.20000004768372,
+      "steps": 201,
+      "maxUnionNs": 3300000,
+      "outputBytes": 4116,
+      "nativeBytesEqual": true,
+      "heartbeatDuringCompute": [
+        506.3000000715256,
+        512.6000000238419,
+        518.1000000238419,
+        521.9000000953674,
+        526.9000000953674,
+        532,
+        536.9000000953674,
+        542,
+        547,
+        552,
+        557,
+        562,
+        567,
+        572.1000000238419,
+        577.1000000238419,
+        582.1000000238419,
+        587.1000000238419,
+        592.1000000238419,
+        597.2000000476837,
+        602.1000000238419,
+        607.2000000476837,
+        612.2000000476837,
+        617.2000000476837,
+        622.2000000476837,
+        627.2000000476837,
+        632.2000000476837,
+        637.3000000715256,
+        642.3000000715256,
+        647.3000000715256,
+        652.3000000715256,
+        657.3000000715256,
+        662.3000000715256,
+        667.3000000715256,
+        672.3000000715256,
+        677.4000000953674,
+        682.4000000953674,
+        687.4000000953674,
+        692.4000000953674,
+        697.4000000953674,
+        702.5,
+        707.4000000953674,
+        712.5,
+        717.5,
+        722.5,
+        727.5,
+        732.5,
+        737.5,
+        742.6000000238419,
+        747.5,
+        752.6000000238419,
+        757,
+        761.6000000238419
+      ]
+    },
+    {
+      "label": "publication-owner",
+      "index": 3,
+      "executor": "1",
+      "key": "1/1/0/144115188075855872/1/14/1/1",
+      "accepted": true,
+      "inputBytes": 128128,
+      "submittedAt": 962.7000000476837,
+      "status": "Ready",
+      "terminalReceivedAt": 1209.2000000476837,
+      "computeMs": 244.29999995231628,
+      "importMs": 0.8999999761581421,
+      "exportMs": 0,
+      "yieldMs": 1,
+      "totalMs": 246.39999997615814,
+      "steps": 201,
+      "maxUnionNs": 3200000,
+      "outputBytes": 4116,
+      "nativeBytesEqual": true,
+      "heartbeatDuringCompute": [
+        967.5,
+        972.6000000238419,
+        977.6000000238419,
+        982.6000000238419,
+        987.5,
+        991.7000000476837,
+        997.4000000953674,
+        1002.3000000715256,
+        1006.8000000715256,
+        1013,
+        1016.7000000476837,
+        1021.8000000715256,
+        1027.1000000238419,
+        1032.1000000238419,
+        1037.1000000238419,
+        1042.2000000476837,
+        1047.1000000238419,
+        1052.1000000238419,
+        1056.2000000476837,
+        1062.5,
+        1066.7000000476837,
+        1073,
+        1076.7000000476837,
+        1083,
+        1086.8000000715256,
+        1093,
+        1096.4000000953674,
+        1102.7000000476837,
+        1107.6000000238419,
+        1112.6000000238419,
+        1117.6000000238419,
+        1122.6000000238419,
+        1127.7000000476837,
+        1132.7000000476837,
+        1137.7000000476837,
+        1142.7000000476837,
+        1147.7000000476837,
+        1152.8000000715256,
+        1157.7000000476837,
+        1162.8000000715256,
+        1167.7000000476837,
+        1172.7000000476837,
+        1177.8000000715256,
+        1182.8000000715256,
+        1187.8000000715256,
+        1192.8000000715256,
+        1197.8000000715256,
+        1202.8000000715256,
+        1207.8000000715256,
+        1211.9000000953674,
+        1216.7000000476837
+      ]
+    }
+  ],
+  "executors": [
+    {
+      "label": "before-next-generation",
+      "before": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 10,
+        "terminals": 10,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/1/1/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/2/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/4/1/1",
+            "status": "Failed"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/6/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/7/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/8/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/9/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/10/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/11/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/5/1/1",
+            "status": "Cancelled"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": false,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaBefore": {
+        "bytes": 67108864,
+        "ok": true
+      },
+      "capturedAt": 489.10000002384186,
+      "after": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 10,
+        "terminals": 10,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/1/1/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/2/1/1",
+            "status": "Ready"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/4/1/1",
+            "status": "Failed"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/6/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/7/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/8/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/9/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/10/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/11/1/1",
+            "status": "Cancelled"
+          },
+          {
+            "key": "1/1/0/72057594037927936/1/5/1/1",
+            "status": "Cancelled"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": true,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaAfter": {
+        "bytes": 0,
+        "ok": true
+      }
+    },
+    {
+      "label": "generation-two-complete",
+      "before": {
+        "executor": "2",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/2/13/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": false,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaBefore": {
+        "bytes": 67108864,
+        "ok": true
+      },
+      "capturedAt": 762.5,
+      "after": {
+        "executor": "2",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "72057594037927936"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/72057594037927936/2/13/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": true,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaAfter": {
+        "bytes": 0,
+        "ok": true
+      }
+    },
+    {
+      "label": "before-pending-close",
+      "before": {
+        "executor": "1",
+        "basis": [
+          "1",
+          "1",
+          "0",
+          "144115188075855872"
+        ],
+        "pending": 0,
+        "active": null,
+        "admitted": 1,
+        "terminals": 1,
+        "transportBytes": 0,
+        "ledger": [
+          {
+            "key": "1/1/0/144115188075855872/1/14/1/1",
+            "status": "Ready"
+          }
+        ],
+        "cleanupErrors": [],
+        "closed": false,
+        "heapBytes": 67108864,
+        "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+      },
+      "quotaBefore": {
+        "bytes": 67108864,
+        "ok": true
+      },
+      "capturedAt": 1218.2000000476837
+    }
+  ],
+  "assertions": [
+    "input fetch",
+    "Worker starts bounded",
+    "Worker starts bounded",
+    "cancel interleaves before full drain",
+    "cancel step count finite",
+    "input fetch",
+    "binary ack",
+    "independent native path equality",
+    "released result detached",
+    "real Worker Ready",
+    "duplicate rejected",
+    "foreign rejected",
+    "malformed terminal failure",
+    "transport refuses bounded queue",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "queued cancel terminal",
+    "admission list count",
+    "terminal list count",
+    "all accepted exactly one terminal",
+    "no orphaned tasks",
+    "closed quota and transport zero",
+    "input fetch",
+    "binary ack",
+    "independent native path equality",
+    "released result detached",
+    "real Worker Ready",
+    "admission list count",
+    "terminal list count",
+    "all accepted exactly one terminal",
+    "no orphaned tasks",
+    "closed quota and transport zero",
+    "root close during initialization rejects promise",
+    "canonical receipt bounded",
+    "canonical receipt bounded",
+    "canonical rectangle created",
+    "real retained canonical packet",
+    "input fetch",
+    "binary ack",
+    "independent native path equality",
+    "released result detached",
+    "real Worker Ready",
+    "admission list count",
+    "terminal list count",
+    "all accepted exactly one terminal",
+    "no orphaned tasks",
+    "real pending close retains binding",
+    "pending packet preserved worker quota zero",
+    "close barrier forbids edits",
+    "close barrier forbids new grants",
+    "release exact packet custody",
+    "success unbinds only at final close"
+  ],
+  "errors": [],
+  "cleanup": [],
+  "failure": null,
+  "ownerBefore": [
+    "1",
+    "1",
+    "0",
+    "72057594037927936"
+  ],
+  "before": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "canRedo": false,
+    "canUndo": false,
+    "creationMode": false,
+    "data": {
+      "attached": false,
+      "byteCapacity": 33554432,
+      "capacity": 1024,
+      "closing": false,
+      "fault": false,
+      "latest": null,
+      "pending": 0,
+      "pendingBytes": 0,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000001",
+    "eraserMode": 2,
+    "generation": "0",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "00000000000000000000000000000000",
+      "ordinal": "0",
+      "presentedGeneration": "0",
+      "runtimeEpoch": "0"
+    },
+    "objects": 0,
+    "primary": "00000000000000000000000000000000",
+    "selected": [],
+    "selectionMode": 0,
+    "selectionRevision": "1",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 700,
+      "width": 900
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        0,
+        0
+      ],
+      "sequence": "1",
+      "session": "0"
+    },
+    "tool": 0
+  },
+  "quotaBefore": {
+    "bytes": 0,
+    "ok": true
+  },
+  "currentExecutor": {
+    "executor": "1",
+    "basis": [
+      "1",
+      "1",
+      "0",
+      "144115188075855872"
+    ],
+    "pending": 0,
+    "active": null,
+    "admitted": 0,
+    "terminals": 0,
+    "transportBytes": 0,
+    "ledger": [],
+    "cleanupErrors": [],
+    "closed": false,
+    "heapBytes": 67108864,
+    "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+  },
+  "duplicateRejected": "Error: STALE_OR_DUPLICATE_IDENTITY",
+  "foreignRejected": "Error: STALE_OR_DUPLICATE_IDENTITY",
+  "queue": {
+    "accepted": [
+      "1/1/0/72057594037927936/1/5/1/1",
+      "1/1/0/72057594037927936/1/6/1/1",
+      "1/1/0/72057594037927936/1/7/1/1",
+      "1/1/0/72057594037927936/1/8/1/1",
+      "1/1/0/72057594037927936/1/9/1/1",
+      "1/1/0/72057594037927936/1/10/1/1",
+      "1/1/0/72057594037927936/1/11/1/1"
+    ],
+    "refused": "Error: TRANSPORT_BOUND"
+  },
+  "initializationCustody": {
+    "quota": {
+      "bytes": 67108864,
+      "ok": true
+    },
+    "executor": "3",
+    "basis": [
+      "1",
+      "1",
+      "0",
+      "72057594037927936"
+    ],
+    "acceptedJobs": []
+  },
+  "initializationClose": {
+    "error": "Error: CLOSED_DURING_STARTUP"
+  },
+  "publicationAttach": {
+    "attached": true,
+    "byteCapacity": 33554432,
+    "capacity": 8,
+    "closing": false,
+    "fault": false,
+    "latest": null,
+    "pending": 0,
+    "pendingBytes": 0,
+    "releasedOrdinal": "0",
+    "statusCapacity": 4096,
+    "statusRecords": 0
+  },
+  "packet": {
+    "operationId": "4dceaf49df137cfb5f258f24a05e7d68",
+    "commit": {
+      "ordinal": "1",
+      "runtimeEpoch": "1"
+    },
+    "bytes": 271
+  },
+  "pendingClose": {
+    "error": {
+      "code": "PUBLICATION_PENDING",
+      "text": "AxiomError: PUBLICATION_PENDING"
+    },
+    "state": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 8,
+        "closing": true,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "1",
+          "beforeGeneration": "0",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "1",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000002",
+          "kind": 1,
+          "localDurable": 0,
+          "operationId": "4dceaf49df137cfb5f258f24a05e7d68",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 1,
+        "pendingBytes": 271,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000002",
+      "eraserMode": 2,
+      "generation": "1",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "4dceaf49df137cfb5f258f24a05e7d68",
+        "ordinal": "1",
+        "presentedGeneration": "1",
+        "runtimeEpoch": "1"
+      },
+      "objects": 1,
+      "primary": "4dceaf49df137cfb5f258f24a05e7d27",
+      "selected": [
+        "4dceaf49df137cfb5f258f24a05e7d27"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "2",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 700,
+        "width": 900
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 1
+    },
+    "data": {
+      "attached": true,
+      "byteCapacity": 33554432,
+      "capacity": 8,
+      "closing": true,
+      "fault": false,
+      "latest": {
+        "afterGeneration": "1",
+        "beforeGeneration": "0",
+        "binding": "1",
+        "cloudSynced": 0,
+        "commit": {
+          "ordinal": "1",
+          "runtimeEpoch": "1"
+        },
+        "documentId": "00000000000000000000000000000002",
+        "kind": 1,
+        "localDurable": 0,
+        "operationId": "4dceaf49df137cfb5f258f24a05e7d68",
+        "source": 0,
+        "version": 1,
+        "owner": "axiom-sdk-2-1zamdpyi41k"
+      },
+      "pending": 1,
+      "pendingBytes": 271,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "bindingSame": true,
+    "terminated": {
+      "executor": "1",
+      "basis": [
+        "1",
+        "1",
+        "0",
+        "144115188075855872"
+      ],
+      "pending": 0,
+      "active": null,
+      "admitted": 1,
+      "terminals": 1,
+      "transportBytes": 0,
+      "ledger": [
+        {
+          "key": "1/1/0/144115188075855872/1/14/1/1",
+          "status": "Ready"
+        }
+      ],
+      "cleanupErrors": [],
+      "closed": true,
+      "heapBytes": 67108864,
+      "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    "quota": {
+      "bytes": 0,
+      "ok": true
+    },
+    "editBlocked": "DOCUMENT_CLOSING",
+    "grantBlocked": "DOCUMENT_CLOSING"
+  },
+  "released": {
+    "attached": true,
+    "byteCapacity": 33554432,
+    "capacity": 8,
+    "closing": true,
+    "fault": false,
+    "latest": {
+      "afterGeneration": "1",
+      "beforeGeneration": "0",
+      "binding": "1",
+      "cloudSynced": 0,
+      "commit": {
+        "ordinal": "1",
+        "runtimeEpoch": "1"
+      },
+      "documentId": "00000000000000000000000000000002",
+      "kind": 1,
+      "localDurable": 0,
+      "operationId": "4dceaf49df137cfb5f258f24a05e7d68",
+      "source": 0,
+      "version": 1,
+      "owner": "axiom-sdk-2-1zamdpyi41k"
+    },
+    "pending": 0,
+    "pendingBytes": 0,
+    "releasedOrdinal": "1",
+    "statusCapacity": 4096,
+    "statusRecords": 1
+  },
+  "retryClose": {
+    "bindingAbsent": true,
+    "worker": {
+      "executor": "1",
+      "basis": [
+        "1",
+        "1",
+        "0",
+        "144115188075855872"
+      ],
+      "pending": 0,
+      "active": null,
+      "admitted": 1,
+      "terminals": 1,
+      "transportBytes": 0,
+      "ledger": [
+        {
+          "key": "1/1/0/144115188075855872/1/14/1/1",
+          "status": "Ready"
+        }
+      ],
+      "cleanupErrors": [],
+      "closed": true,
+      "heapBytes": 67108864,
+      "build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    }
+  },
+  "completedAt": 1228.3000000715256
+}

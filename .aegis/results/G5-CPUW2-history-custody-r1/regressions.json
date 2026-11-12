@@ -1,0 +1,57 @@
+{
+  "status": "SCOPED_FOCUS_PASS_FROZEN_WEB_CLOSURE_FAILED",
+  "native_results": "native-green.json",
+  "exact634_rows": 634,
+  "exact_mismatches": 0,
+  "Node": {
+    "log": "node-final.log",
+    "passed": 14,
+    "failed": 0
+  },
+  "Python": {
+    "log": "python-final.log",
+    "passed": 2,
+    "failed": 0
+  },
+  "root_driver_latest": {
+    "log": "offline-driver-root-final.log",
+    "passed": 6,
+    "failed": 0
+  },
+  "SDK_Node": {
+    "scripts": 4,
+    "logs": [
+      "sdk-api.log",
+      "sdk-controller.log",
+      "sdk-input.log",
+      "sdk-control.log"
+    ]
+  },
+  "types": {
+    "log": "sdk-types.log",
+    "passed": true
+  },
+  "boundaries": {
+    "log": "boundaries-current.log",
+    "contracts": 120
+  },
+  "browser": {
+    "starts": 1,
+    "charged_seconds": 126,
+    "normal1600": "OBSERVED",
+    "candidate1600": "OBSERVED",
+    "candidate7200": "FAILEDcoldSNAPSHOT_DECODE_FAILED afterA/Bcommit"
+  },
+  "not_run": [
+    "G5CWH-FEEDBACK",
+    "G5CWH-FAILURES",
+    "independentcoldpixels"
+  ],
+  "preserved_setup_failures": [
+    "Nativeedgefixture protectedTable/.applied field fixed beforewindows",
+    "CMakeinitialEMSDKPython3.9wrong env corrected with3.12",
+    "Package /tmp symlink safetyrelativecheck resolved /private/tmp; all42externalexact",
+    "Previousnativebinaries/evidencepartialkept;finalsourcebindonlyintendedruns"
+  ],
+  "no_overall_G5_PASS": true
+}

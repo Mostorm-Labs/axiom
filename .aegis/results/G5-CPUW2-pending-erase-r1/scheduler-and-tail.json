@@ -1,0 +1,235 @@
+{
+  "status": "REGRESSION_OBSERVED_NOT_QUALIFIED_PERFORMANCE",
+  "old1600": {
+    "case": "oldnormal1600",
+    "status": "OBSERVED",
+    "AUp_ms": 3957.5,
+    "BUp_ms": 312.40000009536743,
+    "AUp_generation": "1",
+    "AUp_contacts": 0,
+    "BDown_contacts": 1,
+    "immediate_BDown_delay_ms": 0.30000007152557373,
+    "sequence_end_at": 7441.199999928474,
+    "settled_at": 8263.599999904633,
+    "Up_to_settled_ms": 5093.899999976158,
+    "operation_callbacks": [
+      {
+        "at": 7441.599999904633,
+        "Up_relative_ms": 4271.899999976158,
+        "bytes": 6658294
+      },
+      {
+        "at": 7441.599999904633,
+        "Up_relative_ms": 4271.899999976158,
+        "bytes": 35412
+      },
+      {
+        "at": 12344.5,
+        "Up_relative_ms": 9174.800000071526,
+        "bytes": 1730
+      },
+      {
+        "at": 16848.699999928474,
+        "Up_relative_ms": 13679.0,
+        "bytes": 35412
+      }
+    ],
+    "frame_callbacks": [
+      {
+        "at": 8209.899999976158,
+        "presented": "1"
+      },
+      {
+        "at": 8663.699999928474,
+        "presented": "2"
+      },
+      {
+        "at": 13043.199999928474,
+        "presented": "3"
+      },
+      {
+        "at": 17642.599999904633,
+        "presented": "4"
+      }
+    ],
+    "errors": [],
+    "failureState": null,
+    "closed": true,
+    "raw": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/local-web/G5CPUW2-PAIRS/oldnormal1600/raw.json",
+      "sha256": "fc4d7e07dcef53265483d4221cf1e1a9c41b4cfe3d46aeda5fbd8f8d89b1f240"
+    }
+  },
+  "candidate1600": {
+    "case": "candidate1600",
+    "status": "OBSERVED",
+    "AUp_ms": 0.30000007152557373,
+    "BUp_ms": 0.10000002384185791,
+    "AUp_generation": "0",
+    "AUp_contacts": 0,
+    "BDown_contacts": 1,
+    "immediate_BDown_delay_ms": 0.2999999523162842,
+    "sequence_end_at": 2919.399999976158,
+    "settled_at": 14176.299999952316,
+    "Up_to_settled_ms": 11258.700000047684,
+    "operation_callbacks": [
+      {
+        "at": 8450.399999976158,
+        "Up_relative_ms": 5532.800000071526,
+        "bytes": 6658294
+      },
+      {
+        "at": 13231.399999976158,
+        "Up_relative_ms": 10313.800000071526,
+        "bytes": 35412
+      },
+      {
+        "at": 18248.599999904633,
+        "Up_relative_ms": 15331.0,
+        "bytes": 1730
+      },
+      {
+        "at": 22912.799999952316,
+        "Up_relative_ms": 19995.200000047684,
+        "bytes": 35412
+      }
+    ],
+    "frame_callbacks": [
+      {
+        "at": 14109,
+        "presented": "1"
+      },
+      {
+        "at": 14543.199999928474,
+        "presented": "2"
+      },
+      {
+        "at": 19276.299999952316,
+        "presented": "3"
+      },
+      {
+        "at": 23976.099999904633,
+        "presented": "4"
+      }
+    ],
+    "errors": [],
+    "failureState": null,
+    "closed": true,
+    "raw": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/local-web/G5CPUW2-PAIRS/candidate1600/raw.json",
+      "sha256": "0a70fa821b1f8a57472afe024ef9e197c3508f70717f250476b67b3c4f1cc673"
+    }
+  },
+  "Up_to_settled_ratio": 2.210231845953077,
+  "candidate7200": {
+    "case": "candidate7200",
+    "status": "FAILED",
+    "AUp_ms": 0.5,
+    "BUp_ms": 0.10000002384185791,
+    "AUp_generation": "0",
+    "AUp_contacts": 0,
+    "BDown_contacts": 1,
+    "immediate_BDown_delay_ms": 0.5,
+    "sequence_end_at": 12370.700000047684,
+    "settled_at": null,
+    "Up_to_settled_ms": null,
+    "operation_callbacks": [
+      {
+        "at": 60119.40000009537,
+        "Up_relative_ms": 47751.200000047684,
+        "bytes": 29954294
+      },
+      {
+        "at": 132678.10000002384,
+        "Up_relative_ms": 120309.89999997616,
+        "bytes": 35412
+      }
+    ],
+    "frame_callbacks": [
+      {
+        "at": 134211.60000002384,
+        "presented": "1"
+      }
+    ],
+    "errors": [],
+    "failureState": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": false,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "1",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "e8313d8efe45db694605ae2eb66a3734",
+        "ordinal": "1",
+        "presentedGeneration": "0",
+        "runtimeEpoch": "1"
+      },
+      "objects": 40,
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 1010,
+        "width": 1431
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 2
+    },
+    "closed": true,
+    "raw": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/local-web/G5CPUW2-PAIRS/candidate7200/raw.json",
+      "sha256": "659c54a470fbf02238526ed79ab9ad5c0f4c5d064689290fe6a77742c285f7a5"
+    }
+  },
+  "meaning": "MainUp admission improved; orderedcanonical/presentationtail regressed.7200missed60s;Bcallbackduringfailure/cleanup is laterprogress, notpermanentdeadlock proof",
+  "uncertainties": [
+    "Primarynormal rows no privatependingfacts/Workerterminalledger",
+    "Failure7200 onlyoperationbytelength; notbytes persisted",
+    "finallylaterprogressdoesnotretroactivelypass"
+  ]
+}

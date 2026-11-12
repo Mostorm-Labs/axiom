@@ -47,6 +47,7 @@ struct RenderPreparationBudget final {
     std::size_t maxCoverageSteps=4096;
 };
 struct MaskHistoryWork final {
+    std::uint64_t finishedImports=0,finishedHits=0,finishedDenials=0;
     std::uint64_t identityHits=0,admissions=0,valueRecords=0,valuePrimitives=0,flattenedPrimitives=0,copiedBytes=0;
     std::uint64_t primitiveBuilds=0,prefixReuses=0,resets=0,denied=0,exactPathHits=0,exactPathLookups=0;
     std::uint64_t historicalDifferences=0,componentIntersections=0,newQueryBuilds=0;

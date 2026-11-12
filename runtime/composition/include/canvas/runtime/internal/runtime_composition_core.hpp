@@ -180,6 +180,15 @@ class RuntimeCompositionCore final {
   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
                                               RuntimeFrameOpportunity& out) noexcept;
   [[nodiscard]] bool resourceRetirementPending() const noexcept;
+  void failCpuPendingExecutor()noexcept;
+  void suspendCpuPendingExecutor()noexcept;
+  bool bindCpuPendingExecutor(std::uint64_t)noexcept;
+  std::vector<std::uint8_t> takeCpuPendingRequest()noexcept;
+  bool queueCpuPendingCompletion(std::array<std::uint64_t,8>,std::span<const std::uint8_t>,bool)noexcept;
+  interaction::CpuPendingEraseFacts cpuPendingFacts()const noexcept;
+  std::uint64_t reserveCpuWorkerGrant(std::uint64_t,std::size_t)noexcept;
+  bool releaseCpuWorkerGrant(std::uint64_t,std::uint64_t)noexcept;
+  std::size_t cpuWorkerGrantBytes()const noexcept;
   // Completes the Runtime-owned preview handoff after the platform has
   // supplied its real presentation observation. Hosts do not capture or
   // acknowledge preview sessions themselves.
