@@ -115,6 +115,28 @@ ImageCommandReceipt CanvasRuntimeFacade::importImage(const ImageImportRequest& r
   if (composition_ == nullptr || !composition_->canMutate() || runtime_.closed() || !runtime_.surface().available)
     return rejected(ImageFailureReason::kNotReady);
   if (imageCrop_) return rejected(ImageFailureReason::kInvalidCropSession);
+  if(runtime_.pendingLocalEnabled()){
+    if(runtime_.pendingHistoryBarrier()||request.bytes.empty()||request.bytes.size()>16U*1024U*1024U)return rejected(ImageFailureReason::kNotReady);
+    const auto decodedBytes=render::ImageResourceResolver::decodedRgbaBytes(request.bytes);if(!decodedBytes)return rejected(ImageFailureReason::kDecodeFailed);
+    // RGBA, retained SkImage copy, decoder staging and encoded copies all live
+    // under the same existing aggregate owner budget before decode starts.
+    auto quota=runtime_.skiaRenderer_.reserveCpuPendingMetadata(*decodedBytes*3+request.bytes.size()*4+65536);if(!quota)return rejected(ImageFailureReason::kResourceRejected);
+    const auto registered=registerImageBytes(request.bytes,request.mimeType,false);if(registered.state!=ImageCommandState::kApplied)return registered;
+    auto prepared=request;
+    prepared.objectId=request.objectId.isZero()?runtime_.allocateTextIdentity():request.objectId;
+    prepared.intrinsicWidth=registered.content.intrinsic_width;prepared.intrinsicHeight=registered.content.intrinsic_height;
+    if(prepared.width<=0&&prepared.height<=0){const auto scale=std::min({1.0,480.0/prepared.intrinsicWidth,360.0/prepared.intrinsicHeight});prepared.width=std::max(32.0,prepared.intrinsicWidth*scale);prepared.height=prepared.width*prepared.intrinsicHeight/prepared.intrinsicWidth;}
+    if(prepared.centerInViewport){const auto center=runtime_.viewToContent(runtime_.surface().logicalWidth*.5F,runtime_.surface().logicalHeight*.5F);prepared.transform.tx=center.first-prepared.width*.5;prepared.transform.ty=center.second-prepared.height*.5;prepared.centerInViewport=false;}
+    semantic::ObjectRecord object;object.id=prepared.objectId;object.kind=semantic::ObjectKind::kImage;object.kind_version=1;object.transform=prepared.transform;object.placement=prepared.placement;object.placement.order_key=semantic::OrderKey{{254,255,128}};object.content=semantic::ImageContent{registered.content.resource_id,prepared.intrinsicWidth,prepared.intrinsicHeight,prepared.sourceRect,prepared.contentMode,prepared.width,prepared.height};
+    std::vector<std::uint8_t> order;for(const auto& existing:runtime_.semanticObjects_.children(object.placement.parent_id))if(order.empty()||semantic::OrderKey(order)<existing.placement.order_key)order.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());
+    const auto pendingValues=runtime_.pendingLocalValue();for(const auto& intent:pendingValues.intents)for(const auto id:intent.objects)if(const auto* existing=runtime_.pendingObject(id);existing&&existing->placement.parent_id==object.placement.parent_id&&(order.empty()||semantic::OrderKey(order)<existing->placement.order_key))order.assign(existing->placement.order_key.bytes().begin(),existing->placement.order_key.bytes().end());
+    if(order.size()>=semantic::OrderKey::kMaxSize)return rejected(ImageFailureReason::kObjectRejected);order.push_back(128);object.placement.order_key=semantic::OrderKey(std::move(order));prepared.placement=object.placement;
+    if(!runtime_.imageResolver_)return rejected(ImageFailureReason::kNotReady);
+    auto retained=std::make_shared<resources::ResourceLease>(std::move(*quota));
+    if(!runtime_.imageResolver_->retainPending(registered.content.resource_id,std::make_shared<const std::vector<std::uint8_t>>(request.bytes),retained))return rejected(ImageFailureReason::kResourceRejected);
+    if(!runtime_.enqueuePendingImage(std::move(prepared),object)){runtime_.imageResolver_->releasePending(registered.content.resource_id);return rejected(ImageFailureReason::kObjectRejected);}
+    ImageCommandReceipt result;result.state=ImageCommandState::kPending;result.pendingSerial=runtime_.lastPendingLocalSerial();result.objectId=object.id;result.content=std::get<semantic::ImageContent>(object.content);result.reason=ImageFailureReason::kNone;return result;
+  }
   if (request.resourceId.value.isZero()) {
     if (readTextEditor().phase != TextPhase::kClosed || pendingWork_.load() != 0 ||
         !runtime_.textReady() || !std::isfinite(request.width) || !std::isfinite(request.height) ||
@@ -164,7 +186,7 @@ ImageCommandReceipt CanvasRuntimeFacade::importImage(const ImageImportRequest& r
     const auto registration = registerImageBytes(request.bytes, request.mimeType);
     if (registration.state != ImageCommandState::kApplied) return registration;
     const auto result = importImage(prepared);
-    if (result.state == ImageCommandState::kApplied) {
+    if (result.state == ImageCommandState::kApplied && (!runtime_.cpuPendingBusy() || runtime_.selectedPrimaryObject()==result.objectId)) {
       runtime_.selectCreatedObject(result.objectId);
     }
     return result;

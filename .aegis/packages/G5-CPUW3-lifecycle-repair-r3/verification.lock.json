@@ -1,0 +1,96 @@
+{
+  "status": "FROZEN_CORRECTIVE_VERIFICATION_R3",
+  "original_obligations_ref": {
+    "path": ".aegis/packages/G5-CPUW3-complete-interaction-r2/verification.lock.json",
+    "sha256": "206502932b1fc056bfcdf87a40665693d5c7143bdd4e0f9c407b47af02b56fa5"
+  },
+  "retained_obligations": "AllsevenoriginalCW3 still apply; S/P/orderedmixed/pixels/atomicity proof reused exactly unless affected dependency changes. Do not create newblockedfinishline.",
+  "obligations": [
+    {
+      "id": "CWR3-CLOSE",
+      "requirement": "ActualexportedrootSDKclosesafterpublicationreleasewithnoWorkerresurrectionandnoopenwrites.",
+      "invariant": "Busy/PublicationPending/release/closedareseparatetruthfulstates;exactreleasefullydrained→retryclosedsuccess; read-onlypreflightdoesnotadmitwork.",
+      "failure_mode": "Teardownblockedforever, leakedworker/context/grants, silentpacketlossorrestartedWorkerwhileclosing.",
+      "impact": "SDKcannotcompleteuserlifecycleandresourcecustody.",
+      "existing_independent_coverage": [
+        "r2actualDPR4failedclose rawwithpendingbytes0/releasedOrdinal12",
+        "nativeRuntimeinflightBusyandoriginalDataPortidentitytests",
+        "r2contextrecoveryandunrelatedBconfirmed"
+      ],
+      "residual_proof_gap": "Newrootprivatepreflightafterclosing+noautomaticrestart+nativerejectswrites+realmatchedrootretryteardown.",
+      "oracle": "ActualSessionpublicationpacketandrootJSprivatepreflightcallsequencewithrealRuntime; ownergrant+closeidentityobservers; actualDPR4DOM/WorkerinstalledSDKrecoverychain.",
+      "fixture": "SameFixed40andmixedpublic6objects/2.3MBimagefromr2;24confirmedAsegments;DPR4CSS1431x1010.",
+      "exact_execution_method": "REDbeforeproductionedit:actualSessionclose→PUBLICATION_PENDING→release→cpuPending.closePreflightfailsDOCUMENT_CLOSING;actualrootclosemockincludesnativeclosingtruthandpumpwithclosedWorkermustneverrestart. GREENdemonstratesinflightBusykeepalive,zeroDataPortpacketsretryclosed,wrongpacket/stale/releasedidentitiesrejected,privatewritesstillclosingdenied. Reuseactualfrozenr2RECOVERYrequest/driverasfailedoracleinnewboundedr3windowwithmatchinginstall; keepcontextloss/failure/unrelatededitandDataPortchain.",
+      "evidence_required": [
+        "red-green.json",
+        "lifecycle-and-memory.json",
+        "root-close-chain.json",
+        "regressions.json",
+        "actualDPR4raw/request/source/SDKhashes"
+      ],
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Coverscrossboundaryrootpreflight+pumpwhichnativeSessiondirectcloseneverinvoked.",
+      "blocking_justification": "Formalr2exposedrealpublicboundaryresourceterminationfailure."
+    },
+    {
+      "id": "CWR3-IMAGE-TIE",
+      "requirement": "Imagepixelsretaincorrectresource/geometry/crop/opacity/orderwhilelegitimateexactnearesttiesdonotfalsefail.",
+      "invariant": "Onlymathematicallyexactsource-texel-edgechoicesmayvary; noerrorbandpercentageorblanketimageexclusion;unchangedchannel2andAAwidth.",
+      "failure_mode": "Falseblockonbackendroundingtieorwideallowancemaskswrongimage,transform,crop,opacityorcomposite.",
+      "impact": "Mixedsceneproofinvalidorrealvisualcorruptionundetected.",
+      "existing_independent_coverage": [
+        "r2DPR2 29/DPR4two strictimages0mismatch",
+        "25byteequalOperationreplays",
+        "independent9DPR1allbadtexelattributioneverypointadjacentties"
+      ],
+      "residual_proof_gap": "Explicitanalyticalallowed-valuesoracleandfalsifyingcounterexamplesforallninecapturedDPR1stages.",
+      "oracle": "IndependentlydecodeoriginalPNG(RGBopaque880x880)withoriginalresourceSHA;canonicalImageContent/sourceRect/contentMode/transformpluscameraandpixelcentredefinesnearestsourcecoordinatesusingexactrationalIEEEinputsorprovableboundedroundoffnotlearnedfromdiff. At exactinteger x/y discontinuity useoneortwoindexperaxis,upto4originaltexels;outerclip/sourceboundsandtopmostopaquecontributionmustbeprovenfromreferencegeometry. ExpectedRGBAnottakenfromcandidate. NontiesstrictCPU/AA;defaultfailifnoteligible.",
+      "fixture": "Exactexisting9r2DPR1 RGBA/reference/snapshot/Operations/request resource. Do notmoveorremoveimage orchangefilter.",
+      "exact_execution_method": "Offlinefirstevaluateimmutablecapturewithnewcorroborativeoracleresult,leaveoldFAILEDbytesunchanged. Bindperpixelsource/tie/expectedchoicecounts,zero unexplained. NegativeoriginalOperationreferences independentlyalterimageposeby1devicepx,sourcecropby1sourcetexel,resourcecolororopacity andmuststillfail. Candidatewrongcoloroutsidepermittedsetattieboundarymustfail. Alsochecknear-butexactnontie cannotgettwochoices andotherobjects/overpaintare not accepted asrawimagecolor. No browserneededforretainedpixels;reusecorrectDPR1functionalraw, ifprivatecloseonlyproductiondelta unchangedrenderdepsrecordreuse.",
+      "evidence_required": [
+        "image-tie-contract.json",
+        "image-tie-attribution.json",
+        "image-reference-negatives.json",
+        "feedback-pixels.json"
+      ],
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Enablescorrectedge-degenerateimageoraclewhileexplicitnegativecasesdetectmistakesnotcoveredbybitexactcanonicalstate.",
+      "blocking_justification": "Existingstrictimageevidencefailsatsource discontinuities; acceptedverificationmustjustifyeveryexceptionmathematically,notwaiveit."
+    },
+    {
+      "id": "CWR3-INTEGRATED-CLOSURE",
+      "requirement": "FinishoriginalWorkerwholefunctionalplanandprovideaccuratefreshDemo.",
+      "invariant": "AllretainedCW3requirementscurrentandmatchingSDK/Worker/Build0;noeditlost/fakecommit;noeraser-onlyclosure.",
+      "failure_mode": "TinyclosefixtoutedwholeWorkercompletionwithoutmixed feedback/resources/canonicalproof.",
+      "impact": "Userreceivespartialbrokencandidate.",
+      "existing_independent_coverage": [
+        "r1S/PnumericSnapshot/privateboundary",
+        "r2mixed/DPR1functional/29DPR2+2DPR4pixel/25snapshotreplay",
+        "postpublishfaultA/BCommitted9nativekeepers"
+      ],
+      "residual_proof_gap": "Correctiveclose/imageproofanddependencies/source/artifactreviewreadyDemo.",
+      "oracle": "Source-delta dependency traversal and originalindependentproofbindings; actualrootnewSDKfunctionalrecoveryandallobligationmatrix.",
+      "fixture": "Reuseexistingexactfixturesraw, nofullbaselineperformancecampaign.",
+      "exact_execution_method": "Recordwhat isunchanged/reusedvsnew;runonlyclose/Session/rootpump/receipt/consumer boundaryregressionsactuallyaffected. NoallnativeorallG5scale. Afterfunctionalproof copy/installmatchingcandidateSDKtofreshlocalDemoport,healthcheckHTTPandassetmanifest;openfortheuserpreserving4328.",
+      "evidence_required": [
+        "proof-reuse-map.json",
+        "completion-matrix.json",
+        "source-manifest.json",
+        "source-delta-manifest.json",
+        "SDK-manifest.json",
+        "artifact-manifest.json",
+        "cleanup.json",
+        "result.json"
+      ],
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "CheckswholeobjectivecoverageandmatchednewWebintegrationratherthanunitpatchonly.",
+      "blocking_justification": "CompletenessalreadyfrozenbyoriginaluserWorkergoal."
+    }
+  ],
+  "nonblocking": [
+    "Unmet3s/5sdrainand33msp95remainreportedengineeringdirections.",
+    "Physicalgesture/input-to-photon,allplatformABIand1Mscaleareoutofscope.",
+    "Noextraproof-of-prooforall12cancelpixelregressionswhenindependentcurrentmechanismcoverscancellation."
+  ],
+  "reference_policy_revision": "P20onlyexactnearestimagediscontinuityexpected-valueambiguity. OriginalBrush/geometry/f32/AA/Operation/Snapshot/renderalgorithmunchanged; nooldtestPASSrelabel."
+}

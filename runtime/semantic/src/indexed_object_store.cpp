@@ -159,7 +159,7 @@ std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContai
     if (kind != OperationKind::kSetSectionContent && kind != OperationKind::kEditContainerTopology &&
         (!admitted || (kind != OperationKind::kInsertObjects && kind != OperationKind::kRestoreObjects &&
         kind != OperationKind::kDeleteObjects && kind != OperationKind::kSetTransforms &&
-        kind != OperationKind::kPatchProperties && kind != OperationKind::kEditTable))) return {};
+        kind != OperationKind::kPatchProperties && kind != OperationKind::kEditTable && kind != OperationKind::kAddEraseMasks))) return {};
     if (plan.manifest) return {};
     auto state = std::make_unique<PreparedIndexedContainerApply::State>(store);
     std::vector<ObjectIndex::ParentEntry> before, after;

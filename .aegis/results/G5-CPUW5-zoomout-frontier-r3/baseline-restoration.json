@@ -1,0 +1,76 @@
+{
+  "classification": "CPUW5_PRODUCTION_RESTORED_EXACT_CPUW4_BASELINE",
+  "restored_files": [
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "restored_sha256": "ddea83df0c89c37de1957f24e446eabc6b36ee8620c800a94868a988534f57e7"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp",
+      "restored_sha256": "b7b1e55d3e24f3a20829a921b1dce27d1c756b3b1e4970489127c6e181376fb7"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "restored_sha256": "c4181bdb4b1a58901454cb262014bad3415c6fec374fdad3d7e94bd109f6c849"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "restored_sha256": "449222bf7b4e5710a57b15a42fd10ff7991c121331f8f10f1626c69860d0bec5"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/navigation_sources.hpp",
+      "restored_sha256": "d4d2b8358d64c74df342965233b9c14b4bc0988938836bda4460dfa58ff27639"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "restored_sha256": "108160eee37671f13ecba698a065e2fd622f5241c72c453e08f25f7afc366dc5"
+    },
+    {
+      "path": "runtime/render/src/navigation_pixel_validity.cpp",
+      "restored_sha256": "edac3ea2fb83ce0cd1e1b12ab7f1bcd8903085acb90d646a118f5ff5b90bd309"
+    },
+    {
+      "path": "runtime/render/src/navigation_pixel_validity.hpp",
+      "restored_sha256": "6ac55adf05da4191f6f28e7ecae02a213240abde1456fcbd14b43ac9018afe3e"
+    },
+    {
+      "path": "runtime/render/src/navigation_source_snapshot.hpp",
+      "restored_sha256": "f102c7705d9745594cd18317a4fac148b77a858350bcdec83f445266b7fead36"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "restored_sha256": "297135aa4720cedb0b9de8ec795ed7af4edf3a9f10577228ae6a6115967b1000"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "restored_sha256": "367ef141f6e7069ba9b3e4c705124c5e8f79636d8c2923d2fad6696c5612a8c1"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "restored_sha256": "bb85cfcf21923c94fa4a7a9d52a4566841bb22ee3b9eb40c34e08a7dd4368094"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "restored_sha256": "dbd7c8568fcd1c772b4837f73cfeea044f1731ae09dbe308ba812de370330acf"
+    }
+  ],
+  "restored_count": 13,
+  "CPUW4_checked": 1269,
+  "CPUW4_mismatches": [],
+  "historical_r3_checked": 1261,
+  "historical_r3_mismatches": [],
+  "dependent_CPP_tests_archived_removed": [
+    "runtime/composition/tests/cpu_zoomout_owner_integration_test.cpp",
+    "runtime/render/tests/cpu_zoomout_frontier_test.cpp",
+    "runtime/render/tests/cpu_zoomout_owner_budget_test.cpp",
+    "runtime/render/tests/cpu_zoomout_region_proof_test.cpp",
+    "runtime/render/tests/cpu_zoomout_scene_proof_test.cpp"
+  ],
+  "CMake_all_original_baseline": true,
+  "new_test_in_live_CMake": false,
+  "foreign_change_conflicts": [],
+  "index_empty": true,
+  "HEAD": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+  "branch": "codex/g5-cpu-worker",
+  "verification": "Exact accepted source/build-input equivalence. No new compilation or browser sampling after control stop."
+}

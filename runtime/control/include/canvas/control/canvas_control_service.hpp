@@ -21,6 +21,7 @@ class CanvasControlService final {
   [[nodiscard]] CanvasControlReceipt enqueueMultiSelection(
       std::shared_ptr<MultiSelectionControlWork> request);
   [[nodiscard]] std::size_t processPending(std::uint64_t ownerSequence,std::optional<CanvasControlReceiptKey> only = std::nullopt);
+  bool completeDeferred(CanvasControlReceiptKey,std::uint64_t serial,bool applied,std::uint64_t revision);
   void rejectPending(CanvasControlReceiptKey,CanvasControlError);
   [[nodiscard]] std::optional<CanvasControlReceipt> receipt(CanvasControlReceiptKey key) const;
   [[nodiscard]] CanvasControlSnapshot snapshot(const CanvasTargetKey& target) const;

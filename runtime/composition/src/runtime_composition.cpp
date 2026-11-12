@@ -474,9 +474,11 @@ void RuntimeCompositionCore::suspendCpuPendingExecutor()noexcept{if(std::this_th
 void RuntimeCompositionCore::failCpuPendingExecutor()noexcept{if(std::this_thread::get_id()==ownerThread_&&runtime_)runtime_->failCpuPendingExecutor();}
 bool RuntimeCompositionCore::bindCpuPendingExecutor(std::uint64_t e)noexcept{
  if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return false;
- const auto doc=runtime_->documentId().value();std::array<std::uint64_t,4> basis{runtimeInstanceId_,resources_.lifetimeGeneration,0,0};
- for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
- return runtime_->bindCpuPendingExecutor(basis,e);
+ return runtime_->bindCpuPendingExecutor(cpuWorkerBasis(),e);
+}
+std::array<std::uint64_t,4> RuntimeCompositionCore::cpuWorkerBasis()const noexcept{
+ if(runtime_){const auto pending=runtime_->pendingLocalValue();if(pending.owner[0]){std::array<std::uint64_t,4> basis{pending.owner[0],pending.owner[1],0,0};const auto doc=runtime_->documentId().value();for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);return basis;}}
+ std::array<std::uint64_t,4> basis{runtimeInstanceId_,resources_.lifetimeGeneration,0,0};if(runtime_){const auto doc=runtime_->documentId().value();for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);}return basis;
 }
 std::vector<std::uint8_t> RuntimeCompositionCore::takeCpuPendingRequest()noexcept{
  return std::this_thread::get_id()==ownerThread_&&runtime_?runtime_->takeCpuPendingRequest():std::vector<std::uint8_t>{};
@@ -484,6 +486,7 @@ std::vector<std::uint8_t> RuntimeCompositionCore::takeCpuPendingRequest()noexcep
 bool RuntimeCompositionCore::queueCpuPendingCompletion(std::array<std::uint64_t,8> j,std::span<const std::uint8_t> b,bool ok)noexcept{
  return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->queueCpuPendingCompletion(j,b,ok);
 }
+interaction::PendingLocalValue RuntimeCompositionCore::pendingLocalValue()const{return runtime_?runtime_->pendingLocalValue():interaction::PendingLocalValue{};}
 interaction::CpuPendingEraseFacts RuntimeCompositionCore::cpuPendingFacts()const noexcept{return runtime_?runtime_->cpuPendingFacts():interaction::CpuPendingEraseFacts{};}
 std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
  if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
@@ -517,6 +520,10 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
   runtime_->serviceCpuPendingErases();
+  try{if(auto image=runtime_->pendingHeadImage()){
+    bool applied=false;try{applied=controlFacade_->importImage(image->second).state==ImageCommandState::kApplied;}catch(...){}
+    runtime_->completePendingImage(image->first,applied);
+  }}catch(...){runtime_->completePendingImage(runtime_->cpuPendingFacts().head,false);}
   runtime_->serviceResourceRetirements();
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
@@ -585,7 +592,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if (out.navigationPending || out.navigationPresented) {
     out.canonicalWork.reset();
   }
-  out.needsPaint = runtime_->cpuPendingBusy() || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
+  out.needsPaint = runtime_->cpuPendingFacts().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
   return true;

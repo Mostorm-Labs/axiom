@@ -16,6 +16,7 @@
 #include <utility>
 #include <variant>
 #include <vector>
+#include <new>
 
 namespace canvas::semantic {
 namespace {
@@ -861,7 +862,7 @@ ValidationResult validateEnvelope(
     return {};
 }
 
-ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
+ValidationResult validatePayloadStructure(const Operation& operation) noexcept try {
     const auto geometry = geometryUnits(operation.payload);
     if (geometry.issue != ValidationIssue::kNone) return {geometry.issue};
     return std::visit(
@@ -993,6 +994,8 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
             return {};
         },
         operation.payload);
+} catch(const std::bad_alloc&) {
+    return {ValidationIssue::kInvalidCollection};
 }
 
 bool validateSketchVectorPath(const VectorPathGeometry& path) noexcept {

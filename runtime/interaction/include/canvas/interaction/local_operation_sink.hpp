@@ -26,6 +26,9 @@ class LocalOperationSink {
   [[nodiscard]] virtual bool preparePublication(std::span<const semantic::Operation>) noexcept {
       return true;
   }
+  [[nodiscard]] virtual bool prepareEncodedPublication(const semantic::Operation& op,std::span<const std::uint8_t>) noexcept {
+      return preparePublication({&op,1});
+  }
   virtual void abortPreparedPublication() noexcept {}
   virtual void applied(const semantic::Operation&,
                        const semantic::CanonicalCommitRecord&) noexcept = 0;

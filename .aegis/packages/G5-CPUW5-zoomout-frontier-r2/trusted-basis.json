@@ -1,0 +1,87 @@
+{
+  "status": "EXACT_CPUW4_ACCEPTED_AND_CPUW5_R1_RESCOPE",
+  "refs": {
+    "cpuw4_result": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/result.json",
+      "sha256": "cdcbeae9fc778716991c423eb257d107a34db5ce2839a768601457cee3f5a058"
+    },
+    "source": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-manifest.json",
+      "sha256": "ef88efb26e881e8ccf7047e83e3adc05f9d16abc5e4b2c31542535fa22335305"
+    },
+    "delta": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-delta-manifest.json",
+      "sha256": "b5c07760c98195f5c3c64ef30e8272d86e00322a22cd0146fe75f60115b3f2dc"
+    },
+    "baseline": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/baseline-and-attribution.json",
+      "sha256": "542101c1d7396659fb054e3bdc1e51f567689055989e431e9d16435ee481cfd4"
+    },
+    "phases": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/phase-accounting.json",
+      "sha256": "8ce307570bdde221c6c32cd0660a46cf2a02f52e0e4960b0ef13a6fa29c39d58"
+    },
+    "fixture": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/fixture-and-inputs.json",
+      "sha256": "564323952267db8b3ca8076a3395aa9b77ce46e6257fbf50d1477482620c9b4a"
+    },
+    "sdk": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/SDK-manifest.json",
+      "sha256": "7af8cf0231f1ecc37047670833fb5f26289bd38f91421e45bbee8ae1bef34842"
+    },
+    "ledger": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/sampling-ledger.json",
+      "sha256": "5f2e9419fe0286236f0f08cac32d053846927d6bd32fcb75f281bf4ad995a007"
+    },
+    "control_review": {
+      "path": ".aegis/results/G5-CPUW4-control-review-r1/control-review.json",
+      "sha256": "53842c30387f0597d16c694c256c99ef52ca174098afb0890fb3c4c1567731fc"
+    },
+    "r3_result": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/result.json",
+      "sha256": "e2f413dfd558eaddbb89d370171a9a34fb54cd7337be0d69d3ed2c82a01a2093"
+    },
+    "r3_reference": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/reference-manifest.json",
+      "sha256": "009182faa6bd1fe67fc949f99d5c7bc013fbd58b825771a7208c2568f24724e6"
+    },
+    "original_reference": {
+      "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+      "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+    },
+    "original_reference_binary": {
+      "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+      "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+    },
+    "pixel_oracle": {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+    },
+    "fixed_inputs": {
+      "path": "verification/runners/g5/cpu_edit_navigation_contract.mjs",
+      "sha256": "09168bfbb5208f974db0b5701f1a74fd559ccd2d9922094b309a84fc7695bbaa"
+    },
+    "r1_package": {
+      "path": ".aegis/packages/G5-CPUW5-zoomout-frontier-r1/package.json",
+      "sha256": "5395cbffb4acfc6c81e01ebe5f4c604b4de8ebd1331763c1c66a31cdd2ec6657"
+    },
+    "r1_rescope": {
+      "path": ".aegis/results/G5-CPUW5-zoomout-frontier-r1/rescope-cursor.json",
+      "sha256": "9fb80026d54550d67279d7cf163a0a865f5dcfea43335473d8b355c7ec57521e"
+    },
+    "r1_failures": {
+      "path": ".aegis/results/G5-CPUW5-zoomout-frontier-r1/mechanism-attempts.json",
+      "sha256": "727099db9510796caa47bf6072a7e17ee69e02b88a9f7c3280c086916b2d519f"
+    },
+    "r1_ledger": {
+      "path": ".aegis/results/G5-CPUW5-zoomout-frontier-r1/sampling-ledger.json",
+      "sha256": "41eb965da87ddbafb31f97533060f3f7db900bfb1948d38bd4ec9be08c18e654"
+    }
+  },
+  "source_manifest": {
+    "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-manifest.json",
+    "sha256": "ef88efb26e881e8ccf7047e83e3adc05f9d16abc5e4b2c31542535fa22335305"
+  },
+  "preserve": "1269 current source entries unchanged at P31; CPUW4 productiondelta0. Oldartifacts immutable; do not copymassive priorproof into newresults.",
+  "sampling_carry": "R1 development0/final0, same CPUW5 aggregate6/3 starts. No freshquota on package revision."
+}

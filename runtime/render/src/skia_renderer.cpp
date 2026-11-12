@@ -799,7 +799,17 @@ std::uint64_t SkiaRenderer::reserveCpuWorkerGrant(std::uint64_t executor,std::si
     if(!executor||!bytes||bytes>80U*1024U*1024U||nextCpuGrant_==UINT64_MAX||cpuGrants_.size()>=16)return 0;
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
-        const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return 0;
+        auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);
+        if(!token){
+            // Real denial: release only reconstructible derived sources. GPU
+            // leases stay charged until their existing completion callbacks.
+            if(renderCache_)renderCache_->releaseMaterialSources();
+            navigationFallback_.reset();navigationCache_.reset();
+            if(preparedGeometry_)while(preparedGeometry_->reclaimUnused()){}
+            if(gpuRetirements_)gpuRetirements_->service();
+            token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);
+        }
+        if(!token)return 0;
         resources::ResourceLease lease(resourceBudget_,*token);
         static std::atomic<std::uint64_t> serial{0};
         auto previous=serial.load();do{if(previous==UINT64_MAX)return 0;}while(!serial.compare_exchange_weak(previous,previous+1));
@@ -831,7 +841,8 @@ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneReco
 void SkiaRenderer::beginCpuPendingOpportunity()noexcept{if(cpuPendingPreparation_)cpuPendingOpportunity_=std::chrono::steady_clock::now();}
 std::vector<std::uint8_t> SkiaRenderer::encodeCpuPendingRequest(
  const semantic::EraseMaskGeometry& geometry,const std::array<std::uint64_t,8>& identity)const{
- return internal::cpuEncodeRequest({internal::CpuIdentity{identity},geometry});
+ internal::CpuRequest request;request.identity.words=identity;request.geometry=geometry;
+ return internal::cpuEncodeRequest(request);
 }
 std::optional<resources::ResourceLease> SkiaRenderer::reserveCpuPendingMetadata(std::size_t bytes)noexcept{
  try{if(!resourceBudget_)return {};auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};return resources::ResourceLease(resourceBudget_,*token);}catch(...){return {};}
@@ -843,9 +854,26 @@ void SkiaRenderer::setCpuPendingPreparation(bool value)noexcept{
 SkiaRenderer::CpuPathPin SkiaRenderer::lookupCpuPendingPath(const semantic::EraseMaskGeometry& g)const noexcept{
  return eraseQueries_?eraseQueries_->lookup(g):CpuPathPin{};
 }
+std::vector<std::uint8_t> SkiaRenderer::encodeCpuPendingContinuation(
+ const semantic::EraseMaskGeometry& geometry,const std::array<std::uint64_t,8>& identity,
+ const semantic::EraseMaskGeometry& witness,const CpuPathPin& opaque,std::size_t* prefix)const{
+ internal::CpuRequest request;request.identity.words=identity;request.geometry=geometry;
+ const auto pin=std::static_pointer_cast<const internal::EraseMaskPathCache::Entry>(opaque);
+ const auto* full=std::get_if<semantic::SweptCircleMask>(&geometry);
+ const auto* prior=std::get_if<semantic::SweptCircleMask>(&witness);
+ if(pin&&internal::EraseMaskPathCache::readyMatches(pin,witness)&&full&&prior&&
+    prior->segments.size()<=full->segments.size()&&std::equal(prior->segments.begin(),prior->segments.end(),full->segments.begin())){
+  request.prefixWitness=witness;request.prefixCount=prior->segments.size();request.prefixPath=internal::EraseMaskPathCache::readyPath(pin);
+  auto bytes=internal::cpuEncodeRequest(request);
+  if(!bytes.empty()){if(prefix)*prefix=request.prefixCount;return bytes;}
+ }
+ if(prefix)*prefix=0;request.prefixWitness.reset();request.prefixCount=0;request.prefixPath=SkPath{};
+ return internal::cpuEncodeRequest(request);
+}
 SkiaRenderer::CpuPathPin SkiaRenderer::importCpuPendingPath(
  const semantic::EraseMaskGeometry& geometry,std::span<const std::uint8_t> bytes,
- const std::array<std::uint64_t,8>& identity)const noexcept{
+ const std::array<std::uint64_t,8>& identity,bool* resourcePending)const noexcept{
+ if(resourcePending)*resourcePending=false;
  try{
   if(bytes.size()<internal::cpuHeaderSize||bytes.size()>internal::cpuOutputLimit)return {};
   const auto word32=[&](std::size_t p){std::uint32_t n=0;for(unsigned i=0;i<4;++i)n|=std::uint32_t(bytes[p+i])<<(8*i);return n;};
@@ -859,7 +887,7 @@ SkiaRenderer::CpuPathPin SkiaRenderer::importCpuPendingPath(
   // allocate. Worker heap custody does not cover the main module's heap.
   constexpr std::size_t importLimit=8U*1024U*1024U;
   auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,importLimit,true,0);
-  if(!token)return {};
+  if(!token){if(resourcePending)*resourcePending=true;return {};}
   resources::ResourceLease pin(resourceBudget_,*token);
   auto path=internal::cpuDecodePath(bytes.subspan(128));if(!path)return {};
   const auto footprint=path->approximateBytesUsed()+4096;

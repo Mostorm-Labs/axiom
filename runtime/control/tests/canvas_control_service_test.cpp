@@ -14,6 +14,7 @@ class Port final : public CanvasControlPort {
   bool isTargetCurrent(const CanvasTargetKey& target) const noexcept override { return target == current; }
   CanvasControlApplyResult apply(const CanvasControlRequest& request) override {
     ++applied;
+    if(defer){CanvasControlApplyResult r;r.pendingSerial=19;return r;}
     if (request.payload.kind == CanvasControlPayloadKind::kUndo && undoApplied) {
       return {CanvasControlError::kInternalFailure, "duplicate undo"};
     }
@@ -30,6 +31,7 @@ class Port final : public CanvasControlPort {
   std::uint32_t applied = 0;
   std::uint64_t revision = 4;
   bool undoApplied = false;
+  bool defer=false;
 };
 
 CanvasControlRequest request(std::uint64_t client, std::uint64_t id,
@@ -93,6 +95,15 @@ int main() {
   // Evicting detailed receipts must not make an old Undo executable again.
   assert(bounded.enqueue(request(20, 1, live, CanvasControlPayloadKind::kUndo)).state ==
          CanvasControlReceiptState::kExpired);
+
+  Port pendingPort;pendingPort.defer=true;CanvasControlService deferred(pendingPort,2,1);
+  assert(deferred.enqueue(request(90,1,live,CanvasControlPayloadKind::kUndo)).state==CanvasControlReceiptState::kQueued);
+  assert(deferred.processPending(1)==1&&deferred.receipt({90,1})->state==CanvasControlReceiptState::kQueued);
+  assert(!deferred.completeDeferred({90,1},18,true,8));
+  assert(deferred.completeDeferred({90,1},19,true,8));
+  assert(deferred.receipt({90,1})->state==CanvasControlReceiptState::kApplied&&deferred.receipt({90,1})->appliedRevision==8);
+  assert(!deferred.completeDeferred({90,1},19,false,9));
+  pendingPort.defer=false;assert(deferred.enqueue(request(90,2,live,CanvasControlPayloadKind::kPanBy)).state==CanvasControlReceiptState::kQueued);assert(deferred.processPending(2)==1);assert(!deferred.receipt({90,1}));
 
   Port orderedPort;
   CanvasControlService ordered(orderedPort, 2, 8);

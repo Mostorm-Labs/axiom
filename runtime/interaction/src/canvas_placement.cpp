@@ -6,6 +6,7 @@
 
 namespace canvas::interaction {
 void CanvasEditingRuntime::cancelPlacementCreation() noexcept {
+  if(placementCreation_)cancelPendingLocal(placementCreation_->key);
   if (placementCreation_) {
     placementCreation_.reset();
     transientOverlayDirty_=false;
@@ -17,8 +18,10 @@ void CanvasEditingRuntime::cancelPlacementCreation() noexcept {
 
 bool CanvasEditingRuntime::placementPointer(const input::PointerKey& key,
     input::PointerPhase phase,float x,float y) noexcept {
+  displayInputKey_=key;
   if (!key.valid()) return false;
   if (phase==input::PointerPhase::kDown) {
+    if(!reservePendingLocal(key,"create"))return false;
     placementPointers_.insert(key);
     if (placementPointers_.size()!=1) {
       placementCreation_.reset();transientOverlayDirty_=false;
@@ -105,7 +108,7 @@ bool CanvasEditingRuntime::placementPointer(const input::PointerKey& key,
     request.columns=static_cast<std::uint32_t>(table.columns.size());
     request.x=completed.preview.record.transform.tx;request.y=completed.preview.record.transform.ty;
     request.generation=completed.generation;
-    return createTableObject(request,&completed.preview.record).applied;
+    const auto result=createTableObject(request,&completed.preview.record);return result.applied||result.pending;
   }
   runtime::SectionIntent request;request.objectId=completed.preview.record.id;
   request.content=std::get<semantic::SectionContent>(completed.preview.record.content);

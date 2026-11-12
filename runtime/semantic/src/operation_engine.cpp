@@ -10,7 +10,11 @@
 #include "object_store_mutator.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 #include "change_set_builder.hpp"
+#include "protobuf_codec_internal.hpp"
 
+#include <chrono>
+#include "canvas/semantic/idempotency.hpp"
+#include "canvas/semantic/geometry_accounting_v1.hpp"
 #include <exception>
 #include <new>
 #include <limits>
@@ -88,6 +92,73 @@ const std::vector<PreparedApplyPlan>& PreparedOperationIntent::plans() const noe
 const std::vector<CanonicalCommitRecord>& PreparedOperationIntent::records() const noexcept { return state_->records; }
 CanonicalCommitRecord PreparedOperationIntent::takeLastRecord() noexcept {
     return std::move(state_->records.back());
+}
+
+class PreparedEraseOperation::State final {
+ public:
+ State(Operation value,IndexedObjectStore& store,AppliedOperationLedger& entries,const SemanticGenerationState& generation,const CanonicalCommitClock& clock):input(std::move(value)),objects(store),applied(entries),basis(generation.current()),ordinal(clock.lastCommittedOrdinal()),epoch(clock.runtimeEpoch()){}
+ Operation input;IndexedObjectStore& objects;AppliedOperationLedger& applied;SemanticGeneration basis;CommitOrdinal ordinal;RuntimeEpoch epoch;
+ std::size_t cursor=0;bool failed=false,complete=false,consumed=false;
+ std::vector<std::unique_ptr<internal::PreparedIndexedContainerApply>> storage;
+ std::vector<ObjectSemanticChange> changes;
+ std::optional<CanonicalCommitRecord> record;
+ std::optional<AppliedOperationLedger::ReservedEntry> ledger;
+ unsigned finalPhase=0;
+ std::vector<std::vector<std::uint8_t>> encodedItems;std::vector<std::uint8_t> encoded;
+};
+PreparedEraseOperation::PreparedEraseOperation(std::unique_ptr<State> value):state_(std::move(value)){}
+PreparedEraseOperation::~PreparedEraseOperation()=default;
+bool PreparedEraseOperation::ready()const noexcept{return state_->complete&&!state_->failed;}
+const Operation& PreparedEraseOperation::operation()const noexcept{return state_->input;}
+std::span<const std::uint8_t> PreparedEraseOperation::encoded()const noexcept{return state_->encoded;}
+bool PreparedEraseOperation::advance(std::size_t maxTargets,std::uint64_t micros)try{
+ auto& s=*state_;if(s.failed||s.consumed)return false;if(s.complete)return true;if(!maxTargets||!micros)return true;
+ auto& items=std::get<AddEraseMasksOp>(s.input.payload).items;const auto began=std::chrono::steady_clock::now();
+ for(std::size_t steps=0;s.cursor<items.size()&&steps<maxTargets;++steps){
+  if(std::chrono::steady_clock::now()-began>=std::chrono::microseconds(micros))return true;
+  Operation one{s.input.id,s.input.document_id,s.input.schema_version,s.input.payload_version,AddEraseMasksOp{{std::move(items[s.cursor])}}};
+  OperationEngine engine;auto plan=engine.prepare(one,{s.objects,s.applied});if(!plan.plan||plan.disposition!=PrepareDisposition::kPrepared){s.failed=true;return false;}
+  auto storage=internal::ObjectStoreMutator::prepareContainerPlan(s.objects,*plan.plan,true);if(!storage){s.failed=true;return false;}
+  auto normalized=std::get<AddEraseMasksOp>(std::move(plan.plan->operation.payload));items[s.cursor]=std::move(normalized.items.front());s.storage.push_back(std::move(storage));s.changes.push_back({items[s.cursor].object_id,SemanticChangeFlags::kEraseMasks,{}});
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+  auto encoded=internal::encodePreparedEraseItem(s.input,s.cursor);if(!encoded.ok()){s.failed=true;return false;}s.encodedItems.push_back(std::move(encoded.bytes));
+#endif
+  ++s.cursor;
+ }
+ if(s.cursor==items.size()){
+  // Separate aggregate validation, fallible ledger reservation and final
+  // changeset allocation so none buys an extra per-object time allowance.
+  if(s.finalPhase==0){if(!validatePayloadStructure(s.input).ok()){s.failed=true;return false;}++s.finalPhase;return true;}
+  if(s.finalPhase==1){s.ledger=s.applied.reserveContainerEntry(s.input,true);if(!s.ledger){s.failed=true;return false;}++s.finalPhase;return true;}
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+  if(s.finalPhase==2){auto bytes=internal::framePreparedEraseOperation(s.input,s.encodedItems);if(!bytes.ok()){s.failed=true;return false;}s.encoded=std::move(bytes.bytes);std::vector<std::vector<std::uint8_t>>{}.swap(s.encodedItems);++s.finalPhase;return true;}
+#endif
+  auto change=ChangeSet::fromChanges(s.basis,SemanticGeneration{s.basis.value()+1},std::move(s.changes));
+  s.record=CanonicalCommitRecord{s.input.id,ApplySource::kLocalInteraction,s.basis,SemanticGeneration{s.basis.value()+1},{s.epoch,CommitOrdinal{s.ordinal.value()+1}},std::move(change)};s.complete=true;
+ }
+ return true;
+}catch(const std::bad_alloc&){state_->failed=true;return false;}
+std::unique_ptr<PreparedEraseOperation> OperationEngine::prepareErase(Operation input,IndexedObjectStore& objects,AppliedOperationLedger& applied,const SemanticGenerationState& generation,const CanonicalCommitClock& clock)const try{
+ if(input.kind()!=OperationKind::kAddEraseMasks||!validateEnvelope(input,{true,true}).ok()||clock.runtimeEpoch().value()==0||classifyOperation(input,applied).disposition!=IdempotencyDisposition::kNew)return {};
+ auto& items=std::get<AddEraseMasksOp>(input.payload).items;if(items.empty()||items.size()>65535)return {};
+ std::sort(items.begin(),items.end(),[](const auto& a,const auto& b){return a.object_id<b.object_id;});for(std::size_t i=1;i<items.size();++i)if(items[i-1].object_id==items[i].object_id)return {};
+ const auto count=items.size();auto state=std::make_unique<PreparedEraseOperation::State>(std::move(input),objects,applied,generation,clock);state->storage.reserve(count);state->changes.reserve(count);
+ return std::unique_ptr<PreparedEraseOperation>(new PreparedEraseOperation(std::move(state)));
+}catch(const std::bad_alloc&){return {};}
+ApplyResult OperationEngine::commitErase(PreparedEraseOperation& prepared,ApplySource source,SemanticGenerationState& generation,CanonicalCommitClock& clock)const noexcept{
+ auto& s=*prepared.state_;if(!prepared.ready()||s.consumed||generation.current()!=s.basis||clock.runtimeEpoch()!=s.epoch||clock.lastCommittedOrdinal()!=s.ordinal)return {};
+ SemanticGeneration after;CommitOrdinal ordinal;if(!generation.prepareSuccessor(after)||!clock.prepareSuccessor(ordinal))return {};
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+ if(canvas::qualification::observing(fc08Qualification_))return {};
+ canvas::qualification::FaultScope scope{fc08Qualification_.get()};canvas::qualification::ApplyContext context{fc08Qualification_.get(),this,generation.current().value(),clock.lastCommittedOrdinal().value(),canvas::qualification::kApplyPlan|canvas::qualification::kChangeSet};
+ if(canvas::qualification::notify(&context,canvas::qualification::Point::kSemStaged,s.input)||canvas::qualification::notify(&context,canvas::qualification::Point::kSemReserved,s.input)||canvas::qualification::notify(&context,canvas::qualification::Point::kSemPublish,s.input))return {};
+#endif
+ s.consumed=true;for(auto& target:s.storage)target->publish();if(!s.applied.recordReservedOrApplied(s.input,std::move(s.ledger)))std::terminate();generation.commitSuccessor(after);clock.commitSuccessor(ordinal);
+ auto record=std::move(*s.record);record.source=source;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+ context.generation=after.value();context.ordinal=ordinal.value();context.resources|=canvas::qualification::kPublished;(void)canvas::qualification::notify(&context,canvas::qualification::Point::kSemDone,s.input);
+#endif
+ return {ApplyDisposition::kApplied,{},CommitBlockReason::kNone,std::move(record)};
 }
 
 std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(

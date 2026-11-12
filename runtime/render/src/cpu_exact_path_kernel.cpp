@@ -47,6 +47,13 @@ std::optional<SkPath> cpuExactPath(const semantic::EraseMaskGeometry& geometry,s
  return out;
 }
 CpuExactPathJob::CpuExactPathJob(semantic::EraseMaskGeometry input):input_(std::move(input)),filled_(std::holds_alternative<semantic::FilledPathMask>(input_)&&std::get<semantic::FilledPathMask>(input_).path.fill_rule==semantic::FillRule::kEvenOdd?SkPathFillType::kEvenOdd:SkPathFillType::kWinding){}
+CpuExactPathJob::CpuExactPathJob(semantic::EraseMaskGeometry input,std::size_t prefix,const SkPath& path)
+ :CpuExactPathJob(std::move(input)){
+ if(!prefix)return;
+ const auto* sweep=std::get_if<semantic::SweptCircleMask>(&input_);
+ if(!sweep||prefix>sweep->segments.size()||!path.isFinite()){failed_=true;return;}
+ cursor_=prefix;path_=path;ready_=prefix==sweep->segments.size();
+}
 bool CpuExactPathJob::advance(std::size_t maxSteps,std::uint64_t maxMicroseconds){
  if(cancelled_||failed_)return false;if(ready_)return true;
  if(!maxSteps||!maxMicroseconds)return true;

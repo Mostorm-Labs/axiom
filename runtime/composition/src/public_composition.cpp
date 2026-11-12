@@ -12,6 +12,7 @@ class RuntimeComposition::Impl final {
    public:
     RuntimeComposition::LocalOperationCallback callback = nullptr;
     RuntimeComposition::LocalOperationPrepare prepare = nullptr;
+    RuntimePlatformAccess::PreparedEncodedPublication prepareEncoded = nullptr;
     RuntimeComposition::LocalOperationAbort abort = nullptr;
     RuntimeComposition::LocalOperationStatus readStatus = nullptr;
     void* context = nullptr;
@@ -23,6 +24,9 @@ class RuntimeComposition::Impl final {
         const bool result = !prepare || prepare(context, operations);
         active = false;
         return result;
+    }
+    bool prepareEncodedPublication(const semantic::Operation& operation,std::span<const std::uint8_t> bytes)noexcept override{
+      if(!prepareEncoded)return preparePublication({&operation,1});if(active)return false;active=true;const auto ready=prepareEncoded(context,operation,bytes);active=false;return ready;
     }
     void abortPreparedPublication() noexcept override {
         if (abort) {
@@ -63,11 +67,14 @@ class RuntimeComposition::Impl final {
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
 }
+bool RuntimePlatformAccess::setPreparedEncodedPublication(RuntimeComposition& owner,PreparedEncodedPublication callback)noexcept{if(std::this_thread::get_id()!=owner.impl_->ownerThread||owner.impl_->sink.active)return false;owner.impl_->sink.prepareEncoded=callback;return true;}
 void RuntimePlatformAccess::suspendCpuPendingExecutor(RuntimeComposition& o)noexcept{o.impl_->core.suspendCpuPendingExecutor();}
 void RuntimePlatformAccess::failCpuPendingExecutor(RuntimeComposition& o)noexcept{o.impl_->core.failCpuPendingExecutor();}
 bool RuntimePlatformAccess::bindCpuPendingExecutor(RuntimeComposition& o,std::uint64_t e)noexcept{return o.impl_->core.bindCpuPendingExecutor(e);}
 std::vector<std::uint8_t> RuntimePlatformAccess::takeCpuPendingRequest(RuntimeComposition& o)noexcept{return o.impl_->core.takeCpuPendingRequest();}
 bool RuntimePlatformAccess::queueCpuPendingCompletion(RuntimeComposition& o,std::array<std::uint64_t,8> j,std::span<const std::uint8_t> b,bool ok)noexcept{return o.impl_->core.queueCpuPendingCompletion(j,b,ok);}
+std::array<std::uint64_t,4> RuntimePlatformAccess::cpuWorkerBasis(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerBasis();}
+interaction::PendingLocalValue RuntimePlatformAccess::pendingLocalValue(RuntimeComposition& o){return o.impl_->core.pendingLocalValue();}
 interaction::CpuPendingEraseFacts RuntimePlatformAccess::cpuPendingFacts(RuntimeComposition& o)noexcept{return o.impl_->core.cpuPendingFacts();}
 std::uint64_t RuntimePlatformAccess::reserveCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::size_t b)noexcept{return o.impl_->core.reserveCpuWorkerGrant(e,b);}
 bool RuntimePlatformAccess::releaseCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::uint64_t t)noexcept{return o.impl_->core.releaseCpuWorkerGrant(e,t);}

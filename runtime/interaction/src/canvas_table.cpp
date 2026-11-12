@@ -61,6 +61,7 @@ runtime::TableResult CanvasEditingRuntime::createTableObject(const runtime::Tabl
       for(std::uint32_t i=0;i<request.columns;++i)t.columns.push_back({allocateTextIdentity(),120});
     }
     t.cells.resize(request.rows*request.columns);widths(t);object.content=t;if(preview){object.kind_version=preview->kind_version;object.properties=preview->properties;}else materializeStructuralAppearance(object);
+    if(pendingLocalEnabled()){if(!enqueuePendingCreate({std::move(object)},true))return failure;return {false,preview?preview->id:selection_.primary(),semanticGeneration_.current().value(),true,lastPendingLocalSerial()};}
     const auto f=allocateOperationId(),u=allocateOperationId();
     if(!applyLocalHistoryOperation({f,documentId_,1,1,InsertObjectsOp{{object}}},{u,documentId_,1,1,DeleteObjectsOp{{object.id}}}))return failure;
     tableObject_=object.id;tableRow_=t.rows.front().id;tableColumn_=t.columns.front().id;

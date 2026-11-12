@@ -12,6 +12,7 @@ std::optional<SkPath> cpuExactPath(const semantic::EraseMaskGeometry&,std::uint6
 class CpuExactPathJob final {
  public:
  explicit CpuExactPathJob(semantic::EraseMaskGeometry input);
+ CpuExactPathJob(semantic::EraseMaskGeometry input,std::size_t prefix,const SkPath& path);
  bool advance(std::size_t maxSteps,std::uint64_t maxMicroseconds);
  void cancel()noexcept{cancelled_=true;path_=SkPath{};}
  bool ready()const noexcept{return ready_;}

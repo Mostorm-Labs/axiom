@@ -18,7 +18,14 @@ struct CpuIdentity {
  std::array<std::uint64_t,8> words{}; // runtime,lifetime,doc0,doc1,executor,job,attempt,source
  bool operator==(const CpuIdentity&)const=default;
 };
-struct CpuRequest {CpuIdentity identity;semantic::EraseMaskGeometry geometry;};
+struct CpuRequest {
+ CpuRequest()=default;
+ CpuRequest(CpuIdentity value,semantic::EraseMaskGeometry input):identity(value),geometry(std::move(input)){}
+ CpuIdentity identity;semantic::EraseMaskGeometry geometry;
+ std::size_t prefixCount=0;
+ SkPath prefixPath;
+ std::optional<semantic::EraseMaskGeometry> prefixWitness;
+};
 std::array<std::uint8_t,16> cpuKernelId();
 std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest&);
 std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>);

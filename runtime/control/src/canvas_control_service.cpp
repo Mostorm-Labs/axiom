@@ -259,7 +259,7 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
     }
     const auto result = port_.apply(request);
     const CanvasControlReceiptKey key{request.clientId, request.requestId};
-    const auto state = result.error == CanvasControlError::kNone
+    const auto state = result.pendingSerial?CanvasControlReceiptState::kQueued:result.error == CanvasControlError::kNone
         ? CanvasControlReceiptState::kApplied
         : result.error == CanvasControlError::kStaleTarget
             ? CanvasControlReceiptState::kStaleTarget
@@ -269,6 +269,7 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
         result.error);
     receipt.detail = result.detail == nullptr ? "" : result.detail;
     receipt.section=result.section;
+    receipt.pendingSerial=result.pendingSerial;
     receipt.appliedRevision = port_.snapshot(request.target).controlRevision;
     {
       std::scoped_lock lock(mutex_);
@@ -279,6 +280,12 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
     if(only)break;
   }
   return processed;
+}
+
+bool CanvasControlService::completeDeferred(CanvasControlReceiptKey key,std::uint64_t serial,bool applied,std::uint64_t revision){
+ std::scoped_lock lock(mutex_);const auto found=receipts_.find(key);
+ if(found==receipts_.end()||found->second.state!=CanvasControlReceiptState::kQueued||found->second.pendingSerial!=serial||!serial)return false;
+ auto result=found->second;result.state=applied?CanvasControlReceiptState::kApplied:CanvasControlReceiptState::kFailed;result.error=applied?CanvasControlError::kNone:CanvasControlError::kInternalFailure;result.appliedRevision=applied?revision:0;result.pendingSerial=0;remember(std::move(result));return true;
 }
 
 void CanvasControlService::rejectPending(CanvasControlReceiptKey key,CanvasControlError error) {

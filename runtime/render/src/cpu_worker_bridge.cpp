@@ -19,7 +19,7 @@ std::uint32_t axiom_cpu_create(const std::uint8_t* bytes,std::uint32_t size){
   // Task construction is within the existing charged fixed64MiB Worker heap.
   // It does not request a larger resident Render cache.
   if(!cpuConstructionEstimate(count,size,std::holds_alternative<canvas::semantic::SweptCircleMask>(r->geometry)))return 0;
-  std::copy_n(bytes,cpuHeaderSize,header.begin());job=std::make_unique<CpuExactPathJob>(std::move(r->geometry));handle=++serial;return handle;
+  std::copy_n(bytes,cpuHeaderSize,header.begin());job=std::make_unique<CpuExactPathJob>(std::move(r->geometry),r->prefixCount,r->prefixPath);handle=++serial;return handle;
  }catch(...){return 0;}
 }
 int axiom_cpu_step(std::uint32_t token,std::uint32_t steps,std::uint32_t micros){
@@ -30,7 +30,7 @@ int axiom_cpu_step(std::uint32_t token,std::uint32_t steps,std::uint32_t micros)
   if(!job->ready())return 1;
   if(result.empty()){
    const auto size=job->path().writeToMemory(nullptr);if(size>cpuOutputLimit-cpuHeaderSize)return 4;
-   result.resize(cpuHeaderSize+size);std::copy(header.begin(),header.end(),result.begin());set32(result,0,0x31525043);set32(result,96,size);set32(result,100,2);for(unsigned i=104;i<128;++i)result[i]=0;
+   result.resize(cpuHeaderSize+size);std::copy(header.begin(),header.end(),result.begin());set32(result,0,0x31525043);set32(result,4,1);set32(result,96,size);set32(result,100,2);for(unsigned i=104;i<128;++i)result[i]=0;
    job->path().writeToMemory(result.data()+cpuHeaderSize);
    if(!cpuDecodePath({result.data()+cpuHeaderSize,size}))return 4;
   }

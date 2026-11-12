@@ -10,7 +10,7 @@
 
 namespace canvas::runtime {
 
-enum class ImageCommandState : std::uint8_t { kRejected, kApplied };
+enum class ImageCommandState : std::uint8_t { kRejected, kApplied, kPending };
 enum class ImageFailureReason : std::uint8_t {
   kNone, kWrongThread, kNotReady, kInvalidRequest, kUnknownResource,
   kResourceRejected, kObjectRejected, kInvalidCropSession, kStaleCropSession,
@@ -76,6 +76,7 @@ struct ImageCommandReceipt final {
   semantic::ImageContent content{};
   std::uint64_t semanticGeneration = 0;
   bool historyChanged = false;
+  std::uint64_t pendingSerial = 0;
 };
 
 struct ImageCropSnapshot final {

@@ -1,0 +1,61 @@
+{
+  "schema": "axiom-local-generated-artifact-cleanup-v1",
+  "completed_utc": "2026-11-12T17:10:07.917700+00:00",
+  "human_request": "清理近期证据、无必要产物并释放空间",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+  "deleted_files": 155893,
+  "deleted_logical_bytes": 163448614067,
+  "disk_available_before_bytes": 566223605760,
+  "disk_available_after_bytes": 692858798080,
+  "observed_disk_space_recovered_bytes": 126635192320,
+  "observed_disk_space_recovered_GiB": 117.93821334838867,
+  "available_after_GiB": 645.2750396728516,
+  "stopped_obsolete_servers": 27,
+  "preserved_Demos": [
+    {
+      "port": 4330,
+      "HTTP": 200,
+      "path": "out/G5-CPUW3-lifecycle-repair-r3/user-demo/js",
+      "example_sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "port": 4328,
+      "HTTP": 200,
+      "path": "out/G5-CPUW-user-demo-20261112-r1/js",
+      "example_sha256": "310ea01f69f6689c67a8a5497d6d632417eea07a68e58b92b7b7115b8456ad43"
+    },
+    {
+      "port": 4298,
+      "HTTP": 200,
+      "path": "out/G5-UR2c-moving-preview-progress-r1/normal-install/js",
+      "example_sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    }
+  ],
+  "preserved_source_files": 2581,
+  "source_mismatches": [],
+  "source_basis_checks": [
+    {
+      "basis": "G5-CPUW4-edit-navigation-r1",
+      "files": 1269,
+      "mismatches": []
+    },
+    {
+      "basis": "G5-CPUW3-lifecycle-repair-r3",
+      "files": 1261,
+      "mismatches": []
+    }
+  ],
+  "tracked_status_unchanged": true,
+  "index_unchanged": true,
+  "main_tracked_status_unchanged": true,
+  "git_tracked_files_deleted": 0,
+  "skipped_changed_or_unsafe": [],
+  "shared_dependencies_untouched": true,
+  "original_user_media_untouched": true,
+  "retained_original_fixture": "Fixed40 + public49object snapshot + original2.3MBimage",
+  "candidate_recovery": "CPUW5 task-only.patch and five uniqueCPP test sources retained; derivedcandidateSDK/rawpixels/duplicatepostimages pruned",
+  "historical_proof_status": "Bulky raw payloads intentionally pruned under new human cleanup authorization; prior hashes/reviews retained as historical metadata, not complete rerunnable evidence.",
+  "new_sampling_build_commit_push": false
+}

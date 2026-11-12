@@ -1,0 +1,59 @@
+{
+  "classification": "WEB_FUNCTIONAL_CANDIDATE_READY_FOR_CONTROL_REVIEW",
+  "demo_url": "http://127.0.0.1:4330/example.html",
+  "build": "0.4.3.0",
+  "source_HEAD": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+  "branch": "codex/g5-cpu-worker",
+  "uncommitted_source": true,
+  "source_manifest": "source-manifest.json",
+  "SDK_manifest": "SDK-manifest.json",
+  "normal_CPU_PENDING_ERASE": false,
+  "candidate_CPU_PENDING_ERASE": true,
+  "default_Demo_brush": "round-handdrawn revision4",
+  "controlled_brushes": "CompactStroke algorithmVersion4 round/marker; eraser target transforms must be similarity (uniform scale/rotation/translation)",
+  "capability_boundary": "unsupported legacy/noncontrolled brush content anywhere in the document makes whole-document candidate eraser path ineligible and preserves prior legacy path; no claim unsupported paths are Worker-backed",
+  "verified_platform": "Web/WASM installed root SDK in actual Chromium; DPR1/2/4 focused functional scenes",
+  "verified_operations": [
+    "partial erase with active confirmed prefix",
+    "immediate successive erase",
+    "shape/sticky/table/image creation, pending HUD/hit and drag",
+    "preexisting four object body transforms and cancel",
+    "masked stroke drag A/B/C with local mask travel",
+    "v4 Brush seal/history plus Undo/Redo/NAV while erase queued",
+    "ordered canonical commit and actual promise terminal",
+    "failed erase leaves unrelated later edits",
+    "context loss/restore",
+    "DataPort PUBLICATION_PENDING→exact release→retry close/idempotence/no Worker restart"
+  ],
+  "not_claimed": [
+    "all editing commands queued while computation pending",
+    "all brush families or legacy strokes in Worker domain",
+    "Windows/Android/iOS/macOS actual device multithreading closure",
+    "parallel render/GPU context thread migration",
+    "all-platform ABI/package qualification",
+    "formal100K/1M scale or released SDK"
+  ],
+  "limits": {
+    "Worker_count": 1,
+    "Worker_fixed_heap_MiB": 64,
+    "pending_intent_slots": 8,
+    "aggregate_transport_MiB": 16,
+    "message_max_MiB": 1
+  },
+  "performance_findings": {
+    "actual1600UpToSettled_s": 9.5854,
+    "actual7200burstUpToSettled_s": 54.5579,
+    "actual7200pacedUpToSettled_s": 29.594,
+    "Up_ms": "0.3–0.5",
+    "performance_acceptance": "3s/5s drain and33msdirection not claimed",
+    "next_scope": "same input backlog/repeated work/Worker compute/transport/owner exact query/commit/draw waiting attribution only; no newperf code now",
+    "accounting_ref": ".aegis/results/G5-CPUW3-control-review-r1/post-Up-accounting.json",
+    "outside_Worker_intervals": "not equated entirely to CPU"
+  },
+  "old_demos_preserved": [
+    "http://127.0.0.1:4328/example.html",
+    "http://127.0.0.1:4298/example.html"
+  ],
+  "P34_G5_official_PASS": false,
+  "release_commit_push": false
+}

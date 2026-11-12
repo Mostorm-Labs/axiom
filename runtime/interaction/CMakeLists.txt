@@ -255,3 +255,5 @@ target_sources(canvas_runtime_editor PRIVATE src/cpu_pending_erase.cpp)
 if(AXIOM_CPU_PENDING_ERASE)
  target_compile_definitions(canvas_runtime_editor PUBLIC AXIOM_CPU_PENDING_ERASE=1)
 endif()
+
+target_sources(canvas_runtime_editor PRIVATE src/pending_local_intents.cpp)

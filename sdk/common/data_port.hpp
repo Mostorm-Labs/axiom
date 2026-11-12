@@ -54,6 +54,10 @@ class DataPort final {
             return false;
         }
     }
+    bool prepareEncoded(const semantic::Operation& op,std::span<const std::uint8_t> bytes)noexcept{
+      prepared.clear();if(closing||fault||!bytes.size()||bytes.size()>maxBytes-retainedBytes||retained.size()>=maxPackets)return false;
+      try{Packet p;p.id=op.id;p.document=op.document_id;p.kind=op.kind();p.bytes.assign(bytes.begin(),bytes.end());prepared.push_back(std::move(p));return true;}catch(...){prepared.clear();return false;}
+    }
     const Packet* commit(const semantic::Operation& op,
                          const semantic::CanonicalCommitRecord& record) noexcept {
         if (!attached)

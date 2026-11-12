@@ -20,11 +20,16 @@ struct DecodedImage final {
     std::vector<std::uint8_t> rgba;
     std::string diagnostic;
     std::string mimeType;
+    std::shared_ptr<void> pendingLease;
 };
 class ImageResourceResolver final {
   public:
     explicit ImageResourceResolver(const runtime::ResourceProvider& provider);
     ~ImageResourceResolver();
+    [[nodiscard]] static std::optional<std::size_t> decodedRgbaBytes(std::span<const std::uint8_t>);
+    // Private derived preview custody. Never registers a canonical manifest.
+    bool retainPending(semantic::ResourceId,std::shared_ptr<const std::vector<std::uint8_t>>,std::shared_ptr<void> lease);
+    void releasePending(semantic::ResourceId)noexcept;
     [[nodiscard]] std::shared_ptr<const DecodedImage> resolve(semantic::ResourceId id);
     [[nodiscard]] sk_sp<SkImage> resolveSkImage(semantic::ResourceId id);
     [[nodiscard]] std::uint64_t decodeCount() const;

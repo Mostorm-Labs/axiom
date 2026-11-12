@@ -8,6 +8,7 @@ struct CanvasControlApplyResult final {
   CanvasControlError error = CanvasControlError::kNone;
   const char* detail = "";
   std::optional<SectionOutcome> section{};
+  std::uint64_t pendingSerial=0;
 };
 
 class CanvasControlPort {

@@ -118,6 +118,7 @@ RegionSelectionContext CanvasEditingRuntime::regionContext() const noexcept {
             regionBinding_,selection_.groupScope()};
 }
 foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::ObjectId id) const {
+    if(!semanticObjects_.contains(id)&&pendingObject(id))return id;
     if (const auto* child=semanticObjects_.find(id);child&&child->kind==semantic::ObjectKind::kRichText&&child->placement.parent_id) {
         if (const auto* parent=semanticObjects_.find(*child->placement.parent_id);parent&&parent->kind==semantic::ObjectKind::kSticky)
             id=parent->id;
@@ -130,6 +131,14 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
     auto result=runtimeSceneHost_->hitTest({point,4,{HitTestKindMask::kAll,true},std::max<std::size_t>(1,semanticObjects_.size())});
     if(!result)return result;
     auto& ids=result.value().frontToBack;
+    if(pendingLocalEnabled()){
+      std::vector<std::pair<foundation::ObjectId,semantic::OrderKey>> pendingHits;
+      const auto value=pendingLocalValue();
+      for(const auto& intent:value.intents)for(const auto id:intent.objects){auto record=pendingSceneRecord(id);if(!record)continue;const auto& t=record->transform;semantic::Transform2D inv;if(!scene::inverseTransform(t,inv))continue;const double x=inv.a*point.x+inv.c*point.y+inv.tx,y=inv.b*point.x+inv.d*point.y+inv.ty;const auto& b=record->visualBounds;if(x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom)pendingHits.push_back({id,record->placement.order_key});ids.erase(std::remove(ids.begin(),ids.end(),id),ids.end());}
+      for(const auto& hit:pendingHits)ids.push_back(hit.first);
+      std::sort(ids.begin(),ids.end(),[&](auto a,auto b){const auto ra=pendingSceneRecord(a),rb=pendingSceneRecord(b);if(!ra||!rb)return a<b;if(ra->placement.order_key!=rb->placement.order_key)return ra->placement.order_key>rb->placement.order_key;return a>b;});
+      ids.erase(std::unique(ids.begin(),ids.end()),ids.end());
+    }
     const std::array<RegionPoint,4> neighborhood{{{point.x-4,point.y-4},{point.x+4,point.y-4},{point.x+4,point.y+4},{point.x-4,point.y+4}}};
     bool invalid=false;
     ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){

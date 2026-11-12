@@ -1,0 +1,146 @@
+{
+  "schema": "axiom-cpuw5-execution-closure-v1",
+  "continue_until_terminal_state": true,
+  "profile": "Standard scoped repair",
+  "scope": {
+    "required_production": [
+      "runtime/render/src/skia_navigation_tiles.cpp",
+      "runtime/render/src/skia_navigation_tiles.hpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp only private coordination",
+      "runtime/render/include/canvas/render/navigation_sources.hpp internal progress/work state",
+      "runtime/interaction/src/canvas_editing_runtime.cpp only existing navigation opportunity/quiet/fairness",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp only private scheduling state",
+      "runtime/composition/src/runtime_composition.cpp only existing frame coordination/fairness"
+    ],
+    "conditional_production": [
+      "runtime/render/src/skia_render_cache.cpp and skia_render_cache_internal.hpp only existing prepared/raster region reuse and bounded material progress",
+      "runtime/render/src/skia_ink_layers.cpp/.hpp only existing body/mask reuse if needed by selected frontier chain",
+      "runtime/render/src/skia_compact_material.cpp and compact_raster_internal.hpp only cursor/target/cost/progress plumbing; no mathematical or material/blend edits",
+      "runtime/render/src/skia_gpu_lifetime.hpp and gpu_resource_retirement.hpp only actual existing lease/completion tracking",
+      "runtime/render/include/canvas/render/render_cache.hpp only internal progress/counters/type plumbing; no increased policy defaults"
+    ],
+    "diagnostic": [
+      "runtime/foundation/include/canvas/foundation/internal/g5_observation.hpp and runtime/foundation/src/g5_observation.cpp only appended bounded private records if existing records insufficient",
+      "sdk/common/session.cpp only existing qualification-only facts serialization; no public capability"
+    ],
+    "tests": [
+      "runtime/render/tests/",
+      "runtime/composition/tests/",
+      "runtime/interaction/tests/",
+      "runtime/render/CMakeLists.txt test registration only",
+      "runtime/composition/CMakeLists.txt test registration only",
+      "runtime/interaction/CMakeLists.txt test registration only",
+      "verification/runners/g5/cpu_zoomout_frontier*",
+      "verification/tests/g5_cpu_zoomout_frontier*",
+      "verification/tests/test_g5_cpu_zoomout_frontier*"
+    ],
+    "readonly_reuse": "AllCPUW4/r3 drivers/contracts/references remain immutable; copy/adapt into cpu_zoomout_frontier* for new run. Oldsource oracle unchanged. Public root SDK only for ordinary browser.",
+    "docs": [
+      "docs/planning/G5_CPUW5_ZOOMOUT_FRONTIER_20261112.md"
+    ],
+    "result_root": ".aegis/results/G5-CPUW5-zoomout-frontier-r1",
+    "out_root": "out/G5-CPUW5-zoomout-frontier-r1"
+  },
+  "implementation": {
+    "required_changes": [
+      "Repository/package/evidence/source/driver preflight, reuse fixed publicfixture and existingSDK; save immutable preimages only for modified files. Preflight actual VM and native same transport fields before realbrowser.",
+      "Freeze meaningful RED and one coherent missing-frontier/material/progress/fairness design. Normal choice within scope continues without waiting for control acknowledgement.",
+      "Implement existing-owner current-scene region/coverage progress and navigation/exact schedule as needed to fix zoomout wait; no side renderer/cachepool. Distinguish requested LOD/workclass from supported per-source material capability; do not reset aggregate allowances per source.",
+      "Qualify scoped actual pixels/Operation parity/resource/no-progress+source identity, run paired ordinary latency with all failures retained. Originaltargetactualnewexposedcontent remains.",
+      "Build fresh matching rootSDK/Demo beside4330 once correctness passes; document remainingUp/Scene/Worker tail separately. Materialize source/delta/raw/SDK/reference/result for independentreview."
+    ],
+    "forbidden_changes": [
+      "No Brush/f32/PathOps/Operation/wire/publicAPI/version/eligibility change; no Scene/semantic owner or Worker/platform expansion.",
+      "Do not relax navigation_pixel_validity/bodyEqual/whole/maskproof merely to reuse oldScene pixels; these files remain readonly forCPUW5. No staleedit/newarea blanks/mixedpose/publication of z-prefix.",
+      "No higher memory/step/time/GPUcommand default budgets. Reclassifying actual coarse-frontier v4 work into existing coarse policy is allowed only under global aggregate bound; cannot assign per-source fresh1024/2ms.",
+      "No immutableoldartifacts/builddirs/Demo writes. No commit/push/tag/release/merge/reset/stash/clean or newworktree.",
+      "No reauthoring fixture, reducing knotcount/objects/materials, Cartesianmatrix, parallelheavybrowser/build/native/reference, or unboundedtrial."
+    ],
+    "keep_prior_valid_work": true
+  },
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Original actual mixed frontiers over multiple limited opportunities fail timely first complete current-pose coverage / quiet handoff loses critical progress; specific test follows existing measuredchain, not copied implementation condition.",
+    "observation_seam": "Existing private RenderNavigation/cache/progress and Runtime owner scheduling; no new public API."
+  },
+  "ImplementationDesignPreflight": {
+    "required": true,
+    "unresolved_semantic_decisions": [],
+    "proceed_when_CLEAR": true,
+    "record": [
+      "current and proposed owner flow",
+      "aggregate time/step/GPU commands",
+      "region completion + z/mask/pixel rules",
+      "quiet/no-progress/exact fairness",
+      "identity/cancel/resource retirement",
+      "evidence mapping"
+    ]
+  },
+  "tests": {
+    "required": [
+      "ZF1-CAUSE",
+      "ZF2-BOUNDED-PROGRESS",
+      "ZF3-PIXELS-SEMANTICS",
+      "ZF4-PERFORMANCE-DELIVERY"
+    ],
+    "reuse": "Exactr3functional/lifecycle/Worker/numeric/API proof is reusable where untouched. Only changednavigation/context lifetime owner branches need scoped rerun; no fullCTest/native68 totals. Runtimeboundary checker only if relevant private wiring changes; normalJS+WASM/assets must match."
+  },
+  "sampling": {
+    "development": {
+      "max_starts": 6,
+      "total_seconds": 1440,
+      "seconds_each_max": 240,
+      "rss_mib": 4096,
+      "plan": "Dev1 focused original diagnostic/cause as necessary (CPUW4 evidence reused); Dev2 candidate diagnostic; remaining≤4 for evidence-backed candidate repair/cold check or driver correction. Donot use all by default."
+    },
+    "final": {
+      "max_starts": 3,
+      "total_seconds": 900,
+      "seconds_each_max": 300,
+      "rss_mib": 4096,
+      "plan": "One pairedordinaryperformance window, one final12functional+cold3pixel window; third reserved for explicitly classified reverification only. Freeze finalsource/oracle/driver before formal eachwindow."
+    },
+    "guards": "Reuse bounded_worker process family containment; cumulative seconds and start counters, durable failure/error before ownedcleanup. Pre/post window notifycontrol. Serial heavy work only; no sleep/blockingpoll>60s. Correctnessfailure seals current formalset; preserve result then classify originalscope repair and at most1explicit reverify in reserved finalwindow, not silent rerun. Allfailed/censoredloss rows kept.",
+    "max_causal_repair_hypotheses": 3,
+    "independence": "Originaluncachedreference runs outside primary and afterbrowserclose; readbacks only coldcase. Diagnostictrace/statistics not ordinary performance data."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [],
+    "reason": "LocalWeb/WASM primary; noPR/push/CI authorityrequested."
+  },
+  "terminal_success": {
+    "status": "READY_FOR_CONTROL_REVIEW",
+    "all_of": [
+      "Cause+meaningfulRED and coherent scope repair",
+      "Scopedcorrectness/boundedprogress/semantic proof passes",
+      "Truthful pairedperformance includingtargets/controls/remainingtails",
+      "FreshcorrectmatchingcandidateDemo+reviewableartifactbinding",
+      "Ownedprocesscleanup; oldDemos/userdoc preserved"
+    ],
+    "producer_not_P34_reviewer": true
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "BUDGET_EXHAUSTED_WITH_PRECISE_EVIDENCE_GAP",
+      "PERFORMANCE_UNMET"
+    ],
+    "policy": "Not a blocker merely that fulluserdocument unavailable or exactphysicaldirection differs. Do not stop at diagnostics when measuredfrontierchain can be repaired. If oldRED unexpectedlypasses, return actualearlierlayeroracleissue rather than manufactureRED. No productfixclaim if pairedperformanceunmet."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "notifications": "Notify acceptedpackage, cause/design milestone beforefix, pre/post actualbrowserwindows, and terminal. Final proactively messagecontrol with exactresult/source/SDK/Demo/evidence identities. WithinCLEAR continue without waitingack. User authorization to send these callbacks persists.",
+    "materialization": "Exactsame-repo sharedworktree+contentaddressed source/delta/result/raw/SDK/reference/manifests independentlyreadable; uncommittedallowed and no evidence-onlycommit required. Index staysasreceivedempty."
+  }
+}

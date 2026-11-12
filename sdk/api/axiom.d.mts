@@ -1,4 +1,4 @@
-export const SDK_VERSION: '0.4.3';
+export const SDK_VERSION: '0.4.3.0';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
@@ -34,7 +34,12 @@ export interface FontCatalog {entries:FontEntry[];manifestRevision:Revision;bind
 export type Endpoint = {point:[number,number]}|{objectId:Id128;port?:1|2|3|4};
 export interface ImageContent {resourceId:Id128;width:number;height:number;intrinsicWidth:number;intrinsicHeight:number;sourceRect:[number,number,number,number];}
 export interface CommandResult {ok:true;requestId?:Revision;revision?:Revision;section?:{objectId:Id128;operationId:Id128;generation:Revision;canonical:number;projection:number;failure:number};}
-export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};table:{objectId:Id128;rowId:Id128;columnId:Id128};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
+export interface PendingLocalState {
+ readonly revision:Revision;
+ readonly intents:readonly {readonly token:{readonly runtimeInstance:Revision;readonly lifetimeGeneration:Revision;readonly serial:Revision};readonly kind:'erase'|'create'|'transform'|'undo'|'redo'|'imageImport';readonly phase:'active'|'queued'|'preparing'|'waiting'|'ready';readonly objectIds:readonly Id128[];readonly dependsOn:readonly Revision[]}[];
+ readonly selection:{readonly selected:readonly Id128[];readonly primary:Id128|null;readonly bounds:readonly [number,number,number,number]|null};
+}
+export interface RuntimeState {pending?:PendingLocalState;documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};table:{objectId:Id128;rowId:Id128;columnId:Id128};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
 export type AppearanceStamp = readonly [Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];
@@ -75,7 +80,7 @@ interface ControlMethods {
   table:TableAPI;
   appearance:AppearanceAPI;
   readonly version:'0.4.3';
-  readBuildInfo():{ok:true;apiVersion:1;features:{objectClipboard:1;livePartialErase:1;shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readBuildInfo():{ok:true;apiVersion:1;features:{objectClipboard:1;livePartialErase:1;shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;version:string;buildNumber:number;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
   /** Read-only committed content; owned bytes. Default complete visible content, 16px padding. */

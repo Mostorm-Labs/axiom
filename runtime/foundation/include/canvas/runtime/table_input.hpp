@@ -17,6 +17,8 @@ struct TableResult final {
   bool applied=false;
   foundation::ObjectId object{};
   std::uint64_t generation=0;
+  bool pending=false;
+  std::uint64_t pendingSerial=0;
 };
 struct TableSnapshot final {
   bool available=false,editable=false;

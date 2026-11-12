@@ -1,0 +1,40 @@
+{
+  "schema": "axiom-cpu-worker-source-checkpoint-v1",
+  "checked_at_utc": "2026-11-12T17:23:47.784918+00:00",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "base": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+  "included": "Accepted Web functional candidate CPUW3r3 and CPUW4 observation harness; historical CPUW5 production experiment fully withdrawn. Fresh cleanup-compatible test contexts and historical-evidence availability guards only.",
+  "verification": {
+    "node": {
+      "passed": 58,
+      "skipped": 2,
+      "failed": 0
+    },
+    "python": {
+      "tests_run": 10,
+      "skipped_classes": 1,
+      "failed": 0
+    },
+    "native_ctest": {
+      "passed": 39,
+      "failed": 0,
+      "seconds": 47.13,
+      "historical_gtest_cases": "2 unavailable saved-recording cases skipped inside their test executables; meaningful generated semantic/atomicity cases still run"
+    },
+    "runtime_boundaries": 120,
+    "public_JS_error_contract": "PASS",
+    "diff_whitespace": "PASS"
+  },
+  "dependency_policy": "NativeRelease uses locked Semantic v2Store offline and published R1FullSkia macos-arm64-metal/release. No dependency source rebuild/lock change.",
+  "not_rerun": "Original browser pixel recordings intentionally pruned at human request. Previous candidate functional acceptance is historical, not a new complete browser qualification; no claim the30s/54s drain or zoomout is fixed.",
+  "performance_findings": {
+    "1600segments_after_Up_seconds": 9.5854,
+    "7200burst_after_Up_seconds": 54.5579,
+    "7200paced_after_Up_seconds": 29.594,
+    "measurement_status": "Historical summaries; actual input trace construction and source preserved, raw recordings pruned. New attribution must rebuild minimal sameinput."
+  },
+  "user_Demo": "http://127.0.0.1:4330/example.html",
+  "no_tag_release": true,
+  "raw_retention": ".aegis/results/LOCAL_ARTIFACT_RETENTION_20261113.md"
+}

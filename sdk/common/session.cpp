@@ -116,6 +116,9 @@ class Session::Impl {
             self.notifyOperation(packet->bytes.data(), packet->bytes.size());
             return;
         }
+        if(!self.dataPort.prepared.empty()&&self.dataPort.prepared.front().id==op.id){
+            const auto& bytes=self.dataPort.prepared.front().bytes;self.notifyOperation(bytes.data(),bytes.size());self.dataPort.prepared.clear();return;
+        }
         try {
             auto encoded = semantic::SemanticCodec::encodeProtobufOperation(op);
             if (!encoded.ok()) {
@@ -130,6 +133,9 @@ class Session::Impl {
     static bool preparePublication(void* context,
                                    std::span<const semantic::Operation> ops) noexcept {
         return static_cast<Impl*>(context)->dataPort.prepare(ops);
+    }
+    static bool prepareEncodedPublication(void* context,const semantic::Operation& op,std::span<const std::uint8_t> bytes)noexcept{
+        return static_cast<Impl*>(context)->dataPort.prepareEncoded(op,bytes);
     }
     static void abortPublication(void* context) noexcept {
         static_cast<Impl*>(context)->dataPort.prepared.clear();
@@ -417,6 +423,10 @@ class Session::Impl {
             throw std::runtime_error("NOT_READY");
         return t.front();
     }
+    J pendingTicket(std::uint64_t serial) {
+        const auto pending=runtime::RuntimePlatformAccess::pendingLocalValue(*owner);
+        return {{"runtimeInstance",std::to_string(pending.owner[0])},{"lifetimeGeneration",std::to_string(pending.owner[1])},{"serial",std::to_string(serial)}};
+    }
     J receipt(const runtime::CanvasControlRequest& r) {
         G5_SCOPE(g5Control,g5::Tag::control_result,g5::Purpose::input);
         auto& f = facade();
@@ -435,6 +445,7 @@ class Session::Impl {
                     {"error", done->error},
                     {"requestId", std::to_string(r.requestId)},
                     {"revision", std::to_string(done->appliedRevision)}};
+        if(done->state==runtime::CanvasControlReceiptState::kQueued){result["ok"]=true;result["pendingToken"]=pendingTicket(done->pendingSerial);result["pendingToken"]["control"]=J{{"clientId",std::to_string(r.clientId)},{"requestId",std::to_string(r.requestId)}};result.erase("revision");}
         if (done->section) {
             const auto& s = *done->section;
             result["section"] = {{"objectId", hexId(s.objectId)},
@@ -453,6 +464,11 @@ class Session::Impl {
         r.requestId = ++sequence;
         return r;
     }
+    J pendingState() {
+        const auto value=runtime::RuntimePlatformAccess::pendingLocalValue(*owner);J intents=J::array();
+        for(const auto& intent:value.intents){J dependencies=J::array();for(auto n:intent.dependencies)dependencies.push_back(std::to_string(n));intents.push_back({{"token",{{"runtimeInstance",std::to_string(intent.token[0])},{"lifetimeGeneration",std::to_string(intent.token[1])},{"serial",std::to_string(intent.token[2])}}},{"kind",intent.kind},{"phase",intent.phase},{"objectIds",ids(intent.objects)},{"dependsOn",dependencies}});}
+        return {{"revision",std::to_string(value.revision)},{"intents",intents},{"selection",{{"selected",ids(value.selected)},{"primary",value.selected.empty()?J(nullptr):J(hexId(value.selected.front()))},{"bounds",value.bounds?J(*value.bounds):J(nullptr)}}}};
+    }
     J state() {
         const auto s = facade().readCanvasControlSnapshot(target());
         const auto selected = facade().readSelectionSummary();
@@ -461,6 +477,7 @@ class Session::Impl {
         const auto text = facade().readTextEditor();
         const auto table = facade().readTable();
         return {
+            {"pending",pendingState()},
             {"documentId", hexId(*owner->documentId())},
             {"target", jsonTarget(s.target)},
             {"generation", std::to_string(s.semanticGeneration)},
@@ -505,7 +522,7 @@ class Session::Impl {
             return {{"ok", true},
                     {"apiVersion", 1},
                     {"features", {{"objectClipboard", 1}, {"livePartialErase", 1}, {"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}, {"inkV2",1}, {"compactStroke",1}, {"materialInk",1}, {"simulatedPressure",1}, {"devicePressure",1}, {"laserTransient",1}}},
-                    {"sdkVersion", AXIOM_SDK_VERSION},
+                    {"sdkVersion", AXIOM_SDK_VERSION},{"version", AXIOM_SDK_SEMVER},{"buildNumber", AXIOM_SDK_BUILD_NUMBER},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
                     {"platform", b.platform}};
@@ -571,6 +588,7 @@ class Session::Impl {
             if (!owner->setLocalOperationCallbacks(
                     localOperation, this, preparePublication, abortPublication, operationStatus))
                 return error("CALLBACK_FAILED");
+            if(!runtime::RuntimePlatformAccess::setPreparedEncodedPublication(*owner,prepareEncodedPublication))return error("ENCODED_CALLBACK_FAILED");
             return {{"ok", true}, {"apiVersion", 1}};
         }
         if (!owner)
@@ -656,12 +674,13 @@ class Session::Impl {
         }
         if (dataPort.closing && command!="state" && command!="frame" && command!="selection" &&
             command!="resource" && command!="snapshot" && command!="readSection" && command!="presets" &&
+            !(command=="cpuPending" && j.value("action",std::string{})=="closePreflight") &&
             !(command=="cpuWorkerGrant" && (j.value("action",std::string{})=="observe" ||
                 j.value("action",std::string{})=="basis" || j.value("action",std::string{})=="release")) &&
             !(command=="text" && j.value("action",std::string{})!="intent"))
             return error("DOCUMENT_CLOSING");
         if(runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending){
-            const bool readCommand=command=="state"||command=="frame"||command=="selection"||command=="presets"||command=="hover"||command=="cpuPending"||command=="cpuWorkerGrant"||command=="resize"||command=="lose";
+            const bool readCommand=command=="state"||command=="frame"||command=="selection"||command=="presets"||command=="hover"||command=="cpuPending"||command=="cpuWorkerGrant"||(command=="table"&&j.value("action",std::string{})=="create")||(command=="sticky"&&j.value("action",std::string{})=="create")||(command=="image"&&j.value("action",std::string{})=="import")||command=="pendingReceipt"||command=="resize"||command=="lose";
             const auto action=j.value("action",std::string{});
             const bool readOnlyAction=action=="read"||action=="snapshot"||action=="fonts"||action=="fontStatus"||action=="status";
             if(!readCommand&&command!="control"&&command!="pointer"&&!readOnlyAction)return error("BUSY");
@@ -699,7 +718,7 @@ class Session::Impl {
             if (lost)
                 return {{"ok", true}, {"pending", false}, {"lost", true}};
             auto result=adapter->frame(j.value("force", false));
-            if(facade().transientInkActive()||runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending)result["retry"]=true;
+            if(facade().transientInkActive()||runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).reserved)result["retry"]=true;
             return result;
         }
         if (command == "state")
@@ -1054,7 +1073,7 @@ class Session::Impl {
             if(j.contains("x"))r.x=number(j.at("x"));if(j.contains("y"))r.y=number(j.at("y"));if(j.contains("size"))r.size=number(j.at("size"));
             const auto color=[](const J& v){const auto c=v.get<std::array<float,4>>();for(auto n:c)if(!std::isfinite(n)||n<0||n>1)throw std::invalid_argument("table color");return c;};
             if(j.contains("fill"))r.fill=color(j.at("fill"));if(j.contains("color"))r.gridColor=color(j.at("color"));if(j.contains("width"))r.gridWidth=number(j.at("width"));if(j.contains("format"))r.format=parseFormat(j.at("format"));
-            const auto result=facade().tableCommand(r);return {{"ok",result.applied},{"code","TABLE_REJECTED"},{"objectId",hexId(result.object)},{"generation",std::to_string(result.generation)}};
+            const auto result=facade().tableCommand(r);if(result.pending)return {{"ok",true},{"pendingToken",pendingTicket(result.pendingSerial)},{"objectId",hexId(result.object)}};return {{"ok",result.applied},{"code","TABLE_REJECTED"},{"objectId",hexId(result.object)},{"generation",std::to_string(result.generation)}};
         }
         if (command == "sticky") {
             if (j.at("action") == "read") {
@@ -1073,6 +1092,7 @@ class Session::Impl {
             r.transform.tx = j.value("x", 0.0);
             r.transform.ty = j.value("y", 0.0);
             const auto result = facade().createSticky(r);
+            if(result.state==runtime::ConnectorCommandState::kPending)return {{"ok",true},{"pendingToken",pendingTicket(result.pendingSerial)},{"objectId",hexId(result.objectId)}};
             return {{"ok", result.state == runtime::ConnectorCommandState::kApplied},
                     {"code", "STICKY_REJECTED"},
                     {"objectId", hexId(result.objectId)}};
@@ -1548,11 +1568,21 @@ class Session::Impl {
                 result = f.updateImageCrop(r);
             } else
                 return error("UNSUPPORTED");
+            if(result.state==runtime::ImageCommandState::kPending)return {{"ok",true},{"pendingToken",pendingTicket(result.pendingSerial)},{"objectId",hexId(result.objectId)}};
             return {{"ok", result.state == runtime::ImageCommandState::kApplied},
                     {"code", "IMAGE_REJECTED"},
                     {"reason", result.reason},
                     {"objectId", hexId(result.objectId)},
                     {"cropToken", std::to_string(result.cropToken)}};
+        }
+        if(command=="pendingReceipt"){
+            const auto serial=decimal(j.at("serial"));const auto facts=runtime::RuntimePlatformAccess::cpuPendingFacts(*owner);
+            const auto value=runtime::RuntimePlatformAccess::pendingLocalValue(*owner);
+            if(decimal(j.at("runtimeInstance"))!=value.owner[0] || decimal(j.at("lifetimeGeneration"))!=value.owner[1])return error("STALE_PENDING_RECEIPT");
+            if(j.contains("control")){const auto& key=j.at("control");const auto receipt=facade().canvasControlReceipt({decimal(key.at("clientId")),decimal(key.at("requestId"))});if(!receipt)return error("CONTROL_RECEIPT_EXPIRED");if(receipt->pendingSerial!=serial&&receipt->state==runtime::CanvasControlReceiptState::kQueued)return error("FOREIGN_CONTROL_RECEIPT");if(receipt->state==runtime::CanvasControlReceiptState::kQueued)return {{"ok",true},{"done",false}};return {{"ok",receipt->state==runtime::CanvasControlReceiptState::kApplied},{"done",true},{"code","CONTROL_FAILED"},{"state",receipt->state},{"revision",std::to_string(receipt->appliedRevision)}};}
+            for(const auto& terminal:facts.terminals)if(terminal.serial==serial){const bool applied=terminal.status=="Committed"||terminal.status=="NoOp";return {{"ok",applied},{"done",true},{"code",terminal.status},{"generation",std::to_string(terminal.generation)}};}
+            for(const auto& intent:value.intents)if(intent.token[2]==serial)return {{"ok",true},{"done",false}};
+            return error("PENDING_RECEIPT_EXPIRED");
         }
         if(command=="cpuPending"){
             if(!owner)return error("NOT_OPEN");
@@ -1578,7 +1608,7 @@ class Session::Impl {
             if(action=="closePreflight")return {{"ok",f.reserved==0&&!f.suspended&&contacts.empty()&&adapter->activeContacts()==0},{"code","BUSY"}};
             return {{"ok",true},{"capability",f.capability},{"enabled",f.enabled},{"requestReady",f.requestReady},{"suspended",f.suspended},{"historyJob",f.historyJob},{"newQueryUnions",std::to_string(f.newQueryUnions)},{"historyUnions",std::to_string(f.historyUnions)},{"retainedPathBytes",std::to_string(f.retainedPathBytes)},{"finishedImports",std::to_string(f.finishedImports)},{"finishedHits",std::to_string(f.finishedHits)},
                 {"token",J::array({std::to_string(f.token[0]),std::to_string(f.token[1]),std::to_string(f.token[2]),std::to_string(f.token[3]),std::to_string(f.token[4]),std::to_string(f.token[5]),std::to_string(f.token[6]),std::to_string(f.token[7])})},
-                {"pending",f.pending},{"reserved",f.reserved},{"head",std::to_string(f.head)},{"job",std::to_string(f.job)},
+                {"targetPrepareNs",std::to_string(f.targetPrepareNs)},{"sceneStampPrepareNs",std::to_string(f.sceneStampPrepareNs)},{"historyPrepareNs",std::to_string(f.historyPrepareNs)},{"publicationPrepareNs",std::to_string(f.publicationPrepareNs)},{"publishNs",std::to_string(f.publishNs)},{"maximumCommitStageNs",std::to_string(f.maximumCommitStageNs)},{"allUnionSteps",std::to_string(f.allUnionSteps)},{"preparedBeforeUp",std::to_string(f.preparedBeforeUp)},{"suffixAfterUp",std::to_string(f.suffixAfterUp)},{"checkpointBytes",std::to_string(f.checkpointBytes)},{"pending",f.pending},{"reserved",f.reserved},{"head",std::to_string(f.head)},{"job",std::to_string(f.job)},
                 {"admitted",std::to_string(f.admitted)},{"committed",std::to_string(f.committed)},
                 {"jobs",std::to_string(f.jobs)},{"geometryReuse",std::to_string(f.geometryReuse)},{"exactCalls",std::to_string(f.exactCalls)},
                 {"prepareNs",std::to_string(f.prepareNs)},{"importNs",std::to_string(f.importNs)},{"exactNs",std::to_string(f.exactNs)},{"commitNs",std::to_string(f.commitNs)},{"workerWaitNs",std::to_string(f.workerWaitNs)},{"opportunities",std::to_string(f.opportunities)},{"maxOwnerNs",std::to_string(f.maxOwnerNs)},{"maxExactNs",std::to_string(f.maxExactNs)},
@@ -1587,10 +1617,8 @@ class Session::Impl {
         if(command=="cpuWorkerGrant"){
             if(!owner)return error("NOT_OPEN");
             if(j.at("action")=="basis"){
-                const auto stamp=facade().readMultiSelection().stamp;
-                const auto doc=*owner->documentId();std::array<std::uint64_t,2> words{};
-                for(unsigned i=0;i<16;++i)words[i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
-                return {{"ok",true},{"words",J::array({std::to_string(stamp.runtimeInstance),std::to_string(stamp.lifetimeGeneration),std::to_string(words[0]),std::to_string(words[1])})}};
+                const auto basis=runtime::RuntimePlatformAccess::cpuWorkerBasis(*owner);
+                return {{"ok",true},{"words",J::array({std::to_string(basis[0]),std::to_string(basis[1]),std::to_string(basis[2]),std::to_string(basis[3])})}};
             }
             const auto executor=decimal(j.at("executor"));
             if(j.at("action")=="reserve"){

@@ -1,0 +1,92 @@
+{
+  "owner_map": {
+    "canonical": "runtime/semantic OperationEngine and existing ObjectStore/ledger/clock",
+    "local_intents": "Existing CanvasEditingRuntime pending owner, extended to typed variants",
+    "selection": "Existing SelectionSession with canonical + presentation resolver; no second selection owner",
+    "scene_render": "Derived current Scene plus bounded pending operation overlay/projection and existingRender caches/displayrosters",
+    "cpu": "Shared C++ jobs in independent WASM Worker(s), immutable witness/cursor/path, no canonical state",
+    "resource": "Existing Composition resource registry/token/decode/manifest owners",
+    "sdk": "Private Session transports owner-issued receipt tokens, bytes and terminal metadata; JS adapter schedules and associates promises"
+  },
+  "slices": [
+    {
+      "id": "S",
+      "name": "Snapshot envelope and roundtrip",
+      "required": "Introduce one128MiB snapshot limit independent ofOperation32MiB. Bound canonical encoding before excessive nested allocation (checkedsize/preflight), use all current schema/digest/capability checks. Capture never claimsCaptured if bytes cannot be decoded under same profile; explicit boundederror/no mutation. Reuse savedinitial+twoOps35,456,391B as RED/GREEN. Do not bypassSnapshotCodec through directstore writes or replay claiming atomicrestore.",
+      "contracts": "Keep object/string/geometry/collection/Operation boundaries. Update local SDK contracts and native source behavior consistently. Wirebytes underoldrange unchanged."
+    },
+    {
+      "id": "P",
+      "name": "Exact active-prefix preparation and continuation",
+      "required": "Separate active preparation identity from pending sealed serial. Eraser sample callback appends only; owner safe points discover visible/actual candidate local geometries and advance immutable confirmed prefix work. AtUp move traceO1; consume proven prefix and compute only needed suffix for finalfullinput. Merge unsent suffix, max one retained checkpoint plus inflight per localgeometry. Prior tap->real firstsegment and mutabletail are forks, not append.",
+      "protocol": "Extend private same-build job ABI/envelope as needed, version it and include build/owner/executor/job/attempt/session/local basis/prefixrevision/completeinput lengths. Render binds exported checkpoint to exact completed immutable fullinput; Worker validates prefix witness vs continuation in C++ before using same-build serialized path. Unknown path or cursor/hashalone never proves prefix. Full float math/order maintained. Full envelope including checkpoint+geometry<=1MiB; onejob heap<=64MiB. Oversize checkpoint yields bounded restart/replay or explicit refusal, never main drain or truncation.",
+      "scheduling": "Same8ms/4096 owner opportunity shared with Render; genuine Worker waits yield. Roundrobin local jobs without starvation. Historical Ready cache reuse remains; actualnew/history/allkernels counted. 2Worker condition as authority, maintain globaltransport/custody budget and full error/close/context identity perexecutor.",
+      "cost": "Report totalunions including discarded/forked work, preparedBeforeUp, suffixAfterUp, copybytes, Workercompute/yield/import, mainexact/commit, queuewait. Paced30s vsburst are separate. Prefix preparation is earlier execution, not proof of reduced totalwork; no claimed savings without counts."
+    },
+    {
+      "id": "Q",
+      "name": "Unified local intent timeline and immediate mixed editing",
+      "kinds": [
+        "PartialErase",
+        "BrushCommit",
+        "CreateShape",
+        "CreateSticky",
+        "CreateTable",
+        "ImportImage",
+        "SetTransforms",
+        "Undo",
+        "Redo"
+      ],
+      "ordered_state": [
+        "ActiveContactOrPreparation",
+        "SealedQueued",
+        "Preparing",
+        "WaitingWorkerOrResource",
+        "ReadyToCommit",
+        "AppliedAwaitingQualifiedReplacement",
+        "Retired",
+        "NoOp",
+        "FailedWithoutApply"
+      ],
+      "admission": "Reserve slot/bytes before accepting active/create/import. Serial at sealed Up or accepted command, same owner ingress order acrosssources; active pre-reservation cannot make later unsealed gesture block alreadysealed work. Mutation complete promise waits realterminal, readonly/infrastructure continues. Capacity8includesactive/preparedimages; failure beforeadmission leaves tool/selection/canonical untouched.",
+      "typed_requests": "Freeze final IDs/prototypes/style/rows/columns/resource facts/worldgesture deltas and required preconditions, not arbitrary callable closure or oldfullObjectRecord rollback. Athead build canonical operation with currentpreimage through original mutationpath. Stage operationID/publication reservations beforecommit; no concurrentWorker apply.",
+      "projection": "Use existingScene/presentation/hit owners with bounded suffix. It may reference immutablecanonical contents and pending prototypes plus localmasks and transforms, must not run an alternate OperationEngine or become source for snapshot/sync. Cache by exact canonicalbasis+timeline+camera/resource generations. Rebuild affectedsuffix onrealdependencychange. SequentialAeraseT0→BmoveT1→CeraseT1 masks must be correct before and after Acommit. Existingopaque GPU orderedcomposition used, no force selected-on-top.",
+      "pending_creation": "FinalObjectId reserved onadmission; preserve table axisIDs, sticky labelchildIDs, parent scope/appearance/knownresource binding. Head resolves legitimate orderkey afterpreviouscreates. One-shot pendingacceptedcreate returns to point tool with internalpendingselectionHUD, doesnotclaimcommit. Latepromotion to canonical mustnot stealfocusfromnewerinteraction. Immediately drag pendingcreatedobject throughsame resolver, then canonicalInsertfollowedTransform once each.",
+      "transform": "Freeze initial projection pose + finalworldpose/delta andparent/access/body stamps. Athead derive localpose against latest parent; inverse captures latest committed pose only. Mask-onlypredecessorchange compatible, body/pose/parent/lock changes needactualrevalidation/rebase/conflict. Selectionrevisionfocus races cannot silentlyretarget anotherobject. Canonicalcreated/stickychild/table/image layout followed correctly.",
+      "brush": "Whileerasepending, existing BrushSession must show stableprefix/tail and sealinto samequeue; no new brushmath and no lowresolutionmask as exactinput. Noop/failed canonicalvalidation retainsoriginalerror. ARC previews retire onlyqualifiedmatchedreceipt.",
+      "history": "Undo/Redo are orderedheadactions; afterhistoryadmission a canonical-dependent-editbarrier returnsBusyuntilterminal, NAV/tools/read continue. This is explicit temporary dependency policy, not blanketpause behindallpendingerases.",
+      "other_edits": "Text/tablecellcontent/imagecrop/replace/group/section/clipboard/remote not all part of newqueuedtypecoverage. They keep original correct Busy/committed path duringpending unless their existingtype is explicitlyintegrated with sameowner; do not silently claimallSDK editingcomplete. Immediatecreate/drag fornamedfourkinds, brush/erase/NAV/History are required.",
+      "image": "Preserve ordered resource preparation and original registration+Insert semantics; no unseen canonicalmanifestchange beforeearlierintent. Resource failure beforemanifest noinsert; Insertfailure aftermanifest explicit originalpartialstate preserved. No fake selectedimage. Existingloadedimage drag must work regardlessnewimagecomplexity.",
+      "receipt_display": "Each admission token/{runtime,lifetime,serial} and terminal ties actualOperationID/commit/Scene/frame/receipt. Pendinguncommitteddisplay distinct fromAppliedAwaitingReplacement. LateA/oldcontext receipts cannot retire laterB. CancelbeforeUp onlyactive; sourceLostafterUp doesnotundo acceptedintent. NoOp/Failed clears own display only when validreplacement/suffix ready; lastsuccessfulpixels retained onRetry.",
+      "failure": "Aerase Failed/NoOp allows unrelatedB, refreshes exact history basis. FailedCreate cancels onlyintentdependents with expliciterror; unrelatedqueuecontinues. AtomicHeadfailure cannot halfapply oneOperation/History; originalimage2Operationpartial semantics distinct. Contextloss preserveworldintent, holdwriteuntilrestore; executorfailure atmostoneboundedreplacement perruntime, secondaryfailureterminalandnewadmissionexplicitunavailable. CloseBusybeforeterminatinganyrequiredworkers ordatapump."
+    }
+  ],
+  "pending_public_DTO": {
+    "added_to": "sdk/api/axiom.d.mts RuntimeState.pending optional, generatedWeb/root/nativeJSadaptations consistent",
+    "shape": {
+      "revision": "decimalstring presentation/timeline revision",
+      "intents": "array<=8 of {token:{runtimeInstance:decimalstring,lifetimeGeneration:decimalstring,serial:decimalstring},kind:erase|create|transform|undo|redo|imageImport,phase:active|queued|preparing|waiting|ready,objectIds:Id128[],dependsOn:decimalserial[]}",
+      "selection": "{selected:Id128[],primary:Id128|null,bounds:[left,top,right,bottom]|null}"
+    },
+    "read_semantics": "objects/generation/lastCommit/DataPortcanonical only. Existingselected/readSelection/typedtable/image unavailable/emptyforpendingcreatedobject; pending.selection reportsitsvisibleHUDidentity. Selectionrevisioncanchangeindependentofsemanticgeneration. NeverpasspendingticketascanonicalStamp. Normaloff mayomitpendingorreturnempty, documentboth. NoObjectRecord/Scene/Skia/rawnativehandle exposed.",
+    "write_api": "No newpublicwritecapability. Existing mutationPromises resolveaftercommit, pendinglinkprivate. PublicpendingDTO isadditivereadonly andrequiresmatchingtypes/docs/externalconsumerchecks."
+  },
+  "atomic_preparation": "Reduce synchronouscommit bursts using existing OperationEngine prepare/commit/storage/ledger and History/publication owners. A resumable private erase-preparedplan may be added underSemantic owner, with normalizedfullinput, originalvalidators, pertarget checkpoints, generation/commitclock/resource proof and existingFC08faultpoints. Allfallibleallocations beforepublish; finalcommit singleowner atomic,noWorkerstore. Preparedserializationmay use sameC++inWorker but owner revalidation andexactidentity required; do notintroduceuntrustedready-operationbytesbypass. Old applyfallback preservednormalcorrect. Measuremaxindivisibleapply if cannotpreempt. Main1.9s cannotbehiddenbymovingwholecalltoRAF.",
+  "budgets": {
+    "local_intents": 8,
+    "max_confirmed_eraser_segments": 8192,
+    "Worker_heap_each": 67108864,
+    "max_Workers": 2,
+    "aggregate_Worker_transport": 16777216,
+    "per_request_result": 1048576,
+    "Render_shared_desktop": 536870912,
+    "finished_path_resident_desktop": 67108864,
+    "legacy_construction_optional_flatten": 8388608,
+    "max_path_entries": 512,
+    "Snapshot_envelope": 134217728,
+    "Operation_envelope": 33554432,
+    "ObjectRecord_envelope": 16777216,
+    "policy": "Account actualcapacity/fullrawwitness/checkpoints/pins/aliasmetadata/COW/mainimport/linearheap. No outputpartial-as-ready, no prematuregrantrelease. One Worker fallback onquota, not silentmaincompute. Canonicaldocmemory separatefromRendercache; measuretotalRSS/peaks, no unlimitedqueue."
+  },
+  "activation": "Keep AXIOM_CPU_PENDING_ERASE OFF normalconsumer bydefault duringwork; candidateON realroot. NewDemo onlyafter functionalcontinuousbasicproof; noSDKrelease. 4328unchanged. No officialG5/P34PASSclaimed."
+}

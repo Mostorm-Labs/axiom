@@ -37,7 +37,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
   let closeBarrier=false;
   let pendingWorker=null,pendingTask=null,pendingFailed='0',pendingRestart=null,pendingRestarts=0,pendingReplacement=null,pendingRoot=null,pendingFactory=null;
   const pumpPending=()=>{
-    if(!pendingWorker||pendingTask||pendingRestart||closed)return;
+    if(!pendingWorker||pendingTask||pendingRestart||closed||closing||closeBarrier)return;
     const failureFacts=call('cpuPending');
     if(failureFacts.failed!==pendingFailed){pendingFailed=failureFacts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',failureFacts.error));}
     if(pendingReplacement){
@@ -120,19 +120,31 @@ export async function createRuntime({mount, documentId, restore, initialResource
       if (retainedActive && !pendingResize && frame.surfaceReady) {
         retained.remove();retained.width=retained.height=0;retainedActive=false;
       }
+      resolveTerminals();
       dispatch();
       if (frame.presented && frame.presented !== lastPresented) {
         lastPresented = frame.presented;
         if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});
       }
-      if (frame.pending || frame.retry || text?.snapshot().phase) schedule();
+      if (frame.pending || frame.retry || terminalWaiters.size || text?.snapshot().phase) schedule();
     } catch(error) { emitError(error); }
   };
   const schedule = () => { if(!closed && !closing && !scheduled)scheduled=requestAnimationFrame(render); };
+  const terminalWaiters=new Map();
+  const resolveTerminals=()=>{
+    for(const [key,entry] of terminalWaiters){
+      try{const value=call('pendingReceipt',entry.token);if(value.done){terminalWaiters.delete(key);entry.resolve({...entry.result,...value,pendingToken:undefined});}}
+      catch(error){terminalWaiters.delete(key);entry.reject(error);}
+    }
+  };
   const enqueue = (fn, finish = true, notify = true) => {
     if(closing || closed || closeBarrier)return Promise.reject(new AxiomError(closeBarrier?'DOCUMENT_CLOSING':'CLOSED'));
-    const task = tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();if(notify){changed();schedule();}return result;});
-    tail=task.catch(()=>{});return task;
+    const admission=tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();if(notify){changed();schedule();}return result;});
+    tail=admission.then(()=>{},()=>{});
+    return admission.then(result=>{
+      if(!result?.pendingToken)return result;
+      return new Promise((resolve,reject)=>{const token=result.pendingToken,key=[token.runtimeInstance,token.lifetimeGeneration,token.serial].join('/');terminalWaiters.set(key,{token,result,resolve,reject});schedule();});
+    });
   };
   const cleanup = () => {
     listeners.clear();

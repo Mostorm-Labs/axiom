@@ -76,7 +76,20 @@ bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& l
         std::vector<const CpuPendingEraseState::Intent*> ordered;
         for(const auto& p:cpuPending_->slots)if(p&&p->serial)ordered.push_back(p.get());
         std::sort(ordered.begin(),ordered.end(),[](const auto* a,const auto* b){return a->serial<b->serial;});
-        for(const auto* p:ordered)if(!appendTrace(p->trace,p->radius))return false;
+        for(auto& entry:list.entries){
+            if(!entry.presentationEraseActive)continue;
+            std::uint64_t born=0;
+            if(!semanticObjects_.contains(entry.record.objectId))for(const auto* p:ordered)for(const auto& created:p->creates)if(created.id==entry.record.objectId)born=p->serial;
+            auto pose=entry.record.transform;
+            if(const auto* canonical=sceneCoordinator_->runtimeScene().find(entry.record.objectId))pose=canonical->transform;
+            else if(const auto* object=pendingObject(entry.record.objectId))pose=object->transform;
+            for(const auto* p:ordered){
+                if(p->kind==CpuPendingEraseState::Kind::Transform)for(const auto& item:p->transforms.items)if(item.object_id==entry.record.objectId)pose=item.transform;
+                if(p->kind!=CpuPendingEraseState::Kind::Erase||p->trace.empty()||p->serial<born)continue;
+                auto mask=partialEraseGeometry(p->trace,pose,p->radius);if(!mask)return false;
+                entry.presentationEraseMasks.push_back({{},std::move(*mask)});
+            }
+        }
     }
     for(const auto& [pointer,trace]:eraserTraces_) {
         (void)pointer;

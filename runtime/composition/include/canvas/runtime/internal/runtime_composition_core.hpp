@@ -185,6 +185,8 @@ class RuntimeCompositionCore final {
   bool bindCpuPendingExecutor(std::uint64_t)noexcept;
   std::vector<std::uint8_t> takeCpuPendingRequest()noexcept;
   bool queueCpuPendingCompletion(std::array<std::uint64_t,8>,std::span<const std::uint8_t>,bool)noexcept;
+  std::array<std::uint64_t,4> cpuWorkerBasis()const noexcept;
+  interaction::PendingLocalValue pendingLocalValue()const;
   interaction::CpuPendingEraseFacts cpuPendingFacts()const noexcept;
   std::uint64_t reserveCpuWorkerGrant(std::uint64_t,std::size_t)noexcept;
   bool releaseCpuWorkerGrant(std::uint64_t,std::uint64_t)noexcept;

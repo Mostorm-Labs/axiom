@@ -1,0 +1,74 @@
+{
+  "status": "CURRENT_USER_AUTHORIZED_CORRECTED_CPU_WORKER_COMPLETION",
+  "human_authority": {
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "request": "继续完成多线程方案的改造吧",
+    "prior_choice": "All exact calculation remains shared C++ compiled to WASM. New edits display immediately and commit in original order. Navigation and mixed objects are included.",
+    "publication_preference": "Use codex/g5-cpu-worker for development; no repeated tags. User last asked to publish current checkpoint and open4328; this package does not implicitly release npm/SDK or push new commits.",
+    "current_request": "继续任务",
+    "repair_and_resume": "Correct validation design and complete existing Worker task, preserving old failed attempt."
+  },
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/notion/authority/04-semantic-schema/06-release-safety/semantic-hard-limits-v0.1.md",
+      "sha256": "635e26ed7e7a029bc5fe96b76ec59f67181823845dd429c65ae89b13680fa4d1"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "user_AGENTS_override": "Latest user-provided AGENTS supersedes disk version wording: SemVer X.Y.Z plus Build display, main workflow run Build positive, local unqualified Build0. No SDK publication/version migration in this task. Preserve all historical authority/evidence. Read sdk/VERSIONING.md but do not apply its superseded scale-based version policy.",
+  "decisions": [
+    "OperationEngine remains sole canonical mutation owner. CanvasEditingRuntime is sole local intent/input/selection/History owner; Scene/Render and pending projection are derived. SDK/JS transport and await real owner receipts; they do not own document order or objects.",
+    "Complete the existing independent CPU-WASM Worker plan in three dependent slices: symmetric Snapshot envelope; active-prefix reusable exact computation; unified local intent flow for erasing, drawing, shape/sticky/table/image creation and transforms with immediate feedback, plus ordered History actions and recovery. Do not finish at infrastructure or eraser-only checkpoint.",
+    "Snapshot whole-message admission becomes an independent128MiB private safety envelope, separate from32MiB Operations. Snapshot encode, bindDigests, decode/preflight, SDK capture and restore use one shared source. Existing ObjectRecord16MiB, collections65535, geometry/string/Operation/version/format/digest limits remain. This is a backward-compatible admitted range change, not a 1M scale guarantee or new snapshot format.",
+    "Active local eraser prefixes can be prepared before Up and continued without redoing verified completed segments. All world→local math and f32 intermediates and original sequential leftfold order remain identical. No world-space union then inverse, approximation, union balancing, new Brush algorithm, or GPU exact-hit oracle.",
+    "Default private candidate capability remains OFF until scoped complete review; all new behavior is connected through actual root candidate SDK, not qualification-only mocks. Normal OFF remains its prior behavior except the deliberate shared snapshot correctness fix and additive readonly state DTO.",
+    "The pending owner queue has8 total reserved/active/queued intents, including unfinished image import. Up/admission order is canonical apply order. Admission is not Applied/commit/present/durable. End physical contact independently of deferred semantic work; no confirmed input loss, fake commit or silent main full-path fallback.",
+    "Pending-created objects get final128bit IDs from existing Runtime allocator, with private lifetime/intent provenance. IDs are never reused on failure. SelectionSession remains unique; pending HUD/hit/drag use one bounded presentation resolver composed over current canonical Scene. It is not a second canonical store. Public canonical counts/state remain canonical.",
+    "Feedback is folded in intent order. A erase freezes local mask at predecessor transform T0. B transforms the body and that local mask together toT1. C erase converts its trace atT1. Do not re-inverse every old world trace using latest transform or display duplicate A after A commits. Same projection supplies feedback, hit and next gesture baseline. Preserve original z-order, parent/child, opacity and resource bindings.",
+    "A mask-only commit must not cancel active unrelated object transform solely because semantic generation changed. Freeze actual pose/body/parent/access dependencies; validate at head against latest predecessor. Capture inverse from latest committed preimage for intended aspect (transform inverse must not restore old masks). Genuine stale pose/parent/deletion/permission conflicts resolve or explicitly fail, no global fence deletion.",
+    "Failure/no-op of eraseA removes only A presentation intent and rebases surviving suffix. Failed creation invalidates only its dependent drag/edit; unrelated later edits progress. Qualified completion of A retires only matching frozen display roster, never newer B/C. Canonical-visible and GPU completion remain different states.",
+    "Undo/Redo enter the same ordered owner queue; resolve latest History cursor at head, not admission. Once a History action is admitted, subsequent canonical-dependent edits return explicit Busy without admission until that action completes. Navigation, tools, read and pumps remain available. Commands already earlier in queue remain. Remote/replay stay explicit Busy retry while local queue is nonempty; no swallowed packets or false AlreadyApplied.",
+    "Image import is one ordered local intent with existing resource-owner preparation and manifest→Insert operations at head. Resource decode may be prepared as derived work; canonical manifest cannot overtake earlier A. Preserve existing two-Operation semantics: failed registration means noinsert, successful manifest plus failed Insert may leave original unreferenced resource; report failure truthfully, no fake rollback. Dependent pending image edits fail explicitly; unrelated suffix survives.",
+    "Public async mutation promises resolve only at actual owner terminal Applied/NoOp or reject on failure, while SDK admission ordering is short and distinct from terminal waiting. DOM input/wheel/frame/Worker and navigation never wait behind a commit promise. Text/IME continues its existing ownership. Auto text entry after pending sticky/table create occurs only after commit if original focus/selection ticket is still current.",
+    "Add only the readonly pending DTO frozen in design-contract.json through root RuntimeState and types/private adapters; no new write API, ObjectRecord/Scene/Skia/HEAP pointers exposed. Ordinary packages must not install private headers or expose qualification seams.",
+    "Final atomic canonical apply remains owner-only. Stage fallible per-target normalization, validated plans/storage/History/publication before atomic commit; expand existing OperationEngine private preparation for erase only with the same validators, full basis checks, rollback and FC08 checkpoints. Moving an unsliced1.9s apply call to another RAF is not a scheduling fix.",
+    "No pthread/SAB/OffscreenCanvas/GPU-context migration or dependency rebuild. Start with one independent Worker and exact active-prefix reuse. If measured16local workload still exceeds real30s input, at most2 independent Workers may execute independent local geometry jobs; each64MiB fixed heap, total floors<=128MiB charged to existing512MiB shared budget, aggregate transport16MiB, job bytes1MiB and8 owner intents unchanged. No shared mutable C++ state; quota shortage can reduce to1, not raise global limits. Order still belongs Runtime.",
+    "Functional CW3 closure must not be skipped because total-drain3s/5s target is not yet met. Report actual continuous feedback and final progress separately. Do not claim all performance solved from fast Up, and do not use slower-than-baseline finding alone to abandon independently executable object integration. Numeric correctness, lost-intent/receipt/resource failures remain blocking.",
+    "No force-push, newtag, release/version bump, lock change, source SDK rebuild or edits to past frozen reports. New user Demo after full functional scoped proof and matching build; preserve old4328."
+  ],
+  "prior_authority_lock": {
+    "path": ".aegis/packages/G5-CPUW3-complete-interaction-r1/authority.lock.json",
+    "sha256": "12d3e0a6a620176258a40f8bfb5e99bd3389af4fe922e632b8c29ea69d3e0674"
+  },
+  "additional_frozen_decisions": [
+    "The r1 attempt remains terminal and immutable. r2 is separate P20/P31 repair-and-reverification authority under the current user continuation, not a retry of r1.",
+    "Keep the same controlled round-handdrawn revision4/v4 domain. The driver must explicitly select and verify it before drawing. Unsupported document versions are a disclosed capability boundary, not permission to bypass eligibility.",
+    "Keep canonical ownership and public API scope unchanged. Verification fixes must not change production defaults, algorithms, frozen AA numeric tolerance or admitted input to manufacture a pass.",
+    "Reuse source-bound successful proof. Re-run only changed-path proof and previously unclosed obligations. No blanket full native or repeated long PAIRS campaign just to raise counts.",
+    "If saved-pixel attribution proves the oracle omitted a legitimate analytic material boundary, add that reference-only boundary using the original device-space width and <=2 threshold. If instead production pixels are wrong, repair only the demonstrated existing Render path with a RED case and regression.",
+    "No new commit/push/tag/release under this package. A fresh local Demo is allowed after full functional scoped proof, preserving4328 and labeling unmet drain goals."
+  ]
+}

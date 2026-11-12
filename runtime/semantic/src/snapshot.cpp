@@ -5,6 +5,7 @@
 #include "protobuf_object_mapping.hpp"
 #include "document_background_mapping.hpp"
 #include "sha256_internal.hpp"
+#include "cpu_snapshot_source_preflight.hpp"
 
 #include <algorithm>
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
@@ -15,23 +16,23 @@ namespace canvas::semantic {
 
 namespace {
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
-std::vector<std::uint8_t> canonicalSnapshotBytes(const auditoryworks::axiom::v1::DocumentSnapshot& value) {
-    std::vector<std::uint8_t> bytes;
-    if (!internal::canonicalEncodeDocumentSnapshot(value).ok()) return {};
+std::optional<std::vector<std::uint8_t>> canonicalSnapshotBytes(const auditoryworks::axiom::v1::DocumentSnapshot& value) {
     const auto encoded = internal::canonicalEncodeDocumentSnapshot(value);
+    if (!encoded.ok()) return std::nullopt;
     return encoded.bytes;
 }
 
-std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::DocumentSnapshot& source, bool checkpoint) {
+std::optional<std::array<std::uint8_t, 32>> snapshotDigest(const auditoryworks::axiom::v1::DocumentSnapshot& source, bool checkpoint) {
     std::vector<std::uint8_t> framed;
     const auto number=[&](std::uint64_t n,unsigned width){for(unsigned i=0;i<width;++i)framed.push_back(static_cast<std::uint8_t>(n>>(8*i)));};
-    const auto blob=[&](const google::protobuf::Message& message){const auto e=internal::canonicalEncodeProto(message);number(e.bytes.size(),4);framed.insert(framed.end(),e.bytes.begin(),e.bytes.end());};
+    bool valid=true;const auto blob=[&](const google::protobuf::Message& message){const auto e=internal::canonicalEncodeProto(message);if(!e.ok()){valid=false;return;}number(e.bytes.size(),4);framed.insert(framed.end(),e.bytes.begin(),e.bytes.end());};
     if(checkpoint) {
         auto value=source;value.clear_checkpoint_digest();
         const auto bytes=canonicalSnapshotBytes(value);
+        if (!bytes) return std::nullopt;
         const std::string domain="axiom.checkpoint.v1";
         number(domain.size(),4);framed.insert(framed.end(),domain.begin(),domain.end());
-        number(bytes.size(),8);framed.insert(framed.end(),bytes.begin(),bytes.end());
+        number(bytes->size(),8);framed.insert(framed.end(),bytes->begin(),bytes->end());
     } else {
         const std::string domain="axiom.semantic.projection.v1";
         number(domain.size(),4);framed.insert(framed.end(),domain.begin(),domain.end());
@@ -50,6 +51,7 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
             blob(source.background());
         }
     }
+    if(!valid)return std::nullopt;
     return internal::sha256(framed);
 }
 
@@ -185,7 +187,10 @@ static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapa
     (void)capability;(void)binding;
     return {SemanticError::kRuntimeUnavailable, {}};
 #else
+    const auto sourceError = internal::preflightSnapshotSource(snapshot);
+    if (sourceError != SemanticError::kNone) return {sourceError, {}};
     if (!supportedSnapshotVersion(snapshot.schema_version)) return {SemanticError::kUnsupportedVersion, {}};
+    if (snapshot.objects.size() > 65535U) return {SemanticError::kLimitExceeded, {}};
     if (snapshot.document_id.isZero() || !capabilityProfile(snapshot,capability)) return {SemanticError::kInvalidSemanticValue, {}};
     if (snapshot.schema_version < 3U) {
         if (snapshot.manifest_present || snapshot.document_revision != 0U || !snapshot.recovery_frontier.empty() ||
@@ -196,35 +201,41 @@ static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapa
     } else {
         if (!snapshot.manifest_present || !validateResourceManifest(snapshot.manifest) ||
             snapshot.manifest.schema_version != 1U || snapshot.recovery_frontier.empty() ||
-            snapshot.digest_algorithm != 1U || snapshot.document_digest.size() != 32U ||
-            snapshot.capability_requirements.empty() || snapshot.checkpoint_digest.size() != 32U) {
+            snapshot.digest_algorithm != 1U || (!binding && snapshot.document_digest.size() != 32U) ||
+            snapshot.capability_requirements.empty() || (!binding && snapshot.checkpoint_digest.size() != 32U)) {
             return {SemanticError::kInvalidSemanticValue, {}};
         }
     }
-    std::vector<ObjectRecord> objects = snapshot.objects;
-    for (auto& object : objects) {
-        if (!snapshotObjectSupported(snapshot.schema_version, capability, object)) {
-            return {SemanticError::kUnsupportedVersion, {}};
-        }
-        if (!internal::normalizeObjectRecord(object) || !internal::validateObjectRecord(object)) {
-            return {SemanticError::kInvalidSemanticValue, {}};
-        }
-    }
-    std::sort(objects.begin(), objects.end(), [](const ObjectRecord& lhs, const ObjectRecord& rhs) {
-        return lhs.id.bytes < rhs.id.bytes;
+    std::vector<const ObjectRecord*> objects;
+    objects.reserve(snapshot.objects.size());
+    for (const auto& object : snapshot.objects) objects.push_back(&object);
+    std::sort(objects.begin(), objects.end(), [](const auto* lhs, const auto* rhs) {
+        return lhs->id.bytes < rhs->id.bytes;
     });
-    for (std::size_t i = 1; i < objects.size(); ++i) {
-        if (objects[i - 1U].id == objects[i].id) return {SemanticError::kDuplicateCanonicalKey, {}};
-    }
+    for (std::size_t i = 1; i < objects.size(); ++i)
+        if (objects[i - 1U]->id == objects[i]->id) return {SemanticError::kDuplicateCanonicalKey, {}};
     auditoryworks::axiom::v1::DocumentSnapshot wire;
     wire.mutable_document_id()->set_value(std::string(
         reinterpret_cast<const char*>(snapshot.document_id.value().bytes.data()), snapshot.document_id.value().bytes.size()));
     wire.set_schema_version(snapshot.schema_version);
     if (snapshot.background != foundation::DocumentBackground{})
         internal::toProtobufBackground(snapshot.background, *wire.mutable_background());
-    for (const auto& object : objects) {
+    std::size_t objectsBytes = 0;
+    for (const auto* original : objects) {
+        auto object = *original;
+        if (!snapshotObjectSupported(snapshot.schema_version, capability, object)) {
+            return {SemanticError::kUnsupportedVersion, {}};
+        }
+        if (!internal::normalizeObjectRecord(object) || !internal::validateObjectRecord(object)) {
+            return {SemanticError::kInvalidSemanticValue, {}};
+        }
         auto* destination = wire.add_objects();
         if (!internal::toProtobufObjectRecord(object, *destination)) return {SemanticError::kInvalidSemanticValue, {}};
+        std::size_t size = 0;
+        const auto error = internal::measureSnapshotMessage(*destination, internal::kSnapshotEnvelopeBytes - objectsBytes, size);
+        if (error != SemanticError::kNone) return {error, {}};
+        if (size > internal::kSnapshotEnvelopeBytes - objectsBytes) return {SemanticError::kLimitExceeded, {}};
+        objectsBytes += size;
     }
     if (snapshot.schema_version >= 3U) {
         if (!internal::toProtobufResourceManifest(snapshot.manifest, *wire.mutable_manifest())) {
@@ -233,19 +244,24 @@ static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapa
         wire.set_document_revision(snapshot.document_revision);
         wire.set_recovery_frontier(std::string(snapshot.recovery_frontier.begin(), snapshot.recovery_frontier.end()));
         wire.set_digest_algorithm(snapshot.digest_algorithm);
-        wire.set_document_digest(std::string(snapshot.document_digest.begin(), snapshot.document_digest.end()));
+        wire.set_document_digest(binding ? std::string(32, '\0') : std::string(snapshot.document_digest.begin(), snapshot.document_digest.end()));
         wire.set_capability_requirements(std::string(snapshot.capability_requirements.begin(), snapshot.capability_requirements.end()));
-        wire.set_checkpoint_digest(std::string(snapshot.checkpoint_digest.begin(), snapshot.checkpoint_digest.end()));
+        wire.set_checkpoint_digest(binding ? std::string(32, '\0') : std::string(snapshot.checkpoint_digest.begin(), snapshot.checkpoint_digest.end()));
+        std::size_t size = 0;
+        const auto error = internal::measureSnapshotMessage(wire, internal::kSnapshotEnvelopeBytes, size);
+        if (error != SemanticError::kNone) return {error, {}};
         const auto semantic = snapshotDigest(wire, false);
         const auto checkpoint = snapshotDigest(wire, true);
-        const std::vector<std::uint8_t> semantic_bytes(semantic.begin(), semantic.end());
-        const std::vector<std::uint8_t> checkpoint_bytes(checkpoint.begin(), checkpoint.end());
+        if (!semantic || !checkpoint) return {SemanticError::kLimitExceeded, {}};
+        const std::vector<std::uint8_t> semantic_bytes(semantic->begin(), semantic->end());
+        const std::vector<std::uint8_t> checkpoint_bytes(checkpoint->begin(), checkpoint->end());
         if(binding) {
-            wire.set_document_digest(std::string(semantic.begin(),semantic.end()));
+            wire.set_document_digest(std::string(semantic->begin(),semantic->end()));
             const auto bound_checkpoint=snapshotDigest(wire,true);
+            if (!bound_checkpoint) return {SemanticError::kLimitExceeded, {}};
             binding->document_digest=semantic_bytes;
-            binding->checkpoint_digest.assign(bound_checkpoint.begin(),bound_checkpoint.end());
-            wire.set_checkpoint_digest(std::string(bound_checkpoint.begin(),bound_checkpoint.end()));
+            binding->checkpoint_digest.assign(bound_checkpoint->begin(),bound_checkpoint->end());
+            wire.set_checkpoint_digest(std::string(bound_checkpoint->begin(),bound_checkpoint->end()));
         } else if (snapshot.document_digest != semantic_bytes || snapshot.checkpoint_digest != checkpoint_bytes) {
             return {SemanticError::kInvalidSemanticValue, {}};
         }
@@ -270,9 +286,10 @@ bool SnapshotCodec::populateRequirements(SemanticSnapshot& snapshot) {
 }
 bool SnapshotCodec::bindDigests(SemanticSnapshot& snapshot,SnapshotCapability capability) {
     if(snapshot.schema_version!=3)return false;
-    auto staged=snapshot;staged.document_digest.resize(32);staged.checkpoint_digest.resize(32);
-    if(!encodeSnapshot(staged,capability,&staged).ok())return false;
-    snapshot=std::move(staged);return true;
+    SemanticSnapshot binding;
+    if(!encodeSnapshot(snapshot,capability,&binding).ok())return false;
+    snapshot.document_digest=std::move(binding.document_digest);
+    snapshot.checkpoint_digest=std::move(binding.checkpoint_digest);return true;
 }
 
 SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& bytes, SnapshotCapability capability) {
@@ -324,8 +341,8 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
         result.checkpoint_digest.assign(wire.checkpoint_digest().begin(), wire.checkpoint_digest().end());
         const auto semantic = snapshotDigest(wire, false);
         const auto checkpoint = snapshotDigest(wire, true);
-        if (!std::equal(semantic.begin(), semantic.end(), result.document_digest.begin()) ||
-            !std::equal(checkpoint.begin(), checkpoint.end(), result.checkpoint_digest.begin())) {
+        if (!semantic || !checkpoint || !std::equal(semantic->begin(), semantic->end(), result.document_digest.begin()) ||
+            !std::equal(checkpoint->begin(), checkpoint->end(), result.checkpoint_digest.begin())) {
             return {SemanticError::kInvalidSemanticValue, std::nullopt};
         }
     }

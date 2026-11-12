@@ -104,9 +104,12 @@ class SkiaRenderer final {
     void setCpuPendingPreparation(bool value)noexcept;
     std::optional<resources::ResourceLease> reserveCpuPendingMetadata(std::size_t)noexcept;
     using CpuPathPin=std::shared_ptr<const void>;
+    [[nodiscard]] std::vector<std::uint8_t> encodeCpuPendingContinuation(
+        const semantic::EraseMaskGeometry&,const std::array<std::uint64_t,8>&,
+        const semantic::EraseMaskGeometry&,const CpuPathPin&,std::size_t* prefix=nullptr)const;
     [[nodiscard]] CpuPathPin lookupCpuPendingPath(const semantic::EraseMaskGeometry&)const noexcept;
     [[nodiscard]] CpuPathPin importCpuPendingPath(const semantic::EraseMaskGeometry&,
-        std::span<const std::uint8_t>,const std::array<std::uint64_t,8>&)const noexcept;
+        std::span<const std::uint8_t>,const std::array<std::uint64_t,8>&,bool* resourcePending=nullptr)const noexcept;
     [[nodiscard]] SelectionGeometryHit confirmCpuPendingErase(const RuntimeSceneRecord&,
         const semantic::EraseMaskGeometry&,const CpuPathPin&)const noexcept;
     bool retainCpuPendingHandoff(std::uint64_t,const std::vector<CpuPathPin>&)noexcept;

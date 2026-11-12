@@ -3,7 +3,7 @@ import {kernelId,limits} from './cpu-worker-build.mjs';
 const magic=0x31575043;
 export function inspectCpuEnvelope(buffer){
  if(!(buffer instanceof ArrayBuffer)||buffer.byteLength<128||buffer.byteLength>limits.inputBytes)throw Error('INPUT_BOUND');
- const v=new DataView(buffer);if(v.getUint32(0,true)!==magic||v.getUint32(4,true)!==1||v.getUint32(96,true)!==buffer.byteLength-128)throw Error('INVALID_ENVELOPE');
+ const v=new DataView(buffer);if(v.getUint32(0,true)!==magic||![1,2].includes(v.getUint32(4,true))||v.getUint32(96,true)!==buffer.byteLength-128)throw Error('INVALID_ENVELOPE');
  const build=Array.from(new Uint8Array(buffer,16,16),v=>v.toString(16).padStart(2,'0')).join('');if(build!==kernelId)throw Error('KERNEL_BUILD_MISMATCH');
  const words=Array.from({length:8},(_,i)=>v.getBigUint64(32+i*8,true).toString());if([0,1,4,5,6,7].some(i=>words[i]==='0')||(words[2]==='0'&&words[3]==='0'))throw Error('INVALID_IDENTITY');return{words,key:words.join('/')};
 }

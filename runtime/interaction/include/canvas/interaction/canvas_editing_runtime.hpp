@@ -1,6 +1,7 @@
 #pragma once
 #include "canvas/runtime/object_clipboard.hpp"
 #include "canvas/interaction/internal/cpu_pending_erase.hpp"
+#include "canvas/runtime/image_input.hpp"
 #include "canvas/ink/laser_trail.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
@@ -172,7 +173,30 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   CpuPendingEraseFacts cpuPendingFacts()const noexcept;
   bool cpuPendingBusy()const noexcept;
   void serviceCpuPendingErases()noexcept;
+  void serviceCpuActivePrefixes(std::chrono::steady_clock::time_point)noexcept;
   bool competingCanonicalAdmission()const noexcept;
+  bool pendingLocalEnabled()const noexcept;
+  std::uint64_t lastPendingLocalSerial()const noexcept;
+  bool pendingHistoryBarrier()const noexcept;
+  bool queuePendingHistory(bool redo)noexcept;
+  bool reservePendingLocal(input::PointerKey,std::string_view)noexcept;
+  void cancelPendingLocal(input::PointerKey)noexcept;
+  bool enqueuePendingImage(runtime::ImageImportRequest,semantic::ObjectRecord)noexcept;
+  std::optional<std::pair<std::uint64_t,runtime::ImageImportRequest>> pendingHeadImage()const;
+  void completePendingImage(std::uint64_t,bool)noexcept;
+  bool enqueuePendingCreate(std::vector<semantic::ObjectRecord>,bool editText=false)noexcept;
+  bool enqueuePendingTransform(const semantic::SetTransformsOp&)noexcept;
+  bool servicePendingLocalHead()noexcept;
+  void failPendingDependents(std::uint64_t serial)noexcept;
+  const semantic::ObjectRecord* pendingObject(foundation::ObjectId)const noexcept;
+  std::optional<RuntimeSceneRecord> pendingSceneRecord(foundation::ObjectId)const;
+  std::optional<semantic::Transform2D> pendingPose(foundation::ObjectId)const;
+  bool pendingSelectionCreated()const noexcept;
+  PendingLocalValue pendingLocalValue()const;
+  bool applyPendingPresentation(render::ReferenceDrawList&)const;
+  void selectPendingCreated(foundation::ObjectId)noexcept;
+  bool pendingTransformBasisCompatible()const noexcept;
+
   void failCpuPendingExecutor()noexcept;
   void suspendCpuPendingExecutor()noexcept;
 
@@ -648,11 +672,13 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
            keyedStrokeIds_.empty() && history_.canRedo();
   }
   [[nodiscard]] bool undo() noexcept {
+    if (pendingLocalEnabled() && cpuPendingBusy()) return queuePendingHistory(false);
     if (!recoverHistoryScene() || !canUndo() || !history_.undo()) return false;
     canonicalPresentationDirty_ = true;
     return true;
   }
   [[nodiscard]] bool redo() noexcept {
+    if (pendingLocalEnabled() && cpuPendingBusy()) return queuePendingHistory(true);
     if (!recoverHistoryScene() || !canRedo() || !history_.redo()) return false;
     canonicalPresentationDirty_ = true;
     return true;
@@ -700,6 +726,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       std::optional<std::vector<semantic::EraseMaskAddItem>>,bool)noexcept;
   bool commitPartialEraseItems(std::uint64_t,std::vector<semantic::EraseMaskAddItem>)noexcept;
   std::shared_ptr<CpuPendingEraseState> cpuPending_;
+  std::optional<RuntimeSceneRecord> editingPendingBasis_;
   [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
   [[nodiscard]] bool submitHistoryIntent(std::span<const semantic::Operation>,
       std::span<const HistoryExpectation>, EditorHistory::IntentCommit, void*);
@@ -956,7 +983,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t exactDemandResourceEpoch_=0,presentationResourceEpoch_=0;
   std::uint64_t exactDemandSelectionRevision_=0;
   // Bounded display metadata, not a second semantic/mask/geometry store.
-  enum class DisplayKind : std::uint8_t { kBrush, kErase };
+  enum class DisplayKind : std::uint8_t { kBrush, kErase, kLocal };
   struct DisplayRecord final {
     std::uint64_t serial=0,session=0;
     DisplayKind kind=DisplayKind::kErase;

@@ -73,3 +73,34 @@ preview assets.
 
 
 Object clipboard v1 and live partial erase increment: see `../object-clipboard-and-live-erase-v1.json` and `sdk/web/README.md`. Root JS synchronous Copy returns owned opaque bytes and an owner-bound full Stamp; queued Cut/Duplicate/Paste retain the full captured basis. The shared Runtime owns identity remapping, hierarchy, resource validation, atomic History and publication; the Demo owns OS clipboard/key translation only. No Semantic Operation schema or conflict protocol changes.
+
+
+CPU Worker candidate ordered editing (local unpublished development):
+`RuntimeState.pending` is an optional owned read-only value snapshot. It contains
+at most eight intents with decimal-string runtime/lifetime/serial tokens, kind,
+phase, object IDs and dependency serials, plus pending selection bounds. It
+contains no ObjectRecord, Scene, path, native handle or mutable store. The normal
+OFF build may omit it or return an empty intent list. Canonical `objects`,
+`generation`, `lastCommit`, DataPort packets and existing typed object reads never
+include an uncommitted created object; canonical selection reads are empty or
+unavailable for that pending selection. `pending.selection` describes its visible
+HUD. Selection and presentation revisions do not assert canonical commit.
+
+Mutation promises remain pending until the owning Runtime applies the actual
+ordered intent or reports its terminal failure. Their short owner admission is
+serialized independently of waiting for commit. Pointer, wheel, navigation and
+frame/Worker pumps continue while these promises wait. Undo/Redo are ordered
+History actions; admission establishes a temporary dependency barrier that returns
+Busy for subsequent canonical-dependent writes until the History action finishes.
+Read, navigation and tool selection stay available. Remote/replay return Busy
+without applying while local intents are pending; callers retry the same IDs.
+
+Image import preserves existing manifest-then-Insert semantics: registration
+failure inserts nothing; Insert failure after successful manifest registration may
+leave an unreferenced resource and rejects the promise. No cross-Operation atomic
+rollback is claimed. Snapshot has an independent 128 MiB whole-message envelope;
+encode and decode share it, while Operation 32 MiB, ObjectRecord 16 MiB and existing
+collection limits remain. Unsupported or oversized capture does not return a
+successful restorable document. This is not a 1M-object scale acceptance.
+
+本地未发布编译的逻辑版本保持 `0.4.3`，Build 为 `0`；root `SDK_VERSION`、`Runtime.version` 和 `readBuildInfo().sdkVersion` 显示 `0.4.3.0`，`readBuildInfo().version` 与 npm `version` 保持三段，npm `buildNumber` 为数值 `0`。此元数据不构成发布或正式 Gate 通过。
