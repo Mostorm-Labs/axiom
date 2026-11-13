@@ -1,0 +1,46 @@
+{
+  "schema": "axiom-r2-raw-preservation-v1",
+  "windows": [
+    {
+      "raw": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/iab/SZ2-IAB/raw.json",
+        "sha256": "9d7dad40f27e781197c5a39f4cee92caeb7d52e5d233acbd2e1e27ed6066ffb0"
+      },
+      "raw_bytes": 246291339,
+      "compressed": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/iab/SZ2-IAB/raw.json.gz",
+        "sha256": "16429d914fe2b231a30913e54a9758547386dfc23e8659b6c8b2956fa2f45a15"
+      },
+      "compressed_bytes": 3309201,
+      "retained_original": true
+    },
+    {
+      "raw": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-1/raw.json",
+        "sha256": "fb1a6f5e997bb575a8f79c74088926b4798627e5a72a1d7810da3b669e065666"
+      },
+      "raw_bytes": 3149576,
+      "compressed": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-1/raw.json.gz",
+        "sha256": "d40676881e72e1242f47635d42587d4622bdd8b6758426cc6dfad4f66c9b147f"
+      },
+      "compressed_bytes": 1110379,
+      "retained_original": true
+    },
+    {
+      "raw": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-2/raw.json",
+        "sha256": "bbdeb9a7c056847a31204f4179311f4930279681a68d6c90902b5ac36b5b5bc6"
+      },
+      "raw_bytes": 3176002,
+      "compressed": {
+        "path": "out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-2/raw.json.gz",
+        "sha256": "a7c92d058ffaee116a74e2c619e18094705d872a256c23b97b1edcaed5f8c1ac"
+      },
+      "compressed_bytes": 1110616,
+      "retained_original": true
+    }
+  ],
+  "no_new_browser": true,
+  "format": "Exact original JSON retained; gzip copy compresses saved buffers without rewriting original or frozen evidence."
+}

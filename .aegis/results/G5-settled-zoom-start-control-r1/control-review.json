@@ -1,0 +1,17 @@
+{
+  "schema": "axiom-settled-zoom-independent-review-v1",
+  "created_utc": "2026-11-13T15:25:31.902192+00:00",
+  "subject": {
+    "path": ".aegis/results/G5-settled-zoom-start-repair-r1/result.json",
+    "sha256": "d2d52a596f576f112b4af5dfb6ecb3612fff2b2fa72f58f070b056b3bb73d52c"
+  },
+  "verdict": "DO_NOT_PROMOTE_PERFORMANCE_UNMET",
+  "independent_evidence_bindings_checked": 191,
+  "binding_errors": [],
+  "source_review": "Verified fixed-region actual paint validity, samecell source reduction, actualGPU eligibility, safetygate; noSDK/Runtime mutation",
+  "performance": "Native work reduction does not establish display latency. Both IAB ordinaryprimarys worse; Chrome one70.3ms callback and57.5ms input lateness explicit. Canonicalrestore/edit residency asymmetry limits causalattribution.",
+  "pixels": "Independently decoded allthree IAB beforeSnapshotobject identities and compared savedfullbefore/finalRGBA exact crossSDK. Native independentcoldcoarse+sharpresample coversfirstview withsmallquantization limits; do notclaimallWebfirstcorrectframes.",
+  "r1_accepted": "diagnostic/rootcause/probe+boundedwork reduction andscopedidentityfix useful; candidateoverallunqualified",
+  "successor": "Separateauthorizedr2 onelocalvariable completeboundingrectrepaint/simpleclip, allcomparisonlanesuniformrestore; r1remainsimmutable",
+  "no_G5_or_release_PASS": true
+}

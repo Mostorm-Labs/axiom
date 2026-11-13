@@ -1,0 +1,28 @@
+{
+  "schema": "axiom-control-authority-clarification-v1",
+  "created_utc": "2026-11-13T15:44:36.324527+00:00",
+  "package": {
+    "path": ".aegis/packages/G5-settled-zoom-start-rect-repair-r2/package.json",
+    "sha256": "094cab5b1a0228fcd65bd569edd6f0fc5a55a3569bd9cfd9f5c429bba2585a4c"
+  },
+  "classification": "P31_AMBIGUOUS_WORDING_RESOLVED_AGAINST_EXISTING_HUMAN_AUTHORITY",
+  "human_authority": "Earlier direct human reply in this controlling conversation: 允许抗锯齿边缘差异. Scope unchanged: preserve contour/width/pressure/transparency/selfintersection/erase/seams, AAedge differences permitted.",
+  "conflict": "R2-PIXELS exactunchanged shorthand could mean every RGBA byte, while same package explicitly inherits existing AA allowance. This clarification does not erase either wording or old results.",
+  "resolved_acceptance": "Canonical state and semantic operation bytes unchanged; final exact-fidelity rendering must preserve all geometry/material/masks/order. CPU/GPU AA edge pixels may differ only inside pre-existing fixed1devicepixel contour/mask boundary computed solely from frozenSnapshot/source geometry+camera, independent of candidate differences. Every pixel outside must match independentCPU reference exactly for these fixtures. No enlarged band/tolerance/globaldelta exemption.",
+  "evidence_policy": "Keep observed4/5pixels max76 and no fullRGBAexact claim. Qualify them as allowedAA only if all inside originalsource-onlyband and zerooutside mismatch; sameprimary/sourcecorrectness independently established.",
+  "unchanged": [
+    "productionfiles",
+    "pixeloraclegeometry/1pixelwidth",
+    "allbrowserlimits and rawfailures",
+    "r1UNMET verdict",
+    "performance no-longframe criterion",
+    "no physicalphoton/allscene claim"
+  ],
+  "not_authorized": [
+    "New production repair",
+    "New sampling",
+    "New pixelband or per-candidate mask",
+    "Commit/push"
+  ],
+  "result": "Scoped test candidate may be prepared once all originalperformance/semantic/edge-oracle/cleanup requirements independently verified; notoverallG5/P34/releasePASS"
+}

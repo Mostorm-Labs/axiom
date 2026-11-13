@@ -1,0 +1,58 @@
+{
+  "schema": "axiom-independent-scoped-zoom-final-review-v1",
+  "created_utc": "2026-11-13T15:51:45.321512+00:00",
+  "status": "EVIDENCE_VERIFIED_AWAIT_EXACT_PRODUCER_RETURN",
+  "scope": "Settled first zoom-out on defaultv4 beyondviewport strokes, with/withoutmask. No postUpowner/Worker/idle closure.",
+  "independent_reviews": {
+    "final-pixel-acceptance-clarification.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/final-pixel-acceptance-clarification.json",
+      "sha256": "56884fa2a76e3998a3dfdfb1cf31ae0fa58ef140c7e73ead8539565ee41cb17c"
+    },
+    "HTTP-demo-review.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/HTTP-demo-review.json",
+      "sha256": "64524f5eee0bc9de41600671ddd9e9105139ae629b0032dd3c6e82ec13a9a508"
+    },
+    "independent-performance-review.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/independent-performance-review.json",
+      "sha256": "ee5c57d4c70396602028cef5b4c3eb230e04568afbbfb861f1116c0b5499ba0a"
+    },
+    "independent-final-pixel-review.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/independent-final-pixel-review.json",
+      "sha256": "a5f89ee5f4bfbf4555f13899428aa1f24dc5ff10aa918c4790a46e4f1aac7846"
+    }
+  },
+  "source_audit": "Same coarsecell holes considered together; rect demand is actuallycleared/repainted inordered source/mask/material beforetilevalidpublication. Fullcoveragegate retained, fine/highdensityretainedoverlap wins. Existingpanrectpolicy unchanged, preparedunmaskedGPUusesexistingquota andCPU/Rasterfallback. CrossScenefailedquerybinding returnsRetry. NoSDK/Runtime/canonical mutation.",
+  "verification": {
+    "fresh_native": {
+      "passed": 10,
+      "failed": 0,
+      "log": {
+        "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/independent-native-tests.log",
+        "sha256": "401414fcfdf8d1a24c94c6842e4b8adc3047d997fa871238051aa11aebe2ae8a"
+      }
+    },
+    "node_metrics_tests": 3,
+    "runtime_boundary_contracts": 120,
+    "git_diff_check": "PASS",
+    "frozenSDK_assets": 126,
+    "frozen_driver_hashes_match": true,
+    "HTTPserved_primary_assets_match": true
+  },
+  "accepted_with_limits": [
+    "SameSnapshot ordinaryChrome startupmedians58.3->17.5ms/34.55->25.7ms; IAB97.6->32.1ms/41.6->18.5ms; fixedfinite synthetic input only",
+    "No r170.3ms callback regression observed in r2; ordinarytiming/proxy separatefromreadback",
+    "9changedWebpixels confined toindependentfixed1devicepixelcontourband; allnonedgeRGBAexactCPU; nofullRGBAexactclaim",
+    "Native firstcompleteframe fullgrid+sharpresample andfinalDirect/pixeloracle, scopedlifetime/proofguards",
+    "Human AApermission resolved P31shorthand conflict explicitly, source authoritynotrewritten"
+  ],
+  "not_claimed": [
+    "Physical trackpad orfirstphotonSLO",
+    "All renderingpathsmigrated",
+    "FullG5/P34/releasePASS",
+    "PostUp transientcameradirty orcommitprogress fixed",
+    "20minidle/inputblank fixed"
+  ],
+  "git_publication": "No currentrequestto commit/push; source remainsuncommitted",
+  "user_demo": "http://127.0.0.1:4335/example.html",
+  "old4334_preserved": true
+}

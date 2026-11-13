@@ -589,16 +589,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
                 return !compact||compact->content.get().stroke.config.algorithmVersion==4;
             });
-            // Permanent masks invalidate old wide feedback. Preparing their
-            // replacement on CPU kept replaying dense ribbons during gestures.
-            // Use the same qualified GPU SrcOver contour as canonical, with
-            // independently bounded submissions. No second geometry/edge pass.
-            job->gpuCoarse=coarseV4&&context&&options.gpuCoverageCandidate&&
-                std::any_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& e){return !e.record.eraseMasks.empty();});
+            // Ready v4 paths use the same qualified SrcOver GPU coverage with
+            // or without historical masks. Completeness still gates present;
+            // existing command/time/memory ceilings bound this bootstrap.
+            job->gpuCoarse=coarseV4&&context&&options.gpuCoverageCandidate;
             for(std::size_t i=0;i<job->sources->entries.size()&&job->gpuCoarse;++i)
                 if(std::holds_alternative<CompactStrokeReferenceCommand>(job->sources->entries[i].command))
                     job->gpuCoarse=job->sources->geometry[i]&&job->sources->geometry[i]->isContour();
-            // Unprepared, raster-only, unmasked and explicit CPU-policy work
+            // Unprepared, raster-only and explicit CPU-policy work
             // retain the established bounded CPU coarse path.
             job->cpuCoverage=coarseV4&&!job->gpuCoarse;
             // Reuse canonical's qualified single-channel encoding for v4
@@ -618,6 +616,43 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             auto demand=b;
             const auto old=tiles_.find(*next);
             const bool reusable=old!=tiles_.end()&&old->second.checkedScene==scene;
+            const bool zoomExposure=retained&&retained->draw&&
+                (retained->bounds.right-retained->bounds.left!=visible.right-visible.left||
+                 retained->bounds.bottom-retained->bounds.top!=visible.bottom-visible.top);
+            if(zoomExposure){
+            // Prepare all actual holes in this cell in one source pass. A
+            // rectangle around their union is only a lifecycle/culling hint;
+            // its unknown inner corners never become valid or visible pixels.
+            job->paint.reset(b);
+            if(!work.coverageComplete&&next->scale<level&&!job->sources->entries.empty()){
+                job->paint.count=0;
+                for(const auto& hole:missing)if(intersects(hole,b)){
+                    auto r=foundation::WorldRect{std::max(b.left,hole.left),std::max(b.top,hole.top),
+                        std::min(b.right,hole.right),std::min(b.bottom,hole.bottom)};
+                    r={std::max(b.left,b.left+std::floor((r.left-b.left)*s)/s),
+                       std::max(b.top,b.top+std::floor((r.top-b.top)*s)/s),
+                       std::min(b.right,b.left+std::ceil((r.right-b.left)*s)/s),
+                       std::min(b.bottom,b.top+std::ceil((r.bottom-b.top)*s)/s)};
+                    // The critical job leads only observed camera movement.
+                    // A fixed64-coarse-texel lead could add512world units to a
+                    // first18world-unit exposure and import unrelated ink.
+                    const auto prior=previousVisible.value_or(visible);
+                    const auto lead=[&](float edge,float previous){return float(std::clamp(
+                        2.*std::abs(double(edge)-previous),1./s,64./s));};
+                    if(r.left<=visible.left)r.left=std::max(b.left,r.left-lead(visible.left,prior.left));
+                    if(r.right>=visible.right)r.right=std::min(b.right,r.right+lead(visible.right,prior.right));
+                    if(r.top<=visible.top)r.top=std::max(b.top,r.top-lead(visible.top,prior.top));
+                    if(r.bottom>=visible.bottom)r.bottom=std::min(b.bottom,r.bottom+lead(visible.bottom,prior.bottom));
+                    if(!job->paint.add(r)){
+                        // Bounded metadata fallback repaints the whole cell;
+                        // no unknown corner is certified by a bounding box.
+                        job->paint.reset(b);break;
+                    }
+                }
+                if(job->paint.count){demand=job->paint.areas[0];for(std::size_t i=1;i<job->paint.count;++i){const auto& r=job->paint.areas[i];
+                    demand={std::min(demand.left,r.left),std::min(demand.top,r.top),std::max(demand.right,r.right),std::max(demand.bottom,r.bottom)};}}
+            }
+            }else{
             // Coverage is needed only in the exposed frontier. Do not make a
             // narrow strip wait for every contour in a whole coarse cell.
             // Publish explicit valid regions, one missing strip at a time.
@@ -675,8 +710,18 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                     demand=r;break;
                 }
             }
+                job->paint.reset(demand);
+            }
+            if(zoomExposure){
+                // Primitive selection already sees this bounding demand. Paint
+                // every ordered source/mask/material within it using a simple
+                // rectangular scissor before granting the full rectangle.
+                job->paint.reset(demand);
+            }
             if(reusable){(void)old->second.lease.markGpuUse();job->valid=old->second.valid;}
-            if(!job->valid.add(demand)){
+            bool admitted=true;
+            for(std::size_t i=0;i<job->paint.count&&admitted;++i)admitted=job->valid.add(job->paint.areas[i]);
+            if(!admitted){
                 ++work.regionCompactions;
                 auto repaint=demand;
                 for(std::size_t i=0;i<job->valid.count;++i){const auto& area=job->valid.areas[i];
@@ -691,7 +736,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 // The rectangle includes unknown inside corners: repaint all
                 // sources there before publishing validity. Metadata exhaustion
                 // must not make this strip depend on the rest of the cell.
-                job->valid.reset(repaint);demand=repaint;
+                job->valid.reset(repaint);job->paint.reset(repaint);demand=repaint;
             }
             job->demand=demand;
             const auto deviceRect=[&](foundation::WorldRect r){return SkRect::MakeLTRB(
@@ -700,6 +745,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(reusable)job->surface->getCanvas()->drawImage(old->second.image,0,0);
             auto* material=job->surface->getCanvas();
             material->clipRect(deviceRect(demand));
+            if(zoomExposure)job->coverage->getCanvas()->clipRect(deviceRect(demand));
             // Repaint the complete new strip, including its sampling gutter.
             // Src clear prevents double application over old gutter pixels.
             // A rectangular scissor also avoids complex difference-clip GPU
@@ -745,7 +791,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 const auto range = compactRange(entry);
                 if (range.second <= range.first) { ++job.source; continue; }
                 job.knot = range.first;
-                draw->resetMatrix();draw->clear(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+                draw->resetMatrix();draw->clear(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
+                draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
                 const auto& t=entry.record.transform;
                 draw->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
                 // The range renderer backs up one shared neighbor before

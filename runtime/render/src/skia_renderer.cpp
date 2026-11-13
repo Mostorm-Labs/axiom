@@ -678,6 +678,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     auto options=renderCacheOptions_;
     internal::RetainedNavigationSource retained,fallback;
     const auto proofStart=std::chrono::steady_clock::now();
+    bool invalidQueryBinding=false;
     const auto revalidate=[&](const std::shared_ptr<NavigationCache>& cache){
         if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_)return;
         if(cache->matches(&provider,current))return;
@@ -696,7 +697,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         const bool queried=query(cache->worldBounds(),entries,diagnostics);
         navigationTiles_->work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
         const auto reject=[&]{++navigationTiles_->work.regionalPlaneRejects;};
-        if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){reject();return;}
+        if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){invalidQueryBinding=true;reject();return;}
         ReferenceDrawList validation{.frame=current,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip=current.viewportClip.isFiniteAndOrdered()?current.viewportClip:foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight};
         validation.entries=entries;
         if(internal::validateReferencePlan(FramePlan{current,std::move(validation)}).code!=BackendSubmissionCode::kAccepted){reject();return;}
@@ -718,6 +719,10 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         }catch(const std::bad_alloc&){++navigationTiles_->work.regionalPlaneRejects;}
     };
     revalidate(navigationCache_);revalidate(navigationFallback_);
+    // A rejected cross-Scene query cannot authorize new tiles under this
+    // invocation either. Keep earlier prepared work private until a current
+    // query binds it; a faster complete job must not bypass this admission.
+    if(invalidQueryBinding)return BackendSubmissionResult::retry("navigation query binding unavailable");
     const auto proofUs=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-proofStart).count();
     options.navigationMicroseconds=proofUs>=std::int64_t(options.navigationMicroseconds)?0:options.navigationMicroseconds-proofUs;
     navigationTiles_->work.retainedValidRegions=0;

@@ -1,0 +1,37 @@
+{
+  "created_utc": "2026-11-13T15:43:23.756989+00:00",
+  "method": "Independent control: decode full saved IABRGBA; compare bc40/r2 every channel outside source-only SnapshotCodec/Scene/DirectCPU projected1pixelcontourband, no candidate-derived exclusion",
+  "full_nonedge_every_channel_exact": true,
+  "max_nonedge_delta": 0,
+  "cases": [
+    {
+      "name": "outside-one-stroke",
+      "bc40_vs_r2_diff_pixels": 4,
+      "all_diff_on_independent_boundary": true
+    },
+    {
+      "name": "outside-three-strokes-masked",
+      "bc40_vs_r2_diff_pixels": 5,
+      "all_diff_on_independent_boundary": true
+    },
+    {
+      "name": "central-short",
+      "bc40_vs_r2_diff_pixels": 0,
+      "all_diff_on_independent_boundary": true
+    }
+  ],
+  "artifact_bindings": {
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/central-short.axsnap": "0be6e9c13505ad326efd5f2a3f3aedbd2fee7e96242e9eb55621bb6f84139648",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/central-short.edges": "767d8e5dd4ff96bf53d9791124382e235ef773c84ac6947f0e1bd3be4c258ff1",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/central-short.rgba": "f3a2af311716c0603acb4e0dc2aaad5243b926480853f4bada22d2ceb2613c86",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-one-stroke.axsnap": "488b8c6ab1eae9f3ff8292f22454ea4618fe96d850d4c5b990db5a80996ee1af",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-one-stroke.edges": "3b4209ac4dc7f7a21a16a87302c6e6be1d172fd774e5a445a10bdb51c30e6e68",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-one-stroke.rgba": "191e8f956d091cfecb3dda9fce6bab1cb7aafdbd1ab7bdfa6d76e5771e951023",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-three-strokes-masked.axsnap": "de2dcc53f0e8ed02905bf4054d0e549d265f8b508f469804b77188705bfa5d8c",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-three-strokes-masked.edges": "3138fc15ed8e8bb35997bd7462a72181dfc95bf430edf16e04bd53dac05e85d4",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/outside-three-strokes-masked.rgba": "be105432b6d2cedae8f8023a3304484d37e5310fe89d8b5331dea3e9ca82137c",
+    "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/snapshot-boundary-oracle.cpp": "f7ff65bedf580f02e4cbdf52467b021016fc0c66a74061c19ed6df66c6950da0"
+  },
+  "AA_policy": "Human allowed AAedge differences; no fullRGBAexact claim forprimary",
+  "no_new_browser": true
+}

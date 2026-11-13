@@ -1,0 +1,10 @@
+{
+  "source_reasoning": "SUPPORTED_STATIC_ONLY",
+  "no_production_change": true,
+  "query": "load queries entire coarse cell with sampling gutter and preserves ordered complete source list",
+  "prepared_culling": "nextVisiblePrimitive/drawContour use canvas local clip bounds and deviceDemand bbox; multi-rectangle clip exact holes are not used for primitive enumeration",
+  "union_raster": "GPU coverage/material are clipped by complex union; command selection can still include primitive work throughout bounding box",
+  "possible_rectangular_repaint": "A bounding rectangle is valid only after clearing and repainting all sources there in order, with current masks/material/gutter. Current metadata exhaustion fallback already follows that rule. It may remove complex-clip program cost while similar bbox primitive selection, but adds raster/material pixels; net latency unproven.",
+  "retained_overlap": "existing complete coverage partition must still prefer denser valid retained pixels over coarser bounding repaint",
+  "not_authorized_here": "r2 needs separate frozen single-variable workload/source; r1 remains UNMET, no retest/parameterchanges"
+}

@@ -1,0 +1,26 @@
+{
+  "status": "FROZEN_SINGLE_VARIABLE_COMPARISON",
+  "inherit_fixtures": {
+    "path": ".aegis/packages/G5-settled-zoom-start-repair-r1/workload.json",
+    "sha256": "faf1c297f075e35258e4a1b411908ce797886787150275e3cae38ed2523a3799"
+  },
+  "samecanonical_source": "out/G5-settled-zoom-start-repair-r1/iab/SZ-IAB-BASE/raw.json; each matching ordinary/pixel before-zoom snapshot with exactmetadata, freeze fullfile hash",
+  "raw_snapshot_file": {
+    "path": "out/G5-settled-zoom-start-repair-r1/iab/SZ-IAB-BASE/raw.json",
+    "sha256": "fe75c0d46731f55ee6eafe7f14c62bd06c3b867da5604c2f61386f6ed0de247a"
+  },
+  "lanes": [
+    "bc40 baseline SDK out/G5-checkpoint-publication-integration-r1/matching-install/js",
+    "r1 unionSDK out/G5-settled-zoom-start-repair-r1/candidate-install/js",
+    "r2 rect candidate new matching install"
+  ],
+  "input": "Same1200x800DPR2, 24ctrlwheel1->.5 anchored600,400 at16.7ms, no prior zoomout/warmup. Primaryoutside1 andmasked3 pluscentralshort. Alllanesrestore exactlysame fullSnapshot; stable/noactive/pending/naturalRAFidle+1s, not oneedit vs onerestore.",
+  "sampling_limits": {
+    "Chrome_starts_max": 2,
+    "IAB_isolated_pages_max": 1,
+    "charged_seconds_max": 480,
+    "plan": "Chrome two opposite lane-order rounds across allthree cases; eachlane independentRuntime/context/docs; two starts max includes failures, no autoadditional attempts. IABone isolatedpage lanes; performance runs separate from pixel documents.",
+    "r1_budget_history": "r1 fourChrome/twoIAB, charged120/900s retained unchanged. R2 is explicit new scoped package on new hypothesis, not resetting r1 attempts."
+  },
+  "correctness_reuse": "Reuse full r1 native oracles; repeat affectedrect/coveragepixel+budgets/negativeproof after sourcechanges. Samepixel snapshots alreadyavailable, no broadmatrix."
+}

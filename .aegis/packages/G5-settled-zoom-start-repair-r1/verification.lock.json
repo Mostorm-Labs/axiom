@@ -1,0 +1,70 @@
+{
+  "status": "FROZEN_SCOPED_ZOOM_REPAIR_VERIFICATION",
+  "blocking": [
+    "SZ3-RED",
+    "SZ3-CORRECT",
+    "SZ3-BOUND",
+    "SZ3-WEB",
+    "SZ3-RETURN"
+  ],
+  "obligations": [
+    {
+      "id": "SZ3-RED",
+      "requirement": "Reproduce current settled zoom startup with beyond-viewport ink; identify avoidable work before production edit",
+      "oracle": "Actual old code/SDK run using frozen primary; old pixel hold or mechanism work/route predicate must fail strengthened regression",
+      "acceptance": "Preserve before logs and raw inputs. A new test merely failing to compile is not RED. Work regression requires actual useful coverage sources, not arbitrary total-time assertion. If old passes, diagnose oracle before product mutation.",
+      "evidence_required": [
+        "red.json",
+        "before-source/hash",
+        "actual old outputs"
+      ]
+    },
+    {
+      "id": "SZ3-CORRECT",
+      "requirement": "First new-camera display contains complete qualified visible coverage and preserves sharp retained overlap, current masks/alpha/order; eventual exact matches independent cold reference",
+      "oracle": "Native actual Render integration with retained plane + populated exposure; compare each accepted frame and final canonical to independent cold Direct/reference preparation, same grid. Web pixel run separate from ordinary timing.",
+      "acceptance": "Never present unfinished tile/missing region; no new canonical receipt from navigation; stale basis/unknown denies. Preserve same configured AA-only exception; no widened tolerance, candidate-as-sole-reference or user-document access. CPU/Raster explicit policies remain supported.",
+      "evidence_required": [
+        "native actual pixel/work probes",
+        "separate rootSDK pixel proof",
+        "final snapshot/operation equality",
+        "negative/denial tests"
+      ]
+    },
+    {
+      "id": "SZ3-BOUND",
+      "requirement": "Reduce unnecessary startup coverage work within existing owners and limits",
+      "oracle": "Native and actual source counters: actual coverage target GPU/CPU, prepared hits/builds, primitive work, job restarts, queried regions, published valid regions, opportunity count",
+      "acceptance": "No increased time/step/GPU/query/memory budgets, no new Worker/cache pool/threads. If enabling prepared unmasked coarse GPU, prove actual GPU target + correct material/mask and keep explicitCPU/raster/unprepared fallback truthful. Avoid replay of unaffected full content merely to publish a narrow exposure; never fake empty-space proof.",
+      "evidence_required": [
+        "implementation-design.json",
+        "work-before-after.json",
+        "budgets/lifetime regressions"
+      ]
+    },
+    {
+      "id": "SZ3-WEB",
+      "requirement": "Show meaningful improvement in settled zoom startup on matching ordinary Web build, including isolated IAB",
+      "oracle": "Frozen outside-one and masked-three cases, 2ordinary A/B Chrome pairs plus IAB isolated baseline/candidate using same identity; firstGL is proxy, camera-qualified pixel movement separately checked",
+      "acceptance": "Both primary cases show at least one fewer missed display opportunity OR >=20percent lower startup median with no material worse control/maxRAF/continuous input gap. If baseline does not reproduce or improvement unmet, report scoped unresolved/performance-unmet; do not declare fixed. Exact final images/semantics cannot regress. No physical SLO claim. Finite limits apply.",
+      "evidence_required": [
+        "ordinary paired startup/gap/accounting",
+        "IAB observed outcomes",
+        "separate pixel run",
+        "matching42assetSDK/source manifest"
+      ]
+    },
+    {
+      "id": "SZ3-RETURN",
+      "requirement": "Return reviewable exact source/evidence, preserve valid work and user Demos",
+      "oracle": "Content hashes, source delta, tests, ownedprocess cleanup; control independently reads result",
+      "acceptance": "Return READY_FOR_CONTROL_REVIEW or precise blocked/unmet with actual evidence; no commit/push/tag/merge; new4335Demo only after scoped proof qualified, old4331-4334 untouched. No G5/P34/release/global performance closure claim.",
+      "evidence_required": [
+        "result.json",
+        "artifact/source/SDK manifests",
+        "cleanup.json",
+        "newDemoURLifqualified"
+      ]
+    }
+  ]
+}

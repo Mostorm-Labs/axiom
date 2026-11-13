@@ -1,0 +1,94 @@
+{
+  "schema": "axiom-r2-regressions-v1",
+  "native_focused": {
+    "passed": 10,
+    "failed": 0,
+    "implementation_9": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/native-tests.log",
+      "sha256": "59eceec9b8f647edba4127ddfe463bac33e94f354590a7dd668e6eae37770ef1"
+    },
+    "implementation_navigation": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/navigation-test.log",
+      "sha256": "46a1e8ae8e16bd92d0297db4a4e43df7dc0b134ef5f7b26de14ac247465a94cb"
+    },
+    "independent_control_fresh10": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/independent-native-tests.log",
+      "sha256": "401414fcfdf8d1a24c94c6842e4b8adc3047d997fa871238051aa11aebe2ae8a"
+    }
+  },
+  "frontier_strict": {
+    "exit": 0,
+    "log": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/frontier-tests.log",
+      "sha256": "654832bddcee96ca93afe505370f2f2fd6c5855f87ce81a8888832e9e240e3a4"
+    },
+    "coverage": "strict original pixel/compaction/reclaim/pan path guards unchanged"
+  },
+  "first_complete_frame": "Same independent full cold absolute tile/grid+density plus actual retained canonical resample at Metal DPR1/2/4 and Raster DPR1. Sourceorder/masks/alpha/background/foreground/seams checked; no skipped strips. Native samegrid max2LSB allowance separate from Web fixed AA edges.",
+  "actual_native_work": [
+    {
+      "budget_bytes": 3249632,
+      "count": 1,
+      "cpu_coarse_starts": 0,
+      "dpr": 2,
+      "drawn": 386,
+      "first_opportunity": 1,
+      "gpu_contours": 386,
+      "initializations": 4,
+      "masked": false,
+      "queries": 4,
+      "source_steps": 4,
+      "tested": 854,
+      "tiles": 4
+    },
+    {
+      "budget_bytes": 4062040,
+      "count": 3,
+      "cpu_coarse_starts": 0,
+      "dpr": 2,
+      "drawn": 1157,
+      "first_opportunity": 2,
+      "gpu_contours": 1157,
+      "initializations": 5,
+      "masked": true,
+      "queries": 5,
+      "source_steps": 12,
+      "tested": 2562,
+      "tiles": 4
+    }
+  ],
+  "driver_Node": {
+    "passed": 3,
+    "failed": 0,
+    "log": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/driver-tests.log",
+      "sha256": "5f53f6e8e3c45cf8e5a1feb2bd1a3280a9fe03a38f5a110d96f0854c8c39b12d"
+    }
+  },
+  "Python_tools": "py_compile four new tools passed; complete offline pixel script passed36 state rows/3 pixel cases; no new Python unit-test claim",
+  "boundary": {
+    "passed_contracts": 120,
+    "log": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/final-boundaries.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  },
+  "offline_boundary": {
+    "reproducible_build": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/reproducible/build-recipe.json",
+      "sha256": "dfc7453b9708a59c0ea1c5fa235d167fb8ac4ad4e9e2a20615c9f705542b13ef"
+    },
+    "runs": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/reproducible/runs.json",
+      "sha256": "9a525986e4be551f6c45915691fe4b1a10acc0809d3cdafc16c1ad332039e0b8"
+    },
+    "allthree_outputs_equal_original": true,
+    "original_failed_const_compile": {
+      "path": "out/G5-settled-zoom-start-rect-repair-r2/offline-pixel/compile-failed-const.log",
+      "sha256": "34b4186eadbeb42a5933d61fddc6594beb5334ed0ea2c31340d635c56c4216ee"
+    },
+    "failed_harness_classification": "immutable FramePlan assigned in first temporary tool; compile rejected before execution, not product test failure or RED"
+  },
+  "full_project": "not required/not run",
+  "dependency_build": "Locked prebuilt Semantic/Skia consumed. Only project targets and standalone offline tool compiled."
+}

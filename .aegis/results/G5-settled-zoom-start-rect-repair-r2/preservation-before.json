@@ -1,0 +1,27 @@
+{
+  "files": {
+    "runtime/render/src/skia_navigation_tiles.cpp": "e2a4a24739dfdde42541d93d087281af442c85a02ccbf6c7344e434b319be6d4",
+    "runtime/render/src/skia_navigation_tiles.hpp": "baee7f6ca2a9184a7362a871f979d5d0ae7f3fa37779df82140bdf0ee50d7d20",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/render/CMakeLists.txt": "caa66d6ac78dcdf3148f4097fae3db4fbc140cdfc7965b1cfe5bc1466f318e11",
+    "runtime/render/tests/settled_zoom_start_test.cpp": "7e755a8c2fc7fd5d3083e6555f1728d99a236b88daa420933aa855a4c5d7226c",
+    "verification/runners/g5/settled_zoom_start_consumer.mjs": "92e9963b84859d015ecfd38214a7236574de2f5d06680f0c1cf5f37c5f848583",
+    "verification/runners/g5/settled_zoom_start_iab_run.mjs": "d48d5a5e1dfeef6b6f8a3abdbf5a8019fe4b1cb6b683d597229d37619310d0c1",
+    "verification/runners/g5/settled_zoom_start_iab_server.mjs": "0546475c780b952963aafd078e617131b20cf328ec7647e00b4f4e5105a00b81",
+    "verification/runners/g5/settled_zoom_start_metrics.mjs": "8254c2cbdfb89845266e232fffe694f08e02167dac05f62c48a15ddb33923aa9",
+    "verification/runners/g5/settled_zoom_start_runner.py": "6e09284243d05d5d16513a625b47fd79b9824b80ba0aec8f6f6be4be4b50fdd7",
+    "verification/runners/g5/settled_zoom_start_web.mjs": "c96fa9d0783f7802f950ab3d0b6f05335e733113784ac5dc5b5930404be80294",
+    "verification/tests/g5_settled_zoom_start.test.mjs": "6149e8c398616993b5eba49b34d5573990efb3d9d04a704e10b34384011341b5"
+  },
+  "r1_result": "d2d52a596f576f112b4af5dfb6ecb3612fff2b2fa72f58f070b056b3bb73d52c",
+  "r1_artifacts": "5fe1e8db82e963708807a8094c4e8d684b422063b0b5d1a1ac22db0b0d91f105",
+  "r1_allSDK": {
+    ".aegis/results/G5-settled-zoom-start-repair-r1/baseline-SDK-manifest.json": "84785f9ff4f771148d161dc7c87334e3d35b11efb6b972b1d4538017001a635a",
+    ".aegis/results/G5-settled-zoom-start-repair-r1/candidate-SDK-manifest.json": "e9125a648b8fe496fddccf16facefea73af442b18c6145a1f539de29dcad8c35"
+  },
+  "snapshot_ref": {
+    "path": "out/G5-settled-zoom-start-repair-r1/iab/SZ-IAB-BASE/raw.json",
+    "sha256": "fe75c0d46731f55ee6eafe7f14c62bd06c3b867da5604c2f61386f6ed0de247a"
+  },
+  "ports": "COMMAND   PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nPython  15544 qing    3u  IPv4 0x2b0e64a4441087f6      0t0  TCP 127.0.0.1:4331 (LISTEN)\nPython  18659 qing    4u  IPv4 0xba7ee373782d71fb      0t0  TCP 127.0.0.1:4334 (LISTEN)\nPython  40475 qing    3u  IPv4 0xeb47fd0987dc52a5      0t0  TCP 127.0.0.1:4332 (LISTEN)\nPython  82528 qing    3u  IPv4 0xd704ba0cf40608e6      0t0  TCP 127.0.0.1:4333 (LISTEN)\n"
+}

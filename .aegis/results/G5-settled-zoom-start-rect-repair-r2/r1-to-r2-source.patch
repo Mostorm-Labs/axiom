@@ -1,0 +1,39 @@
+--- r1/runtime/render/src/skia_navigation_tiles.cpp
++++ r2/runtime/render/src/skia_navigation_tiles.cpp
+@@ -7,7 +7,6 @@
+ #include "canvas/ink/compact_geometry.hpp"
+ #include "include/core/SkCanvas.h"
+ #include "include/core/SkPaint.h"
+-#include "include/core/SkRegion.h"
+ #include "include/gpu/ganesh/GrDirectContext.h"
+ #include "include/gpu/ganesh/GrRecordingContext.h"
+ #include <algorithm>
+@@ -713,6 +712,12 @@
+             }
+                 job->paint.reset(demand);
+             }
++            if(zoomExposure){
++                // Primitive selection already sees this bounding demand. Paint
++                // every ordered source/mask/material within it using a simple
++                // rectangular scissor before granting the full rectangle.
++                job->paint.reset(demand);
++            }
+             if(reusable){(void)old->second.lease.markGpuUse();job->valid=old->second.valid;}
+             bool admitted=true;
+             for(std::size_t i=0;i<job->paint.count&&admitted;++i)admitted=job->valid.add(job->paint.areas[i]);
+@@ -739,13 +744,8 @@
+                 gutter+(r.right-b.left)*s+gutter,gutter+(r.bottom-b.top)*s+gutter);};
+             if(reusable)job->surface->getCanvas()->drawImage(old->second.image,0,0);
+             auto* material=job->surface->getCanvas();
+-            SkRegion paintClip;
+-            for(std::size_t i=0;i<job->paint.count;++i){SkIRect r;deviceRect(job->paint.areas[i]).roundOut(&r);paintClip.op(r,SkRegion::kUnion_Op);}
+-            if(zoomExposure){
+-                material->clipRegion(paintClip);
+-                // Job-owned coverage scissor applies for shape-first lists too.
+-                job->coverage->getCanvas()->clipRegion(paintClip);
+-            }else material->clipRect(deviceRect(demand));
++            material->clipRect(deviceRect(demand));
++            if(zoomExposure)job->coverage->getCanvas()->clipRect(deviceRect(demand));
+             // Repaint the complete new strip, including its sampling gutter.
+             // Src clear prevents double application over old gutter pixels.
+             // A rectangular scissor also avoids complex difference-clip GPU

@@ -1,0 +1,65 @@
+{
+  "lanes": [
+    {
+      "name": "bc40",
+      "sdk": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-checkpoint-publication-integration-r1/matching-install/js"
+    },
+    {
+      "name": "r1",
+      "sdk": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/candidate-install/js"
+    },
+    {
+      "name": "r2",
+      "sdk": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-rect-repair-r2/candidate-install/js"
+    }
+  ],
+  "restore_snapshot_source": {
+    "path": "out/G5-settled-zoom-start-repair-r1/iab/SZ-IAB-BASE/raw.json",
+    "sha256": "fe75c0d46731f55ee6eafe7f14c62bd06c3b867da5604c2f61386f6ed0de247a"
+  },
+  "restore_hashes": [
+    {
+      "case": "outside-one-stroke",
+      "pixel": false,
+      "base64sha256": "2e3344043bf5c760877c362516d02286f1fa22e709578a76393988f208bdc86d"
+    },
+    {
+      "case": "outside-three-strokes-masked",
+      "pixel": false,
+      "base64sha256": "2a14c4afeb52317d6eb669523477b9c5e2d77aff6496247adf0eb08de433fdea"
+    },
+    {
+      "case": "central-short",
+      "pixel": false,
+      "base64sha256": "b0b0a69f4e5ed4f9af360a5d13422ffc4de11b67dfdb46d466c828ce723702d3"
+    },
+    {
+      "case": "outside-one-stroke",
+      "pixel": true,
+      "base64sha256": "4141f4377e22025db3fe41fa020cf9a2eb8d57cdf91fcbcb5c149abf9d767b3c"
+    },
+    {
+      "case": "outside-three-strokes-masked",
+      "pixel": true,
+      "base64sha256": "9954d4a157d533bb0ab97ee9b70804487adc3689972bd62b7f7cf76e130c8c9e"
+    },
+    {
+      "case": "central-short",
+      "pixel": true,
+      "base64sha256": "847ba66f4b897e2d3d3c469b0855d01523ead99f645bf40e51e272cd209cdd75"
+    }
+  ],
+  "Chrome_orders": [
+    [
+      "bc40",
+      "r1",
+      "r2"
+    ],
+    [
+      "r2",
+      "r1",
+      "bc40"
+    ]
+  ],
+  "IAB": "allthreelanesonepageordinarythenpixel; sameinput/snapshotrestore; nogetError/forcedRAF/prewarm"
+}

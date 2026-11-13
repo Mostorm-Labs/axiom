@@ -1,0 +1,301 @@
+[
+  {
+    "case": "outside-one-stroke",
+    "all_candidate_delta_on_independent_boundary": true,
+    "unexpected_outside_boundary": [],
+    "changes": [
+      {
+        "x": 891,
+        "y": 1090,
+        "baseline": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "candidate": [
+          149,
+          154,
+          165,
+          255
+        ],
+        "CPU": [
+          136,
+          143,
+          155,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 885,
+        "y": 1096,
+        "baseline": [
+          28,
+          40,
+          64,
+          255
+        ],
+        "candidate": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "CPU": [
+          23,
+          35,
+          60,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 1612,
+        "y": 1263,
+        "baseline": [
+          103,
+          111,
+          127,
+          255
+        ],
+        "candidate": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "CPU": [
+          84,
+          93,
+          111,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 1598,
+        "y": 1273,
+        "baseline": [
+          149,
+          154,
+          165,
+          255
+        ],
+        "candidate": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "CPU": [
+          137,
+          143,
+          156,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      }
+    ],
+    "matches_CPU_at_changed_pixels": {
+      "candidate_equal_cpu": 0,
+      "baseline_equal_cpu": 0,
+      "neither_equal_cpu": 4
+    },
+    "full_CPU_parity": {
+      "bc40": {
+        "changed_pixels_vs_CPU": 22322,
+        "changed_channels_vs_CPU": 65727,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 19349,
+        "max_inside_delta": 138,
+        "max_outside_delta": 0
+      },
+      "r2": {
+        "changed_pixels_vs_CPU": 22322,
+        "changed_channels_vs_CPU": 65727,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 19349,
+        "max_inside_delta": 138,
+        "max_outside_delta": 0
+      }
+    },
+    "claim": "Offline existing contour edge oracle reprojected from actual same Snapshot and exactcamera; edge band fixed 2px stroke around independent fullhistory contour/masks, not diff-derived; no new browser/readback or production change. Exact baseline parity is separately false for primary."
+  },
+  {
+    "case": "outside-three-strokes-masked",
+    "all_candidate_delta_on_independent_boundary": true,
+    "unexpected_outside_boundary": [],
+    "changes": [
+      {
+        "x": 1339,
+        "y": 233,
+        "baseline": [
+          149,
+          154,
+          165,
+          255
+        ],
+        "candidate": [
+          80,
+          89,
+          108,
+          255
+        ],
+        "CPU": [
+          154,
+          160,
+          170,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 466,
+        "y": 877,
+        "baseline": [
+          13,
+          26,
+          51,
+          255
+        ],
+        "candidate": [
+          13,
+          25,
+          51,
+          255
+        ],
+        "CPU": [
+          12,
+          26,
+          51,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 494,
+        "y": 952,
+        "baseline": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "candidate": [
+          28,
+          40,
+          64,
+          255
+        ],
+        "CPU": [
+          24,
+          36,
+          61,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 1612,
+        "y": 1271,
+        "baseline": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "candidate": [
+          103,
+          111,
+          127,
+          255
+        ],
+        "CPU": [
+          84,
+          93,
+          111,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      },
+      {
+        "x": 1598,
+        "y": 1281,
+        "baseline": [
+          73,
+          82,
+          101,
+          255
+        ],
+        "candidate": [
+          149,
+          154,
+          165,
+          255
+        ],
+        "CPU": [
+          105,
+          113,
+          129,
+          255
+        ],
+        "independent_contour_edge_band": 255
+      }
+    ],
+    "matches_CPU_at_changed_pixels": {
+      "candidate_equal_cpu": 0,
+      "baseline_equal_cpu": 0,
+      "neither_equal_cpu": 5
+    },
+    "full_CPU_parity": {
+      "bc40": {
+        "changed_pixels_vs_CPU": 32894,
+        "changed_channels_vs_CPU": 76750,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 18926,
+        "max_inside_delta": 138,
+        "max_outside_delta": 0
+      },
+      "r2": {
+        "changed_pixels_vs_CPU": 32894,
+        "changed_channels_vs_CPU": 76751,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 18926,
+        "max_inside_delta": 138,
+        "max_outside_delta": 0
+      }
+    },
+    "claim": "Offline existing contour edge oracle reprojected from actual same Snapshot and exactcamera; edge band fixed 2px stroke around independent fullhistory contour/masks, not diff-derived; no new browser/readback or production change. Exact baseline parity is separately false for primary."
+  },
+  {
+    "case": "central-short",
+    "all_candidate_delta_on_independent_boundary": true,
+    "unexpected_outside_boundary": [],
+    "changes": [],
+    "matches_CPU_at_changed_pixels": {
+      "candidate_equal_cpu": 0,
+      "baseline_equal_cpu": 0,
+      "neither_equal_cpu": 0
+    },
+    "full_CPU_parity": {
+      "bc40": {
+        "changed_pixels_vs_CPU": 4358,
+        "changed_channels_vs_CPU": 12899,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 3848,
+        "max_inside_delta": 136,
+        "max_outside_delta": 0
+      },
+      "r2": {
+        "changed_pixels_vs_CPU": 4358,
+        "changed_channels_vs_CPU": 12899,
+        "outside_fixed_band_delta_gt2": 0,
+        "inside_fixed_band_delta_gt2": 3848,
+        "max_inside_delta": 136,
+        "max_outside_delta": 0
+      }
+    },
+    "claim": "Offline existing contour edge oracle reprojected from actual same Snapshot and exactcamera; edge band fixed 2px stroke around independent fullhistory contour/masks, not diff-derived; no new browser/readback or production change. Exact baseline parity is separately false for primary."
+  }
+]

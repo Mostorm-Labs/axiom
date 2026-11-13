@@ -1,0 +1,220 @@
+{
+  "schema": "axiom-settled-zoom-rectangle-repair-result-v1",
+  "task_id": "G5-settled-zoom-start-rect-repair-r2",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_AA_EDGE_LIMITS",
+  "terminal_class": null,
+  "package": {
+    "path": ".aegis/packages/G5-settled-zoom-start-rect-repair-r2/package.json",
+    "sha256": "094cab5b1a0228fcd65bd569edd6f0fc5a55a3569bd9cfd9f5c429bba2585a4c"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "bc40e42cd83b290152703631b2ba80a9329a78f4",
+  "materialization": "Retained uncommitted controlled worktree delta; no Git publication",
+  "production_delta_vs_r1": "Only skia_navigation_tiles.cpp actualcompletebbox repaint and rectangularclip; same owner/eligibility/budgets/querysafety/pan/sharpretainedpriority",
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/preflight.json",
+      "sha256": "d33526a706370ed10e81f5977a337c9730a4d1472b95389df19056d2481be314"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/implementation-design.json",
+      "sha256": "eb3c83097a71e6f1f2e340b7639f3b7ed66be6b4cf75f3c7b1249ad08abb2493"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/source-manifest.json",
+      "sha256": "91ffad5b23376fbaf481aee116f06e5ecce02faf40ec1827eda88fa30f9c1419"
+    },
+    "r1-to-r2-source.patch": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/r1-to-r2-source.patch",
+      "sha256": "057fa180656632d4ce2371e6af56649f84d5beb8d28e6db43898251fb25fcf10"
+    },
+    "tracked-source.patch": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/tracked-source.patch",
+      "sha256": "faa099d3174c56d7749793984b82fd5d641b815670b6f5afec6860c2a72d8f43"
+    },
+    "inputs.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/inputs.json",
+      "sha256": "b9c267cea68161cc3c82eaabd7d351497b0beb5fe392f15716dd88ff991f96fa"
+    },
+    "browser-freeze.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/browser-freeze.json",
+      "sha256": "04caf6b0b9e6ed5e50bbe134d0219a7795acead5d3d25c39b3f6fb730232ae0b"
+    },
+    "candidate-SDK-manifest.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/candidate-SDK-manifest.json",
+      "sha256": "7787d5850abe72ca519865231cd749f9013b1d76e2140c5527a37135a75fa9fb"
+    },
+    "native-tests.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/native-tests.json",
+      "sha256": "8ab2d7a1a88aefa12a0d6b0510abc5fd6213ab0c01ab2e32dbe5f3a343837d5b"
+    },
+    "performance-observation.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/performance-observation.json",
+      "sha256": "b5abeaf65335a993aca6dd4b51b5613e299028ea472d0657177c1fcfa63674c0"
+    },
+    "semantic-pixel-observation.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/semantic-pixel-observation.json",
+      "sha256": "f7645dabd0b9b3ebbbfe8fd4be20616434e1f68e71dfa959eb2bc4f9a037d43b"
+    },
+    "final-pixel-diff.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/final-pixel-diff.json",
+      "sha256": "bc88c345874347920368ba6e9c5e0f0197c8ba76ae4467c46d2a6133046731a7"
+    },
+    "independent-final-boundary-attribution.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/independent-final-boundary-attribution.json",
+      "sha256": "e9a168fc715380acf3568affdad9d6d9f99c801f0b34686f67a395296c36cfbe"
+    },
+    "acceptance-resolution.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/acceptance-resolution.json",
+      "sha256": "d423f80e1bd69d081b7adb89d430e30b6b2ac770d71fc9ce47110c6ffae689f8"
+    },
+    "completion-matrix.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/completion-matrix.json",
+      "sha256": "14d75875170f7080c1ff7cc9d7d384427215303d57e212e98f6855828fddac82"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/sampling-ledger.json",
+      "sha256": "4220982d00e1ab4ae30e4fd720c0e4d3f25b1497b0f7ea371642afbc4b003a90"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/preservation-check.json",
+      "sha256": "afa926a4e26a6ec161c976e0a9e24d0a7247ef6f04fc3f16dfe6ae0051a88bd3"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/cleanup.json",
+      "sha256": "c1dbe8d0fcb4b8fe04a2f837f37f740b8bc75c56d745903ac435f230c1b58714"
+    },
+    "demo-manifest.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/demo-manifest.json",
+      "sha256": "30da298b1ce2e1d18d8a4377883d8856276ab72861c79e35bbad3a2a184ab885"
+    },
+    "source-freeze-final.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/source-freeze-final.json",
+      "sha256": "56ed129090e3ea0d186bf59feb23bdfdbac9a1aca7947b95e312ea3541c21b05"
+    },
+    "raw-buffer-references.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/raw-buffer-references.json",
+      "sha256": "aca552b7df0d449c492616830d0681850c427016fca26b082bf7b692a8281fc1"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/artifact-manifest.json",
+      "sha256": "0ac56c16f1068f98f8f3953fadc29e404223be689f49638e521efef5170401ab"
+    }
+  },
+  "control": {
+    "pre_final_review": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/pre-final-control-review.json",
+      "sha256": "fc0e8997c63063d5485804ba6764b700c4e2a3d1f53dd6ac66d3bf9ee145e667"
+    },
+    "AA_clarification": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/final-pixel-acceptance-clarification.json",
+      "sha256": "56884fa2a76e3998a3dfdfb1cf31ae0fa58ef140c7e73ead8539565ee41cb17c"
+    },
+    "independent_pixel_review": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/independent-final-pixel-review.json",
+      "sha256": "a5f89ee5f4bfbf4555f13899428aa1f24dc5ff10aa918c4790a46e4f1aac7846"
+    },
+    "scope": "Original human AAedge allowance; no changedpackage/pixelband/newbrowser"
+  },
+  "performance": {
+    "Chrome_primary_startup_median_ms": {
+      "one": [
+        58.299999952316284,
+        17.5
+      ],
+      "masked_three": [
+        34.55000001192093,
+        25.69999998807907
+      ]
+    },
+    "IAB_primary_startup_ms": {
+      "one": [
+        97.60000002384186,
+        32.10000002384186
+      ],
+      "masked_three": [
+        41.60000002384186,
+        18.5
+      ]
+    },
+    "primary_missed_opportunities": {
+      "Chrome": {
+        "one": [
+          3,
+          1
+        ],
+        "masked_three": [
+          2,
+          1
+        ]
+      },
+      "IAB": {
+        "one": [
+          6,
+          2
+        ],
+        "masked_three": [
+          3,
+          1
+        ]
+      }
+    },
+    "ordinary_timing_only": true,
+    "physical_first_photon": false,
+    "release_performance_PASS": false
+  },
+  "correctness": {
+    "state_rows": 36,
+    "operations_during_navigation": 0,
+    "final_RGBA_exact": false,
+    "final_changed_pixels": [
+      4,
+      5,
+      0
+    ],
+    "max_changed_channel": 76,
+    "all_changes_on_fixed_source_only_1devicepixel_AA_boundary": true,
+    "all_nonedge_channels_exact_independentCPU": true,
+    "full_first_viewport_native": "Independent cold samegrid+density+actualsharpretainedimage; MetalDPR1/2/4+RasterDPR1; existing2LSBseparate",
+    "no_false_canonical_mutation_receipt": true
+  },
+  "tests": {
+    "native": 10,
+    "Node": 3,
+    "boundary_contracts": 120,
+    "strict_frontier": true,
+    "independent_control_native": 10,
+    "full_suite": false
+  },
+  "sampling": {
+    "Chrome_starts": 2,
+    "IAB_pages": 1,
+    "total_rows": 36,
+    "charged_seconds": 168,
+    "cap_seconds": 480,
+    "IAB_charge": "Conservative119seconds serverstart through postclose/stop; actualactive55",
+    "r1_charged120_unchanged": true,
+    "sampling_closed": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4335/example.html",
+    "pid": 38514,
+    "matching_ordinary_SDK": true,
+    "nonHTML_assets_HTTP_verified": 41,
+    "existing4331to4334_untouched": true
+  },
+  "remaining_limits": [
+    "Finite cases, no allscene/longidle/physicaltrackpad/photonqualification",
+    "IAB finalsettling on one-stroke276.8ms versus248.1ms; no generalexacttailimprovement claim",
+    "Chrome masked maxRAF-startgap26.8ms versus18.7ms retained; maxcallback and inputlateness didnot materiallyregress",
+    "first3Webpixelopportunities finiteROI; fullfirstframe correctness derivesnativeindependentoracle",
+    "GPUphysicalcomplexclipcostnotdirectlyinstrumented; r2singlevariablemechanismandlatencyassociation",
+    "New shape/sticky/table placement and objectdrag feedback is outside this frozen scope",
+    "r1 remains UNMET; no\u6574\u4f53G5/P34/Gate/releasePASS"
+  ],
+  "callback_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "commit_push": false,
+  "next_action": "Return exact result hash to control, retain valid source/evidence/demo, stop scoped work"
+}

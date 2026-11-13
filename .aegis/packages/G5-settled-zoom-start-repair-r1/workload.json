@@ -1,0 +1,79 @@
+{
+  "status": "FROZEN_INPUT_GENERATOR",
+  "diagnostic_refs": [
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/report.md",
+      "sha256": "a32bccf9774e24f71a5cccc938af720e50a2f6e691a3950397b112e597ae1787"
+    },
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/settled-startup-analysis.json",
+      "sha256": "6a2c6560a53bb8c211a6cfdc51a3a0fb481a1a5baea47951f395377b0b46c0fc"
+    },
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/manifest.json",
+      "sha256": "c76fdf4f9609541bdaa795aa283d9878e98f52e8181fbbec2fbcf13a8ebeb8f5"
+    },
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/iab-run.mjs",
+      "sha256": "7a5aaeced5e0f2ec3177fe3e513886d907fdf80f6151f55e303a747733790cf3"
+    },
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/probe-frontier.mjs",
+      "sha256": "05dcebdbe46008ce0f333654f5aa429057f47b3913db9d22d455a88f7af527bb"
+    }
+  ],
+  "primary": {
+    "view_logical": [
+      1200,
+      800
+    ],
+    "DPR": 2,
+    "brush": "round-handdrawn",
+    "algorithm": 4,
+    "cases": [
+      {
+        "name": "outside-one-stroke",
+        "count": 1,
+        "points_per_stroke": 1600,
+        "ampX": 900,
+        "ampY": 600,
+        "erase": false
+      },
+      {
+        "name": "outside-three-strokes-masked",
+        "count": 3,
+        "points_per_stroke": 1600,
+        "ampX": 900,
+        "ampY": 600,
+        "erase": true
+      }
+    ],
+    "draw_formula": "Start(600,400+i*4); t=j/1600; Move(600+900*sin(4*pi*t),400+i*4+600*sin(6*pi*t)); fixed8ms pointer timestamps; pointerUp at original center. Batch16yield as diagnostic. Use same frozen canonical snapshot/operations and camera on A/B where feasible; preserve actual samples, no adaptive point count.",
+    "erase_trace": "mode2 diameter32; Down(430,150);24Moves at(430,150+j*16);Up(430,534)",
+    "precondition": "No activeContacts, no pendingIntents, committed==presented, natural RAF idle, then1s. No navigation warmup / visited zoom-out viewport before first trial.",
+    "zoom": "24ctrl-wheel events over~400ms, zoom1 to0.5 anchored(600,400), same16.7ms schedule; report first changed-current-camera ink frame and first complete-qualified present separately from exact convergence"
+  },
+  "control": {
+    "name": "central-short",
+    "count": 1,
+    "points": 256,
+    "ampX": 300,
+    "ampY": 45,
+    "erase": false,
+    "same_zoom": true
+  },
+  "native_guards": [
+    "DPR1/2/4 including negative origins and scale crossing",
+    "Unmasked and permanent-mask v4 round/marker, opacity/selfintersection + ordered background/foreground shapes",
+    "Budget/query/step/GPU ceilings, real allocation denial, stale scene/provider/context lifecycle, no publication of incomplete regions"
+  ],
+  "baseline": "Use exact current matching-install SDK at bc40e42c, SHA freeze before incremental build.4334oldCJ SDK diagnostic corroboration only; no oldDemo overwrite.",
+  "sampling_limits": {
+    "new_Chrome_starts_max": 4,
+    "new_IAB_isolated_pages_max": 2,
+    "total_browser_wall_seconds_max": 900,
+    "primary_ordinary_pairs": 2,
+    "corrective_starts_included": 1,
+    "policy": "Report failed attempts/charges; no reset. Reuse raw full qualified runs; no extra mixed50object/7200longtail/20minidle matrix."
+  }
+}
