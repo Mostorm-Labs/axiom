@@ -1611,7 +1611,7 @@ class Session::Impl {
                 J token=J::array();for(const auto w:t.token)token.push_back(std::to_string(w));
                 terminals.push_back({{"serial",std::to_string(t.serial)},{"session",std::to_string(t.session)},{"jobs",std::to_string(t.jobs)},{"operationOrdinal",std::to_string(t.operationOrdinal)},{"token",token},{"status",t.status}});
             }
-            J jobs=J::array();for(const auto& j:f.jobLedger){J token=J::array();for(const auto w:j.token)token.push_back(std::to_string(w));jobs.push_back({{"token",token},{"historical",j.historical},{"inputBytes",j.inputBytes},{"outputBytes",j.outputBytes},{"issuedNs",std::to_string(j.issuedNs)},{"returnedNs",std::to_string(j.returnedNs)},{"importNs",std::to_string(j.importNs)},{"status",j.status}});}
+            J jobs=J::array();for(const auto& job:f.jobLedger){J token=J::array();for(const auto w:job.token)token.push_back(std::to_string(w));jobs.push_back({{"token",token},{"historical",job.historical},{"inputBytes",job.inputBytes},{"outputBytes",job.outputBytes},{"issuedNs",std::to_string(job.issuedNs)},{"returnedNs",std::to_string(job.returnedNs)},{"importNs",std::to_string(job.importNs)},{"status",job.status}});}
             if(action=="closePreflight")return {{"ok",f.reserved==0&&!f.suspended&&contacts.empty()&&adapter->activeContacts()==0},{"code","BUSY"}};
             return {{"ok",true},{"capability",f.capability},{"enabled",f.enabled},{"requestReady",f.requestReady},{"suspended",f.suspended},{"historyJob",f.historyJob},{"newQueryUnions",std::to_string(f.newQueryUnions)},{"historyUnions",std::to_string(f.historyUnions)},{"retainedPathBytes",std::to_string(f.retainedPathBytes)},{"finishedImports",std::to_string(f.finishedImports)},{"finishedHits",std::to_string(f.finishedHits)},
                 {"token",J::array({std::to_string(f.token[0]),std::to_string(f.token[1]),std::to_string(f.token[2]),std::to_string(f.token[3]),std::to_string(f.token[4]),std::to_string(f.token[5]),std::to_string(f.token[6]),std::to_string(f.token[7])})},
@@ -1629,8 +1629,8 @@ class Session::Impl {
             }
             const auto executor=decimal(j.at("executor"));
             if(j.at("action")=="reserve"){
-                const auto bytes=j.at("bytes").get<std::size_t>();
-                const auto token=runtime::RuntimePlatformAccess::reserveCpuWorkerGrant(*owner,executor,bytes);
+                const auto grantBytes=j.at("bytes").get<std::size_t>();
+                const auto token=runtime::RuntimePlatformAccess::reserveCpuWorkerGrant(*owner,executor,grantBytes);
                 return {{"ok",token!=0},{"code","CPU_QUOTA_DENIED"},{"token",std::to_string(token)},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
             }
             if(j.at("action")=="release"){
