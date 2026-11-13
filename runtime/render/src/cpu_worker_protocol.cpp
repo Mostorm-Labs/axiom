@@ -31,8 +31,8 @@ std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest& r){
      r.first>r.fullCount||g->segments.size()>r.fullCount-r.first)return {};
   CpuRequest plain;plain.identity=r.identity;plain.geometry=r.geometry;
   auto bytes=cpuEncodeRequest(plain);if(bytes.empty())return {};
-  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)bytes[p+i]=v>>(8*i);};
-  set(4,3);set(104,r.fullCount);set(108,r.first);set(112,g->segments.size());
+  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)bytes[p+i]=static_cast<std::uint8_t>(v>>(8*i));};
+  set(4,3);set(104,r.fullCount);set(108,r.first);set(112,static_cast<std::uint32_t>(g->segments.size()));
   std::copy(r.fullWitness.begin(),r.fullWitness.end(),bytes.begin()+116);return bytes;
  }
  if(r.prefixCount){
@@ -44,20 +44,20 @@ std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest& r){
   auto bytes=cpuEncodeRequest(plain);
   const auto n=r.prefixPath.writeToMemory(nullptr);
   if(bytes.empty()||!n||n>cpuInputLimit-bytes.size())return {};
-  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)bytes[p+i]=v>>(8*i);};
-  set(4,2);set(104,r.prefixCount);set(108,n);set(112,r.prefixCount*80U);
+  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)bytes[p+i]=static_cast<std::uint8_t>(v>>(8*i));};
+  set(4,2);set(104,static_cast<std::uint32_t>(r.prefixCount));set(108,static_cast<std::uint32_t>(n));set(112,static_cast<std::uint32_t>(r.prefixCount*80U));
   const auto at=bytes.size();bytes.resize(at+n);r.prefixPath.writeToMemory(bytes.data()+at);
-  set(96,bytes.size()-cpuHeaderSize);return bytes;
+  set(96,static_cast<std::uint32_t>(bytes.size()-cpuHeaderSize));return bytes;
  }
  const auto size=std::visit([](const auto& v){if constexpr(requires{v.segments;})return v.segments.size();else return v.path.commands.size();},r.geometry);
  const bool sweep=std::holds_alternative<semantic::SweptCircleMask>(r.geometry);
  if(size>(sweep?cpuSweepLimit:cpuFilledLimit))return {};
  const auto maximum=size*80U+cpuHeaderSize;if(maximum>cpuInputLimit)return {};
  std::vector<std::uint8_t> p;std::uint32_t variant=0,count=0,fill=0;
- if(const auto*s=std::get_if<semantic::SweptCircleMask>(&r.geometry)){count=s->segments.size();for(const auto&x:s->segments){point(p,x.p0.position);u64(p,std::bit_cast<std::uint64_t>(x.p0.radius));point(p,x.p1.position);u64(p,std::bit_cast<std::uint64_t>(x.p1.radius));point(p,x.control1);point(p,x.control2);}}
- else {variant=1;const auto&g=std::get<semantic::FilledPathMask>(r.geometry).path;count=g.commands.size();fill=unsigned(g.fill_rule);for(const auto&c:g.commands){u32(p,c.index());std::visit([&](const auto&v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)point(p,v.point);else if constexpr(std::is_same_v<T,semantic::LineTo>)point(p,v.end);else if constexpr(std::is_same_v<T,semantic::QuadTo>){point(p,v.control);point(p,v.end);}else if constexpr(std::is_same_v<T,semantic::CubicTo>){point(p,v.control1);point(p,v.control2);point(p,v.end);}},c);}}
+ if(const auto*s=std::get_if<semantic::SweptCircleMask>(&r.geometry)){count=static_cast<std::uint32_t>(s->segments.size());for(const auto&x:s->segments){point(p,x.p0.position);u64(p,std::bit_cast<std::uint64_t>(x.p0.radius));point(p,x.p1.position);u64(p,std::bit_cast<std::uint64_t>(x.p1.radius));point(p,x.control1);point(p,x.control2);}}
+ else {variant=1;const auto&g=std::get<semantic::FilledPathMask>(r.geometry).path;count=static_cast<std::uint32_t>(g.commands.size());fill=unsigned(g.fill_rule);for(const auto&c:g.commands){u32(p,static_cast<std::uint32_t>(c.index()));std::visit([&](const auto&v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)point(p,v.point);else if constexpr(std::is_same_v<T,semantic::LineTo>)point(p,v.end);else if constexpr(std::is_same_v<T,semantic::QuadTo>){point(p,v.control);point(p,v.end);}else if constexpr(std::is_same_v<T,semantic::CubicTo>){point(p,v.control1);point(p,v.control2);point(p,v.end);}},c);}}
  if(p.size()+cpuHeaderSize>cpuInputLimit||!cpuConstructionEstimate(count,p.size()+cpuHeaderSize,variant==0))return {};
- std::vector<std::uint8_t>b;u32(b,0x31575043);u32(b,1);u32(b,variant);u32(b,count);const auto id=cpuKernelId();b.insert(b.end(),id.begin(),id.end());for(auto n:r.identity.words)u64(b,n);u32(b,p.size());u32(b,fill);b.resize(cpuHeaderSize);b.insert(b.end(),p.begin(),p.end());return b;
+ std::vector<std::uint8_t>b;u32(b,0x31575043);u32(b,1);u32(b,variant);u32(b,count);const auto id=cpuKernelId();b.insert(b.end(),id.begin(),id.end());for(auto n:r.identity.words)u64(b,n);u32(b,static_cast<std::uint32_t>(p.size()));u32(b,fill);b.resize(cpuHeaderSize);b.insert(b.end(),p.begin(),p.end());return b;
 }
 std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>b){
  if(b.size()<cpuHeaderSize||b.size()>cpuInputLimit||read32(b,0)!=0x31575043)return {};
@@ -79,8 +79,8 @@ std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>b){
   const auto at=b.size()-pathBytes;
   if(at!=cpuHeaderSize+std::size_t(read32(b,12))*80U)return {};
   std::vector<std::uint8_t> plain(b.begin(),b.begin()+at);
-  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)plain[p+i]=v>>(8*i);};
-  set(4,1);set(96,plain.size()-cpuHeaderSize);for(unsigned i=104;i<128;++i)plain[i]=0;
+  const auto set=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)plain[p+i]=static_cast<std::uint8_t>(v>>(8*i));};
+  set(4,1);set(96,static_cast<std::uint32_t>(plain.size()-cpuHeaderSize));for(unsigned i=104;i<128;++i)plain[i]=0;
   auto full=cpuDecodeRequest(plain);auto path=cpuDecodePath(b.last(pathBytes));
   if(!full||!path)return {};
   const auto* f=std::get_if<semantic::SweptCircleMask>(&full->geometry);

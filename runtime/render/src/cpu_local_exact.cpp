@@ -187,8 +187,8 @@ LocalExactStatus LocalExactJob::advance(PreparationAllowance& allowance){
 }
 std::vector<std::uint8_t> LocalExactJob::encode(const std::array<std::uint64_t,8>& token){
     if(status_!=LocalExactStatus::kNeedPiece||!waiting_||!waiting_->ready)return {};
-    const auto* sweep=std::get_if<semantic::SweptCircleMask>(&waiting_->geometry);if(!sweep)return {};
-    CpuRequest request;request.identity.words=token;request.piece=true;request.fullCount=sweep->segments.size();request.first=waitingPiece_*pieceSize;request.fullWitness=waiting_->stamp;
+    const auto* sweep=std::get_if<semantic::SweptCircleMask>(&waiting_->geometry);if(!sweep||sweep->segments.size()>std::numeric_limits<std::uint32_t>::max()||waitingPiece_>std::numeric_limits<std::uint32_t>::max()/pieceSize)return {};
+    CpuRequest request;request.identity.words=token;request.piece=true;request.fullCount=static_cast<std::uint32_t>(sweep->segments.size());request.first=static_cast<std::uint32_t>(waitingPiece_*pieceSize);request.fullWitness=waiting_->stamp;
     semantic::SweptCircleMask subset;subset.segments.assign(sweep->segments.begin()+request.first,
         sweep->segments.begin()+std::min<std::size_t>(request.first+pieceSize,sweep->segments.size()));request.geometry=std::move(subset);
     token_=token;request_=cpuEncodeRequest(request);++work_.pieceRequests;work_.pieceUnions+=std::get<semantic::SweptCircleMask>(request.geometry).segments.size();return request_;
