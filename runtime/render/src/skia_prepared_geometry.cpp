@@ -85,6 +85,7 @@ void PreparedNavigationGeometry::build(ink::CompactContour* staged,PreparedGeome
     }
 }
 void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
+    replayOutputBlock_=nullptr;
     G5_SCOPE(g5Work,g5::Tag::geometry_build,g5::Purpose::none);
 
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
@@ -153,11 +154,17 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
         for(const auto& block:replay_){
             if(block.last<=first)continue;if(block.first>=last)break;
             ++work.chunksVisited;if(!visible(block.bounds))continue;
-            replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
-            compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
-            work.compiledKnots+=block.count;
-            if(auto* execution=RenderExecutionScope::current())execution->sourceWork(0,0,0,block.count);
-            if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+            if(replayOutputBlock_!=&block){
+                // This pointer names a block in this ready immutable body's
+                // pinned vector, never an external source/hash-only identity.
+                replayOutputBlock_=nullptr;
+                replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
+                compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
+                work.compiledKnots+=block.count;
+                if(auto* execution=RenderExecutionScope::current())execution->sourceWork(0,0,0,block.count);
+                if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+                replayOutputBlock_=&block;
+            }
             const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
             for(auto i=std::max(first,block.first);i<std::min(last,block.last);++i){
                 ++work.primitivesTested;const auto local=i-block.first;
@@ -197,6 +204,7 @@ ImmutableSourceIdentity preparedBodyIdentity(const ReferenceCommand& command){
 }
 bool PreparedNavigationGeometry::visitExact(const SkRect& demand,
     const std::function<bool(const SkPath&)>& visitor,ExactComponentWork& work)const{
+    replayOutputBlock_=nullptr;
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
     // Unknown bounds are conservative. They cannot prove a hit or authorize
     // dropping geometry. Coordinates stay in object-local CPU exact space.

@@ -2,6 +2,7 @@
 #include "cpu_pending_erase_state.hpp"
 #include "partial_erase_geometry.hpp"
 #include "pending_scene_preparation.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include <algorithm>
 #include <cmath>
 namespace canvas::interaction {
@@ -192,6 +193,8 @@ void CanvasEditingRuntime::serviceCpuPendingErases()noexcept{
  for(unsigned step=0;step<4096&&cpuPendingBusy();++step){
   if(std::chrono::steady_clock::now()-began>=std::chrono::microseconds(8000))break;
   auto* before=cpuPending_->head();const auto serial=before->serial,job=before->identity[5];
+  AXIOM_FRAME_TIMING_SET(pending_serial,serial);
+  AXIOM_FRAME_TIMING_SET(pending_phase,static_cast<unsigned>(before->phase));
   const auto phase=before->phase;const auto next=before->next,reuse=before->reuseScan;
   if(servicePendingLocalHead())return;
   serviceCpuPendingEraseStep(began);
@@ -421,18 +424,34 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
    const unsigned stage=!p->preparedErase->ready()?0:p->sceneStamp.target<std::get<semantic::AddEraseMasksOp>(p->preparedErase->operation().payload).items.size()?4:!p->preparedHistory?1:!p->publicationPrepared?2:3;
    struct StageCost{CpuPendingEraseState& s;unsigned stage;std::chrono::steady_clock::time_point began;~StageCost(){const auto ns=std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-began).count());s.maximumCommitStageNs=std::max(s.maximumCommitStageNs,ns);if(stage==4)s.sceneStampPrepareNs+=ns;else if(stage==0)s.targetPrepareNs+=ns;else if(stage==1)s.historyPrepareNs+=ns;else if(stage==2)s.publicationPrepareNs+=ns;else s.publishNs+=ns;}} stageCost{state,stage,commitAt};
    if(!p->preparedErase->ready()){
+    AXIOM_FRAME_TIMING_SCOPE(targetTiming,target_prepare);
     if(!p->preparedErase->advance(1,8000)){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
    }
    if(p->sceneStamp.target<std::get<semantic::AddEraseMasksOp>(p->preparedErase->operation().payload).items.size()){
+    AXIOM_FRAME_TIMING_SCOPE(stampTiming,scene_stamp);
     const auto remaining=std::chrono::duration_cast<std::chrono::microseconds>(allowance-(std::chrono::steady_clock::now()-began)).count();
     if(remaining>0)(void)preparePendingMaskStamps(*sceneCompiler_,p->proofs,{p->preparedErase,&p->preparedErase->operation()},p->sceneStamp,4096,remaining);
     if(p->sceneStamp.failed){state.error="PENDING_SCENE_STAMP_FAILED";retire(true);}return;
    }
-   if(!p->preparedHistory){p->preparedHistory=history_.prepareRecord(p->preparedErase->operation(),{p->preparedInverse},{},{});if(!p->preparedHistory){state.error="PENDING_HISTORY_FAILED";retire(true);}return;}
-   if(!p->publicationPrepared){if(localOperationSink_&&!localOperationSink_->prepareEncodedPublication(p->preparedErase->operation(),p->preparedErase->encoded())){state.error="PENDING_PUBLICATION_FAILED";retire(true);return;}p->publicationPrepared=true;return;}
+   if(!p->preparedHistory){AXIOM_FRAME_TIMING_SCOPE(historyTiming,history_prepare);p->preparedHistory=history_.prepareRecord(p->preparedErase->operation(),{p->preparedInverse},{},{});if(!p->preparedHistory){state.error="PENDING_HISTORY_FAILED";retire(true);}return;}
+   if(!p->publicationPrepared){AXIOM_FRAME_TIMING_SCOPE(publicationTiming,publication_prepare);if(localOperationSink_&&!localOperationSink_->prepareEncodedPublication(p->preparedErase->operation(),p->preparedErase->encoded())){state.error="PENDING_PUBLICATION_FAILED";retire(true);return;}p->publicationPrepared=true;return;}
+   AXIOM_FRAME_TIMING_SCOPE(atomicTiming,atomic_apply);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+   AXIOM_FRAME_TIMING_SET(atomic_start_ns,canvas::foundation::internal::frame_timing::now());
+#endif
    state.headApplying=true;auto applied=operationEngine_.commitErase(*p->preparedErase,semantic::ApplySource::kLocalInteraction,semanticGeneration_,canonicalCommitClock_);state.headApplying=false;
+   AXIOM_FRAME_TIMING_END(atomicTiming);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+   AXIOM_FRAME_TIMING_SET(atomic_end_ns,canvas::foundation::internal::frame_timing::now());
+#endif
    const bool ok=applied.disposition==semantic::ApplyDisposition::kApplied&&applied.commit_record;
-   if(ok){history_.commitPrepared(std::move(*p->preparedHistory));if(auto* display=findDisplay(p->session,DisplayKind::kErase))sealDisplay(*display,*applied.commit_record);observeApplied(p->preparedErase->operation(),std::move(applied));++submittedOperationCount_;if(sceneCoordinator_&&sceneCompiler_&&lastAppliedCommit_){semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());canvas::SceneCommitInput input(lastAppliedCommit_->before_generation,lastAppliedCommit_->after_generation,view,&lastAppliedCommit_->change_set);try{(void)sceneCoordinator_->apply(*sceneCompiler_,input);}catch(const std::bad_alloc&){/* Canonical is committed; derived Scene recovers at the next owner opportunity. */}}}
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+   if(ok)std::fprintf(stderr,"AXIOM_POSTWORKER_COMMIT {\"serial\":\"%llu\",\"session\":\"%llu\",\"ordinal\":\"%llu\",\"generation\":\"%llu\",\"at_ns\":%.0f}\n",
+     static_cast<unsigned long long>(p->serial),static_cast<unsigned long long>(p->session),
+     static_cast<unsigned long long>(applied.commit_record->commit_stamp.ordinal.value()),
+     static_cast<unsigned long long>(semanticGeneration_.current().value()),double(canvas::foundation::internal::frame_timing::now()));
+#endif
+   if(ok){AXIOM_FRAME_TIMING_SCOPE(observerTiming,apply_observer);history_.commitPrepared(std::move(*p->preparedHistory));if(auto* display=findDisplay(p->session,DisplayKind::kErase))sealDisplay(*display,*applied.commit_record);observeApplied(p->preparedErase->operation(),std::move(applied));++submittedOperationCount_;AXIOM_FRAME_TIMING_END(observerTiming);if(sceneCoordinator_&&sceneCompiler_&&lastAppliedCommit_){AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_publish);semantic::SemanticReadView view(semanticObjects_,semanticGeneration_.current());canvas::SceneCommitInput input(lastAppliedCommit_->before_generation,lastAppliedCommit_->after_generation,view,&lastAppliedCommit_->change_set);try{(void)sceneCoordinator_->apply(*sceneCompiler_,input);}catch(const std::bad_alloc&){/* Canonical is committed; derived Scene recovers at the next owner opportunity. */}}}
    (void)commitAt;
 
    if(!ok){skiaRenderer_.retireCpuPendingHandoff(p->session);state.error="PENDING_COMMIT_REJECTED";retire(true);return;}

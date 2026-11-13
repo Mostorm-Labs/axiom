@@ -1,0 +1,597 @@
+{
+  "phases": [
+    {
+      "phase": "AB",
+      "lo_ms": 102540.29999995232,
+      "hi_ms": 129542.20000004768,
+      "elapsed_ms": 27001.900000095367,
+      "roles": {
+        "owner": {
+          "rows": 921,
+          "stages": {
+            "attempt": {
+              "inclusive_ns": 19323800000,
+              "exclusive_ns": 6100000,
+              "calls": 921
+            },
+            "reference_build": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 0,
+              "calls": 2
+            },
+            "reference_entries": {
+              "inclusive_ns": 18500000,
+              "exclusive_ns": 18500000,
+              "calls": 432
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 4600000,
+              "exclusive_ns": 4600000,
+              "calls": 2
+            },
+            "frame_plan": {
+              "inclusive_ns": 9600000,
+              "exclusive_ns": 9600000,
+              "calls": 431
+            },
+            "render": {
+              "inclusive_ns": 11459600000,
+              "exclusive_ns": 9170000000,
+              "calls": 2
+            },
+            "validation": {
+              "inclusive_ns": 13100000,
+              "exclusive_ns": 13100000,
+              "calls": 10
+            },
+            "group_update": {
+              "inclusive_ns": 2300000,
+              "exclusive_ns": 2300000,
+              "calls": 2
+            },
+            "damage": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 2
+            },
+            "cache_draw": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 80
+            },
+            "gpu_coverage_submit": {
+              "inclusive_ns": 2273200000,
+              "exclusive_ns": 2273200000,
+              "calls": 5203
+            },
+            "material_submit": {
+              "inclusive_ns": 11300000,
+              "exclusive_ns": 11300000,
+              "calls": 5203
+            },
+            "owner_pump": {
+              "inclusive_ns": 8400000,
+              "exclusive_ns": 8400000,
+              "calls": 921
+            },
+            "pending_owner": {
+              "inclusive_ns": 3280100000,
+              "exclusive_ns": 165500000,
+              "calls": 921
+            },
+            "transient_frame": {
+              "inclusive_ns": 11468200000,
+              "exclusive_ns": 400000,
+              "calls": 921
+            },
+            "resource_service": {
+              "inclusive_ns": 123200000,
+              "exclusive_ns": 123200000,
+              "calls": 921
+            },
+            "target_prepare": {
+              "inclusive_ns": 510900000,
+              "exclusive_ns": 510900000,
+              "calls": 86
+            },
+            "scene_stamp": {
+              "inclusive_ns": 2588000000,
+              "exclusive_ns": 2588000000,
+              "calls": 362
+            },
+            "history_prepare": {
+              "inclusive_ns": 800000,
+              "exclusive_ns": 800000,
+              "calls": 2
+            },
+            "publication_prepare": {
+              "inclusive_ns": 2900000,
+              "exclusive_ns": 2900000,
+              "calls": 2
+            },
+            "atomic_apply": {
+              "inclusive_ns": 400000,
+              "exclusive_ns": 400000,
+              "calls": 2
+            },
+            "apply_observer": {
+              "inclusive_ns": 2800000,
+              "exclusive_ns": 2800000,
+              "calls": 2
+            },
+            "scene_publish": {
+              "inclusive_ns": 8800000,
+              "exclusive_ns": 8800000,
+              "calls": 2
+            },
+            "navigation_frame": {
+              "inclusive_ns": 100900000,
+              "exclusive_ns": 66100000,
+              "calls": 429
+            },
+            "canonical_frame": {
+              "inclusive_ns": 4336900000,
+              "exclusive_ns": 4336900000,
+              "calls": 422
+            }
+          },
+          "counters": {
+            "gpu_coverage_tiles": 5203,
+            "cpu_coverage_tiles": 0,
+            "stamp_primitives": 581440,
+            "stamp_bytes": 89691288,
+            "stamp_calls": 18200,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 10047800,
+            "coverage_steps": 0
+          },
+          "resource_used_max": 478534440,
+          "resource_pending_release_max": 118222784
+        },
+        "canonical": {
+          "rows": 422,
+          "stages": {
+            "attempt": {
+              "inclusive_ns": 4220400000,
+              "exclusive_ns": 169000000,
+              "calls": 422
+            },
+            "visibility": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ns": 57400000,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ns": 23100000,
+              "exclusive_ns": 23100000,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ns": 34300000,
+              "exclusive_ns": 34300000,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ns": 7600000,
+              "exclusive_ns": 7600000,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ns": 3986300000,
+              "exclusive_ns": 1162300000,
+              "calls": 422
+            },
+            "acquire": {
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "calls": 422
+            },
+            "validation": {
+              "inclusive_ns": 626300000,
+              "exclusive_ns": 626300000,
+              "calls": 422
+            },
+            "cache_begin": {
+              "inclusive_ns": 24000000,
+              "exclusive_ns": 15400000,
+              "calls": 422
+            },
+            "group_update": {
+              "inclusive_ns": 7900000,
+              "exclusive_ns": 7900000,
+              "calls": 422
+            },
+            "damage": {
+              "inclusive_ns": 700000,
+              "exclusive_ns": 700000,
+              "calls": 422
+            },
+            "cache_prepare": {
+              "inclusive_ns": 2173200000,
+              "exclusive_ns": 1956700000,
+              "calls": 422
+            },
+            "prepare_scan": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "coverage_flush": {
+              "inclusive_ns": 200000000,
+              "exclusive_ns": 200000000,
+              "calls": 422
+            },
+            "material_submit": {
+              "inclusive_ns": 16500000,
+              "exclusive_ns": 16500000,
+              "calls": 2800
+            },
+            "raster_snapshot": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 17
+            },
+            "scene_draw": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            }
+          },
+          "counters": {
+            "gpu_coverage_tiles": 2800,
+            "cpu_coverage_tiles": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 7327470,
+            "coverage_steps": 162334
+          },
+          "resource_used_max": 526833145,
+          "resource_pending_release_max": 0
+        }
+      },
+      "outside_owner_ms": 7678.100000095368,
+      "within_RAF_outside_owner_ms": 2117.0999990222044,
+      "outside_RAF_callback_ms": 5561.000001072884,
+      "wait_interpretation": "Outside owner includes callback work. Outside RAF is wall interval minus observed callback union; no attribution to GPU execution or a specific scheduler."
+    },
+    {
+      "phase": "C",
+      "lo_ms": 187372.39999997616,
+      "hi_ms": 212528.10000002384,
+      "elapsed_ms": 25155.700000047684,
+      "roles": {
+        "owner": {
+          "rows": 909,
+          "stages": {
+            "attempt": {
+              "inclusive_ns": 17642500000,
+              "exclusive_ns": 10200000,
+              "calls": 909
+            },
+            "reference_build": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ns": 9592600000,
+              "exclusive_ns": 8263500000,
+              "calls": 1
+            },
+            "validation": {
+              "inclusive_ns": 3400000,
+              "exclusive_ns": 3400000,
+              "calls": 1
+            },
+            "group_update": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "damage": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "cache_draw": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 40
+            },
+            "gpu_coverage_submit": {
+              "inclusive_ns": 1315800000,
+              "exclusive_ns": 1315800000,
+              "calls": 2800
+            },
+            "material_submit": {
+              "inclusive_ns": 9800000,
+              "exclusive_ns": 9800000,
+              "calls": 2800
+            },
+            "owner_pump": {
+              "inclusive_ns": 16700000,
+              "exclusive_ns": 16700000,
+              "calls": 909
+            },
+            "pending_owner": {
+              "inclusive_ns": 1463200000,
+              "exclusive_ns": 93300000,
+              "calls": 909
+            },
+            "transient_frame": {
+              "inclusive_ns": 9593200000,
+              "exclusive_ns": 400000,
+              "calls": 909
+            },
+            "resource_service": {
+              "inclusive_ns": 184900000,
+              "exclusive_ns": 184900000,
+              "calls": 909
+            },
+            "target_prepare": {
+              "inclusive_ns": 5400000,
+              "exclusive_ns": 5400000,
+              "calls": 43
+            },
+            "scene_stamp": {
+              "inclusive_ns": 1356800000,
+              "exclusive_ns": 1356800000,
+              "calls": 199
+            },
+            "history_prepare": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "publication_prepare": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "atomic_apply": {
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "calls": 1
+            },
+            "apply_observer": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "scene_publish": {
+              "inclusive_ns": 7400000,
+              "exclusive_ns": 7400000,
+              "calls": 1
+            },
+            "navigation_frame": {
+              "inclusive_ns": 900000,
+              "exclusive_ns": 900000,
+              "calls": 617
+            },
+            "canonical_frame": {
+              "inclusive_ns": 6373400000,
+              "exclusive_ns": 6373400000,
+              "calls": 617
+            }
+          },
+          "counters": {
+            "gpu_coverage_tiles": 2800,
+            "cpu_coverage_tiles": 0,
+            "stamp_primitives": 290920,
+            "stamp_bytes": 44863984,
+            "stamp_calls": 9160,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 5390968,
+            "coverage_steps": 0
+          },
+          "resource_used_max": 416457665,
+          "resource_pending_release_max": 0
+        },
+        "canonical": {
+          "rows": 617,
+          "stages": {
+            "attempt": {
+              "inclusive_ns": 6192500000,
+              "exclusive_ns": 263900000,
+              "calls": 617
+            },
+            "visibility": {
+              "inclusive_ns": 100000,
+              "exclusive_ns": 100000,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ns": 62000000,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ns": 26000000,
+              "exclusive_ns": 26000000,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ns": 36000000,
+              "exclusive_ns": 36000000,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ns": 6300000,
+              "exclusive_ns": 6300000,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ns": 5860200000,
+              "exclusive_ns": 2291500000,
+              "calls": 617
+            },
+            "acquire": {
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "calls": 617
+            },
+            "validation": {
+              "inclusive_ns": 1033800000,
+              "exclusive_ns": 1033800000,
+              "calls": 617
+            },
+            "cache_begin": {
+              "inclusive_ns": 45900000,
+              "exclusive_ns": 31900000,
+              "calls": 617
+            },
+            "group_update": {
+              "inclusive_ns": 13400000,
+              "exclusive_ns": 13400000,
+              "calls": 617
+            },
+            "damage": {
+              "inclusive_ns": 600000,
+              "exclusive_ns": 600000,
+              "calls": 617
+            },
+            "cache_prepare": {
+              "inclusive_ns": 2488200000,
+              "exclusive_ns": 2163700000,
+              "calls": 617
+            },
+            "prepare_scan": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "coverage_flush": {
+              "inclusive_ns": 288000000,
+              "exclusive_ns": 288000000,
+              "calls": 617
+            },
+            "material_submit": {
+              "inclusive_ns": 36200000,
+              "exclusive_ns": 36200000,
+              "calls": 2800
+            },
+            "raster_snapshot": {
+              "inclusive_ns": 300000,
+              "exclusive_ns": 300000,
+              "calls": 7
+            },
+            "scene_draw": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ns": 200000,
+              "exclusive_ns": 200000,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ns": 0,
+              "exclusive_ns": 0,
+              "calls": 1
+            }
+          },
+          "counters": {
+            "gpu_coverage_tiles": 2800,
+            "cpu_coverage_tiles": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 7327470,
+            "coverage_steps": 162334
+          },
+          "resource_used_max": 531320939,
+          "resource_pending_release_max": 0
+        }
+      },
+      "outside_owner_ms": 7513.200000047684,
+      "within_RAF_outside_owner_ms": 5120.400000332767,
+      "outside_RAF_callback_ms": 2392.7999997138977,
+      "wait_interpretation": "Outside owner includes callback work. Outside RAF is wall interval minus observed callback union; no attribution to GPU execution or a specific scheduler."
+    }
+  ],
+  "loss": 0,
+  "clock": {
+    "start": {
+      "before": 813.2000000476837,
+      "after": 813.2000000476837,
+      "nowNs": "813200000"
+    },
+    "end": {
+      "before": 226240.5,
+      "after": 226240.60000002384,
+      "nowNs": "226240600000"
+    }
+  },
+  "counting_policy": "ownerroleexclusive partition and canonical nesteddetail separate; noaddingownercanonical_frame+canonicalattempt; noCPU/GPUexecution inferencefromAPI",
+  "operation_delivery": "onOperation is notification only; AXIOM_POSTWORKER_COMMIT internaltimestamp separate"
+}

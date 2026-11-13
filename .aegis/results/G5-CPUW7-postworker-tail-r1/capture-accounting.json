@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "stage": "AB",
+      "diagnostic_encode_ms": 6517.399999976158,
+      "diagnostic_persist_readback_ms": 6302.5,
+      "normal_encode_ms": 6798.0,
+      "normal_persist_readback_ms": 6310.800000071526
+    },
+    {
+      "stage": "undo",
+      "diagnostic_encode_ms": 6534.5,
+      "diagnostic_persist_readback_ms": 6229.200000047684,
+      "normal_encode_ms": 6698.600000023842,
+      "normal_persist_readback_ms": 6386.299999952316
+    },
+    {
+      "stage": "redo",
+      "diagnostic_encode_ms": 6704.799999952316,
+      "diagnostic_persist_readback_ms": 8204.399999976158,
+      "normal_encode_ms": 8720,
+      "normal_persist_readback_ms": 7410.299999952316
+    },
+    {
+      "stage": "followup",
+      "diagnostic_encode_ms": 6944.299999952316,
+      "diagnostic_persist_readback_ms": 6371.800000071526,
+      "normal_encode_ms": 8875.399999976158,
+      "normal_persist_readback_ms": 7554.299999952316
+    }
+  ],
+  "policy": "orderedcaptureeffects retained, excludedfromprimaryAB/Cinterval; protocol/readerunchanged"
+}

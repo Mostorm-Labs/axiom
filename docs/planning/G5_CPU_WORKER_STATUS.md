@@ -1,5 +1,39 @@
 # G5 independent CPU Worker development checkpoint
 
+## CPUW7 postWorker experiment · 2026-11-13
+
+The existing [4331 Demo](http://127.0.0.1:4331/example.html) remains the
+default comparison baseline and its assets/user document are untouched.
+[4332](http://127.0.0.1:4332/example.html) is an experimental comparison build,
+not a broadly faster replacement. Both are local `0.4.3.0` builds.
+
+Actual DPR4 attribution found repeated checkpoint compilation inside prepared
+contour drawing. A 32-primitive raster step could repeatedly compile the same
+immutable 256-knot checkpoint. The repair retains only the last checkpoint's
+output in the existing charged owner-thread scratch; exact visits invalidate
+that witness. Original primitive order, source, full canonical masks, blend/AA
+and quotas remain unchanged. A structural test reduced compiled inputs from
+10,783 to 7,199 with identical pixels, and verified draw → exact → same-draw
+scratch invalidation.
+
+Four finite Web windows preserved the complete A7200 → immediate B8 → pan/zoom
+→ AB capture → Undo/capture → Redo/capture → C1 sequence. Ordinary paired DPR4
+results were mixed: AB Up-to-drain increased from 27.879s to 38.528s, while C
+decreased from 27.575s to 18.764s. Input duration also varied materially
+(234.030s baseline, 222.420s candidate); no observer-overhead or overall
+performance PASS is claimed. Candidate DPR1 measured AB 10.593s and C 6.175s
+without a fresh DPR1 baseline. Both final-C snapshots match original
+OperationEngine replay byte for byte and their independent CPU pixel references
+pass the unchanged AA rule.
+
+Stamp was measured, not optimized: diagnostic C spent about 1.357s on stamp
+preparation, about 9.593s in transient rendering and 6.373s in canonical frame
+calls. Nested owner/canonical records are separate accounting views, and
+opportunity gaps are not all CPU time. Remaining submission/render/resource
+waiting is open. This experiment demonstrates one removed repeated-work chain;
+it does not close the user-visible long tail, G5, P34 or platform qualification.
+The evidence lives in `.aegis/results/G5-CPUW7-postworker-tail-r1/`.
+
 ## CPUW6b local exact union candidate · 2026-11-13
 
 The current candidate Demo is http://127.0.0.1:4331/example.html (local

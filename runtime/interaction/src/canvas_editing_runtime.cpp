@@ -373,9 +373,13 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       if(!job.header){out<<':';for(auto byte:mask.id.bytes)out<<unsigned(byte)<<',';out<<':'<<mask.geometry.index();job.header=true;
         if(const auto* path=std::get_if<semantic::FilledPathMask>(&mask.geometry))out<<static_cast<unsigned>(path->path.fill_rule)<<':'<<path->path.commands.size();}
       bool done=false;
+      [[maybe_unused]] const auto previousPrimitive=job.primitive;
       if(const auto* sweep=std::get_if<semantic::SweptCircleMask>(&mask.geometry)){
         for(unsigned n=0;n<32&&job.primitive<sweep->segments.size();++n){const auto& segment=sweep->segments[job.primitive++];for(const auto* knot:{&segment.p0,&segment.p1})out<<knot->position.x<<','<<knot->position.y<<','<<knot->radius<<';';out<<segment.control1.x<<','<<segment.control1.y<<','<<segment.control2.x<<','<<segment.control2.y<<'|';}done=job.primitive==sweep->segments.size();
       }else{const auto& commands=std::get<semantic::FilledPathMask>(mask.geometry).path.commands;for(unsigned n=0;n<32&&job.primitive<commands.size();++n)appendScenePathCommand(out,commands[job.primitive++]);done=job.primitive==commands.size();}
+      AXIOM_FRAME_TIMING_ADD(stamp_primitives,job.primitive-previousPrimitive);
+      AXIOM_FRAME_TIMING_ADD(stamp_calls,1);
+      AXIOM_FRAME_TIMING_ADD(stamp_bytes,out.tellp()>0?static_cast<std::uint64_t>(out.tellp()):0);
       for(unsigned char c:out.str()){job.hash^=c;job.hash*=16777619U;}
       if(done){job.hashes.push_back(job.hash);++job.mask;job.primitive=0;job.header=false;}
     }
@@ -5507,12 +5511,15 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
   }
+  AXIOM_FRAME_TIMING_SCOPE(transientReferenceTiming,reference_build);
   auto references = render::DirectReferenceSource::buildTransient(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  AXIOM_FRAME_TIMING_END(transientReferenceTiming);
   if (!references) return false;
   applyAppearancePreview(references.value());
+  {AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
   if(!applyPendingPresentation(references.value()))return false;
-  if(!applyPartialErasePreview(references.value()))return false;
+  if(!applyPartialErasePreview(references.value()))return false;}
   const auto composeTransform = [](const semantic::Transform2D& parent,
                                    const semantic::Transform2D& child) {
     return semantic::Transform2D{
@@ -5676,8 +5683,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
   auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
+  AXIOM_FRAME_TIMING_SCOPE(transientRenderTiming,render);
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay());
+  AXIOM_FRAME_TIMING_END(transientRenderTiming);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
   coverBrushDisplays(plan.value());
   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=

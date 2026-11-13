@@ -1,0 +1,137 @@
+{
+  "fixture": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "source_driver": {
+    "path": "verification/runners/g5/cpu_local_exact_web.mjs",
+    "sha256": "05da00557becee8c79914e759e272d69b0bcefc092fcd70dd3665b74f86f5694"
+  },
+  "primary_sequence": "Restore originalFixed40 with originalmetadata/entropy324508639; defaultv4round partialeraser diameter32; A7200originalf32trace Up(noUpcoord), immediateB8, immediate originalwheelpan24/12 + ctrlwheel-9; settle andcaptureAB; Undo/settle/capture; Redo/settle/capture; followupC Down/Move inworld350,210→360,230 transformed by currentcamera andUp999,999; recordC separately; final selectionregion same old40 IDs if unchanged.",
+  "A": {
+    "down": [
+      420,
+      160
+    ],
+    "moves": 7200,
+    "move_i": "float(420+7*sin(i*.17)), float(160+170*i/7200), i1..7200",
+    "timestamps_increment_ns": 8000000,
+    "yield_every_moves": 8,
+    "up": [
+      999,
+      999
+    ],
+    "radius": 16
+  },
+  "B": {
+    "down": [
+      300,
+      230
+    ],
+    "moves_i": "[300,230+i*4],i1..8",
+    "up": [
+      999,
+      999
+    ]
+  },
+  "C": {
+    "down_world": [
+      350,
+      210
+    ],
+    "move_world": [
+      360,
+      230
+    ],
+    "up": [
+      999,
+      999
+    ]
+  },
+  "CSS": [
+    1431,
+    1010
+  ],
+  "rows": [
+    {
+      "id": "W7-D4-DIAGNOSTIC",
+      "variant": "anchored baseline with diagnostic-only observation",
+      "DPR": 4,
+      "purpose": "First true cross-layer attribution; same fullsequence inclUndoRedo/captures andC. Use existing G5/frame-timing+privatependingfacts/RAF observer before adding minimal gaps."
+    },
+    {
+      "id": "W7-D4-BASELINE",
+      "variant": "unchanged normal final6bSDK",
+      "DPR": 4,
+      "purpose": "One ordinary baseline for observer-overhead comparison and paired candidateperformance. Same fullsequence as diagnostic; baseline same source/behavior5102, final6bSDK assets may be reused afterexacthash matching."
+    },
+    {
+      "id": "W7-D4-CANDIDATE",
+      "variant": "ordinary repaired SDK diagnosticsOFF",
+      "DPR": 4,
+      "purpose": "Primary sameinput postWorker chain validation, C latency/progress/finalpixels; explicitallstage waits."
+    },
+    {
+      "id": "W7-D1-CANDIDATE",
+      "variant": "sameordinary repaired SDK",
+      "DPR": 1,
+      "purpose": "Samefullsequence functional regression/remainingtail, compare retained6b cautiously; no freshD1baseline needed."
+    }
+  ],
+  "finite_execution": {
+    "native_seconds_max_per_command": 180,
+    "native_heavy_case_starts_max": 3,
+    "web_starts_max": 5,
+    "web_seconds_each_max": 420,
+    "web_seconds_total_max": 1800,
+    "browser_process_family_RSS_MiB_max": 4096,
+    "corrective_window_max": 1,
+    "corrective_policy": "Only after concretely repaired driver/environment/implementation fault, never retry away correctness failure. Retain failure andactualcharge. Do not add smoke/formal duplicate windows.",
+    "fullsequence_setup": "Capture/serialization sideeffects are preserved betweenHistory phases because they may affect cache/quota. Exclude serialization fromprimaryphase intervals, reportseparately rather than deleteit.",
+    "baseline_diagnostic_order": "Diagnostic thenordinary baseline thenrepairordinaryD4 andD1. Native/lint/build can run first. No heavybuild/oracle in parallel withbrowser. One browserinstance atatime."
+  },
+  "historical_limits": {
+    "native_A7200_B1": {
+      "drain_s": 2.559504125,
+      "Worker_s": 0.083838994,
+      "Scene_stamp_s": 1.715641951
+    },
+    "Web_D1_A7200_B8": {
+      "afterUp_s": 10.3114,
+      "Worker_ms": 60.2
+    },
+    "Web_D4": {
+      "afterUp_s": 30.9067,
+      "C_afterUndoRedo_s": 71.8492,
+      "C_Worker_ms": 118.7,
+      "C_Worker_terminal_span_ms": 723.5
+    },
+    "qualification": "PreviousWebsourcefreeze priorfinalcompatibility/RoundJoin fixes; oldvalues explanatoryonly, notfreshmeasurement for5102."
+  },
+  "reference": [
+    {
+      "path": "runtime/render/tests/cpu_local_exact_original.hpp",
+      "sha256": "ee446d2b5219ae44b14ce5fdbdbc977821710af871349e06ab3ea3f2e7185563"
+    },
+    {
+      "path": "runtime/render/tests/cpu_exact_kernel_test.cpp",
+      "sha256": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9"
+    },
+    {
+      "path": "runtime/render/tests/cpu_prefix_continuation_test.cpp",
+      "sha256": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0"
+    },
+    {
+      "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+      "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+    },
+    {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+    }
+  ],
+  "reference_binary": {
+    "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+    "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+  }
+}

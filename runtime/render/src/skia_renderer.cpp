@@ -39,6 +39,29 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <type_traits>
 
 namespace canvas::render {
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+namespace {
+struct PostworkerRenderObservation final {
+    const SkiaRenderer& renderer;
+    const std::shared_ptr<resources::ResourceBudgetManager>& budget;
+    RenderCacheWork before;
+    PostworkerRenderObservation(const SkiaRenderer& r,const std::shared_ptr<resources::ResourceBudgetManager>& b):renderer(r),budget(b),before(r.renderCacheWork()){}
+    ~PostworkerRenderObservation(){const auto after=renderer.renderCacheWork();
+        AXIOM_FRAME_TIMING_ADD(render_pending,after.executionPending-before.executionPending);
+        AXIOM_FRAME_TIMING_ADD(render_alloc_denials,after.executionAllocationDenials-before.executionAllocationDenials);
+        AXIOM_FRAME_TIMING_ADD(body_builds,after.preparedBodyBuilds-before.preparedBodyBuilds);
+        AXIOM_FRAME_TIMING_ADD(body_advances,after.preparedAdvances-before.preparedAdvances);
+        AXIOM_FRAME_TIMING_ADD(body_compile,after.preparedCompileInputs-before.preparedCompileInputs);
+        AXIOM_FRAME_TIMING_ADD(body_replay,after.bodyReplayInputs-before.bodyReplayInputs);
+        AXIOM_FRAME_TIMING_ADD(mask_primitive_draws,after.maskPrimitiveDraws-before.maskPrimitiveDraws);
+        AXIOM_FRAME_TIMING_ADD(mask_tile_resets,after.maskTileResets-before.maskTileResets);
+        AXIOM_FRAME_TIMING_ADD(coverage_steps,after.preparationCoverageSteps-before.preparationCoverageSteps);
+        if(budget){std::size_t pending=0;for(unsigned i=0;i<unsigned(resources::ResourceClass::kCount);++i)pending+=budget->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
+            AXIOM_FRAME_TIMING_SET(resource_used,budget->used());AXIOM_FRAME_TIMING_SET(resource_pending_release,pending);AXIOM_FRAME_TIMING_SET(resource_gpu_epochs,budget->pendingGpuEpochCount());}
+    }
+};
+}
+#endif
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
 namespace {
 struct ObservationCounters final {
@@ -310,6 +333,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::canonical_basis,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
 
     AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    PostworkerRenderObservation postworkerObservation{*this,resourceBudget_};
+#endif
     const auto& metrics=plan.frame.metrics;
     if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
        metrics.logicalWidth<=0||metrics.logicalHeight<=0||!metrics.physicalWidth||!metrics.physicalHeight)
@@ -1037,6 +1063,9 @@ internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexc
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay) {
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    PostworkerRenderObservation postworkerObservation{*this,resourceBudget_};
+#endif
     G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
     ObservationCounters observationCounters{*this};

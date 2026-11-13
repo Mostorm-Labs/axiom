@@ -1,4 +1,5 @@
 #include "canvas/foundation/internal/g5_observation.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
@@ -507,6 +508,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
 
   out = {};
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  AXIOM_FRAME_TIMING_BEGIN(false,viewId_.value(),nextCanonicalWorkId_,runtime_->semanticGeneration().value(),runtime_->sceneRevision(),runtime_->cameraGeneration(),runtime_->surface().generation,runtime_->surface().metricsGeneration,"owner");
   // A capture may be superseded by input, resize, restore, or cancellation
   // before the platform reports its presentation result.  Invalidate that
   // obsolete work at the next owner opportunity so it cannot reserve the
@@ -518,27 +520,29 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   }
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
-  if (!ownerPump()) return false;
-  runtime_->serviceCpuPendingErases();
+  {AXIOM_FRAME_TIMING_SCOPE(ownerPumpTiming,owner_pump);if (!ownerPump()) return false;}
+  {AXIOM_FRAME_TIMING_SCOPE(pendingTiming,pending_owner);runtime_->serviceCpuPendingErases();}
   try{if(auto image=runtime_->pendingHeadImage()){
     bool applied=false;try{applied=controlFacade_->importImage(image->second).state==ImageCommandState::kApplied;}catch(...){}
     runtime_->completePendingImage(image->first,applied);
   }}catch(...){runtime_->completePendingImage(runtime_->cpuPendingFacts().head,false);}
-  runtime_->serviceResourceRetirements();
+  {AXIOM_FRAME_TIMING_SCOPE(resourceTiming,resource_service);runtime_->serviceResourceRetirements();}
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   const bool editingTransient=!forceCanonical && ((runtime_->platformPresentationDeferred() && (runtime_->creationActive() ||
       runtime_->selectionTransformActive() || runtime_->regionSelectionActive())) || runtime_->objectEraseFeedbackActive() || runtime_->partialEraseFeedbackActive());
-  const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
-      runtime_->retryTransientOverlayFrame();
+  bool transientRendered=false;
+  {AXIOM_FRAME_TIMING_SCOPE(transientTiming,transient_frame);transientRendered=editingTransient && runtime_->transientOverlayDirty() && runtime_->retryTransientOverlayFrame();}
   if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
     retirePreviewCapture();
   }
-  if(shouldCanonical && !forceCanonical && !editingTransient)
+  if(shouldCanonical && !forceCanonical && !editingTransient){
+    AXIOM_FRAME_TIMING_SCOPE(navTiming,navigation_frame);
     out.navigationPending=runtime_->serviceNavigationPresentation(
         std::chrono::steady_clock::now(),out.navigationPresented);
+  }
   // Selection chrome is a canonical overlay, but the first contact of a
   // possible pinch is still under AutoIntent arbitration. Do not spend this
   // frame opportunity on a full scene render before the second contact can
@@ -548,6 +552,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
       runtime_->pendingViewportGesture();
   if (shouldCanonical && !out.navigationPending && !editingTransient &&
       !awaitingViewportClaim) {
+    AXIOM_FRAME_TIMING_SCOPE(canonicalTiming,canonical_frame);
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
     out.canonicalRequested = G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false));
@@ -595,6 +600,10 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   out.needsPaint = runtime_->cpuPendingFacts().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
+  AXIOM_FRAME_TIMING_SET(commit_ordinal,runtime_->canonicalCommitFence().ordinal.value());
+  AXIOM_FRAME_TIMING_SET(after_generation,runtime_->semanticGeneration().value());
+  AXIOM_FRAME_TIMING_SET(after_scene,runtime_->sceneRevision());
+  AXIOM_FRAME_TIMING_OUTCOME(out.needsPaint?"pending":"settled");
   return true;
 }
 void RuntimeCompositionCore::retirePreviewCapture() noexcept {

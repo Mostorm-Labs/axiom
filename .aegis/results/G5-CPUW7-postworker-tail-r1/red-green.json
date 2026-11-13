@@ -1,0 +1,33 @@
+{
+  "red": {
+    "path": "replay-red.json",
+    "sha256": "a443958abf0077a1398bd0277b6620f05c29e4ff8c058c216818090eda4b2ea1",
+    "observed": {
+      "budget_after": 266128,
+      "budget_before": 266128,
+      "compiled_knots": 10783,
+      "draw_after_exact_compiled_knots": 512,
+      "exact_visit_replay_knots": 1598,
+      "knots": 7199,
+      "pixels_equal": true,
+      "primitives": 461
+    },
+    "failure": "ADJACENT_DRAW_RANGES_RECOMPILED_SAME_CHECKPOINT"
+  },
+  "green": {
+    "path": "replay-green.json",
+    "sha256": "4b825598cbc601a135284d3107bf5394b160e5769da8b88f240d02f219fa5533",
+    "observed": {
+      "budget_after": 266136,
+      "budget_before": 266136,
+      "compiled_knots": 7199,
+      "draw_after_exact_compiled_knots": 512,
+      "exact_visit_replay_knots": 1598,
+      "knots": 7199,
+      "pixels_equal": true,
+      "primitives": 461
+    }
+  },
+  "sameRangeAfterExact": "explicitdrawA\u2192exactfarB\u2192drawA; compiledKnots>0 and fullpixelsmatch",
+  "no_budget_increase": "existingchargedreplayOutput scratch; before/afterequal"
+}

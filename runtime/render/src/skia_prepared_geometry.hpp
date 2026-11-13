@@ -78,6 +78,10 @@ class PreparedNavigationGeometry final {
     // Owner-thread draw scratch; source/checkpoint geometry stays immutable.
     // 16 taper cuts, carried patch and finish fit within32 extra slots.
     mutable ink::CompactContour replayOutput_;
+    // The existing charged scratch may retain one immutable checkpoint output
+    // between adjacent owner-thread draw ranges. Exact queries also use this
+    // scratch and invalidate the draw witness before writing it.
+    mutable const ReplayBlock* replayOutputBlock_=nullptr;
     double replayDistance_=0;
     ReferenceCommand source_;
     bool contour_=false;

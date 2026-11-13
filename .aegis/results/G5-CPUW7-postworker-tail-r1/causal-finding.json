@@ -1,0 +1,34 @@
+{
+  "status": "CAUSAL_CHAIN_FROZEN_BEFORE_BEHAVIOR_EDIT",
+  "actual_observation": "C25.1566s diagnostic; owner17.6425s includes transient9.5932s/canonical6.3734s/pending1.4632s; stamp1.3568s notprimary",
+  "ordinary_baseline": {
+    "A_input_ms": 234029.8,
+    "AB_up_to_drain_ms": 27879.2,
+    "C_down_to_drain_ms": 27574.9,
+    "input_variation": "not normalized/hidden; no claim observeroverheadPASS"
+  },
+  "source_mechanism": {
+    "raster": "CompactStrokeRasterJob::step draws atmost32preparedprimitive thenyields",
+    "prepared": "drawContour replay recompiles whole256knotblock for eachneighbor32primitive range; sameimmutablebody and compilercheckpoint repeatedlyexecuted",
+    "measured_C_replay_knots": 12718438,
+    "body_build_compile": 0,
+    "canonical_attempts": 617,
+    "coverage_steps": 162334,
+    "actual_GPU_tiles": 5600,
+    "CPU_tiles": 0,
+    "resource_pending_release_max": 0,
+    "allocation_denial_count": 0
+  },
+  "repair": "retainlastcompiledcheckpoint inexisting ownerthread replayOutput_ scratch, keyedby immutableblockindex/pointee; use exactsamecommandorder/visibility; invalidateonecachebeforevisitExactandbuild; no extraoutlinegeometry/pixelcachebudget",
+  "predicted_work": "adjacent32ranges intersecting sameblock compileblock once rather thaneveryrange; compiledKnots drops andpixels/primitiveorder identical",
+  "falsifying_test": "same replaybody chunked32draw vs originalfullreference; countcompiledKnots <=knothistoryonce per contiguouswalk; interveningvisitExact invalidates thenresume correctly; sourceclone/fork noalias; forcecheckpointbudget",
+  "excluded": "stamp change/Workercount/budget/SLOtuning/newrenderer",
+  "remaining": "transientframe also syncfullcoverage and617RAFotherreplay; thisslice onlyprovedduplicatecheckpointchain, endtoendmayremainfinding",
+  "RED": {
+    "source": "runtime/render/tests/cpu_postworker_replay_test.cpp",
+    "observed": "10783compiledknots>7199inputknots inadjacent32primitivewalk; pixelidentical/budget266128Bunchanged",
+    "failure": "ADJACENT_DRAW_RANGES_RECOMPILED_SAME_CHECKPOINT",
+    "evidence": "replay-red.json",
+    "production_edit_started_after_RED": true
+  }
+}

@@ -1,5 +1,6 @@
 #include "canvas/runtime/internal/runtime_platform_access.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "session.hpp"
 
@@ -1600,6 +1601,9 @@ class Session::Impl {
                 return {{"ok",runtime::RuntimePlatformAccess::queueCpuPendingCompletion(*owner,token,bytes,j.value("success",false))},{"code","CPU_PENDING_STALE_COMPLETION"}};
             }
             const auto f=runtime::RuntimePlatformAccess::cpuPendingFacts(*owner);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+            if(action=="clock")return {{"ok",true},{"nowNs",std::to_string(canvas::foundation::internal::frame_timing::now())}};
+#endif
             J terminals=J::array();for(const auto& t:f.terminals){
                 J token=J::array();for(const auto w:t.token)token.push_back(std::to_string(w));
                 terminals.push_back({{"serial",std::to_string(t.serial)},{"session",std::to_string(t.session)},{"jobs",std::to_string(t.jobs)},{"operationOrdinal",std::to_string(t.operationOrdinal)},{"token",token},{"status",t.status}});
