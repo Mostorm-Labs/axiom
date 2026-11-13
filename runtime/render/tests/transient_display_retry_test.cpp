@@ -300,7 +300,7 @@ void denseObjectContinuity(const std::filesystem::path& out,bool budgetCompariso
    SkiaRenderer candidate,oracle;ImageResourceResolver candidateImages(resources),oracleImages(resources);
    RenderCacheOptions limits;
    if(desktop){limits.maxBytes=256U*1024U*1024U;limits.sharedMaxBytes=512U*1024U*1024U;limits.maxEntryBytes=64U*1024U*1024U;}
-   if(budgetComparison)candidate.setRenderCacheOptions(limits);
+   candidate.setRenderCacheOptions(limits);
    candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
    auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
@@ -485,7 +485,10 @@ void continuity(const std::filesystem::path& out){
    std::cout<<nlohmann::json{{"DPR",dpr},{"background",bg},{"stage",stage},{"status",static_cast<unsigned>(result.code)},{"message",result.message},{"pixels_preserved",after==before},{"presents",target.presentCount()},{"body_builds",r.renderCacheWork().preparedBodyBuilds}}.dump()<<std::endl;
    require(result.code!=BackendSubmissionCode::kAccepted,"failure stage accepted");require(after==before,"failed attempt changed last display");require(target.presentCount()==presents&&r.submissionCount()==submits,"failed attempt counted as successful display");};
   auto b=displayPlan(2,2,dpr,bg);transientDisplayFault.beforeObject=1;fail(b,"after-one-object");
-  auto newest=displayPlan(3,3,dpr,bg);transientDisplayFault.afterTile=0;fail(newest,"after-one-tile");
+  auto newestBase=displayPlan(3,3,dpr,bg);auto newestDraw=newestBase.referenceDrawList;
+  for(auto& entry:newestDraw.entries)entry.record.transform.tx+=.125;
+  FramePlan newest{newestBase.frame,std::move(newestDraw),newestBase.background,newestBase.transparentBackground,newestBase.isolateEraseMasks};
+  transientDisplayFault.afterTile=0;fail(newest,"after-one-tile");
   target.unavailable=true;fail(displayPlan(3,4,dpr,bg),"acquire-unavailable");target.unavailable=false;
   transientDisplayFault.beforeObject=0;fail(displayPlan(3,5,dpr,bg),"before-first-object");
   transientDisplayFault.beforePublish=true;fail(displayPlan(3,6,dpr,bg),"prepublication-refusal");
@@ -500,9 +503,12 @@ void continuity(const std::filesystem::path& out){
  }
 }
 void recovery(const std::filesystem::path& out){
- std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");auto c=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};c->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(c);require(target.resize(3200,2000).code==BackendSubmissionCode::kAccepted,"DPR4 pressure target");SkiaRenderer r;auto a=displayPlan(1,1,4,0,16,true);settle(r,target,a,c);auto before=pixels(target,a);auto budget=transientDisplayBudget.lock();require(bool(budget),"test-only existing budget witness");
+ std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");auto c=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};c->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(c);require(target.resize(3200,2000).code==BackendSubmissionCode::kAccepted,"DPR4 pressure target");SkiaRenderer r;r.setRenderCacheOptions(RenderCacheOptions{});auto a=displayPlan(1,1,4,0,16,true);settle(r,target,a,c);auto before=pixels(target,a);auto budget=transientDisplayBudget.lock();require(bool(budget),"test-only existing budget witness");
  const auto available=96U*1024U*1024U-budget->used();const auto token=budget->reserve(resources::ResourceClass::kRecorded,available-1024,true);require(bool(token),"admit held competing quota");resources::ResourceLease hold(budget,*token);const auto presents=target.presentCount();
- for(unsigned i=0;i<3;++i){auto p=displayPlan(i+2,i+2,4,0,16,true);EditingOverlay overlay{p.frame};auto result=r.renderTransientOverlay(target,p,&overlay);c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto after=pixels(target,p);require(result.code==BackendSubmissionCode::kRetry&&after==before&&target.presentCount()==presents,"genuine quota Retry changed display");std::cout<<nlohmann::json{{"pressure_attempt",i},{"used_bytes",budget->used()},{"hard_bytes",96U*1024U*1024U},{"pixels_preserved",true},{"GPU_epochs",budget->pendingGpuEpochCount()}}.dump()<<std::endl;}
+ for(unsigned i=0;i<3;++i){auto pBase=displayPlan(i+2,i+2,4,0,16,true);auto pDraw=pBase.referenceDrawList;
+  for(auto& entry:pDraw.entries)entry.record.content.update([](auto& value){++std::get<semantic::CompactStrokeContent>(value).stroke.seed;});
+  for(auto& entry:pDraw.entries)entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
+  FramePlan p{pBase.frame,std::move(pDraw),pBase.background,pBase.transparentBackground,pBase.isolateEraseMasks};EditingOverlay overlay{p.frame};auto result=r.renderTransientOverlay(target,p,&overlay);c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto after=pixels(target,p);require(result.code==BackendSubmissionCode::kRetry&&after==before&&target.presentCount()==presents,"genuine quota Retry changed display");std::cout<<nlohmann::json{{"pressure_attempt",i},{"used_bytes",budget->used()},{"hard_bytes",96U*1024U*1024U},{"pixels_preserved",true},{"GPU_epochs",budget->pendingGpuEpochCount()}}.dump()<<std::endl;}
  hold.reset();c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto newest=displayPlan(4,9,4,0,16,true);settle(r,target,newest,c);require(target.presentCount()==presents+1,"quota release did not publish newest exactly once");require(budget->used()<=96U*1024U*1024U,"new target escaped original hard cap");
  const auto count=target.presentCount(),submits=r.submissionCount();target.refusePresent=true;EditingOverlay overlay{newest.frame};require(r.renderTransientOverlay(target,newest,&overlay).code!=BackendSubmissionCode::kAccepted,"provider rejection accepted");require(target.presentCount()==count&&r.submissionCount()==submits,"provider rejection fabricated receipt");target.refusePresent=false;settle(r,target,displayPlan(4,10,4,0,16,true),c);
  require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"generation advance");require(r.renderTransientOverlay(target,newest,&overlay).code==BackendSubmissionCode::kRejected,"stale target presented");

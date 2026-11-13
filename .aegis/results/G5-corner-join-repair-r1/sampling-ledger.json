@@ -1,0 +1,34 @@
+{
+  "starts_cap": 2,
+  "seconds_cap": 480,
+  "charged_seconds": 11,
+  "attempts": [
+    {
+      "id": "CJ-WEB",
+      "status": "COMPLETED",
+      "unix": 1794563134.9428911,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/corner_join_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-corner-join-repair-r1/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-corner-join-repair-r1/web/CJ-WEB"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 10.087989875,
+        "peak_process_family_rss_kib": 1769840,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "charged_seconds": 11,
+      "drift": []
+    }
+  ]
+}

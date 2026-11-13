@@ -70,11 +70,28 @@ void CompactContourCompiler::appendKnot(const foundation::InkKnot& k,double tota
         }else{
             const auto px=current_->x-previous_->x,py=current_->y-previous_->y,pl=std::hypot(px,py);
             const auto ox=pl>0?-py/pl:nx,oy=pl>0?px/pl:ny,dot=ox*nx+oy*ny;
-            // Same direction-aware side projection as the reference. At a
-            // reversal retain the corner rather than blend normals to zero.
-            const auto ax=dot<0?ox:nx+(ox-nx)*dot,ay=dot<0?oy:ny+(oy-ny)*dot;
-            accept(makeAnchor(*current_,ax,ay,currentDistance_,total),dot<0,out);
-            if(dot<0)out.caps.push_back({current_->x,current_->y,radius(*current_,currentDistance_,total)});
+            if(dot<0){
+                // The round join lives at this actual knot. Midpoint smoothing
+                // must reach its incoming support before changing direction;
+                // otherwise the separate disk can be an isolated component.
+                const auto incoming=makeAnchor(*current_,ox,oy,currentDistance_,total);
+                const auto outgoing=makeAnchor(*current_,nx,ny,currentDistance_,total);
+                lastPatch_=ContourPatch{midpoint_->left,anchor_->left,incoming.left,
+                                       midpoint_->right,anchor_->right,incoming.right};
+                out.patches.push_back(*lastPatch_);
+                // Both support pairs and the common control are in the same
+                // round/marker-ellipse node. This bridge cannot add a miter or
+                // a bulge outside the node, even at a degenerate 180-degree U.
+                const ContourPoint center{current_->x,current_->y};
+                lastPatch_=ContourPatch{incoming.left,center,outgoing.left,
+                                       incoming.right,center,outgoing.right};
+                out.patches.push_back(*lastPatch_);
+                anchor_=midpoint_=outgoing;++anchors_;
+                out.caps.push_back({current_->x,current_->y,radius(*current_,currentDistance_,total)});
+            }else{
+                const auto ax=nx+(ox-nx)*dot,ay=ny+(oy-ny)*dot;
+                accept(makeAnchor(*current_,ax,ay,currentDistance_,total),false,out);
+            }
         }
         previous_=current_;current_=k;distance_+=l;currentDistance_=distance_;
 

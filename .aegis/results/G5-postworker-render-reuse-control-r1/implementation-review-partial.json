@@ -1,0 +1,48 @@
+{
+  "schema": "axiom-render-reuse-source-review-partial-v1",
+  "created_utc": "2026-11-13T04:01:47.060388+00:00",
+  "source": {
+    "runtime/render/src/skia_render_cache.cpp": "bb812a43de28a73fc3910d86e1e7d9c5094f1378f481f717f2df9fb2b8e7e4a8",
+    "runtime/render/src/skia_render_cache_internal.hpp": "a7d4227641169e2a19d43e7294a44c5d00961ac22ff9e3a3015d7eb34ae56dbf",
+    "runtime/render/src/skia_renderer.cpp": "82fedd8c63e29274edb032a2150ddc398f0063490574810eee201335831b82e4",
+    "runtime/render/tests/postworker_render_reuse_test.cpp": "896b9b87ed5a14d9e3f118f170ace994b9f07ce5da907eae6c34570b02c35206",
+    "runtime/render/tests/prepared_body_index_test.cpp": "cbe1e3754148ed305324c55b6a5d91dc324fe3a8b20513d3de4f022df424bc79",
+    "runtime/render/tests/transient_display_retry_test.cpp": "6e0112a86bd375757bb369597ad0877b8cddfcd0772f0bb373177642d9db2cdf"
+  },
+  "review_scope": "Read-only source and prior native evidence; no control build or browser load during producer timing",
+  "findings": [
+    {
+      "id": "SRC-1",
+      "class": "REVIEWED_WITHOUT_CURRENT_BLOCKER",
+      "description": "Completed isolated material uses fully admitted shared prepared body for complete config/seed/source equality plus exact transform/properties and ordered permanent mask geometry. Semantic mask IDs are not pixel dependencies, and canonical identities remain per object. Object and per-presentation compositing remains ordered."
+    },
+    {
+      "id": "SRC-2",
+      "class": "REVIEWED_WITHOUT_CURRENT_BLOCKER",
+      "description": "Aliases own separate recorded metadata, Material owns one pixel lease, final alias erasure decrements unique bytes, existing GPU epoch retains pending quota. Baseline/source/candidate assets distinguished via build-provenance; host-tree freeze alone is not build source."
+    },
+    {
+      "id": "TEST-1",
+      "class": "FROZEN_RR2_EVIDENCE_GAP_NOT_PRODUCTION_DEFECT_ESTABLISHED",
+      "description": "Seven materialLifetimes variants currently produce coverage counts but no work/pixel assertions, so they cannot establish changed mask/seed/pose invalidation. Producer asked to strengthen these same variants after browser windows, no expanded matrix or SDK rebuild."
+    },
+    {
+      "id": "MEASURE-1",
+      "class": "CLAIM_LIMIT",
+      "description": "Zoom feedback captures onFrame only after all6 wheels/current camera/current canonical generation. It cannot prove earliest retained/LOD feedback. Proxy and capture timings must remain separately named; missing earlier feedback remains explicit."
+    },
+    {
+      "id": "PERF-1",
+      "class": "REMAINING_IMPLEMENTATION_BOUNDARY",
+      "description": "stagedMaterial composition contains active mask and resets on growing active prefix. Under oversized working-set continuous Move can still lose partial composite progress. Producer confirmed and will report as remaining, no all-move-path closure claim."
+    },
+    {
+      "id": "TEST-2",
+      "class": "ACCEPTED_TEST_ADAPTATION",
+      "description": "PreparedBodyIndex consumer assertion allows canonical/direct/pixel reuse while preserving one body/no new hash compare checks and pixel equality. Fault tests now force cold miss under explicit original conservative profile instead of assuming warm reuse must allocate. First failed runs preserved."
+    }
+  ],
+  "producer_informed": true,
+  "formal_gate_PASS": false,
+  "production_modified_by_control": false
+}

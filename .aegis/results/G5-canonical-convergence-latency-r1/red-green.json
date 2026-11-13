@@ -1,0 +1,74 @@
+{
+  "red": {
+    "path": "out/G5-canonical-convergence-latency-r1/body-material-red.json",
+    "sha256": "4a7cc24647bbff8a9ce6e62640d4c55fadb14bbc556e73021056a6bd5b71b9e6",
+    "actual": {
+      "cold8copies_steps": 128,
+      "mask_only_work_pass": false,
+      "rows": [
+        {
+          "GPU_tiles_delta": 8,
+          "coverage_steps_delta": 128,
+          "nonAAfailures": 0,
+          "variant": 1
+        },
+        {
+          "GPU_tiles_delta": 1,
+          "coverage_steps_delta": 16,
+          "nonAAfailures": 0,
+          "variant": 2
+        },
+        {
+          "GPU_tiles_delta": 8,
+          "coverage_steps_delta": 128,
+          "nonAAfailures": 0,
+          "variant": 3
+        },
+        {
+          "GPU_tiles_delta": 8,
+          "coverage_steps_delta": 128,
+          "nonAAfailures": 0,
+          "variant": 4
+        }
+      ]
+    },
+    "failure": "CANONICAL_MASK_CHANGE_REPLAYS_UNCHANGED_BODY_COVERAGE"
+  },
+  "green": {
+    "path": "out/G5-canonical-convergence-latency-r1/body-material-identity-green.json",
+    "sha256": "98f93b4e4f84eb45f478ade5e76f8d0a25395940a4ec2ac26b435d705e019f8a",
+    "actual": {
+      "cold8copies_steps": 16,
+      "mask_only_work_pass": true,
+      "rows": [
+        {
+          "GPU_tiles_delta": 0,
+          "coverage_steps_delta": 0,
+          "nonAAfailures": 0,
+          "variant": 1
+        },
+        {
+          "GPU_tiles_delta": 0,
+          "coverage_steps_delta": 0,
+          "nonAAfailures": 0,
+          "variant": 2
+        },
+        {
+          "GPU_tiles_delta": 0,
+          "coverage_steps_delta": 0,
+          "nonAAfailures": 0,
+          "variant": 3
+        },
+        {
+          "GPU_tiles_delta": 0,
+          "coverage_steps_delta": 0,
+          "nonAAfailures": 0,
+          "variant": 4
+        }
+      ]
+    }
+  },
+  "identity_lifetimes": "identity-progress.json actual bodyByte/slot-hit+seedposecamerarresource/source removal/GPUrelease asserts",
+  "capacity": "same budget manager,1mostrecentoptionalbodycrop; no capacityincrease",
+  "postfreeze_behavior_change": false
+}

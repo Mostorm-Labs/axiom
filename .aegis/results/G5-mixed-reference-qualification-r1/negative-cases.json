@@ -1,0 +1,88 @@
+{
+  "material_actual_mapper_and_comparePixels": {
+    "cpp": "verification/runners/g5/mixed_reference_negative.cpp",
+    "result": "out/G5-mixed-reference-qualification-r1/material-negatives.json",
+    "node": "verification/tests/g5_mixed_reference_negative.test.mjs",
+    "cases": 6,
+    "status": "PASS",
+    "meaning": "actualoriginalmapperwrongmaterialpixels compared under source-onlyexpectedband; no mock"
+  },
+  "image_precision_failclosed": {
+    "test": "verification/tests/test_g5_mixed_reference_image.py",
+    "cases": 6,
+    "status": "PASS",
+    "script": "verification/runners/g5/mixed_reference_image.py",
+    "remaining302rule": "None/no alternates ever granted withoutqualification",
+    "covered": [
+      "exacttie vsnear-nontie",
+      "f32diagnostic notexpected",
+      "wrongcrop+onepixelpose",
+      "wrongresource/opacity/parent/shear",
+      "wrongcolor strict",
+      "occluder"
+    ]
+  },
+  "actual_image_badcolor_comparePixels": {
+    "node": "verification/tests/g5_mixed_reference_image.test.mjs",
+    "cases": 1,
+    "status": "PASS"
+  },
+  "initial_test_configuration_errors": "image-negative-tests.log three name-shadow errors; image-negative-tests-corrected.log one over-specific singletexel assumption; both preserved. Factory renamed and source-only fixed interval compares discrete crop/pose changes. Final original6passed.",
+  "numeric_thresholds_unchanged": {
+    "device_boundary_width": 2,
+    "outside_max_channel_delta": 2
+  },
+  "logs": {
+    "material-negatives.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/material-negatives.log",
+      "sha256": "1bbb8acf75b92949ee15d58be40c24685537f7c6442287709ae44c18d40a0194"
+    },
+    "negative-final.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/negative-final.log",
+      "sha256": "ce0c52202bc18137f8846a1d879dd02d91321aa0f47ec105123995a2d0176f29"
+    },
+    "negative-node.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/negative-node.log",
+      "sha256": "7a310a2a306bf503938dde8c1baf0f408434a0412ac9e894a91928ca528276fc"
+    },
+    "image-negative-tests.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/image-negative-tests.log",
+      "sha256": "b4d4c6124922b121115bcd2152b08102dbf66f56bb35b6c726f12c6eff0d7f08"
+    },
+    "image-negative-tests-corrected.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/image-negative-tests-corrected.log",
+      "sha256": "b16e239121b24957df8ab4ea2937cbc57363f8141da1ae35e548911996186144"
+    },
+    "image-negative-tests-final.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/image-negative-tests-final.log",
+      "sha256": "1b6c0fcafc2aa29baf6981d1bed7dea7c3dd7464d37d20e9b89d71ab83b3e174"
+    },
+    "node-tests-final.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/node-tests-final.log",
+      "sha256": "06ececccca69039e5b48ee867cda67a5a24db3511e1cac1173e0a08b9a8b88da"
+    },
+    "python-gzip-verified.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/python-gzip-verified.log",
+      "sha256": "e42e5f2e9d30f660b436129771ff6bb8b6734e80a461d9dc01b01a53d67b9add"
+    },
+    "node-final-verified.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/node-final-verified.log",
+      "sha256": "33a5138b8246867a23f1be8e77890e9493ad91a35313ab7da17ba13988ef0d52"
+    },
+    "historical-tie-tests.log": {
+      "path": "out/G5-mixed-reference-qualification-r1/historical-tie-tests.log",
+      "sha256": "4c350ffe66d91d3f8d5db6340c5269edf447da0dc018371bf8227efb71ce81ae"
+    }
+  },
+  "final_fresh_status": {
+    "Node": {
+      "pass": 7,
+      "fail": 0
+    },
+    "Python": {
+      "pass": 6,
+      "fail": 0
+    },
+    "native_micro": "oldhelperRED/newhelperGREEN andactualmappernegative6PASS"
+  }
+}

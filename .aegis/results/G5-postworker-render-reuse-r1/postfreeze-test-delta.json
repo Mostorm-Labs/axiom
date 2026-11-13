@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "path": "runtime/render/tests/postworker_render_reuse_test.cpp",
+      "sampled_sha256": "896b9b87ed5a14d9e3f118f170ace994b9f07ce5da907eae6c34570b02c35206",
+      "current_sha256": "7753609089a886d596cc0bd93d073a8c0e203ab0ae99c0597bca8b5eb2d02278",
+      "classification": "TEST_ONLY_POSTFREEZE"
+    }
+  ],
+  "production_drift": false,
+  "reason": "Strengthen same seven frozenRR2material variants after control read-only review: warm original aliases, assert work invalidation or equal-allocation hit, independent original pixels; no SDK/production rebuild or resampling needed."
+}

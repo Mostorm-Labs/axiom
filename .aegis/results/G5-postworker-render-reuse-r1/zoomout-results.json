@@ -1,0 +1,245 @@
+{
+  "rows": [
+    {
+      "row": "append-zoom-out-immediate",
+      "rows": [
+        {
+          "role": "BASELINE",
+          "status": "OBSERVED",
+          "up_handler_ms": 2.399999976158142,
+          "up_to_first_wheel_ms": 97.89999997615814,
+          "input_queue_ms": [
+            97.89999997615814,
+            87.59999995231556,
+            71.39999995231665,
+            55.000000023841494,
+            38.40000004768444,
+            21.899999976158142
+          ],
+          "wheel_handlers_ms": [
+            1.3000000715255737,
+            0.5,
+            0.30000007152557373,
+            0.10000002384185791,
+            0.19999992847442627,
+            0.10000002384185791
+          ],
+          "first_GL_proxy_after_first_wheel_ms": 8815.200000047684,
+          "complete_camera_canonical_feedback_ms": 8831,
+          "feedback_readback_ms": 50.300000071525574,
+          "up_to_settled_ms": 9014.399999976158,
+          "canonical_final_after_first_wheel_ms": 8916.5,
+          "camera": {
+            "scale": 1.2750000953674316,
+            "x": -62.75006103515625,
+            "y": -26.25
+          },
+          "expectedCamera": {
+            "scale": 1.275,
+            "x": -62.75,
+            "y": -26.25
+          },
+          "errors": [],
+          "closed": true,
+          "source": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-BASELINE/append-zoom-out-immediate/raw.json"
+        },
+        {
+          "role": "CANDIDATE",
+          "status": "OBSERVED",
+          "up_handler_ms": 2.5999999046325684,
+          "up_to_first_wheel_ms": 99.40000009536743,
+          "input_queue_ms": [
+            99.40000009536743,
+            88.40000002384113,
+            72.0000000953678,
+            55.60000004768335,
+            39.0000000715263,
+            22.700000047683716
+          ],
+          "wheel_handlers_ms": [
+            1.0999999046325684,
+            0.30000007152557373,
+            0.2999999523162842,
+            0.10000002384185791,
+            0.3999999761581421,
+            0.20000004768371582
+          ],
+          "first_GL_proxy_after_first_wheel_ms": 8910.199999928474,
+          "complete_camera_canonical_feedback_ms": 8926.299999952316,
+          "feedback_readback_ms": 51.200000047683716,
+          "up_to_settled_ms": 9112.400000095367,
+          "canonical_final_after_first_wheel_ms": 9013,
+          "camera": {
+            "scale": 1.2750000953674316,
+            "x": -62.75006103515625,
+            "y": -26.25
+          },
+          "expectedCamera": {
+            "scale": 1.275,
+            "x": -62.75,
+            "y": -26.25
+          },
+          "errors": [],
+          "closed": true,
+          "source": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-CANDIDATE/append-zoom-out-immediate/raw.json"
+        }
+      ],
+      "paired_pixels": {
+        "feedback": {
+          "baseline_sha256": "18fac8b973e794a8ddb729f96f5283b0386639ecb08b53ac2b9959da6d0779c0",
+          "candidate_sha256": "bebdf67e32ca5f6ecc16469fd06111a928a95100b73d887026bda9c0b713a478",
+          "exact_equal": false,
+          "changed_channels": 6,
+          "maximum_difference": 2,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        },
+        "final": {
+          "baseline_sha256": "18fac8b973e794a8ddb729f96f5283b0386639ecb08b53ac2b9959da6d0779c0",
+          "candidate_sha256": "bebdf67e32ca5f6ecc16469fd06111a928a95100b73d887026bda9c0b713a478",
+          "exact_equal": false,
+          "changed_channels": 6,
+          "maximum_difference": 2,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        },
+        "redo": {
+          "baseline_sha256": "5d3df80be87b6b94496c8518c7b71747f67266d57f5ef8e17d94bbe34ecfe69b",
+          "candidate_sha256": "8230b62b5fa70fc9cb1b2e83a656b6424127f39cdbfa6d07a4edf096e7f6372d",
+          "exact_equal": false,
+          "changed_channels": 5,
+          "maximum_difference": 1,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        }
+      },
+      "paired_snapshot_byte_equal": true,
+      "snapshots": [
+        "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+        "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac"
+      ],
+      "all3_operations_byte_equal": true,
+      "reference": "initial10s misconfigured attempts preserved; corrected original reference completed35.7s each; zoomout-independent-pixels.json",
+      "earliest_retained_LOD_feedback": "NOT_QUALIFIED; measured feedback is fullcamera after6wheels canonical onFrame only",
+      "classification": "NO_MATERIAL_IMPROVEMENT_AND_ORIGINAL_PIXEL_FINDING"
+    },
+    {
+      "row": "partial-erase-zoom-out-immediate",
+      "rows": [
+        {
+          "role": "BASELINE",
+          "status": "OBSERVED",
+          "up_handler_ms": 171.20000004768372,
+          "up_to_first_wheel_ms": 26.299999952316284,
+          "input_queue_ms": [
+            26.299999952316284,
+            15.199999976157414,
+            -2.384149411227554e-8,
+            1.2999999761577783,
+            1.4000000476844434,
+            1.2000000476837158
+          ],
+          "wheel_handlers_ms": [
+            0.40000009536743164,
+            0.30000007152557373,
+            0.20000004768371582,
+            0.5,
+            0.19999992847442627,
+            0.2999999523162842
+          ],
+          "first_GL_proxy_after_first_wheel_ms": 8781,
+          "complete_camera_canonical_feedback_ms": 8795.600000023842,
+          "feedback_readback_ms": 43,
+          "up_to_settled_ms": 8900,
+          "canonical_final_after_first_wheel_ms": 8873.700000047684,
+          "camera": {
+            "scale": 1.2750000953674316,
+            "x": -62.75006103515625,
+            "y": -26.25
+          },
+          "expectedCamera": {
+            "scale": 1.275,
+            "x": -62.75,
+            "y": -26.25
+          },
+          "errors": [],
+          "closed": true,
+          "source": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-BASELINE/partial-erase-zoom-out-immediate/raw.json"
+        },
+        {
+          "role": "CANDIDATE",
+          "status": "OBSERVED",
+          "up_handler_ms": 172.70000004768372,
+          "up_to_first_wheel_ms": 26.100000023841858,
+          "input_queue_ms": [
+            26.100000023841858,
+            14.500000047682988,
+            0.1000000000003638,
+            3.899999999999636,
+            1.5999999761588697,
+            2.299999952316284
+          ],
+          "wheel_handlers_ms": [
+            0.3999999761581421,
+            0.19999992847442627,
+            0.2999999523162842,
+            0.5,
+            0.30000007152557373,
+            0.20000004768371582
+          ],
+          "first_GL_proxy_after_first_wheel_ms": 8731.399999976158,
+          "complete_camera_canonical_feedback_ms": 8758.5,
+          "feedback_readback_ms": 43.10000002384186,
+          "up_to_settled_ms": 8862,
+          "canonical_final_after_first_wheel_ms": 8835.899999976158,
+          "camera": {
+            "scale": 1.2750000953674316,
+            "x": -62.75006103515625,
+            "y": -26.25
+          },
+          "expectedCamera": {
+            "scale": 1.275,
+            "x": -62.75,
+            "y": -26.25
+          },
+          "errors": [],
+          "closed": true,
+          "source": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-CANDIDATE/partial-erase-zoom-out-immediate/raw.json"
+        }
+      ],
+      "paired_pixels": {
+        "feedback": {
+          "baseline_sha256": "647a116c3d230887ee28794e348ef4fe9fb2a9e26b66d36f258c2d182b401db1",
+          "candidate_sha256": "8e132e98161fa6f88db9c4dddbb3dedb0c471d70195fe66a63216fcc88662d79",
+          "exact_equal": false,
+          "changed_channels": 6,
+          "maximum_difference": 1,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        },
+        "final": {
+          "baseline_sha256": "647a116c3d230887ee28794e348ef4fe9fb2a9e26b66d36f258c2d182b401db1",
+          "candidate_sha256": "8e132e98161fa6f88db9c4dddbb3dedb0c471d70195fe66a63216fcc88662d79",
+          "exact_equal": false,
+          "changed_channels": 6,
+          "maximum_difference": 1,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        },
+        "redo": {
+          "baseline_sha256": "06a0a725a33f3ec04c11087f4c0037ea831eb59c99ec131df44e2f7f2231c587",
+          "candidate_sha256": "0193eeb5857836e19fc3e8623afadf0041e068a73dd9760bd7d336d199719b8a",
+          "exact_equal": false,
+          "changed_channels": 9,
+          "maximum_difference": 2,
+          "independent_oracle": "zoomout-independent-pixels.json corrected original reference; paired equality cannot substitute"
+        }
+      },
+      "paired_snapshot_byte_equal": true,
+      "snapshots": [
+        "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+        "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe"
+      ],
+      "all3_operations_byte_equal": true,
+      "reference": "initial10s misconfigured attempts preserved; corrected original reference completed35.7s each; zoomout-independent-pixels.json",
+      "earliest_retained_LOD_feedback": "NOT_QUALIFIED; measured feedback is fullcamera after6wheels canonical onFrame only",
+      "classification": "NO_MATERIAL_IMPROVEMENT_AND_ORIGINAL_PIXEL_FINDING"
+    }
+  ],
+  "not_overall_performance_PASS": true
+}

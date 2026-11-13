@@ -1,0 +1,88 @@
+{
+  "schema": "axiom-idle-diagnostic-scoped-control-review-v1",
+  "created_utc": "2026-11-13T08:31:01.465317+00:00",
+  "authority": {
+    "path": ".aegis/packages/G5-idle-input-feedback-diagnostic-r1/package.json",
+    "sha256": "6720ee60d3fe8892c853d2d8a015894e0fd62f7f929441013ccad0fac76d35ca"
+  },
+  "subject": {
+    "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/result.json",
+    "sha256": "9291ab707e1fe06f67192bd08771be7aa9f6da809b020e9ec9027152b4614cc5"
+  },
+  "verdict": "ACCEPT_FINITE_NO_REPRODUCTION_WITH_LIMITS_KEEP_USER_DEFECT_OPEN",
+  "scope": "Independent review of diagnostic return, no official Gate/fix/performance acceptance",
+  "obligations": {
+    "IF1": "Finite stable control data sufficient to show sampled preview/commit progression; root failure not reproduced. Sparse frames do not prove absence between them.",
+    "IF2": "Real1200003ms same-doc visible interval and same target/generation/objects proven. Strict no-runtime-RAF failed29callbacks, zeroGLwrites; causaltrigger unknown. PhysicalOSfrontmost unqualified. Preserve BLOCKED_EVIDENCE forstrictidle rather than waiver.",
+    "IF3": "Distinct observed identities and capped events, actualnoinput/framefailure; neitherhandoff norcatch-stopped-RAF cause established. Latesthumanactiveerasurehistory missing fromruntime; persistedmasksource doesnot replaceit.",
+    "IF4": "Fourstarts1269seconds, failedinitialization+corrective+short+idle preserved, source/SDK no drift, allownedcleanup. Old4333 unchanged. No productionbehaviorfix/commit/push."
+  },
+  "independent_audit": {
+    "evidence_refs": 14,
+    "artifacts": 167,
+    "source_files": 10,
+    "ordinarySDK_assets": 42,
+    "diagnosticSDK_assets": 42,
+    "mismatches": [],
+    "fresh_Node": {
+      "passed": 4,
+      "failed": 0
+    },
+    "fresh_Python": {
+      "passed": 3,
+      "failed": 0
+    },
+    "reviewed_native_log": {
+      "passed": 7,
+      "failed": 0
+    },
+    "private_observation_delta": "Onlytwo guardedmacrolines+8displayevents+3webadapterevent/include lines, normalOFF noargs. MixedEOLpreserved.",
+    "review_refs": [
+      {
+        "path": ".aegis/results/G5-idle-input-feedback-control-r1/result-binding-audit.json",
+        "sha256": "7fa71a36d74b7f83e0d73d04b186812ae3fd07bcff6682d7e7819ca48bfc7107"
+      },
+      {
+        "path": ".aegis/results/G5-idle-input-feedback-control-r1/short-controls-independent.json",
+        "sha256": "239721b2d864edce0e5831666f047096a77e048676cb42e11665427429ba55df"
+      },
+      {
+        "path": ".aegis/results/G5-idle-input-feedback-control-r1/short-pixels-independent.json",
+        "sha256": "dd3ba21ee5e3e008bf36f13e4407fbb0886e81b3e79ed32e830424c4a7049f5b"
+      },
+      {
+        "path": ".aegis/results/G5-idle-input-feedback-control-r1/observation-source-review.json",
+        "sha256": "d74051dc30cda51378de6dd57375afe13925dbbb1c5ad8a6c77dc880edc84e0f"
+      },
+      {
+        "path": ".aegis/results/G5-idle-input-feedback-control-r1/twentyminute-independent.json",
+        "sha256": "1926f560a10994ca477106e5d68347a7803ce77aa96643f43881173d93267735"
+      }
+    ]
+  },
+  "actualfindings": {
+    "new_Operations": 6,
+    "new_strokes": 4,
+    "transforms": 2,
+    "final_objects": 44,
+    "rooterrors": 0,
+    "inputrejections": 0,
+    "framerejections": 0,
+    "ringloss": 0,
+    "original_bodies_masks_preserved": true,
+    "restored_masks": 80,
+    "segments_each": 32,
+    "no_idle_state_loss_seen": true
+  },
+  "remaining": [
+    "Actualuser22objectdocument and dynamic repeatedpartialerase history not reproduced",
+    "No same-instant canonical+displayidentity foruserblank",
+    "29naturalframes origin unrecorded",
+    "Sparsefeedbacksamples/readback overhead blockfirstfeedbacklatency assertions",
+    "Requesteddrag displacements affectedby original snapping, no strictidenticalposeperformancepair"
+  ],
+  "user_defect_status": "OPEN_UNLOCALIZED",
+  "production_behavior_fixed": false,
+  "G5_P34_performance_release_PASS": false,
+  "next_scope": "New narrowlyauthorized diagnostic should reproduce active consecutiveerase->pending/settled nextdraw/drag in same runtime. No further20minwait or generalperformance/circlefix justified. Humanhas authorizedcontinuedlocalization; anysuccessorhasitsownfrozenpackage, notoldpackageextension."
+}

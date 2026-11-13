@@ -1,0 +1,125 @@
+{
+  "schema": "axiom-live-erase-feedback-result-v1",
+  "task_id": "G5-live-erase-input-feedback-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "diagnosis": "FINITE_NO_REPRODUCTION_WITH_PENDING_DRAW_COVERAGE",
+  "package": {
+    "path": ".aegis/packages/G5-live-erase-input-feedback-r1/package.json",
+    "sha256": "20465f205a71f162055b3354f869e638d98ed6025f03b6cb934ff3a0b0cdd113"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "materialization": "same-repository shared-controlled-worktree exactnewfiles/results; no commit",
+  "obligations": {
+    "LE1": "bothrequiredwindowscompleted; actualerasependingdrawcovered; pendingdragmissrecorded",
+    "LE2": "actualinput/semantic/finitepixels/privateeventchainpresent; rootcauseunproven; aggregate3682dropsexplicit",
+    "LE3": "54sources/84assets/oldIFevidencepreserved; actualmask/bodychecks; no productionedit/build; cleanupcomplete"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/preflight.json",
+      "sha256": "3204dcc4ccf663ff7d8c5f34d549c34397cd89d3de5a9772b5d30d43fb7324f1"
+    },
+    "diagnostic-plan.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/diagnostic-plan.json",
+      "sha256": "e4db9f94182c90b4c0bc1f8c30dde97902d456d82aa79cdd3fc6058895dcc94c"
+    },
+    "inputs.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/inputs.json",
+      "sha256": "f942281c26d27272c737608bdba5b2389734e9e4a078df0f2b9489c33b0e115b"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/SDK-manifest.json",
+      "sha256": "90f2949ea98c5ccdde2aab84322f6806c4f23bfb4043d606e6b3492d05059f36"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/source-manifest.json",
+      "sha256": "9eab48ca4fc2c523e12106edab01e9c551565112a4494b07fb121d0c4a9d217a"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/sampling-ledger.json",
+      "sha256": "c573206c622760761f8a870582a5e77481b99124afb36963e5603021935cbf79"
+    },
+    "LE-ORDINARY-observation.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/LE-ORDINARY-observation.json",
+      "sha256": "eefe7a216eeb29004c0ae8f7119ccf552aba7a50a85d5299c10ecde492cff15f"
+    },
+    "LE-DIAGNOSTIC-observation.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/LE-DIAGNOSTIC-observation.json",
+      "sha256": "d3823ff13316588ac5e56326809b97d7982a86f37bee85b537288be3d5e2a3ad"
+    },
+    "causal-analysis.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/causal-analysis.json",
+      "sha256": "e8dcb7daddbca779e43ffed750e3d2c708c54203ecb8f3892aa3797048cec661"
+    },
+    "tests.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/tests.json",
+      "sha256": "bf7e6b5b48b8c272bdb4c28acc846c91953a71de1654e2050822aacac7d8fb8c"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/preservation-check.json",
+      "sha256": "7042bb02a64112aa4f7214062f413b5d919978901820114c2d838b24042281fa"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/cleanup.json",
+      "sha256": "7a87985bc83824dd3889d53aa166a554387c72d5613ab663232f08972eeff0e6"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-live-erase-input-feedback-r1/artifact-manifest.json",
+      "sha256": "6b2fbc820db84c4bd554aa892e76f9c61f0957ea17abcf5b7a34bf7e4cd232d0"
+    }
+  },
+  "summary": {
+    "each_window": {
+      "nonNoop_erases": 3,
+      "erase_targets_each": 40,
+      "new_masks": 120,
+      "new_segments": 19200,
+      "new_strokes": 3,
+      "transforms": 3,
+      "final_objects": 43,
+      "operations": 9,
+      "input_rejections": 0,
+      "frame_rejections": 0,
+      "root_errors": 0,
+      "critical_ring_loss": 0
+    },
+    "ordinary_repeat_aggregate_drop": 0,
+    "diagnostic_repeat_aggregate_drop": 3682,
+    "actual_pause_ms": [
+      60005.09999990463,
+      60005.39999997616
+    ],
+    "same_original_drag_ID": "80202ea91a27b2511dd5fd34cf6c40a5",
+    "new_Node_tests": 4,
+    "new_Python_tests": 3
+  },
+  "limits": {
+    "starts_used": 2,
+    "starts_cap": 3,
+    "charged_seconds": 212,
+    "seconds_cap": 720,
+    "remaining_seconds": 508,
+    "remaining_starts": 1,
+    "remaining_start_authorization": "correctiveonlyforconcretefault; no faultneedsone, so stop",
+    "builds": 0,
+    "twenty_minute_windows": 0
+  },
+  "known_gaps": [
+    "actualerasependingdragnotexercised",
+    "naturaluserfailure/user22documentnotreproduced",
+    "sparsemove16/32pixelsarenotcontinuoushandofforfirstphoton",
+    "sameopaquegeometryoverlaprequiresOperation+amber, notjustblackdifference",
+    "diagnosticrepeatedtelemetry3682lost; criticalrings0doesnotrecovermissingfence/previewbranches",
+    "GLerrorqueuenotconsumed; unavailableerrorqualificationexplicit",
+    "nofullsceneCPUoracle/newAA/performancequalification"
+  ],
+  "user_defect": "OPEN",
+  "production_behavior_repair": false,
+  "no_G5_P34_performance_PASS": true,
+  "next_proposal_ref": "causal-analysis.json/minimum_next_proposal",
+  "terminal": "STOP_FINITE_DIAGNOSIS_COMPLETE",
+  "no_commit_push": true,
+  "normal_Demo_URL_unchanged": "http://127.0.0.1:4333/example.html"
+}

@@ -223,7 +223,15 @@ int main(int argc,char** argv){
             for(const auto sides:{std::array{a.leftControl,a.leftEnd,b.leftStart,b.leftControl},std::array{a.rightControl,a.rightEnd,b.rightStart,b.rightControl}}){
                 const auto u=ink::ContourPoint{sides[1].x-sides[0].x,sides[1].y-sides[0].y};
                 const auto v=ink::ContourPoint{sides[3].x-sides[2].x,sides[3].y-sides[2].y};
-                require(sides[1]==sides[2]&&std::abs(u.x*v.y-u.y*v.x)<1e-8,"outline has tangent discontinuity");}}
+                require(sides[1]==sides[2],"outline has a disconnected boundary");
+                if(std::abs(u.x*v.y-u.y*v.x)>=1e-8){
+                    // A round node can join the two one-sided contours at a
+                    // sharp reversal. Smooth spans still require tangent parity;
+                    // non-C1 boundaries must be inside an actual connected node.
+                    bool roundNode=false;for(const auto& cap:fitted.caps)
+                        roundNode=roundNode||std::hypot(sides[1].x-cap.x,sides[1].y-cap.y)<=cap.radius+1e-8;
+                    require(roundNode,"smooth outline has tangent discontinuity outside a round join");
+                }}}
         const auto image=draw(c,jitter);double roughness=0;std::vector<double> edge;
         for(unsigned x=35;x<210;++x){unsigned first=0;for(unsigned y=15;y<110;++y)if(alpha(image,x,y)>=128){first=y;break;}
             const auto a=first?alpha(image,x,first-1):0,b=alpha(image,x,first);edge.push_back(first-1+(127.5-a)/std::max(1.,double(b)-a));}

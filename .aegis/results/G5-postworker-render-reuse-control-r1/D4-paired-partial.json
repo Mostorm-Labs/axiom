@@ -1,0 +1,55 @@
+{
+  "schema": "axiom-render-reuse-independent-D4-partial-observation-v1",
+  "created_utc": "2026-11-13T03:59:01.020407+00:00",
+  "rows": [
+    {
+      "status": "OBSERVED",
+      "A_down_to_up_ms": 159544.10000002384,
+      "up_to_drain_ms": 28293.399999976158,
+      "followup_erase_ms": 17481.100000023842,
+      "masked_selection_ms": 83.29999995231628,
+      "id": "RR-D4-BASELINE",
+      "source_path": "out/G5-postworker-render-reuse-r1/web/RR-D4-BASELINE/raw.json",
+      "source_sha256": "6405a8909a643a417e5bd26df736836b1e02b1635dbb1fe56cd4bb9f99d9c748",
+      "C_first_job_issue_after_Up_ms": 6181.199999928474,
+      "C_last_job_terminal_after_Up_ms": 6905.599999904633,
+      "C_after_last_terminal_until_settled_ms": 10574.700000047684,
+      "C_job_envelope_total_ms": 78.00000047683716,
+      "C_compute_total_ms": 70.19999980926514,
+      "C_worst_RAF_ms": 6181.100000023842,
+      "all_worst_RAF_ms": 6262.200000047684,
+      "operation_count": 5,
+      "errors": [],
+      "closed": true
+    },
+    {
+      "status": "OBSERVED",
+      "A_down_to_up_ms": 11373.300000071526,
+      "up_to_drain_ms": 13736.299999952316,
+      "followup_erase_ms": 11566,
+      "masked_selection_ms": 85.29999995231628,
+      "id": "RR-D4-CANDIDATE",
+      "source_path": "out/G5-postworker-render-reuse-r1/web/RR-D4-CANDIDATE/raw.json",
+      "source_sha256": "45ba3861bf5ff0145f06e01d6e0e457db36c7f89570eff13ce96651c0ecc3d88",
+      "C_first_job_issue_after_Up_ms": 11.399999976158142,
+      "C_last_job_terminal_after_Up_ms": 949.6000000238419,
+      "C_after_last_terminal_until_settled_ms": 10615.799999952316,
+      "C_job_envelope_total_ms": 208.10000026226044,
+      "C_compute_total_ms": 78.700000166893,
+      "C_worst_RAF_ms": 83.09999990463257,
+      "all_worst_RAF_ms": 2530.3000000715256,
+      "operation_count": 5,
+      "errors": [],
+      "closed": true
+    }
+  ],
+  "limits": [
+    "One paired sequence, not statistical qualification.",
+    "Input wall times materially differ due to production work between identical Move facts. No attribution to code alone beyond actual causal tests.",
+    "Primary4snapshots byte-equality, original replay and independent pixels still to review.",
+    "Does not qualify immediate zoomout or first correct feedback; those windows pending.",
+    "No GPU hardware-duration or physical display-latency claim.",
+    "C post-result wait remains roughly10.6s even though first synchronous transient block shrank."
+  ],
+  "status": "PARTIAL_EVIDENCE_NOT_FINAL_REVIEW"
+}

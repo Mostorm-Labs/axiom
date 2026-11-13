@@ -1,0 +1,35 @@
+{
+  "status": "HYPOTHESES_FROZEN_BEFORE_PRODUCTION_EDIT",
+  "retained_C": {
+    "path": ".aegis/results/G5-postworker-render-reuse-control-r1/retained-C-attribution.json",
+    "sha256": "2654e51ea723790261917c12746450fa293a7d429df69aa0d993ea12d846b89c"
+  },
+  "hypotheses": [
+    {
+      "path": "transient",
+      "prediction": "warm same-basis erase should reuse completed canonical material without new body coverage; cold miss must yield inside existing aggregate allowance before provider write",
+      "old_chain": [
+        "SkiaRenderer::renderTransientOverlay releaseMaterialSources",
+        "SkiaRenderCache::drawTransientScene resetPreparation",
+        "SkiaRenderCache::drawDamagedInk synchronous miss"
+      ]
+    },
+    {
+      "path": "canonical",
+      "prediction": "duplicate content/pose/history with identical device basis should rasterize unique material once; copies still blend independently in original order",
+      "old_chain": [
+        "prepare admission counts allocation per object",
+        "entries_ ObjectId-only",
+        "CompactStrokeRasterJob per duplicate"
+      ]
+    }
+  ],
+  "not_claimed": [
+    "all617 attempts are wasted",
+    "GPU hardware duration",
+    "Worker transport is long tail"
+  ],
+  "RED_pending": false,
+  "validation": "red-green.json",
+  "conclusion": "SCOPED_WORK_REDUCTION; mixedzoomunchanged; postWorkerC~10.6s remains"
+}

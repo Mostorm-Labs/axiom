@@ -1,0 +1,18 @@
+--- runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp accepted-before
++++ runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp diagnostic-after
+@@ -124,6 +124,7 @@
+     }
+ };
+ }
++#define AXIOM_IF_EVENT(format,...) std::fprintf(stderr,"AXIOM_IF_EVENT t_ns=%llu " format "\n",static_cast<unsigned long long>(::canvas::foundation::internal::frame_timing::now()),__VA_ARGS__)
+ #define AXIOM_FRAME_TIMING_BEGIN(...) ::canvas::foundation::internal::frame_timing::Attempt axiomFrameTiming{__VA_ARGS__}
+ #define AXIOM_FRAME_TIMING_OUTCOME(value) axiomFrameTiming.outcome(value)
+ #define AXIOM_FRAME_TIMING_SCOPE(name,stage) ::canvas::foundation::internal::frame_timing::Scope name{::canvas::foundation::internal::frame_timing::Stage::stage}
+@@ -131,6 +132,7 @@
+ #define AXIOM_FRAME_TIMING_ADD(counter,value) ::canvas::foundation::internal::frame_timing::add(::canvas::foundation::internal::frame_timing::Counter::counter,value)
+ #define AXIOM_FRAME_TIMING_SET(counter,value) ::canvas::foundation::internal::frame_timing::set(::canvas::foundation::internal::frame_timing::Counter::counter,value)
+ #else
++#define AXIOM_IF_EVENT(...) ((void)0)
+ #define AXIOM_FRAME_TIMING_BEGIN(...) ((void)0)
+ #define AXIOM_FRAME_TIMING_OUTCOME(value) ((void)0)
+ #define AXIOM_FRAME_TIMING_SCOPE(name,stage) ((void)0)

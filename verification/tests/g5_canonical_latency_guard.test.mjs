@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';
+import{freezeKnownResidual,regressionGuard}from'../runners/g5/canonical_latency_guard.mjs';
+const expected=Uint8Array.from([255,255,255,255,10,20,30,255,200,210,220,255]);const baseline=expected.slice();baseline[0]=10;const edge=Uint8Array.of(0,0,0);const basis={snapshot:'full',camera:[1,0,0],image:'sha',source:'unchanged'};const known=freezeKnownResidual(baseline,expected,edge,{count:1,basis});
+test('known baseline remains explicit open image qualification',()=>{assert.equal(regressionGuard(baseline,baseline,expected,edge,known,basis).status,'SCOPED_NO_NEW_REGRESSION');assert.match(known.scope,/open/);});
+test('changing known image color fails without growing accepted set',()=>{const a=baseline.slice();a[1]-=10;const r=regressionGuard(a,baseline,expected,edge,known,basis);assert.equal(r.status,'FAILED');assert.equal(r.changed_known_pixels,1);});
+test('new interior difference fails despite previous known image hole',()=>{const a=baseline.slice();a[4]+=30;const r=regressionGuard(a,baseline,expected,edge,known,basis);assert.equal(r.status,'FAILED');assert.equal(r.new_residual_pixels,1);});
+test('foreign image camera snapshot or edge basis rejects',()=>{assert.throws(()=>regressionGuard(baseline,baseline,expected,edge,known,{...basis,image:'foreign'}),/basis/);const wrong=edge.slice();wrong[1]=1;assert.throws(()=>regressionGuard(baseline,baseline,expected,wrong,known,basis),/basis/);});
+test('count mismatch cannot freeze enlarged residual set',()=>{assert.throws(()=>freezeKnownResidual(baseline,expected,edge,{count:2,basis}),/residual/);});

@@ -1,0 +1,67 @@
+{
+  "status": "FROZEN_REFERENCE_QUALIFICATION_VERIFICATION",
+  "obligations": [
+    {
+      "id": "MQ1",
+      "requirement": "Identify each retained mixed-scene reference mismatch through independent material geometry and resource realization.",
+      "invariant": "True interiors remain strictly compared; actual geometry/paint cannot disappear under arbitrary exclusions.",
+      "failure_mode": "A false referenceboundary or sampling exemption can hide missing/wrongmaterial, wrongpose, wrongresource ormask corruption.",
+      "existing_independent_coverage": "OriginalOperationEngine replay andpurev4finalCPU pixels pass; affectednativeRender tests pass. Existingmixedoldreferencefails4325onbothbaselineandcandidate anddoesnotmarkTable/Stickymaterialboundaries. Pairedagreementalone cannot detect common-modewrongoutput.",
+      "residual_gap": "Need independently correct boundary andimageexpectations for the capturedactualWebmixedoutput.",
+      "oracle": "TypedSnapshot decode; oldpinnedCPU pixels; independent boundary pathgeneration from sourcegeometry/paint andfixeddevicebasis; PNGdecodedsource/f32sourcecoordinate analysis independentofcandidatecolors. Freeze eligibility before inspecting actualcolors.",
+      "acceptance": "Reproduce original4325 with retainedinputs. Classify all attributions as independentlyproven/remainingunknown. Confirm emptylabels/celltext or explicitly record unsupportedtext. Newedgegeometrymustnot use candidatepixels/diff locations andmustretain exactold2devicepixel construction/exterior<=2rule. Preserveoriginalfailed evidence.",
+      "blocking_justification": "This is the exactRR3unclosedoutputproof; noexistingindependentfullmixedmechanismdetects the coveredfalseoutput failures.",
+      "evidence_required": [
+        "attribution.json",
+        "reference-design.json",
+        "input-manifest.json"
+      ]
+    },
+    {
+      "id": "MQ2",
+      "requirement": "Repair only evidenced reference omissions and prove that the corrected acceptance still rejects material errors.",
+      "invariant": "Referenceexpectedsets depend only on canonical/source/backend realization, never actualcandidate outcome.",
+      "failure_mode": "OverwideAA masks or unrestrictedadjacent imagechoices make incorrect contentpass.",
+      "existing_independent_coverage": "ExistingcomparePixels strictboundarypolicy andliteralimageTie negatives; these do not prove newlycoveredTable/Sticky boundaries orcurrentf32samplingdomain.",
+      "residual_gap": "Need minimalactualhelperRED plus independentlychosennegativeoracles fornewacceptancecomponents.",
+      "oracle": "Smallactualboundaryhelper path/inside-outside tests using knowncanonicalgrid/fill/stroke; field/pose/stroke/grid mutation cases andalteredinteriorcolor/omission. ExistingexactrationalPNG/IEEEtests plussupportednewf32domainifused; noauthoritativeimagechoicefromfitting differences.",
+      "acceptance": "OldhelperRED identifies missingtrueboundaries; newhelperGREEN withunchangedspatialwidth. Negativebadinteriorcolor, omittedgrid, non-AAposechangesandbadimagecrop/resource/colormustrejectwhereapplicable; unsupportedtransforms/precisionfailclosed. Imageambiguityrulemustbeexplicitandjustifydiscretechoicesfrompinnedarithmetic; ifunprovenleaveunqualifiedratherthantuneepsilon. Do not testonlymocks/implementationmirrors.",
+      "blocking_justification": "The neworacleitself is materialtoRR3andotherwisecouldhidewrongpixels; minimalnegativetests uniquelydetectover-permissiveacceptance.",
+      "evidence_required": [
+        "red-green.json",
+        "negative-cases.json",
+        "source-delta-manifest.json"
+      ]
+    },
+    {
+      "id": "MQ3",
+      "requirement": "Re-evaluate the twelve saved mixed images honestly with the corrected reference and unchanged production.",
+      "invariant": "Qualifiedmixedpixelsrequirezero unexplainedinterior mismatches under independentlydefinedcurrentcamera/materialbasis.",
+      "failure_mode": "A partialcorrectionis misreported ascompletepixelorperformancequalification.",
+      "existing_independent_coverage": "Originaltwelvefailed comparisons andexactcapturedsource/SDK/snapshots/images/resourcesremainavailable.",
+      "residual_gap": "Alltwelvesavedoutputs needcorrected independent comparison orprecisepartialverdict.",
+      "oracle": "Union originaledge map withsupplementalindependentactualmaterialboundaries only; unchangedoriginalCPU referenceRGBA; provenimageexpectedsets ifqualified. Sameimagebytes/snapshot/camera/DPR/sourceorder. Comparefullimage, notonlypreviousmismatches.",
+      "acceptance": "Everycapturedrow/role/feedback-final-redo hasrawandcorrectedcounts/witnesses/basis,strictcomparedareaandnewedgearea. READY_FOR_CONTROL_REVIEW onlyifallunexplaineddifferences0andMQ1/2hold. Otherwise returnPARTIAL/BLOCKED_EVIDENCE withremainingpixelclassandwhywithoutnewprodwork. PriorRRresultisnotrewritten; noinferenceaboutlatency/earliestLOD/G5.",
+      "blocking_justification": "CarriesactualRR3failureoutputstothecorrectedreferencewithoutrequiringnewmatrix.",
+      "evidence_required": [
+        "pixel-comparisons.json",
+        "result.json",
+        "artifact-manifest.json",
+        "preservation-check.json"
+      ]
+    }
+  ],
+  "blocking": [
+    "MQ1",
+    "MQ2",
+    "MQ3"
+  ],
+  "corroborative": [
+    "performanceimprovement",
+    "earliestLOD",
+    "alltext/image/backend/brush/platformsupport",
+    "nativefullscenePixelrerender"
+  ],
+  "hosted_required": [],
+  "test_scope": "Newactualhelperbehavior/negative tests and affectedverificationcompare tests. Reuse prior26native/17Node/5Python/120boundary evidence becauseallproductionbyteidentical; nofullre-run. Noexistinghistoricaltestchange merelytoavoidfailures. Explicitly retainSkipifhistoricalfixturepruned, newtestsuseavailablecurrentcorpus."
+}

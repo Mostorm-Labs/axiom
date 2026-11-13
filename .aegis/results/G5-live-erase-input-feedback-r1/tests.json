@@ -1,0 +1,17 @@
+{
+  "Node": {
+    "command": "node --test verification/tests/g5_live_erase_feedback.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "log": "out/G5-live-erase-input-feedback-r1/final-node-tests.log"
+  },
+  "Python": {
+    "command": "python3 -m unittest discover -s verification/tests -p test_g5_live_erase_feedback.py",
+    "passed": 3,
+    "failed": 0,
+    "log": "out/G5-live-erase-input-feedback-r1/python-tests.log"
+  },
+  "offline_both_actual_windows": "live_erase_feedback_analyze.py checks originalmask/body +120actualnewmasks/final43objects/9realoperations/inputcallcardinality/actualpixel hashes",
+  "existing_IF_tests": "reused exact hashes; not new native run",
+  "corrective_needed": false
+}

@@ -1,0 +1,45 @@
+{
+  "prior_artifacts_checked": 211,
+  "starting_source_files": 29,
+  "authorized_evolved": [
+    "docs/planning/G5_CPU_WORKER_STATUS.md",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp"
+  ],
+  "unaffected_unchanged": 25,
+  "regression_logs": [
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/final-native-regressions.log",
+      "resolution": "raw",
+      "matches": true
+    },
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/final-node.log",
+      "resolution": "raw",
+      "matches": true
+    },
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/final-public-api.log",
+      "resolution": "raw",
+      "matches": true
+    },
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/final-boundaries.log",
+      "resolution": "raw",
+      "matches": true
+    },
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/body-identity-green2.log",
+      "resolution": "gzip decompressed",
+      "matches": true
+    },
+    {
+      "path": "out/G5-canonical-convergence-latency-r1/guard-tests.log",
+      "resolution": "raw",
+      "matches": true
+    }
+  ],
+  "git_diff_check_exit": 0,
+  "failures": []
+}

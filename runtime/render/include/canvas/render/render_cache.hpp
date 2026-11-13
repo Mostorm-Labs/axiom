@@ -78,6 +78,8 @@ struct RenderCacheWork final {
     std::uint64_t eraseFullFrames=0,eraseDamageFrames=0,eraseDamagePixels=0;
     std::uint64_t bodyTileBuilds=0,bodyTileHits=0,maskTileUpdates=0,maskPrimitiveDraws=0,maskTileResets=0;
     std::size_t inkLayerBytes=0;
+    std::uint64_t bodyPixelBuilds=0,bodyPixelHits=0;
+    std::size_t bodyPixelBytes=0;
     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
     std::size_t retainedBytes=0,entries=0;
     std::uint64_t coverageBuilds=0,coverageHits=0,scratchAllocations=0;

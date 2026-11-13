@@ -1,4 +1,5 @@
 #include "canvas/foundation/internal/g5_observation.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "skia_prepared_geometry.hpp"
 #include "prepared_body_job.hpp"
@@ -97,8 +98,8 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
         support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));}
     exactValidationComplete_=true;
     replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
-    replayOutput_.patches.reserve(replayBlockKnots+replayBlockExtras);replayOutput_.caps.reserve(replayBlockKnots+replayBlockExtras);
-    ink::CompactContourCompiler compiler(stroke.config);std::size_t primitive=0;
+    replayOutput_.patches.reserve(ink::CompactContourCompiler::maxPatches(replayBlockKnots));replayOutput_.caps.reserve(ink::CompactContourCompiler::maxCaps(replayBlockKnots));
+    ink::CompactContourCompiler compiler(stroke.config);replayRibbonCount_=replayCapCount_=0;
     for(std::size_t first=0;first<stroke.knots.size();first+=replayBlockKnots){
         const auto count=std::min(replayBlockKnots,stroke.knots.size()-first);
         auto checkpoint=compiler;replayOutput_.patches.clear();replayOutput_.caps.clear();
@@ -114,17 +115,25 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
             exactDerivedFinite_=exactDerivedFinite_&&path.isFinite();join(path.getBounds());
         }
         for(const auto& cap:replayOutput_.caps){exactDerivedFinite_=exactDerivedFinite_&&exactCapPath(stroke.config,cap).isFinite();join(compactContourCapBounds(cap));}
-        const auto emitted=(replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1)+replayOutput_.caps.size();
-        if(work)work->syncPathPrimitives+=emitted;
-        replay_.push_back({std::move(checkpoint),first,count,primitive,primitive+emitted,bounds});primitive+=emitted;
+        const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
+        const auto caps=replayOutput_.caps.size();
+        if(work)work->syncPathPrimitives+=ribbons+caps;
+        replay_.push_back({std::move(checkpoint),first,count,replayRibbonCount_,replayRibbonCount_+ribbons,replayCapCount_,replayCapCount_+caps,bounds});
+        replayRibbonCount_+=ribbons;replayCapCount_+=caps;
     }
     replayOutput_.patches.clear();replayOutput_.caps.clear();
 }
 std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
+    AXIOM_FRAME_TIMING_SCOPE(selectTiming,prepared_select);
     first=std::min(first,primitiveCount());const auto clip=compactContourCullBounds(canvas,deviceDemand);
     if(!clip)return first;
     if(!replay_.empty()){
-        for(const auto& block:replay_)if(block.last>first&&visibleContour(clip,block.bounds))return std::max(first,block.first);
+        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
+            const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
+            const auto end=pass?replayRibbonCount_+block.capLast:block.last;
+            if(begin==end)continue; // No component in this pass can become visible or need replay.
+            if(end>first&&visibleContour(clip,block.bounds))return std::max(first,begin);
+        }
     }else{
         for(const auto& group:ribbonGroups_)if(group.end>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin);
         for(const auto& group:capGroups_)if(group.end+ribbons_.size()>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin+ribbons_.size());
@@ -143,20 +152,26 @@ std::size_t PreparedNavigationGeometry::footprint()const{
 PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
     G5_SCOPE(g5Work,g5::Tag::geometry_replay,g5::Purpose::none);
 
+    AXIOM_FRAME_TIMING_SCOPE(drawTiming,prepared_draw);
     PreparedGeometryDraw work;if(!contour_)return work;
     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
+    if(first==last)return work;
     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
     const auto clip=compactContourCullBounds(canvas,deviceDemand);
     const auto visible=[&](const SkRect& b){return visibleContour(clip,b);};
     SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode((canvas.recordingContext()||canvas.imageInfo().colorType()==kAlpha_8_SkColorType)?SkBlendMode::kSrcOver:SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
     if(!replay_.empty()){
         const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
-        for(const auto& block:replay_){
-            if(block.last<=first)continue;if(block.first>=last)break;
+        // Match the full compiler's scalar union order. Interleaving caps
+        // between checkpoint ribbons changes integer AA accumulation at self
+        // intersections. Global primitive indices are ribbons, then all caps.
+        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
+            const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
+            const auto end=pass?replayRibbonCount_+block.capLast:block.last;
+            if(begin==end)continue; // No component in this pass can become visible or need replay.
+            if(end<=first)continue;if(begin>=last)break;
             ++work.chunksVisited;if(!visible(block.bounds))continue;
             if(replayOutputBlock_!=&block){
-                // This pointer names a block in this ready immutable body's
-                // pinned vector, never an external source/hash-only identity.
                 replayOutputBlock_=nullptr;
                 replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
                 compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
@@ -165,13 +180,12 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
                 if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
                 replayOutputBlock_=&block;
             }
-            const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
-            for(auto i=std::max(first,block.first);i<std::min(last,block.last);++i){
-                ++work.primitivesTested;const auto local=i-block.first;
-                if(local<ribbons){
+            for(auto i=std::max(first,begin);i<std::min(last,end);++i){
+                ++work.primitivesTested;const auto local=i-begin;
+                if(pass==0){
                     auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(local,2));
                     if(visible(path.getBounds())){canvas.drawPath(path,paint);++work.primitivesDrawn;}
-                }else{const auto& cap=replayOutput_.caps[local-ribbons];
+                }else{const auto& cap=replayOutput_.caps[local];
                     if(visible(compactContourCapBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
             }
         }
@@ -219,6 +233,7 @@ bool PreparedNavigationGeometry::visitExact(const SkRect& demand,
         // Selected checkpoints can therefore replay twice. Count every input;
         // checkpoint mode is never reported as zero compilation.
         for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
+            if(pass?block.capFirst==block.capLast:block.first==block.last)continue;
             ++work.groups;if(!visible(block.bounds))continue;
             replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
             compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
@@ -425,7 +440,6 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
     ink::CompactContour staged;
     resources::ResourceLease stagingLease;
     const bool contour=compact&&compact->content.get().stroke.config.algorithmVersion==4;
-    const auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
     const auto replay=[&]()->std::shared_ptr<const PreparedNavigationGeometry>{
         // Drop optional full-path staging before admitting its compact replacement.
         staged={};stagingLease.reset();
@@ -433,7 +447,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         // no new Brush geometry or larger entry/global budget is admitted.
         constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
         const auto blocks=(count+block-1)/block;
-        const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
+        const auto scratch=ink::CompactContourCompiler::maxPatches(block)*sizeof(ink::ContourPatch)+ink::CompactContourCompiler::maxCaps(block)*sizeof(ink::ContourCap);
         const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
         if(scratch>cap-base||blocks>(cap-base-scratch)/replayUnit)return denied();
         const auto replayEstimate=base+scratch+blocks*replayUnit;
@@ -451,21 +465,19 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         }catch(const std::bad_alloc&){return denied();}
     };
     if(contour){
-        // The pinned compiler emits at most one anchor/cap per knot, plus
-        // sixteen global taper cuts and two finish patches. Admit its exact
-        // temporary capacity before compiling, then admit paths from actual
-        // anchors rather than assuming 2KiB of paths for every input knot.
-        constexpr auto extra=18U;
-        if(count>std::numeric_limits<std::size_t>::max()-extra)return denied();
-        if(count+extra>(cap-base)/stagingUnit){
-            return replay();
-        }
-        const auto stagingBytes=base+(count+extra)*stagingUnit;
+        // A sharp knot emits an incoming flush and an in-node bridge. Admit
+        // the complete bounded expansion before the compiler writes vectors.
+        const auto patches=ink::CompactContourCompiler::maxPatches(count);
+        const auto caps=ink::CompactContourCompiler::maxCaps(count);
+        if(patches>(cap-base)/sizeof(ink::ContourPatch))return replay();
+        const auto patchBytes=patches*sizeof(ink::ContourPatch);
+        if(caps>(cap-base-patchBytes)/sizeof(ink::ContourCap))return replay();
+        const auto stagingBytes=base+patchBytes+caps*sizeof(ink::ContourCap);
         auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
         while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
         if(!token)return criticalContour?replay():denied();stagingLease=resources::ResourceLease(budget,*token);
         try{
-            staged.patches.reserve(count+extra);staged.caps.reserve(count+extra);
+            staged.patches.reserve(patches);staged.caps.reserve(caps);
             const auto& stroke=compact->content.get().stroke;
             ink::CompactContourCompiler compiler(stroke.config);
             const auto total=ink::compactLength(stroke.knots);

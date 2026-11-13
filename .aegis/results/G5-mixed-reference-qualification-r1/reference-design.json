@@ -1,0 +1,41 @@
+{
+  "status": "FROZEN_BEFORE_FULL_EDGE_OR_ACTUAL_COLOR_COMPARISON",
+  "owner": "verification-only independent source material boundaries; existing typedSnapshotCodec/semantic geometry helpers read-only",
+  "public_API": "none",
+  "Table": {
+    "fills": "for each visiblealpha cell, exact typed tableCellRect perimeter",
+    "grid": "all actual default tableouter+internal strokedlines, typedgridwidth/color; stroke filled outline viaacceptedSkPathUtils; no centerline-only exclusion",
+    "sketch": "use existing read-only semantic sketchGeometry outline,widthscale only; unsupportedpaint failclosed"
+  },
+  "Sticky": {
+    "fill": "defaultyellow or explicit visibleSolidFill semanticbody perimeter",
+    "outline": "explicitSolidStroke actualstroke filledoutline withcap/join/dash+typedwidth; noimplicitstrokeassumption",
+    "pattern": "unsupported failclosed for thisliteral qualification; noPatternexpansion"
+  },
+  "domain": "literalrootfixture; no parented objects/unknown transforms orvisibletext silentlyignored. TypedemptyTablecells/Sticky childtext confirmed in fullhelper report. Match records byObjectId, notindex assumption.",
+  "devicebasis": "source localpath\u2192exactf32 deviceScale*worldToView*object matrix inexistingorder, boundarySkPaint strokeWidth2devicepx AAtrue thenboolmask; same oldrule construction/noadditionaldilation",
+  "composition": "union oldimmutableedge withnewmaterialedge; oldexpectedRGBA unchanged; eligibilityneverreadsactualcolors/difflocations",
+  "image": "separate sourcePNG+exactIEEE32normalize/sourceRect/devicequad audit; no imagesourceedgeAA mask; anyalloweddiscretetexelset must derive acceptedarithmetic, withoutarbitraryepsilon. Incompleteprecision remainsunknown",
+  "negative_tests": [
+    "knownsmallinternalgrid/defaultfilloldhelperRED",
+    "strictinsidecolorwrong",
+    "omittedgridvisibleinteriorstroke",
+    "wrongpose/crop/resource/color",
+    "near-nontieimageprecision and unsupportedaffinefailclosed"
+  ],
+  "full_edge_limits": {
+    "starts": 2,
+    "seconds_each": 120,
+    "RSS_MiB": 2048,
+    "fullsceneRGBA": 0,
+    "browser": 0
+  },
+  "sources": {
+    "verification/runners/g5/cpu_reference_boundary.hpp": "1a534df14fed1602b31ea9381ab5462f4b9d0cf80d100d44cfc5b277ed517b54",
+    "runtime/render/src/skia_headless_backend.cpp": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38",
+    "runtime/semantic/include/canvas/semantic/table_content.hpp": "2b245eb101e7760c4d364a2469daf6d0c03b15fa760cb072a8e5a1f027003018",
+    "runtime/scene/src/sketch_geometry.cpp": "3b49554038dad1672c134060d2528b058fd4f7cdd68c9ee7323391343ffb145a",
+    "verification/runners/g5/mixed_reference_material_boundary.hpp": "64a59bc1064fdb4d8dc1edc3b20c57de0367aae634f63998845c5cb3b4de1d91",
+    "verification/runners/g5/mixed_reference_edges.cpp": "86c2df49278dd16ff1ed93d0342fb31f0b1c46f03c04b8bae35cf3913a9e7637"
+  }
+}

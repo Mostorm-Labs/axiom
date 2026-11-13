@@ -1,0 +1,15 @@
+{
+  "production_source_drift": [],
+  "SDK_asset_drift": [],
+  "status": "MATCH",
+  "postfreeze_tests": [
+    "runtime/render/tests/postworker_render_reuse_test.cpp"
+  ],
+  "postfreeze_verification_tools": [
+    "verification/runners/g5/postworker_render_reuse_compare.mjs",
+    "verification/runners/g5/postworker_render_reuse_independent_pixels.mjs",
+    "verification/runners/g5/postworker_render_reuse_oracle_corrective.py",
+    "verification/runners/g5/postworker_render_reuse_analyze.py"
+  ],
+  "reason": "verification-only corrected reference comparisons and strengthened exact existingRR2 variants; none imported by sampledbrowserdrivers orlinked ordinarySDK"
+}

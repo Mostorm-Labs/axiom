@@ -1,0 +1,259 @@
+{
+  "windows": [
+    {
+      "id": "IF-WARM-ORDINARY",
+      "status": "FAILED",
+      "error": "Error: default round brush\n    at check (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:10:34)\n    at run (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:85:69)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:112:129",
+      "valid_product_observation": false
+    },
+    {
+      "id": "IF-CORRECTIVE",
+      "status": "OBSERVED",
+      "error": null,
+      "valid_product_observation": true,
+      "operations": 3,
+      "root_errors": [],
+      "page_errors": [],
+      "rings": {
+        "frames": {
+          "records": 408,
+          "lost": 0
+        },
+        "events": {
+          "records": 23,
+          "lost": 0
+        },
+        "logs": {
+          "records": 0,
+          "lost": 0
+        },
+        "tasks": {
+          "records": 6,
+          "lost": 0
+        },
+        "workers": {
+          "records": 2,
+          "lost": 0
+        },
+        "calls": {
+          "records": 408,
+          "lost": 0
+        },
+        "terminals": {
+          "records": 175,
+          "lost": 0
+        }
+      },
+      "frame_rejections": 0,
+      "pointer_rejections": 0,
+      "context_events": [],
+      "activeRAF": {
+        "count": 366,
+        "median": 0.7000000476837158,
+        "p95": 14.700000047683716,
+        "max": 61.299999952316284
+      },
+      "successor_gap_ms": 30.700000047683716,
+      "first_two_strokes": [
+        {
+          "down": 4247.700000047684,
+          "up": 6413.200000047684,
+          "admitted": true,
+          "commit": 6445.800000071526,
+          "operationId": "040bab4ad0cbe8d49756cad8be0df022",
+          "generation": "1"
+        },
+        {
+          "down": 6446.300000071526,
+          "up": 8778.800000071526,
+          "admitted": true,
+          "commit": 8809.600000023842,
+          "operationId": "070bab4ad0cbe8d49756cad8be0df022",
+          "generation": "2"
+        }
+      ],
+      "drag": {
+        "requested_view": [
+          80,
+          30
+        ],
+        "actual_view": [
+          81.91428546282422,
+          29.999999094850864
+        ],
+        "before_matrix": [
+          1,
+          0,
+          0,
+          1,
+          15,
+          15
+        ],
+        "after_matrix": [
+          1,
+          0,
+          0,
+          1,
+          255.9243664741516,
+          103.23529052734375
+        ],
+        "selected_id": "80202ea91a27b2511dd5fd34cf6c40a5",
+        "default_snap_unchanged": true
+      },
+      "native_display": [],
+      "observation_limits": [
+        "64moves paced with host16ms minimum; actualmouse delivery roughly33ms; ROI readback adds synchronous overhead",
+        "successor has host/page boundary reads; no settled wait, not same DOM task",
+        "pixel samples atmove16/32 and settled are correctness witnesses/upper bounds, not first-photon",
+        "Fixed40 different from user22; only ordinary+one diagnostic short, not performance pairing"
+      ]
+    },
+    {
+      "id": "IF-SHORT-DIAGNOSTIC",
+      "status": "OBSERVED",
+      "error": null,
+      "valid_product_observation": true,
+      "operations": 3,
+      "root_errors": [],
+      "page_errors": [],
+      "rings": {
+        "frames": {
+          "records": 412,
+          "lost": 0
+        },
+        "events": {
+          "records": 23,
+          "lost": 0
+        },
+        "logs": {
+          "records": 811,
+          "lost": 0
+        },
+        "tasks": {
+          "records": 5,
+          "lost": 0
+        },
+        "workers": {
+          "records": 2,
+          "lost": 0
+        },
+        "calls": {
+          "records": 412,
+          "lost": 0
+        },
+        "terminals": {
+          "records": 175,
+          "lost": 0
+        }
+      },
+      "frame_rejections": 0,
+      "pointer_rejections": 0,
+      "context_events": [],
+      "activeRAF": {
+        "count": 367,
+        "median": 1.600000023841858,
+        "p95": 16.59999990463257,
+        "max": 24.199999928474426
+      },
+      "successor_gap_ms": 34.10000002384186,
+      "first_two_strokes": [
+        {
+          "down": 4231.899999976158,
+          "up": 6400.399999976158,
+          "admitted": true,
+          "commit": 6436.199999928474,
+          "operationId": "23a65d015244eddb824f490cba6a0a5b",
+          "generation": "1"
+        },
+        {
+          "down": 6436.799999952316,
+          "up": 8799.299999952316,
+          "admitted": true,
+          "commit": 8831.199999928474,
+          "operationId": "20a65d015244eddb824f490cba6a0a5b",
+          "generation": "2"
+        }
+      ],
+      "drag": {
+        "requested_view": [
+          80,
+          30
+        ],
+        "actual_view": [
+          81.91428546282422,
+          29.999999094850864
+        ],
+        "before_matrix": [
+          1,
+          0,
+          0,
+          1,
+          15,
+          15
+        ],
+        "after_matrix": [
+          1,
+          0,
+          0,
+          1,
+          255.9243664741516,
+          103.23529052734375
+        ],
+        "selected_id": "80202ea91a27b2511dd5fd34cf6c40a5",
+        "default_snap_unchanged": true
+      },
+      "native_display": [
+        {
+          "at": 4233.5,
+          "phase": "warm-draw-A",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=4233500000 display_admit serial=1 session=1 source=1 pointer=1 contactgen=1 camera=3 surface=1"
+        },
+        {
+          "at": 6416.199999928474,
+          "phase": "warm-draw-B",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=6416200000 display_seal serial=1 session=1 commit=1 semantic=1 scene=2"
+        },
+        {
+          "at": 6437,
+          "phase": "warm-draw-B",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=6437000000 display_admit serial=2 session=2 source=1 pointer=1 contactgen=2 camera=3 surface=1"
+        },
+        {
+          "at": 6829.399999976158,
+          "phase": "warm-draw-B",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=6829400000 display_retire serial=1 session=1 reason=1"
+        },
+        {
+          "at": 8810.899999976158,
+          "phase": "warm-draw-B",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=8810900000 display_seal serial=2 session=2 commit=2 semantic=2 scene=3"
+        },
+        {
+          "at": 11899.5,
+          "phase": "warm-drag",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=11899500000 display_admit serial=3 session=9223372036854775811 source=1 pointer=1 contactgen=2 camera=3 surface=1"
+        },
+        {
+          "at": 11913.600000023842,
+          "phase": "warm-drag",
+          "type": "error",
+          "text": "AXIOM_IF_EVENT t_ns=11913600000 display_seal serial=3 session=9223372036854775811 commit=3 semantic=3 scene=4"
+        }
+      ],
+      "observation_limits": [
+        "64moves paced with host16ms minimum; actualmouse delivery roughly33ms; ROI readback adds synchronous overhead",
+        "successor has host/page boundary reads; no settled wait, not same DOM task",
+        "pixel samples atmove16/32 and settled are correctness witnesses/upper bounds, not first-photon",
+        "Fixed40 different from user22; only ordinary+one diagnostic short, not performance pairing"
+      ]
+    }
+  ],
+  "no_reproduction_in_short_controls": true,
+  "not_a_fix_or_performance_PASS": true
+}

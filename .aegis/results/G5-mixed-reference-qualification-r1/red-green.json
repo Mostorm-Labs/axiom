@@ -1,0 +1,22 @@
+{
+  "actual_helper_old_RED": {
+    "path": "out/G5-mixed-reference-qualification-r1/boundary-red.log",
+    "sha256": "ded7451932f82589571c12afbcdfe7e3554948ee64539067c0cb683ff15d11c4",
+    "failure": "OLD_HELPER_OMITS_TABLE_INTERNAL_GRID_MATERIAL_BOUNDARY",
+    "observed": {
+      "internal": 0,
+      "inside": 0
+    }
+  },
+  "actual_helper_GREEN": {
+    "path": "out/G5-mixed-reference-qualification-r1/boundary-green-final.log",
+    "sha256": "70a66ed2ace1716be5fea190446f7389da5bbd060557fb06539f62de9dc82937",
+    "observed": {
+      "internal": 255,
+      "inside": 0
+    }
+  },
+  "full_old_RED": "pixel-comparisons.json original4325all12",
+  "full_new_partial": "materialboundarycorrected302all12, strictcompared17365031(append)/17390216(erase),newedge33348",
+  "negative_tests": "negative-cases.json"
+}

@@ -17,7 +17,7 @@ class PreparedBodyJob final {
     Phase phase_=Phase::kMetrics;
     std::shared_ptr<resources::ResourceBudgetManager> budget_;
     bool replay_=false;
-    std::size_t cursor_=0,ribbon_=0,cap_=0,blockKnot_=0,blockCount_=0,primitive_=0,pathBytes_=0;
+    std::size_t cursor_=0,ribbon_=0,cap_=0,blockKnot_=0,blockCount_=0,pathBytes_=0;
     ink::CompactContourCompiler compiler_;
     std::optional<ink::CompactContourCompiler> checkpoint_;
     ink::CompactContour emitted_;

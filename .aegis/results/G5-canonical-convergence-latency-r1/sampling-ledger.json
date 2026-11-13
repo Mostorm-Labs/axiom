@@ -1,0 +1,178 @@
+{
+  "starts_max": 7,
+  "seconds_max": 2400,
+  "charged_seconds": 659,
+  "attempts": [
+    {
+      "id": "CL-D4-PRIMARY-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "limit_seconds": 420,
+      "started_unix": 1794548520.4297159,
+      "basis": "CL-D4-PRIMARY-DIAGNOSTIC-freeze.json",
+      "request_sha256": "5c2de40694772aec3b7e963db9b0c2a37d3b06658e99a36ee05a5345ccdcdb91",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_primary.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-PRIMARY-DIAGNOSTIC.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-DIAGNOSTIC"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 118.75670533301309,
+        "peak_process_family_rss_kib": 2325072,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 119
+    },
+    {
+      "id": "CL-D4-MIXED-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "limit_seconds": 180,
+      "started_unix": 1794548708.710382,
+      "basis": "CL-D4-MIXED-DIAGNOSTIC-freeze.json",
+      "request_sha256": "1e75ca4845ce34e037fb324e70320df69e6f0004938cb51397a786abcc2a07d8",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_mixed.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-MIXED-DIAGNOSTIC.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-DIAGNOSTIC"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 118.16851670795586,
+        "peak_process_family_rss_kib": 2289856,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 119
+    },
+    {
+      "id": "CL-D4-PRIMARY-BASELINE",
+      "status": "COMPLETED",
+      "limit_seconds": 420,
+      "started_unix": 1794549868.692492,
+      "basis": "CL-D4-PRIMARY-BASELINE-freeze.json",
+      "request_sha256": "c580529d302ddb4c6dec5026ea644994725d0be494a715d938e77ee27097ff73",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_primary.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-PRIMARY-BASELINE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-BASELINE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 109.0323172500357,
+        "peak_process_family_rss_kib": 2019264,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 110
+    },
+    {
+      "id": "CL-D4-MIXED-BASELINE",
+      "status": "COMPLETED",
+      "limit_seconds": 180,
+      "started_unix": 1794550034.0044181,
+      "basis": "CL-D4-MIXED-BASELINE-freeze.json",
+      "request_sha256": "a24fb3db07109046b98b924613e604a2cfc171240ca97c86207effaa7e5a56f2",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_mixed.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-MIXED-BASELINE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-BASELINE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 103.78727433399763,
+        "peak_process_family_rss_kib": 1993024,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 104
+    },
+    {
+      "id": "CL-D4-PRIMARY-CANDIDATE",
+      "status": "COMPLETED",
+      "limit_seconds": 420,
+      "started_unix": 1794550204.518969,
+      "basis": "CL-D4-PRIMARY-CANDIDATE-freeze.json",
+      "request_sha256": "5d77e2977f0f26a319a858134a6801fffb2909535fc9b3a397107c0e804dac1f",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_primary.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-PRIMARY-CANDIDATE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-CANDIDATE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 112.88055716699455,
+        "peak_process_family_rss_kib": 2278816,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 113
+    },
+    {
+      "id": "CL-D4-MIXED-CANDIDATE",
+      "status": "COMPLETED",
+      "limit_seconds": 180,
+      "started_unix": 1794550379.020287,
+      "basis": "CL-D4-MIXED-CANDIDATE-freeze.json",
+      "request_sha256": "057518dcbc9f75e0846479bb33aaf8c9021c9dcc713ef78a631063148bc87008",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_mixed.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/requests/CL-D4-MIXED-CANDIDATE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-CANDIDATE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 93.02628566592466,
+        "peak_process_family_rss_kib": 2022960,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 94
+    }
+  ]
+}

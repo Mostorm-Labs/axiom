@@ -1,0 +1,55 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-live-erase-input-feedback-r1",
+  "status": "FROZEN_AUTHORIZED_DIAGNOSIS_ONLY",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "completed_through": [
+      "PriorIF finite no-repro independentlyaccepted withstrictidlelimit; userdefectopen",
+      "Humanclarifiedmultipleliveerasurebeforeidle; noactualdynamicsequenceyet"
+    ],
+    "next_action": "Preflight preservepriorSDKsources -> verificationonlydynamicerase/rootcontrols ordinary+existingdiag -> cause/no-repro andreturn, no behaviorfix."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-live-erase-input-feedback-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority.lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "babde4b494dc01b11fa26793a70d3facd104d0dd6a940fd19b6e211772cd9675"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "b0813efea433e73ed63424c172f2eb5f8447e4aeb07baf77106189c80e87b9b9"
+  },
+  "verification.lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "a40285ae6eec037724a11c98df557a192d98140860205f145a620b2c9ff4608f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "c2cc61511e6f7dd9331ea842a2e343498695f50ceb6033313777adf95b7ed661"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e775d3d3b3f5db5a06f7fd881d33aafec5de15a4c104da3d0acbc2344c811655"
+  }
+}

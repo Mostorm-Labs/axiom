@@ -56,7 +56,7 @@ class PreparedNavigationGeometry final {
     // Visitor false stops at a decided component; source/checkpoints stay pinned.
     bool visitExact(const SkRect&,const std::function<bool(const SkPath&)>&,ExactComponentWork&)const;
     std::span<const double> distances()const noexcept{return distances_;}
-    std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replay_.back().last;}
+    std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replayRibbonCount_+replayCapCount_;}
     double totalDistance()const noexcept{return distances_.empty()?replayDistance_:distances_.back();}
     std::size_t nextVisiblePrimitive(SkCanvas&,std::size_t first,const SkRect* deviceDemand=nullptr)const;
     PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0},const SkRect* deviceDemand=nullptr)const;
@@ -72,11 +72,12 @@ class PreparedNavigationGeometry final {
     SkRect support_=SkRect::MakeEmpty();
     std::unique_ptr<PreparedBodyJob> job_;
     struct Group {SkRect bounds;std::size_t begin=0,end=0;};
-    struct ReplayBlock {ink::CompactContourCompiler compiler;std::size_t knot=0,count=0,first=0,last=0;SkRect bounds;};
-    static constexpr std::size_t replayBlockKnots=256,replayBlockExtras=32;
+    struct ReplayBlock {ink::CompactContourCompiler compiler;std::size_t knot=0,count=0,first=0,last=0,capFirst=0,capLast=0;SkRect bounds;};
+    static constexpr std::size_t replayBlockKnots=256;
     std::vector<ReplayBlock> replay_;
+    std::size_t replayRibbonCount_=0,replayCapCount_=0;
     // Owner-thread draw scratch; source/checkpoint geometry stays immutable.
-    // 16 taper cuts, carried patch and finish fit within32 extra slots.
+    // Compiler bounds include two patches per corner, taper cuts and carry.
     mutable ink::CompactContour replayOutput_;
     // The existing charged scratch may retain one immutable checkpoint output
     // between adjacent owner-thread draw ranges. Exact queries also use this

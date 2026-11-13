@@ -1,0 +1,64 @@
+{
+  "mechanism": "red-green.json",
+  "last_alias_GPU_lease": {
+    "path": ".aegis/results/G5-postworker-render-reuse-r1/render-reuse-leases.json",
+    "sha256": "7b43e0b227a9de997add187380bfab98424327d09ea353af6bb183ecb17acb47",
+    "observed": {
+      "GPU_release_after_completion": true,
+      "last_alias_survived_source_removal": true,
+      "single_pixel_lease": true,
+      "variants": [
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 0
+        },
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 1
+        },
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 2
+        },
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 3
+        },
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 4
+        },
+        {
+          "coverage_steps_delta": 16,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 5
+        },
+        {
+          "coverage_steps_delta": 0,
+          "exact_channel_differences": 0,
+          "non_AA_failures": 0,
+          "variant": 6
+        }
+      ]
+    }
+  },
+  "fresh_affected_tests": {
+    "path": "out/G5-postworker-render-reuse-r1/focused-tests.log",
+    "sha256": "55f76ebf9d0e221c705ce8ec3762c4a5c832d049699473547c7bfa143999246e",
+    "tests": 12,
+    "failed": 0
+  },
+  "preserved": "original null-cache Direct and CPU geometry AA rules; actual provider pixels and present count under faults; complete canonical material only, current presentation mask never stored",
+  "postfreeze_tests": "postfreeze-test-delta.json"
+}

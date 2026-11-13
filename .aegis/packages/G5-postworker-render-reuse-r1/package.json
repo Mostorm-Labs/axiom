@@ -1,0 +1,58 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-postworker-render-reuse-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "completed_through": [
+      "CPUW7 scoped review and committed pushed checkpoint; no overall performance promotion"
+    ],
+    "next_action": "Validate package/repository, inspect retained Render cost/progress, targeted RED and two authorized Render slices; no main merge."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-postworker-render-reuse-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "c9810ff1d2b7a3fc6442a156503ae8eb21b77f711a50d1bc134e640d1490e83d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "aebe9a841e9f85ec5f0c16c8d2faf66cfebaae66368683c47960dc3d11fd0085"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "74f868bae9075bb5dbb8f21fec0692e327c66f8c85cfc44db6186a0641a3f59d"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "1b90eeae1a007db5fac2d56575702f6a0f6ce7d535a199fa4fe0cc1e32720094"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "3c1a3549b3e1bdaed1bd71374ef2ae195bd0f446f19ede0b81b06ffcf1c8c2f6"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "25df34b66a546e9cbb462ff5e18a9f5cebcc6a5fa4a3842fed09ef40746c19ae"
+  }
+}

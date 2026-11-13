@@ -1,0 +1,133 @@
+{
+  "task": "G5-idle-input-feedback-diagnostic-r1",
+  "max_starts": 4,
+  "max_seconds": 2220,
+  "idle_starts_max": 1,
+  "diagnostic_builds_max": 1,
+  "diagnostic_builds": 1,
+  "ordinary_builds": 0,
+  "charged_seconds": 1269,
+  "attempts": [
+    {
+      "id": "IF-WARM-ORDINARY",
+      "status": "FAILED",
+      "idle": false,
+      "limit_seconds": 240,
+      "started_unix": 1794555786.824533,
+      "request_sha256": "ced86023f135e682650f28159a4e460e57b8a84992ebc668f06157e33ec2288e",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/requests/IF-WARM-ORDINARY.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/web/IF-WARM-ORDINARY"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 4.9522991670000005,
+        "peak_process_family_rss_kib": 1302784,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FAILED",
+          "error": "Error: default round brush\n    at check (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:10:34)\n    at run (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:85:69)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs:112:129"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 5
+    },
+    {
+      "id": "IF-CORRECTIVE",
+      "status": "COMPLETED",
+      "idle": false,
+      "limit_seconds": 240,
+      "started_unix": 1794555920.948469,
+      "request_sha256": "c3636a8db28d3bdc4d5e74fbc8680d70a37c0e03a28a20395c52b6448c76d708",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/requests/IF-CORRECTIVE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/web/IF-CORRECTIVE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 17.579712584000003,
+        "peak_process_family_rss_kib": 1508352,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 18
+    },
+    {
+      "id": "IF-SHORT-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "idle": false,
+      "limit_seconds": 240,
+      "started_unix": 1794556213.791848,
+      "request_sha256": "929fa218cc274972e0f8ff9c90e4f84c9bea2a221a1eae005a17c5e85a8fae40",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/requests/IF-SHORT-DIAGNOSTIC.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/web/IF-SHORT-DIAGNOSTIC"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 17.874419,
+        "peak_process_family_rss_kib": 1501184,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 18
+    },
+    {
+      "id": "IF-FOREGROUND-IDLE",
+      "status": "COMPLETED",
+      "idle": true,
+      "limit_seconds": 1500,
+      "started_unix": 1794556488.596695,
+      "request_sha256": "c7e38f2a664166a369aba67eafcf280ab8bcebf0ab842773c0f1d71913f2369f",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/idle_input_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/requests/IF-FOREGROUND-IDLE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-idle-input-feedback-diagnostic-r1/web/IF-FOREGROUND-IDLE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1227.332894208,
+        "peak_process_family_rss_kib": 1484656,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 1500,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED_QUALIFICATION_LIMIT"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 1228
+    }
+  ]
+}

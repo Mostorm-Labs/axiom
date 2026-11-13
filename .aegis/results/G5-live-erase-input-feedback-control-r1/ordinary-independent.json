@@ -1,0 +1,198 @@
+{
+  "schema": "axiom-live-erase-independent-ordinary-v1",
+  "created_utc": "2026-11-13T08:45:53.193526+00:00",
+  "raw": {
+    "path": "out/G5-live-erase-input-feedback-r1/web/LE-ORDINARY/raw.json",
+    "sha256": "809c387f84164823f5b3bc302d86a527eac4ac66f28b52dade4f8325e2d8ff2c"
+  },
+  "actual_draw_branch": [
+    {
+      "label": "immediate-draw",
+      "erase_pending_at_Down": true,
+      "activeContacts": 1,
+      "pointercalls": 66,
+      "allaccepted": true,
+      "ROI": [
+        {
+          "sample": "immediate-draw-move16",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 0,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 166,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        },
+        {
+          "sample": "immediate-draw-move32",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 0,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 344,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "settled-draw",
+      "erase_pending_at_Down": false,
+      "activeContacts": 1,
+      "pointercalls": 66,
+      "allaccepted": true,
+      "ROI": [
+        {
+          "sample": "settled-draw-move16",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 773,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 166,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        },
+        {
+          "sample": "settled-draw-move32",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 773,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 344,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "post-pause-draw",
+      "erase_pending_at_Down": false,
+      "activeContacts": 1,
+      "pointercalls": 66,
+      "allaccepted": true,
+      "ROI": [
+        {
+          "sample": "post-pause-draw-move16",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 799,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 166,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        },
+        {
+          "sample": "post-pause-draw-move32",
+          "layers": [
+            {
+              "role": "canonical",
+              "visibility": "",
+              "amber": 0,
+              "dark": 799,
+              "matches": true
+            },
+            {
+              "role": "preview",
+              "visibility": "visible",
+              "amber": 344,
+              "dark": 0,
+              "matches": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "actual_drag_branch": [
+    {
+      "label": "immediate-drag",
+      "erase_pending_at_Down": false,
+      "target": "80202ea91a27b2511dd5fd34cf6c40a5",
+      "error": null,
+      "actual_view_displacement": [
+        81.91428546282422,
+        29.999999094850864
+      ]
+    },
+    {
+      "label": "settled-drag",
+      "erase_pending_at_Down": false,
+      "target": "80202ea91a27b2511dd5fd34cf6c40a5",
+      "error": null,
+      "actual_view_displacement": [
+        80.00000450358675,
+        24.700052349497838
+      ]
+    },
+    {
+      "label": "post-pause-drag",
+      "erase_pending_at_Down": false,
+      "target": "80202ea91a27b2511dd5fd34cf6c40a5",
+      "error": null,
+      "actual_view_displacement": [
+        79.99998375163341,
+        29.999999094850864
+      ]
+    }
+  ],
+  "rooterrors": [],
+  "frameerrors": [],
+  "pointererrors": [],
+  "ring_losses": {
+    "frames": 0,
+    "events": 0,
+    "logs": 0,
+    "tasks": 0,
+    "workers": 0,
+    "calls": 0,
+    "terminals": 0,
+    "nativeFrames": 0,
+    "triggers": 0
+  },
+  "provisional": "Ordinaryliveerasedrawpending exercised with actualsampledamber and accepted66mousefacts; no rootcause reproduced. Dragpending notexercised. Diagnosticlane awaited. No newheavywork."
+}

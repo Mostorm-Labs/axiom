@@ -1107,7 +1107,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         // live feedback does not invalidate pixels outside the changed mask.
         // Mandatory preparation already reclaims navigation on actual denial;
         // optional body layers must yield rather than destroy that coverage.
-        if(renderCache_&&!renderCache_->stagedBodies())renderCache_->releaseMaterialSources(!previousErase);
+        // begin() qualifies retained canonical material against source and target
+        // dependencies; active presentation masks do not invalidate it.
     }
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -1178,6 +1179,14 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         const auto staged=cache->prepareWorkingSet(*canvas,plan,allowance,images_,&textResources_,true,selectionOverlay);
         if(staged!=internal::SkiaRenderCache::Preparation::kReady){
             provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");
+        }
+    }
+    if(gpuLiveV4&&renderCacheOptions_.enabled&&cache&&!cache->stagedBodies()){
+        const auto material=cache->prepareTransientMaterial(*canvas,plan,allowance,images_,&textResources_);
+        if(material!=internal::SkiaRenderCache::Preparation::kReady){
+            provider.release();return material==internal::SkiaRenderCache::Preparation::kRejected?
+                BackendSubmissionResult::rejected("transient material capacity rejected"):
+                BackendSubmissionResult::retry("transient material preparation pending");
         }
     }
     if(gpu.ready())gpu.touch();

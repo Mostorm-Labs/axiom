@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {boundedRing,summarize,qualifyIdle,installIdleObserver} from '../runners/g5/idle_input_feedback_observer.mjs';
+test('bounded loss is explicit and earlier evidence retained',()=>{const r=boundedRing(2);r.push(1);r.push(2);r.push(3);assert.deepEqual(r.read(),{values:[1,2],lost:1,capacity:2});});
+test('idle qualification rejects short, hidden, work and context changes',()=>{const a={at:10,visibility:'visible',focus:true,rafRequested:5,rafCompleted:5,glWrites:2};const b={...a,at:1200010};assert.equal(qualifyIdle(a,b,[],1200000).qualified,true);for(const c of[{...b,at:20},{...b,visibility:'hidden'},{...b,glWrites:3},{...b,rafRequested:6}])assert.equal(qualifyIdle(a,c,[],1200000).qualified,false);assert.equal(qualifyIdle(a,b,[{type:'blur',at:20}],1200000).qualified,false);});
+test('summary quantiles preserve worst callback',()=>assert.deepEqual(summarize([9,1,4,2,3]),{count:5,median:3,p95:9,max:9}));
+test('passive observer owns no frame/timer or state polling',()=>{const s=installIdleObserver.toString();assert.doesNotMatch(s,/setTimeout|setInterval|readState\(/);assert.equal((s.match(/rawRAF\.call/g)||[]).length,1);});

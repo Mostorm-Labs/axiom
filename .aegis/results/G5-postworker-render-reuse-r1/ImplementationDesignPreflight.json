@@ -1,0 +1,37 @@
+{
+  "status": "CLEAR",
+  "owner": "SkiaRenderer / SkiaRenderCache existing material entries, prepared geometry, mask history and disposable composite",
+  "canonical_writer": "OperationEngine unchanged",
+  "public_API_impact": "none",
+  "transient": {
+    "observed_chain": "gpuLiveV4 releaseMaterialSources unconditionally clears still-qualified canonical entries; drawTransientScene resets preparation and may synchronously replay full history when whole-demand layers do not fit",
+    "repair": "retain qualified canonical pixels, preflight unresolved v4 material through existing cooperative prepare path and shared invocation allowance; compose current active mask after complete canonical material; only complete disposable frame published",
+    "invalidation": "begin still verifies target/context/camera/metrics/resource/group stamps. Presentation tails are not canonical material dependencies. Failed publication retains last provider pixels."
+  },
+  "canonical": {
+    "observed_chain": "entries/admissions are keyed only by ObjectId; independently copied identical v4 content+pose+ordered permanent mask geometry is rasterized once per object even when prepared body is shared",
+    "repair": "share complete isolated material pixels inside existing entry owner, qualified by ready immutable body identity/full content, exact transform/paint/ordered mask geometry, original device grid/target epoch. Ordered scene still composites each object separately. Unknown identities cannot reuse partial jobs or skips."
+  },
+  "budget": "existing defaults and per-frame allowance unchanged; shared pixels have one lease and aliases charged metadata; no new pool",
+  "RED": [
+    "actual canonical 7199-knot identical-pose copies work grows per ObjectId",
+    "warm canonical-to-erase consumes nonzero new coverage despite unchanged body/history",
+    "cold transient consumes more than existing 4096 coverage steps in a single invocation"
+  ],
+  "correctness": [
+    "original full reference pixels",
+    "same-basis monotonic preparation and pending provider unchanged",
+    "mask append/replacement/reorder/removal",
+    "opacity/transform/body/context/resource/camera/metrics invalidation",
+    "publication/allocation refusal and z-order transparent objects"
+  ],
+  "preserve": [
+    "CPUW6b",
+    "CPUW7",
+    "4331",
+    "4332",
+    "4330",
+    "4328",
+    "4298"
+  ]
+}

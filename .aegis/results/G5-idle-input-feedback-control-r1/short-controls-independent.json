@@ -1,0 +1,195 @@
+{
+  "schema": "axiom-independent-idle-short-controls-v1",
+  "created_utc": "2026-11-13T07:58:00.860651+00:00",
+  "mode": "Offline reading already completed short data; no build/test/GPU/reference/browseractions duringrealidle",
+  "controls": {
+    "IF-CORRECTIVE": {
+      "raw_sha256": "d855604a72ab60ce52db7d33ea7e64c5745d5d0cccc2aa58d29e1df2aff133bd",
+      "status": "OBSERVED",
+      "input": [
+        {
+          "action": "A",
+          "dom_source": [
+            "mouse"
+          ],
+          "owner_pointer_calls": 66,
+          "Down": 1,
+          "Move": 64,
+          "Up": 1,
+          "Cancel": 0,
+          "all_admitted": true,
+          "afterUp_gen": "0",
+          "afterUp_intents": [
+            {
+              "dependsOn": [],
+              "kind": "create",
+              "objectIds": [
+                "040bab4ad0cbe8d49756cad8be0df06d"
+              ],
+              "phase": "ready",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "1"
+              }
+            }
+          ]
+        },
+        {
+          "action": "B",
+          "dom_source": [
+            "mouse"
+          ],
+          "owner_pointer_calls": 68,
+          "Down": 2,
+          "Move": 64,
+          "Up": 2,
+          "Cancel": 0,
+          "all_admitted": true,
+          "afterUp_gen": "1",
+          "afterUp_intents": [
+            {
+              "dependsOn": [],
+              "kind": "create",
+              "objectIds": [
+                "070bab4ad0cbe8d49756cad8be0df06d"
+              ],
+              "phase": "ready",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "2"
+              }
+            }
+          ]
+        }
+      ],
+      "first_Up_to_B_Down_ms": 33.0,
+      "final_objects": 42,
+      "final_generation": "3",
+      "presentedGeneration": "3",
+      "activeContacts": 0,
+      "pending": [],
+      "operations": 3,
+      "root_errors": [],
+      "pointer_call_errors": [],
+      "drag_actual_view_delta": [
+        81.91428546282422,
+        29.999999094850864
+      ],
+      "drag_requested": [
+        80,
+        30
+      ],
+      "snap_preserved": true,
+      "raw_feedback_readback": "Contains observation GPU sync/time; not ordinary latency or physicalfirstphoton",
+      "rings_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0
+      }
+    },
+    "IF-SHORT-DIAGNOSTIC": {
+      "raw_sha256": "e4409069864de013fa20b1aa21ff1a9d72aa7042f65bf01a639d9fbae49fe850",
+      "status": "OBSERVED",
+      "input": [
+        {
+          "action": "A",
+          "dom_source": [
+            "mouse"
+          ],
+          "owner_pointer_calls": 66,
+          "Down": 1,
+          "Move": 64,
+          "Up": 1,
+          "Cancel": 0,
+          "all_admitted": true,
+          "afterUp_gen": "0",
+          "afterUp_intents": [
+            {
+              "dependsOn": [],
+              "kind": "create",
+              "objectIds": [
+                "23a65d015244eddb824f490cba6a0a14"
+              ],
+              "phase": "ready",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "1"
+              }
+            }
+          ]
+        },
+        {
+          "action": "B",
+          "dom_source": [
+            "mouse"
+          ],
+          "owner_pointer_calls": 68,
+          "Down": 2,
+          "Move": 64,
+          "Up": 2,
+          "Cancel": 0,
+          "all_admitted": true,
+          "afterUp_gen": "1",
+          "afterUp_intents": [
+            {
+              "dependsOn": [],
+              "kind": "create",
+              "objectIds": [
+                "20a65d015244eddb824f490cba6a0a14"
+              ],
+              "phase": "ready",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "2"
+              }
+            }
+          ]
+        }
+      ],
+      "first_Up_to_B_Down_ms": 36.300000071525574,
+      "final_objects": 42,
+      "final_generation": "3",
+      "presentedGeneration": "3",
+      "activeContacts": 0,
+      "pending": [],
+      "operations": 3,
+      "root_errors": [],
+      "pointer_call_errors": [],
+      "drag_actual_view_delta": [
+        81.91428546282422,
+        29.999999094850864
+      ],
+      "drag_requested": [
+        80,
+        30
+      ],
+      "snap_preserved": true,
+      "raw_feedback_readback": "Contains observation GPU sync/time; not ordinary latency or physicalfirstphoton",
+      "rings_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0
+      }
+    }
+  },
+  "conclusion": "Both short controls retain accepted mouse Down/Move/Up and commit2draws+1transform. No rooterrors/ringloss. This doesnot establish idle or uservideo rootcause.",
+  "limits": [
+    "Fixed40 is not user22-object history",
+    "No physical macOS threefinger drag input equivalence",
+    "Postidle identical opaque drawcoords can overlap olddraw; use visibleamber+newOperation/canonical counts, not newdarkpixelcount alone",
+    "Postidle same selectionpoint may choose a different overlappedstroke afterfirstdrag; bind actualselectedID/pose and disclose comparisons"
+  ]
+}

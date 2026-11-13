@@ -1,0 +1,103 @@
+{
+  "schema": "axiom-canonical-latency-independent-ordinary-paired-observation-v1",
+  "created_utc": "2026-11-13T06:16:17.157418+00:00",
+  "rows": [
+    {
+      "row": "primary",
+      "role": "BASELINE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-BASELINE/raw.json",
+      "source_sha256": "f1429a8d08a60bb1a774ebb3467c4d5e5b4d97e349396b9ac838afbdb9b5df75",
+      "input_ms": 7960.299999952316,
+      "AB_ms": 15311.799999952316,
+      "C_ms": 13437.699999928474,
+      "C_first_worker_issue_afterUp_ms": 11.600000023841858,
+      "C_last_worker_terminal_afterUp_ms": 3072.6999999284744,
+      "C_post_lastWorker_to_settled_ms": 10364.200000047684,
+      "C_compute_ms": 79.80000054836273,
+      "C_job_envelopes_ms": 1216.6000002622604,
+      "C_maxRAF_ms": 133.79999995231628
+    },
+    {
+      "row": "append-zoom-out-immediate",
+      "role": "BASELINE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-BASELINE/append-zoom-out-immediate/raw.json",
+      "source_sha256": "8c8d5807c7880efc36be269d151a0aab3830aa20e3b0a0153c13b8d06e8b70da",
+      "Up_to_settled_ms": 8839.0,
+      "firstGL_proxy_after_firstWheel_ms": 8620.100000023842,
+      "complete_camera_canonical_after_firstWheel_ms": 8648.399999976158,
+      "RAFcount": 515,
+      "RAFs_sum_ms": 4864.300000786781,
+      "RAFp95_ms": 9.100000023841858,
+      "RAFmax_ms": 48.699999928474426,
+      "outside_RAF_ms": 3784.099999189377,
+      "qualification": "completecamera6wheelonFrame, notearliestLODfeedbackorhardwaredisplay"
+    },
+    {
+      "row": "partial-erase-zoom-out-immediate",
+      "role": "BASELINE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-BASELINE/partial-erase-zoom-out-immediate/raw.json",
+      "source_sha256": "4b0a6b3ba4e976bacbfe816b3965d68898aba9d2d63ee6319cb2fe2b72b1ae91",
+      "Up_to_settled_ms": 8983.899999976158,
+      "firstGL_proxy_after_firstWheel_ms": 8861.100000023842,
+      "complete_camera_canonical_after_firstWheel_ms": 8875.600000023842,
+      "RAFcount": 531,
+      "RAFs_sum_ms": 4943.200000286102,
+      "RAFp95_ms": 9.100000023841858,
+      "RAFmax_ms": 37.5,
+      "outside_RAF_ms": 3932.3999997377396,
+      "qualification": "completecamera6wheelonFrame, notearliestLODfeedbackorhardwaredisplay"
+    },
+    {
+      "row": "primary",
+      "role": "CANDIDATE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-CANDIDATE/raw.json",
+      "source_sha256": "719eacb500d7fab31da95b00edb5ab4057bddc2fac9ba69e72ee0c51222260bd",
+      "input_ms": 13172.199999928474,
+      "AB_ms": 15000.800000071526,
+      "C_ms": 11010.100000023842,
+      "C_first_worker_issue_afterUp_ms": 11.200000047683716,
+      "C_last_worker_terminal_afterUp_ms": 868.0,
+      "C_post_lastWorker_to_settled_ms": 10141.200000047684,
+      "C_compute_ms": 75.69999957084656,
+      "C_job_envelopes_ms": 162.799999833107,
+      "C_maxRAF_ms": 74.19999992847443
+    },
+    {
+      "row": "append-zoom-out-immediate",
+      "role": "CANDIDATE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-CANDIDATE/append-zoom-out-immediate/raw.json",
+      "source_sha256": "236e218b8dd26f976034ffa72708520a308489df7a2f2d9ff86cb1ce9dce7288",
+      "Up_to_settled_ms": 4185.899999976158,
+      "firstGL_proxy_after_firstWheel_ms": 3912.5,
+      "complete_camera_canonical_after_firstWheel_ms": 3994.0,
+      "RAFcount": 235,
+      "RAFs_sum_ms": 2391.2999999523163,
+      "RAFp95_ms": 30.399999976158142,
+      "RAFmax_ms": 49.89999997615814,
+      "outside_RAF_ms": 1602.7000000476837,
+      "qualification": "completecamera6wheelonFrame, notearliestLODfeedbackorhardwaredisplay"
+    },
+    {
+      "row": "partial-erase-zoom-out-immediate",
+      "role": "CANDIDATE",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-CANDIDATE/partial-erase-zoom-out-immediate/raw.json",
+      "source_sha256": "e28793f68982b1c8d3fe74974dcba067d3953a42c0ff5316cf2d5c9285bc85e1",
+      "Up_to_settled_ms": 8866.299999952316,
+      "firstGL_proxy_after_firstWheel_ms": 8744.399999976158,
+      "complete_camera_canonical_after_firstWheel_ms": 8758.100000023842,
+      "RAFcount": 524,
+      "RAFs_sum_ms": 4868.700001716614,
+      "RAFp95_ms": 9.0,
+      "RAFmax_ms": 33.700000047683716,
+      "outside_RAF_ms": 3889.399998307228,
+      "qualification": "completecamera6wheelonFrame, notearliestLODfeedbackorhardwaredisplay"
+    }
+  ],
+  "findings": [
+    "Appendzoomsettledimproves,RAFp95worsensfrom9.1to30.4ms; recordboth.",
+    "Mask-onlyerasezoomandprimaryCpostlastWorkerremainnear10s.",
+    "SinglematchedpairandinputwalltimevariationnotstatisticalperformancePASS.",
+    "Pixel/semantic/known302regressionguardmustpassbeforecandidatequalification."
+  ],
+  "no_new_sampling": true
+}

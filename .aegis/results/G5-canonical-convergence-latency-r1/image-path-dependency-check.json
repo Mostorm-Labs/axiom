@@ -1,0 +1,70 @@
+{
+  "sources": [
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "normal_image_draw_same": true,
+      "change": "validationcounteronlyoutside mapper; fullimage/shader/source unchanged",
+      "current_sha256": "cdad460ff08feafb8b49cfc47138e267c26ec0fad5a7d402d04f10009fff2e10",
+      "RR_sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38"
+    },
+    {
+      "path": "runtime/render/src/image_resource.cpp",
+      "unchanged": true,
+      "current_sha256": "b47138a67b0690c9e1b1381b35d130a69f28e0dacd54f784213bb0185ffc8e04",
+      "RR_sha256": "b47138a67b0690c9e1b1381b35d130a69f28e0dacd54f784213bb0185ffc8e04"
+    },
+    {
+      "path": "runtime/scene/src/sketch_geometry.cpp",
+      "unchanged": true,
+      "current_sha256": "3b49554038dad1672c134060d2528b058fd4f7cdd68c9ee7323391343ffb145a",
+      "RR_sha256": "3b49554038dad1672c134060d2528b058fd4f7cdd68c9ee7323391343ffb145a"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "unchanged": true,
+      "current_sha256": "2970c87ceef5599b37764a90c069348dc1552125e9b929b70d1cd8db40d5c643",
+      "RR_sha256": "2970c87ceef5599b37764a90c069348dc1552125e9b929b70d1cd8db40d5c643"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "unchanged": true,
+      "current_sha256": "87d9224fd94854c2718131f0b7d3a90e3843901c1802b1193bf0e4f2a56c3d6a",
+      "RR_sha256": "87d9224fd94854c2718131f0b7d3a90e3843901c1802b1193bf0e4f2a56c3d6a"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "unchanged": true,
+      "current_sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8",
+      "RR_sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8"
+    },
+    {
+      "path": "runtime/ink/src/compact_contour.cpp",
+      "unchanged": true,
+      "current_sha256": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+      "RR_sha256": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada"
+    }
+  ],
+  "scope": "Only canonical isolatedCompactStroke bodypixels reuse; nonink/order/alpha pipeline unchanged. Native transparentmixedzorder independentlypassed.",
+  "CPU302imagequalification": "openindependent; baselineguard notglobalimagepass",
+  "actual_unchanged_image_draw_ranges": {
+    "file": "runtime/render/src/skia_headless_backend.cpp",
+    "sha256": "cdad460ff08feafb8b49cfc47138e267c26ec0fad5a7d402d04f10009fff2e10",
+    "function": "drawCommand ImageReferenceCommand branch",
+    "range": [
+      520,
+      561
+    ],
+    "proof": "Onlyoneaddedvalidationcounterlineoutside drawCommand; removingthatline reproducesHEADbytes; RRalsoleftmapperunchanged"
+  },
+  "new_body_branch": {
+    "file": "runtime/render/src/skia_render_cache.cpp",
+    "functions": [
+      "needsPreparedBody",
+      "restoreBodyPixels",
+      "retainBodyPixels",
+      "prepare bodyReusable branch"
+    ],
+    "restricted_to": "CompactStrokeReferenceCommand algorithmVersion4, GPUpreparedbody, destinationindependentisolatedN32source; no ImageReferenceCommand branch",
+    "composition": "samefullscratch andfullhistoricalmasks, native transparency/zordertests passed"
+  }
+}

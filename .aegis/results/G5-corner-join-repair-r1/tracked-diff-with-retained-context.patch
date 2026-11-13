@@ -1,0 +1,408 @@
+diff --git a/runtime/ink/include/canvas/ink/compact_contour.hpp b/runtime/ink/include/canvas/ink/compact_contour.hpp
+index 7240bd23..65e98f9d 100644
+--- a/runtime/ink/include/canvas/ink/compact_contour.hpp
++++ b/runtime/ink/include/canvas/ink/compact_contour.hpp
+@@ -1,6 +1,7 @@
+ #pragma once
+ #include "canvas/runtime/ink_brush.hpp"
+ #include <optional>
++#include <limits>
+ #include <span>
+ #include <vector>
+ namespace canvas::ink {
+@@ -16,6 +17,16 @@ class CompactContourCompiler final {
+     void append(std::span<const foundation::InkKnot>,double totalDistance,CompactContour&);
+     void finish(double totalDistance,CompactContour&);
+     std::uint64_t visits()const noexcept{return visits_;}
++    // At most two patches/one corner node per effective knot, sixteen total
++    // taper cuts, one carried patch and finish. Saturate before reservations.
++    static constexpr std::size_t maxPatches(std::size_t knots) noexcept {
++        constexpr auto max=std::numeric_limits<std::size_t>::max();
++        return knots>(max-35)/2?max:knots*2+35;
++    }
++    static constexpr std::size_t maxCaps(std::size_t knots) noexcept {
++        constexpr auto max=std::numeric_limits<std::size_t>::max();
++        return knots>max-18?max:knots+18;
++    }
+  private:
+     struct Anchor {ContourPoint left,right;};
+     foundation::InkBrushConfig config_;
+diff --git a/runtime/ink/src/compact_contour.cpp b/runtime/ink/src/compact_contour.cpp
+index 60abd886..a070dedc 100644
+--- a/runtime/ink/src/compact_contour.cpp
++++ b/runtime/ink/src/compact_contour.cpp
+@@ -70,11 +70,28 @@ void CompactContourCompiler::appendKnot(const foundation::InkKnot& k,double tota
+         }else{
+             const auto px=current_->x-previous_->x,py=current_->y-previous_->y,pl=std::hypot(px,py);
+             const auto ox=pl>0?-py/pl:nx,oy=pl>0?px/pl:ny,dot=ox*nx+oy*ny;
+-            // Same direction-aware side projection as the reference. At a
+-            // reversal retain the corner rather than blend normals to zero.
+-            const auto ax=dot<0?ox:nx+(ox-nx)*dot,ay=dot<0?oy:ny+(oy-ny)*dot;
+-            accept(makeAnchor(*current_,ax,ay,currentDistance_,total),dot<0,out);
+-            if(dot<0)out.caps.push_back({current_->x,current_->y,radius(*current_,currentDistance_,total)});
++            if(dot<0){
++                // The round join lives at this actual knot. Midpoint smoothing
++                // must reach its incoming support before changing direction;
++                // otherwise the separate disk can be an isolated component.
++                const auto incoming=makeAnchor(*current_,ox,oy,currentDistance_,total);
++                const auto outgoing=makeAnchor(*current_,nx,ny,currentDistance_,total);
++                lastPatch_=ContourPatch{midpoint_->left,anchor_->left,incoming.left,
++                                       midpoint_->right,anchor_->right,incoming.right};
++                out.patches.push_back(*lastPatch_);
++                // Both support pairs and the common control are in the same
++                // round/marker-ellipse node. This bridge cannot add a miter or
++                // a bulge outside the node, even at a degenerate 180-degree U.
++                const ContourPoint center{current_->x,current_->y};
++                lastPatch_=ContourPatch{incoming.left,center,outgoing.left,
++                                       incoming.right,center,outgoing.right};
++                out.patches.push_back(*lastPatch_);
++                anchor_=midpoint_=outgoing;++anchors_;
++                out.caps.push_back({current_->x,current_->y,radius(*current_,currentDistance_,total)});
++            }else{
++                const auto ax=nx+(ox-nx)*dot,ay=ny+(oy-ny)*dot;
++                accept(makeAnchor(*current_,ax,ay,currentDistance_,total),false,out);
++            }
+         }
+         previous_=current_;current_=k;distance_+=l;currentDistance_=distance_;
+ 
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 0523bc3d..174032ab 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -232,6 +232,22 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+         target_link_libraries(axiom_canonical_prepared_body_tests PRIVATE "-framework Foundation" objc)
+     endif()
+     add_test(NAME G5CanonicalPreparedBody COMMAND axiom_canonical_prepared_body_tests)
++    add_executable(axiom_canonical_latency_body_material_tests tests/canonical_latency_body_material_test.cpp)
++    target_link_libraries(axiom_canonical_latency_body_material_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_canonical_latency_body_material_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++    if(APPLE)
++        target_link_libraries(axiom_canonical_latency_body_material_tests PRIVATE "-framework Foundation" objc)
++        add_test(NAME G5CanonicalLatencyBodyMaterial COMMAND axiom_canonical_latency_body_material_tests "${CMAKE_CURRENT_BINARY_DIR}/canonical-latency-body-material.json")
++    endif()
++    add_executable(axiom_postworker_render_reuse_tests tests/postworker_render_reuse_test.cpp)
++    target_link_libraries(axiom_postworker_render_reuse_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_postworker_render_reuse_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++    if(APPLE)
++        target_link_libraries(axiom_postworker_render_reuse_tests PRIVATE "-framework Foundation" objc)
++        foreach(reuse_case canonical warm cold leases)
++            add_test(NAME G5PostworkerRenderReuse-${reuse_case} COMMAND axiom_postworker_render_reuse_tests ${reuse_case} "${CMAKE_CURRENT_BINARY_DIR}/render-reuse-${reuse_case}.json")
++        endforeach()
++    endif()
+     add_executable(axiom_cpu_postworker_replay_tests tests/cpu_postworker_replay_test.cpp)
+     target_link_libraries(axiom_cpu_postworker_replay_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     target_include_directories(axiom_cpu_postworker_replay_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+@@ -552,6 +568,11 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
+     endif()
+     add_test(NAME G5SkiaChunkRangeEntry
+         COMMAND axiom_render_skia_chunk_range_entry_tests)
++    add_executable(axiom_corner_join_tests tests/corner_join_test.cpp)
++    target_link_libraries(axiom_corner_join_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_corner_join_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
++    target_compile_features(axiom_corner_join_tests PRIVATE cxx_std_20)
++    add_test(NAME G5CornerJoin COMMAND axiom_corner_join_tests)
+     add_executable(axiom_prepared_geometry_tests tests/prepared_geometry_test.cpp)
+     target_link_libraries(axiom_prepared_geometry_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     target_include_directories(axiom_prepared_geometry_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+diff --git a/runtime/render/src/prepared_body_job.cpp b/runtime/render/src/prepared_body_job.cpp
+index d1e599b6..1667765d 100644
+--- a/runtime/render/src/prepared_body_job.cpp
++++ b/runtime/render/src/prepared_body_job.cpp
+@@ -6,43 +6,51 @@
+ #include <limits>
+ 
+ namespace canvas::render::internal {
++namespace {
++constexpr std::size_t compileKnots=32;
++constexpr auto scratchPatches=ink::CompactContourCompiler::maxPatches(compileKnots);
++constexpr auto scratchCaps=ink::CompactContourCompiler::maxCaps(compileKnots);
++constexpr auto scratchBytes=scratchPatches*sizeof(ink::ContourPatch)+scratchCaps*sizeof(ink::ContourCap);
++constexpr auto baseBytes=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+2*scratchBytes;
++}
+ std::size_t PreparedBodyJob::minimumBytes(std::size_t count)noexcept{
+-    const auto base=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+
+-        64*(sizeof(ink::ContourPatch)+sizeof(ink::ContourCap));
+-    const auto blocks=count/32+(count%32!=0),unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+-    return blocks>(std::numeric_limits<std::size_t>::max()-base)/unit?std::numeric_limits<std::size_t>::max():base+blocks*unit;
++    constexpr auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
++    const auto blocks=count/compileKnots+(count%compileKnots!=0);
++    return blocks>(std::numeric_limits<std::size_t>::max()-baseBytes)/replayUnit?
++        std::numeric_limits<std::size_t>::max():baseBytes+blocks*replayUnit;
+ }
+ std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const ReferenceCommand& source,SourceRetentions sources,
+     std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage){
+     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source).content.get().stroke;
+     const auto count=stroke.knots.size();
+-    if(count>std::numeric_limits<std::size_t>::max()-50)return {};
+-    constexpr auto extra=std::size_t(64);
+-    const auto base=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+
+-        extra*(sizeof(ink::ContourPatch)+sizeof(ink::ContourCap));
+-    if(base>cap)return {};
+-    const auto fullUnit=sizeof(SkPath)+512+sizeof(ink::ContourCap)+sizeof(PreparedNavigationGeometry::Group);
+-    const bool full=count+extra<=(cap-base)/fullUnit;
+-    const auto blocks=count/32+(count%32!=0);
+-    const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+-    if(!full&&blocks>(cap-base)/replayUnit)return {};
+-    auto estimate=base+(full?(count+extra)*fullUnit:blocks*replayUnit);
++    if(baseBytes>cap)return {};
++    const auto patchCount=ink::CompactContourCompiler::maxPatches(count);
++    const auto capCount=ink::CompactContourCompiler::maxCaps(count);
++    const auto ribbonCount=patchCount-1;
++    constexpr auto pathUnit=sizeof(SkPath)+512+sizeof(PreparedNavigationGeometry::Group);
++    constexpr auto capUnit=sizeof(ink::ContourCap)+sizeof(PreparedNavigationGeometry::Group);
++    auto fullBytes=baseBytes;
++    bool full=ribbonCount<=(cap-fullBytes)/pathUnit;
++    if(full){fullBytes+=ribbonCount*pathUnit;full=capCount<=(cap-fullBytes)/capUnit;if(full)fullBytes+=capCount*capUnit;}
++    const auto replayBytes=minimumBytes(count);
++    if(!full&&replayBytes>cap)return {};
++    auto estimate=full?fullBytes:replayBytes;
+     auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,!full);
+-    // The existing compact checkpoint realization is also the quota fallback;
+-    // it has the same entry cap and all replay compilation stays observable.
++    // Checkpoint geometry remains the existing quota fallback. Reserve both
++    // compilation and replay scratch before allocating either vector.
+     bool replay=!full;
+-    if(!token&&full){estimate=base+blocks*replayUnit;if(estimate>cap)return {};
++    if(!token&&full){estimate=replayBytes;if(estimate>cap)return {};
+         token=budget->reserve(resources::ResourceClass::kRecorded,estimate,true);replay=true;}
+     if(!token)return {};
+     resources::ResourceLease reservation(budget,*token);
+     auto result=std::make_shared<PreparedNavigationGeometry>();
+     auto job=std::make_unique<PreparedBodyJob>(stroke.config);job->replay_=replay;job->budget_=budget;
+-    job->emitted_.patches.reserve(extra);job->emitted_.caps.reserve(extra);
+-    if(replay){result->replay_.reserve(blocks);
+-        result->replayOutput_.patches.reserve(extra);result->replayOutput_.caps.reserve(extra);
++    job->emitted_.patches.reserve(scratchPatches);job->emitted_.caps.reserve(scratchCaps);
++    if(replay){result->replay_.reserve(count/compileKnots+(count%compileKnots!=0));
++        result->replayOutput_.patches.reserve(scratchPatches);result->replayOutput_.caps.reserve(scratchCaps);
+     }
+-    else {result->ribbons_.reserve(count+extra);result->caps_.reserve(count+extra);
+-        result->ribbonGroups_.reserve((count+extra+31)/32);result->capGroups_.reserve((count+extra+31)/32);}
++    else {result->ribbons_.reserve(ribbonCount);result->caps_.reserve(capCount);
++        result->ribbonGroups_.reserve((ribbonCount+31)/32);result->capGroups_.reserve((capCount+31)/32);}
+     result->source_=source;result->sourceLeases_=std::move(sources);result->contour_=true;result->ready_=false;
+     result->lease_=std::move(reservation);result->bytes_=estimate;result->usage_=usage;usage->bytes+=estimate;
+     result->job_=std::move(job);return result;
+@@ -86,8 +94,13 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
+             body.exactDerivedFinite_=body.exactDerivedFinite_&&PreparedNavigationGeometry::exactCapPath(stroke.config,cap).isFinite();join(blockBounds_,bounds);
+             if(!replay_){group(body.capGroups_,body.caps_.size(),bounds);body.caps_.push_back(cap);}++work.pathPrimitives;}
+         if(cap_<emitted_.caps.size())return false;
+-        const auto emitted=(emitted_.patches.empty()?0:emitted_.patches.size()-1)+emitted_.caps.size();
+-        if(replay_)body.replay_.push_back({*checkpoint_,blockKnot_,blockCount_,primitive_,primitive_+emitted,blockBounds_});primitive_+=emitted;
++        if(replay_){
++            const auto ribbons=emitted_.patches.empty()?0:emitted_.patches.size()-1;
++            const auto caps=emitted_.caps.size();
++            body.replay_.push_back({*checkpoint_,blockKnot_,blockCount_,body.replayRibbonCount_,body.replayRibbonCount_+ribbons,
++                                   body.replayCapCount_,body.replayCapCount_+caps,blockBounds_});
++            body.replayRibbonCount_+=ribbons;body.replayCapCount_+=caps;
++        }
+         if(cursor_!=knots.size()){phase_=Phase::kCompile;return false;}
+         // All source and path/bounds work was charged above. No final footprint
+         // traversal or whole-history constructor is hidden in publication.
+diff --git a/runtime/render/src/prepared_body_job.hpp b/runtime/render/src/prepared_body_job.hpp
+index 1dc4bda4..71be1ba9 100644
+--- a/runtime/render/src/prepared_body_job.hpp
++++ b/runtime/render/src/prepared_body_job.hpp
+@@ -17,7 +17,7 @@ class PreparedBodyJob final {
+     Phase phase_=Phase::kMetrics;
+     std::shared_ptr<resources::ResourceBudgetManager> budget_;
+     bool replay_=false;
+-    std::size_t cursor_=0,ribbon_=0,cap_=0,blockKnot_=0,blockCount_=0,primitive_=0,pathBytes_=0;
++    std::size_t cursor_=0,ribbon_=0,cap_=0,blockKnot_=0,blockCount_=0,pathBytes_=0;
+     ink::CompactContourCompiler compiler_;
+     std::optional<ink::CompactContourCompiler> checkpoint_;
+     ink::CompactContour emitted_;
+diff --git a/runtime/render/src/skia_prepared_geometry.cpp b/runtime/render/src/skia_prepared_geometry.cpp
+index 80a44997..1e584370 100644
+--- a/runtime/render/src/skia_prepared_geometry.cpp
++++ b/runtime/render/src/skia_prepared_geometry.cpp
+@@ -1,4 +1,5 @@
+ #include "canvas/foundation/internal/g5_observation.hpp"
++#include "canvas/foundation/internal/frame_timing.hpp"
+ namespace g5 = canvas::foundation::internal::g5;
+ #include "skia_prepared_geometry.hpp"
+ #include "prepared_body_job.hpp"
+@@ -97,8 +98,8 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
+         support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));}
+     exactValidationComplete_=true;
+     replay_.reserve((stroke.knots.size()+replayBlockKnots-1)/replayBlockKnots);
+-    replayOutput_.patches.reserve(replayBlockKnots+replayBlockExtras);replayOutput_.caps.reserve(replayBlockKnots+replayBlockExtras);
+-    ink::CompactContourCompiler compiler(stroke.config);std::size_t primitive=0;
++    replayOutput_.patches.reserve(ink::CompactContourCompiler::maxPatches(replayBlockKnots));replayOutput_.caps.reserve(ink::CompactContourCompiler::maxCaps(replayBlockKnots));
++    ink::CompactContourCompiler compiler(stroke.config);replayRibbonCount_=replayCapCount_=0;
+     for(std::size_t first=0;first<stroke.knots.size();first+=replayBlockKnots){
+         const auto count=std::min(replayBlockKnots,stroke.knots.size()-first);
+         auto checkpoint=compiler;replayOutput_.patches.clear();replayOutput_.caps.clear();
+@@ -114,17 +115,24 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
+             exactDerivedFinite_=exactDerivedFinite_&&path.isFinite();join(path.getBounds());
+         }
+         for(const auto& cap:replayOutput_.caps){exactDerivedFinite_=exactDerivedFinite_&&exactCapPath(stroke.config,cap).isFinite();join(compactContourCapBounds(cap));}
+-        const auto emitted=(replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1)+replayOutput_.caps.size();
+-        if(work)work->syncPathPrimitives+=emitted;
+-        replay_.push_back({std::move(checkpoint),first,count,primitive,primitive+emitted,bounds});primitive+=emitted;
++        const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
++        const auto caps=replayOutput_.caps.size();
++        if(work)work->syncPathPrimitives+=ribbons+caps;
++        replay_.push_back({std::move(checkpoint),first,count,replayRibbonCount_,replayRibbonCount_+ribbons,replayCapCount_,replayCapCount_+caps,bounds});
++        replayRibbonCount_+=ribbons;replayCapCount_+=caps;
+     }
+     replayOutput_.patches.clear();replayOutput_.caps.clear();
+ }
+ std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
++    AXIOM_FRAME_TIMING_SCOPE(selectTiming,prepared_select);
+     first=std::min(first,primitiveCount());const auto clip=compactContourCullBounds(canvas,deviceDemand);
+     if(!clip)return first;
+     if(!replay_.empty()){
+-        for(const auto& block:replay_)if(block.last>first&&visibleContour(clip,block.bounds))return std::max(first,block.first);
++        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
++            const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
++            const auto end=pass?replayRibbonCount_+block.capLast:block.last;
++            if(end>first&&visibleContour(clip,block.bounds))return std::max(first,begin);
++        }
+     }else{
+         for(const auto& group:ribbonGroups_)if(group.end>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin);
+         for(const auto& group:capGroups_)if(group.end+ribbons_.size()>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin+ribbons_.size());
+@@ -143,6 +151,7 @@ std::size_t PreparedNavigationGeometry::footprint()const{
+ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
+     G5_SCOPE(g5Work,g5::Tag::geometry_replay,g5::Purpose::none);
+ 
++    AXIOM_FRAME_TIMING_SCOPE(drawTiming,prepared_draw);
+     PreparedGeometryDraw work;if(!contour_)return work;
+     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
+     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
+@@ -151,12 +160,15 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
+     SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode((canvas.recordingContext()||canvas.imageInfo().colorType()==kAlpha_8_SkColorType)?SkBlendMode::kSrcOver:SkBlendMode::kLighten);paint.setColor(SK_ColorWHITE);
+     if(!replay_.empty()){
+         const auto& stroke=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke;
+-        for(const auto& block:replay_){
+-            if(block.last<=first)continue;if(block.first>=last)break;
++        // Match the full compiler's scalar union order. Interleaving caps
++        // between checkpoint ribbons changes integer AA accumulation at self
++        // intersections. Global primitive indices are ribbons, then all caps.
++        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
++            const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
++            const auto end=pass?replayRibbonCount_+block.capLast:block.last;
++            if(end<=first)continue;if(begin>=last)break;
+             ++work.chunksVisited;if(!visible(block.bounds))continue;
+             if(replayOutputBlock_!=&block){
+-                // This pointer names a block in this ready immutable body's
+-                // pinned vector, never an external source/hash-only identity.
+                 replayOutputBlock_=nullptr;
+                 replayOutput_.patches.clear();replayOutput_.caps.clear();auto compiler=block.compiler;
+                 compiler.append({stroke.knots.data()+block.knot,block.count},replayDistance_,replayOutput_);
+@@ -165,13 +177,12 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
+                 if(block.knot+block.count==stroke.knots.size())compiler.finish(replayDistance_,replayOutput_);
+                 replayOutputBlock_=&block;
+             }
+-            const auto ribbons=replayOutput_.patches.empty()?0:replayOutput_.patches.size()-1;
+-            for(auto i=std::max(first,block.first);i<std::min(last,block.last);++i){
+-                ++work.primitivesTested;const auto local=i-block.first;
+-                if(local<ribbons){
++            for(auto i=std::max(first,begin);i<std::min(last,end);++i){
++                ++work.primitivesTested;const auto local=i-begin;
++                if(pass==0){
+                     auto path=compactContourRibbon(std::span(replayOutput_.patches).subspan(local,2));
+                     if(visible(path.getBounds())){canvas.drawPath(path,paint);++work.primitivesDrawn;}
+-                }else{const auto& cap=replayOutput_.caps[local-ribbons];
++                }else{const auto& cap=replayOutput_.caps[local];
+                     if(visible(compactContourCapBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
+             }
+         }
+@@ -425,7 +436,6 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+     ink::CompactContour staged;
+     resources::ResourceLease stagingLease;
+     const bool contour=compact&&compact->content.get().stroke.config.algorithmVersion==4;
+-    const auto stagingUnit=sizeof(ink::ContourPatch)+sizeof(ink::ContourCap);
+     const auto replay=[&]()->std::shared_ptr<const PreparedNavigationGeometry>{
+         // Drop optional full-path staging before admitting its compact replacement.
+         staged={};stagingLease.reset();
+@@ -433,7 +443,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+         // no new Brush geometry or larger entry/global budget is admitted.
+         constexpr auto block=PreparedNavigationGeometry::replayBlockKnots;
+         const auto blocks=(count+block-1)/block;
+-        const auto scratch=(block+PreparedNavigationGeometry::replayBlockExtras)*stagingUnit;
++        const auto scratch=ink::CompactContourCompiler::maxPatches(block)*sizeof(ink::ContourPatch)+ink::CompactContourCompiler::maxCaps(block)*sizeof(ink::ContourCap);
+         const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+         if(scratch>cap-base||blocks>(cap-base-scratch)/replayUnit)return denied();
+         const auto replayEstimate=base+scratch+blocks*replayUnit;
+@@ -451,21 +461,19 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+         }catch(const std::bad_alloc&){return denied();}
+     };
+     if(contour){
+-        // The pinned compiler emits at most one anchor/cap per knot, plus
+-        // sixteen global taper cuts and two finish patches. Admit its exact
+-        // temporary capacity before compiling, then admit paths from actual
+-        // anchors rather than assuming 2KiB of paths for every input knot.
+-        constexpr auto extra=18U;
+-        if(count>std::numeric_limits<std::size_t>::max()-extra)return denied();
+-        if(count+extra>(cap-base)/stagingUnit){
+-            return replay();
+-        }
+-        const auto stagingBytes=base+(count+extra)*stagingUnit;
++        // A sharp knot emits an incoming flush and an in-node bridge. Admit
++        // the complete bounded expansion before the compiler writes vectors.
++        const auto patches=ink::CompactContourCompiler::maxPatches(count);
++        const auto caps=ink::CompactContourCompiler::maxCaps(count);
++        if(patches>(cap-base)/sizeof(ink::ContourPatch))return replay();
++        const auto patchBytes=patches*sizeof(ink::ContourPatch);
++        if(caps>(cap-base-patchBytes)/sizeof(ink::ContourCap))return replay();
++        const auto stagingBytes=base+patchBytes+caps*sizeof(ink::ContourCap);
+         auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
+         while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
+         if(!token)return criticalContour?replay():denied();stagingLease=resources::ResourceLease(budget,*token);
+         try{
+-            staged.patches.reserve(count+extra);staged.caps.reserve(count+extra);
++            staged.patches.reserve(patches);staged.caps.reserve(caps);
+             const auto& stroke=compact->content.get().stroke;
+             ink::CompactContourCompiler compiler(stroke.config);
+             const auto total=ink::compactLength(stroke.knots);
+diff --git a/runtime/render/src/skia_prepared_geometry.hpp b/runtime/render/src/skia_prepared_geometry.hpp
+index b37d7ab3..8afabdf2 100644
+--- a/runtime/render/src/skia_prepared_geometry.hpp
++++ b/runtime/render/src/skia_prepared_geometry.hpp
+@@ -56,7 +56,7 @@ class PreparedNavigationGeometry final {
+     // Visitor false stops at a decided component; source/checkpoints stay pinned.
+     bool visitExact(const SkRect&,const std::function<bool(const SkPath&)>&,ExactComponentWork&)const;
+     std::span<const double> distances()const noexcept{return distances_;}
+-    std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replay_.back().last;}
++    std::size_t primitiveCount()const noexcept{return replay_.empty()?ribbons_.size()+caps_.size():replayRibbonCount_+replayCapCount_;}
+     double totalDistance()const noexcept{return distances_.empty()?replayDistance_:distances_.back();}
+     std::size_t nextVisiblePrimitive(SkCanvas&,std::size_t first,const SkRect* deviceDemand=nullptr)const;
+     PreparedGeometryDraw drawContour(SkCanvas&,std::size_t first=0,std::size_t count=~std::size_t{0},const SkRect* deviceDemand=nullptr)const;
+@@ -72,11 +72,12 @@ class PreparedNavigationGeometry final {
+     SkRect support_=SkRect::MakeEmpty();
+     std::unique_ptr<PreparedBodyJob> job_;
+     struct Group {SkRect bounds;std::size_t begin=0,end=0;};
+-    struct ReplayBlock {ink::CompactContourCompiler compiler;std::size_t knot=0,count=0,first=0,last=0;SkRect bounds;};
+-    static constexpr std::size_t replayBlockKnots=256,replayBlockExtras=32;
++    struct ReplayBlock {ink::CompactContourCompiler compiler;std::size_t knot=0,count=0,first=0,last=0,capFirst=0,capLast=0;SkRect bounds;};
++    static constexpr std::size_t replayBlockKnots=256;
+     std::vector<ReplayBlock> replay_;
++    std::size_t replayRibbonCount_=0,replayCapCount_=0;
+     // Owner-thread draw scratch; source/checkpoint geometry stays immutable.
+-    // 16 taper cuts, carried patch and finish fit within32 extra slots.
++    // Compiler bounds include two patches per corner, taper cuts and carry.
+     mutable ink::CompactContour replayOutput_;
+     // The existing charged scratch may retain one immutable checkpoint output
+     // between adjacent owner-thread draw ranges. Exact queries also use this
+diff --git a/runtime/render/tests/ink_v2_material_test.cpp b/runtime/render/tests/ink_v2_material_test.cpp
+index a4c24aa2..8a79964b 100644
+--- a/runtime/render/tests/ink_v2_material_test.cpp
++++ b/runtime/render/tests/ink_v2_material_test.cpp
+@@ -223,7 +223,15 @@ int main(int argc,char** argv){
+             for(const auto sides:{std::array{a.leftControl,a.leftEnd,b.leftStart,b.leftControl},std::array{a.rightControl,a.rightEnd,b.rightStart,b.rightControl}}){
+                 const auto u=ink::ContourPoint{sides[1].x-sides[0].x,sides[1].y-sides[0].y};
+                 const auto v=ink::ContourPoint{sides[3].x-sides[2].x,sides[3].y-sides[2].y};
+-                require(sides[1]==sides[2]&&std::abs(u.x*v.y-u.y*v.x)<1e-8,"outline has tangent discontinuity");}}
++                require(sides[1]==sides[2],"outline has a disconnected boundary");
++                if(std::abs(u.x*v.y-u.y*v.x)>=1e-8){
++                    // A round node can join the two one-sided contours at a
++                    // sharp reversal. Smooth spans still require tangent parity;
++                    // non-C1 boundaries must be inside an actual connected node.
++                    bool roundNode=false;for(const auto& cap:fitted.caps)
++                        roundNode=roundNode||std::hypot(sides[1].x-cap.x,sides[1].y-cap.y)<=cap.radius+1e-8;
++                    require(roundNode,"smooth outline has tangent discontinuity outside a round join");
++                }}}
+         const auto image=draw(c,jitter);double roughness=0;std::vector<double> edge;
+         for(unsigned x=35;x<210;++x){unsigned first=0;for(unsigned y=15;y<110;++y)if(alpha(image,x,y)>=128){first=y;break;}
+             const auto a=first?alpha(image,x,first-1):0,b=alpha(image,x,first);edge.push_back(first-1+(127.5-a)/std::max(1.,double(b)-a));}

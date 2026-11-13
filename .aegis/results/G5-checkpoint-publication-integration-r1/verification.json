@@ -1,0 +1,29 @@
+{
+  "old_existing_RED": {
+    "path": "out/G5-checkpoint-publication-integration-r1/old-existing-red.log",
+    "sha256": "61f522e53a94ca480675850a4af2ceaed30312c1c5e3265028abcb1f9f761443",
+    "compiled_inputs": 14398,
+    "knots": 7199,
+    "pixels_equal": true,
+    "budget_unchanged": 291144
+  },
+  "strengthened_RED": {
+    "path": "out/G5-checkpoint-publication-integration-r1/strong-red.log",
+    "sha256": "e9dc7d73c1927a276ed69415f0fa457396ba955a9f17474b61193dda5985126c",
+    "expected": "EMPTY_DRAW_RANGE_COMPILED_CHECKPOINT"
+  },
+  "GREEN": {
+    "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native --output-on-failure -R previousfailure+CJ4+RR4+CL",
+    "passed": 10,
+    "failed": 0,
+    "log": {
+      "path": "out/G5-checkpoint-publication-integration-r1/affected-native-tests.log",
+      "sha256": "575119242918e76546e974eecad8410feb7eab74381fc5b517085d1af0b540c1"
+    }
+  },
+  "work": "work-observation.json",
+  "unchanged_checks": "control29Node/12Python/120boundarieskept; no repeatedunchangeditems",
+  "full51": "notrerun; frozen10subsetallpassednonewfailure",
+  "compiler_and_Brush_geometry_unchanged": true,
+  "new_browser_starts": 0
+}

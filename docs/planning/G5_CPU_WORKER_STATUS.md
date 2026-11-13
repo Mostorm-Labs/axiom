@@ -1,5 +1,42 @@
 # G5 independent CPU Worker development checkpoint
 
+## Canonical body material experiment · 2026-11-13
+
+New experimental Demo: http://127.0.0.1:4333/example.html (local0.4.3.0,
+diagnosticsOFF, privateCPUWorkerON). Existing4331/4332 remain untouched.
+One optional completed unmasked body-material artifact reuses coverage across
+mask-only changes. Native eight-copy coverage128→16, subsequent append/remove/
+replace/reorder0newsteps, independentpixels andleases/identitychecks pass.
+
+Fresh ordinary DPR4 observations are limited: AB15.312→15.001s, C13.438→11.010s,
+but post-last-Worker10.364→10.141s remains. Append-immediatezoom8.839→4.186s;
+RAF p95 rose9.1→30.4ms, so this is not a general smoothness claim. Erase-zoom
+8.984→8.866s is essentially unchanged. Primary original replay/pixels qualify;
+mixed known302-image baseline guard has zero new differences, while global
+image qualification remains open. No G5/P34/performance promotion follows.
+See `G5_CANONICAL_CONVERGENCE_20261113.md` and the new exact result namespace.
+
+## Render material reuse · 2026-11-13
+
+The scoped dirty candidate preserves complete canonical material for live v4
+feedback and shares equivalent completed isolated material between copies.
+Cold transient preparation uses the existing cooperative allowance. Native
+one/eight-copy work drops from16/128 to16/16 coverage steps; warm erasure adds
+zero new coverage. Original semantic mutations, masks, brush/AA and all budget
+limits remain unchanged.
+
+Five finite Web windows observed DPR4 AB28.293→13.736s and C17.481→11.566s.
+The mixed49-object immediate zoom-out rows remain approximately9s, with no
+material improvement. The post-Worker C convergence wait remains about10.6s.
+DPR1 candidate measured AB10.233s/C5.458s, with substantial input-time variation.
+These are scoped observations, not an overall performance PASS. Final primary
+snapshots/Operations and independent CPU reference pixels agree. Corrected
+mixed-scene references completed after an initial10s driver misconfiguration,
+but both baseline and candidate show the same4325 non-AA mismatches. That
+original-reference proof gap blocksRR3; no4333 candidate is served. Existing4331/4332 demos remain unchanged; no new default is
+promoted. See `G5_POSTWORKER_RENDER_REUSE_20261113.md` and the exact result root
+`.aegis/results/G5-postworker-render-reuse-r1/`.
+
 ## CPUW7 postWorker experiment · 2026-11-13
 
 The existing [4331 Demo](http://127.0.0.1:4331/example.html) remains the

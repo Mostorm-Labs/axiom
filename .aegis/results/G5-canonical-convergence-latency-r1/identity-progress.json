@@ -1,0 +1,19 @@
+{
+  "status": "GREEN",
+  "actual_path": "canonicalSkiaRenderCacheprepare/CompactStrokeRasterJob/completeBodyPixels",
+  "cold8maskclasses": {
+    "before_steps": 128,
+    "after_steps": 16
+  },
+  "mask_only_variants": "body-material-identity-green.json:append/removal/replace/actualtwo-maskreorder allGPUtiles+steps0/nonAA0",
+  "identity_lease_assertions": [
+    "bodyPixelBytes>0/bodyPixelBuilds>0 actuallynewslot",
+    "maskchangehitsbodyPixelHits andcoverageunchanged",
+    "pose/seed/camera/resourceepoch eachcoverageincreases notstalereuse",
+    "sourceremovaloptionalbodymaystayresident",
+    "clear+preparedclear underactiveGPUepoch keepsRasterpendingRelease>0",
+    "end+actualGPUcompletionmanager budgetused0 finalrelease"
+  ],
+  "capacity_policy": "body+materialsummaxBytes/maxEntries;optionalbodydropfirstonstoreallocationdenial. Pixelrasteronlysinglecompletedcrop; no oldmasks sourcepinned",
+  "scope": "newtest itself contains actualruntime assertions, notJSON-onlyclaim"
+}

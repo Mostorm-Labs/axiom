@@ -1,0 +1,47 @@
+{
+  "diagnosis": "FINITE_NO_REPRODUCTION_WITH_QUALIFICATION_LIMIT",
+  "confirmed": {
+    "actual_idle_ms": 1200003,
+    "visible_focus_before_after": true,
+    "idle_frame_calls": 29,
+    "idle_GPU_write_delta": 0,
+    "new_strokes": 4,
+    "transforms": 2,
+    "final_objects": 44,
+    "frame_rejections": 0,
+    "input_rejections": 0,
+    "ring_loss": 0,
+    "historical_masks": 80,
+    "historical_segments": 2560
+  },
+  "unproven_hypotheses": [
+    {
+      "id": "handoff",
+      "finding": "no missing sampledpreview/canonical in stable short+idlecontrols; retainedidentity provesadmission/apply. User dynamicerase state not covered."
+    },
+    {
+      "id": "frame_exception_stopsRAF",
+      "finding": "actualframeokfalse0; no catchfailure inthese runs, no syntheticfault. Sourcelevelrisk remains, notusercauseproof."
+    },
+    {
+      "id": "idleTTL_or_needprewarm",
+      "finding": "no20minTTLfound; thisconditionnorepro; 29naturalidleframes meanstrictnostepintervalunqualified, no prewarmfixauthorized."
+    }
+  ],
+  "qualification_blocker": "ENVIRONMENT_OR_FOREGROUND_VISIBILITY_QUALIFICATION: strict no runtime RAF condition failed; 29idle requests noGPUwrites, unknown natural origin; no new20minwindowallowed",
+  "latest_user_precondition": "User says repeatedpartialerasesbeforeidle. Persistedmasksalone do not reproduce livecache/pending/displayhistory.",
+  "minimum_successor_proposal": {
+    "kind": "diagnostic only until causallylocalized",
+    "owner": "existing interaction pendingLocal/CPU erase -> OperationEngine -> display records/composition -> canonical/preview/fence; SDKcollector/frame scheduler observed",
+    "sequence": "sameordinaryrootdocument: consecutivepartialerases -> immediate nextdraw anddrag both while pending and aftersettled; preserve originaldocument/operations ifavailable. Capture exact pending serial/key, maskrevision, display covered/retire and frame basis atentry. Addpassive hover/resize trigger facts onlytoexplainnaturalRAF. 20minrepeat requires newfinite authorization, notautomatic.",
+    "no_behavior_patch_yet": true
+  },
+  "forbidden_claims": [
+    "repaired",
+    "prewarmrequired",
+    "allidlePASS",
+    "performancePASS",
+    "circlefix",
+    "P34PASS"
+  ]
+}

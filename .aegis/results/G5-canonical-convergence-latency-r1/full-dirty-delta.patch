@@ -1,0 +1,759 @@
+diff --git a/docs/planning/G5_CPU_WORKER_STATUS.md b/docs/planning/G5_CPU_WORKER_STATUS.md
+index 3743a85f..006a8055 100644
+--- a/docs/planning/G5_CPU_WORKER_STATUS.md
++++ b/docs/planning/G5_CPU_WORKER_STATUS.md
+@@ -1,5 +1,42 @@
+ # G5 independent CPU Worker development checkpoint
+ 
++## Canonical body material experiment · 2026-11-13
++
++New experimental Demo: http://127.0.0.1:4333/example.html (local0.4.3.0,
++diagnosticsOFF, privateCPUWorkerON). Existing4331/4332 remain untouched.
++One optional completed unmasked body-material artifact reuses coverage across
++mask-only changes. Native eight-copy coverage128→16, subsequent append/remove/
++replace/reorder0newsteps, independentpixels andleases/identitychecks pass.
++
++Fresh ordinary DPR4 observations are limited: AB15.312→15.001s, C13.438→11.010s,
++but post-last-Worker10.364→10.141s remains. Append-immediatezoom8.839→4.186s;
++RAF p95 rose9.1→30.4ms, so this is not a general smoothness claim. Erase-zoom
++8.984→8.866s is essentially unchanged. Primary original replay/pixels qualify;
++mixed known302-image baseline guard has zero new differences, while global
++image qualification remains open. No G5/P34/performance promotion follows.
++See `G5_CANONICAL_CONVERGENCE_20261113.md` and the new exact result namespace.
++
++## Render material reuse · 2026-11-13
++
++The scoped dirty candidate preserves complete canonical material for live v4
++feedback and shares equivalent completed isolated material between copies.
++Cold transient preparation uses the existing cooperative allowance. Native
++one/eight-copy work drops from16/128 to16/16 coverage steps; warm erasure adds
++zero new coverage. Original semantic mutations, masks, brush/AA and all budget
++limits remain unchanged.
++
++Five finite Web windows observed DPR4 AB28.293→13.736s and C17.481→11.566s.
++The mixed49-object immediate zoom-out rows remain approximately9s, with no
++material improvement. The post-Worker C convergence wait remains about10.6s.
++DPR1 candidate measured AB10.233s/C5.458s, with substantial input-time variation.
++These are scoped observations, not an overall performance PASS. Final primary
++snapshots/Operations and independent CPU reference pixels agree. Corrected
++mixed-scene references completed after an initial10s driver misconfiguration,
++but both baseline and candidate show the same4325 non-AA mismatches. That
++original-reference proof gap blocksRR3; no4333 candidate is served. Existing4331/4332 demos remain unchanged; no new default is
++promoted. See `G5_POSTWORKER_RENDER_REUSE_20261113.md` and the exact result root
++`.aegis/results/G5-postworker-render-reuse-r1/`.
++
+ ## CPUW7 postWorker experiment · 2026-11-13
+ 
+ The existing [4331 Demo](http://127.0.0.1:4331/example.html) remains the
+diff --git a/runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp b/runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp
+index 35ae61e4..de8cdf12 100644
+--- a/runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp
++++ b/runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp
+@@ -16,7 +16,7 @@ enum class Stage : std::size_t {
+     cache_draw, coverage_record, scratch_draw, coverage_select, contour_compile, contour_record, contour_replay, contour_draw, cpu_coverage, gpu_coverage_submit, coverage_flush, material_submit,
+     raster_snapshot, scene_draw, navigation_snapshot, provider_present,
+     owner_pump,pending_owner,target_prepare,scene_stamp,history_prepare,publication_prepare,
+-    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,count
++    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,prepared_select,prepared_draw,historical_mask_draw,count
+ };
+ inline constexpr const char* names[]{
+     "attempt","visibility","reference_build","reference_entries","reference_encode",
+@@ -25,7 +25,7 @@ inline constexpr const char* names[]{
+     "cache_draw","coverage_record","scratch_draw","coverage_select","contour_compile","contour_record","contour_replay","contour_draw","cpu_coverage","gpu_coverage_submit","coverage_flush","material_submit",
+     "raster_snapshot","scene_draw","navigation_snapshot","provider_present",
+     "owner_pump","pending_owner","target_prepare","scene_stamp","history_prepare","publication_prepare",
+-    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service"
++    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service","prepared_select","prepared_draw","historical_mask_draw"
+ };
+ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
+     prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels,
+@@ -36,7 +36,7 @@ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entr
+     pending_serial,pending_phase,pending_jobs,commit_ordinal,after_generation,after_scene,
+     stamp_primitives,stamp_bytes,stamp_calls,atomic_start_ns,atomic_end_ns,
+     resource_used,resource_pending_release,resource_gpu_epochs,render_pending,render_alloc_denials,
+-    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,count };
++    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,history_draw_primitives,validation_mask_primitives,prepare_resets,material_alias_hits,count };
+ static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
+ inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
+     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
+@@ -47,7 +47,7 @@ inline constexpr const char* counterNames[]{"candidates","sources","encoded_byte
+     "pending_serial","pending_phase","pending_jobs","commit_ordinal","after_generation","after_scene",
+     "stamp_primitives","stamp_bytes","stamp_calls","atomic_start_ns","atomic_end_ns",
+     "resource_used","resource_pending_release","resource_gpu_epochs","render_pending","render_alloc_denials",
+-    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps"};
++    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps","history_draw_primitives","validation_mask_primitives","prepare_resets","material_alias_hits"};
+ static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
+ struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
+ struct Scope;
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 0523bc3d..4fb45cb7 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -232,6 +232,22 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+         target_link_libraries(axiom_canonical_prepared_body_tests PRIVATE "-framework Foundation" objc)
+     endif()
+     add_test(NAME G5CanonicalPreparedBody COMMAND axiom_canonical_prepared_body_tests)
++    add_executable(axiom_canonical_latency_body_material_tests tests/canonical_latency_body_material_test.cpp)
++    target_link_libraries(axiom_canonical_latency_body_material_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_canonical_latency_body_material_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++    if(APPLE)
++        target_link_libraries(axiom_canonical_latency_body_material_tests PRIVATE "-framework Foundation" objc)
++        add_test(NAME G5CanonicalLatencyBodyMaterial COMMAND axiom_canonical_latency_body_material_tests "${CMAKE_CURRENT_BINARY_DIR}/canonical-latency-body-material.json")
++    endif()
++    add_executable(axiom_postworker_render_reuse_tests tests/postworker_render_reuse_test.cpp)
++    target_link_libraries(axiom_postworker_render_reuse_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_postworker_render_reuse_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++    if(APPLE)
++        target_link_libraries(axiom_postworker_render_reuse_tests PRIVATE "-framework Foundation" objc)
++        foreach(reuse_case canonical warm cold leases)
++            add_test(NAME G5PostworkerRenderReuse-${reuse_case} COMMAND axiom_postworker_render_reuse_tests ${reuse_case} "${CMAKE_CURRENT_BINARY_DIR}/render-reuse-${reuse_case}.json")
++        endforeach()
++    endif()
+     add_executable(axiom_cpu_postworker_replay_tests tests/cpu_postworker_replay_test.cpp)
+     target_link_libraries(axiom_cpu_postworker_replay_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     target_include_directories(axiom_cpu_postworker_replay_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+diff --git a/runtime/render/include/canvas/render/render_cache.hpp b/runtime/render/include/canvas/render/render_cache.hpp
+index fa5921bb..2c8b4cce 100644
+--- a/runtime/render/include/canvas/render/render_cache.hpp
++++ b/runtime/render/include/canvas/render/render_cache.hpp
+@@ -78,6 +78,8 @@ struct RenderCacheWork final {
+     std::uint64_t eraseFullFrames=0,eraseDamageFrames=0,eraseDamagePixels=0;
+     std::uint64_t bodyTileBuilds=0,bodyTileHits=0,maskTileUpdates=0,maskPrimitiveDraws=0,maskTileResets=0;
+     std::size_t inkLayerBytes=0;
++    std::uint64_t bodyPixelBuilds=0,bodyPixelHits=0;
++    std::size_t bodyPixelBytes=0;
+     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
+     std::size_t retainedBytes=0,entries=0;
+     std::uint64_t coverageBuilds=0,coverageHits=0,scratchAllocations=0;
+diff --git a/runtime/render/src/skia_headless_backend.cpp b/runtime/render/src/skia_headless_backend.cpp
+index 816b9a5c..46341b44 100644
+--- a/runtime/render/src/skia_headless_backend.cpp
++++ b/runtime/render/src/skia_headless_backend.cpp
+@@ -993,6 +993,7 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
+         }
+         for (const auto masks : {std::span(entry.record.eraseMasks), std::span(entry.presentationEraseMasks)})
+         for (const auto& mask : masks) {
++            AXIOM_FRAME_TIMING_ADD(validation_mask_primitives,std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1);
+             const bool valid = std::visit([](const auto& geometry) {
+                 using T = std::decay_t<decltype(geometry)>;
+                 // Object-local erase geometry can be fractional after inverse
+diff --git a/runtime/render/src/skia_prepared_geometry.cpp b/runtime/render/src/skia_prepared_geometry.cpp
+index 80a44997..504321c4 100644
+--- a/runtime/render/src/skia_prepared_geometry.cpp
++++ b/runtime/render/src/skia_prepared_geometry.cpp
+@@ -1,4 +1,5 @@
+ #include "canvas/foundation/internal/g5_observation.hpp"
++#include "canvas/foundation/internal/frame_timing.hpp"
+ namespace g5 = canvas::foundation::internal::g5;
+ #include "skia_prepared_geometry.hpp"
+ #include "prepared_body_job.hpp"
+@@ -121,6 +122,7 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
+     replayOutput_.patches.clear();replayOutput_.caps.clear();
+ }
+ std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
++    AXIOM_FRAME_TIMING_SCOPE(selectTiming,prepared_select);
+     first=std::min(first,primitiveCount());const auto clip=compactContourCullBounds(canvas,deviceDemand);
+     if(!clip)return first;
+     if(!replay_.empty()){
+@@ -143,6 +145,7 @@ std::size_t PreparedNavigationGeometry::footprint()const{
+ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,std::size_t first,std::size_t count,const SkRect* deviceDemand)const{
+     G5_SCOPE(g5Work,g5::Tag::geometry_replay,g5::Purpose::none);
+ 
++    AXIOM_FRAME_TIMING_SCOPE(drawTiming,prepared_draw);
+     PreparedGeometryDraw work;if(!contour_)return work;
+     first=std::min(first,primitiveCount());const auto last=first+std::min(count,primitiveCount()-first);
+     const auto& config=std::get<CompactStrokeReferenceCommand>(source_).content.get().stroke.config;
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index 86725aaa..a36babbb 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -104,6 +104,11 @@ bool SkiaRenderCache::buildStaticScene(SkCanvas& canvas,const FramePlan& plan,
+     return true;
+ }
+ void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
++    AXIOM_FRAME_TIMING_SCOPE(historyTiming,historical_mask_draw);
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    for(const auto& mask:entry.record.eraseMasks)AXIOM_FRAME_TIMING_ADD(history_draw_primitives,
++        std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1);
++#endif
+     if(maskHistory&&!entry.record.eraseMasks.empty()){
+         [[maybe_unused]]const auto before=maskHistory->work().history;
+         auto plan=maskHistory->history(entry.record.eraseMasks,budget,std::min(options.maxEntryBytes,options.maxBytes/4));
+@@ -127,11 +132,12 @@ bool SkiaRenderCache::canRetainCompact(const SkCanvas& canvas,const ReferenceTra
+         compact->content.get().stroke.config.algorithmVersion==4&&entry.record.eraseMasks.empty();
+ }
+ void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
++    bodyPixels_.reset();work.bodyPixelBytes=0;
+     entries_.clear();coverage_.clear();runs_.clear();tileEntries_.clear();resetPreparation();
+     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
+     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+ }
+-void SkiaRenderCache::clear() noexcept {invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
++void SkiaRenderCache::clear() noexcept {bodyPixels_.reset();work.bodyPixelBytes=0;invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_.clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
+     const void* target,std::uint64_t resourceEpoch)noexcept{
+     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
+@@ -149,7 +155,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+         return entry.presentationEraseActive&&!entry.presentationEraseMasks.empty()&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+     });
+-    if(resourceEpoch_!=resourceEpoch){invalidateStaticScene();inkLayers_.clear();work.inkLayerBytes=0;}
++    if(resourceEpoch_!=resourceEpoch){bodyPixels_.reset();work.bodyPixelBytes=0;invalidateStaticScene();inkLayers_.clear();work.inkLayerBytes=0;}
+     resourceEpoch_=resourceEpoch;
+     const auto beforeRevision=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
+     if(!sourcePool)sourcePool=std::make_shared<SourceRetentionPool>();
+@@ -183,7 +189,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         frame_->metricsGeneration!=f.metricsGeneration;
+     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
+     if(changed || !transient || activeSource_!=activeSource) invalidateStaticScene();
+-    if(changed){inkLayers_.clear();work.inkLayerBytes=0;}
++    if(changed){bodyPixels_.reset();work.bodyPixelBytes=0;inkLayers_.clear();work.inkLayerBytes=0;}
+     else inkLayers_.prune(plan.referenceDrawList.entries);
+     coverageTargets_.budget=budget;
+     if(targetChanged){coverageTargets_.clear();coverage_.clear();scratch_.reset();scratchLease_.reset();work.coverageBytes=0;}
+@@ -238,7 +244,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+     AXIOM_FRAME_TIMING_END(damageTiming);
+     // Removed/cull-out groups never retain an unbounded raster representation.
+     for(auto it=entries_.begin();it!=entries_.end();)if(!groups_.find(it->first)){
+-        work.retainedBytes-=it->second.bytes;it=entries_.erase(it);
++        auto removed=it++;eraseEntry(removed);
+     }else ++it;
+     for(auto it=coverage_.begin();it!=coverage_.end();)if(!groups_.find(it->first)){
+         work.coverageBytes-=it->second.bytes;it=coverage_.erase(it);
+@@ -262,9 +268,9 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+     transform_=plan.referenceDrawList.worldToView;++tick_;work.entries=entries_.size();
+ }
+ void SkiaRenderCache::evict(std::size_t bytes){
+-    while(!entries_.empty()&&(work.retainedBytes>options.maxBytes-bytes||entries_.size()>=options.maxEntries)){
++    while(!entries_.empty()&&(work.retainedBytes+work.bodyPixelBytes>options.maxBytes-bytes||entries_.size()+std::size_t(bool(bodyPixels_))>=options.maxEntries)){
+         auto victim=std::min_element(entries_.begin(),entries_.end(),[](const auto& a,const auto& b){return a.second.used<b.second.used;});
+-        work.retainedBytes-=victim->second.bytes;entries_.erase(victim);++work.evictions;
++        eraseEntry(victim);++work.evictions;
+     }
+ }
+ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source,
+@@ -376,6 +382,99 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
+     canvas.save();canvas.resetMatrix();for(const auto& key:keys){const auto& e=tileEntries_.at(key);canvas.drawImage(e.image,static_cast<SkScalar>(e.device.left()),static_cast<SkScalar>(e.device.top()));}canvas.restore();
+     return true;
+ }
++void SkiaRenderCache::eraseEntry(std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash>::iterator it){
++    if(!it->second.material||it->second.material.use_count()==1)work.retainedBytes-=it->second.bytes;
++    entries_.erase(it);work.entries=entries_.size();
++}
++bool SkiaRenderCache::equivalentMaterial(const ReferenceTraversalEntry& a,const ReferenceTraversalEntry& b){
++    if(a.geometryChunked||b.geometryChunked||a.record.transform!=b.record.transform||a.record.properties!=b.record.properties||
++       a.record.eraseMasks.size()!=b.record.eraseMasks.size())return false;
++    const auto body=readyBody(a,PreparedConsumer::kCanonical);
++    if(!body||body!=readyBody(b,PreparedConsumer::kCanonical))return false;
++    for(std::size_t i=0;i<a.record.eraseMasks.size();++i)
++        if(a.record.eraseMasks[i].geometry!=b.record.eraseMasks[i].geometry)return false;
++    return true;
++}
++bool SkiaRenderCache::aliasMaterial(const ReferenceTraversalEntry& source,const RenderCacheValidity& validity,const SkIRect& crop){
++    if(entries_.contains(source.record.objectId)||source.geometryChunked)return false;
++    if(entries_.size()+std::size_t(bool(bodyPixels_))>=options.maxEntries){bodyPixels_.reset();work.bodyPixelBytes=0;}
++    if(entries_.size()>=options.maxEntries)return false;
++    const auto body=readyBody(source,PreparedConsumer::kCanonical);if(!body)return false;
++    for(const auto& [id,resident]:entries_){
++        const auto& material=resident.material;
++        // A ready body is pinned by the prepared owner after full immutable
++        // content/config/seed comparison. Per-object revision numbers are not
++        // an equivalence proof. All other pixel dependencies are checked here.
++        const auto* group=groups_.find(id);
++        if(!group||RenderSourceResolver::resolve(resident.validity,{group->revisions,targetEpoch_,false})!=RenderSourceKind::kRasterCache||
++           !material||material->body!=body||material->targetEpoch!=targetEpoch_||material->resourceEpoch!=resourceEpoch_||resident.bounds!=crop||
++           material->transform!=source.record.transform||material->properties!=source.record.properties||
++           material->masks.size()!=source.record.eraseMasks.size())continue;
++        bool masks=true;for(std::size_t i=0;i<material->masks.size();++i)
++            if(material->masks[i].geometry!=source.record.eraseMasks[i].geometry){masks=false;break;}
++        if(!masks)continue;
++        const auto token=budget->reserve(resources::ResourceClass::kRecorded,sizeof(Entry)+128,true);if(!token)return false;
++        Entry alias{validity,resident.image,crop,resident.bytes,tick_,material,resources::ResourceLease(budget,*token)};
++        entries_.emplace(source.record.objectId,std::move(alias));AXIOM_FRAME_TIMING_ADD(material_alias_hits,1);++work.hits;work.entries=entries_.size();
++        if(auto* execution=RenderExecutionScope::current())execution->reusePixels();return true;
++    }
++    return false;
++}
++SkiaRenderCache::Preparation SkiaRenderCache::prepareTransientMaterial(SkCanvas& canvas,const FramePlan& plan,
++    PreparationAllowance& allowance,ImageResourceResolver* images,SkiaTextResources* text){
++    // Preparation ignores presentation masks; the transient scene applies them
++    // only to complete immutable canonical material. It never publishes scratch.
++    SkAutoCanvasRestore restore(&canvas,true);
++    canvas.scale(plan.frame.metrics.physicalWidth/plan.frame.metrics.logicalWidth,
++        plan.frame.metrics.physicalHeight/plan.frame.metrics.logicalHeight);
++    const auto& clip=plan.referenceDrawList.viewportClip;
++    canvas.clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
++    const auto result=prepare(canvas,plan,allowance.limits,images,text,&allowance);
++    if(streamFrame_){
++        // Canonical streaming includes no live masks. Use the existing complete
++        // transient working-set evaluator when all material cannot reside;
++        // never synchronously redraw nonresident sources after preparation.
++        stagedBodies_=true;stagedMaterial_=true;
++        stagedDemand_=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),
++            [&](const auto& entry){return needsPreparedBody(entry);});
++        resetPreparation();return Preparation::kPending;
++    }
++    return result;
++}
++bool SkiaRenderCache::restoreBodyPixels([[maybe_unused]] SkCanvas& canvas,const ReferenceTraversalEntry& source,const SkIRect& crop){
++    if(!bodyPixels_||source.geometryChunked)return false;
++    const auto body=readyBody(source,PreparedConsumer::kCanonical);const auto& pixels=*bodyPixels_;const auto& basis=*pixels.material;
++    // This witness pins the prepared body's fully validated immutable content,
++    // config and seed. Mask identities never enter body-pixel qualification.
++    if(!body||body!=basis.body||basis.targetEpoch!=targetEpoch_||basis.resourceEpoch!=resourceEpoch_||pixels.crop!=crop||
++       basis.transform!=source.record.transform||basis.properties!=source.record.properties)return false;
++    (void)basis.pixels.markGpuUse();auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
++    SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);target->drawImage(pixels.image,float(crop.left()),float(crop.top()),SkSamplingOptions{},&copy);
++    ++work.bodyPixelHits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();return true;
++}
++void SkiaRenderCache::retainBodyPixels(SkCanvas& canvas,const ReferenceTraversalEntry& source,const SkIRect& crop){
++    if(source.geometryChunked||!scratch_)return;
++    const auto body=readyBody(source,PreparedConsumer::kCanonical);if(!body)return;
++    const auto bytes=std::size_t(crop.width())*crop.height()*4;
++    const auto optionalOther=work.retainedBytes+work.coverageBytes+work.retainedRunBytes+work.inkLayerBytes;
++    if(!bytes||bytes>options.maxEntryBytes||bytes>options.maxBytes||optionalOther>options.maxBytes-bytes||
++       entries_.size()>=options.maxEntries)return;
++    // The old artifact is optional. Retirement stays charged through its last
++    // real GPU read; a denied replacement simply keeps cooperative raster.
++    bodyPixels_.reset();work.bodyPixelBytes=0;
++    auto token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);if(!token)return;
++    resources::ResourceLease lease(budget,*token);
++    auto metadata=budget->reserve(resources::ResourceClass::kRecorded,sizeof(BodyPixels)+sizeof(Material)+sourceMetadataBytes(source)+256,true);if(!metadata)return;
++    resources::ResourceLease meta(budget,*metadata);auto bodySource=source;bodySource.record.eraseMasks.clear();bodySource.presentationEraseMasks.clear();
++    auto sources=sourcePool->get(bodySource,budget,true);if(!sources)return;
++    auto target=canvas.makeSurface(surface_->imageInfo().makeWH(crop.width(),crop.height()));if(!target)return;
++    target->getCanvas()->clear(SK_ColorTRANSPARENT);auto image=scratch_->makeImageSnapshot();if(!image)return;
++    target->getCanvas()->drawImage(image,float(-crop.left()),float(-crop.top()));image=target->makeImageSnapshot();if(!image)return;
++    auto material=std::make_shared<Material>();material->body=body;material->command=source.command;
++    material->transform=source.record.transform;material->properties=source.record.properties;material->sources=std::move(*sources);
++    material->pixels=std::move(lease);material->metadata=std::move(meta);material->targetEpoch=targetEpoch_;material->resourceEpoch=resourceEpoch_;
++    bodyPixels_=BodyPixels{std::move(image),crop,std::move(material),bytes};work.bodyPixelBytes=bytes;++work.bodyPixelBuilds;
++}
+ bool SkiaRenderCache::hasPixels(const ReferenceTraversalEntry& entry)const{
+     const auto* group=groups_.find(entry.record.objectId);if(!group)return false;
+     const auto found=entries_.find(entry.record.objectId);
+@@ -431,12 +530,14 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
+     // A strictly smaller demand gets one normal-residency admission attempt.
+     // Same-demand retries retain their cooperative staged progress and latch.
+     if(stagedBodies_&&std::size_t(demands)<stagedDemand_){
+-        stagedBodies_=false;stagedDemand_=0;bodyDependencies_.clear();resetPreparation();
++        stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;bodyDependencies_.clear();resetPreparation();
+     }
+     if(std::size_t(demands)>options.maxEntries&&!stagedBodies_&&!movingEraseBodies_){
+         stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation();
+     }
+-    if(stagedBodies_&&!movingEraseBodies_)return Preparation::kReady;
++    // An oversized unique body set remains staged. Re-admitting the full
++    // prefix before every staged step discards the same job indefinitely.
++    if(stagedBodies_&&(stagedMaterial_||!movingEraseBodies_||std::size_t(demands)>options.maxEntries))return Preparation::kReady;
+     for(const auto& entry:plan.referenceDrawList.entries){
+         if(!needsPreparedBody(entry)||(hasPixels(entry)&&!entry.presentationEraseActive))continue;
+         const auto result=prepareBody(entry,allowance);
+@@ -629,12 +730,21 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 streamFrame_=true;continue;
+             }
+             const auto allocation=std::uint64_t(crop.width())*crop.height()*4;
+-            if(allocation>options.maxEntryBytes||allocation>options.maxBytes||bytes>options.maxBytes-allocation||admitted>=options.maxEntries){
++            // Count each completed isolated material once, not once per object.
++            // Admission is still bounded by maxEntries for all aliases.
++            const bool shareable=needsPreparedBody(entry)&&(plan.isolateEraseMasks||
++                requiresInkEntryIsolation(entry,isolatedInk)||canRetainCompact(canvas,entry));
++            const bool alias=shareable&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& prior){
++                const auto found=admissions_.find(prior.record.objectId);
++                return prior.record.objectId!=entry.record.objectId&&found!=admissions_.end()&&
++                    found->second.kind==AdmissionKind::kRaster&&found->second.crop==crop&&equivalentMaterial(entry,prior);
++            });
++            if(allocation>options.maxEntryBytes||allocation>options.maxBytes||(!alias&&bytes>options.maxBytes-allocation)||admitted>=options.maxEntries){
+                 admissions_.insert_or_assign(entry.record.objectId,Admission{crop,AdmissionKind::kDirect});
+                 AXIOM_FRAME_TIMING_ADD(prepare_budget,1);
+                 ++work.preparationBudgetEntries;streamFrame_=true;continue;
+             }
+-            bytes+=allocation;++admitted;admissions_.insert_or_assign(entry.record.objectId,Admission{crop,AdmissionKind::kRaster});
++            if(!alias)bytes+=allocation;++admitted;admissions_.insert_or_assign(entry.record.objectId,Admission{crop,AdmissionKind::kRaster});
+         }
+         // Admission is deterministic for the entire demand. Drop ineligible
+         // and stale residents before filling it; never evict a prepared prefix.
+@@ -642,7 +752,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+             const auto admissionEntry=admissions_.find(it->first);const auto* group=groups_.find(it->first);
+             if(admissionEntry==admissions_.end()||admissionEntry->second.kind!=AdmissionKind::kRaster||!group||
+                RenderSourceResolver::resolve(it->second.validity,{group->revisions,targetEpoch_,false})!=RenderSourceKind::kRasterCache){
+-                work.retainedBytes-=it->second.bytes;it=entries_.erase(it);
++                auto removed=it++;eraseEntry(removed);
+             }else ++it;
+         }
+         admissionReady_=true;
+@@ -693,9 +803,11 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+             continue;
+         }
+         const auto* group=groups_.find(entry.record.objectId);if(!group)return Preparation::kFallback;
+-        const auto found=entries_.find(entry.record.objectId);
+         const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
++        if(raster&&!pending_&&(plan.isolateEraseMasks||requiresInkEntryIsolation(entry,requiresInkIsolation(plan))||canRetainCompact(canvas,entry)))aliasMaterial(entry,validity,admission->second.crop);
++        const auto found=entries_.find(entry.record.objectId);
+         if(raster&&found!=entries_.end()&&RenderSourceResolver::resolve(found->second.validity,validity)==RenderSourceKind::kRasterCache){
++            if(found->second.material)(void)found->second.material->pixels.markGpuUse();
+             captureRunEntry(plan,preparationCursor_,found->second.image,found->second.bounds.left(),found->second.bounds.top());
+             if(streamFrame_){
+                 if(exhausted())return yield();
+@@ -716,7 +828,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+             ((admission->second.crop.height()+SkiaInkLayers::tileSize-1)/SkiaInkLayers::tileSize+1);
+         const bool layerFits=inkCount&&layerBytes<=options.maxBytes/std::size_t(inkCount)&&
+             tileCount<=options.maxEntries/std::size_t(inkCount);
+-        if(raster&&!pending_&&layered&&layered->content.get().stroke.config.algorithmVersion==4&&
++        if(raster&&!pending_&&!entry.presentationEraseActive&&entry.presentationEraseMasks.empty()&&entry.presentationOpacity==1.0F&&layered&&layered->content.get().stroke.config.algorithmVersion==4&&
+            options.gpuCoverageCandidate&&canvas.recordingContext()&&layerFits&&
+            (plan.isolateEraseMasks||requiresInkEntryIsolation(entry,requiresInkIsolation(plan)))){
+             if(!ensureScratch(canvas,true))return allocationFailure_;
+@@ -741,44 +853,53 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 ++built;continue;
+             }
+         }
+-        if(!pending_){
+-            if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
+-            const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
+-            auto* target=(directComposite?composite_:scratch_)->getCanvas();
+-            if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
+-            configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
++        const bool bodyReusable=!directComposite&&needsPreparedBody(entry)&&
++            (plan.isolateEraseMasks||requiresInkEntryIsolation(entry,requiresInkIsolation(plan))||canRetainCompact(canvas,entry));
++        if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
++        const bool bodyHit=bodyReusable&&!pending_&&restoreBodyPixels(canvas,entry,admission->second.crop);
++        auto* target=(directComposite?composite_:scratch_)->getCanvas();
++        if(!bodyHit){
++            if(!pending_){
++                if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
++                const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
++                auto* target=(directComposite?composite_:scratch_)->getCanvas();
++                if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
++                configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
++                const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
++                auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
++                    std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,readyBody(entry,PreparedConsumer::kCanonical));
++                target->restore();
++                pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
++                ++work.misses;
++            }
++            if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
++                pending_.reset();return Preparation::kFallback;
++            }
+             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+-            auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
+-                std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,readyBody(entry,PreparedConsumer::kCanonical));
+-            target->restore();
+-            pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
+-            ++work.misses;
+-        }
+-        if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
+-            pending_.reset();return Preparation::kFallback;
++            bool complete=false;
++            do{
++                configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
++                CompactRasterWork rasterWork;
++                try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,
++                        coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
++                catch(...){target->restore();pending_.reset();throw;}
++                target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
++                if(pending_->raster->resourcePending()){
++                    // Admission failure is an expected resumable state. Never
++                    // throw across a no-exception WASM Runtime boundary, discard
++                    // the job, or publish its partial coverage.
++    #if defined(AXIOM_ENABLE_FRAME_TIMING)
++                    std::fprintf(stderr,"AXIOM_RENDER_RESOURCE_RETRY {\"stage\":\"coverage\",\"used_bytes\":%llu,\"hard_bytes\":%llu}\n",
++                        static_cast<unsigned long long>(budget?budget->used():0),static_cast<unsigned long long>(options.sharedMaxBytes));
++    #endif
++                    if(reclaimPreparation)reclaimPreparation(coverageBytes*(hybrid?2:1));
++                    flushPreparation();++work.preparationYields;return Preparation::kResourcePending;
++                }
++                if(!complete&&exhausted())return yield();
++            }while(!complete);
++            if(movingEraseBodies_&&transientTileRefused())return yield();
++            if(bodyReusable)retainBodyPixels(canvas,entry,admission->second.crop);
+         }
+-        auto* target=(directComposite?composite_:scratch_)->getCanvas();const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+-        bool complete=false;
+-        do{
+-            configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+-            CompactRasterWork rasterWork;
+-            try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,
+-                    coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
+-            catch(...){target->restore();pending_.reset();throw;}
+-            target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
+-            if(pending_->raster->resourcePending()){
+-                // Admission failure is an expected resumable state. Never
+-                // throw across a no-exception WASM Runtime boundary, discard
+-                // the job, or publish its partial coverage.
+-#if defined(AXIOM_ENABLE_FRAME_TIMING)
+-                std::fprintf(stderr,"AXIOM_RENDER_RESOURCE_RETRY {\"stage\":\"coverage\",\"used_bytes\":%llu,\"hard_bytes\":%llu}\n",
+-                    static_cast<unsigned long long>(budget?budget->used():0),static_cast<unsigned long long>(options.sharedMaxBytes));
+-#endif
+-                if(reclaimPreparation)reclaimPreparation(coverageBytes*(hybrid?2:1));
+-                flushPreparation();++work.preparationYields;return Preparation::kResourcePending;
+-            }
+-            if(!complete&&exhausted())return yield();
+-        }while(!complete);
+         // Match Direct's original destination and complete viewport clip.
+         // Isolated entries clear scratch only; legacy transformed ink-only
+         // entries clear the ordered composite, preserving existing semantics.
+@@ -786,7 +907,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+             drawHistoricalMasks(*target,entry);target->restore();
+         }
+-        const auto crop=pending_->crop;pending_.reset();
++        const auto crop=admission->second.crop;pending_.reset();
+         if(directComposite){++work.rasterizedGroups;++built;continue;}
+         const bool stored=raster&&store(canvas,entry,validity,crop,false,true);
+         // Consume the already materialized source; never run coverage again to
+@@ -833,6 +954,9 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const
+         if(auto* execution=RenderExecutionScope::current())execution->unavailable({},ExecutionReason::kAllocationDenied);
+         damageFailed_=true;return InkDraw::kRetry;
+     }
++    if(hasPixels(source)&&source.presentationEraseMasks.empty()&&source.presentationOpacity==1.0F){
++        if(draw(canvas,plan,source,true,true,false))return InkDraw::kDrawn;
++    }
+     const bool gpuLive=options.enabled&&options.gpuCoverageCandidate&&canvas.recordingContext()&&
+         (damageOnly_||source.presentationEraseActive)&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+     if(gpuLive&&!ensureScratch(canvas,true)){damageFailed_=true;return InkDraw::kRetry;}
+@@ -853,7 +977,7 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const
+     const auto nonLayers=used-std::min(used,work.inkLayerBytes);
+     const auto layerCapacity=std::min(options.maxBytes,options.sharedMaxBytes-std::min(options.sharedMaxBytes,nonLayers));
+     const bool fits=tiles&&tiles<=layerCapacity/tilePeak&&std::size_t(inkSources)<=layerCapacity/(tilePeak*tiles);
+-    if(gpuLive&&sourceAdmission_&&options.maxEntryBytes>=layerTileBytes&&fits){
++    if(gpuLive&&!hasPixels(source)&&sourceAdmission_&&options.maxEntryBytes>=layerTileBytes&&fits){
+         // Body layers have no permanent/transient masks in their identity.
+         // All masks retain the original full viewport/device grid.
+         const auto transform=entryMatrix(canvas,plan,source);
+@@ -975,7 +1099,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
+     // A transient source may include permanent masks that cooperative exact
+     // preparation routes Direct. Reuse/build its bounded isolated cache here;
+     // never keep an exact-frame admission that forbids that source reuse.
+-    resetPreparation();
++    if(pending_||composite_)resetPreparation();
+     const auto& entries=plan.referenceDrawList.entries;
+     const auto active=std::find_if(entries.begin(),entries.end(),[&](const auto& e){return e.record.objectId==activeSource_;});
+     const bool supported=active!=entries.end() && active->contributesPixels &&
+@@ -1038,6 +1162,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
+     return !damageFailed_;
+ }
+ void SkiaRenderCache::resetPreparation(){
++    AXIOM_FRAME_TIMING_ADD(prepare_resets,1);
+     pending_.reset();admissions_.clear();admissionReady_=false;preparationCursor_=0;
+     composite_.reset();compositeLease_.reset();preparedFrame_.reset();streamFrame_=false;compositeReady_=false;
+ }
+@@ -1071,7 +1196,7 @@ bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& targ
+     if(budget&&!token&&mandatory){
+         // Completed prefix pixels are already in composite_; optional resident
+         // sources can be rebuilt. Never drop the active raster job or its grid.
+-        entries_.clear();coverage_.clear();runs_.clear();inkLayers_.clear();work.inkLayerBytes=0;
++        bodyPixels_.reset();work.bodyPixelBytes=0;entries_.clear();coverage_.clear();runs_.clear();inkLayers_.clear();work.inkLayerBytes=0;
+         work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
+         if(preparedGeometry)while(preparedGeometry->reclaimUnused()){}
+         if(reclaimPreparation)reclaimPreparation(bytes);
+@@ -1160,6 +1285,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
+         G5_CANVAS(canvas,true);
+         G5_OBSERVE(g5::Kind::Stage,g5::Tag::cached_pixels,true,g5::word(source.record.objectId,0),g5::word(source.record.objectId,1),targetEpoch_,plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value());
+         if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(found->second.image,static_cast<float>(found->second.bounds.left()),static_cast<float>(found->second.bounds.top()));canvas.restore();}
++        if(found->second.material)(void)found->second.material->pixels.markGpuUse();
+         found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();return true;
+     }
+     // Damage feedback can reuse a complete resident source, but a miss is
+@@ -1167,7 +1293,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
+     // or create clipped images that could later masquerade as full sources.
+     if(damageOnly_||!allowBuild)return false;
+     ++work.misses;
+-    if(found!=entries_.end()){work.retainedBytes-=found->second.bytes;entries_.erase(found);}
++    if(found!=entries_.end()){eraseEntry(found);}
+     const auto& r=source.record.transform;
+     const auto& v=plan.referenceDrawList.worldToView;
+     SkMatrix world;world.setAll(static_cast<float>(v.a),static_cast<float>(v.c),static_cast<float>(v.tx),static_cast<float>(v.b),static_cast<float>(v.d),static_cast<float>(v.ty),0,0,1);
+@@ -1208,11 +1334,23 @@ bool SkiaRenderCache::store(SkCanvas& canvas,const ReferenceTraversalEntry& sour
+     const RenderCacheValidity& validity,const SkIRect& crop,bool composite,bool preservePrepared){
+     const auto info=surface_->imageInfo();const auto bytes=std::size_t(crop.width())*crop.height()*4;
+     const auto old=entries_.find(source.record.objectId);
+-    if(old!=entries_.end()){work.retainedBytes-=old->second.bytes;entries_.erase(old);}
++    if(old!=entries_.end()){eraseEntry(old);}
+     // Own a physically cropped representation. A subset image is allowed to
+     // retain its source allocation, which would undercount residency.
++    if(bodyPixels_&&(work.retainedBytes+work.bodyPixelBytes>options.maxBytes-bytes||
++       entries_.size()+1>=options.maxEntries)){bodyPixels_.reset();work.bodyPixelBytes=0;}
+     if(!preservePrepared)evict(static_cast<std::size_t>(bytes));
++    if(work.retainedBytes+work.bodyPixelBytes>options.maxBytes-bytes||
++       entries_.size()+std::size_t(bool(bodyPixels_))>=options.maxEntries){
++        // Complete material has priority over its optional reusable body.
++        // Dropping the owner does not free an in-flight GPU pixel reservation.
++        bodyPixels_.reset();work.bodyPixelBytes=0;
++    }
+     auto reserved=budget?budget->reserve(resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
++    if(budget&&!reserved&&bodyPixels_){
++        bodyPixels_.reset();work.bodyPixelBytes=0;
++        reserved=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
++    }
+     if(budget&&!reserved&&preservePrepared)return false;
+     if(budget&&!reserved){work.evictions+=entries_.size();entries_.clear();work.retainedBytes=0;reserved=budget->reserve(resources::ResourceClass::kRaster,bytes,true);if(!reserved)return false;}
+     resources::ResourceLease lease(budget,reserved.value_or(0));
+@@ -1224,7 +1362,17 @@ bool SkiaRenderCache::store(SkCanvas& canvas,const ReferenceTraversalEntry& sour
+     cropped->getCanvas()->drawImage(fullImage,static_cast<float>(-crop.left()),static_cast<float>(-crop.top()));
+     auto image=cropped->makeImageSnapshot();if(!image)return false;
+     AXIOM_FRAME_TIMING_END(snapshotTiming);
+-    entries_.emplace(source.record.objectId,Entry{validity,image,crop,static_cast<std::size_t>(bytes),tick_,std::move(lease)});
++    auto sources=sourcePool?sourcePool->get(source,budget,true):std::nullopt;if(!sources)return false;
++    const auto charge=sizeof(Material)+sourceMetadataBytes(source)+256;
++    const auto ownerToken=budget->reserve(resources::ResourceClass::kRecorded,charge,true);
++    if(!ownerToken)return false;resources::ResourceLease ownerLease(budget,*ownerToken);
++    const auto aliasToken=budget->reserve(resources::ResourceClass::kRecorded,sizeof(Entry)+128,true);
++    if(!aliasToken)return false;resources::ResourceLease aliasLease(budget,*aliasToken);
++    auto material=std::make_shared<Material>();material->body=readyBody(source,PreparedConsumer::kCanonical);
++    material->command=source.command;material->masks=source.record.eraseMasks;material->transform=source.record.transform;
++    material->properties=source.record.properties;material->sources=std::move(*sources);material->pixels=std::move(lease);
++    material->metadata=std::move(ownerLease);material->targetEpoch=targetEpoch_;material->resourceEpoch=resourceEpoch_;
++    entries_.emplace(source.record.objectId,Entry{validity,image,crop,static_cast<std::size_t>(bytes),tick_,std::move(material),std::move(aliasLease)});
+     work.retainedBytes+=static_cast<std::size_t>(bytes);work.entries=entries_.size();++work.rasterizedGroups;
+     if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(image,static_cast<float>(crop.left()),static_cast<float>(crop.top()));canvas.restore();}
+     return true;
+diff --git a/runtime/render/src/skia_render_cache_internal.hpp b/runtime/render/src/skia_render_cache_internal.hpp
+index 63697585..c88305ba 100644
+--- a/runtime/render/src/skia_render_cache_internal.hpp
++++ b/runtime/render/src/skia_render_cache_internal.hpp
+@@ -62,6 +62,8 @@ class SkiaRenderCache final {
+         return discovered;
+     }
+     bool hasPixels(const ReferenceTraversalEntry&)const;
++    // Cold transient material uses this same cooperative canonical preparation.
++    Preparation prepareTransientMaterial(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*);
+     bool compositePreparedFrame(SkCanvas&);
+     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
+     // Retained ordered compact runs qualify approximate editing only. Exact
+@@ -130,7 +132,7 @@ class SkiaRenderCache final {
+         std::uint64_t seen=0;
+     };
+     std::map<foundation::ObjectId,BodyDependency> bodyDependencies_;
+-    bool stagedBodies_=false;
++    bool stagedBodies_=false,stagedMaterial_=false;
+     // An active mask may reuse resident immutable bodies without inheriting
+     // the previous whole-frame pixel working-set admission failure.
+     bool movingEraseBodies_=false;
+@@ -158,8 +160,33 @@ class SkiaRenderCache final {
+     void planRuns(SkCanvas&,const FramePlan&);
+     void captureRunEntry(const FramePlan&,std::size_t,const sk_sp<SkImage>&,int x=0,int y=0);
+     bool validRun(const RetainedRun&,const FramePlan&)const;
+-    struct Entry {RenderCacheValidity validity;sk_sp<SkImage> image;SkIRect bounds;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
++    struct Material final {
++        std::shared_ptr<const PreparedNavigationGeometry> body;
++        ReferenceCommand command;
++        scene::SharedVector<semantic::EraseMaskRecord> masks;
++        semantic::Transform2D transform;
++        semantic::PropertyBag properties;
++        SourceRetentions sources;
++        resources::ResourceLease pixels,metadata;
++        std::uint64_t targetEpoch=0,resourceEpoch=0;
++    };
++    struct Entry {RenderCacheValidity validity;sk_sp<SkImage> image;SkIRect bounds;std::size_t bytes=0;std::uint64_t used=0;
++        std::shared_ptr<Material> material;resources::ResourceLease metadata;};
++    bool equivalentMaterial(const ReferenceTraversalEntry&,const ReferenceTraversalEntry&);
++    bool aliasMaterial(const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&);
++    void eraseEntry(std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash>::iterator);
+     std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash> entries_;
++    // One most-recent complete isolated body material, before permanent or
++    // presentation masks. Same owner and optional budget as material entries.
++    struct BodyPixels final {
++        sk_sp<SkImage> image;SkIRect crop;
++        std::shared_ptr<Material> material;
++        std::size_t bytes=0;
++    };
++    std::optional<BodyPixels> bodyPixels_;
++    bool restoreBodyPixels(SkCanvas&,const ReferenceTraversalEntry&,const SkIRect&);
++    void retainBodyPixels(SkCanvas&,const ReferenceTraversalEntry&,const SkIRect&);
++
+     struct TileEntry {std::uint64_t generation;sk_sp<SkImage> image;SkIRect device;resources::ResourceLease lease;};
+     std::map<TileKey,TileEntry> tileEntries_;
+     bool tiledFrame_=false;
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index bb261c25..69807b13 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -1107,7 +1107,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+         // live feedback does not invalidate pixels outside the changed mask.
+         // Mandatory preparation already reclaims navigation on actual denial;
+         // optional body layers must yield rather than destroy that coverage.
+-        if(renderCache_&&!renderCache_->stagedBodies())renderCache_->releaseMaterialSources(!previousErase);
++        // begin() qualifies retained canonical material against source and target
++        // dependencies; active presentation masks do not invalidate it.
+     }
+     try{
+         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+@@ -1180,6 +1181,14 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+             provider.release();return staged==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient working set cannot fit staging capacity"):BackendSubmissionResult::retry("transient working set pending");
+         }
+     }
++    if(gpuLiveV4&&renderCacheOptions_.enabled&&cache&&!cache->stagedBodies()){
++        const auto material=cache->prepareTransientMaterial(*canvas,plan,allowance,images_,&textResources_);
++        if(material!=internal::SkiaRenderCache::Preparation::kReady){
++            provider.release();return material==internal::SkiaRenderCache::Preparation::kRejected?
++                BackendSubmissionResult::rejected("transient material capacity rejected"):
++                BackendSubmissionResult::retry("transient material preparation pending");
++        }
++    }
+     if(gpu.ready())gpu.touch();
+     // Selection/creation transient presentation is a complete replacement
+     // frame for the overlay window.  Drawing only the moved object on a
+diff --git a/runtime/render/tests/prepared_body_index_test.cpp b/runtime/render/tests/prepared_body_index_test.cpp
+index c1c72141..cde327af 100644
+--- a/runtime/render/tests/prepared_body_index_test.cpp
++++ b/runtime/render/tests/prepared_body_index_test.cpp
+@@ -251,7 +251,7 @@ void realRendererConsumers(){
+             require(target.readbackRgba(actual).code==BackendSubmissionCode::kAccepted&&reference.readbackRgba(expected).code==BackendSubmissionCode::kAccepted,"native GPU pixel readbacks");
+             require(actual==expected,"shared prepared native GPU changed transform/mask/opacity/lower-z pixels");
+             const auto ink=renderer.renderCacheWork();
+-            require(ink.preparedInkQueries>0&&ink.preparedBodyBuilds==nav.preparedBodyBuilds&&ink.preparedIdentityHits>nav.preparedIdentityHits,"actual consumers rebuilt/separated prepared service");
++            require((ink.preparedInkQueries>0||ink.preparedDirectQueries>0||ink.preparedCanonicalQueries>0||ink.executionPixelReuses>nav.executionPixelReuses)&&ink.preparedBodyBuilds==nav.preparedBodyBuilds&&ink.preparedIdentityHits>nav.preparedIdentityHits,"actual consumers rebuilt/separated prepared service");
+             require(ink.preparedHashBytes==nav.preparedHashBytes&&ink.preparedContentComparisons==nav.preparedContentComparisons,"retained ink rehashed/recompared admitted body");
+             std::printf("{\"actual_native_gpu\":true,\"dpr\":%u,\"shared_body_builds\":%llu,\"navigation_queries\":%llu,\"retained_ink_queries\":%llu,\"identity_hits\":%llu}\n",dpr,
+                 static_cast<unsigned long long>(ink.preparedBodyBuilds),static_cast<unsigned long long>(ink.preparedNavigationQueries),static_cast<unsigned long long>(ink.preparedInkQueries),static_cast<unsigned long long>(ink.preparedIdentityHits));
+@@ -259,7 +259,7 @@ void realRendererConsumers(){
+             require(renderer.renderNavigation(target,{1,0,0},plan.frame,query).code!=BackendSubmissionCode::kAccepted,"stale navigation presented");
+             auto rebound=renderPlan(edit,3,dpr,target.generation());EditingOverlay reboundOverlay{rebound.frame};
+             require(renderer.renderTransientOverlay(target,rebound,&reboundOverlay).code==BackendSubmissionCode::kAccepted,"full transient after consumer surface reset");
+-            require(renderer.renderCacheWork().preparedBodyBuilds==ink.preparedBodyBuilds&&renderer.renderCacheWork().preparedInkQueries>ink.preparedInkQueries,"consumer reset cleared another consumer's shared body");
++            require(renderer.renderCacheWork().preparedBodyBuilds==ink.preparedBodyBuilds&&(renderer.renderCacheWork().preparedInkQueries>ink.preparedInkQueries||renderer.renderCacheWork().preparedDirectQueries>ink.preparedDirectQueries||renderer.renderCacheWork().preparedCanonicalQueries>ink.preparedCanonicalQueries),"consumer reset cleared another consumer's shared body");
+             renderer.clearRenderCache();renderer.serviceResourceRetirements();
+             require(renderer.renderCacheWork().preparedAliases==0&&renderer.renderCacheWork().preparedIndexReservationBytes==0,"renderer owner clear left source/index metadata");
+         }
+diff --git a/runtime/render/tests/transient_display_retry_test.cpp b/runtime/render/tests/transient_display_retry_test.cpp
+index ee82fe25..02e57a9d 100644
+--- a/runtime/render/tests/transient_display_retry_test.cpp
++++ b/runtime/render/tests/transient_display_retry_test.cpp
+@@ -300,7 +300,7 @@ void denseObjectContinuity(const std::filesystem::path& out,bool budgetCompariso
+    SkiaRenderer candidate,oracle;ImageResourceResolver candidateImages(resources),oracleImages(resources);
+    RenderCacheOptions limits;
+    if(desktop){limits.maxBytes=256U*1024U*1024U;limits.sharedMaxBytes=512U*1024U*1024U;limits.maxEntryBytes=64U*1024U*1024U;}
+-   if(budgetComparison)candidate.setRenderCacheOptions(limits);
++   candidate.setRenderCacheOptions(limits);
+    candidate.setImageResolver(&candidateImages);oracle.setImageResolver(&oracleImages);
+    RenderCacheOptions disabled;disabled.enabled=false;oracle.setRenderCacheOptions(disabled);
+    auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
+@@ -485,7 +485,10 @@ void continuity(const std::filesystem::path& out){
+    std::cout<<nlohmann::json{{"DPR",dpr},{"background",bg},{"stage",stage},{"status",static_cast<unsigned>(result.code)},{"message",result.message},{"pixels_preserved",after==before},{"presents",target.presentCount()},{"body_builds",r.renderCacheWork().preparedBodyBuilds}}.dump()<<std::endl;
+    require(result.code!=BackendSubmissionCode::kAccepted,"failure stage accepted");require(after==before,"failed attempt changed last display");require(target.presentCount()==presents&&r.submissionCount()==submits,"failed attempt counted as successful display");};
+   auto b=displayPlan(2,2,dpr,bg);transientDisplayFault.beforeObject=1;fail(b,"after-one-object");
+-  auto newest=displayPlan(3,3,dpr,bg);transientDisplayFault.afterTile=0;fail(newest,"after-one-tile");
++  auto newestBase=displayPlan(3,3,dpr,bg);auto newestDraw=newestBase.referenceDrawList;
++  for(auto& entry:newestDraw.entries)entry.record.transform.tx+=.125;
++  FramePlan newest{newestBase.frame,std::move(newestDraw),newestBase.background,newestBase.transparentBackground,newestBase.isolateEraseMasks};
++  transientDisplayFault.afterTile=0;fail(newest,"after-one-tile");
+   target.unavailable=true;fail(displayPlan(3,4,dpr,bg),"acquire-unavailable");target.unavailable=false;
+   transientDisplayFault.beforeObject=0;fail(displayPlan(3,5,dpr,bg),"before-first-object");
+   transientDisplayFault.beforePublish=true;fail(displayPlan(3,6,dpr,bg),"prepublication-refusal");
+@@ -500,9 +503,12 @@ void continuity(const std::filesystem::path& out){
+  }
+ }
+ void recovery(const std::filesystem::path& out){
+- std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");auto c=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};c->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(c);require(target.resize(3200,2000).code==BackendSubmissionCode::kAccepted,"DPR4 pressure target");SkiaRenderer r;auto a=displayPlan(1,1,4,0,16,true);settle(r,target,a,c);auto before=pixels(target,a);auto budget=transientDisplayBudget.lock();require(bool(budget),"test-only existing budget witness");
++ std::filesystem::create_directories(out);auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");auto c=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};c->context=GrDirectContexts::MakeMetal(backend);DisplayTarget target(c);require(target.resize(3200,2000).code==BackendSubmissionCode::kAccepted,"DPR4 pressure target");SkiaRenderer r;r.setRenderCacheOptions(RenderCacheOptions{});auto a=displayPlan(1,1,4,0,16,true);settle(r,target,a,c);auto before=pixels(target,a);auto budget=transientDisplayBudget.lock();require(bool(budget),"test-only existing budget witness");
+  const auto available=96U*1024U*1024U-budget->used();const auto token=budget->reserve(resources::ResourceClass::kRecorded,available-1024,true);require(bool(token),"admit held competing quota");resources::ResourceLease hold(budget,*token);const auto presents=target.presentCount();
+- for(unsigned i=0;i<3;++i){auto p=displayPlan(i+2,i+2,4,0,16,true);EditingOverlay overlay{p.frame};auto result=r.renderTransientOverlay(target,p,&overlay);c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto after=pixels(target,p);require(result.code==BackendSubmissionCode::kRetry&&after==before&&target.presentCount()==presents,"genuine quota Retry changed display");std::cout<<nlohmann::json{{"pressure_attempt",i},{"used_bytes",budget->used()},{"hard_bytes",96U*1024U*1024U},{"pixels_preserved",true},{"GPU_epochs",budget->pendingGpuEpochCount()}}.dump()<<std::endl;}
++ for(unsigned i=0;i<3;++i){auto pBase=displayPlan(i+2,i+2,4,0,16,true);auto pDraw=pBase.referenceDrawList;
++  for(auto& entry:pDraw.entries)entry.record.content.update([](auto& value){++std::get<semantic::CompactStrokeContent>(value).stroke.seed;});
++  for(auto& entry:pDraw.entries)entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(entry.record.content)};
++  FramePlan p{pBase.frame,std::move(pDraw),pBase.background,pBase.transparentBackground,pBase.isolateEraseMasks};EditingOverlay overlay{p.frame};auto result=r.renderTransientOverlay(target,p,&overlay);c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto after=pixels(target,p);require(result.code==BackendSubmissionCode::kRetry&&after==before&&target.presentCount()==presents,"genuine quota Retry changed display");std::cout<<nlohmann::json{{"pressure_attempt",i},{"used_bytes",budget->used()},{"hard_bytes",96U*1024U*1024U},{"pixels_preserved",true},{"GPU_epochs",budget->pendingGpuEpochCount()}}.dump()<<std::endl;}
+  hold.reset();c->context->flushAndSubmit(GrSyncCpu::kYes);r.serviceResourceRetirements();auto newest=displayPlan(4,9,4,0,16,true);settle(r,target,newest,c);require(target.presentCount()==presents+1,"quota release did not publish newest exactly once");require(budget->used()<=96U*1024U*1024U,"new target escaped original hard cap");
+  const auto count=target.presentCount(),submits=r.submissionCount();target.refusePresent=true;EditingOverlay overlay{newest.frame};require(r.renderTransientOverlay(target,newest,&overlay).code!=BackendSubmissionCode::kAccepted,"provider rejection accepted");require(target.presentCount()==count&&r.submissionCount()==submits,"provider rejection fabricated receipt");target.refusePresent=false;settle(r,target,displayPlan(4,10,4,0,16,true),c);
+  require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted,"generation advance");require(r.renderTransientOverlay(target,newest,&overlay).code==BackendSubmissionCode::kRejected,"stale target presented");

@@ -16,7 +16,7 @@ enum class Stage : std::size_t {
     cache_draw, coverage_record, scratch_draw, coverage_select, contour_compile, contour_record, contour_replay, contour_draw, cpu_coverage, gpu_coverage_submit, coverage_flush, material_submit,
     raster_snapshot, scene_draw, navigation_snapshot, provider_present,
     owner_pump,pending_owner,target_prepare,scene_stamp,history_prepare,publication_prepare,
-    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,count
+    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,prepared_select,prepared_draw,historical_mask_draw,count
 };
 inline constexpr const char* names[]{
     "attempt","visibility","reference_build","reference_entries","reference_encode",
@@ -25,7 +25,7 @@ inline constexpr const char* names[]{
     "cache_draw","coverage_record","scratch_draw","coverage_select","contour_compile","contour_record","contour_replay","contour_draw","cpu_coverage","gpu_coverage_submit","coverage_flush","material_submit",
     "raster_snapshot","scene_draw","navigation_snapshot","provider_present",
     "owner_pump","pending_owner","target_prepare","scene_stamp","history_prepare","publication_prepare",
-    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service"
+    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service","prepared_select","prepared_draw","historical_mask_draw"
 };
 enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
     prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels,
@@ -36,7 +36,7 @@ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entr
     pending_serial,pending_phase,pending_jobs,commit_ordinal,after_generation,after_scene,
     stamp_primitives,stamp_bytes,stamp_calls,atomic_start_ns,atomic_end_ns,
     resource_used,resource_pending_release,resource_gpu_epochs,render_pending,render_alloc_denials,
-    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,count };
+    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,history_draw_primitives,validation_mask_primitives,prepare_resets,material_alias_hits,count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
@@ -47,7 +47,7 @@ inline constexpr const char* counterNames[]{"candidates","sources","encoded_byte
     "pending_serial","pending_phase","pending_jobs","commit_ordinal","after_generation","after_scene",
     "stamp_primitives","stamp_bytes","stamp_calls","atomic_start_ns","atomic_end_ns",
     "resource_used","resource_pending_release","resource_gpu_epochs","render_pending","render_alloc_denials",
-    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps"};
+    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps","history_draw_primitives","validation_mask_primitives","prepare_resets","material_alias_hits"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;
@@ -124,6 +124,7 @@ class Attempt final {
     }
 };
 }
+#define AXIOM_IF_EVENT(format,...) std::fprintf(stderr,"AXIOM_IF_EVENT t_ns=%llu " format "\n",static_cast<unsigned long long>(::canvas::foundation::internal::frame_timing::now()),__VA_ARGS__)
 #define AXIOM_FRAME_TIMING_BEGIN(...) ::canvas::foundation::internal::frame_timing::Attempt axiomFrameTiming{__VA_ARGS__}
 #define AXIOM_FRAME_TIMING_OUTCOME(value) axiomFrameTiming.outcome(value)
 #define AXIOM_FRAME_TIMING_SCOPE(name,stage) ::canvas::foundation::internal::frame_timing::Scope name{::canvas::foundation::internal::frame_timing::Stage::stage}
@@ -131,6 +132,7 @@ class Attempt final {
 #define AXIOM_FRAME_TIMING_ADD(counter,value) ::canvas::foundation::internal::frame_timing::add(::canvas::foundation::internal::frame_timing::Counter::counter,value)
 #define AXIOM_FRAME_TIMING_SET(counter,value) ::canvas::foundation::internal::frame_timing::set(::canvas::foundation::internal::frame_timing::Counter::counter,value)
 #else
+#define AXIOM_IF_EVENT(...) ((void)0)
 #define AXIOM_FRAME_TIMING_BEGIN(...) ((void)0)
 #define AXIOM_FRAME_TIMING_OUTCOME(value) ((void)0)
 #define AXIOM_FRAME_TIMING_SCOPE(name,stage) ((void)0)

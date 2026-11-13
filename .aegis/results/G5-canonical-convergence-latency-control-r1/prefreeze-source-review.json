@@ -1,0 +1,40 @@
+{
+  "schema": "axiom-canonical-latency-source-review-prefinal-v1",
+  "created_utc": "2026-11-13T06:06:11.951135+00:00",
+  "scope": "Read-only source/identity/budget/guard review duringordinarybaseline; noheavytestorbuildduringtiming",
+  "basis": {
+    "runtime/render/src/skia_render_cache.cpp": "c7d15bea33dfcf8a4168b92fae169871334e1680dc945fd58ae7da068827127b",
+    "runtime/render/src/skia_render_cache_internal.hpp": "06544bbbad4e5557eb38495931f30bd86b0ae7986804377a8694b470d3fff9b4",
+    "runtime/render/include/canvas/render/render_cache.hpp": "d016890314a743fc28d5e198366f02b019042e964273cae66935312722d7541e",
+    "runtime/render/tests/canonical_latency_body_material_test.cpp": "24dcd7848b1148d9c25134984c0412d062f2482f178bf72a8725beaef955e5a5",
+    "verification/runners/g5/canonical_latency_guard.mjs": "8e3ec5a0b8eec546da3c7a08d683ff48f1309ccf3eb85f8adc56db675248d805",
+    "verification/tests/g5_canonical_latency_guard.test.mjs": "e74f4b29e79431c43a7890e404839d37ead21f3dc12d09d9416513b669a47854"
+  },
+  "new_body_slot": {
+    "owner": "existingSkiaRenderCache",
+    "representation": "oneoptionalcompletedunmaskedN32bodycrop; no newgeometry/canonical/stateowner",
+    "reuse": "readysharedpreparedbody(fullcontent/config/seed)+exacttransform/properties/crop/targetepoch/resourceepoch; globalbegininvalidatescamera/provider/metricscontextbasis",
+    "composition": "copySrcintoclearedfullscratchthenoriginalfullhistoricalmaskorder; noextraopacity",
+    "capacity": "bodycount/bytescombinedwithmaterialentries; completefinalmaterialprioritydropsoptionalbodyonpressure; budgetleasependingreleaseuntilactualGPUcompletion",
+    "source_custody": "bodySourcehascanonical/presentationmasksremoved, sourcePoolpinsbodypayloadonly; active/permanentmaskneverstoredinbodyimage"
+  },
+  "tests_reviewed": [
+    "Actualoldmask-onlyreplayRED128/16/128/128→new0/0/0/0; cold8differentmasks128→16.",
+    "variant3actualtwodifferentmasksreadythenvariant4onlyswap.",
+    "NewbodyLeaseIdentityassertsactualbodyhit,seed/pose/camera/resourceinvalidate,optionalbodyaftercanonicalsourcegone,clear+GPUepochpendingrelease→complete→0bytes.",
+    "Independentguard5/5negativecases noexpanded302acceptance. Actualnewrawbasisvalidationwillberequiredatfinalcompare."
+  ],
+  "sampling_artifact_audit": {
+    "ordinarySDKvariants": 2,
+    "files_each": 42,
+    "mismatches": [],
+    "host_treefreeze_not_buildsource": true
+  },
+  "remaining_limits": [
+    "One-lastposecacheactualFixed40benefitneedsordinarymeasurement; noperformancefixedclaimfrommicroGREEN.",
+    "Known302imagesamplerqualificationopen, frozenstrictregressionguardonly.",
+    "NohardwareGPUtimingfromAPIwalltime orretirementticket."
+  ],
+  "new_completion_requirements_added": false,
+  "official_PASS": false
+}

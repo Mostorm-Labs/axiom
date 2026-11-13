@@ -1,0 +1,92 @@
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index 097fbe3a..d6e3e5f0 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -1776,6 +1776,7 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
+     // Content revisions restart for a new brush session. Its display lifetime
+     // must still differ from a previous GPU capture using the same pointer.
+     if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
++    AXIOM_IF_EVENT("display_admit serial=%llu session=%llu source=%llu pointer=%llu contactgen=%llu camera=%llu surface=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)r.key.source,(unsigned long long)r.key.pointer,(unsigned long long)r.key.generation,(unsigned long long)r.camera,(unsigned long long)r.surface);
+     G5_OBSERVE(g5::Kind::Admission,g5::Tag::display_record,true,r.serial,r.session,static_cast<unsigned>(kind),r.key.source,r.key.pointer,r.key.generation,r.view,r.surface,r.metrics,r.resource,r.camera);
+     return &r;
+   }
+@@ -1784,12 +1785,14 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
+ void CanvasEditingRuntime::cancelDisplay(std::uint64_t session,DisplayKind kind) noexcept {
+   if(auto* r=findDisplay(session,kind);r&&!r->sealed){
+     if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
++    AXIOM_IF_EVENT("display_cancel serial=%llu session=%llu",(unsigned long long)r->serial,(unsigned long long)r->session);
+     G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_record,true,r->serial,3);*r={};
+   }
+ }
+ void CanvasEditingRuntime::sealDisplay(DisplayRecord& r,const semantic::CanonicalCommitRecord& commit,foundation::ObjectId object) noexcept {
+   r.sealed=true;r.operation=commit.operation_id;r.commit=commit.commit_stamp;r.semantic=commit.after_generation;
+   r.scene=sceneRevision();r.object=object;
++  AXIOM_IF_EVENT("display_seal serial=%llu session=%llu commit=%llu semantic=%llu scene=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)r.commit.ordinal.value(),(unsigned long long)r.semantic.value(),(unsigned long long)r.scene);
+   G5_OBSERVE(g5::Kind::Commit,g5::Tag::display_record,true,r.serial,r.session,g5::word(r.operation,0),g5::word(r.operation,1),r.commit.runtime_epoch.value(),r.commit.ordinal.value(),r.semantic.value(),r.scene);
+ }
+ void CanvasEditingRuntime::freezeDisplayRoster(const render::FramePlan& plan) noexcept {
+@@ -1842,6 +1845,7 @@ void CanvasEditingRuntime::completeDisplayWork(const DisplayWorkBasis& work,cons
+     G5_OBSERVE(g5::Kind::Complete,g5::Tag::display_record,true,r.serial,roster.outcomes[i],work.runtime,work.lifetime,work.attachment,work.work,frame.frameId.value(),g5::word(r.operation,0),g5::word(r.operation,1),r.commit.runtime_epoch.value(),r.commit.ordinal.value());
+     if(r.kind==DisplayKind::kBrush){
+       if(previewController_&&previewProvider_)(void)previewController_->retireSession(r.session,previewProvider_->generation());
++      AXIOM_IF_EVENT("display_retire serial=%llu session=%llu reason=%u",(unsigned long long)r.serial,(unsigned long long)r.session,1U);
+       pendingCanonicalIdentities_.erase(r.session);
+       ++previewDisplayRevision_;previewDisplayDirty_=previewActive();
+     }
+@@ -1862,6 +1866,7 @@ void CanvasEditingRuntime::coverBrushDisplays(const render::FramePlan& plan) noe
+     for(const auto& entry:plan.referenceDrawList.entries)if(entry.record.objectId==r.object)represented=true;
+     if(!represented)continue;
+     r.covered=true;++previewDisplayRevision_;previewDisplayDirty_=true;
++    AXIOM_IF_EVENT("display_covered serial=%llu session=%llu frame=%llu semantic=%llu camera=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)plan.frame.frameId.value(),(unsigned long long)plan.frame.sceneGeneration.value(),(unsigned long long)plan.frame.camera.generation.value());
+     G5_OBSERVE(g5::Kind::Stage,g5::Tag::display_record,true,r.serial,4,plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value());
+   }
+ }
+@@ -3654,6 +3659,7 @@ bool CanvasEditingRuntime::renderPreviewPresentation(
+   // later UI-thread acknowledgement only records the presentation receipt
+   // and must not be the sole visibility transition because CanonicalVisible
+   // can race that message.
++  AXIOM_IF_EVENT("preview_submit visible=%u revision=%llu display=%llu surface=%llu count=%llu",unsigned(capture.visible),(unsigned long long)capture.contentRevision,(unsigned long long)capture.displayRevision,(unsigned long long)capture.surfaceGeneration,(unsigned long long)provider->presentCount());
+   provider->setOverlayVisible(capture.visible);
+   if (presentCount != nullptr) *presentCount = provider->presentCount();
+   return true;
+@@ -3667,6 +3673,7 @@ bool CanvasEditingRuntime::acknowledgePreviewPresentation(
+       previewProvider_->generation() != capture.surfaceGeneration||capture.displayRevision!=previewDisplayRevision_) return false;
+   const bool accepted = previewController_->markPresented(
+       capture.contentRevision, capture.surfaceGeneration, presentCount);
++  AXIOM_IF_EVENT("preview_ack accepted=%u visible=%u revision=%llu display=%llu",unsigned(accepted),unsigned(capture.visible),(unsigned long long)capture.contentRevision,(unsigned long long)capture.displayRevision);
+   if (accepted) { previewDisplayDirty_=false;previewProvider_->setOverlayVisible(capture.visible); }
+   if (!accepted || pendingCanonicalIdentities_.empty()) {
+     return accepted;
+@@ -3697,6 +3704,7 @@ bool CanvasEditingRuntime::acknowledgePreviewPresentation(
+                                            previewProvider_->generation())) {
+       return false;
+     }
++    AXIOM_IF_EVENT("display_retire serial=%llu session=%llu reason=%u",(unsigned long long)(display?display->serial:0),(unsigned long long)pointer,2U);
+     retired.push_back(pointer);
+     if(auto* own=findDisplay(pointer,DisplayKind::kBrush)) {
+       [[maybe_unused]] const auto& work=submittedDisplayRoster_.work;
+diff --git a/sdk/web/web_runtime_adapter.cpp b/sdk/web/web_runtime_adapter.cpp
+index e3e34952..dd73384c 100644
+--- a/sdk/web/web_runtime_adapter.cpp
++++ b/sdk/web/web_runtime_adapter.cpp
+@@ -1,3 +1,4 @@
++#include "canvas/foundation/internal/frame_timing.hpp"
+ #include "canvas/platform/web_runtime_adapter.hpp"
+ #include "canvas/runtime/runtime_composition.hpp"
+ #include "canvas/runtime/internal/runtime_composition_core.hpp"
+@@ -18,6 +19,7 @@ namespace canvas::platform {
+ namespace {
+ WebFrameResult rejected(const char* stage) noexcept {
+   std::fprintf(stderr, "Axiom Web frame rejected: %s\n", stage);
++  AXIOM_IF_EVENT("frame_rejected stage=%s",stage);
+   return WebFrameResult::kRejected;
+ }
+ struct Fence final {
+@@ -39,6 +41,7 @@ struct Fence final {
+     if (!sync) return 1;
+     if (emscripten_webgl_make_context_current(context) != EMSCRIPTEN_RESULT_SUCCESS) return 0;
+     const auto result = glClientWaitSync(sync, 0, 0);
++    AXIOM_IF_EVENT("fence_poll context=%d result=%u",int(context),unsigned(result));
+     return result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED ? 1
+          : result == GL_TIMEOUT_EXPIRED ? 2 : 0;
+   }

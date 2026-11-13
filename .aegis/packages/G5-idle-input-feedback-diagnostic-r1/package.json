@@ -1,0 +1,60 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-idle-input-feedback-diagnostic-r1",
+  "status": "FROZEN_AUTHORIZED_DIAGNOSIS_ONLY",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "completed_through": [
+      "RR/MQ/CL scoped changes retained and independentlyreviewed, noalltailPASS",
+      "Suppliedvideo+readonlysource/tabobservations saved; manualrefresh clarified",
+      "Cornercapdiagnosis separate, noBrushfixauthorized"
+    ],
+    "next_action": "Preflight frozen package/retainedsource/SDK -> bounded ordinary controls + capped diagnostic ifneeded -> actual20minutevisibleidle firstdraw/nextdraw/drag -> causal/no-repro exact return, no behaviorfix."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-idle-input-feedback-diagnostic-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority.lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "a69f5377f9e22a33dc9d902170d0a54c3c1ab5aaf751af0c26aad138f76f2468"
+  },
+  "verification.lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "dafcf5f4b963c10b0978f4e8d9be9955745b55fd10dadc94939f57b36ec5ed75"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "c6d5138e552d2d2869d4e8b7d229418268c850e4b7a656731f4511333484896a"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ce7666ea4d4b60988d30024da56c7d380479444daae4023bc67b6a3191e8bf6b"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f4cbca6d51e93e8246ceb618a83acddad9e30f0518a632f2b0ae1c6882be0da7"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "640bc4f5a3e6d20e6249ccf2dd23634c82f2fbfac9e46bb16ed027e93e41014e"
+  }
+}

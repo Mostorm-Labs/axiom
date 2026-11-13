@@ -1,0 +1,91 @@
+{
+  "schema": "axiom-checkpoint-publication-integration-result-v1",
+  "task_id": "G5-checkpoint-publication-integration-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "package": {
+    "path": ".aegis/packages/G5-checkpoint-publication-integration-r1/package.json",
+    "sha256": "5737fd9aae869381e2c11d42c4ab09b0434d130961867fbc3caeff06e04532f2"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "scope": "prepublication only; Render checkpoint componentemptyrange guard+actualusefulphaseworktest",
+  "production_changes": {
+    "path": "runtime/render/src/skia_prepared_geometry.cpp",
+    "sha256": "3846b772ec5f462a1e8a0d8f189ec9d638732b5c5eceadfc29f408374f53543d",
+    "kind": "4guards: nextVisiblePrimitive/drawContour emptycomponentpass; emptydrawrequest; visitExact emptycomponentpass"
+  },
+  "test_changes": {
+    "path": "runtime/render/tests/cpu_postworker_replay_test.cpp",
+    "sha256": "34292135d7d30a0059add4b8c776e3d838b4fa4f717cba493cd116684967da61",
+    "contract": "ribbon-only7199, caps-only256+31=287, totaluseful7486; emptyrequest0; singlecaponlycorrespondingcheckpoint; strictpixels/scratchinvalidation/unchangedresidentbudget"
+  },
+  "observed_work": {
+    "old_compiled_inputs": 14398,
+    "new_compiled_inputs": 7486,
+    "actual_body_inputs": 7199,
+    "nonempty_cap_block_inputs": [
+      256,
+      31
+    ],
+    "zero_empty_request_inputs": true,
+    "exact_enumeration_inputs": 7486,
+    "pixels_equal": true,
+    "budget_before_after_all_probes": 291144
+  },
+  "verification": {
+    "actualold_RED": true,
+    "strongernew_RED": true,
+    "affectedfreshnative": {
+      "passed": 10,
+      "failed": 0
+    },
+    "newmatchingordinaryWASM": "buildandinstallcompletedexact42assets; timingOFF/UR0OFF/privateWorkerON/DESKTOP/local0.4.3.0",
+    "Node_Python_boundary": "unchangedcontrolchecksnotrerunperpackage",
+    "browser_starts": 0,
+    "broad51rerun": false
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/preflight.json",
+      "sha256": "6178f4988e5c67df997c5147b9902d5fce49287f8ef1d226d743611204b44a95"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/source-manifest.json",
+      "sha256": "d09635059125a07a9fbf1422520ff45c6e3c84a25b6a788a0081b6b022806ecd"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/SDK-manifest.json",
+      "sha256": "84785f9ff4f771148d161dc7c87334e3d35b11efb6b972b1d4538017001a635a"
+    },
+    "verification.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/verification.json",
+      "sha256": "0fa951b89217146ad8551c6104ff70d4eebd466c2da845e7ed4a3d7db3de191f"
+    },
+    "work-observation.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/work-observation.json",
+      "sha256": "1aecc1ae6e05dacdd0e1b40cde09edaa4ad259244e236e7ee3beb346f64928b1"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/preservation-check.json",
+      "sha256": "a9ed5a5b7faa4242b6367175f04140d17b103be72d589801ca40e04c006303dc"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/cleanup.json",
+      "sha256": "85c8f762c0930ba9f06d4ce101917cedf36cc3f04a94eae1fa776cc51355f016"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/artifact-manifest.json",
+      "sha256": "10f2bbff4821545ec710b78ef02811a68abfbc30a586bf5beee46478e652d5df"
+    }
+  },
+  "preservation": "Brush/CJshape/compiler/threads/budgets/APIunchanged; oldCJresult/review/51logunchanged; old4333/4334SDK42eachanduserpagespreserved",
+  "matchingSDK_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-checkpoint-publication-integration-r1/matching-install/js",
+  "old4334_status": "retains exactpreviousCJsampledassets, intentionallynotnewguardbuild; no userreloadoroverwrite",
+  "newDemo": "none required",
+  "remaining_findings": "No G5/relativeperformance/idle/physicalacceptance; usefulcaprestartcanlegitimatelycompileitslocalblockagain, neverblind2N allowance",
+  "initial_result_alias": ".aegis/results/G5-checkpoint-empty-pass-integration-r1 ispre-formalstagingdesign; thisexactresultgovernedbyformal5737fd...package",
+  "no_executor_commit_push": true,
+  "publication_owner": "controlchat01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "terminal": "STOP_NARROW_INTEGRATION_COMPLETE"
+}

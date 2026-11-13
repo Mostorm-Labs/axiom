@@ -1,0 +1,40 @@
+{
+  "anchor": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "branch": "codex/g5-cpu-worker",
+  "CL_files": {
+    "docs/planning/G5_CANONICAL_CONVERGENCE_20261113.md": "f101d0563aa803f5ab675e612d35c138b5afe620eabf68c4b018c31eb370c3e8",
+    "docs/planning/G5_CPU_WORKER_STATUS.md": "64700286f876e4c2b2e97cde30d1d55f69cbd96bd12b47f388f9f4040d2a1a28",
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": "366aaeb5be89b8630e2701382495fbba1f4fb614e5905884765e558803207627",
+    "runtime/render/CMakeLists.txt": "ab9d01ed62d4ba9ae6bc97dc33c644af883ede437b14b66cc2be54017f2718ab",
+    "runtime/render/include/canvas/render/render_cache.hpp": "d016890314a743fc28d5e198366f02b019042e964273cae66935312722d7541e",
+    "runtime/render/src/skia_headless_backend.cpp": "cdad460ff08feafb8b49cfc47138e267c26ec0fad5a7d402d04f10009fff2e10",
+    "runtime/render/src/skia_prepared_geometry.cpp": "0bda0638746ad3df18635fb6ef4b87982815041071889c658e2620b6787a57dc",
+    "runtime/render/src/skia_render_cache.cpp": "c7d15bea33dfcf8a4168b92fae169871334e1680dc945fd58ae7da068827127b",
+    "runtime/render/src/skia_render_cache_internal.hpp": "06544bbbad4e5557eb38495931f30bd86b0ae7986804377a8694b470d3fff9b4",
+    "runtime/render/tests/canonical_latency_body_material_test.cpp": "24dcd7848b1148d9c25134984c0412d062f2482f178bf72a8725beaef955e5a5",
+    "verification/runners/g5/canonical_latency_analyze.py": "76d8dcce977f46edff56ef62babf275b833331d60f77acb8480fd0f8bf087898",
+    "verification/runners/g5/canonical_latency_demo.py": "ea5abd88b7ffd132052eb067a523a737ec61cfde246f1a798b8f3aee46073e1f",
+    "verification/runners/g5/canonical_latency_guard.mjs": "8e3ec5a0b8eec546da3c7a08d683ff48f1309ccf3eb85f8adc56db675248d805",
+    "verification/runners/g5/canonical_latency_mixed.mjs": "956abdb151a9b91761964bcce186168bb2b542600db78d5a0cac32b6996c3481",
+    "verification/runners/g5/canonical_latency_phase_analysis.py": "e185cb8ac89d813cd8a3d8233a49bf8e0329755e5ce1e7016b97d3460ccc9e38",
+    "verification/runners/g5/canonical_latency_pixels.mjs": "6241394c9f7d4da7058211e629fde5827bd1aeb0c38fd5d006cf56679feaea19",
+    "verification/runners/g5/canonical_latency_primary.mjs": "258e998c4f4c5ca25f1c26d2e948fe83265f667e5d4743d63cc7d16f3c7d4163",
+    "verification/runners/g5/canonical_latency_primary_pixels.mjs": "48bfed731377849d55c961df9da3c32043b3760e11a3e1ef0026aeb367c5dc57",
+    "verification/runners/g5/canonical_latency_runner.py": "3193173f3d2c2406ea0b6827184830c876e4b717a44fcb310dfbf32e9aa8291a",
+    "verification/tests/g5_canonical_latency_guard.test.mjs": "e74f4b29e79431c43a7890e404839d37ead21f3dc12d09d9416513b669a47854"
+  },
+  "behavior_files": [
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp"
+  ],
+  "observation_only_files": [
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp",
+    "runtime/render/src/skia_headless_backend.cpp",
+    "runtime/render/src/skia_prepared_geometry.cpp"
+  ],
+  "private_work_counter_shape": "runtime/render/include/canvas/render/render_cache.hpp",
+  "preserved_starting29": "authority.lock exacthash; allowedRender4evolve, other25preserved",
+  "patch": "full-dirty-delta.patch includesRRacceptedbaselineplusCLchanges; starting29manifest disambiguates",
+  "SDK_publicAPI": "unchanged",
+  "commit_push_merge": false
+}

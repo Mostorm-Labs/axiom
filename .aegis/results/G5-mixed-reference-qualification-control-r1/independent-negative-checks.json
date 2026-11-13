@@ -1,0 +1,28 @@
+{
+  "schema": "axiom-mixed-reference-independent-focused-tests-v1",
+  "created_utc": "2026-11-13T05:20:28.941201+00:00",
+  "Node": {
+    "command": "node --test verification/tests/g5_mixed_reference_negative.test.mjs verification/tests/g5_mixed_reference_image.test.mjs",
+    "pass": 7,
+    "fail": 0
+  },
+  "Python": {
+    "command": "/opt/homebrew/bin/python3.12 -m unittest discover -s verification/tests -p 'test_g5_mixed_reference_image.py' -v",
+    "pass": 6,
+    "fail": 0,
+    "initial_control_failure": "3TypeError causedbytestsetUpClassaudit member shadowingfactory; producerinformed, routinefixthenfresh6pass; notproductionfailure"
+  },
+  "preserved_previous_delta_files": 17,
+  "previous_delta_all_hashes_match": true,
+  "whitespace_check": "git diff --check exit0",
+  "remaining_unexplained_image_pixels_each": 302,
+  "image_alternates_applied": 0,
+  "no_production_or_SDK_changes": true,
+  "source_refs": {
+    "verification/tests/test_g5_mixed_reference_image.py": "8bec1f68ebaa93d00882a4a7417b2d2fd8802a6667c423c5db1ddbb7106da9f3",
+    "verification/tests/g5_mixed_reference_image.test.mjs": "ec9c2b4e4f1731d6834245acb9948268180b4b77e3cbaaaa218d8997e98373ac",
+    "verification/tests/g5_mixed_reference_negative.test.mjs": "9d25adf798a0f177815f703ae95cbdff9e4236df476d7d5d7c9bc00b0f36cb52",
+    "verification/runners/g5/mixed_reference_image.py": "b7b1444d6ea8eafbffd40df62caa5b7eea833a22669adac8352042a628ec6135"
+  },
+  "official_PASS": false
+}
