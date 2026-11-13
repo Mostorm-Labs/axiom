@@ -76,7 +76,7 @@ int main() {
   assert(completionProvider.resize(48, 48).code == canvas::render::BackendSubmissionCode::kAccepted);
   completion->service();
   assert(completionProvider.gpuCompletionService()->state()->lifetime != completionState->lifetime);
-  assert(!completionState->physicalLost.load());
+  assert(completionState->abandoned.load() && !completionState->physicalLost.load());
   assert(adapter.prepareFrame(true));
   assert(adapter.frameStatus().available && adapter.frameStatus().canonicalWorkId != 0);
   assert(adapter.present());

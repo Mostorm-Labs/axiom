@@ -101,6 +101,13 @@ class D3D12Completion final : public canvas::render::GpuCompletionService {
     }
     context_->checkAsyncWorkCompletion();
   }
+  void retire() noexcept {
+    // The provider still owns all DXGI resources here. Finish already-complete
+    // callbacks, then abandon the old context before releasing those resources.
+    if (!state_->abandoned.load(std::memory_order_acquire)) service();
+    state_->abandoned.store(true, std::memory_order_release);
+    if (context_) context_->releaseResourcesAndAbandonContext();
+  }
   std::shared_ptr<const canvas::render::GpuCompletionState> state() const noexcept override {
     return state_;
   }
@@ -521,7 +528,8 @@ void WindowsD3D12SurfaceProvider::destroyGpuSurface() noexcept {
   // The SkSurface wrappers are now gone, so no Skia object may retain a
   // backbuffer when the DXGI resources are released.
   if (impl_->context) {
-    impl_->context->freeGpuResources();
+    if (impl_->completion) impl_->completion->retire();
+    else impl_->context->releaseResourcesAndAbandonContext();
     impl_->context.reset();
   }
   for (auto& buffer : impl_->buffers) buffer.Reset();
