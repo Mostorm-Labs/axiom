@@ -1,0 +1,66 @@
+Test project /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native
+      Start 620: G5CanonicalPreparedBodyPixels
+ 1/27 Test #620: G5CanonicalPreparedBodyPixels ....   Passed    3.02 sec
+      Start 632: G5MaskedNavigationProgress
+ 2/27 Test #632: G5MaskedNavigationProgress .......   Passed    0.04 sec
+      Start 643: G5CpuExactKernel
+ 3/27 Test #643: G5CpuExactKernel .................   Passed   13.71 sec
+      Start 644: G5CpuWorkerProtocol
+ 4/27 Test #644: G5CpuWorkerProtocol ..............   Passed    0.46 sec
+      Start 645: G5LongQueryPreparationPath
+ 5/27 Test #645: G5LongQueryPreparationPath .......Subprocess aborted***Exception:   7.00 sec
+libc++abi: terminating due to uncaught exception of type std::runtime_error: ELIGIBLE_STABLE_PREFIX_STALLED_BEFORE_FINAL_UP
+{"final_remainder_unions":7,"path_equal":true,"prepared_segments":25433,"resident":2104576,"status":"RED"}
+
+      Start 646: G5ExactHistoryPathResidency
+ 6/27 Test #646: G5ExactHistoryPathResidency ......   Passed    4.80 sec
+      Start 647: G5ExactHistoryPathMemory
+ 7/27 Test #647: G5ExactHistoryPathMemory .........   Passed    1.41 sec
+      Start 648: G5CrossframeHistoryRuntime
+ 8/27 Test #648: G5CrossframeHistoryRuntime .......   Passed   36.58 sec
+      Start 649: G5LongQueryPreparationRuntime
+ 9/27 Test #649: G5LongQueryPreparationRuntime ....   Passed    7.82 sec
+      Start 650: G5ExactOwnerResidencyPixels
+10/27 Test #650: G5ExactOwnerResidencyPixels ......   Passed    0.66 sec
+      Start 651: G5ExactOwnerResidency
+11/27 Test #651: G5ExactOwnerResidency ............   Passed    2.77 sec
+      Start 652: G5ExactQueryWorkingSet
+12/27 Test #652: G5ExactQueryWorkingSet ...........   Passed    6.17 sec
+      Start 713: G5UR2BExactParity
+13/27 Test #713: G5UR2BExactParity ................   Passed    0.75 sec
+      Start 714: G5UR2BExactBodySharing
+14/27 Test #714: G5UR2BExactBodySharing ...........   Passed    0.13 sec
+      Start 715: G5UR2BExactLocality
+15/27 Test #715: G5UR2BExactLocality ..............   Passed    0.10 sec
+      Start 716: G5UR2BExactInvalidation
+16/27 Test #716: G5UR2BExactInvalidation ..........   Passed    0.01 sec
+      Start 717: G5UR2BExactPressure
+17/27 Test #717: G5UR2BExactPressure ..............   Passed    0.01 sec
+      Start 718: G5UR2CHistoryPlanReuse
+18/27 Test #718: G5UR2CHistoryPlanReuse ...........   Passed    1.19 sec
+      Start 719: G5UR2CHistoryInvalidation
+19/27 Test #719: G5UR2CHistoryInvalidation ........   Passed    0.84 sec
+      Start 720: G5UR2CHistoryExactParity
+20/27 Test #720: G5UR2CHistoryExactParity .........   Passed    0.56 sec
+      Start 721: G5UR2CLeaseAccounting
+21/27 Test #721: G5UR2CLeaseAccounting ............   Passed    0.02 sec
+      Start 722: G5UR2CHistoryProgress
+22/27 Test #722: G5UR2CHistoryProgress ............   Passed    1.62 sec
+      Start 723: G5UR2CHistoryAdmission
+23/27 Test #723: G5UR2CHistoryAdmission ...........   Passed    0.03 sec
+      Start 724: G5UR2CHistoryProgressSafety
+24/27 Test #724: G5UR2CHistoryProgressSafety ......   Passed    0.10 sec
+      Start 725: G5ConvergenceContextRelease
+25/27 Test #725: G5ConvergenceContextRelease ......   Passed    0.41 sec
+      Start 727: G5TransientDisplayRetryPixels
+26/27 Test #727: G5TransientDisplayRetryPixels ....   Passed    0.74 sec
+      Start 779: G5UR2BExactInputRuntime
+27/27 Test #779: G5UR2BExactInputRuntime ..........   Passed    0.04 sec
+
+96% tests passed, 1 tests failed out of 27
+
+Total Test time (real) =  91.01 sec
+
+The following tests FAILED:
+	645 - G5LongQueryPreparationPath (Subprocess aborted)
+Errors while running CTest

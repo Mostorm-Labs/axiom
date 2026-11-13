@@ -1,0 +1,104 @@
+{
+  "schema": "axiom-idle-input-feedback-observation-v1",
+  "created_utc": "2026-11-13T07:00:44.081313+00:00",
+  "method": "read-only supplied video, source and existing user tab DOM/retained console; no reload, edits, new browser or sampling run",
+  "video": {
+    "path": "/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/TemporaryItems/NSIRD_screencaptureui_LeTi7q/录屏2026-11-13 14.40.11.mov",
+    "sha256": "e971f367118fd9c6eb53243d09cc96e91f4a932948016d4c6f62f793fbcf2afe",
+    "duration_s": 83.071667,
+    "width": 1362,
+    "height": 1010
+  },
+  "user_clarifications": {
+    "idle_mode": "probably continuously foreground",
+    "idle_duration": "about 20 minutes estimated",
+    "video_9_to_10s_reload": "user explicitly confirmed manual refresh"
+  },
+  "video_observations": [
+    {
+      "time_s": [
+        0,
+        8.25
+      ],
+      "fact": "Amber transient stroke visible; footer reports 22 objects, 1 selected, Zoom0.34."
+    },
+    {
+      "time_s": [
+        8.5,
+        9.5
+      ],
+      "fact": "Visible ink disappears while footer still reports22 objects/1 selected/Zoom0.34; object count alone is UI and not a direct canonical snapshot."
+    },
+    {
+      "time_s": [
+        9.75,
+        11
+      ],
+      "fact": "User-confirmed manual refresh; Loading SDK then empty new Demo0objects/Zoom1.00."
+    },
+    {
+      "time_s": [
+        12,
+        28
+      ],
+      "fact": "New drawing first amber overlay, then dark canonical ink appears; object counter increases1 then2."
+    },
+    {
+      "time_s": [
+        49,
+        83
+      ],
+      "fact": "Partial-erase feedback shown and BUSY:BUSY appears; both Undo/Redo disabled."
+    }
+  ],
+  "live_readonly": {
+    "URL": "http://127.0.0.1:4333/example.html",
+    "DOM": {
+      "status": "BUSY: BUSY",
+      "undo_disabled": true,
+      "redo_disabled": true,
+      "visibility": "visible",
+      "canonical_canvas": [
+        822,
+        900
+      ],
+      "preview_canvas_hidden": true
+    },
+    "retained_console": {
+      "rows": 483,
+      "latest_frame_begin": 709,
+      "latest_objects": 24,
+      "latest_scene_records": 24,
+      "repeated_reason": "exact cache preparation pending",
+      "framegen": 1,
+      "providergen": 1,
+      "no_timing_claim": "Tool batch log timestamps not native event times; no loop rate or contemporaneous duration inferred",
+      "no_contextloss_or_inputreject_in_retained_rows": true
+    }
+  },
+  "source_facts": {
+    "no_idle20minute_timer_found": "runtime/render, runtime/interaction, sdk/web, sdk/common/session.cpp",
+    "navigation_prewarm_ms": 40,
+    "navigation_quiet_ms": 100,
+    "resize_debounce_ms": 120,
+    "preview_tint": "SkiaRenderer::renderPreview default amber transient",
+    "Demo_reload": "example.html createRuntime without documentId/restore; default newId, empty RAM document; no persistence",
+    "full_display_source": "canonical cache pixels invalidated by real camera/provider/resource/scene dependencies; no idleTTL incachebegin"
+  },
+  "unknown": [
+    "Why preview/canonical display disappeared before manual refresh",
+    "Whether old committed objects were still present in canonical bytes at that instant",
+    "Whether reported20min idle itself or previous unfinished demand caused first-input stall",
+    "Whether separate reported no-manual-refresh loss was browser reset, semantic mutation, or display loss"
+  ],
+  "no_production_changes": true,
+  "evidence_frames": {
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/t10.png": "008b92b8820c4e0da0d14314c637408e5f58a4411a625d12c851255e85292b05",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/t49.png": "6a744ef9087700ff87aac25c00be12ee18d8123592bd12f93cc31734f554e515",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/t08-11.jpg": "046bf4ab3e95288fc129fd7c664df5dc3ca33592d9e45ca6880ad7b9ca0fe460",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/first24.jpg": "3ec27f8ede3fc1993937fca750cc1fc540763ceb96fea049b541e4e373e8b845",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/after24.jpg": "b8e82573b22e220b5170d08dd5178f21af30a327ddc5b641c72d08768b0a7361",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/first30-status.jpg": "c4232c2e6935e434de8aeefb5ba0aa0f0bbf33f8930cc12e65b3c2b18b4d68ad",
+    ".aegis/results/G5-idle-input-feedback-control-r1/video/t07_8.png": "0479e0b336b757efb11d46f4c231b5b157f2b675803c32060077e35cea6e5fdb"
+  }
+}

@@ -1,0 +1,20 @@
+TAP version 13
+# Subtest: actual root private asset binding uses normalized relative assets
+ok 1 - actual root private asset binding uses normalized relative assets
+  ---
+  duration_ms: 0.8705
+  ...
+# Subtest: actual root close retains private binding after publication-pending and retires only on successful retry
+ok 2 - actual root close retains private binding after publication-pending and retires only on successful retry
+  ---
+  duration_ms: 1.121542
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43.592625

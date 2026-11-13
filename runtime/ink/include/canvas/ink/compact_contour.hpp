@@ -1,6 +1,7 @@
 #pragma once
 #include "canvas/runtime/ink_brush.hpp"
 #include <optional>
+#include <limits>
 #include <span>
 #include <vector>
 namespace canvas::ink {
@@ -16,6 +17,16 @@ class CompactContourCompiler final {
     void append(std::span<const foundation::InkKnot>,double totalDistance,CompactContour&);
     void finish(double totalDistance,CompactContour&);
     std::uint64_t visits()const noexcept{return visits_;}
+    // At most two patches/one corner node per effective knot, sixteen total
+    // taper cuts, one carried patch and finish. Saturate before reservations.
+    static constexpr std::size_t maxPatches(std::size_t knots) noexcept {
+        constexpr auto max=std::numeric_limits<std::size_t>::max();
+        return knots>(max-35)/2?max:knots*2+35;
+    }
+    static constexpr std::size_t maxCaps(std::size_t knots) noexcept {
+        constexpr auto max=std::numeric_limits<std::size_t>::max();
+        return knots>max-18?max:knots+18;
+    }
  private:
     struct Anchor {ContourPoint left,right;};
     foundation::InkBrushConfig config_;

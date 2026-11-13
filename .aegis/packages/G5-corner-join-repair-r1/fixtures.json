@@ -1,0 +1,199 @@
+{
+  "source": {
+    "path": "out/G5-corner-cap-diagnostic-r1/probe.cpp",
+    "sha256": "37dbf59ccf6bf81585113b9282b03817fee76933a660a2e63b76f3214653fd26"
+  },
+  "knots": {
+    "straight": [
+      [
+        40,
+        120,
+        32768
+      ],
+      [
+        80,
+        120,
+        32768
+      ],
+      [
+        120,
+        120,
+        32768
+      ],
+      [
+        160,
+        120,
+        32768
+      ]
+    ],
+    "abrupt-turn": [
+      [
+        260,
+        40,
+        32768
+      ],
+      [
+        180,
+        70,
+        32768
+      ],
+      [
+        110,
+        100,
+        32768
+      ],
+      [
+        70,
+        150,
+        32768
+      ],
+      [
+        95,
+        155,
+        32768
+      ],
+      [
+        180,
+        158,
+        32768
+      ],
+      [
+        260,
+        150,
+        32768
+      ]
+    ],
+    "sparse-hairpin": [
+      [
+        350,
+        40,
+        32768
+      ],
+      [
+        200,
+        80,
+        32768
+      ],
+      [
+        70,
+        150,
+        32768
+      ],
+      [
+        220,
+        160,
+        32768
+      ],
+      [
+        360,
+        150,
+        32768
+      ]
+    ],
+    "narrow-turn": [
+      [
+        200,
+        40,
+        32768
+      ],
+      [
+        160,
+        60,
+        32768
+      ],
+      [
+        120,
+        90,
+        32768
+      ],
+      [
+        105,
+        120,
+        32768
+      ],
+      [
+        115,
+        122,
+        32768
+      ],
+      [
+        150,
+        124,
+        32768
+      ],
+      [
+        200,
+        120,
+        32768
+      ]
+    ],
+    "smooth-turn": [
+      [
+        200,
+        40,
+        32768
+      ],
+      [
+        160,
+        42,
+        32768
+      ],
+      [
+        125,
+        50,
+        32768
+      ],
+      [
+        100,
+        65,
+        32768
+      ],
+      [
+        85,
+        85,
+        32768
+      ],
+      [
+        80,
+        105,
+        32768
+      ],
+      [
+        85,
+        125,
+        32768
+      ],
+      [
+        100,
+        140,
+        32768
+      ],
+      [
+        125,
+        150,
+        32768
+      ],
+      [
+        160,
+        155,
+        32768
+      ],
+      [
+        200,
+        155,
+        32768
+      ]
+    ]
+  },
+  "config": {
+    "version": 2,
+    "algorithmVersion": 4,
+    "signalVersion": 3,
+    "size": 16,
+    "thinning": 0.99,
+    "smoothing": 0.61,
+    "startCap": false,
+    "endCap": false
+  },
+  "extensions": "Mirrorleft/right; densifythesamearms; near90/near180/exact180, adjacentleft-right reversals, duplicatepoints; fixedand0->1->0effectivepressure; taperpresent; markerangle.7flatness.25and.05. Thesearesmallnativecases, notnewbrowsermatrix."
+}

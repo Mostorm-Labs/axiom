@@ -1,0 +1,145 @@
+{
+  "schema": "axiom-postworker-render-reuse-independent-scoped-review-v1",
+  "created_utc": "2026-11-13T04:27:04.005977+00:00",
+  "role": "CONTROL_REVIEW independent scoped audit",
+  "authority": {
+    "path": ".aegis/packages/G5-postworker-render-reuse-r1/package.json",
+    "sha256": "ef56b7c84e7f3f5cb526b43554dc765fd819ae4ab78567680733fb8929ccf987"
+  },
+  "subject": {
+    "path": ".aegis/results/G5-postworker-render-reuse-r1/result.json",
+    "sha256": "a60466fd460d336bd4b5fa65c2cd3253cb8602ee84e336c5cfca9689d306946c"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "index_empty": true,
+    "scoped_changes": "retained uncommitted; no control production edits"
+  },
+  "objective": "Review the two frozen Render work-reduction slices and required continuous primary/zoomout behavior, distinguishing accepted local gains from outstanding full-scene qualification.",
+  "non_goals": [
+    "No official G5/P34/release acceptance",
+    "No merge/main/version/thread/budget expansion",
+    "No extra browser sampling or reference rerendering",
+    "No AA waiver or image-tie exception expansion"
+  ],
+  "frozen_requirement_audit": {
+    "RR1": {
+      "verdict": "SATISFIED_SCOPED_CAUSAL_REPAIR",
+      "evidence": "Read current old/new drawTransientOverlay/cache admission/prepare/alias/replay. Old native one/eight-copy work16/128 becomes16/16; warm newcoverage4→0. Fixed40 has17 complete material equivalence classes after mask geometry comparison; production equality uses validated prepared body plus other full pixel dependencies. Repeatedattempts are not all called wasted."
+    },
+    "RR2": {
+      "verdict": "SATISFIED_AFFECTED_PATHS_WITH_EXPLICIT_LIMIT",
+      "evidence": "Independent fresh native4/4 including warm/cold completion/provider nonpublication/sharedaliasGPUlease; changedmask/pose/seed variants now assert16newcoverage, equalallocation0; independent original variantpixels0difference. Existing broader native26/Node17/Python5/boundary120 logs reviewed. Shared pixel lease remains through aliases/GPU epoch and original active mask never enters canonical image. Continuous changingprefix oversizedstaged composites remain an explicitly incomplete performance path, not claimed covered."
+    },
+    "RR3": {
+      "verdict": "PARTIAL_PRIMARY_SATISFIED_MIXED_PIXEL_QUALIFICATION_UNRESOLVED",
+      "primary": "Control independently compared all5Operation/fourSnapshot matched D4 bytes; original OperationEngine replay/three finalC originalCPU pixels pass. D4AB28.293→13.736s/C17.481→11.566s singlepair; candidateinput11.373s vsbaseline159.544s; no statistical performance verdict. C firstworkerissue6181.2→11.4ms andworstC RAF6181.1→83.1ms; postlastworker~10.6s unchanged.",
+      "mixed": "Control independently compared12feedback/final/redo images against bounded originalCPU reference: baseline/candidate eachsame4325nonAA fail/max240. Paired images differonly≤2channels but pairedagreement cannot prove independent correctness. Fullcamera canonicalfeedback after6wheels is measured, earliestretainedLOD feedback notqualified. Immediatezoomout~9s unchanged.",
+      "failure_mode_and_impact": "Frozen independent mixed-scene pixels are intended to detect lost content, wrong mask composition/z-order/opacity or stale camera output. Existing native affected-path oracle and byte-equal Operations do not uniquely detect full actual Web mixed output; residual full-scene reference disagreement remains.",
+      "classification": "FROZEN_RR3_EVIDENCE_QUALIFICATION_FAILURE; product regression not established; reference/boundary/text realization candidate defect routes to verification analysis, not automatic new product repair."
+    },
+    "RR4": {
+      "verdict": "SATISFIED_TERMINAL_BLOCKER_RETURN",
+      "evidence": "Exact source/artifact/result/demos and original failures preserved, same repo shared worktree reviewer-accessible. Five browser windows/773s all cleanup. No new4333 ordefaultpromotion, producer callback delivered, no commit/push/mainmerge."
+    }
+  },
+  "frozen_evidence_audit": {
+    "direct_bindings_checked": 364,
+    "artifact_files": 272,
+    "source_delta_files": 17,
+    "candidate_SDK_files": 42,
+    "mismatches": [],
+    "browser_windows": 5,
+    "browser_charged_seconds": 773,
+    "browser_all_cleanup": true,
+    "conditional_diagnostics_used": 0,
+    "browser_correctives_used": 0,
+    "reference_execution_correction": {
+      "initial10s_timeouts": 2,
+      "defect": "Selfselected driver setting, not frozen180s cap.",
+      "correction": {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/oracle-driver-correction.json",
+        "sha256": "b90e54ba4e8d1bf5906997164da7193af8f4fd0dfae5b8aaa7e9b3bcfec30290"
+      },
+      "corrected_starts": 2,
+      "seconds": [
+        35.67539470898919,
+        35.65811224991921
+      ],
+      "cleanup": true,
+      "original_failure_records_preserved": true
+    },
+    "source_build_identity": "Host tree source-SDK freeze is only drift witness. Baseline42assets independently match W7 immutable build manifest/source==ced1 production; candidate uses exact current scoped dirtysource and ordinary timing/diagnosticsOFF SDK. Postfreeze test/verification changes do not alter sampledproduction.",
+    "no_proof_rule_change": "Existing independent geometry AA and exterior≤2channel unchanged. Image-tie allowance remains only its old literal scope. No new boundary exclusion inferred from candidate diffs.",
+    "independent_rechecks": [
+      {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/D4-paired-partial.json",
+        "sha256": "483cf467ca747507751af3935c3b02e88818d293fb1cf90d7468c33d0c671b35"
+      },
+      {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/matched-semantics-partial.json",
+        "sha256": "1d42f6cbe155d2e54b4d6f94f3cd50d6c30f9cf7a437aea9d8c766eb236efcdb"
+      },
+      {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/primary-pixel-recheck.json",
+        "sha256": "362fc022e5251b8484656d995a2750ec20e3dcb44edbb73e3c1dd24804e77426"
+      },
+      {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/zoom-pixel-recheck.json",
+        "sha256": "5655308228e4f42e24f05f5c6a4c0a6b23cb8be93a471b26f415ca8a87fbfabd"
+      },
+      {
+        "path": ".aegis/results/G5-postworker-render-reuse-control-r1/verification-followup.json",
+        "sha256": "d6ac7cf1c3ffb0b5c73799743b6b91b74f59ef37ff9417dbbadf0fa4b2885919"
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "affected_owners": "Existing Render cache/material and cooperative preparation; OperationEngine/Interaction/Scene canonical contracts unchanged.",
+    "production_files": [
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "runtime/render/src/skia_renderer.cpp"
+    ],
+    "current_delta_all17_match": true,
+    "production_sampling_freeze_unchanged": true,
+    "ordinary_worker_default_OFF_unchanged": true,
+    "current_candidate_private_ON": true,
+    "old_4331_assets_verified": 42,
+    "old_4332_assets_verified": 42,
+    "old_assets_mismatches": [],
+    "new_demo": null,
+    "user_documents": "untouched",
+    "git_diff_check": "exit0",
+    "main_not_merged": true,
+    "commit_push_tag_release": false
+  },
+  "findings": [
+    {
+      "classification": "NONBLOCKING_PERFORMANCE_REMAINDER",
+      "detail": "Primary/C waits remain13.7s/11.6s atD4, mixedzoom~9s, postlastworker10.6s;3s/5s directions unmet. Additional threads not justified by measured Workercompute."
+    },
+    {
+      "classification": "VERIFICATION_DESIGN_CANDIDATE_DEFECT",
+      "detail": "Both originalbaseline andcandidate fail same4325mixedpixels. Static original boundary helper coversShapeexplicitproperties, may omitTablegrid/Stickydefaultfill boundaries; noTextResources inCPUreference. Bbox localization alone cannot authorize geometric edge masks or attribute every mismatch. Requires bounded independent reference design review before repair; no productfix inferred."
+    },
+    {
+      "classification": "EVIDENCE_EXECUTION_DEFECT_REPAIRED",
+      "detail": "Wrong10s driver cap corrected under existing180s native execution envelope; originaltwo124 retained, newtwo references complete. No browser repeated."
+    },
+    {
+      "classification": "TEST_EVIDENCE_DEFECT_REPAIRED",
+      "detail": "Sevenvariants originally loggedcounts only; control requested actualwork/pixelassertions withinfrozenRR2. Strengthenedtests4/4 independentlypass, productionunchanged."
+    }
+  ],
+  "verdict": "ACCEPT_SCOPED_RENDER_WORK_REDUCTION_HOLD_RR3_MIXED_PIXEL_QUALIFICATION_AND_DEMO_PROMOTION",
+  "package_overall_status": "BLOCKED_EVIDENCE",
+  "implementation_regression_established": false,
+  "official_G5_P34_performance_release_PASS": false,
+  "handoff": "This package terminates with valid changes preserved. Next review should qualify the existing mixed Table/Sticky/image independent reference/boundary using retained inputs/pixels before new production work. Then separately plan remaining postWorker canonical wait and immediatezoomout~9s. Do not autoextend currentpackage/threadcount/budget/matrix. Implementation chat should remain idle until a new authorized package.",
+  "producer_notification_authorized": true
+}

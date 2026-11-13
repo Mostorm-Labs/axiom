@@ -1,0 +1,34 @@
+# CPUW5 r3: one owner allowance, several bounded batches
+
+User asks to fix zoomout. r2actualcompleteproof nowpasses andretains3/4regions,
+but feedbackstillwaits on exposedcontent; ordinarycandidate slower. Stopcheckpoints
+andpartialformalraw preserved. Thisexplicitcontrolredesign replacesonlypolicy
+thatfixednavigationmustgetone2msbatchperRAF, notpixel/Brush/semanticcorrectness.
+
+UseexistingRuntimeownerstart (beginCpuPendingOpportunity ifenabled) forshared
+preparationdeadline8ms. CriticalNAV mayperform≤4original2ms/64steps/≤1024coarse
+commandbatches, cumulative≤4096commands/256NAVsteps, beforeyield. Finishactual
+SkiaGpuLifetime asyncflush/submit eachbatch; servicecompletion/pendingtickets>=2
+stops. No blockingwait/syncfence. SameScene/camera/provider/resource/metricsbasis
+required, forwardprogressrequired. Cannotreset8msperbatch/source/canonical/preview.
+Exactfairnessusesremaininggrantorfinitealternatingslot, cannotstarve. Source
+canonicalprepare8mswasnotwholeframe8ms; input/commit/Scene72msremainsseparate.
+
+D5mostnav1.5–2ms/ticketbackpressure0 butone153.9mscallbetweenrecordandGPUsubmit;
+privateCPUflush/submitscopes needed. Ifdrivercallovershoots, recordtruthfullyand
+do nofurtherderivedworkthatturn. 8mscannotpreemptdriverandisnotframehardSLO.
+R2cold12turn failsdiagnosticnotnewprooforacle. Originalpixel/LOD/reference
+proofandnegativecaches remainrequired. Do notrelease ‘fixed’Demo untilcorrectness
+andordinarypairtargetsmeetcontractorclearlyboundedfindings. Noqualitydrop.
+
+Preserveallr3historicalfunctionalcandidatechanges/4330document/oldSDKhashes.
+Branchcodex/g5-cpu-worker HEAD53cd1d66, exactr2currentfiles in trusted-basis.
+SameCPUW5quota remaining1development+2final, r2F1controlstop18raw isnotproduct
+correctnessfailure; authorize newformalsetonr3sourcewithoutresetledgerhistory.
+Dev6maycombineserialdiag2+ordinary3targetA/B+cold3smallpreflight≤240s/4GiB.
+F2full3pair ordinary18+4settledcontrols; F3functional12+cold3correctness.
+NoextraDPR/platform/size/baselineauthor. NativeVMbudget/fairness first.
+
+R3oneexplicitdesignonly; continueexecutableimplementation/verification/Demo
+untilterminal, notanotherread-onlyreturn. Activecallbackcontrolforaccept/cause/
+eachbrowserprepost/terminal, CLEARwithoutACK. No commit/push/tag/version.

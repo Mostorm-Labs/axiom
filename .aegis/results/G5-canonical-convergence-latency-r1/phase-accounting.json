@@ -1,0 +1,1276 @@
+{
+  "primary": {
+    "AB": {
+      "lo": 11958.200000047684,
+      "hi": 27785.899999976158,
+      "wall_ms": 15827.699999928474,
+      "roles": {
+        "canonical": {
+          "rows": 359,
+          "stages_ms": {
+            "attempt": {
+              "inclusive_ns": 3596.7,
+              "exclusive_ns": 148.1,
+              "calls": 359
+            },
+            "visibility": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ns": 58.3,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ns": 22.9,
+              "exclusive_ns": 22.9,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ns": 35.3,
+              "exclusive_ns": 35.3,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ns": 6.1,
+              "exclusive_ns": 6.1,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ns": 3384.1,
+              "exclusive_ns": 1066.6,
+              "calls": 359
+            },
+            "acquire": {
+              "inclusive_ns": 0.6,
+              "exclusive_ns": 0.6,
+              "calls": 359
+            },
+            "validation": {
+              "inclusive_ns": 540.4,
+              "exclusive_ns": 540.4,
+              "calls": 359
+            },
+            "cache_begin": {
+              "inclusive_ns": 21.8,
+              "exclusive_ns": 16.1,
+              "calls": 359
+            },
+            "group_update": {
+              "inclusive_ns": 5.5,
+              "exclusive_ns": 5.5,
+              "calls": 359
+            },
+            "damage": {
+              "inclusive_ns": 0.2,
+              "exclusive_ns": 0.2,
+              "calls": 359
+            },
+            "cache_prepare": {
+              "inclusive_ns": 1754.5,
+              "exclusive_ns": 126.6,
+              "calls": 359
+            },
+            "prepare_scan": {
+              "inclusive_ns": 0.8,
+              "exclusive_ns": 0.8,
+              "calls": 1
+            },
+            "coverage_flush": {
+              "inclusive_ns": 169.3,
+              "exclusive_ns": 169.3,
+              "calls": 359
+            },
+            "prepared_select": {
+              "inclusive_ns": 51.3,
+              "exclusive_ns": 51.3,
+              "calls": 125817
+            },
+            "prepared_draw": {
+              "inclusive_ns": 1043.8,
+              "exclusive_ns": 1043.8,
+              "calls": 125047
+            },
+            "material_submit": {
+              "inclusive_ns": 19.2,
+              "exclusive_ns": 19.2,
+              "calls": 2170
+            },
+            "raster_snapshot": {
+              "inclusive_ns": 0.2,
+              "exclusive_ns": 0.2,
+              "calls": 17
+            },
+            "historical_mask_draw": {
+              "inclusive_ns": 343.3,
+              "exclusive_ns": 343.3,
+              "calls": 31
+            },
+            "scene_draw": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ns": 0.2,
+              "exclusive_ns": 0.2,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            }
+          },
+          "counts": {
+            "candidates": 40,
+            "sources": 40,
+            "encoded_bytes": 29053826,
+            "plan_entries": 40,
+            "prepare_knots": 0,
+            "built_groups": 31,
+            "coverage_tiles": 2170,
+            "coverage_pixels": 142213120,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 2,
+            "exact_demand_reuse": 358,
+            "source_points": 287960,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 2170,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 0,
+            "after_generation": 0,
+            "after_scene": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 4178280,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 125848,
+            "history_draw_primitives": 225432,
+            "validation_mask_primitives": 104425920,
+            "prepare_resets": 1,
+            "material_alias_hits": 9
+          },
+          "maxima": {
+            "resource_used": 526844785,
+            "resource_pending_release": 133922092,
+            "resource_gpu_epochs": 8
+          },
+          "outcomes": {
+            "retry": 358,
+            "accepted": 1
+          }
+        },
+        "owner": {
+          "rows": 906,
+          "stages_ms": {
+            "attempt": {
+              "inclusive_ns": 11375.0,
+              "exclusive_ns": 7.7,
+              "calls": 906
+            },
+            "reference_build": {
+              "inclusive_ns": 8.5,
+              "exclusive_ns": 0.9,
+              "calls": 539
+            },
+            "reference_entries": {
+              "inclusive_ns": 21.9,
+              "exclusive_ns": 21.9,
+              "calls": 906
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 948.1,
+              "exclusive_ns": 948.1,
+              "calls": 539
+            },
+            "frame_plan": {
+              "inclusive_ns": 602.2,
+              "exclusive_ns": 602.2,
+              "calls": 905
+            },
+            "render": {
+              "inclusive_ns": 2532.8,
+              "exclusive_ns": 849.9,
+              "calls": 539
+            },
+            "validation": {
+              "inclusive_ns": 707.9,
+              "exclusive_ns": 707.9,
+              "calls": 547
+            },
+            "group_update": {
+              "inclusive_ns": 404.0,
+              "exclusive_ns": 404.0,
+              "calls": 539
+            },
+            "damage": {
+              "inclusive_ns": 0.6,
+              "exclusive_ns": 0.6,
+              "calls": 539
+            },
+            "prepare_scan": {
+              "inclusive_ns": 0.9,
+              "exclusive_ns": 0.9,
+              "calls": 3
+            },
+            "coverage_flush": {
+              "inclusive_ns": 79.8,
+              "exclusive_ns": 79.8,
+              "calls": 539
+            },
+            "material_submit": {
+              "inclusive_ns": 5.0,
+              "exclusive_ns": 5.0,
+              "calls": 742
+            },
+            "owner_pump": {
+              "inclusive_ns": 8.4,
+              "exclusive_ns": 8.4,
+              "calls": 906
+            },
+            "pending_owner": {
+              "inclusive_ns": 3259.2,
+              "exclusive_ns": 153.0,
+              "calls": 906
+            },
+            "transient_frame": {
+              "inclusive_ns": 4134.9,
+              "exclusive_ns": 48.1,
+              "calls": 906
+            },
+            "resource_service": {
+              "inclusive_ns": 188.2,
+              "exclusive_ns": 188.2,
+              "calls": 906
+            },
+            "prepared_select": {
+              "inclusive_ns": 16.1,
+              "exclusive_ns": 16.1,
+              "calls": 43464
+            },
+            "prepared_draw": {
+              "inclusive_ns": 365.7,
+              "exclusive_ns": 365.7,
+              "calls": 43103
+            },
+            "target_prepare": {
+              "inclusive_ns": 464.8,
+              "exclusive_ns": 464.8,
+              "calls": 86
+            },
+            "scene_stamp": {
+              "inclusive_ns": 2626.7,
+              "exclusive_ns": 2626.7,
+              "calls": 397
+            },
+            "history_prepare": {
+              "inclusive_ns": 0.9,
+              "exclusive_ns": 0.9,
+              "calls": 2
+            },
+            "publication_prepare": {
+              "inclusive_ns": 2.2,
+              "exclusive_ns": 2.2,
+              "calls": 2
+            },
+            "atomic_apply": {
+              "inclusive_ns": 0.3,
+              "exclusive_ns": 0.3,
+              "calls": 2
+            },
+            "apply_observer": {
+              "inclusive_ns": 2.9,
+              "exclusive_ns": 2.9,
+              "calls": 2
+            },
+            "scene_publish": {
+              "inclusive_ns": 8.4,
+              "exclusive_ns": 8.4,
+              "calls": 2
+            },
+            "raster_snapshot": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 10
+            },
+            "historical_mask_draw": {
+              "inclusive_ns": 116.2,
+              "exclusive_ns": 116.2,
+              "calls": 10
+            },
+            "navigation_frame": {
+              "inclusive_ns": 78.4,
+              "exclusive_ns": 46.0,
+              "calls": 366
+            },
+            "canonical_frame": {
+              "inclusive_ns": 3698.2,
+              "exclusive_ns": 3698.2,
+              "calls": 359
+            }
+          },
+          "counts": {
+            "candidates": 36240,
+            "sources": 36240,
+            "encoded_bytes": 0,
+            "plan_entries": 36200,
+            "prepare_knots": 0,
+            "built_groups": 10,
+            "coverage_tiles": 744,
+            "coverage_pixels": 48758784,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 0,
+            "exact_demand_reuse": 0,
+            "source_points": 260891760,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 744,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 802,
+            "pending_phase": 3648,
+            "pending_jobs": 0,
+            "commit_ordinal": 996,
+            "after_generation": 996,
+            "after_scene": 1902,
+            "stamp_primitives": 581440,
+            "stamp_bytes": 89691288,
+            "stamp_calls": 18200,
+            "atomic_start_ns": 38612200000,
+            "atomic_end_ns": 38612500000,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 1438107,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 43412,
+            "history_draw_primitives": 72640,
+            "validation_mask_primitives": 159111360,
+            "prepare_resets": 4,
+            "material_alias_hits": 0
+          },
+          "maxima": {
+            "resource_used": 436069689,
+            "resource_pending_release": 44756160,
+            "resource_gpu_epochs": 7
+          },
+          "outcomes": {
+            "pending": 905,
+            "settled": 1
+          }
+        }
+      }
+    },
+    "C": {
+      "lo": 88205.20000004768,
+      "hi": 100803.80000007153,
+      "wall_ms": 12598.600000023842,
+      "roles": {
+        "canonical": {
+          "rows": 437,
+          "stages_ms": {
+            "attempt": {
+              "inclusive_ns": 4397.7,
+              "exclusive_ns": 182.4,
+              "calls": 437
+            },
+            "visibility": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "reference_build": {
+              "inclusive_ns": 57.4,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "reference_entries": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "reference_encode": {
+              "inclusive_ns": 22.3,
+              "exclusive_ns": 22.3,
+              "calls": 1
+            },
+            "reference_digest": {
+              "inclusive_ns": 35.0,
+              "exclusive_ns": 35.0,
+              "calls": 1
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "frame_plan": {
+              "inclusive_ns": 2.5,
+              "exclusive_ns": 2.5,
+              "calls": 1
+            },
+            "render": {
+              "inclusive_ns": 4155.3,
+              "exclusive_ns": 1415.8,
+              "calls": 437
+            },
+            "acquire": {
+              "inclusive_ns": 0.3,
+              "exclusive_ns": 0.3,
+              "calls": 437
+            },
+            "validation": {
+              "inclusive_ns": 666.1,
+              "exclusive_ns": 666.1,
+              "calls": 437
+            },
+            "cache_begin": {
+              "inclusive_ns": 26.8,
+              "exclusive_ns": 20.1,
+              "calls": 437
+            },
+            "group_update": {
+              "inclusive_ns": 6.3,
+              "exclusive_ns": 6.3,
+              "calls": 437
+            },
+            "damage": {
+              "inclusive_ns": 0.4,
+              "exclusive_ns": 0.4,
+              "calls": 437
+            },
+            "coverage_flush": {
+              "inclusive_ns": 197.5,
+              "exclusive_ns": 197.5,
+              "calls": 437
+            },
+            "prepared_select": {
+              "inclusive_ns": 61.3,
+              "exclusive_ns": 61.3,
+              "calls": 162294
+            },
+            "prepared_draw": {
+              "inclusive_ns": 1338.9,
+              "exclusive_ns": 1338.9,
+              "calls": 161326
+            },
+            "material_submit": {
+              "inclusive_ns": 16.8,
+              "exclusive_ns": 16.8,
+              "calls": 2800
+            },
+            "historical_mask_draw": {
+              "inclusive_ns": 431.6,
+              "exclusive_ns": 431.6,
+              "calls": 40
+            },
+            "scene_draw": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "navigation_snapshot": {
+              "inclusive_ns": 0.2,
+              "exclusive_ns": 0.2,
+              "calls": 1
+            },
+            "provider_present": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            }
+          },
+          "counts": {
+            "candidates": 40,
+            "sources": 40,
+            "encoded_bytes": 29058026,
+            "plan_entries": 40,
+            "prepare_knots": 0,
+            "built_groups": 0,
+            "coverage_tiles": 2800,
+            "coverage_pixels": 183500800,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 0,
+            "exact_demand_reuse": 436,
+            "source_points": 287960,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 2800,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 0,
+            "after_generation": 0,
+            "after_scene": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 5390904,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 162334,
+            "history_draw_primitives": 290920,
+            "validation_mask_primitives": 127132040,
+            "prepare_resets": 2,
+            "material_alias_hits": 0
+          },
+          "maxima": {
+            "resource_used": 437568247,
+            "resource_pending_release": 0,
+            "resource_gpu_epochs": 8
+          },
+          "outcomes": {
+            "retry": 436,
+            "accepted": 1
+          }
+        },
+        "owner": {
+          "rows": 740,
+          "stages_ms": {
+            "attempt": {
+              "inclusive_ns": 7972.3,
+              "exclusive_ns": 7.6,
+              "calls": 740
+            },
+            "reference_build": {
+              "inclusive_ns": 4.5,
+              "exclusive_ns": 0.2,
+              "calls": 302
+            },
+            "reference_entries": {
+              "inclusive_ns": 4.3,
+              "exclusive_ns": 4.3,
+              "calls": 302
+            },
+            "presentation_adapt": {
+              "inclusive_ns": 9.6,
+              "exclusive_ns": 9.6,
+              "calls": 302
+            },
+            "frame_plan": {
+              "inclusive_ns": 5.1,
+              "exclusive_ns": 5.1,
+              "calls": 302
+            },
+            "render": {
+              "inclusive_ns": 1861.8,
+              "exclusive_ns": 762.7,
+              "calls": 302
+            },
+            "validation": {
+              "inclusive_ns": 412.1,
+              "exclusive_ns": 412.1,
+              "calls": 302
+            },
+            "group_update": {
+              "inclusive_ns": 5.1,
+              "exclusive_ns": 5.1,
+              "calls": 302
+            },
+            "damage": {
+              "inclusive_ns": 0.2,
+              "exclusive_ns": 0.2,
+              "calls": 302
+            },
+            "prepare_scan": {
+              "inclusive_ns": 0.6,
+              "exclusive_ns": 0.6,
+              "calls": 1
+            },
+            "coverage_flush": {
+              "inclusive_ns": 73.3,
+              "exclusive_ns": 73.3,
+              "calls": 302
+            },
+            "material_submit": {
+              "inclusive_ns": 7.7,
+              "exclusive_ns": 7.7,
+              "calls": 907
+            },
+            "owner_pump": {
+              "inclusive_ns": 6.5,
+              "exclusive_ns": 6.5,
+              "calls": 740
+            },
+            "pending_owner": {
+              "inclusive_ns": 1376.7,
+              "exclusive_ns": 56.1,
+              "calls": 740
+            },
+            "transient_frame": {
+              "inclusive_ns": 1906.8,
+              "exclusive_ns": 25.8,
+              "calls": 740
+            },
+            "resource_service": {
+              "inclusive_ns": 153.8,
+              "exclusive_ns": 153.8,
+              "calls": 740
+            },
+            "prepared_select": {
+              "inclusive_ns": 17.4,
+              "exclusive_ns": 17.4,
+              "calls": 53101
+            },
+            "prepared_draw": {
+              "inclusive_ns": 442.3,
+              "exclusive_ns": 442.3,
+              "calls": 52719
+            },
+            "historical_mask_draw": {
+              "inclusive_ns": 140.4,
+              "exclusive_ns": 140.4,
+              "calls": 12
+            },
+            "target_prepare": {
+              "inclusive_ns": 5.7,
+              "exclusive_ns": 5.7,
+              "calls": 43
+            },
+            "scene_stamp": {
+              "inclusive_ns": 1312.2,
+              "exclusive_ns": 1312.2,
+              "calls": 199
+            },
+            "history_prepare": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "publication_prepare": {
+              "inclusive_ns": 0.0,
+              "exclusive_ns": 0.0,
+              "calls": 1
+            },
+            "atomic_apply": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "apply_observer": {
+              "inclusive_ns": 0.1,
+              "exclusive_ns": 0.1,
+              "calls": 1
+            },
+            "scene_publish": {
+              "inclusive_ns": 2.5,
+              "exclusive_ns": 2.5,
+              "calls": 1
+            },
+            "navigation_frame": {
+              "inclusive_ns": 0.3,
+              "exclusive_ns": 0.3,
+              "calls": 437
+            },
+            "canonical_frame": {
+              "inclusive_ns": 4520.6,
+              "exclusive_ns": 4520.6,
+              "calls": 437
+            }
+          },
+          "counts": {
+            "candidates": 12080,
+            "sources": 12080,
+            "encoded_bytes": 0,
+            "plan_entries": 12080,
+            "prepare_knots": 0,
+            "built_groups": 0,
+            "coverage_tiles": 909,
+            "coverage_pixels": 59572224,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 2,
+            "exact_demand_reuse": 0,
+            "source_points": 86963920,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 909,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 909,
+            "pending_phase": 1980,
+            "pending_jobs": 0,
+            "commit_ordinal": 3398,
+            "after_generation": 3398,
+            "after_scene": 4138,
+            "stamp_primitives": 290920,
+            "stamp_bytes": 44863984,
+            "stamp_calls": 9160,
+            "atomic_start_ns": 93328800000,
+            "atomic_end_ns": 93328900000,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 1760435,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 53113,
+            "history_draw_primitives": 87264,
+            "validation_mask_primitives": 87857840,
+            "prepare_resets": 3,
+            "material_alias_hits": 0
+          },
+          "maxima": {
+            "resource_used": 511054897,
+            "resource_pending_release": 92499840,
+            "resource_gpu_epochs": 8
+          },
+          "outcomes": {
+            "pending": 739,
+            "settled": 1
+          }
+        }
+      }
+    }
+  },
+  "observation_loss": 0,
+  "cautions": [
+    "owner/canonicalarenestedviews; donotsumroles",
+    "prepared_select/draw perstepinstrumentation overhead; diagnoseworknotnormalperformance",
+    "historydrawprimitives=offeredsegments/Filledrecord1, notactualGPUdraw",
+    "resetcountsincludeemptyresetsnotlostprogress"
+  ],
+  "mixed": {
+    "partial-erase-zoom-out-immediate": {
+      "wall_ms": 10508.100000023842,
+      "roles": {
+        "owner": {
+          "rows": 620,
+          "exclusive_ms": {
+            "attempt": 3.400000000000002,
+            "reference_entries": 26.600000000000097,
+            "frame_plan": 9.99999999999998,
+            "validation": 5.0,
+            "owner_pump": 2.400000000000001,
+            "pending_owner": 1.6000000000000003,
+            "transient_frame": 0.30000000000000004,
+            "navigation_frame": 81.10000000000016,
+            "resource_service": 123.40000000000028,
+            "prepared_select": 0.1,
+            "prepared_draw": 1.8,
+            "canonical_frame": 5845.200000000001
+          },
+          "counts": {
+            "candidates": 30870,
+            "sources": 30856,
+            "encoded_bytes": 0,
+            "plan_entries": 30328,
+            "prepare_knots": 0,
+            "built_groups": 0,
+            "coverage_tiles": 0,
+            "coverage_pixels": 0,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 0,
+            "exact_demand_reuse": 0,
+            "source_points": 181682550,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 0,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 620,
+            "after_generation": 620,
+            "after_scene": 1240,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 0,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 0,
+            "history_draw_primitives": 0,
+            "validation_mask_primitives": 74424,
+            "prepare_resets": 1,
+            "material_alias_hits": 0
+          },
+          "resources": {
+            "resource_used": 0,
+            "resource_pending_release": 0,
+            "resource_gpu_epochs": 0
+          }
+        },
+        "canonical": {
+          "rows": 609,
+          "exclusive_ms": {
+            "attempt": 243.6000000000016,
+            "visibility": 0.1,
+            "reference_build": 0.0,
+            "reference_entries": 0.0,
+            "reference_encode": 5.6,
+            "reference_digest": 7.6,
+            "presentation_adapt": 0.5,
+            "frame_plan": 0.4,
+            "render": 1098.5000000000014,
+            "acquire": 0.6,
+            "validation": 153.19999999999996,
+            "cache_begin": 17.799999999999983,
+            "group_update": 11.499999999999975,
+            "damage": 0.30000000000000004,
+            "coverage_flush": 483.19999999999993,
+            "material_submit": 23.50000000000004,
+            "prepared_select": 133.19999999999987,
+            "prepared_draw": 3485.400000000002,
+            "gpu_coverage_submit": 8.5,
+            "historical_mask_draw": 7.2,
+            "scene_draw": 0.0,
+            "navigation_snapshot": 0.0,
+            "provider_present": 0.0
+          },
+          "counts": {
+            "candidates": 49,
+            "sources": 49,
+            "encoded_bytes": 6078209,
+            "plan_entries": 49,
+            "prepare_knots": 0,
+            "built_groups": 0,
+            "coverage_tiles": 3761,
+            "coverage_pixels": 245749760,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 0,
+            "exact_demand_reuse": 608,
+            "source_points": 288385,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 3761,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 0,
+            "after_generation": 0,
+            "after_scene": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 20606597,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 434688,
+            "history_draw_primitives": 3520,
+            "validation_mask_primitives": 2158296,
+            "prepare_resets": 2,
+            "material_alias_hits": 0
+          },
+          "resources": {
+            "resource_used": 354817909,
+            "resource_pending_release": 0,
+            "resource_gpu_epochs": 8
+          }
+        }
+      },
+      "loss": 0
+    },
+    "append-zoom-out-immediate": {
+      "wall_ms": 10295.299999952316,
+      "roles": {
+        "owner": {
+          "rows": 607,
+          "exclusive_ms": {
+            "attempt": 3.8000000000000025,
+            "reference_entries": 31.800000000000168,
+            "frame_plan": 9.699999999999982,
+            "validation": 2.0,
+            "cpu_coverage": 27.6,
+            "material_submit": 2.6,
+            "owner_pump": 1.2,
+            "pending_owner": 1.3,
+            "transient_frame": 0.30000000000000004,
+            "navigation_frame": 72.40000000000026,
+            "resource_service": 123.00000000000036,
+            "prepared_select": 0.0,
+            "prepared_draw": 0.7,
+            "canonical_frame": 5780.699999999995
+          },
+          "counts": {
+            "candidates": 30550,
+            "sources": 30545,
+            "encoded_bytes": 0,
+            "plan_entries": 30250,
+            "prepare_knots": 0,
+            "built_groups": 0,
+            "coverage_tiles": 196,
+            "coverage_pixels": 12644352,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 0,
+            "prepare_budget": 0,
+            "exact_demand_reuse": 0,
+            "source_points": 176299773,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 0,
+            "cpu_coverage_tiles": 196,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 196,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 607,
+            "after_generation": 607,
+            "after_scene": 1214,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 0,
+            "body_advances": 0,
+            "body_compile": 0,
+            "body_replay": 0,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 0,
+            "history_draw_primitives": 0,
+            "validation_mask_primitives": 28160,
+            "prepare_resets": 0,
+            "material_alias_hits": 0
+          },
+          "resources": {
+            "resource_used": 0,
+            "resource_pending_release": 0,
+            "resource_gpu_epochs": 0
+          }
+        },
+        "canonical": {
+          "rows": 600,
+          "exclusive_ms": {
+            "attempt": 231.4000000000017,
+            "visibility": 0.0,
+            "reference_build": 0.0,
+            "reference_entries": 0.0,
+            "reference_encode": 5.4,
+            "reference_digest": 7.5,
+            "presentation_adapt": 0.5,
+            "frame_plan": 0.6,
+            "render": 659.600000000001,
+            "acquire": 0.5,
+            "validation": 136.79999999999998,
+            "cache_begin": 19.80000000000001,
+            "group_update": 10.29999999999998,
+            "damage": 0.2,
+            "cache_prepare": 409.4000000000003,
+            "prepare_scan": 0.1,
+            "coverage_flush": 503.79999999999905,
+            "material_submit": 20.40000000000001,
+            "prepared_select": 123.39999999999999,
+            "prepared_draw": 3474.6000000000063,
+            "gpu_coverage_submit": 9.1,
+            "raster_snapshot": 0.1,
+            "historical_mask_draw": 6.4,
+            "scene_draw": 0.0,
+            "navigation_snapshot": 0.0,
+            "provider_present": 0.0
+          },
+          "counts": {
+            "candidates": 50,
+            "sources": 50,
+            "encoded_bytes": 6002121,
+            "plan_entries": 50,
+            "prepare_knots": 425,
+            "built_groups": 44,
+            "coverage_tiles": 3957,
+            "coverage_pixels": 258394112,
+            "gpu_interior_pixels": 0,
+            "cpu_edge_pixels": 0,
+            "prepare_direct": 6,
+            "prepare_budget": 34,
+            "exact_demand_reuse": 599,
+            "source_points": 288543,
+            "compiled_contour_knots": 0,
+            "record_candidates": 0,
+            "record_replays": 0,
+            "record_rejected": 0,
+            "record_groups": 0,
+            "record_selection_yields": 0,
+            "checkpoint_replays": 0,
+            "checkpoint_replay_knots": 0,
+            "scalar_coverage_tiles": 0,
+            "gpu_coverage_tiles": 3957,
+            "cpu_coverage_tiles": 0,
+            "coverage_no_gpu_context": 0,
+            "coverage_cpu_policy": 0,
+            "coverage_target_fallback": 0,
+            "pending_serial": 0,
+            "pending_phase": 0,
+            "pending_jobs": 0,
+            "commit_ordinal": 0,
+            "after_generation": 0,
+            "after_scene": 0,
+            "stamp_primitives": 0,
+            "stamp_bytes": 0,
+            "stamp_calls": 0,
+            "atomic_start_ns": 0,
+            "atomic_end_ns": 0,
+            "render_pending": 0,
+            "render_alloc_denials": 0,
+            "body_builds": 1,
+            "body_advances": 14,
+            "body_compile": 158,
+            "body_replay": 20606977,
+            "mask_primitive_draws": 0,
+            "mask_tile_resets": 0,
+            "coverage_steps": 437083,
+            "history_draw_primitives": 2560,
+            "validation_mask_primitives": 1536000,
+            "prepare_resets": 1,
+            "material_alias_hits": 0
+          },
+          "resources": {
+            "resource_used": 523983400,
+            "resource_pending_release": 0,
+            "resource_gpu_epochs": 7
+          }
+        }
+      },
+      "loss": 0
+    }
+  },
+  "ordinary": {
+    "rows": [
+      {
+        "role": "BASELINE",
+        "status": "OBSERVED",
+        "input_down_to_up_ms": 7960.299999952316,
+        "AB_up_to_drain_ms": 15311.799999952316,
+        "C_down_to_drain_ms": 13437.699999928474,
+        "C_up_to_drain_ms": 13436.899999976158,
+        "A_Up_handler_ms": 0.3999999761581421,
+        "B_Down_handler_ms": 0.20000004768371582,
+        "B_Down_after_A_Up_return_ms": 0.5,
+        "canonical_AB_receipt_notification_ms": 15272.399999976158,
+        "operation_notification_A_ms": 4431.100000023842,
+        "selection_ms": 85.30000007152557,
+        "Worker_C": {
+          "jobs": 44,
+          "first_issue_after_Up_ms": 11.600000023841858,
+          "last_terminal_after_Up_ms": 3072.6999999284744,
+          "after_last_terminal_ms": 10364.200000047684,
+          "sum_compute_ms": 79.80000054836273,
+          "sum_envelope_ms": 1216.6000002622604,
+          "sum_yield_ms": 4.499999403953552,
+          "envelope_is_not_all_compute": true
+        },
+        "C_worstRAF_ms": 133.79999995231628,
+        "C_RAF_inside_ms": 12111.200001358986,
+        "C_RAF_outside_ms": 1325.6999986171722,
+        "snapshots": {
+          "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+          "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+          "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+          "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+        },
+        "operations": 5,
+        "workerjobs": 76,
+        "errors": [],
+        "closed": true,
+        "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-BASELINE",
+        "observationloss": 0
+      },
+      {
+        "role": "CANDIDATE",
+        "status": "OBSERVED",
+        "input_down_to_up_ms": 13172.199999928474,
+        "AB_up_to_drain_ms": 15000.800000071526,
+        "C_down_to_drain_ms": 11010.100000023842,
+        "C_up_to_drain_ms": 11009.200000047684,
+        "A_Up_handler_ms": 0.30000007152557373,
+        "B_Down_handler_ms": 0.2999999523162842,
+        "B_Down_after_A_Up_return_ms": 0.2999999523162842,
+        "canonical_AB_receipt_notification_ms": 14962.899999976158,
+        "operation_notification_A_ms": 4670,
+        "selection_ms": 88.39999997615814,
+        "Worker_C": {
+          "jobs": 44,
+          "first_issue_after_Up_ms": 11.200000047683716,
+          "last_terminal_after_Up_ms": 868.0,
+          "after_last_terminal_ms": 10141.200000047684,
+          "sum_compute_ms": 75.69999957084656,
+          "sum_envelope_ms": 162.799999833107,
+          "sum_yield_ms": 2.5000001192092896,
+          "envelope_is_not_all_compute": true
+        },
+        "C_worstRAF_ms": 74.19999992847443,
+        "C_RAF_inside_ms": 9784.600000739098,
+        "C_RAF_outside_ms": 1224.5999993085861,
+        "snapshots": {
+          "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+          "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+          "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+          "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+        },
+        "operations": 5,
+        "workerjobs": 76,
+        "errors": [],
+        "closed": true,
+        "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-CANDIDATE",
+        "observationloss": 0
+      }
+    ],
+    "no_statistical_performance_PASS": true,
+    "nested_accounting": "ordinaryhasno nativephase; onOperationnotification !=atomiccommit; RAFoutside !=GPUwait",
+    "known_image_qualification": "independent302open notusedforprimarypurev4",
+    "paired": {
+      "input_down_to_up_ms": {
+        "baseline": 7960.299999952316,
+        "candidate": 13172.199999928474,
+        "percent": 65.47366305299272
+      },
+      "AB_up_to_drain_ms": {
+        "baseline": 15311.799999952316,
+        "candidate": 15000.800000071526,
+        "percent": -2.0311132582828906
+      },
+      "C_up_to_drain_ms": {
+        "baseline": 13436.899999976158,
+        "candidate": 11009.200000047684,
+        "percent": -18.06741138158937
+      },
+      "C_down_to_drain_ms": {
+        "baseline": 13437.699999928474,
+        "candidate": 11010.100000023842,
+        "percent": -18.065591581279193
+      },
+      "C_worstRAF_ms": {
+        "baseline": 133.79999995231628,
+        "candidate": 74.19999992847443,
+        "percent": -44.54409569886557
+      }
+    }
+  },
+  "mixed_ordinary": "zoomout-results.json",
+  "interpretation": "Canonical andowner roles nested; outsideRAF notGPUwait; sumjobenvelopesexcludespreissue/postreturn; no hardwaredurationclaim"
+}

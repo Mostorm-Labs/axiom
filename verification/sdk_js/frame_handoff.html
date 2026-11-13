@@ -43,6 +43,7 @@ try{
   await until(()=>delayed>0,'real pending GPU fence');
   pointer('pointerdown',40,40);
   pointer('pointermove',160,140);pointer('pointerup',160,140);
+  await until(()=>sdk.readState().objects===1,'canonical input committed while prior fence pending');
   check(sdk.readState().objects===1,'canonical input committed while prior fence pending');
   held=false;
   await until(blue,'new canonical pixels after pending frame');

@@ -1,0 +1,43 @@
+{
+  "HEAD": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "branch": "codex/geometry-navigation-integration",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "accepted_CW1_CWR": {
+    "path": ".aegis/results/G5-CPUW1-repair-control-r2/control-review.json",
+    "sha256": "69ced6aa008a23d7febe6b22a60b911f335b0f34a1b442a3e44346636fa8f0fe"
+  },
+  "failed_CW2_result": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/result.json",
+    "sha256": "8e669aff7b64984cc4cb7ad3bcb46a5b3a6e03b94a8599b6283453520b086bae"
+  },
+  "failed_source_manifest": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/source-manifest.json",
+    "sha256": "085a6df320fbfd93bb6a72119c023b85165e3612f847daa8ec3b0a53b33f899c"
+  },
+  "failed_artifact_manifest": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/artifact-manifest.json",
+    "sha256": "181ad56c838ecf6dfe2241ebb6a9f3fa3b7c411b6535d7a4618448e29634b508"
+  },
+  "control_native_review": {
+    "path": ".aegis/results/G5-CPUW2-control-r1/control-review.json",
+    "sha256": "69e2b3348a979b134b073e3e5a663c8879677c8fd5fd900d007f4e3a6b41ac3b"
+  },
+  "control_probe": {
+    "path": ".aegis/results/G5-CPUW2-control-r1/history-replay-r4.json",
+    "sha256": "79a2616d7c1a0e4bca89db26bd3fdafc57cd2a6619bb38439ab9abf734da0958"
+  },
+  "probe_source": {
+    "path": ".aegis/results/G5-CPUW2-control-r1/history-replay-probe-r4.cpp",
+    "sha256": "d1a2c45d4e90b3f3a07bae6428f7566fdc83c6131d6b1cf36c942af5726ca0c4"
+  },
+  "probe_guard": {
+    "path": ".aegis/results/G5-CPUW2-control-r1/history-replay-r4.worker.json",
+    "sha256": "d66f8f75163ba3fbc370150e4a4ee4282304bc688db15677896b33aba85614c6"
+  },
+  "SDK": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/SDK-manifest.json",
+    "sha256": "c943e098195ef1c952ae01e6ea17b3e0b69d8ebddd76ce84240de4b83b22d9ca"
+  },
+  "checkpoint_tag": "g5-pre-cpu-worker-20261111-e275da6e",
+  "source_reconciliation": "All1223source hashes mustmatch r1manifest beforemutation; currentHEAD descendantanchorallowed, indexempty. Additionalcontrolfiles areofflinesupport outsideproduction. PreserveallacceptedCW1/CWR/CW2dirty andoldDemos."
+}

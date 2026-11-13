@@ -2,6 +2,8 @@
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "cpu_pending_erase_state.hpp"
+#include "pending_scene_preparation.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "undoable_command.hpp"
 
@@ -94,6 +96,15 @@ semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bo
   return bag;
 }
 
+void appendScenePathCommand(std::ostream& out,const semantic::PathCommand& command) {
+  out << ':' << command.index();
+  std::visit([&](const auto& value){
+    if constexpr(requires {value.point;})out << ':' << value.point.x << ',' << value.point.y;
+    if constexpr(requires {value.control;})out << ':' << value.control.x << ',' << value.control.y;
+    if constexpr(requires {value.control1;})out << ':' << value.control1.x << ',' << value.control1.y << ':' << value.control2.x << ',' << value.control2.y;
+    if constexpr(requires {value.end;})out << ':' << value.end.x << ',' << value.end.y;
+  },command);
+}
 void appendSceneMaskStamp(std::ostream& out,const semantic::EraseMaskRecord& mask) {
     out << ':';
     for (const auto byte : mask.id.bytes) out << static_cast<unsigned>(byte) << ',';
@@ -108,7 +119,8 @@ void appendSceneMaskStamp(std::ostream& out,const semantic::EraseMaskRecord& mas
               << segment.control2.x << ',' << segment.control2.y << '|';
         }
       } else {
-        out << geometry.path.commands.size();
+        out << static_cast<unsigned>(geometry.path.fill_rule) << ':' << geometry.path.commands.size();
+        for(const auto& command:geometry.path.commands)appendScenePathCommand(out,command);
       }
     }, mask.geometry);
 }
@@ -337,7 +349,45 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     }
     return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
   }
+  bool prepareMaskStamp(const RuntimeSceneRecord& before,
+      std::shared_ptr<const semantic::Operation> operation,std::size_t itemIndex,
+      PendingSceneStampPreparation::Job& job,std::size_t maxSteps,std::uint64_t micros){
+    const auto& item=std::get<semantic::AddEraseMasksOp>(operation->payload).items[itemIndex];
+    if(!job.operation){
+      job.operation=operation;job.before=before;job.body=sceneContentStamp(before,false);
+      for(const auto& mask:before.eraseMasks)job.masks.push_back(&mask);
+      for(const auto& mask:item.masks)job.masks.push_back(&mask);
+      std::sort(job.masks.begin(),job.masks.end(),[](auto a,auto b){return a->id<b->id;});
+      job.hashes.reserve(job.masks.size());
+      for(unsigned char c:job.body){job.hash^=c;job.hash*=16777619U;}
+    }
+    // Exact immutable owners and pointees are part of the cursor, not just IDs.
+    if(job.operation.get()!=operation.get()||job.operation.owner_before(operation)||operation.owner_before(job.operation))return false;
+    if(job.before.content.shared()!=before.content.shared()||
+       job.before.eraseMasks.storage()!=before.eraseMasks.storage()||
+       job.before.properties!=before.properties||job.before.referenceGeometryDigest!=before.referenceGeometryDigest)return false;
+    const auto began=std::chrono::steady_clock::now();
+    for(std::size_t step=0;job.mask<job.masks.size()&&step<maxSteps;++step){
+      if(std::chrono::steady_clock::now()-began>=std::chrono::microseconds(micros))return false;
+      const auto& mask=*job.masks[job.mask];std::ostringstream out;out.precision(17);
+      if(!job.header){out<<':';for(auto byte:mask.id.bytes)out<<unsigned(byte)<<',';out<<':'<<mask.geometry.index();job.header=true;
+        if(const auto* path=std::get_if<semantic::FilledPathMask>(&mask.geometry))out<<static_cast<unsigned>(path->path.fill_rule)<<':'<<path->path.commands.size();}
+      bool done=false;
+      [[maybe_unused]] const auto previousPrimitive=job.primitive;
+      if(const auto* sweep=std::get_if<semantic::SweptCircleMask>(&mask.geometry)){
+        for(unsigned n=0;n<32&&job.primitive<sweep->segments.size();++n){const auto& segment=sweep->segments[job.primitive++];for(const auto* knot:{&segment.p0,&segment.p1})out<<knot->position.x<<','<<knot->position.y<<','<<knot->radius<<';';out<<segment.control1.x<<','<<segment.control1.y<<','<<segment.control2.x<<','<<segment.control2.y<<'|';}done=job.primitive==sweep->segments.size();
+      }else{const auto& commands=std::get<semantic::FilledPathMask>(mask.geometry).path.commands;for(unsigned n=0;n<32&&job.primitive<commands.size();++n)appendScenePathCommand(out,commands[job.primitive++]);done=job.primitive==commands.size();}
+      AXIOM_FRAME_TIMING_ADD(stamp_primitives,job.primitive-previousPrimitive);
+      AXIOM_FRAME_TIMING_ADD(stamp_calls,1);
+      AXIOM_FRAME_TIMING_ADD(stamp_bytes,out.tellp()>0?static_cast<std::uint64_t>(out.tellp()):0);
+      for(unsigned char c:out.str()){job.hash^=c;job.hash*=16777619U;}
+      if(done){job.hashes.push_back(job.hash);++job.mask;job.primitive=0;job.header=false;}
+    }
+    job.ready=job.mask==job.masks.size();return job.ready;
+  }
+  void retainPreparedStamp(foundation::ObjectId id,const std::shared_ptr<PendingSceneStampPreparation::Job>& job){preparedStamps_[id]=job;}
  private:
+  mutable std::unordered_map<foundation::ObjectId,std::weak_ptr<PendingSceneStampPreparation::Job>,foundation::ObjectIdHash> preparedStamps_;
   struct StampMetadata final {
     std::string body;
     canvas::scene::SharedVector<semantic::EraseMaskRecord> masks;
@@ -361,6 +411,13 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
         },old.geometry);if(!equal)break;++prefix;
       }
     }
+    if(const auto prepared=preparedStamps_.find(record.objectId);prepared!=preparedStamps_.end()){
+      const auto job=prepared->second.lock();preparedStamps_.erase(prepared);
+      if(job&&job->ready&&job->body==body&&job->masks.size()==record.eraseMasks.size()){
+        bool equal=true;for(std::size_t i=0;i<job->masks.size();++i)if(*job->masks[i]!=record.eraseMasks[i]){equal=false;break;}
+        if(equal){memo.body=body;memo.masks=record.eraseMasks;memo.hashAfterMask=job->hashes;return job->hash?job->hash:1U;}
+      }
+    }
     memo.hashAfterMask.resize(prefix);auto hash=prefix?memo.hashAfterMask.back():hashBytes(2166136261U,body);
     for(std::size_t i=prefix;i<record.eraseMasks.size();++i){std::ostringstream out;out.precision(17);appendSceneMaskStamp(out,record.eraseMasks[i]);const auto text=out.str();bytes+=text.size();++serialized;hash=hashBytes(hash,text);memo.hashAfterMask.push_back(hash);}
     memo.body=body;memo.masks=record.eraseMasks;
@@ -375,6 +432,22 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
   mutable std::unordered_set<std::uint32_t> renderSlotsUsed_;
   mutable std::unordered_set<std::uint32_t> hitSlotsUsed_;
 };
+bool preparePendingMaskStamps(canvas::ISemanticSceneCompiler& base,
+ const std::vector<RuntimeSceneRecord>& proofs,std::shared_ptr<const semantic::Operation> operation,
+ PendingSceneStampPreparation& state,std::size_t steps,std::uint64_t micros){
+ auto* compiler=dynamic_cast<EditingSceneCompiler*>(&base);
+ if(!compiler||!operation||!std::holds_alternative<semantic::AddEraseMasksOp>(operation->payload)){state.failed=true;return false;}
+ if(!state.operation||state.operation.get()!=operation.get()||state.operation.owner_before(operation)||operation.owner_before(state.operation))state=PendingSceneStampPreparation{};
+ if(!state.operation)state.operation=operation;
+ const auto& items=std::get<semantic::AddEraseMasksOp>(operation->payload).items;
+ if(state.target>=items.size())return true;
+ const auto proof=std::find_if(proofs.begin(),proofs.end(),[&](const auto& p){return p.objectId==items[state.target].object_id;});
+ if(proof==proofs.end()){state.failed=true;return false;}
+ if(state.jobs.size()==state.target)state.jobs.push_back(std::make_shared<PendingSceneStampPreparation::Job>());
+ auto& job=state.jobs[state.target];
+ if(compiler->prepareMaskStamp(*proof,operation,state.target,*job,steps,micros)){compiler->retainPreparedStamp(proof->objectId,job);++state.target;}
+ return state.target==items.size();
+}
 }  // namespace canvas::interaction
 
 namespace {
@@ -552,6 +625,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  skiaRenderer_.retireAllCpuPendingHandoffs();
   clearAppearancePreview();
   abortExplicitIntent();
   cancelConnectorRouting();
@@ -567,6 +641,7 @@ void CanvasEditingRuntime::close() noexcept {
   pendingPreviewProvider_.reset();
   cancelDisplayDemands();
   cancelAllPointers();
+  cpuPending_.reset();
   if (previewController_ != nullptr) (void)previewController_->cancel();
   exactDemand_.reset();
   frameCoordinator_.close();
@@ -666,6 +741,7 @@ bool CanvasEditingRuntime::brushBatch(
   }
   displayInputKey_=samples.front().key;
   if (samples.front().phase == input::PointerPhase::kDown) {
+    if(!reservePendingLocal(samples.front().key,"brush"))return false;
     const auto loaded=brushCatalog_.loadDefault(selectedBrushProfile_,selectedBrushRevision_);
     if(!loaded||!beginBrushSession(session,loaded.package,0x4500ULL+session))return false;
   }
@@ -875,6 +951,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
       publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
+  if(pendingHistoryBarrier()&&!panTool_&&!batch.samples.empty()&&batch.samples.front().phase==input::PointerPhase::kDown)return false;
   exactDemand_.reset();
   const auto source = batch.samples.front().source;
   if (appBinding_ == nullptr) return false;
@@ -953,7 +1030,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     if (inkBatch.empty()) return true;
     const bool accepted = dispatchRuntime_.submitBatch(inkBatch);
     if (!accepted) for (const auto& sample : inkBatch)
-      if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel) {
+      if (sample.phase == input::PointerPhase::kDown || sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel ||
+          (cpuPending_&&cpuPending_->error=="ACTIVE_TRACE_CAPACITY_CANCELLED")) {
         baselineDownTimestamps_.erase(sample.key);
         // Dispatch has cancelled the rejected session; retire its exact ingress
         // key too. Other pointers/sources and accepted commits stay untouched.
@@ -1148,6 +1226,7 @@ bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept 
 
 bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
                                         float x, float y) noexcept {
+  displayInputKey_=key;
   if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
       surface_.height == 0U) return false;
@@ -1233,6 +1312,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   };
   if (phase == input::PointerPhase::kDown) {
     if (creations_.contains(key)) return false;
+    if(!reservePendingLocal(key,"create"))return false;
     auto& creation = creations_[key];
     creation.setRouting(connectorRoutingPreset_);
     latestCreationPointer_ = key;
@@ -1294,6 +1374,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     return true;
   }
   if (phase == input::PointerPhase::kCancel) {
+    cancelPendingLocal(key);
     eraseSession();
     (void)clearTransientOverlay();
     return true;
@@ -1393,6 +1474,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       return false;
     }
   }
+  if(pendingLocalEnabled())return enqueuePendingCreate(std::move(inserted),commit->record.kind==semantic::ObjectKind::kSticky);
   semantic::Operation operation{
       localOperationIdentity(ordinal), documentId_,
       1U, 1U, semantic::InsertObjectsOp{std::move(inserted)}};
@@ -1694,6 +1776,7 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
     // Content revisions restart for a new brush session. Its display lifetime
     // must still differ from a previous GPU capture using the same pointer.
     if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
+    AXIOM_IF_EVENT("display_admit serial=%llu session=%llu source=%llu pointer=%llu contactgen=%llu camera=%llu surface=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)r.key.source,(unsigned long long)r.key.pointer,(unsigned long long)r.key.generation,(unsigned long long)r.camera,(unsigned long long)r.surface);
     G5_OBSERVE(g5::Kind::Admission,g5::Tag::display_record,true,r.serial,r.session,static_cast<unsigned>(kind),r.key.source,r.key.pointer,r.key.generation,r.view,r.surface,r.metrics,r.resource,r.camera);
     return &r;
   }
@@ -1702,12 +1785,14 @@ CanvasEditingRuntime::DisplayRecord* CanvasEditingRuntime::reserveDisplay(std::u
 void CanvasEditingRuntime::cancelDisplay(std::uint64_t session,DisplayKind kind) noexcept {
   if(auto* r=findDisplay(session,kind);r&&!r->sealed){
     if(kind==DisplayKind::kBrush)++previewDisplayRevision_;
+    AXIOM_IF_EVENT("display_cancel serial=%llu session=%llu",(unsigned long long)r->serial,(unsigned long long)r->session);
     G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_record,true,r->serial,3);*r={};
   }
 }
 void CanvasEditingRuntime::sealDisplay(DisplayRecord& r,const semantic::CanonicalCommitRecord& commit,foundation::ObjectId object) noexcept {
   r.sealed=true;r.operation=commit.operation_id;r.commit=commit.commit_stamp;r.semantic=commit.after_generation;
   r.scene=sceneRevision();r.object=object;
+  AXIOM_IF_EVENT("display_seal serial=%llu session=%llu commit=%llu semantic=%llu scene=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)r.commit.ordinal.value(),(unsigned long long)r.semantic.value(),(unsigned long long)r.scene);
   G5_OBSERVE(g5::Kind::Commit,g5::Tag::display_record,true,r.serial,r.session,g5::word(r.operation,0),g5::word(r.operation,1),r.commit.runtime_epoch.value(),r.commit.ordinal.value(),r.semantic.value(),r.scene);
 }
 void CanvasEditingRuntime::freezeDisplayRoster(const render::FramePlan& plan) noexcept {
@@ -1760,9 +1845,11 @@ void CanvasEditingRuntime::completeDisplayWork(const DisplayWorkBasis& work,cons
     G5_OBSERVE(g5::Kind::Complete,g5::Tag::display_record,true,r.serial,roster.outcomes[i],work.runtime,work.lifetime,work.attachment,work.work,frame.frameId.value(),g5::word(r.operation,0),g5::word(r.operation,1),r.commit.runtime_epoch.value(),r.commit.ordinal.value());
     if(r.kind==DisplayKind::kBrush){
       if(previewController_&&previewProvider_)(void)previewController_->retireSession(r.session,previewProvider_->generation());
+      AXIOM_IF_EVENT("display_retire serial=%llu session=%llu reason=%u",(unsigned long long)r.serial,(unsigned long long)r.session,1U);
       pendingCanonicalIdentities_.erase(r.session);
       ++previewDisplayRevision_;previewDisplayDirty_=previewActive();
     }
+    if(r.kind==DisplayKind::kErase)skiaRenderer_.retireCpuPendingHandoff(r.session);
     r={};
   }
   roster={};
@@ -1779,6 +1866,7 @@ void CanvasEditingRuntime::coverBrushDisplays(const render::FramePlan& plan) noe
     for(const auto& entry:plan.referenceDrawList.entries)if(entry.record.objectId==r.object)represented=true;
     if(!represented)continue;
     r.covered=true;++previewDisplayRevision_;previewDisplayDirty_=true;
+    AXIOM_IF_EVENT("display_covered serial=%llu session=%llu frame=%llu semantic=%llu camera=%llu",(unsigned long long)r.serial,(unsigned long long)r.session,(unsigned long long)plan.frame.frameId.value(),(unsigned long long)plan.frame.sceneGeneration.value(),(unsigned long long)plan.frame.camera.generation.value());
     G5_OBSERVE(g5::Kind::Stage,g5::Tag::display_record,true,r.serial,4,plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value());
   }
 }
@@ -1819,7 +1907,7 @@ void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,
 
 semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) {
-  if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
+  if (cpuPendingBusy() || closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return {};
   if ((source != semantic::ApplySource::kRemoteSync && source != semantic::ApplySource::kRestoreReplay) ||
       operation.document_id != documentId_) return {};
   const auto result = operationEngine_.apply(operation, source, semanticObjects_,
@@ -1839,7 +1927,7 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 }
 
 bool CanvasEditingRuntime::setDocumentBackground(const foundation::DocumentBackground& value) {
-  if (!foundation::validDocumentBackground(value) || !canonicalWriteAdmission() ||
+  if (!foundation::validDocumentBackground(value) || !competingCanonicalAdmission() ||
       explicitIntentActive_ || !historySceneReady() || !snapshotCaptureReady() ||
       (interaction_->textSession() &&
        interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)) return false;
@@ -1855,7 +1943,7 @@ bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
 }
 
 bool CanvasEditingRuntime::beginExplicitIntent() noexcept {
-  if (explicitIntentActive_ || !canonicalWriteAdmission() || !historySceneReady() ||
+  if (explicitIntentActive_ || !competingCanonicalAdmission() || !historySceneReady() ||
       historyPublicationPending_ || !resourceManifestPort_ || !sceneCoordinator_ || !sceneCompiler_)
     return false;
   explicitIntentActive_ = true;
@@ -1870,7 +1958,7 @@ bool CanvasEditingRuntime::prepareExplicitIntent(std::span<const semantic::Opera
 
 bool CanvasEditingRuntime::prepareExplicitIntentInternal(
     std::span<const semantic::Operation> operations, bool recordHistory) try {
-  if (!explicitIntentActive_ || explicitIntent_ || operations.empty() || !canonicalWriteAdmission())
+  if (!explicitIntentActive_ || explicitIntent_ || operations.empty() || !competingCanonicalAdmission())
     return false;
   for (const auto& op : operations) if (op.document_id != documentId_) return false;
   auto prepared = operationEngine_.prepareIntent(operations,
@@ -1936,7 +2024,7 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
 
 bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
   if (!explicitIntentActive_ || !explicitIntent_ || !explicitIntentHistory_ ||
-      !canonicalWriteAdmission() || !sceneCoordinator_->intentBasisMatches()) {
+      !competingCanonicalAdmission() || !sceneCoordinator_->intentBasisMatches()) {
     abortExplicitIntent();
     return false;
   }
@@ -2006,11 +2094,11 @@ bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operati
 }
 
 bool CanvasEditingRuntime::textReady() const noexcept {
-  return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
+  return competingCanonicalAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
          creations_.empty() && !textCreation_ && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
 }
 bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
-  const auto* current=semanticObjects_.find(id);
+  const auto* current=pendingObject(id);
   for(std::size_t count=0;current && count<=semanticObjects_.size();++count) {
     for(const auto& entry:current->properties.entries) {
       if(entry.field_id==2 && std::holds_alternative<bool>(entry.value) && std::get<bool>(entry.value))return false;
@@ -2037,7 +2125,7 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
 }
 
 bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
-  if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
+  if (!competingCanonicalAdmission() || !resourceManifestPort_ ||
       operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
   PublicationReservation publication(localOperationSink_, operation);
@@ -2066,7 +2154,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   if (canvas::qualification::observing(fc08Qualification_)) return false;
   canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
 #endif
-  if (!canonicalWriteAdmission()) return false;
+  if (!competingCanonicalAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero()) return false;
   if (interaction::isContainerCommand(forward, semanticObjects_)) return history_.executeUndoable(forward);
   if (inverse.id.isZero()) return false;
@@ -2409,6 +2497,7 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::selectedObjectRecord
   return object ? std::optional<semantic::ObjectRecord>(*object) : std::nullopt;
 }
 bool CanvasEditingRuntime::setSelectedTransform(const semantic::Transform2D& transform) noexcept {
+  if(pendingLocalEnabled()&&selectedObjectCount()==1U){semantic::Transform2D world=transform;const auto* record=pendingObject(selection_.primary());if(!record)return false;if(record->placement.parent_id){const auto parent=pendingPose(*record->placement.parent_id);if(!parent)return false;world=scene::composeTransform(*parent,transform);}return enqueuePendingTransform({{{selection_.primary(),world}}});}
   if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked()) return false;
@@ -2497,7 +2586,8 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     selectionView_.reset();
     return false;
   }
-  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
+  const auto pendingRecord=pendingSceneRecord(selection_.primary());
+  const auto* record = pendingRecord?&*pendingRecord:sceneCoordinator_->runtimeScene().find(selection_.primary());
   if (record == nullptr || !record->worldBounds.isFiniteAndOrdered()) {
     selectionView_.reset();
     return false;
@@ -2610,6 +2700,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
 }
 
 void CanvasEditingRuntime::cancelSelectionTransform() noexcept {
+  cancelPendingLocal(editingPointer_);editingPendingBasis_.reset();
   sectionBoundaryDrag_.reset();
   transformDrag_.cancel();
   editingMultiInitial_.clear();
@@ -2706,7 +2797,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     } catch (const std::bad_alloc&) { cancelSelectionTransform(); return false; }
   }
   if (key == editingPointer_ && !editingMultiInitial_.empty() && transformDrag_.active()) {
-    if (editingGeneration_ != semanticGeneration_.current() || editingCameraGeneration_ != cameraGeneration() ||
+    if ((editingGeneration_ != semanticGeneration_.current()&&!pendingTransformBasisCompatible()) || editingCameraGeneration_ != cameraGeneration() ||
         editingMetricsGeneration_ != surface_.metricsGeneration || editingSurfaceGeneration_ != surface_.generation ||
         editingSelectionRevision_ != selection_.revision() || !multiSelectionPermissionAllowed_ ||
         editingPermissionRevision_ != multiSelectionPermissionRevision_ || imageCropPresentation_ ||
@@ -2765,13 +2856,13 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
               parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
             hitId = parent->id;
         }
-        hitId=selection_.resolveHit(hitId,semanticObjects_);
+        hitId=resolveSelectionRoot(hitId);
         moveSelected = hitId == selection_.primary();
       }
     }
     if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
       const bool selected = selectAtViewPoint(x,y);
-      const auto* acquired = semanticObjects_.find(selection_.primary());
+      const auto* acquired = pendingObject(selection_.primary());
       // A Group is the target of the original Down on any of its members.
       // Start the same whole-Group drag immediately instead of requiring a
       // second gesture after selection. Preserve the existing behavior for
@@ -2782,11 +2873,12 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         return true;
       }
     }
-    const auto* object = semanticObjects_.find(selection_.primary());
+    const auto* object = pendingObject(selection_.primary());
     if (object == nullptr) return false;
     if (propertyBool(object->properties, 2U, false)) return true;
     auto bounds = canvas::computeBounds(*object);
-    const auto* projected=sceneCoordinator_->runtimeScene().find(object->id);
+    const auto pendingRecord=pendingSceneRecord(object->id);
+    const auto* projected=pendingRecord?&*pendingRecord:sceneCoordinator_->runtimeScene().find(object->id);
     const auto t = projected?projected->transform:object->transform;
     if(projected&&object->kind==semantic::ObjectKind::kGroup) {bounds.geometry=projected->geometryBounds;bounds.visual=projected->visualBounds;bounds.world=projected->worldBounds;}
     if (!bounds.finite || std::abs(t.a*t.d-t.b*t.c) < 1e-12) return false;
@@ -2798,7 +2890,9 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       (void)G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId()));return true;
     }
     const std::array targets{std::pair{object->id,t}};
-    if (!transformDrag_.begin(targets)) return false;
+    if(!reservePendingLocal(key,"transform"))return false;
+    if (!transformDrag_.begin(targets)) {cancelPendingLocal(key);return false;}
+    editingPendingBasis_=pendingSceneRecord(object->id);
     editingPointer_ = key;
     editingInitial_ = t;
     editingLocalBounds_ = usesDerivedAppearance(object->properties)?bounds.geometry:bounds.visual;
@@ -2813,7 +2907,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
   }
   if (key != editingPointer_) return true;
   if (transformDrag_.active()) {
-    if (editingGeneration_ != semanticGeneration_.current() || editingCameraGeneration_!=cameraGeneration() ||
+    if ((editingGeneration_ != semanticGeneration_.current()&&!pendingTransformBasisCompatible()) || editingCameraGeneration_!=cameraGeneration() ||
         editingMetricsGeneration_!=surface_.metricsGeneration || editingSurfaceGeneration_!=surface_.generation ||
         editingSelectionRevision_!=selection_.revision()) {
       cancelSelectionTransform(); return false;
@@ -2867,7 +2961,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const double height=editingLocalBounds_.bottom-editingLocalBounds_.top;
       sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
       sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
-      const auto* selectedObject = semanticObjects_.find(selection_.primary());
+      const auto* selectedObject = pendingObject(selection_.primary());
       if (selectedObject != nullptr && selectedObject->kind == semantic::ObjectKind::kSticky) {
         const double uniform = std::max(sx, sy);
         sx = uniform;
@@ -2969,6 +3063,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       if (resizeX || resizeY) next = rebuildScaled(snappedSx, snappedSy);
     }
     editingChanged_ = !(next==editingInitial_);
+    if(cpuPending_)++cpuPending_->revision;
     const std::array values{std::pair{selection_.primary(),next}};
     if (!transformDrag_.preview(values)) { cancelSelectionTransform(); return false; }
     // Refresh the transient overlay immediately so a guide appears/disappears
@@ -3000,6 +3095,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
 }
 
 interaction::SubmitResult CanvasEditingRuntime::submit(const semantic::SetTransformsOp& transforms) {
+  if(pendingLocalEnabled())return enqueuePendingTransform(transforms)?interaction::SubmitResult::acceptedResult():interaction::SubmitResult::rejected();
   if (!editingMultiInitial_.empty()) {
     if (!multiSelectionPermissionAllowed_ || editingPermissionRevision_ != multiSelectionPermissionRevision_ ||
         editingGeneration_ != semanticGeneration_.current() || editingSelectionRevision_ != selection_.revision() ||
@@ -3135,6 +3231,15 @@ void CanvasEditingRuntime::finishObjectEraseFeedback(std::uint64_t pointerId,boo
   if(cancel)transientTrails_.cancel(pointerId);else (void)transientTrails_.end(pointerId);
 }
 void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
+std::uint64_t CanvasEditingRuntime::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
+  if(closed_||publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return 0;
+  return skiaRenderer_.reserveCpuWorkerGrant(executor,bytes);
+}
+bool CanvasEditingRuntime::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
+  if(publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return false;
+  return skiaRenderer_.releaseCpuWorkerGrant(executor,token);
+}
+std::size_t CanvasEditingRuntime::cpuWorkerGrantBytes()const noexcept{return skiaRenderer_.cpuWorkerGrantBytes();}
 void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
 
 bool CanvasEditingRuntime::setEraserDiameterLogicalPx(float diameter) noexcept {
@@ -3214,6 +3319,7 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
   if(!reserveDisplay(pointerId,DisplayKind::kErase))return false;
   std::lock_guard lock(previewStateMutex_);
   eraserTraces_[pointerId] = {};
+  if(!reserveCpuPendingContact(pointerId)){eraserTraces_.erase(pointerId);cancelDisplay(pointerId,DisplayKind::kErase);return false;}
   eraserPreviewRevisions_[pointerId] = 0U;
   if(toolMode_==ToolMode::kPartialEraser) {
     // Partial erase owns replacement frames, never an empty ARC contour.
@@ -3243,6 +3349,10 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
   std::lock_guard lock(previewStateMutex_);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end() || !std::isfinite(x) || !std::isfinite(y)) return false;
+  if(cpuPending_&&cpuPending_->enabled&&it->second.size()>=8193){
+    cpuPending_->error="ACTIVE_TRACE_CAPACITY_CANCELLED";
+    (void)eraserCancel(pointerId);return false;
+  }
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
   if(toolMode_==ToolMode::kObjectEraser){
@@ -3277,6 +3387,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
 
   if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   std::lock_guard lock(previewStateMutex_);
+  if(freezeCpuPendingContact(pointerId))return true;
   bool committed=false;
   try {
   const bool objectEraser=toolMode_==ToolMode::kObjectEraser;
@@ -3313,9 +3424,26 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     for (const auto id : tested.value().frontToBack) hit.insert(id);
   }
   }
+  return applyEraserCommit(pointerId,std::move(hit),std::move(partial),objectEraser);
+  } catch(const std::bad_alloc&) {
+    if(committed)return true;
+    (void)eraserCancel(pointerId);return false;
+  }
+}
+
+bool CanvasEditingRuntime::commitPartialEraseItems(std::uint64_t session,std::vector<semantic::EraseMaskAddItem> items)noexcept{
+ try{std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> hits;
+ for(const auto& item:items)hits.insert(item.object_id);
+ return applyEraserCommit(session,std::move(hits),std::move(items),false);
+ }catch(...){return false;}
+}
+bool CanvasEditingRuntime::applyEraserCommit(std::uint64_t pointerId,
+ std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> hit,
+ std::optional<std::vector<semantic::EraseMaskAddItem>> partial,bool objectEraser)noexcept{
+ bool committed=false;try{
   canonicalPresentationDirty_=true;
   if (hit.empty()) {
-    eraserTraces_.erase(it);
+    eraserTraces_.erase(pointerId);
     eraserPreviewRevisions_.erase(pointerId);
     cancelDisplay(pointerId,DisplayKind::kErase);
     return true;
@@ -3327,7 +3455,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
-  if (toolMode_ == ToolMode::kObjectEraser) {
+  if (objectEraser) {
     semantic::DeleteObjectsOp payload;
     payload.object_ids.assign(hit.begin(), hit.end());
     std::sort(payload.object_ids.begin(), payload.object_ids.end());
@@ -3346,7 +3474,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
-  if (toolMode_ == ToolMode::kObjectEraser) {
+  if (objectEraser) {
     semantic::RestoreObjectsOp restore;
     for (const auto id : std::get<semantic::DeleteObjectsOp>(operation.payload).object_ids) {
       const auto* record = semanticObjects_.find(id);
@@ -3387,7 +3515,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   G5_SCOPE_END(g5Apply);
   UR2D_END(upApply);
-  eraserTraces_.erase(it);
+  eraserTraces_.erase(pointerId);
   eraserPreviewRevisions_.erase(pointerId);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) {cancelDisplay(pointerId,DisplayKind::kErase);AXIOM_ERASE_REJECT("semantic_apply");return false;}
   committed=true;
@@ -3422,10 +3550,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     (void)G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false));
   }
   return true;
-  } catch(const std::bad_alloc&) {
-    if(committed)return true;
-    (void)eraserCancel(pointerId);return false;
-  }
+ }catch(const std::bad_alloc&){if(committed)return true;(void)eraserCancel(pointerId);return false;}
 }
 
 bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
@@ -3436,6 +3561,7 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
   transientOverlayDirty_=false;
   cancelDisplay(pointerId,DisplayKind::kErase);
   const bool erased = eraserTraces_.erase(pointerId) != 0U;
+  cancelCpuPendingContact(pointerId);
   eraserPreviewRevisions_.erase(pointerId);
   // Hide the platform overlay before any clear/retire present. DirectComposition
   // can otherwise expose the last white eraser frame for one refresh interval.
@@ -3533,6 +3659,7 @@ bool CanvasEditingRuntime::renderPreviewPresentation(
   // later UI-thread acknowledgement only records the presentation receipt
   // and must not be the sole visibility transition because CanonicalVisible
   // can race that message.
+  AXIOM_IF_EVENT("preview_submit visible=%u revision=%llu display=%llu surface=%llu count=%llu",unsigned(capture.visible),(unsigned long long)capture.contentRevision,(unsigned long long)capture.displayRevision,(unsigned long long)capture.surfaceGeneration,(unsigned long long)provider->presentCount());
   provider->setOverlayVisible(capture.visible);
   if (presentCount != nullptr) *presentCount = provider->presentCount();
   return true;
@@ -3546,6 +3673,7 @@ bool CanvasEditingRuntime::acknowledgePreviewPresentation(
       previewProvider_->generation() != capture.surfaceGeneration||capture.displayRevision!=previewDisplayRevision_) return false;
   const bool accepted = previewController_->markPresented(
       capture.contentRevision, capture.surfaceGeneration, presentCount);
+  AXIOM_IF_EVENT("preview_ack accepted=%u visible=%u revision=%llu display=%llu",unsigned(accepted),unsigned(capture.visible),(unsigned long long)capture.contentRevision,(unsigned long long)capture.displayRevision);
   if (accepted) { previewDisplayDirty_=false;previewProvider_->setOverlayVisible(capture.visible); }
   if (!accepted || pendingCanonicalIdentities_.empty()) {
     return accepted;
@@ -3576,6 +3704,7 @@ bool CanvasEditingRuntime::acknowledgePreviewPresentation(
                                            previewProvider_->generation())) {
       return false;
     }
+    AXIOM_IF_EVENT("display_retire serial=%llu session=%llu reason=%u",(unsigned long long)(display?display->serial:0),(unsigned long long)pointer,2U);
     retired.push_back(pointer);
     if(auto* own=findDisplay(pointer,DisplayKind::kBrush)) {
       [[maybe_unused]] const auto& work=submittedDisplayRoster_.work;
@@ -3602,7 +3731,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
-  if (!canonicalWriteAdmission()) return false;
+  if (!competingCanonicalAdmission()&&!pendingLocalEnabled()) return false;
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   ink::BrushCommitIntent intent;
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
@@ -3652,6 +3781,14 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
   inverse.payload = semantic::DeleteObjectsOp{{objectId}};
+  if(pendingLocalEnabled()){
+    for(auto& pending:cpuPending_->slots)if(pending&&!pending->serial&&pending->kind==CpuPendingEraseState::Kind::Brush&&pending->key==displayInputKey_){
+      auto quota=skiaRenderer_.reserveCpuPendingMetadata(intent.knots.capacity()*sizeof(foundation::InkKnot)+intent.outline.capacity()*sizeof(ink::reference::StrokeOutlinePoint)+65536);if(!quota)return false;
+      pending->prefixMetadata=std::move(*quota);pending->brush=operation;pending->brushInverse=std::move(inverse);pending->session=pointerId;pending->serial=++cpuPending_->nextSerial;pending->phase=CpuPendingEraseState::Phase::Ready;pending->creates.push_back(std::get<semantic::AddStrokeOp>(operation.payload).object);++cpuPending_->admitted;++cpuPending_->revision;cpuPending_->lastAdmitted=pending->serial;
+      brushSessions_.erase(it);brushSessionPackages_.erase(pointerId);brushSessionSeeds_.erase(pointerId);brushPreviews_.erase(pointerId);transientOverlayDirty_=true;canonicalPresentationDirty_=true;return true;
+    }
+    return false;
+  }
   auto historyEntry=history_.prepareRecord(operation,{std::move(inverse)},{},{});
   if(!historyEntry){(void)cancelBrushSession(pointerId);return false;}
   // Reserve map node and buckets before apply; insertion after commit cannot
@@ -3724,6 +3861,7 @@ bool CanvasEditingRuntime::cancelBrushSession(std::uint64_t pointerId) noexcept 
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
   it->second->cancel();
+  cancelPendingLocal(displayInputKey_);
   cancelDisplay(pointerId,DisplayKind::kBrush);
   brushSessions_.erase(it);
   brushSessionPackages_.erase(pointerId);
@@ -3789,6 +3927,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
     submittedDisplayRoster_.bound=false;
   }
   navigationRequested_=true;
+  if(partialEraseFeedbackActive())transientOverlayDirty_=true;
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
@@ -3936,7 +4075,7 @@ semantic::Operation CanvasEditingRuntime::legacyStrokeOperation(
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     const interaction::OperationRequest& request) {
-  if (!canonicalWriteAdmission())
+  if (!competingCanonicalAdmission())
     return interaction::SubmitResult::rejected();
   if (request.operationId == 0U) return interaction::SubmitResult::rejected();
   // Identity alone carries no semantic intent. Legacy Ink supplies its
@@ -3999,7 +4138,7 @@ interaction::SubmitResult CanvasEditingRuntime::submitConditional(
 interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
     const semantic::Operation& operation, semantic::ApplySource source,
     semantic::OperationAdmission& admission) {
-  if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
+  if (historyPublicationPending_ || !competingCanonicalAdmission() || !historySceneReady() ||
       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
@@ -4154,7 +4293,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
-  if (!canonicalWriteAdmission())
+  if (!competingCanonicalAdmission())
     return interaction::SubmitResult::rejected();
   // This host records only one-operation compensation entries. Reject larger
   // batches before mutation; other EditorHistory owners may support them.
@@ -5245,10 +5384,10 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   // create a brush/ARC handoff identity. Retire their last transient frame
   // only after this canonical frame has been accepted, so the compositor
   // never exposes the old canonical position between pointer-up and redraw.
-  if (retire && !previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
+  if (retire && !cpuPendingBusy() && !previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
     (void)clearTransientOverlay();
   }
-  if (retire && !previewActive() && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
+  if (retire && !cpuPendingBusy() && !previewActive() && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
     (void)clearTransientOverlay();
   }
   lastSubmittedCanonicalFrame_.reset();
@@ -5329,7 +5468,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   auto visibility = render::VisibilityResolver::resolve(
       frame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
   if (!visibility) return false;
-  if (transformDrag_.active() &&
+  if (transformDrag_.active() &&sceneCoordinator_->runtimeScene().find(selection_.primary())&&
       std::find(visibility.value().backToFront.begin(), visibility.value().backToFront.end(),
                 selection_.primary()) == visibility.value().backToFront.end()) {
     auto& ids = visibility.value().backToFront;
@@ -5380,11 +5519,15 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
   }
+  AXIOM_FRAME_TIMING_SCOPE(transientReferenceTiming,reference_build);
   auto references = render::DirectReferenceSource::buildTransient(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  AXIOM_FRAME_TIMING_END(transientReferenceTiming);
   if (!references) return false;
   applyAppearancePreview(references.value());
-  if(!applyPartialErasePreview(references.value()))return false;
+  {AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
+  if(!applyPendingPresentation(references.value()))return false;
+  if(!applyPartialErasePreview(references.value()))return false;}
   const auto composeTransform = [](const semantic::Transform2D& parent,
                                    const semantic::Transform2D& child) {
     return semantic::Transform2D{
@@ -5548,8 +5691,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
   auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
+  AXIOM_FRAME_TIMING_SCOPE(transientRenderTiming,render);
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay());
+  AXIOM_FRAME_TIMING_END(transientRenderTiming);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
   coverBrushDisplays(plan.value());
   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=

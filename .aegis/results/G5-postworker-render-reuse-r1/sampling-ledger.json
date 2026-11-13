@@ -1,0 +1,139 @@
+{
+  "starts_max": 7,
+  "seconds_max": 2400,
+  "RSS_MiB_max": 4096,
+  "attempts": [
+    {
+      "id": "RR-D4-BASELINE",
+      "status": "COMPLETED",
+      "started_unix": 1794541775.718146,
+      "limit_seconds": 420,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postworker_render_reuse_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/requests/RR-D4-BASELINE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/web/RR-D4-BASELINE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 277.40230687498115,
+        "peak_process_family_rss_kib": 2522208,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 278
+    },
+    {
+      "id": "RR-D4-CANDIDATE",
+      "status": "COMPLETED",
+      "started_unix": 1794542108.322093,
+      "limit_seconds": 420,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postworker_render_reuse_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/requests/RR-D4-CANDIDATE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/web/RR-D4-CANDIDATE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 111.39574824995361,
+        "peak_process_family_rss_kib": 2318624,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 112
+    },
+    {
+      "id": "RR-D1-CANDIDATE",
+      "status": "COMPLETED",
+      "started_unix": 1794542244.793687,
+      "limit_seconds": 420,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postworker_render_reuse_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/requests/RR-D1-CANDIDATE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/web/RR-D1-CANDIDATE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 173.1969667499652,
+        "peak_process_family_rss_kib": 2242288,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 174
+    },
+    {
+      "id": "RR-ZOOM-D4-BASELINE",
+      "status": "COMPLETED",
+      "started_unix": 1794542455.9755468,
+      "limit_seconds": 180,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postworker_render_reuse_zoomout_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/requests/RR-ZOOM-D4-BASELINE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-BASELINE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 103.78786670905538,
+        "peak_process_family_rss_kib": 2012656,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 104
+    },
+    {
+      "id": "RR-ZOOM-D4-CANDIDATE",
+      "status": "COMPLETED",
+      "started_unix": 1794542596.229428,
+      "limit_seconds": 180,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postworker_render_reuse_zoomout_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/requests/RR-ZOOM-D4-CANDIDATE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-CANDIDATE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 104.34180583292618,
+        "peak_process_family_rss_kib": 1996640,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 180,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 105
+    }
+  ],
+  "charged_seconds": 773
+}

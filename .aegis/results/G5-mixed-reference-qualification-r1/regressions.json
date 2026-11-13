@@ -1,0 +1,27 @@
+{
+  "native_edge_micro": "boundary-green-final.log + actualnative mappernegative6 PASS",
+  "Node": {
+    "tests": 7,
+    "failed": 0,
+    "log": "out/G5-mixed-reference-qualification-r1/node-final-verified.log"
+  },
+  "Python": {
+    "tests": 6,
+    "failed": 0,
+    "log": "out/G5-mixed-reference-qualification-r1/python-gzip-verified.log"
+  },
+  "historical_exacttie": {
+    "skipped": true,
+    "reason": "previousDPR1fixturepruned, existingexplicitSkip retained; newtests use currentavailablecorpus",
+    "log": "out/G5-mixed-reference-qualification-r1/historical-tie-tests.log"
+  },
+  "previousproduction_tests_reused": {
+    "native": 26,
+    "Node": 17,
+    "Python": 5,
+    "boundaries": 120,
+    "reason": "allproduction/prior17sourcebytesunchanged; currentreferenceonly newtestsabove"
+  },
+  "newtests_source": "source-delta-manifest.json",
+  "failurelogs_preserved": true
+}

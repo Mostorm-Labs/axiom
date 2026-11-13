@@ -1,0 +1,56 @@
+TAP version 13
+# Subtest: actual root private asset binding uses normalized relative assets
+ok 1 - actual root private asset binding uses normalized relative assets
+  ---
+  duration_ms: 0.878291
+  ...
+# Subtest: actual root close retains private binding after publication-pending and retires only on successful retry
+ok 2 - actual root close retains private binding after publication-pending and retires only on successful retry
+  ---
+  duration_ms: 1.474875
+  ...
+# (node:23814) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker uses fair posted tasks for bounded steps and invalidates cancelled turns
+ok 3 - actual Worker uses fair posted tasks for bounded steps and invalidates cancelled turns
+  ---
+  duration_ms: 6.290959
+  ...
+# (node:23815) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker code rejects cancelled timer after a successor starts
+ok 4 - actual Worker code rejects cancelled timer after a successor starts
+  ---
+  duration_ms: 4.181084
+  ...
+# (node:23816) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real client code enforces owner identity, monotonic jobs, queue and cancellation
+ok 5 - real client code enforces owner identity, monotonic jobs, queue and cancellation
+  ---
+  duration_ms: 3.38925
+  ...
+# Subtest: startup custody is registered before ready; root closes it without leaking floor
+ok 6 - startup custody is registered before ready; root closes it without leaking floor
+  ---
+  duration_ms: 0.914875
+  ...
+# Subtest: startup postMessage failure releases quota and same owner can retry generation
+ok 7 - startup postMessage failure releases quota and same owner can retry generation
+  ---
+  duration_ms: 1.058708
+  ...
+# Subtest: unknown terminal is failure; error closes existing ready buffers before releasing grants
+ok 8 - unknown terminal is failure; error closes existing ready buffers before releasing grants
+  ---
+  duration_ms: 1.238
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 52.518875

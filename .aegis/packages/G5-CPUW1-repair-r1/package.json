@@ -1,0 +1,64 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW1-repair-r1",
+  "status": "FROZEN_AUTHORIZED_CONSOLIDATED_REPAIR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "completed_through": [
+      "CW1_partial_compute_kernel_WASM_protocol_quota_accepted",
+      "CW1_19realWorkerpathparity_and3windows_saved",
+      "control_review_consolidatedrepair_required"
+    ],
+    "next_action": "PreservehashboundCW1dirtysource; implementconsolidatedscheduler/rootlifecycle/asset+terminalproofrepair andcompletefrozenclosure."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW1-repair-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "36ff6aecc3d11bf23624acf383ce06bfe65eacbb2351927c6f9bdd7737a455a2"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "4e703167a5592f2b9241a717b8d5f12e834e3d93b9f55cb878e46b30c90a6bcc"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "5dafb91c9afd99e7cb60ae35ab515dbd5ab402fcb22bc2a59507b637e240aefc"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "9d6b47a829b0cb5f2b9031c474a7ca7171bdf1de8575a34284f00a0453770d59"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "71542248b8dfc9e4fcd55a824991ecbc38f964015cc6d822fda4f5d5d4cdd590"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "aa67a57aeccf43821cc38719ac7c66343d43b4e953c1bd67fddf5b39134a3dd0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "4a1d55ced80ec36e795ea308f19362d5a883fed02b071777dd22b26a2af9ec8c"
+  }
+}

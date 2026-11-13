@@ -1,0 +1,33 @@
+{
+  "status": "OFFLINE_LEDGER_AND_FAILURE_VALIDATION_REAL_BROWSER_NOT_RUN",
+  "offline_actual_consumer_VM": {
+    "log": "node-final.log",
+    "case_counts": {
+      "driver": 6,
+      "root": 2,
+      "posted_scheduler": 1,
+      "existingclient": 4,
+      "old_cancelledturn": 1
+    },
+    "old_candidate_ledger_shape": true,
+    "missing_terminal_blocks_and_retains_raw": true,
+    "allacceptedIDs_equal_unique_terminalIDs": true,
+    "publicationclose_barrier_assertions": true,
+    "strictbinary_chunk_transport": true
+  },
+  "real_all_generation_ledger": {
+    "status": "NOT_RUN",
+    "reason": "Native gate failure before anybrowser"
+  },
+  "firstCW1executor_gap_not_backfilled": true,
+  "limits": {
+    "frozen_max_jobs_per_executor": 32,
+    "ledger_cap": 64,
+    "task_segment_steps": 8,
+    "task_time_microseconds": 2000,
+    "input_output_bytes": 1048576,
+    "heap_bytes": 67108864,
+    "transport_bytes": 16777216,
+    "queue_jobs": 8
+  }
+}

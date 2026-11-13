@@ -1,0 +1,23 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Configuring done (2.5s)
+-- Generating done (1.8s)
+-- Build files have been written to: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW2-history-custody-r1/build-native
+[0/2] Re-checking globbed directories...
+[1/2] Building CXX object runtime/composition/CMakeFiles/axiom_cpu_pending_runtime_tests.dir/tests/cpu_pending_runtime_test.cpp.o
+FAILED: runtime/composition/CMakeFiles/axiom_cpu_pending_runtime_tests.dir/tests/cpu_pending_runtime_test.cpp.o 
+/usr/bin/c++ -DAXIOM_CPU_PENDING_ERASE=1 -DAXIOM_RUNTIME_QUALIFICATION=1 -DAXIOM_UR2D_TESTS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/control/include -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -MD -MT runtime/composition/CMakeFiles/axiom_cpu_pending_runtime_tests.dir/tests/cpu_pending_runtime_test.cpp.o -MF runtime/composition/CMakeFiles/axiom_cpu_pending_runtime_tests.dir/tests/cpu_pending_runtime_test.cpp.o.d -o runtime/composition/CMakeFiles/axiom_cpu_pending_runtime_tests.dir/tests/cpu_pending_runtime_test.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_runtime_test.cpp
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_runtime_test.cpp:48:19: error: 'createTableObject' is a protected member of 'canvas::interaction::CanvasEditingRuntime'
+   48 |   require(!editor.createTableObject(t).accepted&&editor.semanticGeneration().value()==generation,"pendingtableovertake");
+      |                   ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp:712:24: note: declared protected here
+  712 |   runtime::TableResult createTableObject(const runtime::TableRequest&, const semantic::ObjectRecord* preview = nullptr);
+      |                        ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_runtime_test.cpp:48:40: error: no member named 'accepted' in 'canvas::runtime::TableResult'
+   48 |   require(!editor.createTableObject(t).accepted&&editor.semanticGeneration().value()==generation,"pendingtableovertake");
+      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/tests/cpu_pending_runtime_test.cpp:55:36: warning: unsequenced modification and access to 'sequence' [-Wunsequenced]
+   55 |   require(core.unregisterSource(71,++sequence,90000000000+sequence*8000000),"sourcecancel");
+      |                                    ^                      ~~~~~~~~
+1 warning and 2 errors generated.
+ninja: build stopped: subcommand failed.

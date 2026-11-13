@@ -1,0 +1,50 @@
+{
+  "schema": "axiom-r2-source-manifest-v1",
+  "HEAD": "bc40e42cd83b290152703631b2ba80a9329a78f4",
+  "branch": "codex/g5-cpu-worker",
+  "base_to_current": {
+    "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/tracked-source.patch",
+    "sha256": "faa099d3174c56d7749793984b82fd5d641b815670b6f5afec6860c2a72d8f43"
+  },
+  "r1_to_r2": {
+    "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/r1-to-r2-source.patch",
+    "sha256": "057fa180656632d4ce2371e6af56649f84d5beb8d28e6db43898251fb25fcf10"
+  },
+  "r1_to_r2_production_files": [
+    "runtime/render/src/skia_navigation_tiles.cpp"
+  ],
+  "production_and_test": {
+    "runtime/render/src/skia_navigation_tiles.cpp": "ca6269c5d9d53ee000608638ce3740c3aa6250117c312262d19585f0ca850e1d",
+    "runtime/render/src/skia_navigation_tiles.hpp": "baee7f6ca2a9184a7362a871f979d5d0ae7f3fa37779df82140bdf0ee50d7d20",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/render/CMakeLists.txt": "caa66d6ac78dcdf3148f4097fae3db4fbc140cdfc7965b1cfe5bc1466f318e11",
+    "runtime/render/tests/settled_zoom_start_test.cpp": "7e755a8c2fc7fd5d3083e6555f1728d99a236b88daa420933aa855a4c5d7226c"
+  },
+  "new_r2_tools": {
+    "verification/runners/g5/settled_zoom_start_rect_analyze.mjs": "4f830646d6cf043d7114640dcab3b3a7a6de7e41f2d7922e3b6f36dcefc41946",
+    "verification/runners/g5/settled_zoom_start_rect_boundary.cpp": "51aca8d5715204e5f54490b432bac714f875791f1da1709b4d49b1ea8b169dc5",
+    "verification/runners/g5/settled_zoom_start_rect_boundary_build.py": "b26a26b270a93f7ec47c1dbec7801a661d72bb40b64f01e6cdf5c7b6753abf30",
+    "verification/runners/g5/settled_zoom_start_rect_consumer.mjs": "f4145679411d260fa2ecb048be80a7ac9f3ce8b209bdec4b22f00f4344cad351",
+    "verification/runners/g5/settled_zoom_start_rect_demo.py": "ce2bb4efe486f06e1a3c0f11f5d2db8948681f9ba6d55858096e44e6f4d15512",
+    "verification/runners/g5/settled_zoom_start_rect_iab_run.mjs": "9e84e8af10519527b6db9d203dadae99f1be4ea84da62fc4fd74d4544603b24e",
+    "verification/runners/g5/settled_zoom_start_rect_iab_server.mjs": "ba9e503af7bd4d54c9445f5f9f67a194c5b305601c8ea66e35ef0b2303f2d4e7",
+    "verification/runners/g5/settled_zoom_start_rect_pixels.py": "18c0c12b7d6f8615d819608fde8ce8ada79e01172bffa6d34da159ba3baffcc6",
+    "verification/runners/g5/settled_zoom_start_rect_runner.py": "7599fdb7db977afdcd6940181ef142b63010e8746245536bb6ae79698143b88e",
+    "verification/runners/g5/settled_zoom_start_rect_web.mjs": "03aeee3295b3feed93da1d912e5987147e241e1773e88bfe60f563c603c8bcba"
+  },
+  "test_helpers": {
+    "verification/runners/g5/idle_input_feedback_analyze.py": "1a45da31b2a5a636f74a5283429faebcb7ebd49ff14c7b3af6e8dfa92920a6dc",
+    "verification/runners/g5/idle_input_feedback_observer.mjs": "5383c69432c47a32300eb8c0f99b8f0550f9b86baec11a1f115c5e92e7381ca7",
+    "verification/runners/g5/navigation_observer.mjs": "0968ca9a696e42735f43edd5426641604aeece8b58c31bf2116e13b7ef4bd00e",
+    "verification/runners/g5/live_erase_feedback_pixels.mjs": "0e17af771d5660c5f2ebb5d26ec3cd9d7da8b217c78e27bdca702290c073430d",
+    "verification/runners/g5/settled_zoom_start_metrics.mjs": "8254c2cbdfb89845266e232fffe694f08e02167dac05f62c48a15ddb33923aa9",
+    "verification/tests/g5_settled_zoom_start.test.mjs": "6149e8c398616993b5eba49b34d5573990efb3d9d04a704e10b34384011341b5",
+    "runtime/render/tests/corner_join_test.cpp": "a1baf64742ae5e48099736d0f14f72cf3f3cf3f0d826da2627d2af1509a64a12"
+  },
+  "SDK_dependency_locks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "offline_tools_added_after_sampling": "boundary/analyze/pixels/repro build/demo only; measuredfive drivers and production remained unchanged and before/after freezes match",
+  "scope": "Same Render-owned Job/orderedSources/leases/cache/budget; no public API, input, Scene, History, Operation, ARC, Worker or brush changes."
+}

@@ -1,0 +1,12 @@
+{
+  "status": "IMPLEMENTATION_SCOPE_NOTE",
+  "allowed_production_unchanged": true,
+  "lexical_test_exception": {
+    "path": "verification/tests/g5_cpu_worker_repair_root.test.mjs",
+    "change": "Existing CWR VM close test context adds pendingRestart:null andpendingReplacement:null, because actualrootclose nowreads these private states",
+    "authorization": "Frozenexecution required affected CWR lifecycle/rootJSkeepers; no business/testexpectedvalueorproductionboundary expansion",
+    "delta_from_before": 1,
+    "current_sha256": "e26d86e22ecc97c6c89d294a82fbe39338399f1c1bd287dac491ba556d8d0cbc"
+  },
+  "no_source_change_afterfreeze": true
+}

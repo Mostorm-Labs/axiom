@@ -1,0 +1,29 @@
+{
+  "status": "PARTIAL_NATIVE_FOCUS_REAL_FAILURE_WINDOW_NOT_RUN",
+  "fixed_worker_heap": 67108864,
+  "Sweep8192_wire": 655488,
+  "Sweep7200_wire": 576128,
+  "Sweep7200_checkedconstruction": 40146048,
+  "resident_bytes_cap": 8388608,
+  "resident_entries_cap": 512,
+  "transport_cap": 16777216,
+  "request_result_cap": 1048576,
+  "native_fault": [
+    "native-fault.xml",
+    "root-restart-vm.log"
+  ],
+  "native_maximum_observed": {
+    "exact_ns": 198957834,
+    "owner_ns": 204467750,
+    "scope": "Observednativecontexttest;singlehelpermayovershoot8ms, sharedstartRendersteps0minimumprogress exception"
+  },
+  "browser_peak_process_family_RSS_kib": 1651120,
+  "owned_process_cleanup": true,
+  "remaining_browser_fault_window": "NOT_RUN",
+  "not_proven": [
+    "Fatalactualbrowserrebind/lease0",
+    "DataPortclose/release/retry newcandidate",
+    "Actualcontextloss/rebindpendingreceipt",
+    "Oversize/radius/allowner mutation boundary coverage incomplete"
+  ]
+}

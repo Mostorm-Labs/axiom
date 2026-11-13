@@ -1,0 +1,59 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-mixed-reference-qualification-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "completed_through": [
+      "RR1/RR2Renderworkreductionacceptedwith17dirtyfilespreserved",
+      "RR3fullmixedreferencefailedonbothbaselineandcandidate; retainedinputsavailable"
+    ],
+    "next_action": "Validateexactpreserveddelta/corpus, qualifyreferenceonlywithRED/independentgeometry/imagepredicates andall12retainedcomparisons."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-mixed-reference-qualification-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "fe142fe83faa83d8c7c1d9ebb76130f115e3fcfc1c9be75182c3465c47add639"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f1c2ca74427c583f9c5253d33eb9b696fb2fb81efc8ed6f770e3034b635593d4"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "b009403392391693a4bdcbc0608961b6e00cabb8512543fc37cf2e8fb4047bff"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "e395ae5e2fd8411bf667a5932e5b2285cc066828cac6e29fb21c6fbaba88567d"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "3afe9e1ab4f212f421639fa71d0fa43da3e52c3ca7458ccd201dea163aaa459f"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "d7a152fe14951c7d924e5f0a4e63bd1882c29815991c431b54c12bc9a0fc75de"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "axiom-render-reuse-independent-verification-followup-v1",
+  "created_utc": "2026-11-13T04:19:10.173919+00:00",
+  "native": {
+    "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native -R ^G5PostworkerRenderReuse-(canonical|warm|cold|leases)$ --output-on-failure",
+    "pass": 4,
+    "fail": 0,
+    "lease_assertion_result": {
+      "path": "out/G5-CPUW-checkpoint-20261113/build-native/runtime/render/render-reuse-leases.json",
+      "sha256": "7b43e0b227a9de997add187380bfab98424327d09ea353af6bb183ecb17acb47"
+    },
+    "coverage": "actual pixel sharing/cold retry convergence and alias mask/transform/seed invalidation plus GPU lifetime; strengthened7variants zero independent mismatches"
+  },
+  "Node": {
+    "command": "node --experimental-vm-modules --test verification/tests/g5_postworker_render_reuse_driver.test.mjs verification/tests/g5_cpu_worker_thread.test.mjs verification/tests/g5_cpu_worker_transport.test.mjs verification/tests/g5_cpu_ordered_promises.test.mjs",
+    "pass": 9,
+    "fail": 0
+  },
+  "whitespace": "git diff --check exit0",
+  "mixedzoom": {
+    "existing_reference_timeout_corrected": true,
+    "reference_comparison": ".aegis/results/G5-postworker-render-reuse-control-r1/zoom-pixel-recheck.json",
+    "all_qualified": false,
+    "same_baseline_and_candidate_mismatches": 4325,
+    "max_channel_delta": 240,
+    "candidate_regression_established": false,
+    "independent_pixel_qualification_complete": false,
+    "no_relaxed_rule": true
+  },
+  "no_new_browser": true,
+  "no_control_production_change": true,
+  "formal_gate_PASS": false
+}

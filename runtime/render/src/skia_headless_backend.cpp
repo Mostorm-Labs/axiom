@@ -993,6 +993,7 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
         }
         for (const auto masks : {std::span(entry.record.eraseMasks), std::span(entry.presentationEraseMasks)})
         for (const auto& mask : masks) {
+            AXIOM_FRAME_TIMING_ADD(validation_mask_primitives,std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1);
             const bool valid = std::visit([](const auto& geometry) {
                 using T = std::decay_t<decltype(geometry)>;
                 // Object-local erase geometry can be fractional after inverse

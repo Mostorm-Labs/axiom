@@ -1,0 +1,69 @@
+{
+  "fixture": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "restore_metadata_source": "out/G5-canonical-convergence-latency-r1/requests/CL-D4-PRIMARY-CANDIDATE.json fixture retains original metadata; full bytes must match sha",
+  "baseline": {
+    "SDK_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/candidate-install/js",
+    "DPR": 1,
+    "CSS": [
+      822,
+      900
+    ],
+    "brush": "default round-handdrawn revision4 unchanged config; record actual readBrushConfig",
+    "camera": {
+      "scale": 0.34,
+      "translation": "Choose once so known Fixed40 body visible inside canvas at least280x220; record exact camera before any measured input, no parameter sweep."
+    },
+    "document": "Existing Fixed40 original document40longstrokes. Explicitly engineering fixture differs from user22objects; do not claim exact user fixture reproduction. No mixed material or new authored scale variants."
+  },
+  "sequence": "Restore once via root, matching known originalmetadata, set camera once, fully finish initial canonical. Record source/semantic/presented identities. Run simple stable-state control: short continuousdraw/down-32or64moves/up with actual16ms pacing, immediate second shortdraw (do not await firstsettled), then select an existing known stroke by actual same-root selection/ID readback and drag+80/+30 with32moves/16ms, checkingfeedback while Down, then Up. Store frozen draw/drag paths and target once. Diagnostic-short may add exactly one control cold/repeat immediate camera zoomorpan matching video .34, not a newmatrix. Exact same actions repeat after idle on same doc; new brush/drag operation values naturally differ but retain original bodies, phase order and action displacement. Do not force canonicalbeforepostidle Down or use observer-ownedRAF/prewarm.",
+  "idle": {
+    "duration_ms": 1200000,
+    "qualification": "Document foreground-visible and same URL/runtime; use dedicated developer browser with visibilityState=visible and actual focus facts; cannot promise physicalfrontmost if not observed. Observe lifecycle/context events not page-evaluate polling. If actualOSforeground impossible, label visible-only limitation.",
+    "no_hidden_work": "First wait until real no pending intents/contacts, generation==presented and existing SDK RAF stops. Let actual runtime idle naturally; no input/state/readback/JSprofiling/CPUbenchmark during idle. Host ledger heartbeat/processcontainment does not call page APIs. Collect only already-triggered passive events/RAF counts, bounded in RAM."
+  },
+  "evidence_recording": "One ring for contacts/session/display events and aggregate frames/Worker/resource statuses, cap8192 frame summaries and1024 lifecycle/input/display events. Duringactive read only stageboundary plus at most4state reads/sec, no fullreadState eachprimitive. Atidle boundaries confirm snapshot/object/generation/ID; no snapshotinactivegesture. Capture bounded ROI/representative full image only for correctness with mirrored baseline. FirstGLwrite not automatically correct. Late capture may be eventual not firstfeedback. Record actual monotonic clocks and event visibility.",
+  "windows": [
+    {
+      "id": "IF-WARM-ORDINARY",
+      "seconds": 240,
+      "kind": "existing exact4333SDK stable/continuous draw+drag controls",
+      "required": true
+    },
+    {
+      "id": "IF-SHORT-DIAGNOSTIC",
+      "seconds": 240,
+      "kind": "samecontrols plus needed native capped identities; eliminate handoff/frame-loop hypotheses",
+      "required": "if existing ordinary SDK lacks necessary attribution; mayreuse IF-WARM observations if fullbasis exact"
+    },
+    {
+      "id": "IF-FOREGROUND-IDLE",
+      "seconds": 1500,
+      "kind": "same document precontrol->real20minvisibleidle->firstdraw+nextdraw+firstdrag",
+      "required": true
+    },
+    {
+      "id": "IF-CORRECTIVE",
+      "seconds": 240,
+      "kind": "one corrected driver/environment attempt only after concrete bug; no second20minute run",
+      "required": false
+    }
+  ],
+  "finite_execution": {
+    "max_browser_starts": 4,
+    "total_seconds_max": 2220,
+    "real20minute_idle_starts_max": 1,
+    "browser_process_family_RSS_MiB": 4096,
+    "parallelism": 1,
+    "diagnostic_SDK_builds_max": 1,
+    "ordinary_SDK_builds": 0,
+    "fullscene_CPU_reference_rerenders": 0,
+    "new_heavy_native_runs": 0,
+    "sourceSDKfrozen_beforeafter_eachwindow": true,
+    "guard": "Reuse bounded_worker.py, never kill unrelated process. No compiled source mutation/heavybuild/video/oracle during active measurements. Wait tools<=60s each, persist ledger and notifycontrol lifecycle changes.",
+    "termination": "Do not silently cancel20min idle at60s. Host timeout1500s remains. Control may do read-only analysis while nativeGPU tests/builds paused. Unavailable foreground/trace/identity is precise partialterminal, no automatic extra run."
+  },
+  "diagnostic_build": "Use existing accepted locked SemanticSDK/Skia and C++/WASM. Prefer existing build tree out/G5-CPUW-checkpoint-20261113/build-web only after inspecting actualCMakeCache; independentinstall new out/G5-idle-input-feedback-diagnostic-r1 only. Existing42assets unchanged. Emscripten Python3.12 as required; no dependency rebuild."
+}

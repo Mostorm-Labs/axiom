@@ -1,0 +1,20 @@
+{
+  "status": "PASS_CORRECTED_ORACLE_AND_NATIVE27",
+  "tests": 27,
+  "failed": 0,
+  "junit": "native-keepers.xml",
+  "data": "prefix-current-green.json",
+  "all16_zero_final_union": true,
+  "all16_original_path_equal": true,
+  "prepared_segments": 25600,
+  "partial": {
+    "expected_remainder": 1599,
+    "get_union_delta": 1599,
+    "opportunities": 1,
+    "path_equal": true,
+    "prepared": 1
+  },
+  "limits": "same genuine max8 steps and8ms opportunity; at most512 additional per local round-robin; partial max1 sharedstep at most32 opportunities",
+  "candidate_binary_sha256": "d229a15f2c51f51ac143cc21e710ea52408dca493715227d477fd20b0d2fb889",
+  "test_sha256": "8a241fd54b8e7238a779b80f3e42bff228ededb45a3345571c0597cfa596fa81"
+}

@@ -1,0 +1,71 @@
+{
+  "status": "FROZEN_SCOPED_VERIFICATION",
+  "obligations": [
+    {
+      "id": "RR1",
+      "requirement": "Identify and remove measured unnecessary transient replay and canonical replay/preparation work within existing Render owners.",
+      "oracle": "Retained W7 attribution plus focused actual Render counters and RED oracle at current baseline; optional single diagnostic only for a material unresolved mechanism. Count useful versus repeated/offscreen work, body/mask steps, entry/tile replay and progress invalidations.",
+      "acceptance": "Before production edits, freeze the falsifiable cause for each changed path. Old behavior must fail a targeted work/progress regression while original pixel/reference oracle remains correct. Candidate shows predicted work reduction without hiding work in Up/next Down/navigation, skipping original primitives or retuning quotas. Inspect both transient and canonical paths; a verified no-change finding for one is valid only if evidence shows it lacks the claimed avoidable chain, not as a scope shortcut.",
+      "evidence_required": [
+        "causal-finding.json",
+        "red-green.json",
+        "phase-accounting.json"
+      ]
+    },
+    {
+      "id": "RR2",
+      "requirement": "Reuse valid ordered content and coverage while preserving compositing, progress, failure continuity and final correctness.",
+      "oracle": "Existing independent Direct/CPU pixel reference plus affected native transient/canonical tests. Exercise same-basis retries, mask append versus replacement/reorder/removal, exact/body scratch alternation, target/context/camera/metrics change, allocation/refused publication, and transparent overlap with an object behind and ahead.",
+      "acceptance": "No stale/partial/blank provider publication; only completed qualified output is published. Mask-only changes retain unchanged body work where valid. Same-basis jobs resume monotonic useful progress. Context/resource/generation changes invalidate dependent state and retain last legal display until replacement. All changed-path tests pass, original z-order/alpha/width/pressure/self-crossing/grid/AA and GPU no-silent-CPU policy preserved.",
+      "evidence_required": [
+        "progress-and-pixels.json",
+        "regressions.json"
+      ]
+    },
+    {
+      "id": "RR3",
+      "requirement": "Measure original long erase drain and immediate outward-navigation behavior without waiting for the scene to settle.",
+      "oracle": "Matched ordinaryD4 primary baseline/candidate, ordinaryD1 candidate; matched same-driver DPR4 mixed fixture append/erase immediate zoomout2 rows. Immutable artifacts/root exports/WASM/Worker/resources and same captured input. Independent OperationEngine replay and current camera pixel/quality oracle.",
+      "acceptance": "Report Up/nextDown dispatch, earliest correct subsequent feedback, primary drain, C drain, current-camera feedback and final canonical deadline separately;3s/5s bands and actual tails honest. No input loss, partial target set, changed operation/mask order, stalled progress, false receipt or new final pixel regression. Primary finalC/UndoRedo snapshots match independent original replay; only new affected independent pixels required, unchanged oracle proof may be reused by exact basis. Do not treat unsupported mixed-brush legacy mode as Worker performance.",
+      "evidence_required": [
+        "paired-performance.json",
+        "zoomout-results.json",
+        "semantic-and-pixels.json",
+        "sampling-ledger.json"
+      ]
+    },
+    {
+      "id": "RR4",
+      "requirement": "Deliver a narrow independently reviewable result, preserve existing demos, and notify control without waiting for acknowledgment at routine checkpoints.",
+      "oracle": "Exact source/SDK/input/result hashes, bounded logs/raw/cleanup, matching new candidate assets if qualified.",
+      "acceptance": "Complete the finite package through implementation, focused tests and required browser windows or an explicit terminal blocker. Return READY_FOR_CONTROL_REVIEW with honest performance classification; no officialG5/P34/release PASS. Old demos/user documents untouched. Proactively notify control on accepted package, causal design, meaningful sampling milestones, blocker and final result.",
+      "evidence_required": [
+        "result.json",
+        "source-delta-manifest.json",
+        "SDK-manifest.json",
+        "artifact-manifest.json",
+        "proof-reuse-map.json",
+        "demo-manifest.json"
+      ]
+    }
+  ],
+  "blocking": [
+    "RR1",
+    "RR2",
+    "RR3",
+    "RR4"
+  ],
+  "nonblocking": [
+    "3s/5s reporting bands",
+    "33ms interaction p95 direction",
+    "physical input-to-photon",
+    "GPU hardware duration without existing device support",
+    "legacy union migration",
+    "all brushes/platforms/100K/1M"
+  ],
+  "tests": "Meaningful actual-path RED/GREEN; CPUW6b local exact core5 and current PostworkerReplayReuse/PreparedGeometry; affected canonical coverage and transient retry/continuity/recovery/handoff/inflight and ordered mixed z-order cases; Node Worker thread/transport/ordered promise/root/close as affected;120 runtime boundaries and JS public error contract. Build matching normal Web SDK. Do not run full native/global14reference matrix. Reuse unaffected numeric and lifecycle proofs with exact dependency rationale.",
+  "hosted": {
+    "required": [],
+    "optional": []
+  }
+}

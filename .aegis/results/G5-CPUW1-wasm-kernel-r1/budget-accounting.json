@@ -1,0 +1,53 @@
+{
+  "status": "SCOPED_BOUNDS_AND_OWNER_GRANT_OBSERVED_WITH_LIMITS",
+  "fixed_limits": {
+    "workerHeapBytes": 67108864,
+    "memoryGrowth": false,
+    "queueJobs": 8,
+    "inputBytes": 1048576,
+    "outputBytes": 1048576,
+    "transportBytes": 16777216,
+    "stepSegments": 8,
+    "stepMicroseconds": 2000,
+    "requestCount": 1900,
+    "startupTimeoutMs": 5000,
+    "transportPerJob": "2*inputBytes+2*outputLimit: queueupperbound8, actualtransportmaydeny8thlargejobbeforecountcap"
+  },
+  "quota_owner": "Session→RuntimePlatformAccessvalue→Core→CanvasEditingRuntime→SkiaRenderer originalresourceBudget_",
+  "quota_floor_verified": "actualsame-rootRuntime owner.observe64MiB whileWorkeractive; allrowinitialquota0, lifecycleclose/missingmodulequota0",
+  "transport": {
+    "perJobFormula": "2*input length+2*1MiBoutput reservebeforeownedcopy",
+    "queueUpperBound": 8,
+    "actualQueueAccepted": 7,
+    "refusal": "Error: TRANSPORT_BOUND",
+    "result": "SDKownedbuffergranteduntilrelease;detachedbeforegrantrelease. Applicationretainedclonescallerowned, no claimSDKrecovers them."
+  },
+  "heap": {
+    "worker_fixed_capacity": 67108864,
+    "noGrowth": true,
+    "mainParityAdditionalFixedHeap": 67108864,
+    "mainAdditionalGrant": true,
+    "peak_worker_process_family_RSS_KiB": 1169200,
+    "RSS_is_not_cacheQuota": true
+  },
+  "cost": {
+    "queries": 16,
+    "compute_sum_ms": 4392.099999427795,
+    "total_sum_ms": 22850.900000095367,
+    "unattributed_scheduling_transport_ms": 18458.800000667572,
+    "median_compute_ms": 273.3500000834465,
+    "median_total_ms": 1421.6499999761581,
+    "steps_sum": 3220,
+    "max_union_ns": 3700000,
+    "timerclamp": "hypothesis only: setTimeout0 per8segment resumes≈200times; no isolatedschedulingcausalityprobe",
+    "not_overall_speedup": true
+  },
+  "limits": [
+    "Fixedheapgrant beforeWorkercreation boundslinearcapacity; no actualmallocfaultinjection orbrowsermemoryexhaustioncase",
+    "64MiBmaincomparisonheap releasedreference beforegrantrelease butactualGCphysicalmemoryretirementnotobserved; noRSSinstantreleaseclaim",
+    "Original8MiB512CPUresident/globalprofilesunchanged; count1900restrictsnewsidecaravailability; 7200samplelongrequestsunsupported",
+    "No source-resident dedup/appendprotocol; fresh transport19jobs only"
+  ],
+  "native": "cpu-unit.log",
+  "VM": "node-preflight.log"
+}

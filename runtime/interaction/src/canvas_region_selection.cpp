@@ -118,6 +118,7 @@ RegionSelectionContext CanvasEditingRuntime::regionContext() const noexcept {
             regionBinding_,selection_.groupScope()};
 }
 foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::ObjectId id) const {
+    if(!semanticObjects_.contains(id)&&pendingObject(id))return id;
     if (const auto* child=semanticObjects_.find(id);child&&child->kind==semantic::ObjectKind::kRichText&&child->placement.parent_id) {
         if (const auto* parent=semanticObjects_.find(*child->placement.parent_id);parent&&parent->kind==semantic::ObjectKind::kSticky)
             id=parent->id;
@@ -130,6 +131,14 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
     auto result=runtimeSceneHost_->hitTest({point,4,{HitTestKindMask::kAll,true},std::max<std::size_t>(1,semanticObjects_.size())});
     if(!result)return result;
     auto& ids=result.value().frontToBack;
+    if(pendingLocalEnabled()){
+      std::vector<std::pair<foundation::ObjectId,semantic::OrderKey>> pendingHits;
+      const auto value=pendingLocalValue();
+      for(const auto& intent:value.intents)for(const auto id:intent.objects){auto record=pendingSceneRecord(id);if(!record)continue;const auto& t=record->transform;semantic::Transform2D inv;if(!scene::inverseTransform(t,inv))continue;const double x=inv.a*point.x+inv.c*point.y+inv.tx,y=inv.b*point.x+inv.d*point.y+inv.ty;const auto& b=record->visualBounds;if(x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom)pendingHits.push_back({id,record->placement.order_key});ids.erase(std::remove(ids.begin(),ids.end(),id),ids.end());}
+      for(const auto& hit:pendingHits)ids.push_back(hit.first);
+      std::sort(ids.begin(),ids.end(),[&](auto a,auto b){const auto ra=pendingSceneRecord(a),rb=pendingSceneRecord(b);if(!ra||!rb)return a<b;if(ra->placement.order_key!=rb->placement.order_key)return ra->placement.order_key>rb->placement.order_key;return a>b;});
+      ids.erase(std::unique(ids.begin(),ids.end()),ids.end());
+    }
     const std::array<RegionPoint,4> neighborhood{{{point.x-4,point.y-4},{point.x+4,point.y-4},{point.x+4,point.y+4},{point.x-4,point.y+4}}};
     bool invalid=false;
     ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){
@@ -182,6 +191,8 @@ bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionM
     canonicalPresentationDirty_=true;return true;
 }
 void CanvasEditingRuntime::cancelRegionSelection() noexcept {
+    pendingRegionSelection_.reset();
+    skiaRenderer_.clearCpuLocalSelection();
     // The transient surface contains a full scene. Retire it only after a
     // replacement canonical submission, including invalidation during rendering.
     // Do not clear here: renderSelectionOverlay may run under preview locks.
@@ -254,7 +265,10 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
            std::holds_alternative<semantic::CompactStrokeContent>(projection->content.get())){
             std::vector<foundation::WorldPoint> query;query.reserve(world.size());
             for(const auto p:world)query.push_back({float(p.x),float(p.y)});
-            switch(skiaRenderer_.intersectSelectionGeometry(*projection,query)){
+            bool pending=false;
+            const auto hit=skiaRenderer_.intersectSelectionGeometry(*projection,query,&pending);
+            if(pending){result.pending=true;result.publishable=false;continue;}
+            switch(hit){
             case render::SelectionGeometryHit::kHit:intersection=RegionIntersection::kHit;break;
             case render::SelectionGeometryHit::kMiss:intersection=RegionIntersection::kMiss;break;
             case render::SelectionGeometryHit::kUnsupported:intersection=RegionIntersection::kUnsupported;break;
@@ -297,6 +311,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
 bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sample) noexcept {
     using Status=runtime::SelectionQueryStatus;
     if (sample.phase==input::PointerPhase::kDown) {
+        pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();
         if (regionSelection_.active()) return true;
         const auto kind=selectionAcquisitionMode_==runtime::CanvasSelectionMode::kFreeform?RegionSelectionKind::kFreeform:
             selectionAcquisitionMode_==runtime::CanvasSelectionMode::kRectangle?RegionSelectionKind::kRectangle:RegionSelectionKind::kPendingRectangle;
@@ -312,6 +327,7 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionCandidates_.clear();regionUnsupportedKinds_.clear();
         if (result.status==RegionFinishStatus::kReady) {
             const auto query=querySelectionRegion(result.points);regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
+            if(query.pending)pendingRegionSelection_=result;
             if (query.publishable&&(query.status==Status::kComplete||query.status==Status::kPartial)) {
                 if(publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision))snapGuides_.clear();
                 else regionQueryStatus_=Status::kStale;
@@ -330,6 +346,19 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionUnsupportedKinds_=query.unsupportedKinds;regionQueryStatus_=query.status;
     }
     canonicalPresentationDirty_=true;(void)renderSelectionOverlay();(void)presentTransientOverlayFrame(nextCanonicalFrameId());return true;
+}
+void CanvasEditingRuntime::servicePendingRegionSelection()noexcept{
+    if(!pendingRegionSelection_)return;
+    try{
+        const auto& result=*pendingRegionSelection_;
+        if(result.context!=regionContext()){pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();regionQueryStatus_=runtime::SelectionQueryStatus::kStale;return;}
+        const auto query=querySelectionRegion(result.points);
+        if(query.pending){canonicalPresentationDirty_=true;return;}
+        regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
+        if(query.publishable&&(query.status==runtime::SelectionQueryStatus::kComplete||query.status==runtime::SelectionQueryStatus::kPartial))
+            if(!publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision))regionQueryStatus_=runtime::SelectionQueryStatus::kStale;
+        pendingRegionSelection_.reset();skiaRenderer_.clearCpuLocalSelection();canonicalPresentationDirty_=true;
+    }catch(const std::bad_alloc&){canonicalPresentationDirty_=true;}
 }
 bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample) noexcept {
     if (sample.predicted) return true;

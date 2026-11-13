@@ -1,0 +1,86 @@
+{
+  "status": "FROZEN_COMPLETE_SCOPED_WORKER_INTERACTION_VERIFICATION",
+  "obligations": [
+    {
+      "id": "CW3-SNAPSHOT",
+      "requirement": "Supported documentcapture is decodable and atomicrestore",
+      "failure_mode": "Successful capture cannotrestore; oversizeddecodeallocates beforeguard",
+      "oracle": "Savedoriginal35,456,391BcanonicalderivedbyoriginalOperationEngine; SnapshotCodecpreflight/encode/decodeindependentexpectedwire/digest; actualrootSDKcapture/restore/UndoRedo",
+      "acceptance": "35.46MBroundtripwithsameobjects/manifest/digests;128MiBboundary-1/exact/+1consistentencode/decode, boundedpreflightbeforeexpensiveallocation;Operation32/Object16/collections65535unchanged;malformed/stalecapability/digest/limitrejectionnomutation. Native+WASM sameadmission.",
+      "blocking_reason": "Otherwisethecurrentuserdocumentcanbeeditedbutnotrestored.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-PREFIX",
+      "requirement": "Use active preparation andverifiedappend withoutredoingunchangedprefix",
+      "failure_mode": "EveryUprecomputes16longpaths;unknowncheckpointfalsehit; tap/tailforkwrongresult",
+      "oracle": "Frozenoriginalmonolithicleftfold vsstreamedprefix/pathserialization/suffix acrossnative+actualWorker; countsatkernelentry",
+      "acceptance": "Prefix/suffix/fork/cancel/pressure/rebindexactlyoriginalnumeric;realMovepreparesbeforeUp, finalonlysuffix/unpreparedtargets;knownReadygeometryreuseverifiedfullvalues. <=2Workerssameglobalbounds/aggregatecustody16MiB,1MiBwire/fixed64each;noall-at-onceCPUfallback. Reportburst/paced30s/7200totalworkandUpdrain, 3sgoal5sreferenceflexible, noperformancewinfrompausedinput.",
+      "blocking_reason": "Wrongprefixproofcorruptserasure; noactualactiveprepmeanslargestremainingcauseuntouched.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-TIMELINE",
+      "requirement": "Namedobjectcreation/dragandbrushcanfollowpendingeraseimmediatelywithorderedapply",
+      "failure_mode": "Busy-onlyrestrictionorfalseApplied;newobjectunhittable;oldmaskfixedworld;staleinversewipesmask",
+      "oracle": "ActualsharedRuntimeinput/History/OperationEngineandactualpublicSDKDemoeventchainwithheldA, originalserializedsequentialreferenceDocument/Sceneandpixels",
+      "acceptance": "AUp→createBshape/sticky/table/image→dragBbeforeAterminal pluspreexisting4kindsdrag, brush/eraser/UndoRedo/NAV. CanonicalonlyAthenBthenC, eachonce, Bpartialimagefailuretruthful;pendingcreateHUD/pointtool/selectionpromotioncorrect. A mask staysobjectlocalthroughdragthenC, activeBnotcancelledfromunrelatedmaskgeneration, finalUndoRedooriginal. Capacity8/rejectwithoutloss/radius/cancel fullidentity.",
+      "blocking_reason": "This is theexplicitusergoal leftoutoftheeraseronlycandidate.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-FEEDBACK",
+      "requirement": "Allcontinuousfeedback/presentationrecoversanddoesnotstarve",
+      "failure_mode": "Inputacceptedbutnocorrectpixels/newpose;AcompletionclearsB;Retryblanksframe;maincommitblocksinput",
+      "oracle": "Coldcorrectnesspixelswhileheldpendingandimmediateunpausedchain, uniqueRuntime/displayreceiptrosters;originalCPUstrictAAreferenceforfinalandorderedmaskedtransforms",
+      "acceptance": "CorrectA+B/Cbody/localmask/zorder/opacity/text/table/imagefeedbackundernewcamera;historybarrierNAVworks;mainownerpreparebudgetshared andnoinfinitebusyloop. DPR1/2/4 functionalmatrix, boundedcachepressure/context/delayedexecutor andretrylastsuccessfulpixels. ActualfeedbackmeasuredseparatefromRAF/GPUComplete, 33msp95directionand3s/5sdrainreferenceflexible; performancefindingsdonotfalsifyfunctionalcompletedbutarenotclaimedpassed.",
+      "blocking_reason": "Acceptedbutinvisible/incorrectfollowuprecreatesoriginalbug.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-LIFECYCLE",
+      "requirement": "Rejected/failure/cancel/context/close/Historymutations preserveallintentandresourcecustody",
+      "failure_mode": "Orphanqueue,resourcefloorleak,unhandledpromise,doublecommit,fakeUndo/remoteack",
+      "oracle": "Actualownerfaulttestsandoneactualbrowserfailurechain/DataPortpackets;nodeVMonlyforadaptermechanism",
+      "acceptance": "Failed/NoOpA→unrelatedBprogress;failedcreateonlydependentsfail;preUppointercancelvsealedintent;8slot/byteboundstale/foreign/duplicate/fullbuildresultreject;fataldelayedready/secondfailurecontextrebind noownerfreeze;Busyclosebeforeteardownthenqualifiedfinish→publicationpending→releaseexactpacket→retry0leases. Remote/replaynoovertake andpromiseonlyrealterminal.",
+      "blocking_reason": "Concurrency/lifecyclechangesotherwise loseacceptedwork ormisreportcommit.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-BOUNDARY",
+      "requirement": "Publicreadandasynccontractsremainaccurateandpackagedbuildmatches",
+      "failure_mode": "SDKduplicatesorderstate;pendingselectionclaimedcanonical;privateAPIleak;JS/WASMmismatch",
+      "oracle": "MatchingnormalOFF/candidateONnpmoutsidecheckoutrootJS+TSandRuntime/DLLsource/packageexports/installchecks;actualprivateSessionports",
+      "acceptance": "ReadonlypendingDTOexactshape/losslessintegers/bufferlifetime,mutationpromisesactualcommit/NAVindependent. NoHEAP/privateimportsneededbyconsumer. NormalSDKnoqualification/privateheaders;generatedroot/declarations/resources/WASM/Worker/BuildInfoallmatchlocalBuild0undernewuserAGENTS. Keepcurrent logicalSemVer unlesspublicreleaseexplicitlyrequested;SDKreleaseoutofscope.",
+      "blocking_reason": "Pendingstateandworkersmustnotbreakconsumerboundary.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-EVIDENCE",
+      "requirement": "Independentverificationandstablecompletefunctionalclosure",
+      "failure_mode": "FastUp/native-onlytestmisrepresentsfullgoal;missingfailuredata;movingfinishline",
+      "oracle": "Frozenoriginal634/7200andCPUAAcorpora;actualrunnerpreflight/immutableSDK/source+request/terminalquotaledgerwithrawfailurecapture",
+      "acceptance": "Originalnumeric/Operation/Snapshot/restoredscene/UndoRedoparity;strictpixelsoriginalAAthresholdonly. Fullperintent/job/executor/phase/commit/receiptlinks+ownedrawprotocol/opbytespreservedincludingfailures. Allregressionsscopedwithnames, reuseunchangedvalidproofwhereapplicable;do notrerunjustfortotals. Independentcontrolreviewrequired,produceronlyREADY.",
+      "blocking_reason": "Concurrencymechanismsneedrealendtoendproofandfailureattribution.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    }
+  ],
+  "nonblocking": [
+    "Performance3s/5sreferenceor33msp95notahardnewnumber;reportimprovement/regressionandresidual",
+    "PhysicalMacphotonandformal1Mscale/otherplatformGPUqualificationremainseparate",
+    "Duplicateartifactlocations/proof-of-proofnotrequiredifexistingindependentoraclecoversfailure"
+  ],
+  "red_preconditions": [
+    "Original35.46MBencode/decodeasymmetryreproducedbeforeSnapshotfix",
+    "Originalactivepreparation0/full16newpostUpworkmechanismcounterREDbeforeprefixchange",
+    "OriginalDOMnoneraserpendingBusy/noCreateBbeforeAbehaviorREDbeforequeueintegration"
+  ],
+  "performance_reporting": "Do notletunmetdrainperformancegoalpreventotherwiseexecutableCW3functionalintegrationorclaimfullperfPASS. Explicitnumeric/atomicity/feedback/lostwork/resource/protocol failuresareblocking."
+}

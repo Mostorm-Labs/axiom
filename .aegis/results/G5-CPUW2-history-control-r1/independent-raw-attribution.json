@@ -1,0 +1,124 @@
+{
+  "rows": [
+    {
+      "id": "normalOFF1600",
+      "raw_sha256": "a174ac5a76ba38581328d06c5a41c791258d2fdfd2a4e2b63da8f28286dcf728",
+      "status": "OBSERVED",
+      "Up_ms": 3880.899999976158,
+      "Up_to_stable_ms": 5028.699999928474,
+      "error": null,
+      "pending_terminal_facts": {
+        "committed": "0",
+        "failed": "0",
+        "pending": 0,
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "finishedImports": "0",
+        "finishedHits": "0",
+        "retainedPathBytes": "0",
+        "prepareNs": "0",
+        "importNs": "0",
+        "exactNs": "0",
+        "commitNs": "0",
+        "workerWaitNs": "0",
+        "maxOwnerNs": "0",
+        "maxExactNs": "0"
+      },
+      "groups": {},
+      "jobs": 0
+    },
+    {
+      "id": "candidate1600",
+      "raw_sha256": "a165321e53b5575e092ec9bea38ed18efb4c08b43dd016c8336fce09373c60cb",
+      "status": "OBSERVED",
+      "Up_ms": 0.3999999761581421,
+      "Up_to_stable_ms": 7178.600000023842,
+      "error": null,
+      "pending_terminal_facts": {
+        "committed": "2",
+        "failed": "0",
+        "pending": 0,
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "finishedImports": "64",
+        "finishedHits": "616",
+        "retainedPathBytes": "8340110",
+        "prepareNs": "11800000",
+        "importNs": "1700000",
+        "exactNs": "77300000",
+        "commitNs": "774300000",
+        "workerWaitNs": "3990600000",
+        "maxOwnerNs": "440300000",
+        "maxExactNs": "6600000"
+      },
+      "groups": {
+        "('1', False)": {
+          "jobs": 16,
+          "compute_ms": 3750.000001311302,
+          "owner_wait_ms": 3836.4000000000005,
+          "input_bytes": 2050048
+        },
+        "('1', True)": {
+          "jobs": 32,
+          "compute_ms": 74.30000030994415,
+          "owner_wait_ms": 110.59999999999998,
+          "input_bytes": 86016
+        },
+        "('2', False)": {
+          "jobs": 16,
+          "compute_ms": 3.2000001668930054,
+          "owner_wait_ms": 43.6,
+          "input_bytes": 12288
+        }
+      },
+      "jobs": 64
+    },
+    {
+      "id": "candidate7200",
+      "raw_sha256": "19eccc162d245db5fd9b700c3833b507e5f82493b886f7bcad235587f254a159",
+      "status": "FAILED",
+      "Up_ms": 0.2999999523162842,
+      "Up_to_stable_ms": 52202.699999928474,
+      "error": "AxiomError: SNAPSHOT_DECODE_FAILED\n    at call (http://127.0.0.1:61992/sdk/axiom.mjs:83:29)\n    at http://127.0.0.1:61992/sdk/axiom.mjs:396:59\n    at http://127.0.0.1:61992/sdk/axiom.mjs:134:129",
+      "pending_terminal_facts": {
+        "committed": "2",
+        "failed": "0",
+        "pending": 0,
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "finishedImports": "64",
+        "finishedHits": "616",
+        "retainedPathBytes": "10108853",
+        "prepareNs": "46900000",
+        "importNs": "1300000",
+        "exactNs": "161200000",
+        "commitNs": "3388900000",
+        "workerWaitNs": "45173200000",
+        "maxOwnerNs": "1910900000",
+        "maxExactNs": "10200000"
+      },
+      "groups": {
+        "('1', False)": {
+          "jobs": 16,
+          "compute_ms": 44676.499999165535,
+          "owner_wait_ms": 45011.600000000006,
+          "input_bytes": 9218048
+        },
+        "('1', True)": {
+          "jobs": 32,
+          "compute_ms": 79.5,
+          "owner_wait_ms": 117.50000000000001,
+          "input_bytes": 86016
+        },
+        "('2', False)": {
+          "jobs": 16,
+          "compute_ms": 3.1000001430511475,
+          "owner_wait_ms": 44.1,
+          "input_bytes": 12288
+        }
+      },
+      "jobs": 64
+    }
+  ],
+  "classification": "Sourceunchangedbrowserrawreconciliation; 64distinctrequests=16newA+32priorhistory+16newB. Noneoftheextra32areduplicatepayload. Nativecustodyfixacceptedmechanismonly; endtoendblocked."
+}

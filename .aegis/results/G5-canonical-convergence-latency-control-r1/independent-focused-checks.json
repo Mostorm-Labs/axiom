@@ -1,0 +1,24 @@
+{
+  "schema": "axiom-independent-canonical-latency-focused-checks-v1",
+  "created_utc": "2026-11-13T06:21:23.687100+00:00",
+  "fresh_native": {
+    "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native -R '^(G5CanonicalLatencyBodyMaterial|G5PostworkerRenderReuse-(canonical|warm|cold|leases)|G5CpuPostworkerReplayReuse|G5PreparedGeometry)$' --output-on-failure",
+    "pass": 7,
+    "fail": 0
+  },
+  "fresh_Node": {
+    "command": "node --experimental-vm-modules --test verification/tests/g5_canonical_latency_guard.test.mjs verification/tests/g5_cpu_worker_thread.test.mjs verification/tests/g5_cpu_worker_transport.test.mjs verification/tests/g5_cpu_ordered_promises.test.mjs",
+    "pass": 12,
+    "fail": 0
+  },
+  "source_refs": {
+    "runtime/render/tests/canonical_latency_body_material_test.cpp": "24dcd7848b1148d9c25134984c0412d062f2482f178bf72a8725beaef955e5a5",
+    "verification/runners/g5/canonical_latency_guard.mjs": "8e3ec5a0b8eec546da3c7a08d683ff48f1309ccf3eb85f8adc56db675248d805",
+    "verification/tests/g5_canonical_latency_guard.test.mjs": "e74f4b29e79431c43a7890e404839d37ead21f3dc12d09d9416513b669a47854"
+  },
+  "git_diff_check": "exit0",
+  "actualprimary5ops4snapshots_byteequal": true,
+  "new_rendering_during_performance_windows": false,
+  "known_image_qualification": "stillopen302, scopedregressionguardonly",
+  "performance_assertion": "No overallcompletionclaim; freshnormalpairlimitedbenefits andunchangedtails retained."
+}

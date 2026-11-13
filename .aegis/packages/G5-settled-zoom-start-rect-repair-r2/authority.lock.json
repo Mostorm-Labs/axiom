@@ -1,0 +1,17 @@
+{
+  "status": "CURRENT_NARROW_R2_AFTER_MEASURED_R1_UNMET",
+  "created_utc": "2026-11-13T15:24:12.629419+00:00",
+  "human_authorization": "Current user asks fix the diagnosed zoom defect; prior control/implementation pairing and notification authorized. This successor is bounded continuation of that goal.",
+  "authority_preserved": {
+    "path": ".aegis/packages/G5-settled-zoom-start-repair-r1/authority.lock.json",
+    "sha256": "7a473117c593f474c08f23304ab6fa6565e694a346f43b2b22f8dd25160c4b1c"
+  },
+  "r1_status": "UNMET performance, no4335; preserve exact candidate/sourceSDK/data/results. New revision does not relabel r1 success.",
+  "hypothesis": "R1 removes duplicated source passes but complex SkRegion clip adds potential GPU preparation/submit costs. Existing prepared culling enumerates bounding box regardless of disjoint clip. Repaint that complete bbox with simple rectangular scissor, then qualify bbox only AFTER actual full sources/masks/material completed. This trades modest raster work for simple pipeline; must measure, not presume.",
+  "semantics": [
+    "Same soleRuntime/OperationEngine owner",
+    "Render-derived complete qualified currentcamera pixels and sharp retained overlap; no unknown-as-blank",
+    "Same budgets/queries/GPUquota/thread/context/brush/API/AA rules"
+  ],
+  "read_only_base": "bc40e42c exact installed baseline and r1 exact installed candidate, plus original IAB before-zoom snapshot for each case. Both/all measured lanes restore same snapshot and take same quiet/1s path."
+}

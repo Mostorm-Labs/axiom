@@ -1,0 +1,76 @@
+{
+  "retained": {
+    "path": ".aegis/results/G5-postworker-render-reuse-control-r1/retained-C-attribution.json",
+    "sha256": "2654e51ea723790261917c12746450fa293a7d429df69aa0d993ea12d846b89c",
+    "C": {
+      "Up_ms": 187372.39999997616,
+      "settled_ms": 212528.10000002384,
+      "elapsed_ms": 25155.700000047684,
+      "Worker_jobs": 44,
+      "first_job_issue_after_Up_ms": 9598.100000023842,
+      "last_job_terminal_after_Up_ms": 10309.300000071526,
+      "sum_job_envelope_ms": 102.10000038146973,
+      "sum_compute_ms": 82.200000166893,
+      "after_last_terminal_until_settled_ms": 14846.399999976158,
+      "largest_RAF": {
+        "started_after_Up_ms": 0.8999999761581421,
+        "duration_ms": 9597.400000095367
+      }
+    }
+  },
+  "native": "red-green.json",
+  "interpretation": [
+    "FirstWorker issue waits9.598s after Up; transient9.593s nested in9.597s RAF.",
+    "617canonical attempts include useful monotonic coverage. This repair removes repeated equal-material coverage; it does not claim all attempts are wasted.",
+    "Mask primitives and body replay are distinct; no transport memcpy/GPUhardware attribution.",
+    "No diagnostic window requested; normal Web does not carry native counters."
+  ],
+  "fresh_web": "paired-performance.json; same raw identities, ordinary counters limited",
+  "fresh_D4_independent_attribution": {
+    "path": ".aegis/results/G5-postworker-render-reuse-control-r1/D4-paired-partial.json",
+    "sha256": "483cf467ca747507751af3935c3b02e88818d293fb1cf90d7468c33d0c671b35",
+    "rows": [
+      {
+        "status": "OBSERVED",
+        "A_down_to_up_ms": 159544.10000002384,
+        "up_to_drain_ms": 28293.399999976158,
+        "followup_erase_ms": 17481.100000023842,
+        "masked_selection_ms": 83.29999995231628,
+        "id": "RR-D4-BASELINE",
+        "source_path": "out/G5-postworker-render-reuse-r1/web/RR-D4-BASELINE/raw.json",
+        "source_sha256": "6405a8909a643a417e5bd26df736836b1e02b1635dbb1fe56cd4bb9f99d9c748",
+        "C_first_job_issue_after_Up_ms": 6181.199999928474,
+        "C_last_job_terminal_after_Up_ms": 6905.599999904633,
+        "C_after_last_terminal_until_settled_ms": 10574.700000047684,
+        "C_job_envelope_total_ms": 78.00000047683716,
+        "C_compute_total_ms": 70.19999980926514,
+        "C_worst_RAF_ms": 6181.100000023842,
+        "all_worst_RAF_ms": 6262.200000047684,
+        "operation_count": 5,
+        "errors": [],
+        "closed": true
+      },
+      {
+        "status": "OBSERVED",
+        "A_down_to_up_ms": 11373.300000071526,
+        "up_to_drain_ms": 13736.299999952316,
+        "followup_erase_ms": 11566,
+        "masked_selection_ms": 85.29999995231628,
+        "id": "RR-D4-CANDIDATE",
+        "source_path": "out/G5-postworker-render-reuse-r1/web/RR-D4-CANDIDATE/raw.json",
+        "source_sha256": "45ba3861bf5ff0145f06e01d6e0e457db36c7f89570eff13ce96651c0ecc3d88",
+        "C_first_job_issue_after_Up_ms": 11.399999976158142,
+        "C_last_job_terminal_after_Up_ms": 949.6000000238419,
+        "C_after_last_terminal_until_settled_ms": 10615.799999952316,
+        "C_job_envelope_total_ms": 208.10000026226044,
+        "C_compute_total_ms": 78.700000166893,
+        "C_worst_RAF_ms": 83.09999990463257,
+        "all_worst_RAF_ms": 2530.3000000715256,
+        "operation_count": 5,
+        "errors": [],
+        "closed": true
+      }
+    ]
+  },
+  "material_residual": "C after-last-Worker-terminal ~10.575s baseline /10.616s candidate remains; avoid claiming canonical tail fully fixed."
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "axiom-cpuw5-r2-authority-lock-v1",
+  "status": "CURRENT_FOR_CPUW5_R2_SUPERSEDES_R1_SCOPE_ONLY",
+  "source_identity": {
+    "provider": "human-current-conversation",
+    "request": "继续进行下一轮修复，把这种缩小的场景修复优化好",
+    "captured_client_date": "2026-11-12",
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+  },
+  "current_architecture_sources": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "accepted_execution_basis": {
+    "cpuw4_result": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/result.json",
+      "sha256": "cdcbeae9fc778716991c423eb257d107a34db5ce2839a768601457cee3f5a058"
+    },
+    "source": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-manifest.json",
+      "sha256": "ef88efb26e881e8ccf7047e83e3adc05f9d16abc5e4b2c31542535fa22335305"
+    },
+    "delta": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-delta-manifest.json",
+      "sha256": "b5c07760c98195f5c3c64ef30e8272d86e00322a22cd0146fe75f60115b3f2dc"
+    },
+    "baseline": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/baseline-and-attribution.json",
+      "sha256": "542101c1d7396659fb054e3bdc1e51f567689055989e431e9d16435ee481cfd4"
+    },
+    "phases": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/phase-accounting.json",
+      "sha256": "8ce307570bdde221c6c32cd0660a46cf2a02f52e0e4960b0ef13a6fa29c39d58"
+    },
+    "fixture": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/fixture-and-inputs.json",
+      "sha256": "564323952267db8b3ca8076a3395aa9b77ce46e6257fbf50d1477482620c9b4a"
+    },
+    "sdk": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/SDK-manifest.json",
+      "sha256": "7af8cf0231f1ecc37047670833fb5f26289bd38f91421e45bbee8ae1bef34842"
+    },
+    "ledger": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/sampling-ledger.json",
+      "sha256": "5f2e9419fe0286236f0f08cac32d053846927d6bd32fcb75f281bf4ad995a007"
+    },
+    "control_review": {
+      "path": ".aegis/results/G5-CPUW4-control-review-r1/control-review.json",
+      "sha256": "53842c30387f0597d16c694c256c99ef52ca174098afb0890fb3c4c1567731fc"
+    },
+    "r3_result": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/result.json",
+      "sha256": "e2f413dfd558eaddbb89d370171a9a34fb54cd7337be0d69d3ed2c82a01a2093"
+    },
+    "r3_reference": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/reference-manifest.json",
+      "sha256": "009182faa6bd1fe67fc949f99d5c7bc013fbd58b825771a7208c2568f24724e6"
+    },
+    "original_reference": {
+      "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+      "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+    },
+    "original_reference_binary": {
+      "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+      "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+    },
+    "pixel_oracle": {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+    },
+    "fixed_inputs": {
+      "path": "verification/runners/g5/cpu_edit_navigation_contract.mjs",
+      "sha256": "09168bfbb5208f974db0b5701f1a74fd559ccd2d9922094b309a84fc7695bbaa"
+    },
+    "r1_rescope": {
+      "path": ".aegis/results/G5-CPUW5-zoomout-frontier-r1/rescope-cursor.json",
+      "sha256": "9fb80026d54550d67279d7cf163a0a865f5dcfea43335473d8b355c7ec57521e"
+    },
+    "r1_failures": {
+      "path": ".aegis/results/G5-CPUW5-zoomout-frontier-r1/mechanism-attempts.json",
+      "sha256": "727099db9510796caa47bf6072a7e17ee69e02b88a9f7c3280c086916b2d519f"
+    }
+  },
+  "decisions": [
+    "Optimize edit-to-zoom-out display continuity in the preserved mixed scene. CPUW4 is an accepted finite diagnosis with NO product repair; its 12 baseline rows and raw traces remain reusable findings, not a fixed user bug or exact camera-qualified latency.",
+    "Retain the existing RuntimeComposition/CanvasEditingRuntime owner, OperationEngine atomic canonical truth, RuntimeScene query and shared SkiaRenderer/SkiaNavigationTiles/prepared/cache/GPU retirement owners. Scope is one coherent frontier preparation plus progress scheduling chain; it may require multiple coordinated private changes rather than one line.",
+    "Render may distinguish missing-frontier bootstrap from fine refinement independently of unrelated material families. Supported v4 prepared GPU contours may consume the existing coarse policy when actually doing coarse frontier work. Other algorithms retain original coverage, pressure, texture, blend, seed, distance and knot semantics. Aggregate CPU/command/step ceilings remain in force for the entire opportunity, not reset per source.",
+    "Completed spatial regions must include all contributing sources, masks and original z order plus gutter before pixel validity is published. Partial z-prefix or unpainted scratch is never a valid region. Existing qualified sharp content takes priority over coarse replacement.",
+    "Runtime may schedule finite critical-frontier progress across the quiet threshold alongside or before canonical convergence. It must eventually give exact work progress, retain useful job cursors through camera movement, and fall back on unsupported/resource/no-progress conditions without starvation or retry loops.",
+    "Keep the complete current Scene/camera/provider/resource/metrics identity checks. Do not broaden maskPixelDifference whole() or waive real new-object/algorithm6 mask changes. Rebuilding only missing current-scene content is allowed; showing stale edits, blank holes, mixed old/new camera frames, or reporting fake coverageComplete is forbidden. On failure preserve the last successful complete provider image.",
+    "Canonical commit, local durability, navigation feedback, canonical submit, GPU completion and CanonicalVisible remain separate. Navigation cannot acknowledge edit completion or clear preview; original receipt and release conditions remain.",
+    "No public SDK/API/ABI/wire/version change, no Brush/PathOps/f32 change, no Scene/OperationEngine redesign, no extra Worker/platform/threadpool/pthread/SAB/GPU context thread. One existing WASM CPU Worker and current 512MiB desktop/256MiB optional/64MiB entry budgets remain.",
+    "Use current locked Semantic/Skia artifacts. User supplied AGENTS SemVer+Build wording supersedes stale on-disk version section. Preserve local 0.4.3.0, existing CPUW3 candidate flags and retained uncommitted changes. No commit/push/tag/merge/reset/stash/clean/worktree creation.",
+    "Preserve all old result/build/Demo bytes, ports4330/4328/4298 and user document. New source builds/results/Demo use CPUW5 roots and a free port. Public root SDK matching artifacts is the primary Web verification path; detailed private G5 qualification is separate from ordinary timing.",
+    "The user authorizes continued implementation and independent review in paired chat01a1c345-6500-7ea0-984d-707b72878bd1 with active callbacks. Ordinary technical decisions within this contract do not require repeated control permission. No result may self-issue P34/G5/Release PASS.",
+    "R2 explicit architecture decision: extend the existing Render-owned regional pixel witness with a separately named conservative current-Scene edit proof. This is not another renderer or canonical owner. Existing maskPixelDifference/bodyEqual/whole compatibility behavior remains intact for its old callers. New proof may certify only unaffected regions of a prior complete canonical plane when complete old/current commands, same query region and all provider/context/resource/background/composition/metrics identity are established.",
+    "R2 complete proof query is separate from the chunk/range-selected navigation draw query. Existing Runtime scene/visibility owner returns complete immutable commands via buildTransient (no serialization); private completeness capability/marker is bound to actual producer. A missing marker/query disables new reuse. Never ignore algorithm5/6 span differences from a range query and call it complete.",
+    "In new proof, unique nonzero IDs and common-source relative z order must be checked under finite limits. Unchanged common sources require strict body/material/transform/placement/properties/derived geometry/text/dependencies identity. Add/remove support initially limited to qualified leaf compact4/5/6 ink. Conservative old/new complete render support becomes damage; no body/move/material/order broad reuse. Any unsupported changed source or failed bound invalidates rather than pretending unchanged.",
+    "Mask-only changes on unchanged complete compact4/5/6 sources may use a conservative union of changed old/new mask control hulls, including original clear antialias, complete-object affine numerical narrowing and material/sampling footprint. Algorithm5/6 must retain original coverage and material and must be proven local under actual shader/clear composition. If locality is not established, subtract complete verified object support or reject. Existing whole() domain is not widened.",
+    "WorldBounds alone is not a magic trusted raster bound. For changed source admission verify against current derived/prepared support or conservative source-based radius/control hull, include float cancellation/error and AA/filter/gutter padding at actual retained density. Nonfinite/oversized/unknown support or overflow disables proof. Scope may conservatively reject unsupported types/transforms instead of generalized scene diff.",
+    "Only current valid regions outside outward-expanded damage may advance their derived proof to current Scene. Damaged portions and unknown newly exposed regions are rebuilt in original source order before full coverage present. Reference-grid sampling, opacity/translucency and material coverage remain unchanged; never present stale/new mixed poses or receipts.",
+    "All old source/brush/semantic/API/budget/Worker restrictions remain; R2 explicitly replaces the R1 prohibition on editing proof files with this finite separate proof design. No further blind third/fourth retry: validate one defined proof chain with independent old/new pixels and negatives, then execute remaining browser/delivery work or report precise failure."
+  ],
+  "r1_scope_superseded": {
+    "package": {
+      "path": ".aegis/packages/G5-CPUW5-zoomout-frontier-r1/package.json",
+      "sha256": "5395cbffb4acfc6c81e01ebe5f4c604b4de8ebd1331763c1c66a31cdd2ec6657"
+    },
+    "reason": "Three measured bounded-render mechanisms did not achieve first complete cold image; safe reduction of changed-area dependencies needs a current-Scene region proof. Human current repair authorization covers this internal same-owner design choice; no consumer semantics change."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "status": "CLEAR",
+  "accepted_design_ref": ".aegis/results/G5-CPUW1-repair-r1/implementation-design.json",
+  "production_owner": "Existing Render ResourceBudgetManager, root private Worker owner and bounded C++ exact kernel; unchanged from accepted r1",
+  "delta_scope": [
+    "runtime/render/tests/long_query_preparation_test.cpp test-only progress correction",
+    "verification/runners/g5/cpu_worker_repair_runner.py exact r2 package/result identity"
+  ],
+  "public_API_impact": "none",
+  "oracle_break_caught": "A single optional prefix slot discards other locals; hidden final union work after supposedly complete preparation; partial prefix mistaken for complete",
+  "independent_expectation": "1600 original f32 sequential unions per local, all16 queried only after all-local preparation; partial final union delta equals1600-observed stored prefix",
+  "steps": [
+    "Keep original8..1600 interleaved16 append sequence",
+    "Use existing private observer for per-local monotonic stored prefix; at most512 additional max8step/8ms real prepare opportunities per local in round-robin",
+    "Require all16 paths equal independent original and zero additional get unions",
+    "Separate deliberately partial max1/shared allowance final remainder case",
+    "Compile exact old pinned single-slot implementation with corrected test, require RED; current GREEN; affected27",
+    "Freeze driver/source/SDK/requests then run original3 browser windows once"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

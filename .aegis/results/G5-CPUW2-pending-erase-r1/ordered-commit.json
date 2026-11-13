@@ -1,0 +1,60 @@
+{
+  "status": "NATIVE_FOCUS_AND_PAIRED1600_SEMANTICS_PASS_BROWSER7200_INCOMPLETE",
+  "native": [
+    "runtime-noop.json",
+    "runtime-twocommit.json",
+    "runtime-long.json",
+    "runtime-failure.json",
+    "runtime-context.json"
+  ],
+  "CTest": [
+    "native-pending.xml",
+    "native-fault.xml"
+  ],
+  "native_grouped": {
+    "targets_per_intent": 40,
+    "Workerjobs_per_intent": 16,
+    "main_newquery_unions": 0,
+    "reason": "fullgeometryvaluegrouping, finalpayload originalcandidateorder"
+  },
+  "paired1600_operation_bytes": [
+    {
+      "index": 0,
+      "old_sha256": "3704443d63a7095d3a5b909c50b190e22a139ce17b3f52b9a2460d82a9515e7a",
+      "candidate_sha256": "3704443d63a7095d3a5b909c50b190e22a139ce17b3f52b9a2460d82a9515e7a",
+      "bytes": 6658294,
+      "equal": true
+    },
+    {
+      "index": 1,
+      "old_sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998",
+      "candidate_sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998",
+      "bytes": 35412,
+      "equal": true
+    }
+  ],
+  "paired1600_snapshots": [
+    {
+      "stage": "final",
+      "bytes": 12160391,
+      "old_sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2",
+      "candidate_sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2",
+      "equal": true
+    },
+    {
+      "stage": "undo",
+      "bytes": 12125951,
+      "old_sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c",
+      "candidate_sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c",
+      "equal": true
+    },
+    {
+      "stage": "redo",
+      "bytes": 12160391,
+      "old_sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8",
+      "candidate_sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8",
+      "equal": true
+    }
+  ],
+  "missing": "HeldA+Bfeedback/fatal/context/closebrowserwindows notrun; no synthetic terminalsubstitution"
+}

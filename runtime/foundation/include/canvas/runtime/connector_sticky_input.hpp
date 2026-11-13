@@ -8,7 +8,7 @@
 
 namespace canvas::runtime {
 
-enum class ConnectorCommandState : std::uint8_t { kRejected, kApplied };
+enum class ConnectorCommandState : std::uint8_t { kRejected, kApplied, kPending };
 enum class ConnectorFailureReason : std::uint8_t {
   kNone, kWrongThread, kNotReady, kInvalidRequest, kObjectRejected,
   kInvalidTarget, kNoRouteInDomain, kBudgetExceeded, kInvalidEndpoint,
@@ -32,6 +32,7 @@ struct ConnectorCommandReceipt final {
   semantic::ObjectId objectId{};
   std::uint64_t semanticGeneration = 0;
   bool historyChanged = false;
+  std::uint64_t pendingSerial = 0;
 };
 struct StickyCreateRequest final {
   semantic::ObjectId objectId{};
@@ -45,6 +46,7 @@ struct StickyCommandReceipt final {
   semantic::ObjectId objectId{};
   std::uint64_t semanticGeneration = 0;
   bool historyChanged = false;
+  std::uint64_t pendingSerial = 0;
 };
 struct ConnectorSnapshot final {
   bool available = false;

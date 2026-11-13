@@ -1,0 +1,180 @@
+--- runtime/render/src/skia_navigation_tiles.cpp baseline
++++ runtime/render/src/skia_navigation_tiles.cpp candidate
+@@ -7,6 +7,7 @@
+ #include "canvas/ink/compact_geometry.hpp"
+ #include "include/core/SkCanvas.h"
+ #include "include/core/SkPaint.h"
++#include "include/core/SkRegion.h"
+ #include "include/gpu/ganesh/GrDirectContext.h"
+ #include "include/gpu/ganesh/GrRecordingContext.h"
+ #include <algorithm>
+@@ -589,16 +590,14 @@
+                 const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+                 return !compact||compact->content.get().stroke.config.algorithmVersion==4;
+             });
+-            // Permanent masks invalidate old wide feedback. Preparing their
+-            // replacement on CPU kept replaying dense ribbons during gestures.
+-            // Use the same qualified GPU SrcOver contour as canonical, with
+-            // independently bounded submissions. No second geometry/edge pass.
+-            job->gpuCoarse=coarseV4&&context&&options.gpuCoverageCandidate&&
+-                std::any_of(job->sources->entries.begin(),job->sources->entries.end(),[](const auto& e){return !e.record.eraseMasks.empty();});
++            // Ready v4 paths use the same qualified SrcOver GPU coverage with
++            // or without historical masks. Completeness still gates present;
++            // existing command/time/memory ceilings bound this bootstrap.
++            job->gpuCoarse=coarseV4&&context&&options.gpuCoverageCandidate;
+             for(std::size_t i=0;i<job->sources->entries.size()&&job->gpuCoarse;++i)
+                 if(std::holds_alternative<CompactStrokeReferenceCommand>(job->sources->entries[i].command))
+                     job->gpuCoarse=job->sources->geometry[i]&&job->sources->geometry[i]->isContour();
+-            // Unprepared, raster-only, unmasked and explicit CPU-policy work
++            // Unprepared, raster-only and explicit CPU-policy work
+             // retain the established bounded CPU coarse path.
+             job->cpuCoverage=coarseV4&&!job->gpuCoarse;
+             // Reuse canonical's qualified single-channel encoding for v4
+@@ -618,6 +617,43 @@
+             auto demand=b;
+             const auto old=tiles_.find(*next);
+             const bool reusable=old!=tiles_.end()&&old->second.checkedScene==scene;
++            const bool zoomExposure=retained&&retained->draw&&
++                (retained->bounds.right-retained->bounds.left!=visible.right-visible.left||
++                 retained->bounds.bottom-retained->bounds.top!=visible.bottom-visible.top);
++            if(zoomExposure){
++            // Prepare all actual holes in this cell in one source pass. A
++            // rectangle around their union is only a lifecycle/culling hint;
++            // its unknown inner corners never become valid or visible pixels.
++            job->paint.reset(b);
++            if(!work.coverageComplete&&next->scale<level&&!job->sources->entries.empty()){
++                job->paint.count=0;
++                for(const auto& hole:missing)if(intersects(hole,b)){
++                    auto r=foundation::WorldRect{std::max(b.left,hole.left),std::max(b.top,hole.top),
++                        std::min(b.right,hole.right),std::min(b.bottom,hole.bottom)};
++                    r={std::max(b.left,b.left+std::floor((r.left-b.left)*s)/s),
++                       std::max(b.top,b.top+std::floor((r.top-b.top)*s)/s),
++                       std::min(b.right,b.left+std::ceil((r.right-b.left)*s)/s),
++                       std::min(b.bottom,b.top+std::ceil((r.bottom-b.top)*s)/s)};
++                    // The critical job leads only observed camera movement.
++                    // A fixed64-coarse-texel lead could add512world units to a
++                    // first18world-unit exposure and import unrelated ink.
++                    const auto prior=previousVisible.value_or(visible);
++                    const auto lead=[&](float edge,float previous){return float(std::clamp(
++                        2.*std::abs(double(edge)-previous),1./s,64./s));};
++                    if(r.left<=visible.left)r.left=std::max(b.left,r.left-lead(visible.left,prior.left));
++                    if(r.right>=visible.right)r.right=std::min(b.right,r.right+lead(visible.right,prior.right));
++                    if(r.top<=visible.top)r.top=std::max(b.top,r.top-lead(visible.top,prior.top));
++                    if(r.bottom>=visible.bottom)r.bottom=std::min(b.bottom,r.bottom+lead(visible.bottom,prior.bottom));
++                    if(!job->paint.add(r)){
++                        // Bounded metadata fallback repaints the whole cell;
++                        // no unknown corner is certified by a bounding box.
++                        job->paint.reset(b);break;
++                    }
++                }
++                if(job->paint.count){demand=job->paint.areas[0];for(std::size_t i=1;i<job->paint.count;++i){const auto& r=job->paint.areas[i];
++                    demand={std::min(demand.left,r.left),std::min(demand.top,r.top),std::max(demand.right,r.right),std::max(demand.bottom,r.bottom)};}}
++            }
++            }else{
+             // Coverage is needed only in the exposed frontier. Do not make a
+             // narrow strip wait for every contour in a whole coarse cell.
+             // Publish explicit valid regions, one missing strip at a time.
+@@ -675,8 +711,12 @@
+                     demand=r;break;
+                 }
+             }
++                job->paint.reset(demand);
++            }
+             if(reusable){(void)old->second.lease.markGpuUse();job->valid=old->second.valid;}
+-            if(!job->valid.add(demand)){
++            bool admitted=true;
++            for(std::size_t i=0;i<job->paint.count&&admitted;++i)admitted=job->valid.add(job->paint.areas[i]);
++            if(!admitted){
+                 ++work.regionCompactions;
+                 auto repaint=demand;
+                 for(std::size_t i=0;i<job->valid.count;++i){const auto& area=job->valid.areas[i];
+@@ -691,7 +731,7 @@
+                 // The rectangle includes unknown inside corners: repaint all
+                 // sources there before publishing validity. Metadata exhaustion
+                 // must not make this strip depend on the rest of the cell.
+-                job->valid.reset(repaint);demand=repaint;
++                job->valid.reset(repaint);job->paint.reset(repaint);demand=repaint;
+             }
+             job->demand=demand;
+             const auto deviceRect=[&](foundation::WorldRect r){return SkRect::MakeLTRB(
+@@ -699,7 +739,13 @@
+                 gutter+(r.right-b.left)*s+gutter,gutter+(r.bottom-b.top)*s+gutter);};
+             if(reusable)job->surface->getCanvas()->drawImage(old->second.image,0,0);
+             auto* material=job->surface->getCanvas();
+-            material->clipRect(deviceRect(demand));
++            SkRegion paintClip;
++            for(std::size_t i=0;i<job->paint.count;++i){SkIRect r;deviceRect(job->paint.areas[i]).roundOut(&r);paintClip.op(r,SkRegion::kUnion_Op);}
++            if(zoomExposure){
++                material->clipRegion(paintClip);
++                // Job-owned coverage scissor applies for shape-first lists too.
++                job->coverage->getCanvas()->clipRegion(paintClip);
++            }else material->clipRect(deviceRect(demand));
+             // Repaint the complete new strip, including its sampling gutter.
+             // Src clear prevents double application over old gutter pixels.
+             // A rectangular scissor also avoids complex difference-clip GPU
+@@ -745,7 +791,8 @@
+                 const auto range = compactRange(entry);
+                 if (range.second <= range.first) { ++job.source; continue; }
+                 job.knot = range.first;
+-                draw->resetMatrix();draw->clear(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
++                draw->resetMatrix();draw->clear(job.coverage->imageInfo().colorType()==kAlpha_8_SkColorType?SK_ColorTRANSPARENT:SK_ColorBLACK);
++                draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+                 const auto& t=entry.record.transform;
+                 draw->concat(SkMatrix::MakeAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1));
+                 // The range renderer backs up one shared neighbor before
+--- runtime/render/src/skia_navigation_tiles.hpp baseline
++++ runtime/render/src/skia_navigation_tiles.hpp candidate
+@@ -74,6 +74,7 @@
+         bool prewarm=false;
+         bool coveragePriority=false;
+         foundation::WorldRect demand{};
++        ValidRegions paint; // Only these fully painted rectangles may become valid.
+         bool cpuCoverage=false,gpuCoarse=false;
+         resources::ResourceLease lease;
+         ValidRegions valid;
+--- runtime/render/src/skia_renderer.cpp baseline
++++ runtime/render/src/skia_renderer.cpp candidate
+@@ -678,6 +678,7 @@
+     auto options=renderCacheOptions_;
+     internal::RetainedNavigationSource retained,fallback;
+     const auto proofStart=std::chrono::steady_clock::now();
++    bool invalidQueryBinding=false;
+     const auto revalidate=[&](const std::shared_ptr<NavigationCache>& cache){
+         if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_)return;
+         if(cache->matches(&provider,current))return;
+@@ -696,7 +697,7 @@
+         const bool queried=query(cache->worldBounds(),entries,diagnostics);
+         navigationTiles_->work.queryNanoseconds+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-start).count();
+         const auto reject=[&]{++navigationTiles_->work.regionalPlaneRejects;};
+-        if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){reject();return;}
++        if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){invalidQueryBinding=true;reject();return;}
+         ReferenceDrawList validation{.frame=current,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip=current.viewportClip.isFiniteAndOrdered()?current.viewportClip:foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight};
+         validation.entries=entries;
+         if(internal::validateReferencePlan(FramePlan{current,std::move(validation)}).code!=BackendSubmissionCode::kAccepted){reject();return;}
+@@ -718,6 +719,10 @@
+         }catch(const std::bad_alloc&){++navigationTiles_->work.regionalPlaneRejects;}
+     };
+     revalidate(navigationCache_);revalidate(navigationFallback_);
++    // A rejected cross-Scene query cannot authorize new tiles under this
++    // invocation either. Keep earlier prepared work private until a current
++    // query binds it; a faster complete job must not bypass this admission.
++    if(invalidQueryBinding)return BackendSubmissionResult::retry("navigation query binding unavailable");
+     const auto proofUs=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-proofStart).count();
+     options.navigationMicroseconds=proofUs>=std::int64_t(options.navigationMicroseconds)?0:options.navigationMicroseconds-proofUs;
+     navigationTiles_->work.retainedValidRegions=0;
+--- runtime/render/CMakeLists.txt baseline
++++ runtime/render/CMakeLists.txt candidate
+@@ -226,6 +226,13 @@
+         target_link_libraries(axiom_gpu_resource_recovery_tests PRIVATE "-framework Foundation" objc)
+     endif()
+     add_test(NAME G5GpuResourceRecovery COMMAND axiom_gpu_resource_recovery_tests)
++    add_executable(axiom_settled_zoom_start_tests tests/settled_zoom_start_test.cpp)
++    target_link_libraries(axiom_settled_zoom_start_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++    target_include_directories(axiom_settled_zoom_start_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++    if(APPLE)
++        target_link_libraries(axiom_settled_zoom_start_tests PRIVATE "-framework Foundation" objc)
++    endif()
++    add_test(NAME G5SettledZoomStart COMMAND axiom_settled_zoom_start_tests "${CMAKE_CURRENT_BINARY_DIR}/settled-zoom-start.json")
+     add_executable(axiom_canonical_prepared_body_tests tests/canonical_prepared_body_test.cpp)
+     target_link_libraries(axiom_canonical_prepared_body_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     if(APPLE)

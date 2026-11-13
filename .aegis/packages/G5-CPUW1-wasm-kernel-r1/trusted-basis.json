@@ -1,0 +1,43 @@
+{
+  "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "tag": "g5-pre-cpu-worker-20261111-e275da6e",
+  "files": {
+    "runtime/render/src/selection_region_geometry.cpp": "28f4331f9bbaafab7881aeb82a96120c0a0727ead90e0f503b619dbde9ddef94",
+    "runtime/render/src/selection_region_geometry_internal.hpp": "d44ff10b0dfe4efb22d9cfc264b76b53e0ba7ca5e8af5f6681a78cb71cbb3fdb",
+    "runtime/render/src/skia_prepared_geometry.hpp": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da",
+    "runtime/render/src/skia_prepared_geometry.cpp": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19",
+    "runtime/render/src/skia_mask_history.hpp": "32c0a6f69bd30eef59620f82efd40c37025b082e4fc043f0ac6022bdadca4f96",
+    "runtime/render/CMakeLists.txt": "76f7322f141b525d623867b07fc32cf846ac101f57336a348cfaa924cf781062",
+    "runtime/interaction/src/partial_erase_geometry.hpp": "714643946001e27d6e7a48451ec8fbfc8055d11e2378abd40f239da6bae2044f",
+    "runtime/interaction/src/canvas_partial_erase.cpp": "7032a9dadf9955919d0c6d1e1888f5455f3e155d9b7d5c8be2dc2d15442251ae",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "6e96d685fd23cd592d5237b3f91ff393624defffe9247c89a0402dea99979fb3",
+    "runtime/resources/include/canvas/resources/resource_budget_manager.hpp": "1c3f391180733808cd780f96ad16276cb649eb489222811f3c0e90dc09ed117d",
+    "sdk/web/CMakeLists.txt": "8d5bbedb1db0693ce582068befa92bfad079e10d88c0ddee22631489e960733d",
+    "sdk/web/axiom.mjs": "cf0af026c53015e8b2045bd59566227bf3536539601ffbeb832969561bf15b3c",
+    "sdk/web/bridge.cpp": "a47cd84e43201889a40925703c316c67db3025236dd040070c7e8779fcc168e9",
+    "sdk/web/package.json": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e",
+    "sdk/common/session.cpp": "2a78fdf38c1f54773fac40f3ad2ed2fd877c84f0aa55ace2f383e61d9501d7de",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    ".aegis/results/G5-long-query-preparation-r1/result.json": "61fa7bf25dbe656cdd8aacfb9374b9a0dba5fa9486925c2934a112fa2fe3afcc",
+    ".aegis/results/G5-long-query-preparation-control-r1/control-review.json": "0aad7a4b3c454903b848259a6520787bf91875663a15519ad1e62b3d2139469a",
+    ".aegis/results/G5-long-query-preparation-r1/prefix-path-parity.json": "7fa4fdbdc3c4b62a9d999c1884334699e6205ed28cd2ae5d18707bd07fbafc14",
+    ".aegis/results/G5-long-query-preparation-r1/exact-parity.json": "24982fb822e2a527302a0923518bcf21fbbad9226f68874b7c354ebfbabc3c0d",
+    ".aegis/results/G5-long-query-preparation-r1/normal-sdk-manifest.json": "0a6fd76735d7c60bc88ecd424750bc486f32a25725df03b2aa0c41da2181d239",
+    ".aegis/results/G5-erase-prefix-publication-r1/publication.json": "ad509274762cd31d4abbdd170714a4beccdbd5fa93f00769bae2a3fa254004f5",
+    ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "normal_WASM": "7d366a6de44b222d50bdd66124865bd5b25fe712a8750eafb4e252c0b3050ded",
+  "remaining_observations": {
+    "normal_burstUp_ms": 3768,
+    "normal_pacedUp_ms": 3245,
+    "native_remaining_unions": 21554,
+    "fullWebUpcost_attribution": "MISSING_FROZEN_DIAGNOSTIC_PROOF"
+  },
+  "publishedSkia": "singlethreaded pthread:false all3variants",
+  "CPU_oracle": {
+    "path": "out/G5-UR1c1-prepared-body-index/build-native/runtime/render/axiom_ur0_fixture_oracle",
+    "sha256": "ab7a1a3ce61076eb34c1bccb7c59a61f09e5a51323c45403796ad2eab1440105"
+  },
+  "native_build": "out/G5-object-interaction-continuity-r2/build-native"
+}

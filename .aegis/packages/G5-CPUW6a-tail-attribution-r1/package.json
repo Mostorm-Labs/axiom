@@ -1,0 +1,56 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW6a-tail-attribution-r1",
+  "status": "FROZEN_AUTHORIZED_MEASUREMENT_ONLY",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "c5ba55996319e96c801f4e275814473137d7e85c",
+    "completed_through": [
+      "pushedacceptedfunctionalcheckpoint",
+      "readonly7200owner/Workertriage",
+      "freshoriginalnative39tests"
+    ],
+    "next_action": "Compileboundednewnativeattributionharnessagainstexistinglibs andrunexact7200/Fixed40twoerase,reportphase/job breakdown."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW6a-tail-attribution-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "4cb2c8d7350ee191010e481da373dca3bcf4a3388961c3089bf78d85f47f9ca4"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "31d2ad262aac2150beea11b25edc73a867ddff82424f0a4c4751272a03e9765f"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "019e14ccff578c842e44f7dfb3d679ac6bdada5cb5ad41b4762c5d060a6b345f"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f7e24dd3f283011b225404c0a1b8a33ff239a661c92c57ee726cc95b84ce527d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "522f9a318bf66281c08d7bd0805ce63daa8ee085687e643c94bfadf6d1da2132"
+  }
+}

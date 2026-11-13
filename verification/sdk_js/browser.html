@@ -13,6 +13,7 @@ const draw=async(runtime,x=40,y=40,width=100,height=80)=>{
     c.dispatchEvent(new PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:r.left+x+dx,clientY:r.top+y+dy,
       buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));await pause();
   }
+  await until(()=>!(runtime.readState().pending?.intents.length),'ordered pointer commit');
 };
 try {
   const a=await createRuntime({mount:document.getElementById('one'),documentId:'01ff'.padStart(32,'0'),onOperation:b=>operations.push(b),onError:e=>errors.push(e)});

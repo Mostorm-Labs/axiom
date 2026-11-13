@@ -1,0 +1,61 @@
+{
+  "schema": "axiom-settled-zoom-publication-validation-v1",
+  "created_utc": "2026-11-13T16:00:55.559848+00:00",
+  "branch": "codex/g5-cpu-worker",
+  "base": "bc40e42cd83b290152703631b2ba80a9329a78f4",
+  "human_request": "提交并推送当前缩放修复",
+  "source_scope": "Render coarse v4 prepared GPU admission, one complete rectangular repaint per exposed coarse cell, current Scene query binding guard, focused tests/tools/docs and compact r1/r2 evidence. No SDK API/brush/schema/budget change.",
+  "independent_control_review": {
+    "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/control-review.json",
+    "sha256": "eee849d231725199fc52b5aea51d1ea8d207dc0a19b4f38af373df9e7af58ad4"
+  },
+  "producer_result": {
+    "path": ".aegis/results/G5-settled-zoom-start-rect-repair-r2/result.json",
+    "sha256": "9953390b78177adfa212c27304aee2e53f8ee1bbfac81003da7b9cd31db16439"
+  },
+  "fresh_checks": {
+    "native": {
+      "passed": 10,
+      "failed": 0,
+      "log": {
+        "path": "out/G5-zoom-publication-20261113/native-tests.log",
+        "sha256": "9fb1482d4ff3c4bfc33d50683d1469e922c699d0f3baa768e819759c02d8e3a9"
+      },
+      "command": {
+        "path": "out/G5-zoom-publication-20261113/native-command.json",
+        "sha256": "ab46ddf12b1692010bea62d61298fdfdd10970211f1c1d9d62ab0dc4a6b84f8a"
+      }
+    },
+    "node": {
+      "passed": 3,
+      "failed": 0,
+      "log": {
+        "path": "out/G5-zoom-publication-20261113/node-tests.log",
+        "sha256": "e14cab180d0741247b025bb28a8e7519dba5cc6ccba93622b733b129b1b62037"
+      }
+    },
+    "runtime_boundaries": {
+      "passed_contracts": 120,
+      "log": {
+        "path": "out/G5-zoom-publication-20261113/boundary-tests.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    "git_diff_check": {
+      "exit": 0,
+      "log": {
+        "path": "out/G5-zoom-publication-20261113/diff-tests.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "native_build": "No work to do; matching targets current"
+  },
+  "publication_selection": "Explicit current task source/docs/test/tools and compact local package/result/control records; large SDK/WASM/pixel/build artifacts and unrelated old untracked evidence stay local.",
+  "limits": [
+    "Finite synthetic settled zoom tests; no physical first-photon or universal frame SLO",
+    "9 final Web pixels differ only in the existing independent 1 device pixel AA boundary; all nonedge channels match CPU exactly",
+    "First r1 candidate failed performance and remains recorded as UNMET",
+    "Post-Up waiting, idle input and other G5 work remain open"
+  ],
+  "Demo": "4335 preserved; no reload or replacement of 4334"
+}

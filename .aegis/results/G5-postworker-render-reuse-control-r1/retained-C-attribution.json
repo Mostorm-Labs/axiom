@@ -1,0 +1,36 @@
+{
+  "schema": "axiom-retained-C-independent-attribution-v1",
+  "created_utc": "2026-11-13T03:00:42.249960+00:00",
+  "scope": "Offline recomputation of retained W7 diagnostic; no production edit or new sampling",
+  "source": {
+    "path": "out/G5-CPUW7-postworker-tail-r1/web/W7-D4-DIAGNOSTIC/raw.json.gz",
+    "sha256": "bb1fa1080cbb2edc3f06c91a7d7f88e389e209c9dafdcc835bb755f41deaa7dc"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-postworker-render-reuse-r1/package.json",
+    "sha256": "ef56b7c84e7f3f5cb526b43554dc765fd819ae4ab78567680733fb8929ccf987"
+  },
+  "C": {
+    "Up_ms": 187372.39999997616,
+    "settled_ms": 212528.10000002384,
+    "elapsed_ms": 25155.700000047684,
+    "Worker_jobs": 44,
+    "first_job_issue_after_Up_ms": 9598.100000023842,
+    "last_job_terminal_after_Up_ms": 10309.300000071526,
+    "sum_job_envelope_ms": 102.10000038146973,
+    "sum_compute_ms": 82.200000166893,
+    "after_last_terminal_until_settled_ms": 14846.399999976158,
+    "largest_RAF": {
+      "started_after_Up_ms": 0.8999999761581421,
+      "duration_ms": 9597.400000095367
+    }
+  },
+  "interpretation": [
+    "Worker requests are not issued during the first approximately9.6s RAF callback; retained native transient span9.593s is inside this block.",
+    "Later Worker envelopes total approximately102.1ms including82.2ms computation;44jobs are sequentially matched by complete key.",
+    "Another14.846s remains after the last Worker terminal, not all CPU or GPU work.",
+    "Long tail is before Worker issue and after its return; prior shorthand all postWorker was incomplete.",
+    "No memcpy or GPU hardware execution attribution is made.",
+    "Sent as in-scope RR1 diagnosis to paired implementation thread; no new package obligation."
+  ]
+}

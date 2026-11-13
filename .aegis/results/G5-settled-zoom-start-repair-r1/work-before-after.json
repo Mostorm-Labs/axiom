@@ -1,0 +1,54 @@
+{
+  "old_actual_RED": {
+    "path": "out/G5-settled-zoom-start-repair-r1/red-native2.log",
+    "sha256": "ca0150b974d9e0f1420619e6b5484bef2d4893e28709bcf0451a1164572f95bd",
+    "one_line": {
+      "first_opportunity": 2,
+      "source_steps": 8,
+      "tiles": 8,
+      "cpu_coarse_starts": 6,
+      "prepared_builds": 0
+    },
+    "expected_failure": "EXPOSURE_REPLAYED_SOURCES_FOR_SEPARATE_SPECULATIVE_STRIPS"
+  },
+  "candidate_actual": {
+    "path": "out/G5-settled-zoom-start-repair-r1/final-native-work.log",
+    "sha256": "064ed31f73eb0cf6c90e75686accc2b37be16da6da9bbabe6308275b5c69b1da",
+    "work_rows": [
+      {
+        "budget_bytes": 3249632,
+        "count": 1,
+        "cpu_coarse_starts": 0,
+        "dpr": 2,
+        "drawn": 390,
+        "first_opportunity": 1,
+        "gpu_contours": 390,
+        "initializations": 4,
+        "masked": false,
+        "queries": 4,
+        "source_steps": 4,
+        "tested": 854,
+        "tiles": 4
+      },
+      {
+        "budget_bytes": 4062040,
+        "count": 3,
+        "cpu_coarse_starts": 0,
+        "dpr": 2,
+        "drawn": 1169,
+        "first_opportunity": 2,
+        "gpu_contours": 1169,
+        "initializations": 5,
+        "masked": true,
+        "queries": 5,
+        "source_steps": 12,
+        "tested": 2562,
+        "tiles": 4
+      }
+    ],
+    "first_complete_pixel_comparison": "samegrid fullcold+actualsharp retained, no skipped region, max2samegridquantization; no physicaltimingclaim"
+  },
+  "budget": "sameRenderCacheOptions policyvalues, fixed8regionchargedthroughsizeofJob; no step/time/query/GPU/memorycapacityincrease",
+  "static_hypothesis_ref": "followup-static-hypothesis.json",
+  "candidate_is_not_performance_qualified": true
+}

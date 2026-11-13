@@ -1,0 +1,40 @@
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Configuring done (1.4s)
+-- Generating done (0.5s)
+-- Build files have been written to: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-object-interaction-continuity-r2/build-native
+[0/2] Re-checking globbed directories...
+[1/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_placement.cpp.o
+[2/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_table.cpp.o
+[3/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_appearance.cpp.o
+[4/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_creation_hover.cpp.o
+[5/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_partial_erase.cpp.o
+[6/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_object_clipboard.cpp.o
+[7/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_image_export.cpp.o
+[8/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_section_commands.cpp.o
+[9/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_region_selection.cpp.o
+[10/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_selection_summary.cpp.o
+[11/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o
+[12/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_text_geometry.cpp.o
+[13/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/cpu_pending_erase.cpp.o
+[14/35] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_connector_routing.cpp.o
+[15/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/preview_surface.cpp.o
+[16/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_backend.cpp.o
+[17/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/cpu_worker_protocol.cpp.o
+[18/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o
+[19/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_headless_backend.cpp.o
+[20/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_layers.cpp.o
+[21/35] Building CXX object runtime/render/CMakeFiles/axiom_cpu_worker_protocol_tests.dir/tests/cpu_worker_protocol_test.cpp.o
+[22/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o
+[23/35] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_composition.cpp.o
+[24/35] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o
+FAILED: runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o 
+/usr/bin/c++ -DAXIOM_RUNTIME_QUALIFICATION=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/src -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/control/src -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/interaction/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scene/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/text/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/foundation/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/semantic/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/input/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/render/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/scheduling/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/resources/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/ink/include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/nlohmann-json/single_include -I/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/control/include -O3 -DNDEBUG -UNDEBUG -std=c++20 -arch arm64 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o -MF runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o.d -o runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o -c /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/src/runtime_composition.cpp
+/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/runtime/composition/src/runtime_composition.cpp:476:60: error: no member named 'bytes' in 'canvas::semantic::DocumentId'
+  476 |  for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
+      |                                                        ~~~ ^
+1 error generated.
+[25/35] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_render_cache.cpp.o
+[26/35] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_text.cpp.o
+[27/35] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_facade.cpp.o
+ninja: build stopped: subcommand failed.

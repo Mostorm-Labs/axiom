@@ -21,6 +21,8 @@ try{
   const before=a.readState();let rejected=false;
   try{await a.createSticky({size:80});}catch{rejected=true;}
   assert(rejected&&a.readState().generation===before.generation&&a.readState().objects===before.objects,'queue pressure rejects canonical mutation');
+  await Promise.resolve();
+  assert(errors.every(e=>e.code==='CPU_PENDING_FAILED'&&e.message==='LOCAL_INTENT_FAILED')&&errors.length<=1,'queued pressure failure reports only its explicit terminal error');errors.length=0;
   a.data.reportStatus(packets[1],3,1);
   assert(a.readState().lastCommit.localDurable===3,'Axis report reaches existing Runtime status owner');
   rejected=false;try{b.data.reportStatus(packets[1],3,3);}catch{rejected=true;}
@@ -65,5 +67,5 @@ try{
   unsubscribe();retry.data.release(retry.data.readNext());await retry.close();mount.remove();
   assert(errors.length===1&&errors[0].code==='EVENT_LISTENER_FAILED','expected listener error classified exactly');errors.length=0;
   document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,errors:errors.map(e=>e.code)});
-}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(e),stack:e.stack});}
+}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(e),stack:e.stack,errors:errors.map(e=>({code:e.code,message:e.message}))});}
 </script>

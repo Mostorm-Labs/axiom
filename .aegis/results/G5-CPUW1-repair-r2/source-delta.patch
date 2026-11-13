@@ -1,0 +1,1525 @@
+diff --git a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+index d9699d50..4ab4fd59 100644
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp
+@@ -180,6 +180,9 @@ class RuntimeCompositionCore final {
+   [[nodiscard]] bool serviceFrameOpportunity(bool forceCanonical,
+                                               RuntimeFrameOpportunity& out) noexcept;
+   [[nodiscard]] bool resourceRetirementPending() const noexcept;
++  std::uint64_t reserveCpuWorkerGrant(std::uint64_t,std::size_t)noexcept;
++  bool releaseCpuWorkerGrant(std::uint64_t,std::uint64_t)noexcept;
++  std::size_t cpuWorkerGrantBytes()const noexcept;
+   // Completes the Runtime-owned preview handoff after the platform has
+   // supplied its real presentation observation. Hosts do not capture or
+   // acknowledge preview sessions themselves.
+diff --git a/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp b/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
+index b5a8b7c2..633bcb60 100644
+--- a/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
++++ b/runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp
+@@ -1,4 +1,6 @@
+ #pragma once
++#include <cstddef>
++#include <cstdint>
+ 
+ namespace canvas::runtime {
+ class RuntimeComposition;
+@@ -8,5 +10,8 @@ class RuntimeCompositionCore;
+ class RuntimePlatformAccess final {
+  public:
+   [[nodiscard]] static RuntimeCompositionCore& core(RuntimeComposition&) noexcept;
++  static std::uint64_t reserveCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::size_t)noexcept;
++  static bool releaseCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::uint64_t)noexcept;
++  static std::size_t cpuWorkerGrantBytes(RuntimeComposition&)noexcept;
+ };
+ }  // namespace canvas::runtime
+diff --git a/runtime/composition/src/public_composition.cpp b/runtime/composition/src/public_composition.cpp
+index 6f4f0ba6..01d251c3 100644
+--- a/runtime/composition/src/public_composition.cpp
++++ b/runtime/composition/src/public_composition.cpp
+@@ -63,6 +63,9 @@ class RuntimeComposition::Impl final {
+ RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
+   return owner.impl_->core;
+ }
++std::uint64_t RuntimePlatformAccess::reserveCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::size_t b)noexcept{return o.impl_->core.reserveCpuWorkerGrant(e,b);}
++bool RuntimePlatformAccess::releaseCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::uint64_t t)noexcept{return o.impl_->core.releaseCpuWorkerGrant(e,t);}
++std::size_t RuntimePlatformAccess::cpuWorkerGrantBytes(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerGrantBytes();}
+ 
+ RuntimeComposition::RuntimeComposition(std::uint64_t viewId) : impl_(std::make_unique<Impl>(viewId)) {}
+ RuntimeComposition::~RuntimeComposition() = default;
+diff --git a/runtime/composition/src/runtime_composition.cpp b/runtime/composition/src/runtime_composition.cpp
+index 947ae138..fdc8c07d 100644
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -470,6 +470,14 @@ bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
+   return runtime_ && runtime_->resourceRetirementPending();
+ }
+ 
++std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
++ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
++ return runtime_->reserveCpuWorkerGrant(e,b);
++}
++bool RuntimeCompositionCore::releaseCpuWorkerGrant(std::uint64_t e,std::uint64_t t)noexcept{
++ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->releaseCpuWorkerGrant(e,t);
++}
++std::size_t RuntimeCompositionCore::cpuWorkerGrantBytes()const noexcept{return runtime_?runtime_->cpuWorkerGrantBytes():0;}
+ bool RuntimeCompositionCore::serviceFrameOpportunity(
+     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
+ 
+@@ -729,7 +737,7 @@ bool RuntimeCompositionCore::detach() noexcept {
+   notifications_.clear();
+   return true;
+ }
+-bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
++bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if(runtime_&&runtime_->cpuWorkerGrantBytes())return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+ std::uint64_t RuntimeCompositionCore::canonicalPresentCount() const noexcept {
+   const auto* provider = runtime_->activeSurfaceProvider();
+   return provider == nullptr ? 0U : provider->presentCount();
+diff --git a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+index 1251476c..8c663594 100644
+--- a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
++++ b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+@@ -161,6 +161,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
+                                 public render::SessionCancelSink,
+                                 public interaction::InteractionDispatchPort {
+   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
++ public:
++  std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept;
++  bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept;
++  std::size_t cpuWorkerGrantBytes()const noexcept;
++ private:
+   friend class canvas::runtime::CanvasRuntimeFacade;
+   friend class canvas::runtime::MultiSelectionPort;
+ #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index 0437e5f0..04a5837f 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -3135,6 +3135,15 @@ void CanvasEditingRuntime::finishObjectEraseFeedback(std::uint64_t pointerId,boo
+   if(cancel)transientTrails_.cancel(pointerId);else (void)transientTrails_.end(pointerId);
+ }
+ void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
++std::uint64_t CanvasEditingRuntime::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
++  if(closed_||publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return 0;
++  return skiaRenderer_.reserveCpuWorkerGrant(executor,bytes);
++}
++bool CanvasEditingRuntime::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
++  if(publicationCallbackActive_||std::this_thread::get_id()!=ownerThread_)return false;
++  return skiaRenderer_.releaseCpuWorkerGrant(executor,token);
++}
++std::size_t CanvasEditingRuntime::cpuWorkerGrantBytes()const noexcept{return skiaRenderer_.cpuWorkerGrantBytes();}
+ void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
+ 
+ bool CanvasEditingRuntime::setEraserDiameterLogicalPx(float diameter) noexcept {
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 27b17e82..c2383a7d 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -157,6 +157,8 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
+     target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp src/render_execution.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
++    target_sources(canvas_runtime_render PRIVATE src/cpu_exact_path_kernel.cpp)
++    target_sources(canvas_runtime_render PRIVATE src/cpu_worker_protocol.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
+     target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_ink_layers.cpp src/skia_mask_history.cpp src/skia_navigation_tiles.cpp src/skia_prepared_geometry.cpp
+         src/prepared_body_job.cpp src/navigation_pixel_validity.cpp)
+@@ -272,6 +274,15 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+     add_test(NAME G5EraseExactCanonical COMMAND axiom_erase_exact_canonical_tests --verify "${CMAKE_CURRENT_BINARY_DIR}/erase-exact-canonical")
+     add_executable(axiom_exact_query_working_set_tests tests/exact_query_working_set_test.cpp)
+     add_executable(axiom_long_query_preparation_tests tests/long_query_preparation_test.cpp)
++    add_executable(axiom_cpu_exact_kernel_tests tests/cpu_exact_kernel_test.cpp)
++    add_executable(axiom_cpu_worker_protocol_tests tests/cpu_worker_protocol_test.cpp)
++    add_executable(axiom_cpu_worker_behavior_red tests/cpu_worker_behavior_red.cpp)
++    foreach(cpu_test axiom_cpu_exact_kernel_tests axiom_cpu_worker_protocol_tests axiom_cpu_worker_behavior_red)
++      target_link_libraries(${cpu_test} PRIVATE canvas_runtime_render CanvasSkia::Skia)
++      target_compile_features(${cpu_test} PRIVATE cxx_std_20)
++    endforeach()
++    add_test(NAME G5CpuExactKernel COMMAND axiom_cpu_exact_kernel_tests)
++    add_test(NAME G5CpuWorkerProtocol COMMAND axiom_cpu_worker_protocol_tests)
+     target_link_libraries(axiom_long_query_preparation_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+     target_compile_definitions(axiom_long_query_preparation_tests PRIVATE AXIOM_UR2D_TESTS=1)
+     target_compile_features(axiom_long_query_preparation_tests PRIVATE cxx_std_20)
+diff --git a/runtime/render/include/canvas/render/skia_renderer.hpp b/runtime/render/include/canvas/render/skia_renderer.hpp
+index 1a21c2f2..215bdba4 100644
+--- a/runtime/render/include/canvas/render/skia_renderer.hpp
++++ b/runtime/render/include/canvas/render/skia_renderer.hpp
+@@ -17,6 +17,7 @@
+ #include <cstdint>
+ #include <span>
+ #include <vector>
++#include <map>
+ 
+ class SkCanvas;
+ 
+@@ -110,6 +111,10 @@ class SkiaRenderer final {
+     [[nodiscard]] ExactQueryCohort exactQueryCohort(bool active=true) const noexcept;
+     // Existing interaction owner cancels disposable partial exact preparation.
+     void discardEraseQueryPreparation() noexcept;
++    // Private platform quota forwarding. No manager/context is returned.
++    std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes) noexcept;
++    bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token) noexcept;
++    std::size_t cpuWorkerGrantBytes() const noexcept;
+     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
+         std::span<const foundation::WorldPoint>) const noexcept;
+     [[nodiscard]] RenderDamage renderDamage() const;
+@@ -124,6 +129,9 @@ class SkiaRenderer final {
+     std::shared_ptr<NavigationCache> navigationCache_;
+     std::shared_ptr<NavigationCache> navigationFallback_;
+     mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
++    struct CpuGrant {std::uint64_t executor;resources::ResourceLease lease;std::size_t bytes;};
++    std::map<std::uint64_t,CpuGrant> cpuGrants_;
++    std::uint64_t nextCpuGrant_=0;
+     mutable std::shared_ptr<internal::EraseMaskPathCache> eraseQueries_;
+     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
+     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
+diff --git a/runtime/render/src/selection_region_geometry.cpp b/runtime/render/src/selection_region_geometry.cpp
+index d81000ac..652b3ba4 100644
+--- a/runtime/render/src/selection_region_geometry.cpp
++++ b/runtime/render/src/selection_region_geometry.cpp
+@@ -9,6 +9,7 @@
+ #include "skia_prepared_geometry.hpp"
+ #include "skia_mask_history.hpp"
+ #include "skia_geometry_internal.hpp"
++#include "cpu_exact_path_kernel.hpp"
+ #include "compact_contour_skia_path.hpp"
+ #include "canvas/render/brush_outline_skia_path.hpp"
+ #include "canvas/render/image_crop_geometry.hpp"
+@@ -77,14 +78,7 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
+ bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
+ std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask,std::uint64_t* unions=nullptr) {
+         G5_SCOPE(g5Build,foundation::internal::g5::Tag::wa_path_build,foundation::internal::g5::Purpose::none);
+-        SkPath eraser;
+-        if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
+-        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
+-            SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
+-            if(unions)++*unions;
+-            if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return std::nullopt;
+-        }
+-    return eraser;
++        return internal::cpuExactPath(mask,unions);
+ }
+ bool fillVisible(const RuntimeSceneRecord& r) {
+     for(const auto& p:r.properties.entries)if(p.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&p.value)) {
+@@ -619,10 +613,9 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
+         SkPath path=old?old->path:SkPath{};std::size_t done=first;
+         for(;done<end;++done){
+             if(allowance&&!optionalQueryTime(*allowance))break;
+-            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();SkPathBuilder builder;
+-            builder.moveTo(f(p.p0.position.x),f(p.p0.position.y));builder.cubicTo(f(p.control1.x),f(p.control1.y),f(p.control2.x),f(p.control2.y),f(p.p1.position.x),f(p.p1.position.y));
++            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();
+             ++state.stats.history.queryUnionOps;
+-            if(!unite(path,stroke(builder.detach(),2*std::max(p.p0.radius,p.p1.radius),SkPaint::kRound_Cap))||!path.isFinite())return;
++            if(!cpuExactUnionSegment(path,p)||!path.isFinite())return;
+             ++completedNow;if(allowance)++allowance->steps;
+             maxUnion=std::max(maxUnion,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-unionStart).count()));
+         }
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 4426815f..d39c028f 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -29,6 +29,7 @@ namespace g5 = canvas::foundation::internal::g5;
+ #include <unordered_set>
+ #include <optional>
+ #include <chrono>
++#include <atomic>
+ 
+ #include <cmath>
+ #include <algorithm>
+@@ -775,6 +776,9 @@ NavigationWork SkiaRenderer::navigationWork() const noexcept {
+     return navigationTiles_?navigationTiles_->work:NavigationWork{};
+ }
+ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
++    // An isolated executor still owns capacity in this budget. Never issue a
++    // replacement manager while its permit could remain in use.
++    if(!cpuGrants_.empty())return;
+     clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+ }
+ void SkiaRenderer::clearRenderCache() noexcept {if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+@@ -788,6 +792,22 @@ SkiaRenderer::ExactQueryCohort SkiaRenderer::exactQueryCohort(bool active)const
+     catch(const std::bad_alloc&){return ExactQueryCohort(eraseQueries_);}
+ }
+ void SkiaRenderer::discardEraseQueryPreparation()noexcept{if(eraseQueries_)eraseQueries_->discardQueryPrefixes();}
++std::uint64_t SkiaRenderer::reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes)noexcept{
++    if(!executor||!bytes||bytes>80U*1024U*1024U||nextCpuGrant_==UINT64_MAX||cpuGrants_.size()>=16)return 0;
++    try{
++        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
++        const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return 0;
++        resources::ResourceLease lease(resourceBudget_,*token);
++        static std::atomic<std::uint64_t> serial{0};
++        auto previous=serial.load();do{if(previous==UINT64_MAX)return 0;}while(!serial.compare_exchange_weak(previous,previous+1));
++        const auto id=previous+1;nextCpuGrant_=id;
++        cpuGrants_.emplace(id,CpuGrant{executor,std::move(lease),bytes});return id;
++    }catch(...){return 0;}
++}
++bool SkiaRenderer::releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token)noexcept{
++    const auto it=cpuGrants_.find(token);if(it==cpuGrants_.end()||it->second.executor!=executor)return false;cpuGrants_.erase(it);return true;
++}
++std::size_t SkiaRenderer::cpuWorkerGrantBytes()const noexcept{std::size_t bytes=0;for(const auto& entry:cpuGrants_)bytes+=entry.second.bytes;return bytes;}
+ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& geometry)const noexcept{
+     if(!renderCacheOptions_.enabled)return canvas::render::intersectEraseGeometry(record,geometry);
+     try{
+diff --git a/runtime/render/tests/long_query_preparation_test.cpp b/runtime/render/tests/long_query_preparation_test.cpp
+index f983e5ff..674e4718 100644
+--- a/runtime/render/tests/long_query_preparation_test.cpp
++++ b/runtime/render/tests/long_query_preparation_test.cpp
+@@ -8,7 +8,32 @@
+ #include "include/core/SkPathUtils.h"
+ #include "include/core/SkPaint.h"
+ #include "include/core/SkPathBuilder.h"
++#include <array>
+ namespace {
++LongQueryPreparationObservation lastObservation;
++bool observedPreparation=false;
++void observePreparation(const LongQueryPreparationObservation& value){
++ if(!value.ownerInvocation){lastObservation=value;observedPreparation=true;}
++}
++struct PrefixProgress {std::size_t stored=0,calls=0;std::uint64_t completed=0;json observations=json::array();};
++void prepareObserved(EraseMaskPathCache& cache,const semantic::EraseMaskGeometry& geometry,
++ const std::shared_ptr<resources::ResourceBudgetManager>& budget,PrefixProgress& progress){
++ observedPreparation=false;
++ cache.prepareQueryPrefix(geometry,budget,8*1024*1024,8);
++ require(observedPreparation,"missing genuine prefix observation");
++ const auto& v=lastObservation;
++ require(v.completed<=8&&v.steps<=8,"one prefix opportunity exceeded eight steps");
++ // Zero work with no resumed cursor can be a deadline before lookup. It
++ // says nothing about stored progress and must not fabricate a reset.
++ const bool hasCursor=v.resumed||v.completed;
++#if !defined(LQP_OLD_ORACLE)
++ if(hasCursor)require(v.resumed>=progress.stored,"local prefix progress reset between opportunities");
++#endif
++ require(v.resumed+v.completed<=std::get<semantic::SweptCircleMask>(geometry).segments.size(),"prefix observer exceeds actual geometry");
++ if(hasCursor)progress.stored=v.resumed+v.completed;
++ progress.observations.push_back({{"resumed",v.resumed},{"completed",v.completed},{"stored",progress.stored},{"steps",v.steps}});
++ progress.completed+=v.completed;++progress.calls;
++}
+ SkPath originalPath(const semantic::EraseMaskGeometry& mask){
+  SkPath accumulated;
+  const auto& sweep=std::get<semantic::SweptCircleMask>(mask);
+@@ -17,6 +42,7 @@ SkPath originalPath(const semantic::EraseMaskGeometry& mask){
+ }
+ semantic::EraseMaskGeometry input(unsigned count,unsigned local){std::vector<foundation::WorldPoint>trace{{420,160}};for(unsigned i=1;i<=count;++i)trace.push_back({float(420+7*std::sin(i*.17)),float(160+170.*i/1600)});return *interaction::partialEraseGeometry(trace,{1,0,0,1,double(local)*.125,double(local)*.25},16);}
+ }
++#if !defined(LQP_OLD_ORACLE)
+ void edgeCases(){
+  const auto geometry=input(64,0);const auto expected=originalPath(geometry);
+  {
+@@ -55,11 +81,70 @@ void edgeCases(){
+   cache.prepareQueryPrefix(geometry,budget,8*1024*1024,32);require(cache.work().history.queryUnionOps==0,"unprecharged globaldenial constructedpath");cache.clear();require(budget->used()==0,"denied prep lease");
+  }
+ }
++#endif
+ int main(int argc,char**argv){try{
+- require(argc==2,"output.json");edgeCases();auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});EraseMaskPathCache cache;
+- for(unsigned n=8;n<=1600;n+=8)for(unsigned local=0;local<16;++local)cache.prepareQueryPrefix(input(n,local),budget,8*1024*1024,8);
+- const auto before=cache.work();auto entry=cache.get(input(1600,0));require(bool(entry),"final query path");const auto after=cache.work();const auto path=longQueryPreparationPath(entry);const auto original=originalPath(input(1600,0));require(path==original,"prefix path changed original f32 sequential PathOps");
+- const auto remaining=after.history.queryUnionOps-before.history.queryUnionOps;
+- json result{{"status",remaining?"RED":"GREEN"},{"prepared_segments",before.history.queryUnionOps},{"final_remainder_unions",remaining},{"path_equal",true},{"resident",after.bytes}};std::ofstream(argv[1])<<result.dump(2)<<'\n';std::cout<<result.dump()<<'\n';entry.reset();cache.clear();require(budget->used()==0,"prefix lease leak");
+- require(remaining==0,"ELIGIBLE_STABLE_PREFIX_STALLED_BEFORE_FINAL_UP");return 0;
+-}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
++ require(argc==2,"output.json");
++#if !defined(LQP_OLD_ORACLE)
++ edgeCases();
++#endif
++ auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{256U*1024U*1024U,512U*1024U*1024U});EraseMaskPathCache cache;
++ longQueryPreparationObserver=observePreparation;
++ std::array<PrefixProgress,16> progress{};
++ // Preserve the original growing append sequence. Each real call retains the
++ // production max-eight-step AND eight-millisecond ceiling.
++ for(unsigned n=8;n<=1600;n+=8)for(unsigned local=0;local<16;++local)
++  prepareObserved(cache,input(n,local),budget,progress[local]);
++ json afterAppend=json::array();for(const auto& v:progress)afterAppend.push_back(v.stored);
++ // A deadline is a ceiling, not a promise to finish all eight steps. Give all
++ // locals bounded further opportunities, round-robin, before ANY final get.
++ std::array<unsigned,16> extra{};unsigned rounds=0;
++ for(;rounds<512;++rounds){
++  bool work=false;
++  for(unsigned local=0;local<16;++local)if(progress[local].stored<1600){
++   work=true;++extra[local];prepareObserved(cache,input(1600,local),budget,progress[local]);
++  }
++  if(!work)break;
++ }
++ json locals=json::array();std::uint64_t totalRemainder=0;bool pathsEqual=true,allPrepared=true;
++ const auto before=cache.work();
++ for(unsigned local=0;local<16;++local){
++  allPrepared=allPrepared&&progress[local].stored==1600;
++  const auto geometry=input(1600,local);const auto oldWork=cache.work();auto entry=cache.get(geometry);
++  require(bool(entry),"final query path");const auto remainder=cache.work().history.queryUnionOps-oldWork.history.queryUnionOps;
++  const bool equal=longQueryPreparationPath(entry)==originalPath(geometry);pathsEqual=pathsEqual&&equal;totalRemainder+=remainder;
++  locals.push_back({{"local",local},{"observed_stored",progress[local].stored},{"completed_unions",progress[local].completed},
++   {"calls",progress[local].calls},{"observations",progress[local].observations},{"extra_opportunities",extra[local]},{"get_union_delta",remainder},{"path_equal",equal}});
++ }
++ longQueryPreparationObserver=nullptr;
++ json result{{"status",totalRemainder||!allPrepared||!pathsEqual?"RED":"GREEN"},{"prepared_segments",before.history.queryUnionOps},
++  {"final_remainder_unions",totalRemainder},{"path_equal",pathsEqual},{"all16_prepared",allPrepared},{"after_append_stored",afterAppend},
++  {"extra_rounds",rounds},{"max_extra_opportunities_per_local",512},{"locals",locals},{"resident",cache.work().bytes}};
++ cache.clear();require(budget->used()==0,"prefix lease leak");
++#if !defined(LQP_OLD_ORACLE)
++ // Deliberately incomplete preparation: final get must perform exactly the
++ // true remaining original unions, never call a partial prefix a complete hit.
++ EraseMaskPathCache partial;const auto partialGeometry=input(1600,0);
++ ReferenceTraversalEntry entry;entry.presentationEraseActive=true;entry.presentationEraseMasks={{{},partialGeometry}};
++ RenderPreparationBudget one;one.maxCoverageSteps=1;
++ std::size_t partialStored=0;unsigned partialOpportunities=0;
++ longQueryPreparationObserver=observePreparation;
++ for(;partialOpportunities<32&&partialStored==0;++partialOpportunities){
++  PreparationAllowance allowance(one);observedPreparation=false;
++  partial.prepareQueryPrefixes({&entry,1},budget,8*1024*1024,allowance);
++  // A fresh opportunity may legally expire before its first union as well.
++  require(allowance.steps<=1,"partial shared one-step allowance exceeded");
++  if(observedPreparation)partialStored=lastObservation.resumed+lastObservation.completed;
++ }
++ longQueryPreparationObserver=nullptr;require(partialStored==1,"bounded partial opportunities did not retain exactly one segment");
++ const auto partialBefore=partial.work();auto final=partial.get(partialGeometry);require(bool(final),"partial final path");
++ const auto partialDelta=partial.work().history.queryUnionOps-partialBefore.history.queryUnionOps;
++ const bool partialEqual=longQueryPreparationPath(final)==originalPath(partialGeometry);
++ result["intentional_partial"]={{"opportunities",partialOpportunities},{"prepared",partialStored},{"get_union_delta",partialDelta},{"expected_remainder",1600-partialStored},{"path_equal",partialEqual}};
++ final.reset();partial.clear();require(budget->used()==0,"partial prefix lease leak");
++ require(partialDelta==1600-partialStored&&partialEqual,"partial final get did not compute exact true remainder");
++#endif
++ std::ofstream(argv[1])<<result.dump(2)<<'\n';std::cout<<result.dump()<<'\n';
++ require(pathsEqual,"prefix path changed original f32 sequential PathOps");
++ require(totalRemainder==0,"MULTI_LOCAL_PREFIX_LOST_BEFORE_FINAL_UP");
++ require(allPrepared,"BOUNDED_PREPARATION_DID_NOT_COMPLETE_ALL16");return 0;
++}catch(const std::exception&e){longQueryPreparationObserver=nullptr;std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/sdk/common/session.cpp b/sdk/common/session.cpp
+index 576a8bcb..75ff8c3a 100644
+--- a/sdk/common/session.cpp
++++ b/sdk/common/session.cpp
+@@ -1,3 +1,4 @@
++#include "canvas/runtime/internal/runtime_platform_access.hpp"
+ #include "canvas/foundation/internal/g5_observation.hpp"
+ namespace g5 = canvas::foundation::internal::g5;
+ #include "session.hpp"
+@@ -654,6 +655,8 @@ class Session::Impl {
+         }
+         if (dataPort.closing && command!="state" && command!="frame" && command!="selection" &&
+             command!="resource" && command!="snapshot" && command!="readSection" && command!="presets" &&
++            !(command=="cpuWorkerGrant" && (j.value("action",std::string{})=="observe" ||
++                j.value("action",std::string{})=="basis" || j.value("action",std::string{})=="release")) &&
+             !(command=="text" && j.value("action",std::string{})!="intent"))
+             return error("DOCUMENT_CLOSING");
+         if (command == "resize") {
+@@ -1544,6 +1547,27 @@ class Session::Impl {
+                     {"objectId", hexId(result.objectId)},
+                     {"cropToken", std::to_string(result.cropToken)}};
+         }
++        if(command=="cpuWorkerGrant"){
++            if(!owner)return error("NOT_OPEN");
++            if(j.at("action")=="basis"){
++                const auto stamp=facade().readMultiSelection().stamp;
++                const auto doc=*owner->documentId();std::array<std::uint64_t,2> words{};
++                for(unsigned i=0;i<16;++i)words[i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);
++                return {{"ok",true},{"words",J::array({std::to_string(stamp.runtimeInstance),std::to_string(stamp.lifetimeGeneration),std::to_string(words[0]),std::to_string(words[1])})}};
++            }
++            const auto executor=decimal(j.at("executor"));
++            if(j.at("action")=="reserve"){
++                const auto bytes=j.at("bytes").get<std::size_t>();
++                const auto token=runtime::RuntimePlatformAccess::reserveCpuWorkerGrant(*owner,executor,bytes);
++                return {{"ok",token!=0},{"code","CPU_QUOTA_DENIED"},{"token",std::to_string(token)},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            }
++            if(j.at("action")=="release"){
++                const auto token=decimal(j.at("token"));
++                return {{"ok",runtime::RuntimePlatformAccess::releaseCpuWorkerGrant(*owner,executor,token)},{"code","STALE_CPU_GRANT"},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            }
++            if(j.at("action")=="observe")return {{"ok",true},{"bytes",runtime::RuntimePlatformAccess::cpuWorkerGrantBytes(*owner)}};
++            return error("INVALID_CPU_GRANT_ACTION");
++        }
+         if (command == "snapshot") {
+             runtime::DocumentSnapshotRequest r;
+             r.expectedSemanticGeneration = decimal(j.at("generation"));
+diff --git a/sdk/web/CMakeLists.txt b/sdk/web/CMakeLists.txt
+index 03144b73..9b3d82b9 100644
+--- a/sdk/web/CMakeLists.txt
++++ b/sdk/web/CMakeLists.txt
+@@ -31,6 +31,7 @@ target_link_options(axiom_js_runtime PRIVATE
+   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported/Excalifont@/fonts/Excalifont\"")
+ set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs
+   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/internal")
++include("${CMAKE_CURRENT_SOURCE_DIR}/cpu-worker.cmake")
+ add_custom_command(TARGET axiom_js_runtime POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
+   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
+diff --git a/sdk/web/README.md b/sdk/web/README.md
+index 39d8a750..6ec6ecd7 100644
+--- a/sdk/web/README.md
++++ b/sdk/web/README.md
+@@ -541,3 +541,5 @@ non-ink objects and colored backgrounds remain visible through the cutout. Spars
+ pointer samples are joined geometrically. Canonical state/History/publication change
+ only on Up. Unsupported opaque-coverage hit geometry for textured material strokes
+ uses conservative bounded candidates; the renderer still clips against actual ink.
++
++Private CPU compute assets are shipped under `internal/cpu-worker-*` with a matching build identity. They contain the shared C++ exact-path kernel compiled as an isolated, CPU-only WASM module. Current root editing remains synchronous; these assets do not activate pending Up or change commit/presentation semantics. Consumers continue importing the package root. Partial results are never document data.
+diff --git a/sdk/web/axiom.mjs b/sdk/web/axiom.mjs
+index fcc577e0..5dd858ad 100644
+--- a/sdk/web/axiom.mjs
++++ b/sdk/web/axiom.mjs
+@@ -1,3 +1,4 @@
++import {bindCpuWorkerOwner,unbindCpuWorkerOwner} from './internal/cpu-worker-owner.mjs';
+ import {SDK_VERSION, AxiomError} from '../api/axiom.mjs';
+ import {adaptController} from '../api/internal/controller.mjs';
+ export {SDK_VERSION, AxiomError};
+@@ -243,6 +244,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
+       return ()=>{listeners.delete(token);};
+     };
+     if(onChange)subscribe('state',onChange);
++    const cpuWorkers=new Set();
+     const api={
+       version:SDK_VERSION, canvas:canonical,
+       readBuildInfo:()=>call('version'),
+@@ -363,13 +365,14 @@ export async function createRuntime({mount, documentId, restore, initialResource
+       applyReplayOperations:packets=>enqueue(()=>call('replayBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
+       applyRemoteOperations:packets=>enqueue(()=>call('remoteBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
+       async close(){if(closed)return;if(closing)throw new AxiomError('BUSY');closing=true;
+-        try{await tail;await text.finish();call('close');disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
++        try{await tail;await text.finish();for(const worker of [...cpuWorkers])await worker.close();call('close');unbindCpuWorkerOwner(api);disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
+         catch(error){if(['PUBLICATION_PENDING','SHUTDOWN_FAILED','CLOSE_FAILED'].includes(error.code)){closeBarrier=true;disposeInput?.();disposeInput=undefined;text.dispose();}closing=false;schedule();throw error;}}
+     };
+     listen('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing||text.snapshot().phase!==0)return;const t=api.table.read();if(!t.available||!t.editable)return;
+       if(e.key==='Tab'){e.preventDefault();void api.table.navigate(e.shiftKey?-1:1).catch(emitError);}
+       if(e.key==='Enter'){e.preventDefault();void api.table.edit({objectId:t.objectId,rowId:t.rowId,columnId:t.columnId}).catch(emitError);}
+     });
++    bindCpuWorkerOwner(api,{basis:()=>call('cpuWorkerGrant',{action:'basis'}).words,assetBaseURL:new URL('internal/',assets),reserve:(executor,bytes)=>{if(closed||closing)throw new AxiomError('CLOSED');return call('cpuWorkerGrant',{action:'reserve',executor,bytes}).token;},release:(executor,token)=>call('cpuWorkerGrant',{action:'release',executor,token}),observe:()=>call('cpuWorkerGrant',{action:'observe',executor:'1'}),attach:worker=>cpuWorkers.add(worker),detach:worker=>cpuWorkers.delete(worker)});
+     schedule();return Object.freeze(api);
+   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}
+ }
+diff --git a/runtime/render/src/cpu_exact_path_kernel.cpp b/runtime/render/src/cpu_exact_path_kernel.cpp
+new file mode 100644
+index 00000000..cf7025b4
+--- /dev/null
++++ b/runtime/render/src/cpu_exact_path_kernel.cpp
+@@ -0,0 +1,60 @@
++#include "cpu_exact_path_kernel.hpp"
++#include "include/core/SkPathBuilder.h"
++#include "include/core/SkPaint.h"
++#include "include/core/SkPathUtils.h"
++#include "include/pathops/SkPathOps.h"
++#include <algorithm>
++#include <type_traits>
++namespace canvas::render::internal {
++namespace {
++void appendCommand(SkPathBuilder& path,const semantic::PathCommand& command){
++ std::visit([&](const auto& v){using T=std::decay_t<decltype(v)>;
++  if constexpr(std::is_same_v<T,semantic::MoveTo>)path.moveTo(float(v.point.x),float(v.point.y));
++  else if constexpr(std::is_same_v<T,semantic::LineTo>)path.lineTo(float(v.end.x),float(v.end.y));
++  else if constexpr(std::is_same_v<T,semantic::QuadTo>)path.quadTo(float(v.control.x),float(v.control.y),float(v.end.x),float(v.end.y));
++  else if constexpr(std::is_same_v<T,semantic::CubicTo>)path.cubicTo(float(v.control1.x),float(v.control1.y),float(v.control2.x),float(v.control2.y),float(v.end.x),float(v.end.y));
++  else path.close();
++ },command);
++}
++}
++bool cpuExactUnionSegment(SkPath& accumulated,const semantic::EraseCubicSegment& s){
++ SkPathBuilder b;b.moveTo(float(s.p0.position.x),float(s.p0.position.y));
++ b.cubicTo(float(s.control1.x),float(s.control1.y),float(s.control2.x),float(s.control2.y),float(s.p1.position.x),float(s.p1.position.y));
++ SkPaint p;p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(float(2*std::max(s.p0.radius,s.p1.radius)));
++ p.setStrokeCap(SkPaint::kRound_Cap);p.setStrokeJoin(SkPaint::kRound_Join);
++ const auto stroke=skpathutils::FillPathWithPaint(b.detach(),p);
++ auto next=Op(accumulated,stroke,kUnion_SkPathOp);if(!next)return false;
++ accumulated=*next;return true;
++}
++SkPath cpuExactFilledPath(const semantic::VectorPathGeometry& geometry){
++ SkPathBuilder path(geometry.fill_rule==semantic::FillRule::kEvenOdd?SkPathFillType::kEvenOdd:SkPathFillType::kWinding);
++ for(const auto& command:geometry.commands)appendCommand(path,command);
++ return path.detach();
++}
++std::optional<SkPath> cpuExactPath(const semantic::EraseMaskGeometry& geometry,std::uint64_t* unions){
++ SkPath out;if(const auto* fill=std::get_if<semantic::FilledPathMask>(&geometry))return cpuExactFilledPath(fill->path);
++ for(const auto& s:std::get<semantic::SweptCircleMask>(geometry).segments){if(unions)++*unions;if(!cpuExactUnionSegment(out,s))return {};}
++ return out;
++}
++CpuExactPathJob::CpuExactPathJob(semantic::EraseMaskGeometry input):input_(std::move(input)),filled_(std::holds_alternative<semantic::FilledPathMask>(input_)&&std::get<semantic::FilledPathMask>(input_).path.fill_rule==semantic::FillRule::kEvenOdd?SkPathFillType::kEvenOdd:SkPathFillType::kWinding){}
++bool CpuExactPathJob::advance(std::size_t maxSteps,std::uint64_t maxMicroseconds){
++ if(cancelled_||failed_)return false;if(ready_)return true;
++ if(!maxSteps||!maxMicroseconds)return true;
++ const auto begin=std::chrono::steady_clock::now();
++ if(const auto* filled=std::get_if<semantic::FilledPathMask>(&input_)){
++  for(std::size_t steps=0;cursor_<filled->path.commands.size()&&steps<maxSteps;++steps){
++   if(std::chrono::steady_clock::now()-begin>=std::chrono::microseconds(maxMicroseconds))break;
++   appendCommand(filled_,filled->path.commands[cursor_++]);
++  }
++  ready_=cursor_==filled->path.commands.size();if(ready_){path_=filled_.detach();failed_=!path_.isFinite();}return !failed_;
++ }
++ const auto& segments=std::get<semantic::SweptCircleMask>(input_).segments;
++ for(std::size_t steps=0;cursor_<segments.size()&&steps<maxSteps;++steps){
++  if(std::chrono::steady_clock::now()-begin>=std::chrono::microseconds(maxMicroseconds))break;
++  const auto started=std::chrono::steady_clock::now();
++  if(!cpuExactUnionSegment(path_,segments[cursor_])){failed_=true;return false;}
++  maximum_=std::max(maximum_,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-started).count()));++cursor_;
++ }
++ ready_=cursor_==segments.size();if(ready_&&!path_.isFinite()){failed_=true;return false;}return true;
++}
++}
+diff --git a/runtime/render/src/cpu_exact_path_kernel.hpp b/runtime/render/src/cpu_exact_path_kernel.hpp
+new file mode 100644
+index 00000000..78b59efd
+--- /dev/null
++++ b/runtime/render/src/cpu_exact_path_kernel.hpp
+@@ -0,0 +1,28 @@
++#pragma once
++// Private CPU-only exact geometry. No renderer, cache, document or GPU owner.
++#include "canvas/semantic/erase_mask.hpp"
++#include "include/core/SkPath.h"
++#include "include/core/SkPathBuilder.h"
++#include <chrono>
++#include <optional>
++namespace canvas::render::internal {
++bool cpuExactUnionSegment(SkPath&,const semantic::EraseCubicSegment&);
++SkPath cpuExactFilledPath(const semantic::VectorPathGeometry&);
++std::optional<SkPath> cpuExactPath(const semantic::EraseMaskGeometry&,std::uint64_t* unions=nullptr);
++class CpuExactPathJob final {
++ public:
++ explicit CpuExactPathJob(semantic::EraseMaskGeometry input);
++ bool advance(std::size_t maxSteps,std::uint64_t maxMicroseconds);
++ void cancel()noexcept{cancelled_=true;path_=SkPath{};}
++ bool ready()const noexcept{return ready_;}
++ bool failed()const noexcept{return failed_;}
++ bool cancelled()const noexcept{return cancelled_;}
++ std::size_t cursor()const noexcept{return cursor_;}
++ std::uint64_t maxUnionNanoseconds()const noexcept{return maximum_;}
++ const SkPath& path()const noexcept{return path_;}
++ private:
++ semantic::EraseMaskGeometry input_;SkPath path_;SkPathBuilder filled_;
++ std::size_t cursor_=0;std::uint64_t maximum_=0;
++ bool ready_=false,failed_=false,cancelled_=false;
++};
++}
+diff --git a/runtime/render/src/cpu_worker_bridge.cpp b/runtime/render/src/cpu_worker_bridge.cpp
+new file mode 100644
+index 00000000..6444667f
+--- /dev/null
++++ b/runtime/render/src/cpu_worker_bridge.cpp
+@@ -0,0 +1,46 @@
++// Private same-build CPU ABI. One task owns its geometry/path/bytes. No Runtime.
++#include "cpu_worker_protocol.hpp"
++#include <memory>
++#include <cstring>
++#include <string>
++using namespace canvas::render::internal;
++namespace {
++std::unique_ptr<CpuExactPathJob> job;std::vector<std::uint8_t> result;
++std::array<std::uint8_t,cpuHeaderSize> header{};std::uint32_t serial=0,handle=0;
++void set32(std::vector<std::uint8_t>& b,unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)b[p+i]=v>>(i*8);}
++}
++extern "C" {
++const char* axiom_cpu_build(){return AXIOM_CPU_KERNEL_ID;}
++std::uint32_t axiom_cpu_create(const std::uint8_t* bytes,std::uint32_t size){
++ try{
++  if(job||!bytes||size>cpuInputLimit||serial==UINT32_MAX)return 0;
++  auto r=cpuDecodeRequest({bytes,size});if(!r)return 0;
++  const auto count=std::visit([](const auto& v){if constexpr(requires{v.segments;})return v.segments.size();else return v.path.commands.size();},r->geometry);
++  // Existing conservative estimate: one path construction must fit8MiB.
++  if(count*4096U+65536U+size>8U*1024U*1024U)return 0;
++  std::copy_n(bytes,cpuHeaderSize,header.begin());job=std::make_unique<CpuExactPathJob>(std::move(r->geometry));handle=++serial;return handle;
++ }catch(...){return 0;}
++}
++int axiom_cpu_step(std::uint32_t token,std::uint32_t steps,std::uint32_t micros){
++ if(!job||token!=handle||steps>32||micros>2000)return -1;
++ if(job->cancelled())return 3;
++ try{
++  if(!job->advance(steps,micros))return 4;
++  if(!job->ready())return 1;
++  if(result.empty()){
++   const auto size=job->path().writeToMemory(nullptr);if(size>cpuOutputLimit-cpuHeaderSize)return 4;
++   result.resize(cpuHeaderSize+size);std::copy(header.begin(),header.end(),result.begin());set32(result,0,0x31525043);set32(result,96,size);set32(result,100,2);for(unsigned i=104;i<128;++i)result[i]=0;
++   job->path().writeToMemory(result.data()+cpuHeaderSize);
++   if(!cpuDecodePath({result.data()+cpuHeaderSize,size}))return 4;
++  }
++  return 2;
++ }catch(...){return 4;}
++}
++std::uint32_t axiom_cpu_cursor(std::uint32_t token){return job&&token==handle?job->cursor():0;}
++double axiom_cpu_max_union_ns(std::uint32_t token){return job&&token==handle?double(job->maxUnionNanoseconds()):0;}
++const std::uint8_t* axiom_cpu_result(std::uint32_t token){return job&&token==handle&&!result.empty()?result.data():nullptr;}
++std::uint32_t axiom_cpu_result_size(std::uint32_t token){return job&&token==handle?result.size():0;}
++int axiom_cpu_cancel(std::uint32_t token){if(!job||token!=handle)return 0;job->cancel();return 1;}
++int axiom_cpu_release(std::uint32_t token){if(!job||token!=handle)return 0;job.reset();std::vector<std::uint8_t>{}.swap(result);handle=0;return 1;}
++int axiom_cpu_validate(const std::uint8_t* bytes,std::uint32_t size){return bytes&&cpuDecodePath({bytes,size})?1:0;}
++}
+diff --git a/runtime/render/src/cpu_worker_protocol.cpp b/runtime/render/src/cpu_worker_protocol.cpp
+new file mode 100644
+index 00000000..0a5e5eed
+--- /dev/null
++++ b/runtime/render/src/cpu_worker_protocol.cpp
+@@ -0,0 +1,48 @@
++#include "cpu_worker_protocol.hpp"
++#include <bit>
++#include <cmath>
++#include <cstring>
++#include <limits>
++namespace canvas::render::internal {
++namespace {
++void u32(std::vector<std::uint8_t>& b,std::uint32_t v){for(unsigned i=0;i<4;++i)b.push_back(v>>(i*8));}
++void u64(std::vector<std::uint8_t>& b,std::uint64_t v){for(unsigned i=0;i<8;++i)b.push_back(v>>(i*8));}
++std::uint32_t read32(std::span<const std::uint8_t>b,std::size_t p){std::uint32_t n=0;for(unsigned i=0;i<4;++i)n|=std::uint32_t(b[p+i])<<(8*i);return n;}
++std::uint64_t read64(std::span<const std::uint8_t>b,std::size_t p){std::uint64_t n=0;for(unsigned i=0;i<8;++i)n|=std::uint64_t(b[p+i])<<(8*i);return n;}
++void point(std::vector<std::uint8_t>& b,semantic::Vec2 v){u64(b,std::bit_cast<std::uint64_t>(v.x));u64(b,std::bit_cast<std::uint64_t>(v.y));}
++}
++std::array<std::uint8_t,16> cpuKernelId(){std::array<std::uint8_t,16>v{};const char*s=AXIOM_CPU_KERNEL_ID;const auto nib=[](char c){return c<='9'?c-'0':c-'a'+10;};for(unsigned i=0;i<16;++i)v[i]=std::uint8_t(nib(s[i*2])*16+nib(s[i*2+1]));return v;}
++std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest& r){
++ const auto size=std::visit([](const auto& v){if constexpr(requires{v.segments;})return v.segments.size();else return v.path.commands.size();},r.geometry);
++ if(size>1900)return {};
++ const auto maximum=size*80U+cpuHeaderSize;if(maximum>cpuInputLimit)return {};
++ std::vector<std::uint8_t> p;std::uint32_t variant=0,count=0,fill=0;
++ if(const auto*s=std::get_if<semantic::SweptCircleMask>(&r.geometry)){count=s->segments.size();for(const auto&x:s->segments){point(p,x.p0.position);u64(p,std::bit_cast<std::uint64_t>(x.p0.radius));point(p,x.p1.position);u64(p,std::bit_cast<std::uint64_t>(x.p1.radius));point(p,x.control1);point(p,x.control2);}}
++ else {variant=1;const auto&g=std::get<semantic::FilledPathMask>(r.geometry).path;count=g.commands.size();fill=unsigned(g.fill_rule);for(const auto&c:g.commands){u32(p,c.index());std::visit([&](const auto&v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)point(p,v.point);else if constexpr(std::is_same_v<T,semantic::LineTo>)point(p,v.end);else if constexpr(std::is_same_v<T,semantic::QuadTo>){point(p,v.control);point(p,v.end);}else if constexpr(std::is_same_v<T,semantic::CubicTo>){point(p,v.control1);point(p,v.control2);point(p,v.end);}},c);}}
++ if(p.size()+cpuHeaderSize>cpuInputLimit||count>1900)return {};
++ std::vector<std::uint8_t>b;u32(b,0x31575043);u32(b,1);u32(b,variant);u32(b,count);const auto id=cpuKernelId();b.insert(b.end(),id.begin(),id.end());for(auto n:r.identity.words)u64(b,n);u32(b,p.size());u32(b,fill);b.resize(cpuHeaderSize);b.insert(b.end(),p.begin(),p.end());return b;
++}
++std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>b){
++ if(b.size()<cpuHeaderSize||b.size()>cpuInputLimit||read32(b,0)!=0x31575043||read32(b,4)!=1)return {};
++ const auto id=cpuKernelId();if(!std::equal(id.begin(),id.end(),b.begin()+16))return {};
++ const auto variant=read32(b,8),count=read32(b,12),length=read32(b,96),fill=read32(b,100);
++ if(variant>1||count>1900||length!=b.size()-cpuHeaderSize)return {};
++ for(std::size_t i=104;i<128;++i)if(b[i])return {};
++ CpuRequest r;for(unsigned i=0;i<8;++i)r.identity.words[i]=read64(b,32+i*8);
++ for(unsigned i:{0U,1U,4U,5U,6U,7U})if(!r.identity.words[i])return {};
++ if(!r.identity.words[2]&&!r.identity.words[3])return {};
++ std::size_t pos=cpuHeaderSize;
++ // Preflight all lengths/opcodes/scalars before allocating any geometry.
++ const auto scan=[&]()->bool{
++  std::size_t p=pos;for(unsigned i=0;i<count;++i){std::size_t n=10;if(variant){if(p+4>b.size())return false;const auto op=read32(b,p);p+=4;if(op>4)return false;n=op==0||op==1?2:op==2?4:op==3?6:0;}
++   if(n>(b.size()-p)/8)return false;for(std::size_t j=0;j<n;++j)if(!std::isfinite(std::bit_cast<double>(read64(b,p+j*8))))return false;
++   if(!variant&&(std::bit_cast<double>(read64(b,p+16))<0||std::bit_cast<double>(read64(b,p+40))<0))return false;p+=n*8;}
++  return p==b.size();};
++ if((variant==0&&fill!=0)||(variant==1&&fill!=1&&fill!=2)||!scan())return {};
++ const auto number=[&](){auto n=std::bit_cast<double>(read64(b,pos));pos+=8;return n;};const auto pt=[&](){const auto x=number(),y=number();return semantic::Vec2{x,y};};
++ if(!variant){semantic::SweptCircleMask g;g.segments.reserve(count);for(unsigned i=0;i<count;++i){semantic::EraseCubicSegment s;s.p0.position=pt();s.p0.radius=number();s.p1.position=pt();s.p1.radius=number();s.control1=pt();s.control2=pt();g.segments.push_back(s);}r.geometry=std::move(g);}
++ else {semantic::FilledPathMask g;g.path.fill_rule=semantic::FillRule(fill);g.path.commands.reserve(count);for(unsigned i=0;i<count;++i){const auto op=read32(b,pos);pos+=4;switch(op){case 0:g.path.commands.emplace_back(semantic::MoveTo{pt()});break;case 1:g.path.commands.emplace_back(semantic::LineTo{pt()});break;case 2:{const auto a=pt(),z=pt();g.path.commands.emplace_back(semantic::QuadTo{a,z});break;}case 3:{const auto a=pt(),c=pt(),z=pt();g.path.commands.emplace_back(semantic::CubicTo{a,c,z});break;}default:g.path.commands.emplace_back(semantic::ClosePath{});}}r.geometry=std::move(g);}
++ return r;
++}
++std::optional<SkPath> cpuDecodePath(std::span<const std::uint8_t>b){if(b.empty()||b.size()>cpuOutputLimit||b.size()%4)return {};std::size_t read=0;auto p=SkPath::ReadFromMemory(b.data(),b.size(),&read);if(!p||read!=b.size()||!p->isFinite())return {};return p;}
++}
+diff --git a/runtime/render/src/cpu_worker_protocol.hpp b/runtime/render/src/cpu_worker_protocol.hpp
+new file mode 100644
+index 00000000..92768003
+--- /dev/null
++++ b/runtime/render/src/cpu_worker_protocol.hpp
+@@ -0,0 +1,21 @@
++#pragma once
++#include "cpu_exact_path_kernel.hpp"
++#include <array>
++#include <cstdint>
++#include <span>
++#include <vector>
++#ifndef AXIOM_CPU_KERNEL_ID
++#define AXIOM_CPU_KERNEL_ID "00000000000000000000000000000000"
++#endif
++namespace canvas::render::internal {
++constexpr std::size_t cpuInputLimit=1048576,cpuOutputLimit=1048576,cpuHeaderSize=128;
++struct CpuIdentity {
++ std::array<std::uint64_t,8> words{}; // runtime,lifetime,doc0,doc1,executor,job,attempt,source
++ bool operator==(const CpuIdentity&)const=default;
++};
++struct CpuRequest {CpuIdentity identity;semantic::EraseMaskGeometry geometry;};
++std::array<std::uint8_t,16> cpuKernelId();
++std::vector<std::uint8_t> cpuEncodeRequest(const CpuRequest&);
++std::optional<CpuRequest> cpuDecodeRequest(std::span<const std::uint8_t>);
++std::optional<SkPath> cpuDecodePath(std::span<const std::uint8_t>);
++}
+diff --git a/runtime/render/tests/cpu_exact_kernel_test.cpp b/runtime/render/tests/cpu_exact_kernel_test.cpp
+new file mode 100644
+index 00000000..d9815d50
+--- /dev/null
++++ b/runtime/render/tests/cpu_exact_kernel_test.cpp
+@@ -0,0 +1,45 @@
++// Expected values use the independently pinned pre-Worker implementation.
++#include "../src/cpu_exact_path_kernel.hpp"
++#include "../src/cpu_worker_protocol.hpp"
++#include "../../interaction/src/partial_erase_geometry.hpp"
++#include "include/core/SkPaint.h"
++#include "include/core/SkPathBuilder.h"
++#include "include/core/SkPathUtils.h"
++#include "include/pathops/SkPathOps.h"
++#include <cmath>
++#include <stdexcept>
++#include <iostream>
++#include <filesystem>
++#include <fstream>
++using namespace canvas;
++void require(bool x,const char*m){if(!x)throw std::runtime_error(m);}
++SkPath original(const semantic::EraseMaskGeometry& geometry){
++ SkPath out;
++ if(const auto*fill=std::get_if<semantic::FilledPathMask>(&geometry)){
++  SkPathBuilder p(fill->path.fill_rule==semantic::FillRule::kEvenOdd?SkPathFillType::kEvenOdd:SkPathFillType::kWinding);
++  for(const auto&cmd:fill->path.commands)std::visit([&](const auto&v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)p.moveTo(float(v.point.x),float(v.point.y));else if constexpr(std::is_same_v<T,semantic::LineTo>)p.lineTo(float(v.end.x),float(v.end.y));else if constexpr(std::is_same_v<T,semantic::QuadTo>)p.quadTo(float(v.control.x),float(v.control.y),float(v.end.x),float(v.end.y));else if constexpr(std::is_same_v<T,semantic::CubicTo>)p.cubicTo(float(v.control1.x),float(v.control1.y),float(v.control2.x),float(v.control2.y),float(v.end.x),float(v.end.y));else p.close();},cmd);
++  return p.detach();
++ }
++ if(const auto*g=std::get_if<semantic::SweptCircleMask>(&geometry))for(const auto&s:g->segments){
++  SkPathBuilder b;b.moveTo(float(s.p0.position.x),float(s.p0.position.y));b.cubicTo(float(s.control1.x),float(s.control1.y),float(s.control2.x),float(s.control2.y),float(s.p1.position.x),float(s.p1.position.y));
++  SkPaint p;p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(float(2*std::max(s.p0.radius,s.p1.radius)));p.setStrokeCap(SkPaint::kRound_Cap);p.setStrokeJoin(SkPaint::kRound_Join);
++  auto part=skpathutils::FillPathWithPaint(b.detach(),p);auto next=Op(out,part,kUnion_SkPathOp);require(bool(next),"independent original Op");out=*next;
++ }
++ return out;
++}
++int main(int argc,char**argv){try{
++ std::vector<foundation::WorldPoint> trace{{420,160}};for(unsigned i=1;i<=1600;++i)trace.push_back({float(420+7*std::sin(i*.17)),float(160+170.*i/1600)});
++ for(unsigned local=0;local<16;++local){const auto mask=interaction::partialEraseGeometry(trace,{1,0,0,1,local*.125,local*.25},16);require(bool(mask),"local geometry");const auto expected=original(*mask);const auto actual=render::internal::cpuExactPath(*mask);require(actual&&*actual==expected,"shared monolithic changed original numeric path");
++  render::internal::CpuExactPathJob job{*mask};for(unsigned step=0;!job.ready();++step){require(step<2048,"job progress");require(job.advance(3,2000),"job advance");}require(job.path()==expected,"resumable path differs original");
++  if(argc==2){std::filesystem::create_directories(argv[1]);const auto prefix=std::filesystem::path(argv[1])/std::to_string(local);render::internal::CpuRequest request;request.identity.words={1,1,1,0,1,local+1,1,1};request.geometry=*mask;auto input=render::internal::cpuEncodeRequest(request);std::ofstream a(prefix.string()+".request",std::ios::binary);a.write(reinterpret_cast<const char*>(input.data()),input.size());std::vector<std::uint8_t>bytes(expected.writeToMemory(nullptr));expected.writeToMemory(bytes.data());std::ofstream b(prefix.string()+".path",std::ios::binary);b.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());}
++ }
++ if(argc==2){
++  const auto mask=*interaction::partialEraseGeometry(trace,{1,0,0,1,0,0},16);
++  auto append=mask;std::get<semantic::SweptCircleMask>(append).segments.resize(800);
++  auto fork=mask;std::get<semantic::SweptCircleMask>(fork).segments[799].control1.x+=.25;
++  semantic::FilledPathMask fill;fill.path.fill_rule=semantic::FillRule::kEvenOdd;fill.path.commands={semantic::MoveTo{{0,0}},semantic::LineTo{{50,0}},semantic::LineTo{{50,50}},semantic::ClosePath{}};
++  std::array<semantic::EraseMaskGeometry,3> extra{append,fork,fill};
++  for(unsigned i=0;i<3;++i){const auto n=16+i;render::internal::CpuRequest r;r.identity.words={1,1,1,0,1,n+1,1,1};r.geometry=extra[i];const auto bytes=render::internal::cpuEncodeRequest(r);const auto path=original(extra[i]);const auto candidate=render::internal::cpuExactPath(extra[i]);require(candidate&&*candidate==path,"independent extra reference");const auto prefix=std::filesystem::path(argv[1])/std::to_string(n);std::ofstream a(prefix.string()+".request",std::ios::binary);a.write(reinterpret_cast<const char*>(bytes.data()),bytes.size());std::vector<std::uint8_t>data(path.writeToMemory(nullptr));path.writeToMemory(data.data());std::ofstream b(prefix.string()+".path",std::ios::binary);b.write(reinterpret_cast<const char*>(data.data()),data.size());}
++ }
++ std::cout<<"{\"original_path_parity\":true,\"local_queries\":16,\"segments\":1600}\n";return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/runtime/render/tests/cpu_worker_behavior_red.cpp b/runtime/render/tests/cpu_worker_behavior_red.cpp
+new file mode 100644
+index 00000000..b2c7fe7f
+--- /dev/null
++++ b/runtime/render/tests/cpu_worker_behavior_red.cpp
+@@ -0,0 +1,8 @@
++// Compares the old synchronous facade with the new resumable contract; old
++// geometry is correct, but it cannot yield an incomplete bounded step.
++#include "../src/cpu_exact_path_kernel.hpp"
++#include <iostream>
++using namespace canvas;using namespace canvas::render::internal;
++int main(int argc,char**){semantic::SweptCircleMask m;for(unsigned i=0;i<1600;++i)m.segments.push_back({{{double(i),100},5},{{double(i+1),100},5},{i+.3,100},{i+.6,100}});
++ if(argc==1){const auto originalSynchronous=cpuExactPath(m);std::cout<<"{\"numeric_correct\":"<<bool(originalSynchronous)<<",\"yielded_before_complete\":false}\n";return 1;}
++ CpuExactPathJob job(m);job.advance(8,2000);const bool yielded=!job.ready()&&job.cursor()<=8;std::cout<<"{\"yielded_before_complete\":"<<yielded<<",\"cursor\":"<<job.cursor()<<"}\n";return yielded?0:1;}
+diff --git a/runtime/render/tests/cpu_worker_protocol_test.cpp b/runtime/render/tests/cpu_worker_protocol_test.cpp
+new file mode 100644
+index 00000000..1362b543
+--- /dev/null
++++ b/runtime/render/tests/cpu_worker_protocol_test.cpp
+@@ -0,0 +1,18 @@
++#include "../src/cpu_worker_protocol.hpp"
++#include "canvas/render/skia_renderer.hpp"
++#include <iostream>
++#include <stdexcept>
++using namespace canvas;using namespace canvas::render::internal;
++void need(bool b,const char*m){if(!b)throw std::runtime_error(m);}
++int main(){try{
++ CpuRequest r;r.identity.words={1,1,1,0,1,1,1,1};semantic::SweptCircleMask s;s.segments.push_back({{{10,20},4},{{11,21},4},{10.3,20.3},{10.6,20.6}});r.geometry=s;auto bytes=cpuEncodeRequest(r);auto decoded=cpuDecodeRequest(bytes);need(decoded&&decoded->identity==r.identity&&decoded->geometry==r.geometry,"losslessidentity/geometry roundtrip includingzeroD1");
++ for(std::size_t i=0;i<bytes.size();++i){auto truncated=bytes;truncated.resize(i);need(!cpuDecodeRequest(truncated),"truncatedrequestaccepted");}
++ for(auto offset:{0U,4U,16U,96U,104U}){auto wrong=bytes;wrong[offset]^=255;need(!cpuDecodeRequest(wrong),"foreignheaderaccepted");}
++ auto invalid=bytes;for(unsigned i=0;i<8;++i)invalid[128+i]=255;need(!cpuDecodeRequest(invalid),"NaNaccepted");
++ auto huge=r;std::get<semantic::SweptCircleMask>(huge.geometry).segments.resize(20000);need(cpuEncodeRequest(huge).empty(),"encodeallocatedunboundedpayload");
++ auto path=cpuExactPath(r.geometry);need(bool(path),"build");std::vector<std::uint8_t>raw(path->writeToMemory(nullptr));path->writeToMemory(raw.data());need(cpuDecodePath(raw)==path,"pathstrictimport");raw.push_back(0);need(!cpuDecodePath(raw),"trailingpathbytesaccepted");
++ CpuExactPathJob cancelled(r.geometry);need(cancelled.advance(1,1),"step");cancelled.cancel();need(!cancelled.advance(8,2000)&&cancelled.cancelled(),"cancelledjobadvanced");
++ semantic::FilledPathMask filled;filled.path.fill_rule=semantic::FillRule::kEvenOdd;for(unsigned i=0;i<500;++i){filled.path.commands.emplace_back(semantic::MoveTo{{double(i),1}});filled.path.commands.emplace_back(semantic::LineTo{{double(i),2}});filled.path.commands.emplace_back(semantic::ClosePath{});}CpuExactPathJob job(filled);need(job.advance(8,2000)&&job.cursor()<=8&&!job.ready(),"Filledignoredstepbound");while(!job.ready())need(job.advance(8,2000),"Filledprogress");need(job.path()==cpuExactFilledPath(filled.path),"Filledfillruleorderchanged");
++ render::SkiaRenderer renderer;const auto floor=renderer.reserveCpuWorkerGrant(1,64U*1024U*1024U);need(floor&&renderer.cpuWorkerGrantBytes()==64U*1024U*1024U,"originalownergrant");need(!renderer.releaseCpuWorkerGrant(2,floor),"foreignrelease");renderer.setRenderCacheOptions({});need(renderer.cpuWorkerGrantBytes()==64U*1024U*1024U,"replacementforgotgrant");need(renderer.releaseCpuWorkerGrant(1,floor)&&!renderer.releaseCpuWorkerGrant(1,floor)&&renderer.cpuWorkerGrantBytes()==0,"grantlastrelease");
++ std::cout<<"{\"protocol\":true,\"finite\":true,\"Filledstep\":true,\"ownergrant\":true}\n";return 0;
++}catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}}
+diff --git a/sdk/web/cpu-worker.cmake b/sdk/web/cpu-worker.cmake
+new file mode 100644
+index 00000000..ba1919fe
+--- /dev/null
++++ b/sdk/web/cpu-worker.cmake
+@@ -0,0 +1,49 @@
++# Private same-build sidecar. Published single-threaded Skia archives only.
++find_package(CanvasSkia CONFIG REQUIRED PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia" NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
++set(_cpu_identity "${CMAKE_CXX_COMPILER}:${CMAKE_CXX_COMPILER_VERSION}:${CMAKE_CXX_FLAGS}:${CMAKE_BUILD_TYPE}:cpu-v1:heap67108864:stack1048576:input1048576:output1048576:queue8:transport16777216:steps8:us2000")
++foreach(_source
++ "r1-full-skia-sdk.lock.json" "sdk/web/cpu-worker.cmake"
++ "runtime/render/src/cpu_exact_path_kernel.cpp" "runtime/render/src/cpu_exact_path_kernel.hpp"
++ "runtime/render/src/cpu_worker_protocol.cpp" "runtime/render/src/cpu_worker_protocol.hpp"
++ "runtime/render/src/cpu_worker_bridge.cpp" "runtime/semantic/include/canvas/semantic/erase_mask.hpp"
++ "runtime/semantic/include/canvas/semantic/semantic_geometry.hpp")
++ file(SHA256 "${PROJECT_SOURCE_DIR}/${_source}" _hash)
++ string(APPEND _cpu_identity ":${_source}:${_hash}")
++ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/${_source}")
++endforeach()
++file(SHA256 "${CANVAS_SKIA_SDK_ROOT}/manifest.json" _cpu_sdk)
++file(SHA256 "${CMAKE_TOOLCHAIN_FILE}" _cpu_toolchain)
++string(SHA256 _cpu_build "${_cpu_identity}:${_cpu_sdk}:${_cpu_toolchain}")
++string(SUBSTRING "${_cpu_build}" 0 32 AXIOM_CPU_KERNEL_ID)
++add_executable(axiom_cpu_worker_kernel
++ "${PROJECT_SOURCE_DIR}/runtime/render/src/cpu_exact_path_kernel.cpp"
++ "${PROJECT_SOURCE_DIR}/runtime/render/src/cpu_worker_protocol.cpp"
++ "${PROJECT_SOURCE_DIR}/runtime/render/src/cpu_worker_bridge.cpp")
++target_include_directories(axiom_cpu_worker_kernel PRIVATE
++ "${PROJECT_SOURCE_DIR}/runtime/semantic/include" "${PROJECT_SOURCE_DIR}/runtime/foundation/include")
++target_compile_features(axiom_cpu_worker_kernel PRIVATE cxx_std_20)
++target_compile_options(axiom_cpu_worker_kernel PRIVATE -fexceptions -fno-rtti)
++target_compile_definitions(axiom_cpu_worker_kernel PRIVATE AXIOM_CPU_KERNEL_ID="${AXIOM_CPU_KERNEL_ID}")
++target_link_libraries(axiom_cpu_worker_kernel PRIVATE CanvasSkia::Skia)
++target_link_options(axiom_cpu_worker_kernel PRIVATE -fexceptions --no-entry
++ -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web,worker -sFILESYSTEM=0
++ -sINITIAL_MEMORY=67108864 -sMAXIMUM_MEMORY=67108864 -sALLOW_MEMORY_GROWTH=0
++ -sSTACK_SIZE=1048576 -sMALLOC=emmalloc -sABORTING_MALLOC=0
++ "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_cpu_build','_axiom_cpu_create','_axiom_cpu_step','_axiom_cpu_cursor','_axiom_cpu_max_union_ns','_axiom_cpu_result','_axiom_cpu_result_size','_axiom_cpu_cancel','_axiom_cpu_release','_axiom_cpu_validate']"
++ "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','HEAPU8']")
++set_target_properties(axiom_cpu_worker_kernel PROPERTIES OUTPUT_NAME cpu-worker-kernel SUFFIX .mjs
++ RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/internal")
++add_dependencies(axiom_js_runtime axiom_cpu_worker_kernel)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-build.mjs"
++ "export const kernelId='${AXIOM_CPU_KERNEL_ID}';\nexport const limits=Object.freeze({heapBytes:67108864,queueJobs:8,inputBytes:1048576,outputBytes:1048576,transportBytes:16777216,stepSegments:8,stepMicroseconds:2000});\n")
++foreach(name client thread owner)
++ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/internal/cpu-worker-${name}.mjs"
++   "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-${name}.mjs" COPYONLY)
++endforeach()
++install(FILES
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-kernel.mjs"
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-kernel.wasm"
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-build.mjs"
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-client.mjs"
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-thread.mjs"
++ "${CMAKE_CURRENT_BINARY_DIR}/internal/cpu-worker-owner.mjs" DESTINATION js/internal)
+diff --git a/sdk/web/internal/cpu-worker-client.mjs b/sdk/web/internal/cpu-worker-client.mjs
+new file mode 100644
+index 00000000..a74ec925
+--- /dev/null
++++ b/sdk/web/internal/cpu-worker-client.mjs
+@@ -0,0 +1,76 @@
++import {cpuWorkerOwner} from './cpu-worker-owner.mjs';
++import {kernelId,limits} from './cpu-worker-build.mjs';
++const magic=0x31575043;
++export function inspectCpuEnvelope(buffer){
++ if(!(buffer instanceof ArrayBuffer)||buffer.byteLength<128||buffer.byteLength>limits.inputBytes)throw Error('INPUT_BOUND');
++ const v=new DataView(buffer);if(v.getUint32(0,true)!==magic||v.getUint32(4,true)!==1||v.getUint32(96,true)!==buffer.byteLength-128)throw Error('INVALID_ENVELOPE');
++ const build=Array.from(new Uint8Array(buffer,16,16),v=>v.toString(16).padStart(2,'0')).join('');if(build!==kernelId)throw Error('KERNEL_BUILD_MISMATCH');
++ const words=Array.from({length:8},(_,i)=>v.getBigUint64(32+i*8,true).toString());if([0,1,4,5,6,7].some(i=>words[i]==='0')||(words[2]==='0'&&words[3]==='0'))throw Error('INVALID_IDENTITY');return{words,key:words.join('/')};
++}
++export async function createCpuWorker(runtime,{url}={}){
++ if(typeof ArrayBuffer.prototype.transfer!=='function')throw Error('DETACH_CAPABILITY_REQUIRED');
++ const owner=cpuWorkerOwner(runtime),expectedBasis=owner.basis().join('/'),executor=owner.begin();let floor;
++ try{floor=owner.reserve(executor,limits.heapBytes);}catch(error){owner.end(executor);throw error;}let worker;
++ const pending=new Map(),queue=[],ledger=[],results=new Map(),cleanupErrors=[];let active=null,closed=false,transport=0,readyResolve,readyReject,watermark=0n,basis=null,admitted=0,terminals=0;
++ const ready=new Promise((a,b)=>{readyResolve=a;readyReject=b;});
++ // A synchronous Worker/postMessage constructor error can precede await ready.
++ // Keep that rejection observed while preserving the explicit returned error.
++ ready.catch(()=>{});
++ let startupTimer;
++ const ungrant=token=>owner.release(executor,token);
++ const terminal=(job,status,extra={})=>{
++  if(job.terminal)return;job.terminal=true;pending.delete(job.key);
++  if(job.bytes){try{if(job.bytes.byteLength)job.bytes.transfer(0);}catch(error){cleanupErrors.push(String(error));}job.bytes=null;}
++  if(status==='Ready'){job.resultBuffer=extra.bytes;results.set(job.key,job);}else{transport-=job.charge;clean(()=>ungrant(job.grant));}
++  ++terminals;ledger.push({key:job.key,status});if(ledger.length>64)ledger.shift();job.resolve({key:job.key,status,...extra,release:()=>api.release(job.key)});if(active===job)active=null;
++ };
++ const pump=()=>{if(closed||active||!queue.length)return;active=queue.shift();active.sent=performance.now();try{worker.postMessage({type:'run',key:active.key,bytes:active.bytes},[active.bytes]);active.bytes=null;}catch(error){stop('POST_MESSAGE_FAILED:'+String(error));}};
++ const clean=fn=>{try{fn();}catch(error){cleanupErrors.push(String(error));}};
++ const retire=(status,reason)=>{
++  if(closed)return;closed=true;clearTimeout(startupTimer);
++  // Stop the executor before any grant can be returned. A failing individual
++  // release must not orphan the other jobs, results or initialization floor.
++  clean(()=>worker?.terminate());
++  for(const job of [...pending.values()])clean(()=>terminal(job,status,{reason}));
++  queue.length=0;
++  for(const key of [...results.keys()])clean(()=>api.release(key));
++  clean(()=>ungrant(floor));clean(()=>owner.detach(api));clean(()=>owner.end(executor));
++  readyReject(Error(reason));
++ };
++ const stop=reason=>retire('Failed',reason);
++ const api={
++  submit(bytes){
++   if(closed)throw Error('CLOSED');const envelope=inspectCpuEnvelope(bytes);
++   const jobId=BigInt(envelope.words[5]),identityBasis=envelope.words.slice(0,4).join('/');
++   if(envelope.words[4]!==executor||jobId<=watermark||(identityBasis!==expectedBasis)||(basis&&basis!==identityBasis))throw Error('STALE_OR_DUPLICATE_IDENTITY');
++   if(pending.size>=limits.queueJobs)throw Error('QUEUE_BOUND');
++   const charge=2*bytes.byteLength+2*limits.outputBytes;
++   if(transport>limits.transportBytes-charge)throw Error('TRANSPORT_BOUND');
++   const grant=owner.reserve(executor,charge);let copy;try{copy=bytes.slice(0);}catch(error){ungrant(grant);throw error;}
++   ++admitted;watermark=jobId;basis??=identityBasis;transport+=charge;let resolve;const promise=new Promise(r=>resolve=r);const job={...envelope,bytes:copy,grant,charge,resolve,terminal:false,started:performance.now()};pending.set(job.key,job);queue.push(job);pump();return{key:job.key,result:promise};
++  },
++  cancel(key){const job=pending.get(key);if(!job)return false;if(job===active){try{worker.postMessage({type:'cancel',key});}catch(error){stop('POST_MESSAGE_FAILED:'+String(error));}}else{queue.splice(queue.indexOf(job),1);terminal(job,'Cancelled');}return true;},
++  release(key){const job=results.get(key);if(!job)return false;try{if(job.resultBuffer.byteLength)job.resultBuffer.transfer(0);}finally{job.resultBuffer=null;results.delete(key);transport-=job.charge;ungrant(job.grant);}return true;},
++  async close(){retire('Cancelled','CLOSED_DURING_STARTUP');if(cleanupErrors.length)throw Error('CPU_WORKER_CLEANUP:'+cleanupErrors.join(';'));},
++  observation(){return{executor,basis:expectedBasis.split('/'),pending:pending.size,active:active?{key:active.key,sent:active.sent,startedReceivedAt:active.startedReceivedAt??null,workerStartedAt:active.workerStartedAt??null}:null,admitted,terminals,transportBytes:transport,ledger:[...ledger],cleanupErrors:[...cleanupErrors],closed,heapBytes:limits.heapBytes,build:kernelId};}
++ };
++ owner.attach(api);
++ try{worker=new Worker(url??new URL('cpu-worker-thread.mjs',owner.assetBaseURL),{type:'module'});
++  worker.onmessage=({data})=>{
++   if(closed)return;
++   if(data.type==='ready'){if(data.build!==kernelId||data.heap!==limits.heapBytes){stop('KERNEL_BUILD_OR_HEAP_MISMATCH');return;}clearTimeout(startupTimer);readyResolve();pump();return;}
++   if(data.type==='failure'){stop(data.reason);return;}
++   if(data.type==='started'){if(active&&data.key===active.key&&!active.startedReceivedAt){active.startedReceivedAt=performance.now();active.workerStartedAt=data.at;}return;}
++   if(data.type==='terminal'){
++    const job=active;if(!job||data.key!==job.key)return;
++    if(!['Ready','Failed','Cancelled','Stale'].includes(data.status)){stop('INVALID_TERMINAL_STATUS');return;}
++    if(data.status==='Ready'){
++     if(!(data.bytes instanceof ArrayBuffer)||data.bytes.byteLength<128||data.bytes.byteLength>limits.outputBytes){stop('RESULT_BOUND');return;}
++     const view=new DataView(data.bytes),bytes=new Uint8Array(data.bytes);
++     if(data.bytes.byteLength<128||view.getUint32(0,true)!==0x31525043||view.getUint32(4,true)!==1||view.getUint32(96,true)!==data.bytes.byteLength-128||view.getUint32(100,true)!==2||job.words.some((x,i)=>view.getBigUint64(32+i*8,true).toString()!==x)||Array.from(bytes.subarray(16,32),v=>v.toString(16).padStart(2,'0')).join('')!==kernelId||bytes.subarray(104,128).some(Boolean)){stop('FOREIGN_RESULT');return;}
++    }
++    terminal(job,data.status,{...data,totalMs:performance.now()-job.started});pump();
++   }
++  };worker.onerror=e=>stop('WORKER_MODULE_FAILURE:'+e.message);startupTimer=setTimeout(()=>stop('WORKER_INIT_TIMEOUT'),5000);worker.postMessage({type:'init'});await ready;return api;
++ }catch(error){stop(String(error));throw error;}
++}
+diff --git a/sdk/web/internal/cpu-worker-owner.mjs b/sdk/web/internal/cpu-worker-owner.mjs
+new file mode 100644
+index 00000000..51c775e9
+--- /dev/null
++++ b/sdk/web/internal/cpu-worker-owner.mjs
+@@ -0,0 +1,5 @@
++// Private infrastructure binding. Root business DTOs expose no native handle.
++const owners=new WeakMap();
++export function bindCpuWorkerOwner(runtime,owner){owners.set(runtime,{...owner,generation:0n,executor:null,begin(){if(this.executor)throw Error('WORKER_ALREADY_ACTIVE');this.generation+=1n;if(this.generation>0xffffffffffffffffn)throw Error('EXECUTOR_EXHAUSTED');this.executor=this.generation.toString();return this.executor;},end(id){if(this.executor===id)this.executor=null;}});}
++export function cpuWorkerOwner(runtime){const owner=owners.get(runtime);if(!owner)throw Error('FOREIGN_RUNTIME');return owner;}
++export function unbindCpuWorkerOwner(runtime){owners.delete(runtime);}
+diff --git a/sdk/web/internal/cpu-worker-thread.mjs b/sdk/web/internal/cpu-worker-thread.mjs
+new file mode 100644
+index 00000000..30ba43cf
+--- /dev/null
++++ b/sdk/web/internal/cpu-worker-thread.mjs
+@@ -0,0 +1,42 @@
++import factory from './cpu-worker-kernel.mjs';
++import {kernelId,limits} from './cpu-worker-build.mjs';
++let module,active=null,closed=false;
++// Posted tasks yield to the Worker's message queue without the nesting clamp
++// of a timer chain. Each task still performs at most the kernel's8/2ms slice.
++const turns=new MessageChannel();
++turns.port1.onmessage=({data})=>{
++ if(active&&active.handle===data.handle&&active.key===data.key)tick(active);
++};
++function schedule(job){job.queuedAt=performance.now();turns.port2.postMessage({handle:job.handle,key:job.key});}
++const terminal=(job,status,extra={})=>{if(job.terminal)return;job.terminal=true;postMessage({type:'terminal',key:job.key,status,...extra},extra.bytes?[extra.bytes]:[]);};
++async function initialize(){
++ module=await factory();if(module.UTF8ToString(module._axiom_cpu_build())!==kernelId)throw Error('KERNEL_BUILD_MISMATCH');
++ postMessage({type:'ready',build:kernelId,heap:module.HEAPU8.buffer.byteLength,limits});
++}
++function tick(job){
++ if(!job||active!==job||job.terminal||closed)return;
++ if(!job.started){job.started=true;postMessage({type:'started',key:job.key,at:performance.now(),cursor:module._axiom_cpu_cursor(job.handle)});}
++ const started=performance.now();job.yieldMs+=started-job.queuedAt;
++ const status=module._axiom_cpu_step(job.handle,limits.stepSegments,limits.stepMicroseconds);job.compute+=performance.now()-started;++job.steps;
++ if(status===1){schedule(job);return;}
++ if(status===2){const at=performance.now(),p=module._axiom_cpu_result(job.handle),n=module._axiom_cpu_result_size(job.handle);if(!p||n>limits.outputBytes){terminal(job,'Failed',{reason:'OUTPUT_BOUND'});}else{
++   const bytes=module.HEAPU8.slice(p,p+n).buffer;terminal(job,'Ready',{bytes,importMs:job.importMs,computeMs:job.compute,yieldMs:job.yieldMs,steps:job.steps,exportMs:performance.now()-at,maxUnionNs:module._axiom_cpu_max_union_ns(job.handle)});
++  }}else terminal(job,status===3?'Cancelled':'Failed',{reason:'KERNEL_REJECTED'});
++ module._axiom_cpu_release(job.handle);active=null;
++}
++onmessage=async({data})=>{
++ try{
++  if(data.type==='init'){if(module)throw Error('DUPLICATE_INIT');await initialize();return;}
++  if(!module||closed)throw Error('NOT_READY');
++  if(data.type==='cancel'){if(active&&data.key===active.key){const job=active,cursor=module._axiom_cpu_cursor(job.handle);module._axiom_cpu_cancel(job.handle);terminal(job,'Cancelled',{cursor,steps:job.steps,computeMs:job.compute,yieldMs:job.yieldMs,cancelObservedAt:performance.now()});module._axiom_cpu_release(job.handle);active=null;}return;}
++  if(data.type==='run'){
++   if(active||!(data.bytes instanceof ArrayBuffer)||data.bytes.byteLength>limits.inputBytes)throw Error('BUSY_OR_INPUT_BOUND');
++   const at=performance.now(),p=module._malloc(data.bytes.byteLength);if(!p)throw Error('OUT_OF_MEMORY');let handle;
++   try{module.HEAPU8.set(new Uint8Array(data.bytes),p);handle=module._axiom_cpu_create(p,data.bytes.byteLength);}finally{module._free(p);}
++   if(!handle){postMessage({type:'terminal',key:data.key,status:'Failed',reason:'INVALID_REQUEST'});return;}
++   active={key:data.key,handle,terminal:false,compute:0,yieldMs:0,steps:0,importMs:performance.now()-at};schedule(active);return;
++  }
++  if(data.type==='close'){closed=true;if(active){module._axiom_cpu_cancel(active.handle);terminal(active,'Cancelled');module._axiom_cpu_release(active.handle);active=null;}turns.port1.close();turns.port2.close();postMessage({type:'closed'});close();return;}
++  throw Error('UNKNOWN_MESSAGE');
++ }catch(error){postMessage({type:'failure',key:data?.key,reason:String(error)});}
++};
+diff --git a/verification/runners/g5/cpu_worker_repair_runner.py b/verification/runners/g5/cpu_worker_repair_runner.py
+new file mode 100644
+index 00000000..8d9a97cc
+--- /dev/null
++++ b/verification/runners/g5/cpu_worker_repair_runner.py
+@@ -0,0 +1,93 @@
++"""Exactly three frozen CPU Worker repair windows; no repeated IDs or browser attach."""
++from pathlib import Path
++import hashlib, importlib.util, json, math, subprocess, sys
++
++ROOT = Path(__file__).resolve().parents[3]
++PACKAGE = ROOT / '.aegis/packages/G5-CPUW1-repair-r2'
++RESULT = ROOT / '.aegis/results/G5-CPUW1-repair-r2'
++PACKAGE_SHA = '98f46cb7e53a91062e65432aa0dcdaf23e3bc9c82972e36d8c6205b9707de237'
++LIMITS = {'G5CWR1-SCHED':180,'G5CWR1-LIFE':120,'G5CWR1-ASSETS':120}
++ROSTERS={'G5CWR1-SCHED':['old-sched','candidate-sched'],'G5CWR1-LIFE':['candidate-life'],'G5CWR1-ASSETS':['relative-assets','absolute-assets','csp-none']}
++
++def sha(p):
++    h = hashlib.sha256()
++    with Path(p).open('rb') as f:
++        for b in iter(lambda: f.read(1048576), b''):
++            h.update(b)
++    return h.hexdigest()
++
++def read(p): return json.loads(Path(p).read_text())
++def write(p, v):
++    Path(p).parent.mkdir(parents=True, exist_ok=True)
++    Path(p).write_text(json.dumps(v, indent=2) + '\n')
++def inventory(p):
++    return {str(q.relative_to(p)): sha(q) for q in sorted(Path(p).rglob('*')) if q.is_file()}
++
++def reserve(ledger, req):
++    name = req['id']
++    if name not in LIMITS or [x['id']for x in req['cases']]!=ROSTERS[name]:raise ValueError('foreign window/cases')
++    if len(ledger['attempts']) >= 3 or any(x['id'] == name or x['status'] == 'STARTED' for x in ledger['attempts']):
++        raise ValueError('foreign/repeated/concurrent window')
++    if ledger['charged_seconds'] + LIMITS[name] > 420:
++        raise ValueError('420 second allowance exhausted')
++    if any(a.get('hard_stop') for a in ledger['attempts']):
++        raise ValueError('prior hard stop forbids remaining windows')
++    expected_order = list(LIMITS)
++    if name != expected_order[len(ledger['attempts'])]:
++        raise ValueError('window order changed')
++    ledger['attempts'].append(dict(id=name, status='STARTED', limit_seconds=LIMITS[name], rss_mib=4096))
++
++def inputs(req):
++    names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
++    source = {n: sha(ROOT/n) for n in sorted(set(names)) if n and (ROOT/n).is_file()
++              and n.startswith(('runtime/', 'sdk/', 'cmake/', 'verification/runners/g5/', 'verification/tests/'))
++              and Path(n).suffix in ('.cpp', '.h', '.hpp', '.mjs', '.cmake', '.json', '.py', '.txt')}
++    sdks={}
++    for case in req['cases']:
++        manifest=read(ROOT/case['SDK_manifest'])
++        actual=inventory(Path(case['sdk']))
++        if actual!=manifest['files']:raise ValueError('SDK changed')
++        sdks[case['sdk']]=actual
++    requests=inventory(Path(req['requests']))
++    return dict(source=source, SDKs=sdks, requests=requests, driver=sha(ROOT/req['driver']),
++                HEAD=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip())
++
++def execute(request_path):
++    if sha(PACKAGE/'package.json') != PACKAGE_SHA:
++        raise ValueError('frozen package changed')
++    plan = read(RESULT/'sampling-plan.json')
++    req = read(request_path)
++    if plan['requests'].get(req['id']) != sha(request_path):
++        raise ValueError('request differs from offline freeze')
++    before = inputs(req)
++    if before != read(RESULT/'inputs-frozen.json'):
++        # Both windows may have different SDK sets. The source/HEAD remain exact.
++        frozen = read(RESULT/'inputs-frozen.json')
++        if before['source'] != frozen['source'] or before['HEAD'] != frozen['HEAD']:
++            raise ValueError('source changed since offline freeze')
++    lp = RESULT/'sampling-ledger.json'
++    ledger = read(lp) if lp.exists() else dict(schema='g5-cpu-worker-repair-three-windows-v1', cap_seconds=420, charged_seconds=0, attempts=[])
++    reserve(ledger, req)
++    out = RESULT/'local-web'/req['id']
++    out.mkdir(parents=True, exist_ok=False)
++    write(out/'freeze.json', dict(request=req, request_sha256=sha(request_path), inputs=before))
++    write(lp, ledger)
++    spec = importlib.util.spec_from_file_location('guard', Path(__file__).with_name('bounded_worker.py'))
++    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
++    guard = m.run(['node', str(ROOT/req['driver']), str(request_path), str(out)], out, LIMITS[req['id']], 4096*1024)
++    after = inputs(req)
++    write(out/'inputs-after.json', after)
++    worker = read(out/'worker-result.json') if (out/'worker-result.json').exists() else {}
++    elapsed = guard.get('elapsed_s')
++    charged = math.ceil(elapsed) if isinstance(elapsed, (int, float)) and math.isfinite(elapsed) and 0 <= elapsed <= LIMITS[req['id']]+5 else LIMITS[req['id']]
++    hard = guard['reason'] not in ('completed', 'nonzero_exit') or not guard['cleanup_complete'] or bool(guard['remaining_owned_pids']) or before != after
++    ok = not hard and worker.get('status') == 'OBSERVED'
++    ledger['attempts'][-1].update(status='COMPLETED' if ok else 'STOPPED', guard=guard, source_stable=before == after,
++                                  charged_seconds=charged, worker_status=worker.get('status'), hard_stop=hard)
++    ledger['charged_seconds'] += charged
++    write(lp, ledger)
++    print(json.dumps(ledger), flush=True)
++    return 0 if ok else 1
++
++if __name__ == '__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+diff --git a/verification/runners/g5/cpu_worker_repair_web.mjs b/verification/runners/g5/cpu_worker_repair_web.mjs
+new file mode 100644
+index 00000000..74fb4475
+--- /dev/null
++++ b/verification/runners/g5/cpu_worker_repair_web.mjs
+@@ -0,0 +1,106 @@
++// Frozen sparse evidence. Geometry/validation remain shared C++/WASM only.
++import fs from 'node:fs/promises';import http from 'node:http';import path from 'node:path';
++import {chromium} from '../../node_modules/playwright/index.mjs';
++import {validateChunk} from './ur2d_selection_up_contract.mjs';
++export async function consumer(config){
++ const row={id:config.caseId,status:'STARTED',jobs:[],executors:[],assertions:[],errors:[],cleanup:[],failure:null};
++ let sdk,client,owner,heartbeat;let identity,executor,job=0;const beats=[];
++ const pause=ms=>new Promise(r=>setTimeout(r,ms));const check=(x,m)=>{if(!x)throw Error(m);row.assertions.push(m);};
++ const save=()=>window.cpuMetadata(row);
++ const bytes=async(name,data)=>{for(let offset=0;offset<data.length;offset+=65536){const chunk=data.subarray(offset,offset+65536);let binary='';for(let i=0;i<chunk.length;i+=8192)binary+=String.fromCharCode(...chunk.subarray(i,i+8192));const ack=await window.cpuBytes({name,offset,total:data.length,base64:btoa(binary)});check(ack.nextOffset===offset+chunk.length,'binary ack');}};
++ const stamp=(input,n=++job)=>{const b=input.slice(0),v=new DataView(b);[...identity,executor,String(n),'1','1'].forEach((x,i)=>v.setBigUint64(32+i*8,BigInt(x),true));return b;};
++ const requests=new Map();const request=async index=>{if(!requests.has(index)){const response=await fetch('/requests/'+index+'.request');check(response.ok,'input fetch');requests.set(index,await response.arrayBuffer());}return requests.get(index);};
++ const recordLedger=async(label,closing=false)=>{
++  if(!client)return;
++  const before=client.observation();const value={label,before,quotaBefore:owner.observe(),capturedAt:performance.now()};row.executors.push(value);await save();
++  const scope=before.basis.join('/')+'/'+before.executor+'/';const admitted=row.jobs.filter(v=>v.key?.startsWith(scope)&&v.accepted).map(v=>v.key);
++  const terminal=before.ledger.map(v=>v.key);check(before.admitted===admitted.length,'admission list count');check(before.terminals===terminal.length,'terminal list count');check(admitted.length===terminal.length&&new Set(terminal).size===terminal.length&&admitted.every(k=>terminal.includes(k)),'all accepted exactly one terminal');check(before.pending===0,'no orphaned tasks');
++   if(closing){await client.close();value.after=client.observation();value.quotaAfter=owner.observe();await save();check(value.after.transportBytes===0&&(value.after.cleanupErrors?.length??0)===0&&value.quotaAfter.bytes===0,'closed quota and transport zero');client=null;}
++ };
++ const awaitReady=async()=>{const start=performance.now();while(sdk.readState().generation!==sdk.readState().lastCommit.presentedGeneration){check(performance.now()-start<10000,'canonical receipt bounded');await pause(16);}};
++ const outcome=async(task,info,index,keepBytes=true)=>{
++  const v=await task.result;Object.assign(info,{status:v.status,terminalReceivedAt:performance.now(),computeMs:v.computeMs,importMs:v.importMs,exportMs:v.exportMs,yieldMs:v.yieldMs??null,totalMs:v.totalMs,steps:v.steps,cursor:v.cursor,maxUnionNs:v.maxUnionNs,cancelObservedAt:v.cancelObservedAt,outputBytes:v.bytes?.byteLength??0});await save();
++  if(v.bytes&&keepBytes)await bytes(info.label+'.rgba',new Uint8Array(v.bytes));
++  if(v.status==='Ready'){
++   const reference=new Uint8Array(await(await fetch('/requests/'+index+'.path')).arrayBuffer());const actual=new Uint8Array(v.bytes,128);info.nativeBytesEqual=actual.length===reference.length&&actual.every((x,i)=>x===reference[i]);v.release();await save();check(info.nativeBytesEqual,'independent native path equality');check(v.bytes.byteLength===0,'released result detached');
++  }
++  return v;
++ };
++ const beginJob=(input,label,index)=>{const envelope=stamp(input),at=performance.now();const task=client.submit(envelope),info={label,index,executor,key:task.key,accepted:true,inputBytes:envelope.byteLength,submittedAt:at};row.jobs.push(info);return{task,info};};
++ const one=async(index,label='job-'+index)=>{const {task,info}=beginJob(await request(index),label,index);const start=performance.now();const v=await outcome(task,info,index);const end=performance.now();info.heartbeatDuringCompute=beats.filter(x=>x>=start&&x<=end);check(v.status==='Ready','real Worker Ready');return info;};
++ const newClient=async()=>{client=await createCpuWorker(sdk);const v=client.observation();identity=v.basis;executor=v.executor;row.currentExecutor=v;await save();};
++ const createRectangle=async()=>{await sdk.selectShape('rectangle');const r=sdk.canvas.getBoundingClientRect();sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;for(const phase of ['down','up'])sdk.canvas.dispatchEvent(new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:r.left+300,clientY:r.top+200,button:0,buttons:phase==='down'?1:0,pressure:.5,bubbles:true,cancelable:true}));await awaitReady();check(sdk.readState().objects===1,'canonical rectangle created');};
++ let createCpuWorker,cpuWorkerOwner;
++ try{
++  const root=await import('/app/axiom.mjs');({createCpuWorker}=await import('/app/internal/cpu-worker-client.mjs'));({cpuWorkerOwner}=await import('/app/internal/cpu-worker-owner.mjs'));
++  sdk=await root.createRuntime({mount:document.getElementById('mount'),documentId:'00000000000000000000000000000001',assetBaseURL:config.assetBaseURL,builtinFonts:false,permission:'localSingleUser',onError:e=>row.errors.push({code:e.code,text:String(e)})});owner=cpuWorkerOwner(sdk);row.ownerBefore=owner.basis();row.before=sdk.readState();row.quotaBefore=owner.observe();await awaitReady();
++  if(config.mode==='csp'){
++   const start=performance.now();let error=null;try{client=await createCpuWorker(sdk);}catch(e){error=String(e);}row.cspFailure={elapsedMs:performance.now()-start,error,quotaAfter:owner.observe()};await save();check(error&&row.cspFailure.elapsedMs<5500,'CSP bounded explicit failure');check(row.cspFailure.quotaAfter.bytes===0,'CSP releases floor');await createRectangle();row.rootAfterCSP=sdk.readState();await sdk.close();sdk=null;row.status='OBSERVED';return{status:row.status};
++  }
++  await newClient();heartbeat=setInterval(()=>beats.push(performance.now()),5);
++  if(config.mode==='sched'){
++   for(let i=0;i<16;++i)await one(i,config.caseId+'-'+i);
++   if(config.variant==='candidate'){await one(17,'candidate-fork');await one(18,'candidate-filled');}
++   clearInterval(heartbeat);heartbeat=null;row.heartbeat={ticks:beats,maxGapMs:Math.max(0,...beats.slice(1).map((v,i)=>v-beats[i]))};row.after=sdk.readState();check(row.after.generation===row.before.generation&&row.after.objects===row.before.objects,'compute does not mutate canonical');await recordLedger('scheduler-complete',true);
++  }else if(config.mode==='life'){
++   const input=await request(0),{task,info}=beginJob(input,'started-cancel',0);const waiting=performance.now();while(!client.observation().active?.startedReceivedAt){check(performance.now()-waiting<5000,'Worker starts bounded');await pause(1);}info.startedIdentity=client.observation().active;await pause(10);info.cancelSentAt=performance.now();client.cancel(task.key);const cancelled=await outcome(task,info,0,false);await save();check(cancelled.status==='Cancelled'&&cancelled.cursor<1600&&cancelled.steps>0,'cancel interleaves before full drain');check(cancelled.steps<=200,'cancel step count finite');
++   await one(1,'after-cancel');
++   const first=row.jobs[0];let duplicate=false;try{client.submit(stamp(input,Number(BigInt(first.key.split('/')[5]))));}catch(e){duplicate=String(e);}row.duplicateRejected=duplicate;check(duplicate,'duplicate rejected');
++   const wrong=stamp(input);new DataView(wrong).setBigUint64(32,999n,true);let foreign=null;try{client.submit(wrong);}catch(e){foreign=String(e);}row.foreignRejected=foreign;check(foreign,'foreign rejected');
++   const malformed=stamp(input);new DataView(malformed).setUint32(12,1901,true);const bad=client.submit(malformed);const badInfo={label:'malformed',executor,key:bad.key,accepted:true,inputBytes:malformed.byteLength};row.jobs.push(badInfo);const rejected=await outcome(bad,badInfo,0,false);check(rejected.status==='Failed','malformed terminal failure');
++   const queued=[];let refused=null;for(let i=0;i<9;++i){try{queued.push(beginJob(input,'queued-'+i,0));}catch(e){refused=String(e);break;}}row.queue={accepted:queued.map(x=>x.task.key),refused};await save();check(queued.length===7&&refused,'transport refuses bounded queue');for(const item of queued)client.cancel(item.task.key);for(const item of queued){const v=await outcome(item.task,item.info,0,false);check(v.status==='Cancelled','queued cancel terminal');}
++   await recordLedger('before-next-generation',true);await newClient();await one(2,'generation-two');await recordLedger('generation-two-complete',true);
++   // A real slow module holds startup custody while the root closes. The
++   // standalone root remains until this explicit close succeeds.
++   const init=createCpuWorker(sdk,{url:new URL('/slow/cpu-worker-thread.mjs',location.href)});init.catch(()=>{});await pause(10);row.initializationCustody={quota:owner.observe(),executor:owner.executor,basis:owner.basis(),acceptedJobs:[]};await save();await sdk.close();const stopped=await init.then(()=>null,e=>String(e));row.initializationClose={error:stopped};check(stopped,'root close during initialization rejects promise');sdk=null;
++   // Fresh root DataPort holds a real canonical packet through failed close.
++   const mount=document.createElement('div');mount.style.cssText='width:900px;height:700px';document.body.append(mount);sdk=await root.createRuntime({mount,documentId:'00000000000000000000000000000002',assetBaseURL:config.assetBaseURL,builtinFonts:false,permission:'localSingleUser'});owner=cpuWorkerOwner(sdk);row.publicationAttach=sdk.data.attach({capacity:8});await createRectangle();const packet=sdk.data.readNext(null);check(packet&&packet.bytes.length>0,'real retained canonical packet');row.packet={operationId:packet.operationId,commit:packet.commit,bytes:packet.bytes.length};await newClient();await one(3,'publication-owner');await recordLedger('before-pending-close',false);const priorOwner=cpuWorkerOwner(sdk);let closeError=null;try{await sdk.close();}catch(e){closeError={code:e.code,text:String(e)};}row.pendingClose={error:closeError,state:sdk.readState(),data:sdk.data.status(),bindingSame:cpuWorkerOwner(sdk)===priorOwner,terminated:client.observation(),quota:owner.observe()};await save();check(closeError?.code==='PUBLICATION_PENDING'&&row.pendingClose.bindingSame,'real pending close retains binding');check(row.pendingClose.data.pending===1&&row.pendingClose.quota.bytes===0,'pending packet preserved worker quota zero');
++   let blocked=null;try{await sdk.selectTool('ink');}catch(e){blocked=e.code;}check(blocked==='DOCUMENT_CLOSING','close barrier forbids edits');let grantDenied=null;try{owner.reserve('999',1024);}catch(e){grantDenied=e.code;}check(grantDenied==='DOCUMENT_CLOSING','close barrier forbids new grants');row.pendingClose.editBlocked=blocked;row.pendingClose.grantBlocked=grantDenied;
++   sdk.data.release(packet);row.released=sdk.data.status();check(row.released.pending===0,'release exact packet custody');await sdk.close();let absent=false;try{cpuWorkerOwner(sdk);}catch{absent=true;}row.retryClose={bindingAbsent:absent,worker:client.observation()};check(absent,'success unbinds only at final close');sdk=null;client=null;
++  }else{
++   await one(0,config.caseId+'-asset');await recordLedger('asset-complete',true);await createRectangle();row.after=sdk.readState();await sdk.undo();await awaitReady();check(sdk.readState().objects===0,'asset root Undo');await sdk.redo();await awaitReady();check(sdk.readState().objects===1,'asset root Redo');
++  }
++  row.status='OBSERVED';
++ }catch(error){row.status='FAILED';row.failure={error:String(error.stack??error),at:performance.now()};try{row.failure.state=sdk?.readState();row.failure.client=client?.observation();row.failure.quota=owner?.observe();}catch(e){row.failure.captureError=String(e);}await save();}
++ finally{
++  if(heartbeat)clearInterval(heartbeat);
++  if(client)try{row.finalExecutorBefore=client.observation();await client.close();row.finalExecutorAfter=client.observation();}catch(e){row.cleanup.push(String(e));}
++  if(sdk)try{await sdk.close();}catch(e){row.cleanup.push(String(e));}
++  row.completedAt=performance.now();await save();
++ }
++ return{status:row.status,jobs:row.jobs.length,failure:row.failure};
++}
++export function createServer(request,active){
++ return http.createServer(async(req,res)=>{try{
++  const url=new URL(req.url,'http://local'),name=url.pathname;active.requests.push({path:name,at:Date.now()});
++  if(name==='/app/'||name==='/csp/'){
++   if(name==='/csp/')res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'none'; connect-src 'self'");
++   res.setHeader('Content-Type','text/html');res.end('<style>body{margin:0}</style><div id="mount" style="width:900px;height:700px"></div><script type="module">import{consumer}from"/driver.mjs";window.run=consumer;</script>');return;
++  }
++  if(name==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+consumer.toString());return;}
++  if(name==='/slow/cpu-worker-thread.mjs'){await new Promise(r=>setTimeout(r,250));res.setHeader('Content-Type','text/javascript');res.end('await new Promise(()=>{});');return;}
++  let file;if(name.startsWith('/app/'))file=path.join(active.sdk,name.slice(5));else if(name.startsWith('/assets/'))file=path.join(active.sdk,name.slice(8));else if(name.startsWith('/requests/'))file=path.join(request.requests,name.slice(10));
++  if(!file)throw Error('unknown asset');res.setHeader('Content-Type',file.endsWith('.mjs')?'text/javascript':file.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(file));
++ }catch(error){res.statusCode=404;res.end(String(error));}});
++}
++export async function run(request,out){
++ await fs.mkdir(out,{recursive:true});let server,browser,page;const active={sdk:null,requests:[]},result={id:request.id,status:'STARTED',rows:[],errors:[]};
++ try{
++  server=createServer(request,active);await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
++  for(const spec of request.cases){
++   active.sdk=spec.sdk;active.requests=[];const dir=path.join(out,spec.id);await fs.mkdir(dir);const chunks=new Map(),consoleLines=[];page=await browser.newPage({viewport:{width:1100,height:800},deviceScaleFactor:2});
++   page.on('console',m=>{if(consoleLines.length<512)consoleLines.push({type:m.type(),text:m.text()});});
++   await page.exposeFunction('cpuMetadata',value=>fs.writeFile(path.join(dir,'raw.json'),JSON.stringify(value,null,2)+'\n'));
++   await page.exposeFunction('cpuBytes',async c=>{if(c.total>1048576)throw Error('oversized output');const old=chunks.get(c.name);if(old?.complete)throw Error('duplicatebuffer');const next=validateChunk(c,old),data=Buffer.from(c.base64,'base64'),file=path.join(dir,c.name+'.partial');const h=await fs.open(file,c.offset?'r+':'wx');try{const w=await h.write(data,0,data.length,c.offset);if(w.bytesWritten!==data.length)throw Error('shortwrite');}finally{await h.close();}if(next.complete)await fs.rename(file,path.join(dir,c.name));chunks.set(c.name,next);return{nextOffset:next.nextOffset};});
++   console.log(JSON.stringify({stage:'case-start',id:spec.id}));
++   await page.goto(base+(spec.mode==='csp'?'/csp/':'/app/'));await page.waitForFunction(()=>window.run);
++   const config={...spec,caseId:spec.id,assetBaseURL:spec.assetBase==='absolute'?base+'/assets/':'../assets/'};const summary=await page.evaluate(c=>window.run(c),config);result.rows.push({id:spec.id,...summary});
++   await fs.writeFile(path.join(dir,'http-requests.json'),JSON.stringify(active.requests,null,2)+'\n');await fs.writeFile(path.join(dir,'console.json'),JSON.stringify(consoleLines,null,2)+'\n');await page.close();page=null;console.log(JSON.stringify({stage:'case-end',id:spec.id,status:summary.status}));
++   if(summary.status!=='OBSERVED')throw Error('frozen case failed; preserve raw, stop remaining rows');
++  }
++  result.status='OBSERVED';
++ }catch(error){result.status='FAILED';result.error=String(error.stack??error);}
++ finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',status:result.status}));}return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const request=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await run(request,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+diff --git a/verification/runners/g5/cpu_worker_runner.py b/verification/runners/g5/cpu_worker_runner.py
+new file mode 100644
+index 00000000..4422b456
+--- /dev/null
++++ b/verification/runners/g5/cpu_worker_runner.py
+@@ -0,0 +1,89 @@
++"""Exactly the two frozen table-proof windows; no repeated IDs or browser attach."""
++from pathlib import Path
++import hashlib, importlib.util, json, math, subprocess, sys
++
++ROOT = Path(__file__).resolve().parents[3]
++PACKAGE = ROOT / '.aegis/packages/G5-CPUW1-wasm-kernel-r2'
++RESULT = ROOT / '.aegis/results/G5-CPUW1-wasm-kernel-r1'
++PACKAGE_SHA = 'ff4a4a8589c3345f9ca0d91965105c42f603036e16a8775de954198cdea21e99'
++LIMITS = {'G5CPUW1-PARITY':150,'G5CPUW1-LIFECYCLE':120,'G5CPUW1-EXTERNAL':120}
++
++def sha(p):
++    h = hashlib.sha256()
++    with Path(p).open('rb') as f:
++        for b in iter(lambda: f.read(1048576), b''):
++            h.update(b)
++    return h.hexdigest()
++
++def read(p): return json.loads(Path(p).read_text())
++def write(p, v):
++    Path(p).parent.mkdir(parents=True, exist_ok=True)
++    Path(p).write_text(json.dumps(v, indent=2) + '\n')
++def inventory(p):
++    return {str(q.relative_to(p)): sha(q) for q in sorted(Path(p).rglob('*')) if q.is_file()}
++
++def reserve(ledger, req):
++    name = req['id']
++    if name not in LIMITS:raise ValueError('foreign window')
++    if len(ledger['attempts']) >= 3 or any(x['id'] == name or x['status'] == 'STARTED' for x in ledger['attempts']):
++        raise ValueError('foreign/repeated/concurrent window')
++    if ledger['charged_seconds'] + LIMITS[name] > 390:
++        raise ValueError('390 second allowance exhausted')
++    if any(a.get('hard_stop') for a in ledger['attempts']):
++        raise ValueError('prior hard stop forbids remaining windows')
++    expected_order = list(LIMITS)
++    if name != expected_order[len(ledger['attempts'])]:
++        raise ValueError('window order changed')
++    ledger['attempts'].append(dict(id=name, status='STARTED', limit_seconds=LIMITS[name], rss_mib=4096))
++
++def inputs(req):
++    names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], cwd=ROOT).decode().split('\0')
++    source = {n: sha(ROOT/n) for n in sorted(set(names)) if n and (ROOT/n).is_file()
++              and n.startswith(('runtime/', 'sdk/', 'cmake/', 'verification/runners/g5/', 'verification/tests/'))
++              and Path(n).suffix in ('.cpp', '.h', '.hpp', '.mjs', '.cmake', '.json', '.py', '.txt')}
++    sdks={req['sdk']:inventory(Path(req['sdk']))}
++    manifest=read(ROOT/req['SDK_manifest'])
++    if sdks[req['sdk']]!=manifest['files']:raise ValueError('SDK changed')
++    requests=inventory(Path(req['requests']))
++    return dict(source=source, SDKs=sdks, requests=requests, driver=sha(ROOT/req['driver']),
++                HEAD=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip())
++
++def execute(request_path):
++    if sha(PACKAGE/'package.json') != PACKAGE_SHA:
++        raise ValueError('frozen package changed')
++    plan = read(RESULT/'sampling-plan.json')
++    req = read(request_path)
++    if plan['requests'].get(req['id']) != sha(request_path):
++        raise ValueError('request differs from offline freeze')
++    before = inputs(req)
++    if before != read(RESULT/'inputs-frozen.json'):
++        # Both windows may have different SDK sets. The source/HEAD remain exact.
++        frozen = read(RESULT/'inputs-frozen.json')
++        if before['source'] != frozen['source'] or before['HEAD'] != frozen['HEAD']:
++            raise ValueError('source changed since offline freeze')
++    lp = RESULT/'sampling-ledger.json'
++    ledger = read(lp) if lp.exists() else dict(schema='g5-cpu-worker-three-windows-v1', cap_seconds=390, charged_seconds=0, attempts=[])
++    reserve(ledger, req)
++    out = RESULT/'local-web'/req['id']
++    out.mkdir(parents=True, exist_ok=False)
++    write(out/'freeze.json', dict(request=req, request_sha256=sha(request_path), inputs=before))
++    write(lp, ledger)
++    spec = importlib.util.spec_from_file_location('guard', Path(__file__).with_name('bounded_worker.py'))
++    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
++    guard = m.run(['node', str(ROOT/req['driver']), str(request_path), str(out)], out, LIMITS[req['id']], 4096*1024)
++    after = inputs(req)
++    write(out/'inputs-after.json', after)
++    worker = read(out/'worker-result.json') if (out/'worker-result.json').exists() else {}
++    elapsed = guard.get('elapsed_s')
++    charged = math.ceil(elapsed) if isinstance(elapsed, (int, float)) and math.isfinite(elapsed) and 0 <= elapsed <= LIMITS[req['id']]+5 else LIMITS[req['id']]
++    hard = guard['reason'] not in ('completed', 'nonzero_exit') or not guard['cleanup_complete'] or bool(guard['remaining_owned_pids']) or before != after
++    ok = not hard and worker.get('status') == 'OBSERVED'
++    ledger['attempts'][-1].update(status='COMPLETED' if ok else 'STOPPED', guard=guard, source_stable=before == after,
++                                  charged_seconds=charged, worker_status=worker.get('status'), hard_stop=hard)
++    ledger['charged_seconds'] += charged
++    write(lp, ledger)
++    print(json.dumps(ledger), flush=True)
++    return 0 if ok else 1
++
++if __name__ == '__main__':
++    raise SystemExit(execute(Path(sys.argv[1]).resolve()))
+diff --git a/verification/runners/g5/cpu_worker_web.mjs b/verification/runners/g5/cpu_worker_web.mjs
+new file mode 100644
+index 00000000..12edba82
+--- /dev/null
++++ b/verification/runners/g5/cpu_worker_web.mjs
+@@ -0,0 +1,57 @@
++import fs from 'node:fs/promises';import http from 'node:http';import path from 'node:path';import {chromium} from '../../node_modules/playwright/index.mjs';
++import {validateChunk} from './ur2d_selection_up_contract.mjs';
++export async function consumer(config){
++ const row={id:config.id,status:'STARTED',jobs:[],events:[],errors:[],cleanup:[]};let sdk,client;let heartbeat;let mainGrant,mainOwner;let heartbeats=[];
++ const check=(v,m)=>{if(!v)throw Error(m);};const pause=ms=>new Promise(r=>setTimeout(r,ms));
++ const save=()=>window.cpuMetadata(row);
++ const transfer=async(name,bytes)=>{for(let offset=0;offset<bytes.length;offset+=65536){const p=bytes.subarray(offset,offset+65536);let s='';for(let i=0;i<p.length;i+=8192)s+=String.fromCharCode(...p.subarray(i,i+8192));const ack=await window.cpuBytes({name:name.replace('.result','.rgba'),offset,total:bytes.length,base64:btoa(s)});check(ack.nextOffset===offset+p.length,'binaryack');}};
++ const patch=(buffer,basis,executor,job)=>{
++  // Identity/header transport only; all geometry encoding and compute are C++.
++  const b=buffer.slice(0),v=new DataView(b);[...basis,executor,String(job),'1','1'].forEach((x,i)=>v.setBigUint64(32+i*8,BigInt(x),true));
++  new Uint8Array(b,16,16).set(Uint8Array.from(config.kernelId.match(/../g),x=>parseInt(x,16)));return b;
++ };
++ try{
++  const {createRuntime}=await import('/sdk/axiom.mjs');const {createCpuWorker}=await import('/sdk/internal/cpu-worker-client.mjs');const {cpuWorkerOwner}=await import('/sdk/internal/cpu-worker-owner.mjs');
++  sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'00000000000000000000000000000001',builtinFonts:false,permission:'localSingleUser',onError:e=>row.errors.push(String(e))});
++  const owner=cpuWorkerOwner(sdk),before=sdk.readState();row.before=before;row.initialQuota=owner.observe();
++  const waitReady=async()=>{const t=performance.now();while(sdk.readState().generation!==sdk.readState().lastCommit.presentedGeneration){check(performance.now()-t<10000,'initialreceipt');await pause(16);}};await waitReady();
++  client=await createCpuWorker(sdk);row.worker=client.observation();check(row.worker.heapBytes===67108864,'workerheap');check(owner.observe().bytes===67108864,'sameactiveRuntimegrantfloor');
++  const basis=row.worker.basis;let executor=row.worker.executor;let jobId=1;
++  const run=async(index)=>{const input=await(await fetch('/requests/'+index+'.request')).arrayBuffer(),request=patch(input,basis,executor,jobId++),started=performance.now();const task=client.submit(request);const result=await task.result;row.jobs.push({index,key:task.key,status:result.status,totalMs:result.totalMs,computeMs:result.computeMs,steps:result.steps,importMs:result.importMs,exportMs:result.exportMs,maxUnionNs:result.maxUnionNs,inputBytes:request.byteLength,outputBytes:result.bytes?.byteLength??0,elapsed:performance.now()-started});await save();if(result.bytes)await transfer(index+'-worker.result',new Uint8Array(result.bytes));check(result.status==='Ready','actualWorkerjobnotready');const output=new Uint8Array(result.bytes);const native=await(await fetch('/requests/'+index+'.path')).arrayBuffer();const nativeBytes=new Uint8Array(native),pathBytes=output.subarray(128);row.jobs.at(-1).nativeSerializedEqual=pathBytes.length===nativeBytes.length&&pathBytes.every((v,i)=>v===nativeBytes[i]);const equal=row.jobs.at(-1).nativeSerializedEqual;result.release();check(equal,'independentNativeSerializedPathMismatch');check(result.bytes.byteLength===0,'releasedresultnotdetached');return{request,native};};
++  if(config.mode==='parity'){
++   for(let i=0;i<19;++i)await run(i);
++   mainOwner=owner;mainGrant=owner.reserve('999',67108864);
++   const factory=(await import('/sdk/internal/cpu-worker-kernel.mjs')).default;let module=await factory();row.mainWasmHeap=module.HEAPU8.buffer.byteLength;
++   const input=patch(await(await fetch('/requests/0.request')).arrayBuffer(),basis,executor,100),p=module._malloc(input.byteLength);module.HEAPU8.set(new Uint8Array(input),p);const handle=module._axiom_cpu_create(p,input.byteLength);module._free(p);check(handle,'mainWasmcreate');let status=1;while(status===1)status=module._axiom_cpu_step(handle,8,2000);check(status===2,'mainWasmcompute');const bytes=module.HEAPU8.slice(module._axiom_cpu_result(handle),module._axiom_cpu_result(handle)+module._axiom_cpu_result_size(handle));await transfer('main.result',bytes);module._axiom_cpu_release(handle);module=null;owner.release('999',mainGrant);mainGrant=null;
++  }else if(config.mode==='lifecycle'){
++   let ticks=0;heartbeat=setInterval(()=>{++ticks;heartbeats.push(performance.now());},5);
++   const input=patch(await(await fetch('/requests/0.request')).arrayBuffer(),basis,executor,jobId++),a=client.submit(input);await pause(20);client.cancel(a.key);const cancelled=await a.result;row.jobs.push({key:a.key,status:cancelled.status});check(cancelled.status==='Cancelled','betweenstepscancel');
++   const longStart=performance.now();await run(1);const longEnd=performance.now();row.heartbeatDuringActualLong={start:longStart,end:longEnd,ticks:heartbeats.filter(x=>x>=longStart&&x<=longEnd),maxGapMs:Math.max(0,...heartbeats.slice(1).map((x,i)=>x-heartbeats[i]))};check(row.heartbeatDuringActualLong.ticks.length>2,'longcomputeheartbeat');row.heartbeat=ticks;clearInterval(heartbeat);heartbeat=null;check(ticks>0,'mainheartbeat');
++   let failed=false;try{const foreign=patch(input,['999',...basis.slice(1)],executor,jobId++);client.submit(foreign);}catch{failed=true;}check(failed,'foreignruntimeaccepted');row.foreignRejected=failed;
++   const malformed=patch(input,basis,executor,jobId++);new DataView(malformed).setUint32(12,1901,true);const invalid=await client.submit(malformed).result;row.jobs.push({status:invalid.status,kind:'malformed'});check(invalid.status==='Failed','malformednotrejected');
++   const overload=[];let refusal=null;for(let i=0;i<9;++i){try{overload.push(client.submit(patch(input,basis,executor,jobId++)));}catch(error){refusal=String(error);break;}}check(refusal,'queuepressureadmittedunbounded');row.queuePressure={admitted:overload.length,refusal};for(const job of overload)client.cancel(job.key);for(const job of overload)await job.result;
++   const extraMount=document.createElement('div');extraMount.style.cssText='width:300px;height:200px';document.body.append(extraMount);const foreignRuntime=await createRuntime({mount:extraMount,documentId:'00000000000000000000000000000002',builtinFonts:false,permission:'localSingleUser'});const foreignClient=await createCpuWorker(foreignRuntime);let foreignFailed=false;try{foreignClient.submit(patch(input,basis,foreignClient.observation().executor,jobId++));}catch{foreignFailed=true;}check(foreignFailed,'twoRuntimeforeignaccepted');await foreignClient.close();await foreignRuntime.close();row.twoRuntimeForeignRejected=true;
++   await client.close();check(owner.observe().bytes===0,'closegrantleak');client=null;
++   try{await createCpuWorker(sdk,{url:'/missing-worker.mjs'});check(false,'missingmodulesucceeded');}catch(e){row.missingModule=String(e);}check(owner.observe().bytes===0,'modulefailuregrantleak');
++   client=await createCpuWorker(sdk);executor=client.observation().executor;await run(2);
++  }else{
++   // Public root behavior is still synchronous input/edit; no Worker can commit.
++   await run(0);await client.close();client=null;check(owner.observe().bytes===0,'externalgrantreleased');
++   await sdk.selectShape('rectangle');const rect=sdk.canvas.getBoundingClientRect();for(const phase of ['down','up'])sdk.canvas.dispatchEvent(new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+300,clientY:rect.top+200,button:0,buttons:phase==='down'?1:0,pressure:.5,bubbles:true,cancelable:true}));await waitReady();row.externalState=sdk.readState();check(row.externalState.objects===1,'rootcreate');await sdk.undo();await waitReady();check(sdk.readState().objects===0,'rootUndo');await sdk.redo();await waitReady();check(sdk.readState().objects===1,'rootRedo');
++  }
++  row.clientTerminal=client?.observation();if(client)check(row.clientTerminal.admitted===row.clientTerminal.terminals,'missingjobterminal');row.after=sdk.readState();if(config.mode!=='external')check(row.after.objects===before.objects&&row.after.generation===before.generation,'workerchangedcanonical');row.status='OBSERVED';
++ }catch(error){row.status='FAILED';row.error=String(error.stack??error);}
++ finally{if(client)row.finalClient=client.observation();if(mainGrant&&mainOwner)try{mainOwner.release('999',mainGrant);}catch(e){row.cleanup.push(String(e));}if(heartbeat)clearInterval(heartbeat);if(client)try{await client.close();row.closedClient=client.observation();}catch(e){row.cleanup.push(String(e));}if(sdk)try{await sdk.close();}catch(e){row.cleanup.push(String(e));}await save();}
++ return{status:row.status,jobs:row.jobs.length,error:row.error};
++}
++export async function run(request,out){await fs.mkdir(out,{recursive:true});let browser,server,page;const result={id:request.id,status:'STARTED'};
++ try{
++  server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://local').pathname;if(url==='/'){res.setHeader('Content-Type','text/html');res.end('<div id="mount" style="width:900px;height:700px"></div><script type="module">import{consumer}from"/driver.mjs";window.run=consumer;</script>');return;}if(url==='/driver.mjs'){res.setHeader('Content-Type','text/javascript');res.end('export '+consumer.toString());return;}let p;if(url.startsWith('/sdk/'))p=path.join(request.sdk,url.slice(5));if(url.startsWith('/requests/'))p=path.join(request.requests,url.slice(10));if(!p)throw Error('unknown');res.setHeader('Content-Type',p.endsWith('.mjs')?'text/javascript':p.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(await fs.readFile(p));}catch(e){res.statusCode=404;res.end(String(e));}});await new Promise(r=>server.listen(0,'127.0.0.1',r));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});page=await browser.newPage({viewport:{width:1100,height:800}});const consoles=[];page.on('console',m=>{if(consoles.length<512)consoles.push(m.text());});
++  await page.exposeFunction('cpuMetadata',v=>fs.writeFile(path.join(out,'raw.json'),JSON.stringify(v,null,2)+'\n'));
++  const transfers=new Map();
++  await page.exposeFunction('cpuBytes',async c=>{if(c.total>1048576)throw Error('buffer');const old=transfers.get(c.name);if(old?.complete)throw Error('duplicatebuffer');const next=validateChunk(c,old),bytes=Buffer.from(c.base64,'base64'),file=path.join(out,c.name+'.partial');const h=await fs.open(file,c.offset?'r+':'wx');try{const n=await h.write(bytes,0,bytes.length,c.offset);if(n.bytesWritten!==bytes.length)throw Error('shortwrite');}finally{await h.close();}if(next.complete)await fs.rename(file,path.join(out,c.name));transfers.set(c.name,next);return{nextOffset:next.nextOffset};});
++  await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>window.run);result.summary=await page.evaluate(c=>window.run(c),request);result.status=result.summary.status;await fs.writeFile(path.join(out,'console.json'),JSON.stringify(consoles,null,2)+'\n');
++ }catch(e){result.status='FAILED';result.error=String(e.stack??e);}finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.writeFile(path.join(out,'worker-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({stage:'closed',...result}));}return result;
++}
++if(process.argv[1]===new URL(import.meta.url).pathname){const req=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await run(req,path.resolve(process.argv[3]))).status!=='OBSERVED')process.exitCode=1;}
+diff --git a/verification/tests/g5_cpu_worker_repair_driver.test.mjs b/verification/tests/g5_cpu_worker_repair_driver.test.mjs
+new file mode 100644
+index 00000000..3951b107
+--- /dev/null
++++ b/verification/tests/g5_cpu_worker_repair_driver.test.mjs
+@@ -0,0 +1,40 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import vm from 'node:vm';
++import {consumer,createServer} from '../runners/g5/cpu_worker_repair_web.mjs';
++async function exercise(mode,{missingTerminal=false,oldShape=false}={}){
++ const rows=[],savedBuffers=[];let now=1,quota=0,executor=0,objects=0,generation=0,pending=0,closing=false,bound=true,closed=false,activeClient;
++ const basis=['1','1','0','1'];const owner={basis:()=>basis,observe:()=>({bytes:quota,ok:true}),executor:null,reserve:()=>{if(closing)throw Object.assign(Error('DOCUMENT_CLOSING'),{code:'DOCUMENT_CLOSING'});return'1';}};
++ const state=()=>({generation:String(generation),objects,lastCommit:{presentedGeneration:String(generation)},data:{pending}});
++ const sdk={canvas:{getBoundingClientRect:()=>({left:0,top:0}),dispatchEvent:e=>{if(e.type==='pointerup'){objects=1;++generation;if(sdk.attached)pending=1;}}},readState:state,
++  selectShape:async()=>{},selectTool:async()=>{if(closing)throw Object.assign(Error('DOCUMENT_CLOSING'),{code:'DOCUMENT_CLOSING'});},undo:async()=>{objects=0;++generation;},redo:async()=>{objects=1;++generation;},
++  data:{attach:()=>{sdk.attached=true;return{pending};},readNext:()=>({bytes:Uint8Array.of(1),operationId:'packet',commit:{ordinal:'1'}}),status:()=>({pending}),release:()=>{pending=0;}},
++  close:async()=>{if(activeClient)await activeClient.close();if(pending){closing=true;throw Object.assign(Error('PUBLICATION_PENDING'),{code:'PUBLICATION_PENDING'});}closed=true;bound=false;}
++ };
++ let activeJob=null;const clients=[];
++ const worker=async(_,opts)=>{
++  ++executor;owner.executor=String(executor);quota=67108864;if(mode==='csp'){quota=0;throw Error('WORKER_MODULE_FAILURE:CSP');}
++  if(opts?.url){return new Promise((_,reject)=>{activeClient={close:async()=>{quota=0;reject(Error('CLOSED_DURING_STARTUP'));}};});}
++  const id=String(executor),ledger=[],tasks=new Map();let admitted=0,done=0,watermark=0n,isClosed=false;
++  const c={observation:()=>({basis,executor:id,admitted,terminals:missingTerminal?Math.max(0,done-1):done,pending:tasks.size,transportBytes:tasks.size*1024,cleanupErrors:[],closed:isClosed,active:activeJob}),
++   submit:b=>{const view=new DataView(b),words=Array.from({length:8},(_,i)=>view.getBigUint64(32+i*8,true).toString());if(words[0]!=='1'||BigInt(words[5])<=watermark)throw Error('STALE');if(tasks.size>=7)throw Error('TRANSPORT_BOUND');watermark=BigInt(words[5]);const key=words.join('/');++admitted;quota+=1024;let resolve;const result=new Promise(r=>resolve=r);const invalid=view.getUint32(12,true)>1900;const job={key,resolve};tasks.set(key,job);activeJob={key,startedReceivedAt:++now,workerStartedAt:now};
++    const finish=status=>{if(!tasks.delete(key))return;ledger.push({key,status});++done;quota-=1024;activeJob=null;const bytes=status==='Ready'?new ArrayBuffer(132):undefined;if(bytes)new Uint8Array(bytes,128).fill(42);resolve({status,bytes,steps:1,cursor:8,computeMs:1,totalMs:2,release:()=>{if(bytes?.byteLength)bytes.transfer(0);}});};job.finish=finish;
++    if(mode!=='life'||executor!==1||(admitted!==1&&admitted<4))queueMicrotask(()=>finish(invalid?'Failed':'Ready'));return{key,result};},
++   cancel:key=>{const j=tasks.get(key);j?.finish('Cancelled');return!!j;},close:async()=>{isClosed=true;for(const j of [...tasks.values()])j.finish('Cancelled');quota=0;owner.executor=null;},
++  };
++  const observe=c.observation;c.observation=()=>(()=>{const value={...observe(),ledger:missingTerminal?ledger.slice(1):[...ledger]};if(oldShape){delete value.cleanupErrors;delete value.closed;}return value;})();clients.push(c);activeClient=c;return c;
++ };
++ const input=new Uint8Array(128);const v=new DataView(input.buffer);v.setUint32(0,0x31575043,true);v.setUint32(4,1,true);
++ const ctx=vm.createContext({ArrayBuffer,Uint8Array,DataView,BigInt,Set,Map,URL,Error,Promise,performance:{now:()=>++now},location:{href:'http://local/app/'},setTimeout:fn=>{now+=10;queueMicrotask(fn);},setInterval:()=>1,clearInterval:()=>{},btoa:s=>Buffer.from(s,'binary').toString('base64'),PointerEvent:class{constructor(type,p){this.type=type;Object.assign(this,p);}},document:{getElementById:()=>({}),createElement:()=>({style:{}}),body:{append(){}}},fetch:async name=>({ok:true,arrayBuffer:async()=>name.endsWith('.path')?Uint8Array.of(42,42,42,42).buffer:input.slice().buffer}),window:{cpuMetadata:async row=>rows.push(structuredClone(row)),cpuBytes:async c=>{savedBuffers.push(c);return{nextOffset:c.offset+Buffer.from(c.base64,'base64').length};}}});
++ const modules={'/app/axiom.mjs':{createRuntime:async()=>{closed=false;bound=true;closing=false;return sdk;}},'/app/internal/cpu-worker-client.mjs':{createCpuWorker:worker},'/app/internal/cpu-worker-owner.mjs':{cpuWorkerOwner:()=>{if(!bound)throw Error('FOREIGN_RUNTIME');return owner;}}};
++ const m=new vm.SourceTextModule('export '+consumer.toString(),{context:ctx,importModuleDynamically:async name=>{const values=modules[name];assert(values,name);const mod=new vm.SyntheticModule(Object.keys(values),function(){for(const[k,v]of Object.entries(values))this.setExport(k,v);},{context:ctx});await mod.link(()=>{});await mod.evaluate();return mod;}});await m.link(()=>{});await m.evaluate();const result=await m.namespace.consumer({mode,caseId:'vm',variant:oldShape?'old':'candidate',assetBaseURL:oldShape?'http://local/assets/':'../assets/'});return{result,rows,savedBuffers};
++}
++test('actual repair asset consumer preserves result bytes and independent parity before success',async()=>{const r=await exercise('asset');assert.equal(r.result.status,'OBSERVED');assert(r.savedBuffers.length);assert(r.rows.at(-1).executors[0].after.closed);});
++test('actual repair consumer detects missing terminal and saves failing ledger/state before cleanup',async()=>{const r=await exercise('asset',{missingTerminal:true});assert.equal(r.result.status,'FAILED');const last=r.rows.at(-1);assert.match(last.failure.error,/terminal list count|all accepted exactly one terminal/);assert(last.executors[0].before);assert(last.failure.client);assert(r.savedBuffers.length);});
++test('real HTTP harness separates /app and /assets and supplies worker-src none',async()=>{
++ const sdk=new URL('../../.aegis/results/G5-CPUW1-wasm-kernel-r1/immutable-sdk/normal/',import.meta.url).pathname;
++ const active={sdk,requests:[]},server=createServer({requests:new URL('../../out/G5-CPUW1-wasm-kernel-r1/requests/',import.meta.url).pathname},active);await new Promise(r=>server.listen(0,'127.0.0.1',r));try{const base='http://127.0.0.1:'+server.address().port;const csp=await fetch(base+'/csp/');assert.match(csp.headers.get('content-security-policy'),/worker-src 'none'/);for(const url of ['/app/axiom.mjs','/assets/axiom.wasm','/assets/internal/cpu-worker-thread.mjs','/requests/0.path']){const response=await fetch(base+url);assert.equal(response.status,200,url);await response.arrayBuffer();}assert(active.requests.length>=5);const code=await(await fetch(base+'/driver.mjs')).text();assert(!code.includes('node:'));assert(code.includes("sdk.data.release(packet)"));}finally{await new Promise(r=>server.close(r));}
++});
++
++test('actual scheduling consumer covers old ledger shape and candidate independently',async()=>{for(const oldShape of [true,false]){const r=await exercise('sched',{oldShape});assert.equal(r.result.status,'OBSERVED',r.rows.at(-1)?.failure?.error);assert.equal(r.rows.at(-1).jobs.length,oldShape?16:18);}});
++test('actual LIFE driver covers real-flow publication failure release and retry without loosening barrier',async()=>{const r=await exercise('life');assert.equal(r.result.status,'OBSERVED',r.rows.at(-1)?.failure?.error);const last=r.rows.at(-1);assert.equal(last.pendingClose.error.code,'PUBLICATION_PENDING');assert(last.pendingClose.bindingSame);assert.equal(last.pendingClose.editBlocked,'DOCUMENT_CLOSING');assert.equal(last.pendingClose.grantBlocked,'DOCUMENT_CLOSING');assert.equal(last.released.pending,0);assert(last.retryClose.bindingAbsent);});
++
++test('actual CSP consumer retains fault/quota then proves root remains usable',async()=>{const r=await exercise('csp');assert.equal(r.result.status,'OBSERVED',r.rows.at(-1)?.failure?.error);const last=r.rows.at(-1);assert.match(last.cspFailure.error,/CSP/);assert.equal(last.cspFailure.quotaAfter.bytes,0);assert.equal(last.rootAfterCSP.objects,1);});
+diff --git a/verification/tests/g5_cpu_worker_repair_root.test.mjs b/verification/tests/g5_cpu_worker_repair_root.test.mjs
+new file mode 100644
+index 00000000..a578fc09
+--- /dev/null
++++ b/verification/tests/g5_cpu_worker_repair_root.test.mjs
+@@ -0,0 +1,12 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
++const root=fs.readFileSync(new URL('../../sdk/web/axiom.mjs',import.meta.url),'utf8');
++test('actual root private asset binding uses normalized relative assets',()=>{
++ const line=root.split('\n').find(l=>l.includes('bindCpuWorkerOwner(api,'));let owner;
++ vm.runInNewContext(line,{api:{},assets:new URL('../assets/','http://localhost/app/axiom.mjs'),assetBaseURL:'../assets/',URL,bindCpuWorkerOwner:(_,v)=>owner=v,cpuWorkers:new Set()});
++ assert.equal(owner.assetBaseURL.href,'http://localhost/assets/internal/');
++});
++test('actual root close retains private binding after publication-pending and retires only on successful retry',async()=>{
++ const start=root.indexOf('      async close(){'),end=root.indexOf('\n    };',start);const method=root.slice(start,end).trim();
++ let unbound=0,attempts=0;const context={AxiomError:class extends Error{constructor(code){super(code);this.code=code;}},unbindCpuWorkerOwner:()=>++unbound,call:()=>{if(++attempts===1){const e=new Error('PUBLICATION_PENDING');e.code='PUBLICATION_PENDING';throw e;}},schedule:()=>{},cleanup:()=>{},tail:Promise.resolve(),text:{finish:async()=>true,dispose:()=>{}},cpuWorkers:new Set(),disposeInput:undefined,closed:false,closing:false,closeBarrier:false,module:{}};
++ vm.createContext(context);vm.runInContext('const api={'+method+'};globalThis.api=api;',context);await assert.rejects(context.api.close(),/PUBLICATION_PENDING/);assert.equal(unbound,0);assert.equal(context.closed,false);assert.equal(context.closing,false);await context.api.close();assert.equal(unbound,1);assert.equal(context.closed,true);
++});
+diff --git a/verification/tests/g5_cpu_worker_repair_scheduler.test.mjs b/verification/tests/g5_cpu_worker_repair_scheduler.test.mjs
+new file mode 100644
+index 00000000..5574aaa8
+--- /dev/null
++++ b/verification/tests/g5_cpu_worker_repair_scheduler.test.mjs
+@@ -0,0 +1,8 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
++test('actual Worker uses fair posted tasks for bounded steps and invalidates cancelled turns',async()=>{
++ const source=fs.readFileSync(new URL('../../sdk/web/internal/cpu-worker-thread.mjs',import.meta.url),'utf8');const timer=[],tasks=[],messages=[],stepped=[];let handle=0;
++ class MessageChannel{constructor(){this.port1={onmessage:null,close(){}};this.port2={postMessage:v=>tasks.push(()=>this.port1.onmessage?.({data:v})),close(){}};}}
++ const m={HEAPU8:new Uint8Array(67108864),UTF8ToString:()=> 'a'.repeat(32),_axiom_cpu_build:()=>0,_malloc:()=>128,_free:()=>{},_axiom_cpu_create:()=>++handle,_axiom_cpu_cursor:()=>0,_axiom_cpu_step:(h,steps,us)=>{assert.equal(steps,8);assert.equal(us,2000);stepped.push(h);return 1;},_axiom_cpu_release:()=>1,_axiom_cpu_cancel:()=>1};
++ const c=vm.createContext({Uint8Array,ArrayBuffer,performance,MessageChannel,setTimeout:fn=>timer.push(fn),postMessage:v=>messages.push(v),close:()=>{},onmessage:null});const a=new vm.SyntheticModule(['default'],function(){this.setExport('default',async()=>m);},{context:c}),b=new vm.SyntheticModule(['kernelId','limits'],function(){this.setExport('kernelId','a'.repeat(32));this.setExport('limits',{stepSegments:8,stepMicroseconds:2000,heapBytes:67108864,inputBytes:1048576,outputBytes:1048576});},{context:c});for(const mod of[a,b]){await mod.link(()=>{});await mod.evaluate();}const module=new vm.SourceTextModule(source,{context:c});await module.link(n=>n.includes('kernel')?a:b);await module.evaluate();
++ await c.onmessage({data:{type:'init'}});await c.onmessage({data:{type:'run',key:'a',bytes:new ArrayBuffer(128)}});assert.equal(timer.length,0,'perstep timer used');assert.equal(tasks.length,1);await c.onmessage({data:{type:'cancel',key:'a'}});await c.onmessage({data:{type:'run',key:'b',bytes:new ArrayBuffer(128)}});tasks.shift()();assert.deepEqual(stepped,[]);tasks.shift()();assert.deepEqual(stepped,[2]);assert.equal(tasks.length,1,'must schedule only one next bounded turn');assert.equal(messages.filter(v=>v.key==='a'&&v.type==='terminal').length,1);
++});
+diff --git a/verification/tests/g5_cpu_worker_thread.test.mjs b/verification/tests/g5_cpu_worker_thread.test.mjs
+new file mode 100644
+index 00000000..e6283e08
+--- /dev/null
++++ b/verification/tests/g5_cpu_worker_thread.test.mjs
+@@ -0,0 +1,11 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
++test('actual Worker code rejects cancelled timer after a successor starts',async()=>{
++ const source=fs.readFileSync(new URL('../../sdk/web/internal/cpu-worker-thread.mjs',import.meta.url),'utf8');const timers=[],messages=[],stepped=[];let serial=0;
++ const m={HEAPU8:new Uint8Array(67108864),UTF8ToString:()=> 'a'.repeat(32),_axiom_cpu_build:()=>0,_malloc:()=>128,_free:()=>{},_axiom_cpu_create:()=>++serial,_axiom_cpu_cursor:()=>0,_axiom_cpu_step:h=>{stepped.push(h);return 1;},_axiom_cpu_release:()=>1,_axiom_cpu_cancel:()=>1};
++ class MessageChannel{constructor(){this.port1={onmessage:null,close(){}};this.port2={postMessage:data=>timers.push(()=>this.port1.onmessage?.({data})),close(){}};}}
++ const context=vm.createContext({MessageChannel,Uint8Array,ArrayBuffer,performance,setTimeout:fn=>timers.push(fn),postMessage:v=>messages.push(v),close:()=>{},onmessage:null});
++ const kernel=new vm.SyntheticModule(['default'],function(){this.setExport('default',async()=>m);},{context}),build=new vm.SyntheticModule(['kernelId','limits'],function(){this.setExport('kernelId','a'.repeat(32));this.setExport('limits',{stepSegments:8,stepMicroseconds:2000,heapBytes:67108864,inputBytes:1048576,outputBytes:1048576});},{context});for(const x of[kernel,build]){await x.link(()=>{});await x.evaluate();}
++ const code=new vm.SourceTextModule(source,{context});await code.link(n=>n.includes('kernel')?kernel:build);await code.evaluate();
++ await context.onmessage({data:{type:'init'}});await context.onmessage({data:{type:'run',key:'a',bytes:new ArrayBuffer(128)}});await context.onmessage({data:{type:'cancel',key:'a'}});await context.onmessage({data:{type:'run',key:'b',bytes:new ArrayBuffer(128)}});
++ timers.shift()();assert.deepEqual(stepped,[]);timers.shift()();assert.deepEqual(stepped,[2]);assert.equal(messages.filter(v=>v.key==='a'&&v.type==='terminal').length,1);
++});
+diff --git a/verification/tests/g5_cpu_worker_transport.test.mjs b/verification/tests/g5_cpu_worker_transport.test.mjs
+new file mode 100644
+index 00000000..88cf432d
+--- /dev/null
++++ b/verification/tests/g5_cpu_worker_transport.test.mjs
+@@ -0,0 +1,27 @@
++import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';
++const clientSource=fs.readFileSync(new URL('../../sdk/web/internal/cpu-worker-client.mjs',import.meta.url),'utf8');
++const ownerSource=fs.readFileSync(new URL('../../sdk/web/internal/cpu-worker-owner.mjs',import.meta.url),'utf8');
++async function fixture(mode='normal'){
++ let used=0,next=0,terminated=0,lastWorker;const grants=new Map(),workers=new Set();const limits={heapBytes:67108864,queueJobs:8,inputBytes:1048576,outputBytes:1048576,transportBytes:16777216,stepSegments:8,stepMicroseconds:2000},kernelId='a'.repeat(32);
++ const owner={basis:()=>['1','1','2','0'],assetBaseURL:'http://localhost/internal/',reserve:(_,bytes)=>{used+=bytes;grants.set(String(++next),bytes);return String(next);},release:(_,id)=>{assert(grants.has(id));used-=grants.get(id);grants.delete(id);},attach:w=>workers.add(w),detach:w=>workers.delete(w)};
++ class Worker{constructor(){lastWorker=this;this.jobs=[];}postMessage(m){if(m.type==='init'){if(mode==='throw')throw Error('post failed');if(mode!=='hang')queueMicrotask(()=>this.onmessage({data:{type:'ready',build:kernelId,heap:limits.heapBytes}}));}if(m.type==='run')this.jobs.push(m);if(m.type==='cancel')this.onmessage({data:{type:'terminal',key:m.key,status:'Cancelled'}});}terminate(){++terminated;}}
++ const context=vm.createContext({WeakMap,Set,Map,Promise,ArrayBuffer,Uint8Array,DataView,BigInt,Error,URL,performance,Worker,queueMicrotask,setTimeout,clearTimeout});
++ const ownerModule=new vm.SourceTextModule(ownerSource,{context});await ownerModule.link(()=>{});await ownerModule.evaluate();const runtime={};ownerModule.namespace.bindCpuWorkerOwner(runtime,owner);
++ const build=new vm.SyntheticModule(['kernelId','limits'],function(){this.setExport('kernelId',kernelId);this.setExport('limits',limits);},{context});await build.link(()=>{});await build.evaluate();
++ const m=new vm.SourceTextModule(clientSource,{context});await m.link(name=>name.includes('owner')?ownerModule:build);await m.evaluate();
++ const request=(id,executor='1',runtimeId='1')=>{const b=new ArrayBuffer(128),v=new DataView(b);v.setUint32(0,0x31575043,true);v.setUint32(4,1,true);new Uint8Array(b,16,16).fill(170);[''+runtimeId,'1','2','0',executor,String(id),'1','1'].forEach((x,i)=>v.setBigUint64(32+i*8,BigInt(x),true));return b;};
++ return{create:()=>m.namespace.createCpuWorker(runtime),request,owner,workers,get used(){return used;},get worker(){return lastWorker;},get terminated(){return terminated;}};
++}
++test('real client code enforces owner identity, monotonic jobs, queue and cancellation',async()=>{
++ const f=await fixture(),c=await f.create();assert.equal(f.used,67108864);assert.throws(()=>c.submit(f.request(1,'1','9')),/STALE/);const tasks=[];for(let i=1;i<=7;++i)tasks.push(c.submit(f.request(i)));assert.throws(()=>c.submit(f.request(8)),/TRANSPORT_BOUND/);assert(c.cancel(tasks[1].key));assert.equal((await tasks[1].result).status,'Cancelled');await c.close();assert.equal(f.used,0);assert.equal(f.workers.size,0);assert.equal(f.terminated,1);
++});
++test('startup custody is registered before ready; root closes it without leaking floor',async()=>{
++ const f=await fixture('hang'),start=f.create();assert.equal(f.workers.size,1);await [...f.workers][0].close();await assert.rejects(start,/CLOSED/);assert.equal(f.used,0);assert.equal(f.terminated,1);
++});
++test('startup postMessage failure releases quota and same owner can retry generation',async()=>{
++ const f=await fixture('throw');await assert.rejects(f.create(),/post failed/);assert.equal(f.used,0);assert.equal(f.workers.size,0);
++});
++test('unknown terminal is failure; error closes existing ready buffers before releasing grants',async()=>{
++ const f=await fixture(),c=await f.create(),a=c.submit(f.request(1));
++ const output=f.request(1),v=new DataView(output);v.setUint32(0,0x31525043,true);v.setUint32(100,2,true);f.worker.onmessage({data:{type:'terminal',key:a.key,status:'Ready',bytes:output}});const ready=await a.result;assert.equal(ready.status,'Ready');assert(f.used>67108864);const b=c.submit(f.request(2));f.worker.onmessage({data:{type:'terminal',key:b.key,status:'Bogus'}});assert.equal((await b.result).status,'Failed');assert.equal(output.byteLength,0);assert.equal(f.used,0);await c.close();
++});
+diff --git a/verification/tests/test_g5_cpu_worker_repair_runner.py b/verification/tests/test_g5_cpu_worker_repair_runner.py
+new file mode 100644
+index 00000000..970e252e
+--- /dev/null
++++ b/verification/tests/test_g5_cpu_worker_repair_runner.py
+@@ -0,0 +1,20 @@
++from pathlib import Path
++import importlib.util
++import unittest
++spec=importlib.util.spec_from_file_location('runner',Path(__file__).parents[1]/'runners/g5/cpu_worker_repair_runner.py')
++m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
++class RepairGuard(unittest.TestCase):
++ def request(self,name='G5CWR1-SCHED'):return {'id':name,'cases':[{'id':x}for x in m.ROSTERS[name]]}
++ def test_roster_order_and_no_retry(self):
++  ledger={'charged_seconds':0,'attempts':[]};m.reserve(ledger,self.request());self.assertEqual(ledger['attempts'][0]['limit_seconds'],180)
++  for req in [self.request(),self.request('G5CWR1-LIFE'),{'id':'foreign','cases':[]}]:
++   with self.assertRaises(ValueError):m.reserve(ledger,req)
++ def test_invalid_case_and_exhausted_allowance(self):
++  ledger={'charged_seconds':241,'attempts':[]}
++  with self.assertRaises(ValueError):m.reserve(ledger,self.request())
++  req=self.request();req['cases'][0]['id']='wrong'
++  with self.assertRaises(ValueError):m.reserve({'charged_seconds':0,'attempts':[]},req)
++ def test_hard_stop_blocks_remaining(self):
++  ledger={'charged_seconds':10,'attempts':[{'id':'G5CWR1-SCHED','status':'STOPPED','hard_stop':True}]}
++  with self.assertRaises(ValueError):m.reserve(ledger,self.request('G5CWR1-LIFE'))
++if __name__=='__main__':unittest.main()

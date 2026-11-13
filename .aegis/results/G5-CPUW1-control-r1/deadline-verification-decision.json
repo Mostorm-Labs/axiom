@@ -1,0 +1,24 @@
+{
+  "classification": "VERIFICATION_DESIGN_DEFECT_DEADLINE_COUPLED_ZERO_REMAINDER",
+  "basis": {
+    "current_failures": [
+      ".aegis/results/G5-CPUW1-repair-r1/native-keepers.xml",
+      ".aegis/results/G5-CPUW1-repair-r1/native-prefix-recheck.xml"
+    ],
+    "old_binary_audit": "deadline-test-cause-audit.json"
+  },
+  "observed": {
+    "current_final_remainder": [
+      7,
+      3
+    ],
+    "all_paths_equal": true,
+    "old_prepared_total": 25589,
+    "expected_if_all8stepsalwayscompleted": 25600,
+    "old_final_local0_remainder": 0
+  },
+  "cause": "prepareQueryPrefix(maxSegments8) has both coverage-step ceiling and real8ms time ceiling; it may legally complete fewerthan8. Test suppliesexact200opportunitiesfor1600segments perlocal andassertszeroUp remainderforlocal0only, implicitly requiringeverycall8steps andignoringotherlocalpartialwork. Contractrequiresbudgetcompliance/reuse/finalcorrectremainder, nota minimum8segments beforedeadline. Frozenoldbinary itselfprepared25589<25600 shows premise nottrue independentlyofnewkernel.",
+  "required_correction": "Use bounded additional genuinepreparation opportunities whilepreserving8ms/8steps, checkperlocal monotonicresumableprogress, thenzeroadditionalget unions forALL16 aftercompletedpreparation; separatelydeliberatelyleavepartialprefix andprovefinalget computesonlyremaining exactsegments/pathreference. Correctedoracle muststillrejectoriginalsingleprefixslot withsameopportunities, keeporiginalnumericandbudgettestsandoriginalWebcosts. No productionbudget/math orperformancecriterionrelaxation.",
+  "not_proven": "No claimnewkernelandoldkernelidenticalCPUtiming; measuredcost baselines remain. Onlytestpremise proveninvalid.",
+  "continuation": "UnusedCWRbrowserwindowsremain0/3/420; no browserretry needed. ControloneP31correctionpreservesexistingCWRsource/tests/REDandfailureartifacts, thenexecuteunstartedclosure."
+}

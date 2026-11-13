@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "obligations": [
+    "CWH-REPLAY",
+    "CWH-BOUNDS",
+    "CWH-ORDER",
+    "CWH-WEB",
+    "CWH-CORRECT",
+    "CWH-BIND"
+  ],
+  "required": [
+    "PackageBindingPreflight.json",
+    "EvidenceContractPreflight.json",
+    "implementation-design.json",
+    "native-red.json",
+    "native-green.json",
+    "history-path-custody.json",
+    "memory-lifecycle.json",
+    "ordered-state-faults.json",
+    "browser-feedback.json",
+    "numeric-pixel-parity.json",
+    "scheduler-and-tail.json",
+    "package-consumer.json",
+    "regressions.json",
+    "sampling-plan.json",
+    "sampling-ledger.json",
+    "source-manifest.json",
+    "SDK-manifest.json",
+    "artifact-manifest.json",
+    "cleanup.json",
+    "next-step-inputs.json",
+    "result.json"
+  ],
+  "windows": [
+    {
+      "id": "G5CWH-PAIRS",
+      "seconds": 300,
+      "rss_mib": 4096,
+      "cases": [
+        "normalOFF1600",
+        "candidate1600",
+        "candidate7200"
+      ],
+      "purpose": "immediateAUpBDown/endtoend/workerphasemetadata;timingendsbeforepixels;fulloperationbyteskeptownednotArraynumbers"
+    },
+    {
+      "id": "G5CWH-FEEDBACK",
+      "seconds": 180,
+      "rss_mib": 4096,
+      "cases": [
+        "candidateheldAactiveBnewcamera"
+      ],
+      "purpose": "privatehold500mscorrectnessonly; A+Bpixelsandwheelpanpinchnewpose, AcompletioncannotclearB, actualownerBusyremainingmutations; finalexactreceipt/UndoRedo"
+    },
+    {
+      "id": "G5CWH-FAILURES",
+      "seconds": 120,
+      "rss_mib": 4096,
+      "cases": [
+        "candidatefatalDelayedReplacementContextPublication"
+      ],
+      "purpose": "actualfailedworker/invalidresultnoapply, queuedBprogress underdelayedready/contextrebind, quotaandcloseBusybeforeterminate thenDataPortPUBLICATION_PENDING/release/retry;terminal/leasesexact"
+    }
+  ],
+  "max_starts": 3,
+  "cap_seconds": 600,
+  "old_unused_allowance_carried": false
+}

@@ -96,6 +96,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
                     'api/internal/transport.mjs', 'api/internal/transport.d.mts', 'api/internal/values.mjs',
                     'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
                     'example.html', 'serve.py', 'package.json', 'README.md', 'manifest.json']
+        required += [path.relative_to(root).as_posix() for path in (root / 'internal').glob('cpu-worker-*') if path.is_file()]
         required += [path.relative_to(root).as_posix()
                      for path in (root / 'licenses').rglob('*') if path.is_file()]
         for name in required:
@@ -120,6 +121,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         print('COMMAND', json.dumps([str(arg) for arg in typecheck]), flush=True)
         subprocess.run([str(arg) for arg in typecheck], cwd=application, env=env, check=True)
         run([node, verifier, consumer, chrome,evidence/'npm-browser.json'], env)
+        run([node, verifier, consumer, chrome, evidence/'npm-cpu-worker.json', 'cpu-worker'], env)
         # Exercise the current persistent-background, image-export and identity
         # capabilities through the actual packed consumer, including its Demo.
         for feature in ('background', 'image_export', 'object_identity'):
@@ -175,7 +177,7 @@ def main():
                     'EMSDK_PYTHON': sys.executable,
                     'EMSDK_NODE': str(emsdk / 'node/24.19.0_64bit/node.exe')})
         env['PATH'] = str(emsdk / 'upstream/emscripten') + os.pathsep + env['PATH']
-        configure += ['-DCMAKE_TOOLCHAIN_FILE=' + (emsdk / 'upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake').as_posix(), '-DAXIOM_BUILD_JS_SDK=ON']
+        configure += ['-DAXIOM_CPU_PENDING_ERASE=ON', '-DCMAKE_TOOLCHAIN_FILE=' + (emsdk / 'upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake').as_posix(), '-DAXIOM_BUILD_JS_SDK=ON']
     run(configure, env)
     if args.platform == 'windows':
         targets = ['axiom_sdk', 'axiom_sdk_public_resources_tests',

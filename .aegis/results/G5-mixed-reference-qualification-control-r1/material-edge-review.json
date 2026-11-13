@@ -1,0 +1,51 @@
+{
+  "schema": "axiom-mixed-reference-independent-material-review-v1",
+  "created_utc": "2026-11-13T05:07:10.932073+00:00",
+  "scope": "Read-only helper/design/input and retained output comparison",
+  "design": {
+    "path": ".aegis/results/G5-mixed-reference-qualification-r1/reference-design.json",
+    "sha256": "de84139b47387622c722fd487feeb457f3c2b4eba1e94b7f8d9f8b1f963c773d"
+  },
+  "independence": "Helper accepts typedSnapshot/camera/dimensions only, notactualcolors oroldRGBA/difference positions. UsesactualTablecell/gridandStickyfill/outlinefilledgeometry, same2devicepixelboundarypaint. OldexpectedRGBAunchanged.",
+  "source_checks": [
+    "Literalrootrestriction; projectionrecordsbyObjectId; nonemptytextreject; Patternunsupported; originalShape/Inkedgeunchanged.",
+    "Newhelper microoriginalTableinternalcoverage0→255, interior0 remains.",
+    "Full2edgeonlynativeoutputsbyteequalunderbothchangedSnapshots; sameTable/Stickygeometry."
+  ],
+  "group_attribution": {
+    "table": {
+      "total": 2148,
+      "in_supplement": 2148,
+      "in_original": 0
+    },
+    "sticky": {
+      "total": 1875,
+      "in_supplement": 1875,
+      "in_original": 0
+    },
+    "image": {
+      "total": 302,
+      "in_supplement": 0,
+      "in_original": 0
+    },
+    "other": {
+      "total": 0,
+      "in_supplement": 0,
+      "in_original": 0
+    }
+  },
+  "candidate_final_comparison": {
+    "rows": 2,
+    "before_mismatch_each": 4325,
+    "after_supplemental_edge_each": 302,
+    "remaining_region": "Image interior source discontinuity row",
+    "color_threshold": 2,
+    "newly_excluded_edge_pixels": 33348
+  },
+  "negative_tests_still_required": true,
+  "image_qualification": false,
+  "old_failure_verdicts_preserved": true,
+  "new_sampling": false,
+  "production_edits": false,
+  "official_PASS": false
+}

@@ -1,0 +1,45 @@
+{
+  "status": "PASS_FROZEN_SCHEDULER_OBLIGATION_ONLY",
+  "old": {
+    "jobs": 16,
+    "total_ms": 22445.100000023842,
+    "compute_ms": 4175.300001978874,
+    "import_ms": 2.100000262260437,
+    "export_ms": 0.20000004768371582,
+    "yield_ms": null,
+    "unattributed_total_minus_compute_import_export_ms": 18267.499997735023,
+    "steps": 3211,
+    "queue_ms": null,
+    "queue_reason": "Sequential single active requests; no separate queue timer observed",
+    "heartbeat_max_gap_ms": 6.899999976158142,
+    "heartbeat_ticks": 4555,
+    "raw": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/raw.json"
+  },
+  "candidate": {
+    "jobs": 16,
+    "total_ms": 3703.9000000953674,
+    "compute_ms": 3682.70000064373,
+    "import_ms": 2.200000047683716,
+    "export_ms": 0.3999999761581421,
+    "yield_ms": 16.399999499320984,
+    "unattributed_total_minus_compute_import_export_ms": 18.59999942779541,
+    "steps": 3204,
+    "queue_ms": null,
+    "queue_reason": "Sequential single active requests; no separate queue timer observed",
+    "heartbeat_max_gap_ms": 6.799999952316284,
+    "heartbeat_ticks": 823,
+    "raw": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/raw.json"
+  },
+  "total_ratio": 0.16502042762524707,
+  "max_allowed_ratio": 0.7,
+  "independent_path_byte_equality": true,
+  "geometry": "Same C++1600segment requests0..15, full original left-fold reference",
+  "candidate_additional_reference_cases": [
+    17,
+    18
+  ],
+  "main_heartbeat_continues": true,
+  "paired_fresh_window": "G5CWR1-SCHED",
+  "old_yield_missing_is_null": true,
+  "no_overall_erase_editing_or_G5_performance_PASS": true
+}

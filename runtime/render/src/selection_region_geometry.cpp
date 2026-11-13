@@ -9,6 +9,7 @@
 #include "skia_prepared_geometry.hpp"
 #include "skia_mask_history.hpp"
 #include "skia_geometry_internal.hpp"
+#include "cpu_exact_path_kernel.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
@@ -29,9 +30,10 @@ namespace canvas::render {
 namespace internal {
 using ErasePathUsage=MaskHistoryUsage;
 struct EraseMaskPathCache::Entry {
-    semantic::EraseMaskGeometry geometry;SkPath path;resources::ResourceLease lease;
+    resources::ResourceLease lease;semantic::EraseMaskGeometry geometry;SkPath path;
     std::shared_ptr<ErasePathUsage> usage;std::size_t bytes=0;std::uint64_t used=0;
-    ~Entry(){if(usage){usage->bytes-=bytes;
+    std::function<void()> retireIndex;
+    ~Entry(){if(retireIndex)retireIndex();if(usage){usage->bytes-=bytes;
 #if defined(AXIOM_UR2D_TESTS)
         usage->categories[5]-=bytes;
 #endif
@@ -77,14 +79,7 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
 bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
 std::optional<SkPath> erasePath(const semantic::EraseMaskGeometry& mask,std::uint64_t* unions=nullptr) {
         G5_SCOPE(g5Build,foundation::internal::g5::Tag::wa_path_build,foundation::internal::g5::Purpose::none);
-        SkPath eraser;
-        if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask))eraser=internal::semanticPath(filled->path);
-        else if(const auto* swept=std::get_if<semantic::SweptCircleMask>(&mask))for(const auto& s:swept->segments) {
-            SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
-            if(unions)++*unions;
-            if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return std::nullopt;
-        }
-    return eraser;
+        return internal::cpuExactPath(mask,unions);
 }
 bool fillVisible(const RuntimeSceneRecord& r) {
     for(const auto& p:r.properties.entries)if(p.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&p.value)) {
@@ -275,16 +270,27 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
 }
 }
 namespace {
-SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::ExactHistoryProof>& history={},MaskHistoryWork* historyWork=nullptr) noexcept {
+SelectionGeometryHit eraseGeometryQuery(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,EraseGeometryWork* work,bool shareQuery,internal::EraseMaskPathCache* pathCache=nullptr,internal::ExactQueryWork* exact=nullptr,const internal::PreparedNavigationGeometry* prepared=nullptr,const std::shared_ptr<internal::ExactHistoryProof>& history={},MaskHistoryWork* historyWork=nullptr,const SkPath* provenQuery=nullptr,bool strictReady=false) noexcept {
     G5_SCOPE(g5Evaluate,foundation::internal::g5::Tag::wa_exact_eval,foundation::internal::g5::Purpose::none);
     try {
         std::vector<std::shared_ptr<const internal::EraseMaskPathCache::Entry>> pins;
         const auto pathFor=[&](const semantic::EraseMaskGeometry& geometry,bool historical=false){
-            if(pathCache)if(auto entry=pathCache->get(geometry,historical)){pins.push_back(entry);return std::optional<SkPath>{entry->path};}
-            return erasePath(geometry);
+            // A full owner-validated Worker path is pinned for this exact
+            // decision. Never silently rebuild a rejected/missing import.
+            if(!historical&&provenQuery)return std::optional<SkPath>{*provenQuery};
+            if(pathCache)if(auto entry=strictReady?pathCache->lookup(geometry):pathCache->get(geometry,historical)){pins.push_back(entry);return std::optional<SkPath>{entry->path};}
+            if(strictReady)return std::optional<SkPath>{};
+            const auto at=std::chrono::steady_clock::now();std::uint64_t unions=0;
+            auto path=erasePath(geometry,&unions);
+            if(historyWork){
+                (historical?historyWork->historyUnionOps:historyWork->queryUnionOps)+=unions;
+                ++(historical?historyWork->historyPathBuilds:historyWork->queryPathBuilds);
+                (historical?historyWork->historyPathNanoseconds:historyWork->queryPathNanoseconds)+=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-at).count();
+            }
+            return path;
         };
         const auto historicalPath=[&](std::size_t i){
-            if(pathCache&&history)if(auto entry=pathCache->exactHistoricalPath(history,i)){
+            if(!strictReady&&pathCache&&history)if(auto entry=pathCache->exactHistoricalPath(history,i)){
                 pins.push_back(entry);return std::optional<SkPath>{entry->path};
             }
             return pathFor(record.eraseMasks[i].geometry,true);
@@ -451,7 +457,9 @@ struct EraseMaskPathCache::Impl {
     std::vector<std::shared_ptr<ExactHistoryProof>> exactHistories;
     std::vector<std::shared_ptr<Refusal>> refusals;
     std::shared_ptr<SourceRetentionPool> sources=std::make_shared<SourceRetentionPool>();
-    std::size_t capacity=0;std::uint64_t tick=0,nextHistory=0;
+    struct FinishedIndex {std::map<const Entry*,std::weak_ptr<Entry>> entries;};
+    std::shared_ptr<FinishedIndex> finished=std::make_shared<FinishedIndex>();
+    std::size_t capacity=0,residentUpperBound=8U*1024U*1024U;std::uint64_t tick=0,nextHistory=0;
     unsigned cohortDepth=0;
     // Retained CPU representations obey capacity. One synchronous construction
     // has a separate, fully precharged global staging lease; it is not another
@@ -465,7 +473,8 @@ struct EraseMaskPathCache::Impl {
 #endif
     }
     std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
-        std::size_t(lastQuery&&std::find(cohortQueries.begin(),cohortQueries.end(),lastQuery)==cohortQueries.end())+queryPrefixes.size();}
+        std::size_t(lastQuery&&std::find(cohortQueries.begin(),cohortQueries.end(),lastQuery)==cohortQueries.end())+queryPrefixes.size()+
+        std::count_if(finished->entries.begin(),finished->entries.end(),[&](const auto& v){auto p=v.second.lock();return p&&p->usage==usage&&std::find(entries.begin(),entries.end(),p)==entries.end();});}
     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
     bool evict(bool drawPreparation=false){
         observeState();
@@ -513,13 +522,14 @@ struct EraseMaskPathCache::Impl {
         // including externally held plans surviving clear(). It owns no source.
         if(const auto it=usage->sources.find(source.get());it!=usage->sources.end())
             if(auto known=it->second.lock();known&&known->source==source)return known;
+        const auto sourceCapacity=drawPreparation?std::min<std::size_t>(capacity,8U*1024U*1024U):capacity;
         constexpr auto metadata=sizeof(MaskHistorySourceCharge)+256;
-        if(!source||source->bytes>capacity||source->indexBytes>capacity-source->bytes||
-           metadata>capacity-source->bytes-source->indexBytes)return {};
+        if(!source||source->bytes>sourceCapacity||source->indexBytes>sourceCapacity-source->bytes||
+           metadata>sourceCapacity-source->bytes-source->indexBytes)return {};
         const auto weight=source->bytes+source->indexBytes+metadata;
         std::optional<std::uint64_t> token;
         for(;;){
-            if(usage->bytes<=capacity-weight)token=budget->reserve(resources::ResourceClass::kRecorded,metadata,true);
+            if(usage->bytes<=sourceCapacity-weight)token=budget->reserve(resources::ResourceClass::kRecorded,metadata,true);
             if(token)break;if(!evict(drawPreparation))return {};
         }
         resources::ResourceLease reservation(budget,*token);
@@ -533,6 +543,44 @@ struct EraseMaskPathCache::Impl {
 };
 EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
 EraseMaskPathCache::~EraseMaskPathCache()=default;
+bool EraseMaskPathCache::readyMatches(const std::shared_ptr<const Entry>& e,const semantic::EraseMaskGeometry& g)noexcept{return e&&e->geometry==g;}
+const SkPath& EraseMaskPathCache::readyPath(const std::shared_ptr<const Entry>& e)noexcept{return e->path;}
+void EraseMaskPathCache::setResidentUpperBound(std::size_t value)noexcept{
+ impl_->residentUpperBound=std::max<std::size_t>(1,value);
+}
+std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::lookup(const semantic::EraseMaskGeometry& geometry)noexcept{
+ for(auto& entry:impl_->entries)if(entry->geometry==geometry){entry->used=++impl_->tick;++impl_->stats.hits;++impl_->stats.history.finishedHits;return entry;}
+ // An explicit same-budget clear may release discoverability while an active
+ // intent/handoff still owns the charged entry. Recover it by full value.
+ for(const auto& [id,weak]:impl_->finished->entries){(void)id;if(auto entry=weak.lock();entry&&entry->usage==impl_->usage&&entry->geometry==geometry){entry->used=++impl_->tick;++impl_->stats.hits;++impl_->stats.history.finishedHits;return entry;}}
+ return {};
+}
+std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::publishFinished(
+ const semantic::EraseMaskGeometry& geometry,const SkPath& path,
+ std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity){
+ auto& state=*impl_;capacity=std::min(capacity,state.residentUpperBound);
+ if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
+ if(auto ready=lookup(geometry))return ready;
+ if(!state.budget||!path.isFinite())return {};
+ const auto raw=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
+ const auto bytes=sizeof(Entry)+raw+256+path.approximateBytesUsed();
+ if(bytes>state.capacity)return {};
+ while(state.size()>=512||state.usage->bytes>state.capacity-bytes)if(!state.evict())return {};
+ auto token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};
+ resources::ResourceLease admission(state.budget,*token);
+ auto entry=std::make_shared<Entry>();entry->geometry=geometry;entry->path=path;
+ const auto actualRaw=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.capacity()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.capacity()*sizeof(semantic::PathCommand);},entry->geometry);
+ if(actualRaw>raw)return {}; // Never publish an uncharged allocator capacity.
+ entry->lease=std::move(admission);entry->usage=state.usage;entry->bytes=bytes;entry->used=++state.tick;
+ state.usage->bytes+=bytes;
+#if defined(AXIOM_UR2D_TESTS)
+ state.usage->categories[5]+=bytes;
+#endif
+ const auto weakIndex=std::weak_ptr<Impl::FinishedIndex>(state.finished);const auto id=entry.get();
+ entry->retireIndex=[weakIndex,id]{if(auto index=weakIndex.lock())index->entries.erase(id);};
+ state.finished->entries.insert_or_assign(id,entry);
+ state.entries.push_back(entry);++state.stats.builds;++state.stats.history.finishedImports;return entry;
+}
 void EraseMaskPathCache::clear()noexcept{impl_->queryPrefixes.clear();impl_->nextPrefixTarget=0;impl_->lastQuery.reset();impl_->cohortQueries.clear();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<ExactHistoryProof>>{}.swap(impl_->exactHistories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
 void EraseMaskPathCache::beginCohort(std::function<void()> pressure)noexcept{
     if(!impl_->cohortDepth){impl_->cohortPressure=std::move(pressure);impl_->cohortPressureAttempted=false;}
@@ -591,8 +639,8 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
         }
     } observation{began,completedNow,resumed,denied,maxUnion,compared,available,*impl_,allowance};
     try{
-        auto& state=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
-        if(state.budget!=budget||state.capacity!=capacity){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}
+        auto& state=*impl_;capacity=std::min(capacity,impl_->residentUpperBound);
+        if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
         const auto* input=std::get_if<semantic::SweptCircleMask>(&geometry);
         if(!input||!state.budget||!maxSegments||state.constructing||
            (allowance&&!optionalQueryTime(*allowance))||!finiteQuery(*input,&compared))return;
@@ -608,7 +656,8 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
         const auto raw=end*sizeof(semantic::EraseCubicSegment);
         const auto base=sizeof(Entry)+raw+65536U;
         const auto temporary=old?2*old->path.approximateBytesUsed():0U;
-        if(base>capacity||temporary>capacity-base||end>(capacity-base-temporary)/4096U)return;
+        const auto constructionCapacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+        if(base>constructionCapacity||temporary>constructionCapacity-base||end>(constructionCapacity-base-temporary)/4096U)return;
         const auto estimate=base+end*4096U+temporary;
         // Entire original conservative estimate is globally precharged while
         // the old immutable prefix/COW path remains resident and charged.
@@ -619,10 +668,9 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
         SkPath path=old?old->path:SkPath{};std::size_t done=first;
         for(;done<end;++done){
             if(allowance&&!optionalQueryTime(*allowance))break;
-            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();SkPathBuilder builder;
-            builder.moveTo(f(p.p0.position.x),f(p.p0.position.y));builder.cubicTo(f(p.control1.x),f(p.control1.y),f(p.control2.x),f(p.control2.y),f(p.p1.position.x),f(p.p1.position.y));
+            const auto& p=input->segments[done];const auto unionStart=std::chrono::steady_clock::now();
             ++state.stats.history.queryUnionOps;
-            if(!unite(path,stroke(builder.detach(),2*std::max(p.p0.radius,p.p1.radius),SkPaint::kRound_Cap))||!path.isFinite())return;
+            if(!cpuExactUnionSegment(path,p)||!path.isFinite())return;
             ++completedNow;if(allowance)++allowance->steps;
             maxUnion=std::max(maxUnion,std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-unionStart).count()));
         }
@@ -694,6 +742,7 @@ void EraseMaskPathCache::prepareQueryPrefixes(std::span<const ReferenceTraversal
 std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const semantic::EraseMaskGeometry& geometry,bool historical){
     G5_SCOPE(g5PathLookup,foundation::internal::g5::Tag::wa_path_lookup,foundation::internal::g5::Purpose::none);
     auto& state=*impl_;const auto denied=[&]()->std::shared_ptr<const Entry>{++state.stats.denied;return {};};
+    if(auto finished=lookup(geometry))return finished;
     for(auto& entry:state.entries)if((++state.stats.pathValueComparisons,state.stats.pathPrimitiveComparisons+=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry),entry->geometry==geometry)){entry->used=++state.tick;++state.stats.hits;return entry;}
     if(!historical){
         const auto* sweep=std::get_if<semantic::SweptCircleMask>(&geometry);
@@ -712,7 +761,8 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
     const auto units=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},geometry);
     const auto raw=std::visit([](const auto& g){if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
     const auto base=sizeof(Entry)+raw+65536;
-    if(!state.budget||base>state.capacity||units>(state.capacity-base)/4096)return denied();
+    const auto constructionCapacity=std::min<std::size_t>(state.capacity,8U*1024U*1024U);
+    if(!state.budget||base>constructionCapacity||units>(constructionCapacity-base)/4096)return denied();
     const auto estimate=base+units*4096;
     HP_OBSERVE(HistoryPathEvent::kRequest,nullptr,&geometry,state.usage->bytes,estimate,0,state.size(),historical);
     if(state.constructing)return denied();
@@ -792,8 +842,9 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,
     const std::shared_ptr<MaskHistoryPlan>& previous,MaskHistoryAdmission* admission){
     G5_SCOPE(g5HistoryLookup,foundation::internal::g5::Tag::wa_history_lookup,foundation::internal::g5::Purpose::none);
-    auto& state=*impl_;capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
-    if(state.budget!=budget||state.capacity!=capacity){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}
+    auto& state=*impl_;capacity=std::min(capacity,impl_->residentUpperBound);
+    if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
+    const auto drawCapacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
     auto status=MaskHistoryAdmission::kNotAdmitted;
     bool refusalHit=false,structural=false;
     const auto storage=records.storage();
@@ -816,10 +867,10 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     // This is not a mask/document limit: the original GPU draw remains valid.
     std::size_t count=0;for(const auto& mask:records){const auto n=std::visit([](const auto& g)->std::size_t{
         if constexpr(requires{g.segments;})return g.segments.size();else return 1;},mask.geometry);
-        if(n>capacity/sizeof(std::shared_ptr<const PreparedMaskPrimitive>)-count){structural=true;return denied();}count+=n;
+        if(n>drawCapacity/sizeof(std::shared_ptr<const PreparedMaskPrimitive>)-count){structural=true;return denied();}count+=n;
     }
     std::size_t minimum=0;
-    const auto charge=[&](std::size_t n,std::size_t bytes){if(bytes&&n>(capacity-minimum)/bytes)return false;minimum+=n*bytes;return true;};
+    const auto charge=[&](std::size_t n,std::size_t bytes){if(bytes&&n>(drawCapacity-minimum)/bytes)return false;minimum+=n*bytes;return true;};
     if(!charge(1,sizeof(MaskHistoryPlan)+256)||!charge(count,sizeof(std::shared_ptr<const PreparedMaskPrimitive>))||
        !charge(records.size(),sizeof(std::size_t)+sizeof(std::shared_ptr<const void>))||
        !charge(1,sourceMaskBytes(*storage))||!charge(count,sizeof(PreparedMaskPrimitive)+128)){
@@ -843,9 +894,9 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     auto sourceCharge=state.sourceCharge(retention,true);if(!sourceCharge)return denied();
     const auto accounted=metadata;
     const auto reserve=[&](std::size_t bytes,std::size_t weight)->std::optional<std::uint64_t>{
-        if(weight>state.capacity)return {};
+        if(weight>drawCapacity)return {};
         for(;;){
-            const bool room=state.size()<512&&state.usage->bytes<=state.capacity-weight;
+            const bool room=state.size()<512&&state.usage->bytes<=drawCapacity-weight;
             if(room)
                 if(auto token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true))return token;
             if(!state.evict(true)){status=room?MaskHistoryAdmission::kResourcePending:MaskHistoryAdmission::kNotAdmitted;return {};}
@@ -869,7 +920,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     }else ++state.stats.history.resets;
     const auto prepare=[&](const auto& value)->bool{
         const auto units=[&]()->std::size_t{if constexpr(requires{value.path;})return value.path.commands.size();else return 4;}();
-        if(units>(state.capacity-std::min(state.capacity,sizeof(PreparedMaskPrimitive)+65536U))/256U)return false;
+        if(units>(drawCapacity-std::min(drawCapacity,sizeof(PreparedMaskPrimitive)+65536U))/256U)return false;
         const auto estimate=sizeof(PreparedMaskPrimitive)+65536U+units*256U;
         auto t=reserve(estimate,estimate);if(!t)return false;resources::ResourceLease reservation(state.budget,*t);
         auto primitive=makePreparedMaskPrimitive();
@@ -982,12 +1033,12 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::exactHistor
 }
 
 SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,const semantic::EraseMaskGeometry& mask,
-    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options)noexcept{
-    capacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+    std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity,PreparedGeometryCache* prepared,const RenderCacheOptions* options,const SkPath* provenQuery,bool strictReady)noexcept{
+    capacity=std::min(capacity,impl_->residentUpperBound);
     [[maybe_unused]]const auto historyBefore=impl_->stats.history;
     std::shared_ptr<ExactHistoryProof> historyPlan;
     try{
-        if(impl_->budget!=budget||impl_->capacity!=capacity){clear();impl_->usage=std::make_shared<ErasePathUsage>();impl_->budget=std::move(budget);impl_->capacity=capacity;}
+        if(impl_->budget!=budget){clear();impl_->usage=std::make_shared<ErasePathUsage>();impl_->budget=std::move(budget);impl_->capacity=capacity;}else if(impl_->capacity!=capacity){clear();impl_->capacity=capacity;}
     }
     catch(const std::bad_alloc&){++impl_->stats.history.denied;}
     EraseGeometryWork pathOps;
@@ -1056,8 +1107,9 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
                 }
             }
             historyPlan=exactHistory(record.eraseMasks);
-            const auto result=eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history);
-            if(body&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
+            if(strictReady&&!record.eraseMasks.empty()&&!historyPlan)return Hit::kInvalid;
+            const auto result=eraseGeometryQuery(record,mask,&pathOps,true,this,&cost,body.get(),historyPlan,&impl_->stats.history,provenQuery,strictReady);
+            if(!strictReady&&body&&(record.eraseMasks.empty()||historyPlan)&&result!=Hit::kInvalid&&result!=Hit::kUnsupported){
                 impl_->lastQuery.reset();
                 const auto raw=std::visit([](const auto& g)->std::size_t{
                     if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);
@@ -1080,7 +1132,7 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
                 }
             }
             return result;
-        }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost);}
+        }catch(const std::bad_alloc&){++cost.fallbacks;cost.fallbackReason=4;if(strictReady)return Hit::kInvalid;return eraseGeometryQuery(record,mask,nullptr,true,this,&cost,nullptr,{},nullptr,provenQuery);}
     };
     const auto result=run();
     impl_->stats.history.historicalDifferences+=pathOps.historicalDifferences;
@@ -1131,7 +1183,7 @@ SelectionGeometryHit EraseMaskPathCache::selectionQuery(const RuntimeSceneRecord
             if(i)builder.lineTo(lx,ly);else builder.moveTo(lx,ly);
         }
         builder.close();auto selection=builder.detach();auto contact=stroke(selection,2e-4);
-        auto plan=history(record.eraseMasks,budget,std::min<std::size_t>(capacity,8*1024*1024));
+        auto plan=history(record.eraseMasks,budget,capacity);
         ReferenceTraversalEntry entry;entry.record.content=record.content;
         entry.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(record.content)};
         auto& work=impl_->stats.exact;++work.queries;

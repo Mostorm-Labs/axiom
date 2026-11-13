@@ -1,0 +1,71 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW3-complete-interaction-r2",
+  "status": "FROZEN_AUTHORIZED_CORRECTED_COMPLETE_INTERACTION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/g5-cpu-worker",
+    "revision": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+    "completed_through": [
+      "Retained r1 S/P/Q source and independent hash-reviewed partial evidence; no functional GatePASS",
+      "Earlier verification defect classified; corrected P20/P31 materialized"
+    ],
+    "next_action": "Validate preserved uncommitted r1 source map; repair v4/table driver and attribute saved ellipse pixels offline, then complete all remaining mixed/recovery proof under r2."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW3-complete-interaction-r2"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "964400a48b06c3913b6840230a7158ad6d2dcd01160bd7c1c1a13909370cfb8a"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "9a518a25c61d822a300a611a1c4a43911dbc1229f38d0d27bbb6e356f9d56440"
+  },
+  "design_contract_ref": {
+    "path": "design-contract.json",
+    "sha256": "5f0d72ba398803dea0ed4c244839a3de0e45cb4bc996c104cf6b0d51359b8c5d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "206502932b1fc056bfcdf87a40665693d5c7143bdd4e0f9c407b47af02b56fa5"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "233642b9c32b066cf9c689e19cbc3558176a3b0a448bd3c8066e870bf24f5407"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "05496e25d9e32a2ce2c6325a910452dff2bc812fd60537dc8cd8265fcb060862"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "6a5accb0f49b2819f7dfc9a675bb295800db4dff49badf777b4c0eee3df7fcd6"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "ef645be0f7023b5fb14df1e4535cc83a92d0dbee7bcbd0a4dfaa719dd779fd36"
+  },
+  "routing_ref": {
+    "path": "routing-and-verification-repair.json",
+    "sha256": "82d9116a58f736e8cd5eef90ac8c6f50025befe1ec38c23bc93bbc9dfbd4c7ac"
+  }
+}

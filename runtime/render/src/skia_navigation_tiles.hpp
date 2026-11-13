@@ -74,6 +74,7 @@ class SkiaNavigationTiles final {
         bool prewarm=false;
         bool coveragePriority=false;
         foundation::WorldRect demand{};
+        ValidRegions paint; // Only these fully painted rectangles may become valid.
         bool cpuCoverage=false,gpuCoarse=false;
         resources::ResourceLease lease;
         ValidRegions valid;

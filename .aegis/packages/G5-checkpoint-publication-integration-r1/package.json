@@ -1,0 +1,23 @@
+{
+  "schema": "axiom-narrow-publication-integration-package-v1",
+  "task_id": "G5-checkpoint-publication-integration-r1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "task_anchor": {
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+    "relation": "ancestor"
+  },
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "649f5ba156afdcfe08a4de90e44f036a845fa0891582a1aa96f58d06945a8864"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "human_commit_push_authorized": true,
+  "executor_git_mutation": false
+}

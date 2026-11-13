@@ -1351,11 +1351,80 @@ SemanticError SemanticCodec::preflightOperationBytes(const std::vector<std::uint
 
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
 SemanticError internal::preflightDocumentSnapshotV1(std::span<const std::uint8_t> bytes) noexcept {
-    if (bytes.size() > kMaxOperationBytes) return SemanticError::kLimitExceeded;
+    if (bytes.size() > kSnapshotEnvelopeBytes) return SemanticError::kLimitExceeded;
     SnapshotPreflightFailure failure = SnapshotPreflightFailure::kNone;
     if (!preflightSnapshotMessage(bytes, *auditoryworks::axiom::v1::DocumentSnapshot::descriptor(), failure, true)) {
         return failure == SnapshotPreflightFailure::kLimit ? SemanticError::kLimitExceeded
                                                            : SemanticError::kMalformedWire;
+    }
+    return SemanticError::kNone;
+}
+
+SemanticError internal::measureSnapshotMessage(const google::protobuf::Message& source,
+                                              std::size_t limit, std::size_t& size) {
+    const auto* descriptor = source.GetDescriptor();
+    const auto* reflection = source.GetReflection();
+    if (!descriptor || !reflection || reflection->GetUnknownFields(source).field_count())
+        return SemanticError::kMalformedWire;
+    if (descriptor->full_name() == "auditoryworks.axiom.v1.ObjectRecord")
+        limit = std::min(limit, kMaxObjectRecordBytes);
+    size = 0;
+    const auto varintSize = [](std::uint64_t value) {
+        std::size_t bytes = 1;
+        while (value >= 128) { ++bytes; value >>= 7; }
+        return bytes;
+    };
+    const auto add = [&](std::size_t bytes) {
+        if (bytes > limit - size) return false;
+        size += bytes;
+        return true;
+    };
+    // Measure values without constructing nested encoded buffers. Scalars use
+    // the same canonical encoding (including the released signed-zero policy).
+    std::vector<std::uint8_t> scalar;
+    scalar.reserve(16);
+    for (int f = 0; f < descriptor->field_count(); ++f) {
+        const auto* field = descriptor->field(f);
+        const int count = field->is_repeated() ? reflection->FieldSize(source, field)
+                                               : (reflection->HasField(source, field) ? 1 : 0);
+        if (field->is_repeated() && count > int(kMaxSnapshotRepeatedItems))
+            return SemanticError::kLimitExceeded;
+        if (!count) continue;
+        const auto tag = varintSize(std::uint64_t(field->number()) << 3);
+        if (field->is_repeated() && field->is_packable() && field->is_packed()) {
+            std::size_t packed = 0;
+            for (int i = 0; i < count; ++i) {
+                scalar.clear();
+                if (!appendCanonicalScalar(source, *field, i, true, scalar, false))
+                    return SemanticError::kMalformedWire;
+                if (scalar.size() > limit - packed) return SemanticError::kLimitExceeded;
+                packed += scalar.size();
+            }
+            if (!add(tag) || !add(varintSize(packed)) || !add(packed))
+                return SemanticError::kLimitExceeded;
+            continue;
+        }
+        for (int i = 0; i < count; ++i) {
+            if (field->cpp_type() == google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE) {
+                const auto& nested = field->is_repeated() ? reflection->GetRepeatedMessage(source, field, i)
+                                                         : reflection->GetMessage(source, field);
+                std::size_t length = 0;
+                const auto error = measureSnapshotMessage(nested, limit - size, length);
+                if (error != SemanticError::kNone) return error;
+                if (!add(tag) || !add(varintSize(length)) || !add(length))
+                    return SemanticError::kLimitExceeded;
+            } else if (field->cpp_type() == google::protobuf::FieldDescriptor::CPPTYPE_STRING) {
+                const auto& value = field->is_repeated() ? reflection->GetRepeatedStringReference(source, field, i, nullptr)
+                                                        : reflection->GetStringReference(source, field, nullptr);
+                if (!add(tag) || !add(varintSize(value.size())) || !add(value.size()))
+                    return SemanticError::kLimitExceeded;
+            } else {
+                scalar.clear();
+                if (!appendCanonicalScalar(source, *field, i, field->is_repeated(), scalar, true))
+                    return SemanticError::kMalformedWire;
+                if (!add(scalar.size())) return SemanticError::kLimitExceeded;
+            }
+        }
     }
     return SemanticError::kNone;
 }
@@ -1366,9 +1435,29 @@ CodecResult internal::canonicalEncodeProto(const google::protobuf::Message& mess
     return {SemanticError::kNone,std::move(bytes)};
 }
 
+CodecResult internal::encodePreparedEraseItem(const Operation& operation,std::size_t index){
+ if(operation.kind()!=OperationKind::kAddEraseMasks)return {SemanticError::kInvalidSemanticValue,{}};
+ const auto& items=std::get<AddEraseMasksOp>(operation.payload).items;if(index>=items.size())return {SemanticError::kInvalidSemanticValue,{}};
+ Operation item{operation.id,operation.document_id,operation.schema_version,operation.payload_version,AddEraseMasksOp{{items[index]}}};
+ auditoryworks::axiom::v1::Operation wire;if(!toProtobufOperation(item,wire))return {SemanticError::kInvalidSemanticValue,{}};
+ return canonicalEncodeProto(wire.payload().add_erase_masks().items(0));
+}
+CodecResult internal::framePreparedEraseOperation(const Operation& operation,const std::vector<std::vector<std::uint8_t>>& items){
+ if(operation.kind()!=OperationKind::kAddEraseMasks||items.size()!=std::get<AddEraseMasksOp>(operation.payload).items.size())return {SemanticError::kInvalidSemanticValue,{}};
+ std::vector<std::uint8_t> body;std::size_t total=0;for(const auto& item:items){if(item.size()>kMaxOperationBytes-total-16)return {SemanticError::kLimitExceeded,{}};total+=item.size()+16;}body.reserve(total);
+ for(const auto& item:items)appendMessage(body,1,item);
+ std::vector<std::uint8_t> payload;appendMessage(payload,12,body);
+ std::vector<std::uint8_t> bytes,id;appendBytes(id,1,std::string(reinterpret_cast<const char*>(operation.id.value().bytes.data()),16));appendMessage(bytes,1,id);id.clear();appendBytes(id,1,std::string(reinterpret_cast<const char*>(operation.document_id.value().bytes.data()),16));appendMessage(bytes,2,id);appendVarint(bytes,24);appendVarint(bytes,operation.schema_version);appendVarint(bytes,32);appendVarint(bytes,operation.payload_version);appendMessage(bytes,5,payload);
+ if(bytes.size()>kMaxOperationBytes)return {SemanticError::kLimitExceeded,{}};return {SemanticError::kNone,std::move(bytes)};
+}
+
 CodecResult internal::canonicalEncodeDocumentSnapshot(
     const auditoryworks::axiom::v1::DocumentSnapshot& snapshot) {
+    std::size_t size = 0;
+    const auto error = measureSnapshotMessage(snapshot, kSnapshotEnvelopeBytes, size);
+    if (error != SemanticError::kNone) return {error, {}};
     std::vector<std::uint8_t> bytes;
+    bytes.reserve(size);
     if (!canonicalEncodeMessage(snapshot, bytes)) return {SemanticError::kMalformedWire, {}};
     return {SemanticError::kNone, std::move(bytes)};
 }

@@ -1,0 +1,1731 @@
+{
+  "schema": "g5-cpu-worker-repair-artifact-manifest-v2",
+  "status": "SEALED_SHARED_REVIEWABLE",
+  "files": [
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/authority.lock.json",
+      "bytes": 2037,
+      "sha256": "36ff6aecc3d11bf23624acf383ce06bfe65eacbb2351927c6f9bdd7737a455a2"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/evidence-contract.json",
+      "bytes": 769,
+      "sha256": "aa67a57aeccf43821cc38719ac7c66343d43b4e953c1bd67fddf5b39134a3dd0"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/execution-contract.json",
+      "bytes": 5527,
+      "sha256": "f5e24d48de9b0031ad8e8ea8c26db8ab7059e3f695d12422567082d109f93414"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/implementation-context.md",
+      "bytes": 1534,
+      "sha256": "4a1d55ced80ec36e795ea308f19362d5a883fed02b071777dd22b26a2af9ec8c"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/package.json",
+      "bytes": 3137,
+      "sha256": "98f46cb7e53a91062e65432aa0dcdaf23e3bc9c82972e36d8c6205b9707de237"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/trusted-basis.json",
+      "bytes": 1617,
+      "sha256": "4e703167a5592f2b9241a717b8d5f12e834e3d93b9f55cb878e46b30c90a6bcc"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/verification-correction.json",
+      "bytes": 3119,
+      "sha256": "c3c5c87886115830a2df0771da31cbeea77e3609e72490e69ca093777bce79da"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/verification.lock.json",
+      "bytes": 2957,
+      "sha256": "5dafb91c9afd99e7cb60ae35ab515dbd5ab402fcb22bc2a59507b637e240aefc"
+    },
+    {
+      "path": ".aegis/packages/G5-CPUW1-repair-r2/workload.json",
+      "bytes": 2131,
+      "sha256": "9d6b47a829b0cb5f2b9031c474a7ca7171bdf1de8575a34284f00a0453770d59"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/EvidenceContractPreflight.json",
+      "bytes": 804,
+      "sha256": "387f7c8a3003f1d51590ee71f8b404c754436585e08af15f72eb540c41557528"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/PackageBindingPreflight.json",
+      "bytes": 4420,
+      "sha256": "562628ee9efcbbd91e09ed2c6a7c058200ad7d2909823092c8e995b10cc40095"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/SDK-manifest.json",
+      "bytes": 5562,
+      "sha256": "d5fb4b1111efcacc355647f2c7f57e6313566bc6db76cde1f6d0f4322479e95e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/accepted-r1-runner.py.txt",
+      "bytes": 5278,
+      "sha256": "947e1af47b4728c26fa75624dab085154df54fcccd74b663225a6c032b7046cc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/accepted-source-reuse.json",
+      "bytes": 2853,
+      "sha256": "9904798a9d94dfb6933a991b2fec01b45b5c2a4ac8dcff932b5bfb7fc8f2602f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/browser-path-parity.json",
+      "bytes": 27585,
+      "sha256": "83fb8c55a54084b70251f0a2f9fd2a368030b3df8ff7200b6c3ac16203bc44b1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/cleanup.json",
+      "bytes": 896,
+      "sha256": "a83d02f93163698adf1ef69fb592b553273a9ad11ef777c5ea2a5c81e2354561"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/exact634-offline-comparison.json",
+      "bytes": 560,
+      "sha256": "e641883c4dbb83eaf44b04b676bc565994d60f9b9662fab5275dda9344d3af8d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/external-sdk-manifest.json",
+      "bytes": 4509,
+      "sha256": "7bbba8888add4dc2c19d1083d18f0267e3189e4cbc8bf1bac5f56af24352bd18"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/README.md",
+      "bytes": 37750,
+      "sha256": "04683000dfb48f883c03d1a0b891ed83ed6b84da3cda91206333aac7aea2cbf2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/axiom.d.mts",
+      "bytes": 19024,
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/axiom.mjs",
+      "bytes": 222,
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/demo-controls.d.mts",
+      "bytes": 1048,
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/demo-controls.mjs",
+      "bytes": 3268,
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/internal/controller.mjs",
+      "bytes": 2398,
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/internal/transport.d.mts",
+      "bytes": 567,
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/internal/transport.mjs",
+      "bytes": 13629,
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/api/internal/values.mjs",
+      "bytes": 1117,
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/axiom.d.mts",
+      "bytes": 9688,
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/axiom.data",
+      "bytes": 16634361,
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/axiom.mjs",
+      "bytes": 35077,
+      "sha256": "22ff9570fc3c9df3d92a517d42b48983c7e59937daf62c61bb729be749d4ca74"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/axiom.wasm",
+      "bytes": 13496552,
+      "sha256": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/example.html",
+      "bytes": 50814,
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/axiom.mjs",
+      "bytes": 130870,
+      "sha256": "d5fdce76f7e973f0bb2ebff0b67230e10c77162bd22a941e2457cc55094164c4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-build.mjs",
+      "bytes": 227,
+      "sha256": "be7c58967bcbc595877c52c0d0a9937fa72d19a58c6693ff9f1efc64af428159"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-kernel.mjs",
+      "bytes": 13354,
+      "sha256": "dacb0a229c50835b71743762afe83c193f9003cacd16d4f2f56db05bf5fb3cbc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-kernel.wasm",
+      "bytes": 301410,
+      "sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-owner.mjs",
+      "bytes": 687,
+      "sha256": "0258df91b524f92f548ac16be9c25a6d3a4628bbc0a2b641e0afe24be7780444"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/fonts/Excalifont/OFL.txt",
+      "bytes": 4989,
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/nlohmann-json-LICENSE.MIT",
+      "bytes": 1076,
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/noto-cjk-LICENSE.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/noto-cjk-NOTICE.txt",
+      "bytes": 350,
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/semantic/Abseil.txt",
+      "bytes": 11361,
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/semantic/Protobuf.txt",
+      "bytes": 1732,
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/semantic/utf8_range.txt",
+      "bytes": 1091,
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/Expat.txt",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/FreeType.txt",
+      "bytes": 2149,
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/HarfBuzz.txt",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/ICU.txt",
+      "bytes": 27718,
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/Skia.txt",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/Wuffs.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/libjpeg-turbo.txt",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/libpng.txt",
+      "bytes": 5345,
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/libwebp.txt",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/licenses/skia/zlib.txt",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/package.json",
+      "bytes": 442,
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/pointer_input.mjs",
+      "bytes": 3877,
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/serve.py",
+      "bytes": 1424,
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/immutable-sdk/normal/text_input.mjs",
+      "bytes": 12883,
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/implementation-design.json",
+      "bytes": 1606,
+      "sha256": "15013750f845c04b710204c50543d2eb74d6244a0aae3975927a74ed82780084"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/inputs-frozen.json",
+      "bytes": 164437,
+      "sha256": "5ce9390d2ae3f4a17cdfd2d9c2d264f5ac036a0c23007e4da3eb3c205a737f32"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/job-input-identity-map.json",
+      "bytes": 23872,
+      "sha256": "bdde5c08e97ae05c4f5813e30b4f01cafe2c6d18e624eda3aefe1c09460ff573"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/absolute-assets/absolute-assets-asset.rgba",
+      "bytes": 4156,
+      "sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/absolute-assets/console.json",
+      "bytes": 403,
+      "sha256": "26aa4ce3cfad2f12ca914fdb138c8d921461451a41c7f53aa993665ff3740994"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/absolute-assets/http-requests.json",
+      "bytes": 1481,
+      "sha256": "304ef14d1dbf4d9bd32a789891b4da13dc2c6e1178e8d5d622df504a8f40a4bb"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/absolute-assets/raw.json",
+      "bytes": 7768,
+      "sha256": "622bf730cd94ff691a7b01c8583b05469488cf1c28107c94161d7d1a3d3bf3f4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/csp-none/console.json",
+      "bytes": 443,
+      "sha256": "1fc79866fceed888528b0ba78a593aed243f9c2b930721094d283e18de19f844"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/csp-none/http-requests.json",
+      "bytes": 1000,
+      "sha256": "b3b816ac843024daac6c9c0820f1d1eb5f217f877734c4aaac2750d27d99af4e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/csp-none/raw.json",
+      "bytes": 3754,
+      "sha256": "e323b09e6af856150d5268a419b1eb2fc5d22346205498eceee3ee42c7871026"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/freeze.json",
+      "bytes": 164069,
+      "sha256": "f0324a62faf5b2492f4190d1a05e47dc2aab35213775a2574e8d7b06ccb8ac19"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/inputs-after.json",
+      "bytes": 160072,
+      "sha256": "d1fc84c594ef7f77da4c6eaa8e143d52250f0db86e8b2bbdff7c6b76ad0c89ee"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/relative-assets/console.json",
+      "bytes": 526,
+      "sha256": "34c8e7b62e723afb68a2c90fddcf8846486c9d7c77163307c72c913f63c82705"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/relative-assets/http-requests.json",
+      "bytes": 1542,
+      "sha256": "f37a95a328141d5edb9c385a1e269c18faeb35c61a64cea032c2e7711c6f6e35"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/relative-assets/raw.json",
+      "bytes": 7626,
+      "sha256": "89c3af8033279f37d2947e3f13df91d41da1166aef529e4e4dd1a29d3f0eb67d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/relative-assets/relative-assets-asset.rgba",
+      "bytes": 4156,
+      "sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS/worker-result.json",
+      "bytes": 370,
+      "sha256": "26a68d9c8c541ca224478215ad73b0486863f45bfc73148fde72b99074343aea"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS.stdout.log",
+      "bytes": 355,
+      "sha256": "8eedee5d3a4620d5b6f8bfbdd78d88aad8f85fd0c1c614d4ef2f6984a49ad7b1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-ASSETS.worker.json",
+      "bytes": 679,
+      "sha256": "f6b24a13615bb44606c11e8a5bbde9bb2438646ad141b7d3da183a199c44c3e0"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/after-cancel.rgba",
+      "bytes": 4140,
+      "sha256": "770e2b86021c8b7bf73c9181ce257a8c9331da2b99f439d3127f538100f530b5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/console.json",
+      "bytes": 426,
+      "sha256": "e00327c14188103d94cacb101c88756b91687651ed44c375ede8c06c9b7b4827"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/generation-two.rgba",
+      "bytes": 4116,
+      "sha256": "faec58dfac2c0ff0cd37c70b4768069d04b5c16f2c9fe2366670516fc8dd681f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/http-requests.json",
+      "bytes": 2782,
+      "sha256": "9d5d7be08edc0ad5550357a06d7e54806dfe71c605d0aded09147d2e571de78b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/publication-owner.rgba",
+      "bytes": 4116,
+      "sha256": "489fa41a2aa77b089177b04224c4452ba671f749d7b44ba9141abb1714693111"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/candidate-life/raw.json",
+      "bytes": 24915,
+      "sha256": "90f7d326d6ba90a8eaaf2cf33b0c37c9887290337b7a90db36fca5d7fdf9e2e5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/freeze.json",
+      "bytes": 163392,
+      "sha256": "95e2ddc5ff7b872e58aaa74a4b1ed6f7731d0b153dd0c78016b170aa0ea27717"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/inputs-after.json",
+      "bytes": 160083,
+      "sha256": "112b19baa3512e7a9ecffcd44e577c6f76672a2a7ceaf239566d22b951019838"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE/worker-result.json",
+      "bytes": 193,
+      "sha256": "d13322f822571fe306d24dc0fbd91f962f88216e83a2bef13f2cdb75d937583c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE.stdout.log",
+      "bytes": 147,
+      "sha256": "2fbd93fd07d36d03fec6ca48354a0b66938615e7f6efd1e6163ddb3368aebeaf"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-LIFE.worker.json",
+      "bytes": 682,
+      "sha256": "5d6a0ad07cd19bf96fa1370fa7490f0551dec5e4d868781fbc22411fed619e7d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-filled.rgba",
+      "bytes": 172,
+      "sha256": "ce8de345205ba51d22ecad598996ebc49743d06f37ef9058e91c7c6dd2458816"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-fork.rgba",
+      "bytes": 4156,
+      "sha256": "bc67d724c8f108348da49b4579234e9f60d3fa4b2b6d065c1ecc3cf4da40c637"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-0.rgba",
+      "bytes": 4156,
+      "sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-1.rgba",
+      "bytes": 4140,
+      "sha256": "770e2b86021c8b7bf73c9181ce257a8c9331da2b99f439d3127f538100f530b5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-10.rgba",
+      "bytes": 4116,
+      "sha256": "db785f147befaedcf134248f68ea7af43946dbe7fe13af893bc13576e0e662ba"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-11.rgba",
+      "bytes": 4096,
+      "sha256": "a4f39bde220bc56563a51f18444134f0cfd7971e104aeb593f3e324539d901cf"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-12.rgba",
+      "bytes": 4128,
+      "sha256": "d66ca2e20de5ff21622e1665fbac81bbcfc4d6e3f0caa3aa56d235066684d9ff"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-13.rgba",
+      "bytes": 4132,
+      "sha256": "192f23f9cc66335c3d8c88c866eb3f7964f8b95471517de58ab3873ef29ebb30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-14.rgba",
+      "bytes": 4116,
+      "sha256": "81b9435e2cee568d120bfeec182731e84379018b5adca9ed58f83a2b7205a81d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-15.rgba",
+      "bytes": 4104,
+      "sha256": "8a151fd7de61f7c5672b2ef9e968d55310d5b79f82fa08f1e8395576952be6e8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-2.rgba",
+      "bytes": 4116,
+      "sha256": "69feca3a5e203ca9e771e7f910a4b5da21e6c4a8167a28025df2615be86247a7"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-3.rgba",
+      "bytes": 4116,
+      "sha256": "77fd2c05573bff01883c7d52add7dc3f12affcf023f03f73a14c73e2f521ea29"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-4.rgba",
+      "bytes": 4124,
+      "sha256": "c56389ca9ef72661c8d516db8c192a597278938cfa0e42741460fc3dd3d94dac"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-5.rgba",
+      "bytes": 4108,
+      "sha256": "59c502fa151515e9a954e35c35fab87a5ce5670dc5c1a5c432e452316c167d9c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-6.rgba",
+      "bytes": 4160,
+      "sha256": "812832834d5bf41df0a13593f70c18b5795261ceefd8fd286caafc85f67adac5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-7.rgba",
+      "bytes": 4116,
+      "sha256": "e2023b2b8e5406690d9365a80c906010a8ec69afedd6c9322b1330a2a56e83c3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-8.rgba",
+      "bytes": 4128,
+      "sha256": "58d9b4a92209214fa7fb49f5ff680cb121ea8db291d56ba2c3c7f759d99d8a22"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/candidate-sched-9.rgba",
+      "bytes": 4136,
+      "sha256": "a3c36e977b10683211e368a6f03c03393947084292f871d159389d722b981150"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/console.json",
+      "bytes": 103,
+      "sha256": "5b524ee257a434aeff4670c46af6ad9ed83390301d8fb13272c19f1d9c1b0442"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/http-requests.json",
+      "bytes": 3758,
+      "sha256": "ec29070eddd4a7134b2a838fe33f7cdff1fa11f49e69c93a4360cd4f38ebc080"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/candidate-sched/raw.json",
+      "bytes": 61705,
+      "sha256": "878f46c4d22d172b2d18b2e233edf0afb92719810ebe6a30098d9179750c24db"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/freeze.json",
+      "bytes": 168194,
+      "sha256": "e610ed2b6f8caf43f62538d3f20b42b270f450c1f086ad07c5a66d3e2bec14da"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/inputs-after.json",
+      "bytes": 164437,
+      "sha256": "5ce9390d2ae3f4a17cdfd2d9c2d264f5ac036a0c23007e4da3eb3c205a737f32"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/console.json",
+      "bytes": 226,
+      "sha256": "cfcfa7823bb0164067162d806727b88a9ab33fc80a9dc7bd577341efc06cd9c8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/http-requests.json",
+      "bytes": 3549,
+      "sha256": "abb9d9c0d5b170e0263b0a94cf0bf93926d2d4cac8ab171e28d9cdf8cb9d8f1e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-0.rgba",
+      "bytes": 4156,
+      "sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-1.rgba",
+      "bytes": 4140,
+      "sha256": "770e2b86021c8b7bf73c9181ce257a8c9331da2b99f439d3127f538100f530b5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-10.rgba",
+      "bytes": 4116,
+      "sha256": "db785f147befaedcf134248f68ea7af43946dbe7fe13af893bc13576e0e662ba"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-11.rgba",
+      "bytes": 4096,
+      "sha256": "a4f39bde220bc56563a51f18444134f0cfd7971e104aeb593f3e324539d901cf"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-12.rgba",
+      "bytes": 4128,
+      "sha256": "d66ca2e20de5ff21622e1665fbac81bbcfc4d6e3f0caa3aa56d235066684d9ff"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-13.rgba",
+      "bytes": 4132,
+      "sha256": "192f23f9cc66335c3d8c88c866eb3f7964f8b95471517de58ab3873ef29ebb30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-14.rgba",
+      "bytes": 4116,
+      "sha256": "81b9435e2cee568d120bfeec182731e84379018b5adca9ed58f83a2b7205a81d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-15.rgba",
+      "bytes": 4104,
+      "sha256": "8a151fd7de61f7c5672b2ef9e968d55310d5b79f82fa08f1e8395576952be6e8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-2.rgba",
+      "bytes": 4116,
+      "sha256": "69feca3a5e203ca9e771e7f910a4b5da21e6c4a8167a28025df2615be86247a7"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-3.rgba",
+      "bytes": 4116,
+      "sha256": "77fd2c05573bff01883c7d52add7dc3f12affcf023f03f73a14c73e2f521ea29"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-4.rgba",
+      "bytes": 4124,
+      "sha256": "c56389ca9ef72661c8d516db8c192a597278938cfa0e42741460fc3dd3d94dac"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-5.rgba",
+      "bytes": 4108,
+      "sha256": "59c502fa151515e9a954e35c35fab87a5ce5670dc5c1a5c432e452316c167d9c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-6.rgba",
+      "bytes": 4160,
+      "sha256": "812832834d5bf41df0a13593f70c18b5795261ceefd8fd286caafc85f67adac5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-7.rgba",
+      "bytes": 4116,
+      "sha256": "e2023b2b8e5406690d9365a80c906010a8ec69afedd6c9322b1330a2a56e83c3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-8.rgba",
+      "bytes": 4128,
+      "sha256": "58d9b4a92209214fa7fb49f5ff680cb121ea8db291d56ba2c3c7f759d99d8a22"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/old-sched-9.rgba",
+      "bytes": 4136,
+      "sha256": "a3c36e977b10683211e368a6f03c03393947084292f871d159389d722b981150"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/old-sched/raw.json",
+      "bytes": 239895,
+      "sha256": "dbee3bd7995543316482d18a171c701acda40b4c9dce8dbfb804b1ca29508239"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED/worker-result.json",
+      "bytes": 301,
+      "sha256": "1055c8fbb9c5a0869c1b9ec7c10a002060d83ab3fd710ee0c8a5e9b5ed60abc3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED.stdout.log",
+      "bytes": 247,
+      "sha256": "71795b62806ce1a52a3b590438e36326cc6f4dd24b5465cf2284af6387f2d25e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/local-web/G5CWR1-SCHED.worker.json",
+      "bytes": 678,
+      "sha256": "4a1493caf679ea439e39691b40c64f9c86ed77fa69895b72156d1580751080db"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-build-command.json",
+      "bytes": 876,
+      "sha256": "314b19e18cd56a57f9389c6c6539740e1e14606225bdafbe2a75949332015e15"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-build.log",
+      "bytes": 8418,
+      "sha256": "711310f9a680f1e8333aadd1a676ad3004553a930144f9a3195ba33c0708933c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-final-build.log",
+      "bytes": 2842,
+      "sha256": "40115aa572a72c2d00d846076daf5bd57d28cb247638db2c9f35ef35e363e48c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-green.json",
+      "bytes": 737,
+      "sha256": "a100baf59c4c41b1c0778f37fbbd2129d81a0a02fbc1f704416152339ae31ac8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-keepers-initial.log",
+      "bytes": 3299,
+      "sha256": "ef4b61a078561b511f07609d0c60d7d4efb56e8b276f899827e183f14c1ef8c3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-keepers-initial.xml",
+      "bytes": 21333,
+      "sha256": "617da8e736a7659b19bcf6f7a7e364ae03613fd493546ba279f0644c7360e431"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-keepers.log",
+      "bytes": 3299,
+      "sha256": "190d50e02b453f86b793f3b134666a2b0956b9b62d62a4bd04aaf22bd828e8e4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-keepers.xml",
+      "bytes": 21339,
+      "sha256": "966ddd16f524a4ca11fb27fb1c167301b1d21ca57609310ad9c2e35cfea92ff2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-red.json",
+      "bytes": 1194,
+      "sha256": "2d2bf194ac56d190302a3078dd547774c0a92b06098bc832e169666ee6047251"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/native-test-command.json",
+      "bytes": 1005,
+      "sha256": "d564a929ef8d59adf4f84bee0e051c0c289c0bb89ebb3f693303bafa36d4d86b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/next-step-inputs.json",
+      "bytes": 1244,
+      "sha256": "071fe694e72fd89e80787b3e0c81db678734138afd1eeba597e2e6056bc6c816"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/node-final.log",
+      "bytes": 3919,
+      "sha256": "9b7bb95442bd63179d60052a5157a8332a5f392938c6ba229134b5afef562442"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/node-missing-vm-flag.log",
+      "bytes": 13066,
+      "sha256": "c0079a40cbbff656c99f89bf0fbce4a8ecd71129f0523afb0be90c3bb752549a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/normal-sdk-manifest.json",
+      "bytes": 4488,
+      "sha256": "c9a135c81a60ecc54a45c41a818465cc14c64962f0bbdde84f2b709e46c69f3c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/numeric-parity.json",
+      "bytes": 1333,
+      "sha256": "ade81aebb6944997ed01811248383a8845caf6e5b507635bcba514b468ed35d5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-build-commands.json",
+      "bytes": 25282,
+      "sha256": "3ce60f35694afb70d774bfb0c37c9454c19514a199958ade3c173b8c2d07f542"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-final-link.log",
+      "bytes": 2591,
+      "sha256": "69b7ff77d7a97f6d0d045702952537cb73f341fa42939c87cab28ecf399ddf30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-final-test-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-link.log",
+      "bytes": 2591,
+      "sha256": "69b7ff77d7a97f6d0d045702952537cb73f341fa42939c87cab28ecf399ddf30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-oracle-binding.json",
+      "bytes": 1290,
+      "sha256": "0d61ba3364588a505a250508212f94161aedef535e59d25dc0d84128e109f9a1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-source-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/old-test-build.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/package-consumer.json",
+      "bytes": 8728,
+      "sha256": "71562e8a1969bd5c88cb63f6f5da1d01c05bbf7da14e1a7a573139b75982bc55"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/pre-observation-native-keepers.log",
+      "bytes": 3299,
+      "sha256": "3cbbeaa93e94d413d9c34681b16845a8aebeecc205766c90183fc8042230b550"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/pre-observation-native-keepers.xml",
+      "bytes": 21335,
+      "sha256": "f5fa6816f9f3ce01e6a01be45224bbd53eb9aebc47389f8166544284b45b496f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/pre-observation-prefix-current-green.json",
+      "bytes": 3779,
+      "sha256": "7e6268c0c437317bc166afd581cf053bdc325f0d47e4c8cb1317852d9b0ea791"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/pre-observation-prefix-old-red.json",
+      "bytes": 3609,
+      "sha256": "3c14bb3d6c53d35d8192589d333ac1ab43254def2e8462063f52c703b90cdd31"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/pre-observation-prefix-old-red.log",
+      "bytes": 2543,
+      "sha256": "ffbe4c7c8a7024a57eff7d6e3aefc3e78191caa56e99a351608da6881387c51d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-current-green.json",
+      "bytes": 387180,
+      "sha256": "7b978e7603b55976cc11b103f48f9d58610fd1dad88a6e88016e9d7d507984a5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-current-initial-green.json",
+      "bytes": 3755,
+      "sha256": "b49feda887f908d65aad6aa4682d20ba0c84fb767a484cf8946074a0582d65b6"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-old-initial-red.json",
+      "bytes": 3609,
+      "sha256": "548bbcbd2d376d265cae55d6753ec4251d7291ed8ac6dad6b8ee3941668a16ca"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-old-initial-red.log",
+      "bytes": 2546,
+      "sha256": "c5c5596a58288ad3a16e8b292047ad55d83c94b99a91920e12d4ad8c867f7699"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-old-red.json",
+      "bytes": 1314201,
+      "sha256": "3371660086b627557574566580b33636ccdde99f5fb38d69284f45a793d8aa52"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prefix-old-red.log",
+      "bytes": 561023,
+      "sha256": "75febd4cc63fcdeecf287bf4e60e92f363b824bfb48ed943e23b3decbb61ff0e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/prior-freeze-preservation.json",
+      "bytes": 940,
+      "sha256": "efa6eb6001c5c45643569fadf968e1629c9bd7f61c76aee8b1c9ae09ad526307"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/protocol-lifecycle.json",
+      "bytes": 20501,
+      "sha256": "1afddcda299ac6aebfbe252b34f688f5d9e1fc9f0e8a4e6f474ec1566a7f4866"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/regressions.json",
+      "bytes": 1283,
+      "sha256": "c5f3e41f2a987bd936db4daac1f52992d279aa2e50d1fe13d8f44696f11b1159"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/result.json",
+      "bytes": 10319,
+      "sha256": "f3bf2d7b2260c131076e37288e5780e0c7d84271329b9ad91ff7ef0ce87d3854"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/root-lifecycle.json",
+      "bytes": 6897,
+      "sha256": "663712bd173d03fdb055c4a8eef30086508abd41ef3a714d12026c9e7b6019ab"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/runner-python.log",
+      "bytes": 101,
+      "sha256": "33060fd73862c5e1af97335504d5b45211fce6d229657f556d8deceeadc52ce4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/sampling-ledger.json",
+      "bytes": 3591,
+      "sha256": "9ee458d0940476365381d1b0a043b672d44403122655d43428d1cd055542b8b9"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/sampling-plan-draft.json",
+      "bytes": 4022,
+      "sha256": "6f5fed0de7dccae9ba4e0202830706c58be2f53c11c878f9931f57713a100a6b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/sampling-plan.json",
+      "bytes": 4331,
+      "sha256": "3d35bb28214131b414abf6ac445f2a550ea658665be93ef9e3743e6ddf8019ba"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/scheduler-pairs.json",
+      "bytes": 1659,
+      "sha256": "5eea6e144966db63e6be5d2ef9bb8653699032319efcfa304af1144407edaf90"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/source-delta.patch",
+      "bytes": 138122,
+      "sha256": "61202f64866c508d63909f82453fdd3f24fcc8ece31878cc94f5d1acfe3ef711"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r2/source-manifest.json",
+      "bytes": 155084,
+      "sha256": "1d9f5223595696c938c69e057cf308284f311e50d7ae31d2f6f5b61bb56930d2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/G5CWR1-ASSETS.json",
+      "bytes": 1215,
+      "sha256": "7eda23e507f9b991cfb47730d42539b0532f643548328afe97ddc3ee47e810d6"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/G5CWR1-LIFE.json",
+      "bytes": 559,
+      "sha256": "360d036688c03511792fa20084530b61b2a530b8929e93cb5d80fcdccfa9f82b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/G5CWR1-SCHED.json",
+      "bytes": 903,
+      "sha256": "f19a4b923a04043cbc74e031354a4fd28381758ac480c9e516579fff7f6546fe"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/README.md",
+      "bytes": 37750,
+      "sha256": "04683000dfb48f883c03d1a0b891ed83ed6b84da3cda91206333aac7aea2cbf2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/axiom.d.mts",
+      "bytes": 19024,
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/axiom.mjs",
+      "bytes": 222,
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/demo-controls.d.mts",
+      "bytes": 1048,
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/demo-controls.mjs",
+      "bytes": 3268,
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/internal/controller.mjs",
+      "bytes": 2398,
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/internal/transport.d.mts",
+      "bytes": 567,
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/internal/transport.mjs",
+      "bytes": 13629,
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/api/internal/values.mjs",
+      "bytes": 1117,
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/axiom.d.mts",
+      "bytes": 9688,
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/axiom.data",
+      "bytes": 16634361,
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/axiom.mjs",
+      "bytes": 35077,
+      "sha256": "22ff9570fc3c9df3d92a517d42b48983c7e59937daf62c61bb729be749d4ca74"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/axiom.wasm",
+      "bytes": 13496552,
+      "sha256": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/example.html",
+      "bytes": 50814,
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/axiom.mjs",
+      "bytes": 130870,
+      "sha256": "d5fdce76f7e973f0bb2ebff0b67230e10c77162bd22a941e2457cc55094164c4"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-build.mjs",
+      "bytes": 227,
+      "sha256": "be7c58967bcbc595877c52c0d0a9937fa72d19a58c6693ff9f1efc64af428159"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-kernel.mjs",
+      "bytes": 13354,
+      "sha256": "dacb0a229c50835b71743762afe83c193f9003cacd16d4f2f56db05bf5fb3cbc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-kernel.wasm",
+      "bytes": 301410,
+      "sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-owner.mjs",
+      "bytes": 687,
+      "sha256": "0258df91b524f92f548ac16be9c25a6d3a4628bbc0a2b641e0afe24be7780444"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/fonts/Excalifont/OFL.txt",
+      "bytes": 4989,
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/nlohmann-json-LICENSE.MIT",
+      "bytes": 1076,
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/noto-cjk-LICENSE.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/noto-cjk-NOTICE.txt",
+      "bytes": 350,
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/semantic/Abseil.txt",
+      "bytes": 11361,
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/semantic/Protobuf.txt",
+      "bytes": 1732,
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/semantic/utf8_range.txt",
+      "bytes": 1091,
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/Expat.txt",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/FreeType.txt",
+      "bytes": 2149,
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/HarfBuzz.txt",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/ICU.txt",
+      "bytes": 27718,
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/Skia.txt",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/Wuffs.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/libjpeg-turbo.txt",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/libpng.txt",
+      "bytes": 5345,
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/libwebp.txt",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/licenses/skia/zlib.txt",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/package.json",
+      "bytes": 442,
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/pointer_input.mjs",
+      "bytes": 3877,
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/serve.py",
+      "bytes": 1424,
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/external-npm/package/text_input.mjs",
+      "bytes": 12883,
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-CFH-subset.patch",
+      "bytes": 21788,
+      "sha256": "f34b99bf0c1a8f83f7c650884b21ec03de2737736ef3b305d14dd805115aee3d"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-prefix-test.o",
+      "bytes": 314952,
+      "sha256": "926395e8be57dce248fa450c9b80b18b7b03af3b39b37cecf1664f46551378a6"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-single-slot-test",
+      "bytes": 6123544,
+      "sha256": "37e5eee0ef3277493f19a0e5628c84b0adc37a9e0d350334a12ace9c05aadbfc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-single-slot.o",
+      "bytes": 263320,
+      "sha256": "6b44d7945c05bc7cb1164d511e9bc70350f002bf257ee76e3475df95f84fd4d3"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/affine_bounds.hpp",
+      "bytes": 826,
+      "sha256": "b3564395dc846966edb538f01c587eba71efa40cfb0e4bac75f305ddf70eed90"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/brush_outline_skia_path.cpp",
+      "bytes": 1256,
+      "sha256": "e66a38c93c077ef1c916ae791734f5e0873e5ce441452f31651ef21ecd5c873a"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/canonical_handoff.cpp",
+      "bytes": 1180,
+      "sha256": "1386e8111c474954e9e2b21227feff5bb51e08ef8cfa2131d5c9eacf1e4200ae"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/chunk_query.hpp",
+      "bytes": 2569,
+      "sha256": "64da044e32d4c64a3246d55f06713504359810ee1b524501250e98aa40f77ace"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/compact_contour_skia_path.hpp",
+      "bytes": 3609,
+      "sha256": "85bafe3038d6c8c25e408e763b894ea2fec038cdef076eed6a380ad8c504617c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/compact_raster_internal.hpp",
+      "bytes": 4239,
+      "sha256": "a68a7df4488309cced8dfc713e36b15d971b9e8eab2114b8821cdd82a80fb53c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/damage_tracker.cpp",
+      "bytes": 3282,
+      "sha256": "bd03f9c0ad400b30bd9ba7a4e39b38c4d6556f2f0b201d06740b84004aa90a34"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/direct_reference_source.cpp",
+      "bytes": 34711,
+      "sha256": "3f6371e3e60bb551a4405d50dd5b26c9222934eb75a52bd24dde9e0ec188c900"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/editing_overlay.cpp",
+      "bytes": 7030,
+      "sha256": "1aa582c5b43b4112f27b6c1beab39901be7f762da5d7753b55646cdbaf37cf9a"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/exact_history_path_observer.hpp",
+      "bytes": 1164,
+      "sha256": "439ec096c1cdaa52e180474d44a18263cc6474ec9b74497ac0c4daaf5c214e25"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/frame_plan.cpp",
+      "bytes": 1113,
+      "sha256": "6ad95bfe6e4b42416764184b348fb99ee2601600166963c55eff10b5f3c95d71"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/gpu_resource_retirement.hpp",
+      "bytes": 8828,
+      "sha256": "25072b01a4827f0eb57886e864a7aaa41b976c36b1e8ee59bf8be331a8c72fd5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/image_encode.cpp",
+      "bytes": 1523,
+      "sha256": "e2524f362f735b4cbcccb98d6b698aae0a4be9a989598863e2afb7b52fa5d5a5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/image_resource.cpp",
+      "bytes": 4095,
+      "sha256": "e5503a342c91cf4ce5ec6a5ae8368dc50fc25c12987009b6e03ad6bf78a247a8"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/long_query_preparation_observer.hpp",
+      "bytes": 1067,
+      "sha256": "e03f3fd185a0f5aeebb211d8a7f5b9ffdb096886f6c1c9b7b5948740c0747b2a"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/navigation_pixel_validity.cpp",
+      "bytes": 9590,
+      "sha256": "edac3ea2fb83ce0cd1e1b12ab7f1bcd8903085acb90d646a118f5ff5b90bd309"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/navigation_pixel_validity.hpp",
+      "bytes": 1397,
+      "sha256": "6ac55adf05da4191f6f28e7ecae02a213240abde1456fcbd14b43ac9018afe3e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/navigation_source_snapshot.hpp",
+      "bytes": 2382,
+      "sha256": "f102c7705d9745594cd18317a4fac148b77a858350bcdec83f445266b7fead36"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/prepared_body_job.cpp",
+      "bytes": 8199,
+      "sha256": "c5e40a65018c45c9bd247e31bc1bb1715ea4794182622bcbc0dd21c0c537a701"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/prepared_body_job.hpp",
+      "bytes": 1216,
+      "sha256": "11f7ee7e88708cd7d2e33c21f76d1150c959bb69d34c6c654e052f1b8d2f94ca"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/presentation_tracker.cpp",
+      "bytes": 3999,
+      "sha256": "b3db9de34e813b5ba80adbf41bdd5c14f41c26d1a193655adffc544f6e1d12ba"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/preview_surface.cpp",
+      "bytes": 13065,
+      "sha256": "a4f2eba74606f551b433d0a4281239bb445d90d076f586299af5401b9f183884"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_backend.cpp",
+      "bytes": 319,
+      "sha256": "459effb951324f8ae7f724dbda8f3b73003dc3c271114d3d7096cd62a9e0dd76"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_execution.cpp",
+      "bytes": 8325,
+      "sha256": "db9ad78813397347f1031daafef71bebc86e5320aeb3f8314b31275a36ef69fe"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_execution.hpp",
+      "bytes": 4135,
+      "sha256": "5ddb77aaed9d0446bc431c3d29cb38c2cddd939727b37ba9874c11a4756749f2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_group_manager.cpp",
+      "bytes": 9051,
+      "sha256": "d8f5822c52ea06e718c5814604b11e952ad63f5ce6ab3ddb151c57122ed3d7de"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_memory_budget.hpp",
+      "bytes": 623,
+      "sha256": "d800ad4c65fa42ad0267d4b28057399e87a2ec691df0651a8b88bcb93a749a41"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/render_target.cpp",
+      "bytes": 23239,
+      "sha256": "45c6a2c26d9d7b248b676d45739a9911a0217dcb366c39b48445f67fa26d0990"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/resource_reclaim.hpp",
+      "bytes": 827,
+      "sha256": "a3f357b7497f12dfff22c4379bc85d05450508925ac32c02eefd82bcfafda467"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/runtime_app_binding.cpp",
+      "bytes": 7795,
+      "sha256": "6f5ee4039d8d8664794e478af13c0b8c9fe2513ba69bfc4324fb632036e29130"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/runtime_frame_coordinator.cpp",
+      "bytes": 3906,
+      "sha256": "f1798283adabb2fdcdf2ee6915862af1cf3634b10c99bf46c4032b9ed963b577"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/selection_region_geometry.cpp",
+      "bytes": 81349,
+      "sha256": "49c16bc7af2b71877ebaba3058b028465a64d87dddc142b5f737b370e370bdd3"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/selection_region_geometry_internal.hpp",
+      "bytes": 3618,
+      "sha256": "3ab8f2dc4183a2097204fabacecedfac026359bda3382b1246499163b9067ee7"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/single_slot_observed.cpp",
+      "bytes": 82523,
+      "sha256": "c7fd77b64ee44dbc4e895177f767276a4b20ac8ea509bbea60e69840d7eb336b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_brush_renderer.cpp",
+      "bytes": 2193,
+      "sha256": "10db517440885ddfa0d0e10e7166596fffc775b60e182bd577c3121234cfc34c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_compact_material.cpp",
+      "bytes": 50647,
+      "sha256": "7a08821f4357d5ea516a93c4a3828a26036a3e7fe0f89e1b4e2e6890188e19f8"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_erase_mask.hpp",
+      "bytes": 1016,
+      "sha256": "b17d16999fe375060e5e9c4210edcd98b109c871287bbe0bab2ca90992df62aa"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_geometry_internal.hpp",
+      "bytes": 2572,
+      "sha256": "9362db7b748f9024f02dc9b2ea76fc80704609d8a253c7fbd7b7bc4fc80eaf81"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_gpu_lifetime.hpp",
+      "bytes": 4045,
+      "sha256": "297135aa4720cedb0b9de8ec795ed7af4edf3a9f10577228ae6a6115967b1000"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_headless_backend.cpp",
+      "bytes": 77534,
+      "sha256": "7967104b1649b9ac5bfe5d66e162a22d54cacb560a1dc701736448b2c0b1ba38"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_ink_backend.cpp",
+      "bytes": 6623,
+      "sha256": "3cd0e4e6f6b5c1db40bf9a9e1ddb13db6a5f4242bda433c8fb763736a15f0d17"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_ink_layers.cpp",
+      "bytes": 17977,
+      "sha256": "044524fef311b8eda4d70c7af37e06ddfc6b1f8d3f28724bf122715508dc3696"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_ink_layers.hpp",
+      "bytes": 2905,
+      "sha256": "dc99a36bb0be7767ec5b8c480427f3444a636c4498e590b71d881c4e05675458"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_mask_history.cpp",
+      "bytes": 190,
+      "sha256": "7972804662f1819073883f018ee59b0b85460b917cb1dbb7619fd7829c86a66f"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_mask_history.hpp",
+      "bytes": 2611,
+      "sha256": "32c0a6f69bd30eef59620f82efd40c37025b082e4fc043f0ac6022bdadca4f96"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_navigation_tiles.cpp",
+      "bytes": 67122,
+      "sha256": "367ef141f6e7069ba9b3e4c705124c5e8f79636d8c2923d2fad6696c5612a8c1"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_navigation_tiles.hpp",
+      "bytes": 5057,
+      "sha256": "bb85cfcf21923c94fa4a7a9d52a4566841bb22ee3b9eb40c34e08a7dd4368094"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_prepared_geometry.cpp",
+      "bytes": 37159,
+      "sha256": "eb8828f90b938f62c360506b53a33033dc8721b623aba1a99c38121ca5ec2d19"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_prepared_geometry.hpp",
+      "bytes": 10255,
+      "sha256": "0eacff76afd2e2b4a9fded054eec0d0e7e7d04ad87f31989be327f96312380da"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_render_cache.cpp",
+      "bytes": 88358,
+      "sha256": "2e6c507bdc3fb07bda7714e6d27a94b94822ea9136a45081f20d92aa0edb3084"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_render_cache_internal.hpp",
+      "bytes": 12717,
+      "sha256": "5dda6b02a029401e0f1509d28ba33a6f7c2c9eaf91ac054e01c0f317365d9ba6"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_renderer.cpp",
+      "bytes": 103124,
+      "sha256": "f288c66f330e8dbbc4c798976fe1c81ef19c592af567b5715aeecb07829d543a"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_scene_renderer.cpp",
+      "bytes": 16559,
+      "sha256": "19a25143f9f0c4ad9d3a0012cdb1e5e836e20328733304f54f447e43c583d70e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_surface_provider.cpp",
+      "bytes": 6535,
+      "sha256": "27665a63eae3a5a43bd403b0df4c411ff0fcd8f23126e86bff3c67307eb33191"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/skia_text_resources.cpp",
+      "bytes": 2804,
+      "sha256": "3f7a516d1a4ce73237011905438025d971ea733f421c0af040a1b94e0686f287"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/source_retention.hpp",
+      "bytes": 12418,
+      "sha256": "34166388b14044654358980750d14d67dcf361353563a7175c5bd15c02a55a9c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/surface_lifecycle.cpp",
+      "bytes": 5557,
+      "sha256": "4a9c21c261293cc2a0f2d392f06354f6e4949695469bf1df0675eedcde42d847"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/transient_display_state.hpp",
+      "bytes": 2333,
+      "sha256": "f389b7fa8983e2fd7e529415cee04032a651c9f4bf1f31caf8faa395944e31b8"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/ur3_webgl_extensions.hpp",
+      "bytes": 987,
+      "sha256": "58ede9a78f1e363ee7c46638da91712071853bbe568c6690edd23a44ab3f72a5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/visibility_resolver.cpp",
+      "bytes": 2878,
+      "sha256": "818ccfa46584c8db81ac564d04dfb141ccf02efed80c1fb767a0ad7d8fe44610"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/webgl_context_liveness.hpp",
+      "bytes": 871,
+      "sha256": "2b51eef38c52af8ca749c2a3ed3bc2e8f5ff9d87992efe38bdb0a4e18b21f6f0"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/webgl_surface_backend.cpp",
+      "bytes": 14502,
+      "sha256": "7aec2f13075f033436d4016a6ae21583b90a6e4444ab240a10faa9c5785acae3"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/tests/long_query_preparation_test.cpp",
+      "bytes": 11103,
+      "sha256": "8a241fd54b8e7238a779b80f3e42bff228ededb45a3345571c0597cfa596fa81"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/tests/ur2d_selection_up_test.cpp",
+      "bytes": 7943,
+      "sha256": "d15cd4abfb09ed4c53396bed8af85bb73f4cc5adc54d0ff0fced59309f0e9de1"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source-apply.log",
+      "bytes": 189,
+      "sha256": "2063de461a1bf230acfd60fbd6e5ccc5875fa2a1cfec30f2fb13aef836109278"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/old-source-binding.json",
+      "bytes": 7339,
+      "sha256": "2f2a968a4fdde932b415cc65b08059db9280651f7dc57cbfec7dc7f760d851b4"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/0.path",
+      "bytes": 4028,
+      "sha256": "5f2f7f35ad5aacc1f62d63aa882cf93f9084e645d643bc51fc502c1db1e6a361"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/0.request",
+      "bytes": 128128,
+      "sha256": "4186447526d345d9f5b6f7eedf63c5162c55579997aad81b6bea655da5940af4"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/1.path",
+      "bytes": 4012,
+      "sha256": "d6e211fdd4c17f633223e41511fbd86cb6383f01daf76100a71ccb37cdc1cf4e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/1.request",
+      "bytes": 128128,
+      "sha256": "5dbecb91b6c9db7a6afdf57900e0cdf4d189ad18d20bfd247388a297c3e15417"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/10.path",
+      "bytes": 3988,
+      "sha256": "d1d585d0e276b6126cac0011cde7111e0bfa49edd1e70a24379e5e4d03df0354"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/10.request",
+      "bytes": 128128,
+      "sha256": "25f5be064e0ebb804e7d8ffdcb5c03e84f7e598594b2ca1692f20af4bdd88fa9"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/11.path",
+      "bytes": 3968,
+      "sha256": "0650ceb456d95da94bca83aa6f0a8b02f6952f766e89ae1ef4bff1634dd1e5f1"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/11.request",
+      "bytes": 128128,
+      "sha256": "85b3252b9617a152cfba350906e16d16f494855b69bb9f4bbd00e25154eadf5e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/12.path",
+      "bytes": 4000,
+      "sha256": "b2f07b31af7e9f5f894c64aa4fd6e809c81ba9a7ad4912a167e15e9fdf508264"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/12.request",
+      "bytes": 128128,
+      "sha256": "4901383847ba2d33293e29fade5f3d90a7e74add72202045751084fa6560acf7"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/13.path",
+      "bytes": 4004,
+      "sha256": "2951aa50b2a6dc76fe4c30559af6cdde616b6a8b0bc978a725930ecea197f083"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/13.request",
+      "bytes": 128128,
+      "sha256": "08c9d9852313ee3dc8c2eecf3fc2d57f706cd696740df161263b9d367dabc563"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/14.path",
+      "bytes": 3988,
+      "sha256": "5e2eb694583b158247696a39bb823b93aacf6f4c9cd3ddcf99f217958d0dac9f"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/14.request",
+      "bytes": 128128,
+      "sha256": "66df34bb136e421b4f944ce86a16ad8d1ee1cd90bde1f83741693f4a1500e5b2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/15.path",
+      "bytes": 3976,
+      "sha256": "c3de027f07e04a75df1b251c2ee57795e1b0948a3b29782d8ad13322154155bb"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/15.request",
+      "bytes": 128128,
+      "sha256": "1ca291b45172ba18bb7cb06ee9eab5f00ffa7c4f3e11f7137e4461a4292f28f9"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/16.path",
+      "bytes": 2804,
+      "sha256": "a63bad644d3aba259e301fc59a6f3f5037472cfcd9c0015e00391ee46afa1c8c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/16.request",
+      "bytes": 64128,
+      "sha256": "0c67f99bbb2ef8320951447d0ca85fa6fae2f6674f410a9683bbd29821d969e1"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/17.path",
+      "bytes": 4028,
+      "sha256": "5f2f7f35ad5aacc1f62d63aa882cf93f9084e645d643bc51fc502c1db1e6a361"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/17.request",
+      "bytes": 128128,
+      "sha256": "2da423a68592d5ff11ab744df8642ec1207a944b759b6a3470ffafb31d8579ee"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/18.path",
+      "bytes": 44,
+      "sha256": "63cd8fb3eaeeed0faf335e1d7c56e8371ac3e468da0666f84f5fcd9f226344a0"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/18.request",
+      "bytes": 192,
+      "sha256": "2e7094b8ab1ea3732a420f5baab9dd0a5a1b44a178e476a86151e27f6bce7b71"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/2.path",
+      "bytes": 3988,
+      "sha256": "1bfb09093ab4510b70e37016667d6b9b3a8b0735d33227e8add49dea3bfe8fcc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/2.request",
+      "bytes": 128128,
+      "sha256": "5e54ea5db332ba7b4c27a621c56608c0a332a35d29ddb93456f477152cfc1fb1"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/3.path",
+      "bytes": 3988,
+      "sha256": "09b2dc074dd4efa5bcfcf2a2297d2920fd091b2aa04cedd8d2fb16776eb3df73"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/3.request",
+      "bytes": 128128,
+      "sha256": "f4c5d7bc2c0bd5329a54be5d45855b94862f3e4afc471fd90a0339218ce56a96"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/4.path",
+      "bytes": 3996,
+      "sha256": "5b0c621a69f6f5a4a2e0f4effe06e1b8b28c88b054b99b44e68f18920963411e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/4.request",
+      "bytes": 128128,
+      "sha256": "8f4fc19e2d1c0869feee5663c316c7d28407e63f9162d04e8999db94d047f9cd"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/5.path",
+      "bytes": 3980,
+      "sha256": "258156e3d5cd5bb8c362096dfe87849c9f6d8f6408dff2ac6840e81074125ab6"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/5.request",
+      "bytes": 128128,
+      "sha256": "c4d91f5399de105cf4588c8c359783194e1b3dfa1161c4cfcdea06162f6a78ed"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/6.path",
+      "bytes": 4032,
+      "sha256": "2928ca1ef4630fe92f371299593e34bbc5620c608cd5374c9a6758a6deb9cff5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/6.request",
+      "bytes": 128128,
+      "sha256": "ff1fc33b1b5ba112450f22e7f99cd15f835299adb6e7aba880bd526bb2443135"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/7.path",
+      "bytes": 3988,
+      "sha256": "2b43d5d0cb93de304b741495800ca7cd13ebe4b55cac20170eb61dadb55b6bdd"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/7.request",
+      "bytes": 128128,
+      "sha256": "b65e025364bc6687854e99ed5021c5a0b6a519cacac688f68bad26c4c4f0398c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/8.path",
+      "bytes": 4000,
+      "sha256": "02ffdcbe9a4ce70a671e78e5070e9f27f9ac9ca18216a51054e74ec927741853"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/8.request",
+      "bytes": 128128,
+      "sha256": "09fbc6d9b8898592257d2c1900491b38648c5ccc12217a0352ff3e92c5f38e50"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/9.path",
+      "bytes": 4008,
+      "sha256": "ed460e8c4cfabbf60477cd29cbe902cb26f59cbcaf64d395f0434bcc88658dbd"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r2/requests/9.request",
+      "bytes": 128128,
+      "sha256": "b0937014c85178c4e1b133d3b64e3d0ffd62cbd9694d3fc70500026f99360f17"
+    },
+    {
+      "path": "runtime/render/tests/long_query_preparation_test.cpp",
+      "bytes": 11103,
+      "sha256": "8a241fd54b8e7238a779b80f3e42bff228ededb45a3345571c0597cfa596fa81"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "bytes": 102257,
+      "sha256": "e36364e100e7723367dc19ff5c0d2cd55791c8252c405b6f391e64edbeb85ab8"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "bytes": 35431,
+      "sha256": "30d4c4061b90015680885e3b6ee988f4596c7bea38988d60e1b5ba07689bb118"
+    },
+    {
+      "path": "sdk/web/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": "sdk/web/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": "verification/runners/g5/cpu_worker_repair_runner.py",
+      "bytes": 5278,
+      "sha256": "44d3fd538f819707ee81b88635ddbbd266b8c7518ab8e3c79d63a7723090899f"
+    },
+    {
+      "path": "verification/runners/g5/cpu_worker_repair_web.mjs",
+      "bytes": 16868,
+      "sha256": "fe1b379cb0776a26f0afb5f0cb796a08ddbb3ced8723328eea2d823109839e66"
+    }
+  ],
+  "exclusions": [
+    "artifact-manifest.json self-hash only; result independently hashed in manifest"
+  ],
+  "package_sha256": "98f46cb7e53a91062e65432aa0dcdaf23e3bc9c82972e36d8c6205b9707de237",
+  "result_sha256": "f3bf2d7b2260c131076e37288e5780e0c7d84271329b9ad91ff7ef0ce87d3854"
+}

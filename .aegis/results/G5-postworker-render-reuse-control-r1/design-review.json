@@ -1,0 +1,27 @@
+{
+  "schema": "axiom-scoped-render-reuse-design-review-v1",
+  "created_utc": "2026-11-13T03:18:36.940235+00:00",
+  "review_scope": "Package-conformance and owner/invalidation design check only; RED, implementation, pixels and end-to-end evidence still pending",
+  "verdict": "NO_PACKAGE_OR_OWNER_CONFLICT_FOUND_CONTINUE_WITHOUT_ACK",
+  "basis": {
+    ".aegis/packages/G5-postworker-render-reuse-r1/package.json": "ef56b7c84e7f3f5cb526b43554dc765fd819ae4ab78567680733fb8929ccf987",
+    ".aegis/results/G5-postworker-render-reuse-r1/ImplementationDesignPreflight.json": "893c553afd17b89d32e414343398e6917d27588d46e955eef76ec3faec779588",
+    ".aegis/results/G5-postworker-render-reuse-r1/causal-finding.json": "1343421fd3c289cd950039739c3093de790e6fbecd405dca79cb446fc23921ff"
+  },
+  "accepted_direction": [
+    "Keep qualified canonical pixels for transient erasing rather than unconditionally releasing them.",
+    "Resolve cold material misses cooperatively under existing owner allowance, without publishing incomplete frames.",
+    "Share only complete destination-independent isolated v4 material when actual complete pixel dependencies are equivalent, composing every object separately in original order."
+  ],
+  "review_conditions_already_frozen_in_RR1_RR2": [
+    "No ObjectId-only, equal-revision-number-only or hash-only proof across objects. Include config/seed/body, exact device basis/grid/clip, paint/effects, permanent ordered masks and resources.",
+    "Active presentation masks cannot mutate canonical shared images; different semantic object and mask IDs remain independent.",
+    "Aliases own charged metadata; one shared pixel lease remains alive through every alias and outstanding GPU read. Source or alias deletion must not free shared custody prematurely.",
+    "Measure actual equivalence classes in original Fixed40. An identical-pose microcase cannot substitute for primary fixture benefit.",
+    "Keep draw-exact-draw scratch invalidation and original AA grid/numeric cull policy.",
+    "Report useful versus duplicate progress. Repeated attempts are not automatically invalidated progress."
+  ],
+  "communication": "Sent these conditions to paired implementation thread as existing RR1/RR2 reminders; no scope extension or acknowledgment gate.",
+  "formal_gate_PASS": false,
+  "production_modified_by_control": false
+}

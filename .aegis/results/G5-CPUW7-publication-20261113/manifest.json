@@ -1,0 +1,218 @@
+{
+  "created_utc": "2026-11-13T02:10:15.575703+00:00",
+  "base": "5102b2bf76cd1bd0759ab17cce2d68146577e4e6",
+  "branch": "codex/g5-cpu-worker",
+  "reviewed_result_sha256": "8c0fca2b5a6103ff1ec6f74f9f2d952874d941778bffc982e120f341cbe179c6",
+  "scope": "Checkpoint replay scratch reuse and private postWorker phase diagnostics; this is Render execution optimization, separate from CPU Worker background geometry tasks.",
+  "validation": {
+    "fresh_native_CTest_passed": 7,
+    "fresh_node_passed": 8,
+    "runtime_boundary_contracts": 120,
+    "JS_SDK_error_contract": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "performance_qualification": "Scoped correctness and repeated work reduction accepted. D4 C improved but initial AB slower in one pair; no overallperformancePASS. Default4331 retained;4332experimentalonly.",
+  "files": {
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/authority.lock.json": {
+      "sha256": "219635327e8ff23427c1e541da0e8228719c3629f5acd04e78f524df232a1bdd",
+      "bytes": 5423
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/evidence-contract.json": {
+      "sha256": "3fb56af5a9a40b34c10e67711c8b65401b877defa053be70289ea57df69abda2",
+      "bytes": 1933
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/execution-contract.json": {
+      "sha256": "f447af3f83ff70fa31055988df526d02b37aa33c26e840eebccade3fbc0f1bbb",
+      "bytes": 6191
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/implementation-context.md": {
+      "sha256": "31bd3076046f58e7f5d3eb0b6a2f3e68683966b6090dac48783987fb923cc028",
+      "bytes": 3132
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/package.json": {
+      "sha256": "baae41ce53ed301d195486d2baf1c70596c4640ae347b34e72b83fefe1966acf",
+      "bytes": 2306
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/verification.lock.json": {
+      "sha256": "01b521eeb7360a30a7aee4fd165af9bcc65415a568efc30f8fcc11a08004ae68",
+      "bytes": 5502
+    },
+    ".aegis/packages/G5-CPUW7-postworker-tail-r1/workload.json": {
+      "sha256": "f877b15820f989e60373bc473b2d059d2f755ba06d4b2b0fa59ff8e0ae13492a",
+      "bytes": 5068
+    },
+    ".aegis/results/G5-CPUW7-control-review-r1/control-review.json": {
+      "sha256": "bb806cd5c29a7ead284a466edbe58fdd038043f80c55329841cffc00f869e30e",
+      "bytes": 4931
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/D1-finalC-pixels.json": {
+      "sha256": "a3b1b667b89e0fc3d05f91ffd068cc60d341bcb643597e4cbd7259bb8a4c8fd6",
+      "bytes": 1190
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/D4-finalC-pixels.json": {
+      "sha256": "3f97fdde44f4818993ec7ad82b371473c31e64a77b56d79e49b7f7809d167cf1",
+      "bytes": 1329
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/SDK-manifest.json": {
+      "sha256": "34680282e5868dd188d7ca1e1b1173624cd4afa18327bae3477553fccc5540b7",
+      "bytes": 4448
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/artifact-manifest.json": {
+      "sha256": "c3b8c522f66e73a58f308ceaedb5990b4fc68b862112c196a48446685ac978fc",
+      "bytes": 27851
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/attribution-freeze.json": {
+      "sha256": "4ab72c58b8fef0991bcdf57f7b92350d543bf87b042aa5df976c1d374327661a",
+      "bytes": 171780
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/attribution.json": {
+      "sha256": "f0a673af60331ffb11756dca8d7d2a74fa4f70b13727ee3e03a942273824af87",
+      "bytes": 5527
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/candidate-freeze.json": {
+      "sha256": "f314d990a96efa1056180dbe00ebb08d667a7e0c11eb67c72f31252545855787",
+      "bytes": 167413
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/capture-accounting.json": {
+      "sha256": "888ae2934fa9b4fbe809cd10b405c6c78ee15ced5ca43f8772a7515cfb7b1a8d",
+      "bytes": 1052
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/causal-finding.json": {
+      "sha256": "0f61ffb55bca8ec2a1df40dbe2d1d3f035fd1909d04759d11c58950861407829",
+      "bytes": 2162
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/cleanup.json": {
+      "sha256": "d337dfef435f3350264c7656861aa71ef1862a5f3eeaade52d85d87bd92c63ca",
+      "bytes": 611
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/closure-summary.json": {
+      "sha256": "c6c472e413506df7fd8630c48bd638f781d317e6f64a62e49ac9d88b66d257d6",
+      "bytes": 1859
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/demo-manifest.json": {
+      "sha256": "0872c6127ba3282d2ef15155e27d6a315418fffd47595472694dac6b549c673d",
+      "bytes": 5200
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/implementation-design.json": {
+      "sha256": "282e1bb366acd3c9ca4e86b72ea06761b05aebbb83e7227e3d75476588007100",
+      "bytes": 1398
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/observation-preflight.json": {
+      "sha256": "0957555c98c8b41fdd4ca030c5bf749d8bd7a80ab4755ec074a4eb23c1232bed",
+      "bytes": 337
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/paired-performance.json": {
+      "sha256": "8ed2db1a8050023df3fdc1a8e8bfb5db284f4616fab65a01f77a878684dfa096",
+      "bytes": 3977
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/phase-accounting.json": {
+      "sha256": "35897510613a682293a60caaa55fb0a0d5e16a09aadf634306391d640fbb1818",
+      "bytes": 18072
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/preflight.json": {
+      "sha256": "5bf14a56d25857883697a33ae1a8747a620fdc67aad2fea70d9d34835039ce39",
+      "bytes": 119851
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/proof-reuse-map.json": {
+      "sha256": "ca7f69fcd4f73d6c7f4ea6357fa982c8e7e9b88e5714b4a0b7a4c20842f74e6f",
+      "bytes": 1976
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/red-green.json": {
+      "sha256": "0b18ec651fb97f9971faf318a7f6dab1fad21fa80c75aa8383cfffa397a35741",
+      "bytes": 1067
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/regressions.json": {
+      "sha256": "d8b421bc97310f89e83863661cfd85c018439d518b13cdcccd40bffa04b4ac6d",
+      "bytes": 3746
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/replay-green.json": {
+      "sha256": "4b825598cbc601a135284d3107bf5394b160e5769da8b88f240d02f219fa5533",
+      "bytes": 222
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/replay-red.json": {
+      "sha256": "a443958abf0077a1398bd0277b6620f05c29e4ff8c058c216818090eda4b2ea1",
+      "bytes": 223
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/result.json": {
+      "sha256": "8c0fca2b5a6103ff1ec6f74f9f2d952874d941778bffc982e120f341cbe179c6",
+      "bytes": 7421
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/sampling-ledger.json": {
+      "sha256": "95e995509fbeeb1e00d7226f2bf4e2da4499bb59639b645c68dac47e512488e7",
+      "bytes": 3704
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/semantic-and-pixels.json": {
+      "sha256": "c536e1ac32c6b9b46b7118f4ac4025be952f9a70249daceded0d2e8d833dc5d5",
+      "bytes": 3072
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/semantic-pair-partial.json": {
+      "sha256": "6ccce446144129d0b3dd04bbb9f7402858c55b6fcbb2b40e0a31b3213bd7ea12",
+      "bytes": 1549
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/semantic-replay.json": {
+      "sha256": "634730ad8e0b59ab857d948553f3593bf0515919161f96575d8c71b419c60318",
+      "bytes": 1213
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/source-delta-manifest.json": {
+      "sha256": "e69f113af4de927e374dc44f15e41dd2787e75d0d2b2d950c5543ca07175a437",
+      "bytes": 2325
+    },
+    ".aegis/results/G5-CPUW7-postworker-tail-r1/source-manifest.json": {
+      "sha256": "8353bce4885d82173aeff9cb89025a34f2bc5f55fdaf11d12afff9917229eadf",
+      "bytes": 162447
+    },
+    "docs/planning/G5_CPU_WORKER_STATUS.md": {
+      "sha256": "0406880ad6440f8b319e5b6087614ceb0d423b51beabaec6eba5be7a8cf2ffcf",
+      "bytes": 8366
+    },
+    "runtime/composition/src/runtime_composition.cpp": {
+      "sha256": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee",
+      "bytes": 53830
+    },
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": {
+      "sha256": "e7e9bf3b92eff740d3564d7f366ae70b5a9b827b1718127a046162041a45d9c3",
+      "bytes": 9419
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256": "06eae43d2ceb7c8bed2d92e83679299c8b4516ac4f1e059106bed3a3c6cf9067",
+      "bytes": 333046
+    },
+    "runtime/interaction/src/cpu_pending_erase.cpp": {
+      "sha256": "f5d9bb0273a8bceb943b1ffc9f67ee35898261ccd696115af8d9c78b9d4890ca",
+      "bytes": 39471
+    },
+    "runtime/render/CMakeLists.txt": {
+      "sha256": "45fc24b639574f9fb36ad4bd7c81f10f89fcdca9d65b79b433d93a49e72ad862",
+      "bytes": 59535
+    },
+    "runtime/render/src/skia_prepared_geometry.cpp": {
+      "sha256": "ee7da4a978373e5ee42c25b8a9d1a8cb3bb3801549dc9ca5bb77263426586cb9",
+      "bytes": 37544
+    },
+    "runtime/render/src/skia_prepared_geometry.hpp": {
+      "sha256": "d29ef5fb34d5e2e5e4198ce9b1dcb0444a7ea9ae72c027fda15aac648c6ca204",
+      "bytes": 10537
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "75b4640774821c85bdeda0dfb9b523226bcf353043f3c94d2bac171cd52f7615",
+      "bytes": 120988
+    },
+    "runtime/render/tests/cpu_postworker_replay_test.cpp": {
+      "sha256": "dcd487826f77fd7f84c4430620af28a0ba6e163d772cdfb950419cf6869fdd85",
+      "bytes": 3608
+    },
+    "sdk/common/session.cpp": {
+      "sha256": "87d9224fd94854c2718131f0b7d3a90e3843901c1802b1193bf0e4f2a56c3d6a",
+      "bytes": 111958
+    },
+    "verification/runners/g5/cpu_postworker_web.mjs": {
+      "sha256": "aff236a8b3707641496f7b526d2c5f4cd5d6af3f6c9b00fdebbdb5ee402c35e5",
+      "bytes": 13910
+    },
+    "verification/tests/g5_cpu_postworker_observer.test.mjs": {
+      "sha256": "1d4006cd5c93ea42da2a85c284bffa59dad28f2f5bce214c45e8f7093117787b",
+      "bytes": 1467
+    }
+  },
+  "raw_policy": "Large build trees and compressed browser raw remain local; compact reviewed contracts/evidence committed."
+}

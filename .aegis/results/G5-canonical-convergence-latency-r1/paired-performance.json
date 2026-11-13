@@ -1,0 +1,112 @@
+{
+  "rows": [
+    {
+      "role": "BASELINE",
+      "status": "OBSERVED",
+      "input_down_to_up_ms": 7960.299999952316,
+      "AB_up_to_drain_ms": 15311.799999952316,
+      "C_down_to_drain_ms": 13437.699999928474,
+      "C_up_to_drain_ms": 13436.899999976158,
+      "A_Up_handler_ms": 0.3999999761581421,
+      "B_Down_handler_ms": 0.20000004768371582,
+      "B_Down_after_A_Up_return_ms": 0.5,
+      "canonical_AB_receipt_notification_ms": 15272.399999976158,
+      "operation_notification_A_ms": 4431.100000023842,
+      "selection_ms": 85.30000007152557,
+      "Worker_C": {
+        "jobs": 44,
+        "first_issue_after_Up_ms": 11.600000023841858,
+        "last_terminal_after_Up_ms": 3072.6999999284744,
+        "after_last_terminal_ms": 10364.200000047684,
+        "sum_compute_ms": 79.80000054836273,
+        "sum_envelope_ms": 1216.6000002622604,
+        "sum_yield_ms": 4.499999403953552,
+        "envelope_is_not_all_compute": true
+      },
+      "C_worstRAF_ms": 133.79999995231628,
+      "C_RAF_inside_ms": 12111.200001358986,
+      "C_RAF_outside_ms": 1325.6999986171722,
+      "snapshots": {
+        "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+        "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+        "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+        "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+      },
+      "operations": 5,
+      "workerjobs": 76,
+      "errors": [],
+      "closed": true,
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-BASELINE",
+      "observationloss": 0
+    },
+    {
+      "role": "CANDIDATE",
+      "status": "OBSERVED",
+      "input_down_to_up_ms": 13172.199999928474,
+      "AB_up_to_drain_ms": 15000.800000071526,
+      "C_down_to_drain_ms": 11010.100000023842,
+      "C_up_to_drain_ms": 11009.200000047684,
+      "A_Up_handler_ms": 0.30000007152557373,
+      "B_Down_handler_ms": 0.2999999523162842,
+      "B_Down_after_A_Up_return_ms": 0.2999999523162842,
+      "canonical_AB_receipt_notification_ms": 14962.899999976158,
+      "operation_notification_A_ms": 4670,
+      "selection_ms": 88.39999997615814,
+      "Worker_C": {
+        "jobs": 44,
+        "first_issue_after_Up_ms": 11.200000047683716,
+        "last_terminal_after_Up_ms": 868.0,
+        "after_last_terminal_ms": 10141.200000047684,
+        "sum_compute_ms": 75.69999957084656,
+        "sum_envelope_ms": 162.799999833107,
+        "sum_yield_ms": 2.5000001192092896,
+        "envelope_is_not_all_compute": true
+      },
+      "C_worstRAF_ms": 74.19999992847443,
+      "C_RAF_inside_ms": 9784.600000739098,
+      "C_RAF_outside_ms": 1224.5999993085861,
+      "snapshots": {
+        "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+        "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+        "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+        "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+      },
+      "operations": 5,
+      "workerjobs": 76,
+      "errors": [],
+      "closed": true,
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-PRIMARY-CANDIDATE",
+      "observationloss": 0
+    }
+  ],
+  "no_statistical_performance_PASS": true,
+  "nested_accounting": "ordinaryhasno nativephase; onOperationnotification !=atomiccommit; RAFoutside !=GPUwait",
+  "known_image_qualification": "independent302open notusedforprimarypurev4",
+  "paired": {
+    "input_down_to_up_ms": {
+      "baseline": 7960.299999952316,
+      "candidate": 13172.199999928474,
+      "percent": 65.47366305299272
+    },
+    "AB_up_to_drain_ms": {
+      "baseline": 15311.799999952316,
+      "candidate": 15000.800000071526,
+      "percent": -2.0311132582828906
+    },
+    "C_up_to_drain_ms": {
+      "baseline": 13436.899999976158,
+      "candidate": 11009.200000047684,
+      "percent": -18.06741138158937
+    },
+    "C_down_to_drain_ms": {
+      "baseline": 13437.699999928474,
+      "candidate": 11010.100000023842,
+      "percent": -18.065591581279193
+    },
+    "C_worstRAF_ms": {
+      "baseline": 133.79999995231628,
+      "candidate": 74.19999992847443,
+      "percent": -44.54409569886557
+    }
+  }
+}

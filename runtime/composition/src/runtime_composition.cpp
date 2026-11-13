@@ -1,4 +1,5 @@
 #include "canvas/foundation/internal/g5_observation.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
@@ -332,7 +333,7 @@ std::size_t RuntimeCompositionCore::semanticObjectCount() const noexcept {
 }
 semantic::ApplyResult RuntimeCompositionCore::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) noexcept {
-  if (!canMutate() || std::this_thread::get_id() != ownerThread_) return {};
+  if (runtime_->cpuPendingBusy() || !canMutate() || std::this_thread::get_id() != ownerThread_) return {};
   return runtime_->applyExternalOperation(operation, source);
 }
 bool RuntimeCompositionCore::notifyResource(foundation::ObjectId id) noexcept {
@@ -470,6 +471,32 @@ bool RuntimeCompositionCore::resourceRetirementPending() const noexcept {
   return runtime_ && runtime_->resourceRetirementPending();
 }
 
+void RuntimeCompositionCore::suspendCpuPendingExecutor()noexcept{if(std::this_thread::get_id()==ownerThread_&&runtime_)runtime_->suspendCpuPendingExecutor();}
+void RuntimeCompositionCore::failCpuPendingExecutor()noexcept{if(std::this_thread::get_id()==ownerThread_&&runtime_)runtime_->failCpuPendingExecutor();}
+bool RuntimeCompositionCore::bindCpuPendingExecutor(std::uint64_t e)noexcept{
+ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return false;
+ return runtime_->bindCpuPendingExecutor(cpuWorkerBasis(),e);
+}
+std::array<std::uint64_t,4> RuntimeCompositionCore::cpuWorkerBasis()const noexcept{
+ if(runtime_){const auto pending=runtime_->pendingLocalValue();if(pending.owner[0]){std::array<std::uint64_t,4> basis{pending.owner[0],pending.owner[1],0,0};const auto doc=runtime_->documentId().value();for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);return basis;}}
+ std::array<std::uint64_t,4> basis{runtimeInstanceId_,resources_.lifetimeGeneration,0,0};if(runtime_){const auto doc=runtime_->documentId().value();for(unsigned i=0;i<16;++i)basis[2+i/8]|=std::uint64_t(doc.bytes[i])<<((i%8)*8);}return basis;
+}
+std::vector<std::uint8_t> RuntimeCompositionCore::takeCpuPendingRequest()noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_?runtime_->takeCpuPendingRequest():std::vector<std::uint8_t>{};
+}
+bool RuntimeCompositionCore::queueCpuPendingCompletion(std::array<std::uint64_t,8> j,std::span<const std::uint8_t> b,bool ok)noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->queueCpuPendingCompletion(j,b,ok);
+}
+interaction::PendingLocalValue RuntimeCompositionCore::pendingLocalValue()const{return runtime_?runtime_->pendingLocalValue():interaction::PendingLocalValue{};}
+interaction::CpuPendingEraseFacts RuntimeCompositionCore::cpuPendingFacts()const noexcept{return runtime_?runtime_->cpuPendingFacts():interaction::CpuPendingEraseFacts{};}
+std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
+ if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
+ return runtime_->reserveCpuWorkerGrant(e,b);
+}
+bool RuntimeCompositionCore::releaseCpuWorkerGrant(std::uint64_t e,std::uint64_t t)noexcept{
+ return std::this_thread::get_id()==ownerThread_&&runtime_&&runtime_->releaseCpuWorkerGrant(e,t);
+}
+std::size_t RuntimeCompositionCore::cpuWorkerGrantBytes()const noexcept{return runtime_?runtime_->cpuWorkerGrantBytes():0;}
 bool RuntimeCompositionCore::serviceFrameOpportunity(
     bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
 
@@ -481,6 +508,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
 
   out = {};
   if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  AXIOM_FRAME_TIMING_BEGIN(false,viewId_.value(),nextCanonicalWorkId_,runtime_->semanticGeneration().value(),runtime_->sceneRevision(),runtime_->cameraGeneration(),runtime_->surface().generation,runtime_->surface().metricsGeneration,"owner");
   // A capture may be superseded by input, resize, restore, or cancellation
   // before the platform reports its presentation result.  Invalidate that
   // obsolete work at the next owner opportunity so it cannot reserve the
@@ -492,22 +520,29 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   }
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
-  if (!ownerPump()) return false;
-  runtime_->serviceResourceRetirements();
+  {AXIOM_FRAME_TIMING_SCOPE(ownerPumpTiming,owner_pump);if (!ownerPump()) return false;}
+  {AXIOM_FRAME_TIMING_SCOPE(pendingTiming,pending_owner);runtime_->serviceCpuPendingErases();}
+  try{if(auto image=runtime_->pendingHeadImage()){
+    bool applied=false;try{applied=controlFacade_->importImage(image->second).state==ImageCommandState::kApplied;}catch(...){}
+    runtime_->completePendingImage(image->first,applied);
+  }}catch(...){runtime_->completePendingImage(runtime_->cpuPendingFacts().head,false);}
+  {AXIOM_FRAME_TIMING_SCOPE(resourceTiming,resource_service);runtime_->serviceResourceRetirements();}
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   const bool editingTransient=!forceCanonical && ((runtime_->platformPresentationDeferred() && (runtime_->creationActive() ||
       runtime_->selectionTransformActive() || runtime_->regionSelectionActive())) || runtime_->objectEraseFeedbackActive() || runtime_->partialEraseFeedbackActive());
-  const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
-      runtime_->retryTransientOverlayFrame();
+  bool transientRendered=false;
+  {AXIOM_FRAME_TIMING_SCOPE(transientTiming,transient_frame);transientRendered=editingTransient && runtime_->transientOverlayDirty() && runtime_->retryTransientOverlayFrame();}
   if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
     retirePreviewCapture();
   }
-  if(shouldCanonical && !forceCanonical && !editingTransient)
+  if(shouldCanonical && !forceCanonical && !editingTransient){
+    AXIOM_FRAME_TIMING_SCOPE(navTiming,navigation_frame);
     out.navigationPending=runtime_->serviceNavigationPresentation(
         std::chrono::steady_clock::now(),out.navigationPresented);
+  }
   // Selection chrome is a canonical overlay, but the first contact of a
   // possible pinch is still under AutoIntent arbitration. Do not spend this
   // frame opportunity on a full scene render before the second contact can
@@ -517,6 +552,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
       runtime_->pendingViewportGesture();
   if (shouldCanonical && !out.navigationPending && !editingTransient &&
       !awaitingViewportClaim) {
+    AXIOM_FRAME_TIMING_SCOPE(canonicalTiming,canonical_frame);
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
     out.canonicalRequested = G5_CALL(g5::Tag::canonical,g5::Purpose::canonical,runtime_->presentCanonicalFrame(frameId, 0.0, false));
@@ -561,9 +597,13 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if (out.navigationPending || out.navigationPresented) {
     out.canonicalWork.reset();
   }
-  out.needsPaint = out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
+  out.needsPaint = runtime_->cpuPendingFacts().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
+  AXIOM_FRAME_TIMING_SET(commit_ordinal,runtime_->canonicalCommitFence().ordinal.value());
+  AXIOM_FRAME_TIMING_SET(after_generation,runtime_->semanticGeneration().value());
+  AXIOM_FRAME_TIMING_SET(after_scene,runtime_->sceneRevision());
+  AXIOM_FRAME_TIMING_OUTCOME(out.needsPaint?"pending":"settled");
   return true;
 }
 void RuntimeCompositionCore::retirePreviewCapture() noexcept {
@@ -729,7 +769,7 @@ bool RuntimeCompositionCore::detach() noexcept {
   notifications_.clear();
   return true;
 }
-bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+bool RuntimeCompositionCore::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if(runtime_&&(runtime_->cpuPendingBusy()||runtime_->cpuWorkerGrantBytes()))return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 std::uint64_t RuntimeCompositionCore::canonicalPresentCount() const noexcept {
   const auto* provider = runtime_->activeSurfaceProvider();
   return provider == nullptr ? 0U : provider->presentCount();

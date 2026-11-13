@@ -1,0 +1,110 @@
+{
+  "schema": "axiom-idle-input-diagnostic-result-v1",
+  "task_id": "G5-idle-input-feedback-diagnostic-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "diagnostic_outcome": "FINITE_NO_REPRODUCTION_WITH_QUALIFICATION_LIMIT",
+  "strict_idle_evidence": "BLOCKED_EVIDENCE",
+  "package": {
+    "path": ".aegis/packages/G5-idle-input-feedback-diagnostic-r1/package.json",
+    "sha256": "6720ee60d3fe8892c853d2d8a015894e0fd62f7f929441013ccad0fac76d35ca"
+  },
+  "repository": "github:Mostorm-Labs/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "materialization": "same-repository shared-controlled-worktree; exact localrefs, accepted dirty preserved; no commit required",
+  "production_behavior_fixed": false,
+  "observed_actual_idle_ms": 1200003,
+  "finding": "No missing strokes in bounded stable controls or sampled postidle feedback. Same document/semantic retained. Strict idle had29naturalRAF calls withzero observedGPUwrites; trigger unobserved. Latestrepeatedpartialerase livehistory absent fromthis workload.",
+  "obligation_disposition": {
+    "IF1": "finite no-repro; actualowner input/Operation/state/pixel witnesses, notfullcontinuousdisplayproof",
+    "IF2": "actual20minvisibleidle performed; strictnoRAFrulefailed; physicalOSfrontmost notcontinuouslyobserved",
+    "IF3": "unknownroot explicitlybounded; no guessedfix; minimaldynamicerase successorproposed",
+    "IF4": "all4attempts preserved, sourceSDKfreezes stable, ownedcleanupcomplete, oldpages/assets preserved"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/preflight.json",
+      "sha256": "789efba29d52214c918c2603e3aeb37451b8fa777ede12dc997ab39c399fc30e"
+    },
+    "diagnostic-plan.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/diagnostic-plan.json",
+      "sha256": "58b5e2c6504bc4ef93ec716489df008cc71e2dcbb2bc92120ee001af6215c1a0"
+    },
+    "inputs.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/inputs.json",
+      "sha256": "bab3aeb9f87eddc72c62861dea81db20bb5eae44543be3a798e13fe247238737"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/source-manifest.json",
+      "sha256": "fd230c9c10b64c61c4500206bf8f40e16fc4a111155b070f7192fbab93ec7551"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/SDK-manifest.json",
+      "sha256": "90f2949ea98c5ccdde2aab84322f6806c4f23bfb4043d606e6b3492d05059f36"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/sampling-ledger.json",
+      "sha256": "521d421d3754ed37f4f97d95f49495c81e7d2d136c282e0e80e115da6d11a56e"
+    },
+    "warm-observation.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/warm-observation.json",
+      "sha256": "788223569a4848c2134a61c046817263574fbd734cc7593630050664adbb757d"
+    },
+    "idle-observation.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/idle-observation.json",
+      "sha256": "5a383c9ca9bda0d1bca79aa29d0c8b064a200d0ce8bd9cc03b263974c3ddc0e4"
+    },
+    "causal-analysis.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/causal-analysis.json",
+      "sha256": "8926ff43777a247191acbf48a43ab6888c14feac390ece50e220e339362f87af"
+    },
+    "fixture-mask-metadata.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/fixture-mask-metadata.json",
+      "sha256": "5c4bc2f9af247cff84e255f61b23b9aae2e246319f566ab90af910a5d0c71cfd"
+    },
+    "tests.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/tests.json",
+      "sha256": "8a0ae493155b69e57bd07e0016d7e95ddbdf092b39b4988460b421f4b0b8f406"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/preservation-check.json",
+      "sha256": "0153fd01f5985844eee3303dafc54ad069ba068126bc3f3a96387ff1c44a11e7"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/cleanup.json",
+      "sha256": "69cdef85affe00be0881d0f2e3349f6c2d8e5f592adb65245f9918398550e97b"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/artifact-manifest.json",
+      "sha256": "5166d5baffdeca90f9cf618465dfff04cdc9093559cc79db494cfc0ef4b86c79"
+    }
+  },
+  "tests_summary": "4Node/3Python/7focusednativepass; normalOFFprobe0argSideEffects; nofullprojectorperformancesignoff",
+  "limits": {
+    "browser_starts_used": 4,
+    "browser_starts_cap": 4,
+    "remaining_browser_starts": 0,
+    "charged_seconds": 1269,
+    "time_cap_seconds": 2220,
+    "time_remaining_seconds": 951,
+    "actual20min_starts_used": 1,
+    "actual20min_starts_cap": 1,
+    "diagnostic_builds": 1,
+    "diagnostic_builds_cap": 1,
+    "ordinary_builds": 0,
+    "no_more_sampling_allowed": true
+  },
+  "blockers_and_gaps": [
+    "strictnoRAFnotsatisfied29idleframes",
+    "no restoredruntime activecontinuouserase/pending-to-idlehistory",
+    "user22documentnotavailable; Fixed40contains80masksx32segments",
+    "sampledROIupperboundonly, notfirstphoton/fullsceneoracle",
+    "firstfailedinitializationattemptnoproductdraw/pixelwitness; retainedfailure.png/state",
+    "native observationdidnotlogeveryspecificretirebranch, immutableops/presentedstate/pixelsalignonlyobservedpaths"
+  ],
+  "next_proposal_ref": "causal-analysis.json/minimum_successor_proposal",
+  "terminal": "STOP_SCOPE_COMPLETE_FINITE_DIAGNOSIS",
+  "no_commit_push": true,
+  "no_G5_P34_performance_PASS": true,
+  "user_Demo_URL_unchanged": "http://127.0.0.1:4333/example.html"
+}

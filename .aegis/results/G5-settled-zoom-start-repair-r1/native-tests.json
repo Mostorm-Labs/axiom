@@ -1,0 +1,35 @@
+{
+  "actual_RED": "red-native2.log (initialred-build.log compileerrornotRED)",
+  "new_native_G5SettledZoomStart": "passed final-checks.log; full MetalDPR1/2/4+RasterDPR1 complete firstframe/finalDirect",
+  "focused_final_five": {
+    "passed": 5,
+    "failed": 0,
+    "log": "out/G5-settled-zoom-start-repair-r1/final-checks.log"
+  },
+  "other_requested_native_checks": "CJ/CanonicalPreparedBounded/Pixels/Replay passed in regressions.log; no sourceupdates to these owners",
+  "frontier_strict": "frontier-clip-tests.log exit0, originalstrictpixelchecks retained",
+  "runtime_boundaries": {
+    "count": 120,
+    "log": "out/G5-settled-zoom-start-repair-r1/boundaries.log"
+  },
+  "driver_tests": {
+    "passed": 3,
+    "failed": 0,
+    "log": "out/G5-settled-zoom-start-repair-r1/driver-tests.log"
+  },
+  "retained_failures": [
+    "red-build.log missingiostream harness",
+    "pixel-native.log differing densityreference invalid",
+    "pixel-oracle-native.log omittedshapeaffine invalidreference",
+    "samegridlowLSBquantizationlogs retained",
+    "regressions.log regionalstalequeryfailure repairedexistingadmission",
+    "frontier-regression.log strictpanAA changed fromregionclip; restoredpanpath finalstrictfrontierpassed"
+  ],
+  "invalid_baseline_probe": {
+    "log": "out/G5-settled-zoom-start-repair-r1/baseline-regional-negative.log",
+    "exit": "SIGBUS/-10",
+    "classification": "invalidmixednativeJobABIexperiment, notproductcrash oroldnegativePASS"
+  },
+  "full_suite": "notrequirednotrun",
+  "Web_frozen_performance": "UNMET"
+}

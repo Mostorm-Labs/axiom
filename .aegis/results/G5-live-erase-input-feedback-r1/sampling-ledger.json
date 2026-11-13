@@ -1,0 +1,67 @@
+{
+  "task": "G5-live-erase-input-feedback-r1",
+  "max_starts": 3,
+  "max_seconds": 720,
+  "max_builds": 0,
+  "charged_seconds": 212,
+  "attempts": [
+    {
+      "id": "LE-ORDINARY",
+      "status": "COMPLETED",
+      "limit_seconds": 240,
+      "started_unix": 1794559230.0211918,
+      "request_sha256": "1bb157afd9be67a79ed72d2c87a57cf204a6cab879fd24fb9c2cc46a4c13dcc0",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/live_erase_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-live-erase-input-feedback-r1/requests/LE-ORDINARY.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-live-erase-input-feedback-r1/web/LE-ORDINARY"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 105.415375125,
+        "peak_process_family_rss_kib": 1341008,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 106
+    },
+    {
+      "id": "LE-DIAGNOSTIC",
+      "status": "COMPLETED",
+      "limit_seconds": 240,
+      "started_unix": 1794559385.203692,
+      "request_sha256": "57b6e0f8094e2ac626613cee0411de732b01a5587ebb72629fc2f4a737e0dc6f",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/live_erase_feedback_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-live-erase-input-feedback-r1/requests/LE-DIAGNOSTIC.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-live-erase-input-feedback-r1/web/LE-DIAGNOSTIC"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 105.27144387499999,
+        "peak_process_family_rss_kib": 1619664,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "identity_changes": [],
+      "charged_seconds": 106
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "branch": "codex/g5-cpu-worker",
+  "files": {
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": "35ffe5e3aa49cab3544edfbefb4e887bf76525a5ed5eba63578e36b03dcee292",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "f20edaa197630f0924e59b9bfde5b23e1a2bff20461a098def500179eb21cbde",
+    "sdk/web/web_runtime_adapter.cpp": "11f1863460a6ed120410bc05b51d31cf371f6f294da4226b6e9d63c39e891c4b",
+    "verification/runners/g5/idle_input_feedback_analyze.py": "1a45da31b2a5a636f74a5283429faebcb7ebd49ff14c7b3af6e8dfa92920a6dc",
+    "verification/runners/g5/idle_input_feedback_observer.mjs": "5383c69432c47a32300eb8c0f99b8f0550f9b86baec11a1f115c5e92e7381ca7",
+    "verification/runners/g5/idle_input_feedback_runner.py": "b7063442c52b03fa351a45805da7984e5e40a0a96928b4e2fc49c57e6f136c72",
+    "verification/runners/g5/idle_input_feedback_web.mjs": "cb0c9c94a145e603e8e29786f30a2f89b1c9e71d02d14441fe553570d608e080",
+    "verification/tests/g5_idle_input_feedback.test.mjs": "0bf339fec2139dea0df0610a504353747300d26d40369f06c386bb7689c3d166",
+    "verification/tests/test_g5_idle_input_feedback.py": "346f0f18ea876b9dd3ad81395a26d2ae21a078736f15810f68e5d8ed2c14061b",
+    "docs/planning/G5_IDLE_INPUT_FEEDBACK_20261113.md": "0d51983f420cc04c08f47ffc060d1f5198e36ae5aeb50114a90e375cebe2c2f6"
+  },
+  "accepted45_preserved_except_two_guard_macros": true,
+  "production_behavior_changed": false,
+  "public_API_changed": false,
+  "build_source_identity": "IF-SHORT-DIAGNOSTIC-freeze.json / host_tree",
+  "EOL_normalized_build_equivalence": "line-ending-preservation.json",
+  "sourceSDKfrozen_during_windows": true,
+  "build_steps": {
+    "path": "out/G5-idle-input-feedback-diagnostic-r1/build-steps.json",
+    "sha256": "fc95e9b21685b66c91507d505151fd16b590685d8eadb1298dcc71e8cd4234bb"
+  },
+  "normalOFFprobe": "c++ -std=c++20 -Wall -Wextra -Werror /tmp/axiom_if_disabled_probe.cpp; program returned0, side effect not evaluated"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "G5CPUW2-PAIRS",
+  "status": "FAILED",
+  "rows": [
+    {
+      "id": "oldnormal1600",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "candidate1600",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "candidate7200",
+      "status": "FAILED",
+      "error": "Error: canonical convergence60s\n    at check (http://127.0.0.1:51587/driver.mjs:6:83)\n    at stable (http://127.0.0.1:51587/driver.mjs:11:441)\n    at async consumer (http://127.0.0.1:51587/driver.mjs:44:3)\n    at async <anonymous>:337:30"
+    }
+  ],
+  "errors": [],
+  "error": "Error: frozen case failure stop\n    at run (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_pending_web.mjs:91:587)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_pending_web.mjs:93:123"
+}

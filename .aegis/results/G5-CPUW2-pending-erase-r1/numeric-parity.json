@@ -1,0 +1,100 @@
+{
+  "status": "PARTIAL_NUMERIC_SUCCESS_FROZEN_WEB_CONVERGENCE_BLOCKED",
+  "exact634": {
+    "rows": 634,
+    "mismatches": 0,
+    "candidate": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/candidate634.json",
+      "sha256": "0a2bf78fd5ced1a361979425bb1fc71e1be5e31ff154272ea01ca829658990aa"
+    },
+    "reference": {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/A-original634.json",
+      "sha256": "fba3849e177049c6276736434628f98e0af629aad79015a98136e4f33c30eada"
+    }
+  },
+  "original7200": {
+    "equal": true,
+    "path": {
+      "path": ".aegis/results/G5-CPUW2-pending-erase-r1/original7200.path",
+      "sha256": "fa3a9211e613060c85e939f2342ed7b3cc4e3f4dc7e22a0cff1e0bb46785fe5f"
+    },
+    "log": "long-path.log",
+    "wire": 576128,
+    "estimate": 40146048
+  },
+  "paired1600_snapshots": [
+    {
+      "stage": "final",
+      "bytes": 12160391,
+      "old_sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2",
+      "candidate_sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2",
+      "equal": true
+    },
+    {
+      "stage": "undo",
+      "bytes": 12125951,
+      "old_sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c",
+      "candidate_sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c",
+      "equal": true
+    },
+    {
+      "stage": "redo",
+      "bytes": 12160391,
+      "old_sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8",
+      "candidate_sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8",
+      "equal": true
+    }
+  ],
+  "paired1600_operation_bytes": [
+    {
+      "index": 0,
+      "old_sha256": "3704443d63a7095d3a5b909c50b190e22a139ce17b3f52b9a2460d82a9515e7a",
+      "candidate_sha256": "3704443d63a7095d3a5b909c50b190e22a139ce17b3f52b9a2460d82a9515e7a",
+      "bytes": 6658294,
+      "equal": true
+    },
+    {
+      "index": 1,
+      "old_sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998",
+      "candidate_sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998",
+      "bytes": 35412,
+      "equal": true
+    }
+  ],
+  "pixel_raw_pair": [
+    {
+      "stage": "final",
+      "old_sha256": "e93e030398516e7db93828956a31e3acc1a8cde6225fe114e49999df3990bf46",
+      "candidate_sha256": "7341b4e513cb567d038cf78b3603d15d4dd6e37fc8db26c7f116e7930c3c5161",
+      "pixels": 5781240,
+      "differing_pixels": 1,
+      "above2_pixels": 1,
+      "max_channel_delta": 14,
+      "qualification": "NOT_QUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY"
+    },
+    {
+      "stage": "undo",
+      "old_sha256": "5c7cbc0b6b539fe0e9a1a142b32e70ee11b5e668d205afe62a5e3bdf100f3bad",
+      "candidate_sha256": "aa5004075bd652030bdc83fa78fb5e81bd98cfcdff43be952971fadab002224b",
+      "pixels": 5781240,
+      "differing_pixels": 1,
+      "above2_pixels": 1,
+      "max_channel_delta": 18,
+      "qualification": "NOT_QUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY"
+    },
+    {
+      "stage": "redo",
+      "old_sha256": "e93e030398516e7db93828956a31e3acc1a8cde6225fe114e49999df3990bf46",
+      "candidate_sha256": "86c2fc77690cf054c0eb44bd10c672bf5a0a4230152ca142fc09fac8b3a0899d",
+      "pixels": 5781240,
+      "differing_pixels": 1,
+      "above2_pixels": 1,
+      "max_channel_delta": 16,
+      "qualification": "NOT_QUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY"
+    }
+  ],
+  "missing": [
+    "IndependentCPUAAstrictcoldpixels notrun afterblocker; rawpairdifferenceunqualified",
+    "7200browserfullcanonical/op/history/pixelreceipt missing"
+  ]
+}

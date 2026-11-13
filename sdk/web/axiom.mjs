@@ -1,3 +1,4 @@
+import {bindCpuWorkerOwner,unbindCpuWorkerOwner} from './internal/cpu-worker-owner.mjs';
 import {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError} from '../api/axiom.mjs';
 import {adaptController} from '../api/internal/controller.mjs';
 export {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError};
@@ -34,6 +35,38 @@ export async function createRuntime({mount, documentId, restore, initialResource
   let boundWidth=0,boundHeight=0,boundDpr=0,pendingResize=false,resizeTimer=0;
   let retainedActive=false;
   let closeBarrier=false;
+  let pendingWorker=null,pendingTask=null,pendingFailed='0',pendingRestart=null,pendingRestarts=0,pendingReplacement=null,pendingRoot=null,pendingFactory=null;
+  const pumpPending=()=>{
+    if(!pendingWorker||pendingTask||pendingRestart||closed||closing||closeBarrier)return;
+    const failureFacts=call('cpuPending');
+    if(failureFacts.failed!==pendingFailed){pendingFailed=failureFacts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',failureFacts.error));}
+    if(pendingReplacement){
+      if(!call('state').value.surface.available)return;
+      try{call('cpuPending',{action:'bind',executor:pendingReplacement.observation().executor});pendingWorker=pendingReplacement;pendingReplacement=null;}
+      catch(error){void pendingReplacement.close();pendingReplacement=null;call('cpuPending',{action:'unavailable'});emitError(error);return;}
+    }
+    if(pendingWorker.observation().closed){
+      call('cpuPending',{action:'suspend'});
+      if(pendingRestarts>=1){call('cpuPending',{action:'unavailable'});return;}
+      const head=call('cpuPending');if(head.state==='WaitingWorker'||head.state==='OwnerExactConfirmation')return;
+      if(!call('state').value.surface.available)return;
+      ++pendingRestarts;pendingRestart=pendingFactory(pendingRoot).then(next=>{pendingReplacement=next;}).catch(error=>{call('cpuPending',{action:'unavailable'});emitError(error);}).finally(()=>{pendingRestart=null;schedule();});return;
+    }
+    const facts=call('cpuPending');
+    if(facts.failed!==pendingFailed){pendingFailed=facts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',facts.error));}
+    if(!facts.requestReady)return;
+    const taken=call('cpuPending',{action:'take'});if(!taken.bytes)return;
+    const request=module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size());
+    const token=facts.token;
+    try{
+      pendingTask=pendingWorker.submit(request.buffer);
+      pendingTask.result.then(result=>{
+        try{call('cpuPending',{action:'complete',token,success:result.status==='Ready'},result.bytes?new Uint8Array(result.bytes):undefined);}
+        catch(error){emitError(error);}
+        finally{result.release?.();pendingTask=null;schedule();}
+      },error=>{try{call('cpuPending',{action:'complete',token,success:false});}finally{pendingTask=null;emitError(error);schedule();}});
+    }catch(error){call('cpuPending',{action:'complete',token,success:false});pendingTask=null;emitError(error);schedule();}
+  };
   const listeners=new Map();let listenerSequence=0;
   const emitError = error => { if (onError) queueMicrotask(() => {if(!closed)onError(error);}); };
   const call = (command, args = {}, bytes) => {
@@ -81,23 +114,37 @@ export async function createRuntime({mount, documentId, restore, initialResource
   const render = () => {
     scheduled = 0; if (closed || closing) return;
     try {
+      pumpPending();
       const frame = call('frame');
+      pumpPending();
       if (retainedActive && !pendingResize && frame.surfaceReady) {
         retained.remove();retained.width=retained.height=0;retainedActive=false;
       }
+      resolveTerminals();
       dispatch();
       if (frame.presented && frame.presented !== lastPresented) {
         lastPresented = frame.presented;
         if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});
       }
-      if (frame.pending || frame.retry || text?.snapshot().phase) schedule();
+      if (frame.pending || frame.retry || terminalWaiters.size || text?.snapshot().phase) schedule();
     } catch(error) { emitError(error); }
   };
   const schedule = () => { if(!closed && !closing && !scheduled)scheduled=requestAnimationFrame(render); };
+  const terminalWaiters=new Map();
+  const resolveTerminals=()=>{
+    for(const [key,entry] of terminalWaiters){
+      try{const value=call('pendingReceipt',entry.token);if(value.done){terminalWaiters.delete(key);entry.resolve({...entry.result,...value,pendingToken:undefined});}}
+      catch(error){terminalWaiters.delete(key);entry.reject(error);}
+    }
+  };
   const enqueue = (fn, finish = true, notify = true) => {
     if(closing || closed || closeBarrier)return Promise.reject(new AxiomError(closeBarrier?'DOCUMENT_CLOSING':'CLOSED'));
-    const task = tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();if(notify){changed();schedule();}return result;});
-    tail=task.catch(()=>{});return task;
+    const admission=tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();if(notify){changed();schedule();}return result;});
+    tail=admission.then(()=>{},()=>{});
+    return admission.then(result=>{
+      if(!result?.pendingToken)return result;
+      return new Promise((resolve,reject)=>{const token=result.pendingToken,key=[token.runtimeInstance,token.lifetimeGeneration,token.serial].join('/');terminalWaiters.set(key,{token,result,resolve,reject});schedule();});
+    });
   };
   const cleanup = () => {
     listeners.clear();
@@ -243,6 +290,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       return ()=>{listeners.delete(token);};
     };
     if(onChange)subscribe('state',onChange);
+    const cpuWorkers=new Set();
     const api={
       version:SDK_VERSION, canvas:canonical,
       readBuildInfo:()=>call('version'),
@@ -362,14 +410,20 @@ export async function createRuntime({mount, documentId, restore, initialResource
       applyReplayOperation:bytes=>enqueue(()=>call('replay',{},bytes)),
       applyReplayOperations:packets=>enqueue(()=>call('replayBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
       applyRemoteOperations:packets=>enqueue(()=>call('remoteBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
-      async close(){if(closed)return;if(closing)throw new AxiomError('BUSY');closing=true;
-        try{await tail;await text.finish();call('close');disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
+      async close(){if(closed)return;if(closing||pendingRestart||pendingReplacement)throw new AxiomError('BUSY');call('cpuPending',{action:'closePreflight'});closing=true;
+        try{await tail;await text.finish();for(const worker of [...cpuWorkers])await worker.close();call('close');unbindCpuWorkerOwner(api);disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
         catch(error){if(['PUBLICATION_PENDING','SHUTDOWN_FAILED','CLOSE_FAILED'].includes(error.code)){closeBarrier=true;disposeInput?.();disposeInput=undefined;text.dispose();}closing=false;schedule();throw error;}}
     };
     listen('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing||text.snapshot().phase!==0)return;const t=api.table.read();if(!t.available||!t.editable)return;
       if(e.key==='Tab'){e.preventDefault();void api.table.navigate(e.shiftKey?-1:1).catch(emitError);}
       if(e.key==='Enter'){e.preventDefault();void api.table.edit({objectId:t.objectId,rowId:t.rowId,columnId:t.columnId}).catch(emitError);}
     });
+    bindCpuWorkerOwner(api,{basis:()=>call('cpuWorkerGrant',{action:'basis'}).words,assetBaseURL:new URL('internal/',assets),reserve:(executor,bytes)=>{if(closed||closing)throw new AxiomError('CLOSED');return call('cpuWorkerGrant',{action:'reserve',executor,bytes}).token;},release:(executor,token)=>call('cpuWorkerGrant',{action:'release',executor,token}),observe:()=>call('cpuWorkerGrant',{action:'observe',executor:'1'}),attach:worker=>cpuWorkers.add(worker),detach:worker=>cpuWorkers.delete(worker)});
+    pendingRoot=api;
+    if(call('cpuPending').capability){
+      try{pendingFactory=(await import('./internal/cpu-worker-client.mjs')).createCpuWorker;pendingWorker=await pendingFactory(api);call('cpuPending',{action:'bind',executor:pendingWorker.observation().executor});}
+      catch(error){pendingWorker=null;emitError(error);}
+    }
     schedule();return Object.freeze(api);
   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}
 }

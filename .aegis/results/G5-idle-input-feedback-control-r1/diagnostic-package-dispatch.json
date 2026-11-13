@@ -1,0 +1,107 @@
+{
+  "schema": "axiom-idle-diagnostic-control-prefreeze-v1",
+  "created_utc": "2026-11-13T07:35:35.820188+00:00",
+  "package": {
+    "path": ".aegis/packages/G5-idle-input-feedback-diagnostic-r1/package.json",
+    "sha256": "6720ee60d3fe8892c853d2d8a015894e0fd62f7f929441013ccad0fac76d35ca"
+  },
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "origin": "git@github.com:Mostorm-Labs/axiom.git",
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2"
+  },
+  "checks": [
+    {
+      "group": "package",
+      "path": "authority.lock.json",
+      "ok": true
+    },
+    {
+      "group": "package",
+      "path": "verification.lock.json",
+      "ok": true
+    },
+    {
+      "group": "package",
+      "path": "workload.json",
+      "ok": true
+    },
+    {
+      "group": "package",
+      "path": "execution-contract.json",
+      "ok": true
+    },
+    {
+      "group": "package",
+      "path": "evidence-contract.json",
+      "ok": true
+    },
+    {
+      "group": "package",
+      "path": "implementation-context.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "AGENTS.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "docs/notion/manifest.yaml",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": ".aegis/results/G5-idle-input-feedback-control-r1/analysis.json",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": ".aegis/results/G5-idle-input-feedback-control-r1/observations.json",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": ".aegis/results/G5-canonical-convergence-latency-control-r1/control-review.json",
+      "ok": true
+    },
+    {
+      "group": "authority",
+      "path": ".aegis/results/G5-canonical-convergence-latency-r1/result.json",
+      "ok": true
+    }
+  ],
+  "decision": "DISPATCH_NARROW_DIAGNOSTIC_ONLY",
+  "scope": "One actual20minute visibleidle, immediatecontrolfirstdraw/successor/drag, capped observationonly; no productionfix or cornergeometry",
+  "review_obligations": [
+    "Monotonic event timestamps, fullidentity basis, falsebodycount fromstaleUI notproof",
+    "No pageAPI polling duringidle andno observerownedRAF",
+    "Actualnaturalretryprogress or concrete frame-error terminal; no guess infinite loop",
+    "No arbitrary warmup/runtimeclear/forcepresent introduced",
+    "Missingreproduction acceptedasunknown withoutsilently expanding orfalsePASS",
+    "No usertabreload /SDK overwrite / priorresult mutation"
+  ],
+  "annotation": 1
+}

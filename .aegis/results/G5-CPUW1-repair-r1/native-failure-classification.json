@@ -1,0 +1,45 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "test": "G5LongQueryPreparationPath",
+  "first": {
+    "log": "native-keepers.log",
+    "junit": "native-keepers.xml",
+    "final_remainder_unions": 7,
+    "prepared_segments": 25433,
+    "path_equal": true
+  },
+  "single_idle_recheck": {
+    "log": "native-prefix-recheck.log",
+    "junit": "native-prefix-recheck.xml",
+    "final_remainder_unions": 3,
+    "prepared_segments": 25597,
+    "path_equal": true,
+    "returncode": 8
+  },
+  "observed": "Existing test requires all1600segments prepared before finalget after fixed wall-clock-limited opportunities; some work remains while independent original path equality is correct. Assertion and budget unchanged.",
+  "source_identity": {
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "accepted": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7",
+      "current": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7"
+    },
+    "runtime/render/src/cpu_exact_path_kernel.cpp": {
+      "accepted": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4",
+      "current": "8e9193139139dd3d3882a7a9c66e725960dcb12094379646fb44fedbcff129e4"
+    },
+    "runtime/render/src/cpu_worker_protocol.cpp": {
+      "accepted": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee",
+      "current": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee"
+    },
+    "runtime/render/tests/long_query_preparation_test.cpp": {
+      "accepted": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5",
+      "current": "37f0e29047ad1462b69177539808ef4b7b5153bb205759ce15bb654edffe60f5"
+    }
+  },
+  "causality_limit": "Deadline/load sensitivity is a finding, not a proven cause of this run; no claim repair introduced or fixed it. Exact query/kernel/test source is unchanged from acceptedCW1.",
+  "decision": "Per frozencontract and controlinstruction stop after one idle recheck fails. No repeat until green, no threshold/assertion/budget relaxation, no browser start.",
+  "control_baseline_audit": {
+    "path": ".aegis/results/G5-CPUW1-control-r1/deadline-test-cause-audit.json",
+    "sha256": "f00389da531e3e544e8b423c530e32912b776ad491e15bfae36ca03719f0e150"
+  },
+  "control_audit_limit": "Old frozen binary also completed fewer than25600 preparatory unions but local0 happened to be complete. This supports an oracle-precondition finding; it does not supersede this package or authorize editing the frozen test."
+}

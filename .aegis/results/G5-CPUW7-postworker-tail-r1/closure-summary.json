@@ -1,0 +1,26 @@
+{
+  "classification": "READY_FOR_CONTROL_REVIEW_CAUSAL_REPAIR_NO_OVERALL_IMPROVEMENT",
+  "scope": "onecheckpointreplayredundancyrepair; notstampoptimization orcompleteuserlatencyfix",
+  "PW1": "freshdiagnosticD4+ordinaryD4fullsequence; actualatomicmarker vsnotification; roleaccounting/RAF/gap/GPUretirementproxy;loss0",
+  "PW2": "independentworkRED10783→GREEN7199compiledinputs+pixelidentical; exact/drawscratchinvalidated; C31.95%faster butprimary38.20%slower inmatchedsinglepair",
+  "PW3": "CPUW6bcore5/preparedidentity/GPUcanonicalpixels/compatibilitypassed; actual5operationoriginalreplayD4D1bothbyteequal; allfourD4snapshotpairedequal; fullmask/noinputloss",
+  "PW4": "fourplannedWeballOBSERVED/cleanup; new4332experimentalonly/default4331preserved; minimalfinalCrefsD4D1reusedexactbasis0interiormismatch",
+  "limitations": [
+    "singlepairedrun only; D4input234.03s/222.42s substantial variation",
+    "ordinarycandidateinternalreplaycount notsampled; structuralcounterproof not hardwareGPUclaim",
+    "Cdiagnostic25.16s didnotreproduceold71.85s; noclaimoldcasefullyfixed",
+    "stamponly1.357s/Cmeasured, notchanged; majordraw/RAFlatencyremains",
+    "nestedcanonicaldetailnotaddedtoownercanonical_frame;outsideownerisnotallCPU",
+    "onOperation is notification; actualatomicstamps onlydiagnostic",
+    "D1no freshbaseline; no relativePASS",
+    "noofficialG5/P34/performancePASS"
+  ],
+  "demo": "http://127.0.0.1:4332/example.html",
+  "recommended_existing_demo": "http://127.0.0.1:4331/example.html",
+  "accounting_correction": {
+    "C_outside_owner_ms": 7513.200000046665,
+    "C_within_RAF_outside_owner_ms": 5120.400000332767,
+    "C_outside_RAF_callback_ms": 2392.7999997138977,
+    "meaning": "Owner and RAF nested views are not additive. Callback bookkeeping and delivery are distinct from time between callbacks. No new sampling."
+  }
+}

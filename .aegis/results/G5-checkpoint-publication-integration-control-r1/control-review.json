@@ -1,0 +1,73 @@
+{
+  "schema": "axiom-checkpoint-publication-independent-review-v1",
+  "created_utc": "2026-11-13T10:40:10.691311+00:00",
+  "authority": {
+    "path": ".aegis/packages/G5-checkpoint-publication-integration-r1/package.json",
+    "sha256": "5737fd9aae869381e2c11d42c4ab09b0434d130961867fbc3caeff06e04532f2"
+  },
+  "subject": {
+    "path": ".aegis/results/G5-checkpoint-publication-integration-r1/result.json",
+    "sha256": "1803fe12a7883fa935bf1f31333e62f75cd7a6d8a8d94f4026afbc0ef1a53222"
+  },
+  "verdict": "ACCEPT_NARROW_EMPTY_COMPONENT_CHECKPOINT_CORRECTION",
+  "source_review": {
+    "owner": "Existing PreparedNavigationGeometry immutable checkpoint metadata and bounded owner-thread replay scratch",
+    "production_delta": "Exactly four guards: empty draw request, empty component pass in drawContour, nextVisiblePrimitive and visitExact; no geometry, ordering, identity, budgets, threading or public API change",
+    "test_contract": "Actual emitted nonempty component blocks authorize work; ribbon phase7199, two cap blocks256+31=287. Empty request compiles0; cap-only single request compiles only its block. Strict pixel equality, scratch invalidation and resident lease291144 remain asserted",
+    "reason_prior_assertion_changed": "Global ribbon-before-cap order is required for exact byte parity. An at-most-N assertion forbids legitimate cap replay; replacement derives necessary block bounds and separately rejects empty or repeated phase work. It does not allow arbitrary2N."
+  },
+  "independent_verification": {
+    "fresh_native": {
+      "passed": 13,
+      "failed": 0,
+      "log": {
+        "path": "out/G5-reviewed-publication-20261113/integration-focused-tests.log",
+        "sha256": "836d7e1c44112a5f349d9e086e31efc9f3557480415da21dacddff51a85e9fda"
+      },
+      "relevant_exact_targets_relinked_before_run": true
+    },
+    "producer_native": {
+      "passed": 10,
+      "failed": 0
+    },
+    "binding_audit": {
+      "checked": 49,
+      "failures": []
+    },
+    "SDK": {
+      "files_checked": 42,
+      "failures": [],
+      "source_hashes_match": true,
+      "version": "0.4.3.0",
+      "timing": false,
+      "UR0": false,
+      "privateCPUWorker": true
+    },
+    "old51_failure": "Preserved actual50pass/1fail; original failure was prior at-most-N work assumption plus real empty-pass compilation. Focused corrected regression passes; full51 was not rerun.",
+    "RED_GREEN": "Original14398inputs + strengthened EMPTY_DRAW_RANGE_COMPILED_CHECKPOINT failure preserved; GREEN7486inputs, strict pixel equality and resident budget unchanged"
+  },
+  "preservation": {
+    "corner_result": {
+      "path": ".aegis/results/G5-corner-join-repair-r1/result.json",
+      "sha256": "74e933f3a0c3516d3dad22df1345deb69b7c3225321dc8fbb414a68994eb3aec"
+    },
+    "corner_review": {
+      "path": ".aegis/results/G5-corner-join-repair-control-r1/control-review.json",
+      "sha256": "08be82afb0766112063166ddc8575b5dd8784c76382b88d9423a19d12a1a007b"
+    },
+    "original51_log": {
+      "path": "out/G5-reviewed-publication-20261113/native-tests.log",
+      "sha256": "478e2fe82c84a5127deaa8d24925ed471ac155007e6d00e0babce221ab2f30a6"
+    },
+    "old_corner_files_except_explicit_guard": "14/14 identical",
+    "user_Demos": "4331/4332/4333/4334 untouched; no new browser run"
+  },
+  "findings": [],
+  "performance_or_G5_gate_PASS": false,
+  "limits": [
+    "No full native suite claim",
+    "Idle/input defect, mixed-image qualification and postWorker latency remain open",
+    "4334 remains the reviewed corner build before the four empty-range guards"
+  ],
+  "git_publication": "Human authorized; control owns commit/push after explicit staged selection"
+}

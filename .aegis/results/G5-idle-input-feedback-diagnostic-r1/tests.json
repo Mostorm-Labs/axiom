@@ -1,0 +1,22 @@
+{
+  "Node": {
+    "command": "node --test verification/tests/g5_idle_input_feedback.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "log": "out/G5-idle-input-feedback-diagnostic-r1/final-node-tests.log"
+  },
+  "Python": {
+    "command": "python3 -m unittest discover -s verification/tests -p test_g5_idle_input_feedback.py",
+    "passed": 3,
+    "failed": 0,
+    "log": "out/G5-idle-input-feedback-diagnostic-r1/python-tests.log"
+  },
+  "native": {
+    "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native --output-on-failure -R frozen7BrushBatchAndTransientDisplay",
+    "passed": 7,
+    "failed": 0,
+    "log": "out/G5-idle-input-feedback-diagnostic-r1/native-tests.log"
+  },
+  "normalOFF_macro_side_effects": 0,
+  "fullproject_run": false
+}

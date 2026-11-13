@@ -24,6 +24,19 @@ class AppliedOperationLedger;
 class IndexedObjectStore;
 class ReferenceObjectStore;
 class StagedObjectView;
+class PreparedEraseOperation final {
+ public:
+  ~PreparedEraseOperation();
+  bool advance(std::size_t maxTargets,std::uint64_t maxMicroseconds);
+  bool ready()const noexcept;
+  const Operation& operation()const noexcept;
+  std::span<const std::uint8_t> encoded()const noexcept;
+ private:
+  friend class OperationEngine;
+  class State;
+  explicit PreparedEraseOperation(std::unique_ptr<State>);
+  std::unique_ptr<State> state_;
+};
 class PreparedOperationIntent final {
   public:
     ~PreparedOperationIntent();
@@ -75,6 +88,12 @@ class OperationEngine final {
     std::shared_ptr<canvas::qualification::State> fc08Qualification_;
 #endif
   public:
+    [[nodiscard]] std::unique_ptr<PreparedEraseOperation> prepareErase(
+        Operation,IndexedObjectStore&,AppliedOperationLedger&,
+        const SemanticGenerationState&,const CanonicalCommitClock&)const;
+    [[nodiscard]] ApplyResult commitErase(PreparedEraseOperation&,ApplySource,
+        SemanticGenerationState&,CanonicalCommitClock&)const noexcept;
+
     [[nodiscard]] std::unique_ptr<PreparedOperationIntent> prepareIntent(
         std::span<const Operation>, ApplySource, IndexedObjectStore&, ResourceManifest&,
         AppliedOperationLedger&, const SemanticGenerationState&, const CanonicalCommitClock&) const;

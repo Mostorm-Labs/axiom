@@ -1,0 +1,60 @@
+{
+  "schema": "axiom-render-reuse-independent-matched-semantics-partial-v1",
+  "created_utc": "2026-11-13T04:07:33.705960+00:00",
+  "snapshots": [
+    {
+      "capture": "AB",
+      "snapshot_bytes": 35456391,
+      "byte_equal": true,
+      "sha256": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a"
+    },
+    {
+      "capture": "undo",
+      "snapshot_bytes": 35421951,
+      "byte_equal": true,
+      "sha256": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434"
+    },
+    {
+      "capture": "redo",
+      "snapshot_bytes": 35456391,
+      "byte_equal": true,
+      "sha256": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241"
+    },
+    {
+      "capture": "followup",
+      "snapshot_bytes": 35461631,
+      "byte_equal": true,
+      "sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+    }
+  ],
+  "operations": [
+    {
+      "index": 0,
+      "byte_equal": true,
+      "sha256": "51213879796fc380d3629bb2bf80a0f316d5cf5c1b116e72233ea0eb6b8227f8"
+    },
+    {
+      "index": 1,
+      "byte_equal": true,
+      "sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998"
+    },
+    {
+      "index": 2,
+      "byte_equal": true,
+      "sha256": "6e23e1f5473c0f4496333f60b3c3324ca3099079d8d798d3dd368c956e538300"
+    },
+    {
+      "index": 3,
+      "byte_equal": true,
+      "sha256": "79eeb4a3329810b1cad19a8d1ebf5c35767b3c41a37ac68cbc5d61c348c6d3a6"
+    },
+    {
+      "index": 4,
+      "byte_equal": true,
+      "sha256": "142d9e4869c6649bcd7f4990e5510db3e61d1442a2e574bb2bc4345f4ae1f17f"
+    }
+  ],
+  "qualification": "Independent offline matched baseline/candidate comparison; original OperationEngine replay and independent pixel checks remain separate obligations. Byte equality alone is not complete rendering proof.",
+  "all_equal": true,
+  "official_PASS": false
+}

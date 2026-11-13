@@ -1,0 +1,61 @@
+{
+  "dependencies": {
+    "runtime/render/tests/cpu_local_exact_original.hpp": {
+      "expected": "ee446d2b5219ae44b14ce5fdbdbc977821710af871349e06ab3ea3f2e7185563",
+      "actual": "ee446d2b5219ae44b14ce5fdbdbc977821710af871349e06ab3ea3f2e7185563",
+      "match": true
+    },
+    "runtime/render/tests/cpu_exact_kernel_test.cpp": {
+      "expected": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9",
+      "actual": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9",
+      "match": true
+    },
+    "runtime/render/tests/cpu_prefix_continuation_test.cpp": {
+      "expected": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0",
+      "actual": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0",
+      "match": true
+    },
+    "runtime/render/src/cpu_local_exact.cpp": {
+      "expected": "1db35009e8ff9ae5ac5cfaa25243824afdae4de6b4912d81192e8cdfd9242fee",
+      "actual": "1db35009e8ff9ae5ac5cfaa25243824afdae4de6b4912d81192e8cdfd9242fee",
+      "match": true
+    },
+    "runtime/render/src/cpu_exact_path_kernel.cpp": {
+      "expected": "c409d489d8c04d740c24a302025e98d09eb008fa2126cb69c6723e739f041bad",
+      "actual": "c409d489d8c04d740c24a302025e98d09eb008fa2126cb69c6723e739f041bad",
+      "match": true
+    },
+    "runtime/ink/src/compact_contour.cpp": {
+      "expected": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+      "actual": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+      "match": true
+    },
+    "verification/runners/g5/cpu_complete_v2_reference.cpp": {
+      "expected": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a",
+      "actual": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a",
+      "match": true
+    },
+    "verification/runners/g5/ur0/pixel_oracle.mjs": {
+      "expected": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+      "actual": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1",
+      "match": true
+    }
+  },
+  "all_unchanged": true,
+  "retained": {
+    "W7": {
+      "path": ".aegis/results/G5-CPUW7-postworker-tail-r1/semantic-and-pixels.json",
+      "sha256": "c536e1ac32c6b9b46b7118f4ac4025be952f9a70249daceded0d2e8d833dc5d5"
+    },
+    "W6b": {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/numeric-parity.json",
+      "sha256": "43b72bec498ea876c53409a4f576c399a554196c9eec5d8d06287e5616bd6e82"
+    }
+  },
+  "refresh": [
+    "affected renderer path pixels/progress/lease/failure tests",
+    "new primary actual Operations + finalC pixels",
+    "new zoomout current camera feedback/final pixels"
+  ],
+  "reuse_rule": "Full snapshot, output target dimensions/format, camera transform, image bytes/binding, original CPU reference and AA rule must match; semantic-only replay fresh. No14reference rerun."
+}

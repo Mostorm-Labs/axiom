@@ -1,0 +1,68 @@
+{
+  "status": "FOCUSED_REGRESSIONS_PASSED_OVERALL_CW2_BLOCKED",
+  "native27": {
+    "junit": "native-keepers.xml",
+    "passed": 27,
+    "failed": 0
+  },
+  "new_native": {
+    "junit": "native-pending.xml",
+    "passed": 7,
+    "failed": 0
+  },
+  "native_fault": {
+    "junit": "native-fault.xml",
+    "passed": 3,
+    "failed": 0
+  },
+  "fresh_exact634": {
+    "artifact": "candidate634.json",
+    "rows": 634,
+    "mismatches": 0,
+    "guard": "exact634.worker.json"
+  },
+  "Node": {
+    "log": "node-final2.log",
+    "passed": 13,
+    "failed": 0
+  },
+  "Python": {
+    "log": "python-final2.log",
+    "passed": 2,
+    "failed": 0
+  },
+  "sdkNode": {
+    "scripts": 4,
+    "passed": 4,
+    "logs": [
+      "sdk-node2.log",
+      "sdk-controller.log",
+      "sdk-input.log",
+      "sdk-control.log"
+    ]
+  },
+  "TypeScript": {
+    "log": "sdk-types-final.log",
+    "passed": true
+  },
+  "boundary": {
+    "log": "boundaries-final.log",
+    "contracts": 120
+  },
+  "browser": {
+    "ledger": "sampling-ledger.json",
+    "starts": 1,
+    "charged_seconds": 190,
+    "failed_case": "candidate7200 convergence60s",
+    "remaining2windows_notrun": true
+  },
+  "preserved_setup_failures": [
+    "old fixture mainmacro compileerror corrected",
+    "missingSceneDocumentId.value compilefix",
+    "nativeCMake Skia targetscope corrected",
+    "VM importcallback/eventtiming fixtures corrected offline",
+    "wrong tscpath fixedusingexistingcachedtypescript",
+    "wrappermatching first mismatch CMake LFnormalization documented"
+  ],
+  "no_full_G5_or_performance_PASS": true
+}

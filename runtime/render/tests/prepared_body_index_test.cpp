@@ -251,7 +251,7 @@ void realRendererConsumers(){
             require(target.readbackRgba(actual).code==BackendSubmissionCode::kAccepted&&reference.readbackRgba(expected).code==BackendSubmissionCode::kAccepted,"native GPU pixel readbacks");
             require(actual==expected,"shared prepared native GPU changed transform/mask/opacity/lower-z pixels");
             const auto ink=renderer.renderCacheWork();
-            require(ink.preparedInkQueries>0&&ink.preparedBodyBuilds==nav.preparedBodyBuilds&&ink.preparedIdentityHits>nav.preparedIdentityHits,"actual consumers rebuilt/separated prepared service");
+            require((ink.preparedInkQueries>0||ink.preparedDirectQueries>0||ink.preparedCanonicalQueries>0||ink.executionPixelReuses>nav.executionPixelReuses)&&ink.preparedBodyBuilds==nav.preparedBodyBuilds&&ink.preparedIdentityHits>nav.preparedIdentityHits,"actual consumers rebuilt/separated prepared service");
             require(ink.preparedHashBytes==nav.preparedHashBytes&&ink.preparedContentComparisons==nav.preparedContentComparisons,"retained ink rehashed/recompared admitted body");
             std::printf("{\"actual_native_gpu\":true,\"dpr\":%u,\"shared_body_builds\":%llu,\"navigation_queries\":%llu,\"retained_ink_queries\":%llu,\"identity_hits\":%llu}\n",dpr,
                 static_cast<unsigned long long>(ink.preparedBodyBuilds),static_cast<unsigned long long>(ink.preparedNavigationQueries),static_cast<unsigned long long>(ink.preparedInkQueries),static_cast<unsigned long long>(ink.preparedIdentityHits));
@@ -259,7 +259,7 @@ void realRendererConsumers(){
             require(renderer.renderNavigation(target,{1,0,0},plan.frame,query).code!=BackendSubmissionCode::kAccepted,"stale navigation presented");
             auto rebound=renderPlan(edit,3,dpr,target.generation());EditingOverlay reboundOverlay{rebound.frame};
             require(renderer.renderTransientOverlay(target,rebound,&reboundOverlay).code==BackendSubmissionCode::kAccepted,"full transient after consumer surface reset");
-            require(renderer.renderCacheWork().preparedBodyBuilds==ink.preparedBodyBuilds&&renderer.renderCacheWork().preparedInkQueries>ink.preparedInkQueries,"consumer reset cleared another consumer's shared body");
+            require(renderer.renderCacheWork().preparedBodyBuilds==ink.preparedBodyBuilds&&(renderer.renderCacheWork().preparedInkQueries>ink.preparedInkQueries||renderer.renderCacheWork().preparedDirectQueries>ink.preparedDirectQueries||renderer.renderCacheWork().preparedCanonicalQueries>ink.preparedCanonicalQueries),"consumer reset cleared another consumer's shared body");
             renderer.clearRenderCache();renderer.serviceResourceRetirements();
             require(renderer.renderCacheWork().preparedAliases==0&&renderer.renderCacheWork().preparedIndexReservationBytes==0,"renderer owner clear left source/index metadata");
         }

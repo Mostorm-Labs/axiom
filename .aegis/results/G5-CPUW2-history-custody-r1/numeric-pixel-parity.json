@@ -1,0 +1,132 @@
+{
+  "status": "PARTIAL_NUMERIC_PASS_COLD7200_CODEC_LIMIT_BLOCKER",
+  "exact634": {
+    "rows": 634,
+    "mismatches": 0,
+    "actual": "candidate634.json",
+    "guard": "exact634.worker.json",
+    "original": {
+      "path": ".aegis/results/G5-erase-exact-canonical-r1/A-original634.json",
+      "sha256": "fba3849e177049c6276736434628f98e0af629aad79015a98136e4f33c30eada"
+    }
+  },
+  "original7200_path_reference": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/original7200.path",
+    "sha256": "fa3a9211e613060c85e939f2342ed7b3cc4e3f4dc7e22a0cff1e0bb46785fe5f",
+    "binding": "samef32/leftfoldkerneloperations unchanged;newcompiledkernelobserveraddsnoarithmetic",
+    "old_native_ref": ".aegis/results/G5-CPUW2-pending-erase-r1/long-path.log"
+  },
+  "paired1600_operations": [
+    {
+      "index": 0,
+      "bytes": 6658294,
+      "sha256": "3704443d63a7095d3a5b909c50b190e22a139ce17b3f52b9a2460d82a9515e7a",
+      "old_path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/operation-0.axsnap",
+      "candidate_path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/operation-0.axsnap",
+      "equal": true
+    },
+    {
+      "index": 1,
+      "bytes": 35412,
+      "sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998",
+      "old_path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/operation-1.axsnap",
+      "candidate_path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/operation-1.axsnap",
+      "equal": true
+    }
+  ],
+  "paired1600_final_Undo_Redo_snapshots": [
+    {
+      "stage": "final",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/final.axsnap",
+        "sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/final.axsnap",
+        "sha256": "5d2e563b8fb66f5a38c613e26d3ff2ff21b7b1d3df3f4f32c326b15e8318a6d2"
+      },
+      "equal": true
+    },
+    {
+      "stage": "undo",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/undo.axsnap",
+        "sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/undo.axsnap",
+        "sha256": "e3551f53465fbb5244577cb932255d7aa91da6a75d68c960897dd7a53b9cff9c"
+      },
+      "equal": true
+    },
+    {
+      "stage": "redo",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/redo.axsnap",
+        "sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/redo.axsnap",
+        "sha256": "a66044cf3ebc1d02d8821bba1f35f81996452dbadc401430063a2e3a42e2dcb8"
+      },
+      "equal": true
+    }
+  ],
+  "raw_GPU_pairs": [
+    {
+      "stage": "final",
+      "pixels": 5781240,
+      "differing": 1,
+      "above2": 1,
+      "max_delta": 10,
+      "status": "UNQUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/final.rgba",
+        "sha256": "e93e030398516e7db93828956a31e3acc1a8cde6225fe114e49999df3990bf46"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/final.rgba",
+        "sha256": "4eef0907053785bdb5f9e31b559aa567216cc10c5bc8afc2ffad3755be7ab563"
+      }
+    },
+    {
+      "stage": "undo",
+      "pixels": 5781240,
+      "differing": 2,
+      "above2": 1,
+      "max_delta": 13,
+      "status": "UNQUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/undo.rgba",
+        "sha256": "a6510fa8516006ff1bbfce9a5dd28a1b8b13d1ca4d92ab4e193ef1ae44560c7e"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/undo.rgba",
+        "sha256": "d7263ce7218dbd924c5f42347fa1405e2c20ae40ccddafe925bdeda2e21da56e"
+      }
+    },
+    {
+      "stage": "redo",
+      "pixels": 5781240,
+      "differing": 2,
+      "above2": 1,
+      "max_delta": 15,
+      "status": "UNQUALIFIED_WITHOUT_INDEPENDENT_CPU_AA_BOUNDARY",
+      "old": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/redo.rgba",
+        "sha256": "3b82878354221e098928bdf25711b6ea607c7509d43b125933a5ab5472f870d4"
+      },
+      "candidate": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/redo.rgba",
+        "sha256": "2e2bc259d9a23bf8a6cd08022bec1bab51d7d5ac44502d33c8a471730ff4b06b"
+      }
+    }
+  ],
+  "snapshot_limit": "snapshot-limit-proof.json",
+  "missing": [
+    "StrictindependentCPUAApixels notrun afterfrozenblocker",
+    "7200finalSnapshot/UndoRedo due32MiBdecode cap",
+    "Heldfeedback/newcameraCPUoracle notrun"
+  ],
+  "no_pixel_qualification_claim": true
+}

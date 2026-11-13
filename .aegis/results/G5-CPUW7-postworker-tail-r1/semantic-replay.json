@@ -1,0 +1,29 @@
+{
+  "rows": [
+    {
+      "row": "W7-D4-CANDIDATE",
+      "through_operations": 5,
+      "returncode": 0,
+      "wall_seconds": 5.655804999987595,
+      "actual_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "original_replay_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "byte_equal": true,
+      "request": "out/G5-CPUW7-postworker-tail-r1/replay/W7-D4-CANDIDATE/replay-request.json"
+    },
+    {
+      "row": "W7-D1-CANDIDATE",
+      "through_operations": 5,
+      "returncode": 0,
+      "wall_seconds": 5.83747587504331,
+      "actual_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "original_replay_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "byte_equal": true,
+      "request": "out/G5-CPUW7-postworker-tail-r1/replay/W7-D1-CANDIDATE/replay-request.json"
+    }
+  ],
+  "oracle": {
+    "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+    "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+  },
+  "duplicate_scratch_removed": "original operations+actual final snapshot retained inWebgz; reference equality+hash retained"
+}

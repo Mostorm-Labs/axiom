@@ -1,0 +1,271 @@
+{
+  "primary": {
+    "fixture": {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+    },
+    "primary_sequence": "Restore originalFixed40 with originalmetadata/entropy324508639; defaultv4round partialeraser diameter32; A7200originalf32trace Up(noUpcoord), immediateB8, immediate originalwheelpan24/12 + ctrlwheel-9; settle andcaptureAB; Undo/settle/capture; Redo/settle/capture; followupC Down/Move inworld350,210→360,230 transformed by currentcamera andUp999,999; recordC separately; final selectionregion same old40 IDs if unchanged.",
+    "A": {
+      "down": [
+        420,
+        160
+      ],
+      "moves": 7200,
+      "move_i": "float(420+7*sin(i*.17)), float(160+170*i/7200), i1..7200",
+      "timestamps_increment_ns": 8000000,
+      "yield_every_moves": 8,
+      "up": [
+        999,
+        999
+      ],
+      "radius": 16
+    },
+    "B": {
+      "down": [
+        300,
+        230
+      ],
+      "moves_i": "[300,230+i*4],i1..8",
+      "up": [
+        999,
+        999
+      ]
+    },
+    "C": {
+      "down_world": [
+        350,
+        210
+      ],
+      "move_world": [
+        360,
+        230
+      ],
+      "up": [
+        999,
+        999
+      ]
+    },
+    "CSS": [
+      1431,
+      1010
+    ],
+    "reference": [
+      {
+        "path": "runtime/render/tests/cpu_local_exact_original.hpp",
+        "sha256": "ee446d2b5219ae44b14ce5fdbdbc977821710af871349e06ab3ea3f2e7185563"
+      },
+      {
+        "path": "runtime/render/tests/cpu_exact_kernel_test.cpp",
+        "sha256": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9"
+      },
+      {
+        "path": "runtime/render/tests/cpu_prefix_continuation_test.cpp",
+        "sha256": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0"
+      },
+      {
+        "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+        "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+      },
+      {
+        "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+        "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+      }
+    ],
+    "reference_binary": {
+      "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+      "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+    }
+  },
+  "primary_driver": {
+    "path": "verification/runners/g5/cpu_postworker_web.mjs",
+    "sha256": "aff236a8b3707641496f7b526d2c5f4cd5d6af3f6c9b00fdebbdb5ee402c35e5"
+  },
+  "mixed": {
+    "fixture": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/local-web/CPUW4-D4-CORRECTIVE/author/fixture.axsnap",
+      "sha256": "17f0f5ceaa10b0de2f808dd5deed40e44295a4179a43a388d14dd731cb949fbe"
+    },
+    "metadata": {
+      "documentRevision": "54",
+      "recoveryFrontier": [
+        8,
+        1,
+        16,
+        1,
+        24,
+        1
+      ],
+      "checkpointDigest": [
+        129,
+        110,
+        152,
+        232,
+        77,
+        56,
+        240,
+        227,
+        253,
+        186,
+        30,
+        247,
+        159,
+        221,
+        40,
+        106,
+        47,
+        173,
+        8,
+        252,
+        23,
+        162,
+        63,
+        17,
+        157,
+        38,
+        202,
+        184,
+        234,
+        224,
+        184,
+        169
+      ],
+      "resourceBinding": "1"
+    },
+    "object_count": 49,
+    "image": {
+      "path": ".aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+      "sha256": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660"
+    },
+    "input_contract": {
+      "path": "verification/runners/g5/cpu_zoomout_frontier_contract.mjs",
+      "sha256": "09168bfbb5208f974db0b5701f1a74fd559ccd2d9922094b309a84fc7695bbaa"
+    },
+    "reference_driver": {
+      "path": "verification/runners/g5/postworker_render_reuse_zoomout_web.mjs",
+      "sha256": "0cd9e63ae2fbb499d5fef8a9c404483034f3520c627981b861092d8591cb1fa9"
+    },
+    "rows": [
+      "append-zoom-out-immediate",
+      "partial-erase-zoom-out-immediate"
+    ],
+    "DPR": 4,
+    "CSS": [
+      1431,
+      1010
+    ],
+    "initial_camera": {
+      "scale": 1.5,
+      "x": -200,
+      "y": -120
+    },
+    "qualification": "Use retained49object mixed-brush fixture and same image. Confirm exposed nonempty ink before baseline; save exact camera/input once. Preserve other brushes so legacy erase route is honestly exercised. No authoring another fixture or broader12/26row matrix.",
+    "navigation": "Use original6 outward wheel events and original160 append /24 erase Move traces. Start first wheel next task after Up return, with no settle. Scheduled versus actual input times and current camera must be recorded.",
+    "feedback": "Measure handler/queue/proxy times separately from identity-qualified current-camera submission/feedback. Bind one representative actual current-camera feedback image and final pixels to independent old reference/quality rule. Readback effects must be mirrored or measured separately; never call first GL write correct feedback by itself."
+  },
+  "baseline_SDK": {
+    "path": "out/G5-postworker-render-reuse-r1/candidate-install/js",
+    "manifest": {
+      "path": ".aegis/results/G5-postworker-render-reuse-r1/SDK-manifest.json",
+      "sha256": "33824f2dace69d4b1f3e5a9b7e4a99efa2ef51551730b40086c40d9761521f5a"
+    },
+    "source_delta": {
+      "path": ".aegis/results/G5-postworker-render-reuse-r1/source-delta-manifest.json",
+      "sha256": "e2aeb95c85273fe27035f657b734676a7de6bbb4c095c76e8e9793207fb6f6c1"
+    }
+  },
+  "reference_qualification": {
+    "package": {
+      "path": ".aegis/packages/G5-mixed-reference-qualification-r1/package.json",
+      "sha256": "16fc7808c99017769419be0e0d9db19ce7d3f9228389558c8becb505713aa797"
+    },
+    "result": {
+      "path": ".aegis/results/G5-mixed-reference-qualification-r1/result.json",
+      "sha256": "7a532ec22fbc96008c1dda18f98d196097534c182cc943bc2c45775d98e3373e"
+    },
+    "corrected_material_edges": {
+      "path": ".aegis/results/G5-mixed-reference-qualification-r1/edge-attempt-ledger.json",
+      "sha256": "0c182516b284588530bfdce707f83da719f9f952678e7ff7e16f1b8d537d224f"
+    },
+    "comparison": {
+      "path": ".aegis/results/G5-mixed-reference-qualification-r1/pixel-comparisons.json",
+      "sha256": "1b5bec490d2fa3b8f8cef293b8ee5a5d4a895bdd69a6a61d7fa1d368c02b7cad"
+    },
+    "strict_original_rule": {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+    },
+    "known_image_debt_pixels_each": 302,
+    "debt_policy": "Predeclaredretainedbaselinepositionsandvaluesonly; newpositionsorfurtherdifferencefail. DonotchangeoriginalMQorCPUoracle."
+  },
+  "sequence_policy": "PrimaryunchangedA7200→immediateB8→pan+zoom→ABcapture→Undocapture→Redocapture→C1selectioncapture. Mixedsame49fixture withchalk/crayon/watercolor+objects/image,original160/24Moves then6outwardwheelsimmediate, originalcamera1.5/-200/-120. Do notwaitsettledbeforewheel. Thesamecapturedfacts/confirmedtimestampsandUndo/Redo/capturecacheeffectsarepreserved.",
+  "planned_windows": [
+    {
+      "id": "CL-D4-PRIMARY-DIAGNOSTIC",
+      "kind": "diagnostic",
+      "scope": "fullprimarysequenceonstartingRRsourcewithminimumprivatephasecounters",
+      "seconds": 420
+    },
+    {
+      "id": "CL-D4-MIXED-DIAGNOSTIC",
+      "kind": "diagnostic",
+      "scope": "twofrozenmixedimmediatezoomrowsfreshinstanceeach onstartingRRsource; noexpandedmatrix",
+      "seconds": 180
+    },
+    {
+      "id": "CL-D4-PRIMARY-BASELINE",
+      "kind": "ordinarybaseline",
+      "scope": "unchangedRRordinarySDK/fullprimarysameobserverasnewcandidate",
+      "seconds": 420
+    },
+    {
+      "id": "CL-D4-MIXED-BASELINE",
+      "kind": "ordinarybaseline",
+      "scope": "same2mixedrows/unchangedRRSDK/currentcameracapture",
+      "seconds": 180
+    },
+    {
+      "id": "CL-D4-PRIMARY-CANDIDATE",
+      "kind": "ordinarycandidate",
+      "scope": "samefullprimaryordinarynewrepairSDK",
+      "seconds": 420
+    },
+    {
+      "id": "CL-D4-MIXED-CANDIDATE",
+      "kind": "ordinarycandidate",
+      "scope": "same2mixedrowsordinarynewrepairSDK",
+      "seconds": 180
+    }
+  ],
+  "diagnostic_reuse_policy": "IfexactretainedW7/RRevidence+nativecausaltestsfullyansweronepath, thatdiagnosticwindowmaybeskippedwithbindingreason. Do notduplicateobservationsbydefault. Allnewordinarypairedwindowsrequiredifdeclaringcurrentrelativeperformance; nofreshD1/26rows.",
+  "feedback_scope": "KeepmeasuredcanonicalonFrameafter6wheels/currentcameraqualificationseparatefromearliestretainedLOD. Newobservermayboundedcapturefirstactualtargetupdatewithoutwaitingforcanonical,butmustqualifypurpose/camera/source/qualitybeforecallingcorrect. NotrequiredtoaddLODfeatures.",
+  "finite_execution": {
+    "browser_starts_max": 7,
+    "planned_starts_max": 6,
+    "corrective_windows_max": 1,
+    "browser_seconds_total_max": 2400,
+    "primary_seconds_each_max": 420,
+    "mixed_seconds_each_max": 180,
+    "browser_process_family_RSS_MiB_max": 4096,
+    "native_heavy_starts_max": 3,
+    "native_heavy_seconds_each_max": 180,
+    "native_process_family_RSS_MiB_max": 2048,
+    "fullscene_reference_rerenders": 0,
+    "policy": "Serialheavywork, noCPU/GPUbuildreferencewhilebrowserrunning. Onecorrectiveonlyforconcretelyrepaireddriver/env/implementationfault. Preserveallfailedattempts. Nativefocusedunitregressionsarenotheavybenchmarkstarts. Missing10shelperlimitnotauthority; followfrozencaps. Noadditionalwindowswithoutnewscope."
+  },
+  "storage": {
+    "compact_MiB_max": 32,
+    "compressed_raw_MiB_max": 512,
+    "rule": "ReuseoldCPUreference andMQedges/Snapshot/PNG byexactbasis. Onenewordinarycandidateandminimumdiagnosticbuildonly; noSDK/source/.depsduplicates. RehydratepackageownedcopiesonlyanddeleteuncompressedduplicatesafterSHA."
+  },
+  "Demo": {
+    "new_port_preference": 4333,
+    "preserve": [
+      4331,
+      4332,
+      4330,
+      4328,
+      4298
+    ],
+    "rule": "Newpathonlyifscopedcorrectnessqualifies; explicitimage302debt/experimentalprofile. Noolddefaultreplacement/refresh/reload."
+  }
+}

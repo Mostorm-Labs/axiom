@@ -1,0 +1,37 @@
+{
+  "node": {
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "--test",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_driver.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_pending_root.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_root.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_scheduler.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_thread.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_transport.test.mjs"
+    ],
+    "exit_code": 0
+  },
+  "python": {
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "verification/tests/test_g5_cpu_history_runner.py",
+      "verification/tests/test_g5_cpu_pending_runner.py",
+      "verification/tests/test_g5_cpu_worker_repair_runner.py"
+    ],
+    "exit_code": 0
+  },
+  "boundaries": {
+    "command": [
+      "python3",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom"
+    ],
+    "exit_code": 0
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "axiom-canonical-latency-body-reuse-partial-review-v1",
+  "created_utc": "2026-11-13T05:57:10.871141+00:00",
+  "scope": "Read-only prefinalreview; implementationandtestsareinprogress, hashidentifiesobservationpoint notfrozenresult",
+  "basis": {
+    ".aegis/results/G5-canonical-convergence-latency-r1/causal-finding.json": "3294125070e478d71b5b76f500c8156c97a899efdabed11ff7ca84b13921c6e2",
+    "runtime/render/src/skia_render_cache.cpp": "7e78974d2681ea33264035a0e325d364fbb370d2d67ddbee4dfdb4769ebc3f05",
+    "runtime/render/src/skia_render_cache_internal.hpp": "06544bbbad4e5557eb38495931f30bd86b0ae7986804377a8694b470d3fff9b4",
+    "runtime/render/tests/canonical_latency_body_material_test.cpp": "e391feb28aa738198753b2190a030a12c65aaf8a941b60b17c023593665008fb",
+    "out/G5-canonical-convergence-latency-r1/body-material-red.json": "4a7cc24647bbff8a9ce6e62640d4c55fadb14bbc556e73021056a6bd5b71b9e6",
+    "out/G5-canonical-convergence-latency-r1/body-material-green.json": "98f93b4e4f84eb45f478ade5e76f8d0a25395940a4ec2ac26b435d705e019f8a"
+  },
+  "accepted_mechanism": "SameexistingSkiaRenderCachepinsonecompletedunmaskedbodymaterialindependentofpermanentmask. Canonicalmaterialoutputstillperobject. RestoreSrcintofullscratchandapplyoriginalmaskorder; bodyalreadyincludesmaterialopacity, mustnotapplyagain.",
+  "causalwork": {
+    "oldcold8coverage": 128,
+    "newcold8coverage": 16,
+    "oldmask_only_steps": [
+      128,
+      16,
+      128,
+      128
+    ],
+    "newmask_only_steps": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "native_pixel_comparison": "zero nonAA differences innewworkfixture"
+  },
+  "remaining_frozen_risks": [
+    "Optionalbodyartifactslotmustcountwithmaterialentries/runs/layersundertheexistinglimits; alias/store paths mustnot exceedcount orhindernecessarymaterialadmission.",
+    "Whenbodypixels optionalbytescrowdoutrequiredstore, reclaimthemfirstandrespectactualGPUretirementinstead ofneedlesslyforcingallstreamwork.",
+    "Bodycropmustreflectunmaskedbody, exactdevicegrid/matrix/context/resource/metricsbasis; geometry/config/seed/paint/posechangeinvalidate, mask-onlychange doesnot.",
+    "Actualmaskreorderneedsreadytwomaskhistorythenpureswap, notjustinsertion. Sourcewasupdatedtoswaptwodistinctexistingrecords.",
+    "One-lastposecache mayhelpstructuralfixturebutrealFixed40posesalternate; gainmustbeactualnormalpairmeasured, noexpandingcachepoolswithoutcause."
+  ],
+  "producer_notified": true,
+  "no_new_tests_or_browser_by_control": true,
+  "official_PASS": false
+}

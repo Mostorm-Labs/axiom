@@ -1,0 +1,25 @@
+{
+  "repository": "Mostorm-Labs/axiom",
+  "HEAD": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "branch": "codex/g5-cpu-worker",
+  "changed_files": [
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "before": "46a29a458f903ec666685a73d73e1492cc8e11a0543c9afa2a1b0639298fb5b9",
+      "after": "3846b772ec5f462a1e8a0d8f189ec9d638732b5c5eceadfc29f408374f53543d"
+    },
+    {
+      "path": "runtime/render/tests/cpu_postworker_replay_test.cpp",
+      "before": "dcd487826f77fd7f84c4430620af28a0ba6e163d772cdfb950419cf6869fdd85",
+      "after": "34292135d7d30a0059add4b8c776e3d838b4fa4f717cba493cd116684967da61"
+    }
+  ],
+  "actual_production_delta": "4existingowner guards, no newstate/cache/geometry",
+  "patch": {
+    "path": ".aegis/results/G5-checkpoint-publication-integration-r1/delta.patch",
+    "sha256": "2846affff816796b000c294f2b2175db6fdefe0dd550262fcded751e969361eb"
+  },
+  "test_contract": "maxusefulphaseinputsfromactualcomponents: ribbon7199+nonemptycapblocks256+31; caponlyexactblock, zeroemptywork, strictRGBA/budget/scratchinvalidate",
+  "public_API_changes": 0,
+  "budget_changes": 0
+}

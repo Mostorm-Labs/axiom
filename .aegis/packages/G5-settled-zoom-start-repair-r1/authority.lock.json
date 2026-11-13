@@ -1,0 +1,28 @@
+{
+  "status": "CURRENT_SCOPED_HUMAN_AUTHORIZED_BUG_REPAIR",
+  "created_utc": "2026-11-13T14:40:58.278607+00:00",
+  "human_request": "Read axiom gac g5 perf review 01a1c4c7-7796-7380-9f3e-bd0095fc9372 and fix current zoom bug. Retained control/implementation pairing remains authorized.",
+  "sources": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    }
+  ],
+  "user_AGENTS_override": "Latest human SemVer+Build policy applies over stale disk version text; no version/API changes in this repair.",
+  "principles": [
+    "One Runtime canonical owner/OperationEngine atomic apply; Render derived pixels and preparation only",
+    "CanonicalVisible, coverage, masks, alpha, z-order and final exact pixels remain correct",
+    "Do not fill unknown regions with background or drop full coverage eligibility to force a present",
+    "GPU edge AA differences accepted by human, geometry/interior/order remain correct",
+    "Accepted locked Semantic SDK and Skia artifacts only; no source dependency rebuild"
+  ],
+  "scope_decision": "Repair settled-start Render path first. Diagnostic SZ-01 pending camera invalidation and SZ-02 internal preparation progress remain separate, explicitly not implemented in this package."
+}

@@ -1,0 +1,136 @@
+{
+  "fixture": {
+    "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+    "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+  },
+  "original_scene": "40 compact bodies,7199knots,16poses,two32-segment historical masks/object;tx15 has25copies. No easier substitute.",
+  "A": {
+    "down": [
+      420,
+      160
+    ],
+    "moves": 7200,
+    "move_i": "float(420+7*sin(i*.17)), float(160+170*i/7200), i=1..7200",
+    "radius": 16,
+    "timestamp_increment_ns": 8000000,
+    "up": [
+      999,
+      999
+    ],
+    "up_coordinate_in_geometry": false
+  },
+  "B_native": {
+    "down": [
+      350,
+      210
+    ],
+    "moves": [
+      [
+        360,
+        230
+      ]
+    ],
+    "up": [
+      900,
+      900
+    ]
+  },
+  "B_web": {
+    "down": [
+      300,
+      230
+    ],
+    "moves_i": "[300,230+i*4], i=1..8",
+    "up": [
+      999,
+      999
+    ]
+  },
+  "native_baseline": {
+    "up_to_drain_ns": 38377229291,
+    "kernel_advance_ns": 35757340839,
+    "new_A_union_ns": 35699325219,
+    "new_A_jobs": 16,
+    "new_A_union_steps": 115200,
+    "historical_union_steps": 1024,
+    "new_B_union_steps": 16,
+    "applies": 2,
+    "model": "synchronous native surrogate; browser/RAF/GPU unmeasured"
+  },
+  "numerical_corpus": "Fixed40 all targets with A/B and resulting history; additional bounded synthetic cases: tangency/both sides of one-f32-ULP boundary, zero length, invalid late input, self crossing/retrace, repeat exact mask, fully covered by history, changed mask IDs/order/content, identical geometry different owners, fractional and integer translations, uniform scale/rotation; both round and marker. Compare original evaluator decisions exactly.",
+  "web_rows": [
+    {
+      "id": "U6B-BASELINE-D1-BURST",
+      "variant": "unchanged production baseline",
+      "dpr": 1,
+      "A_pacing": "burst with event-loop yield every8Moves",
+      "B": "immediate original8Moves",
+      "purpose": "One actual matched baseline with old SDK only after matching production source identity verified."
+    },
+    {
+      "id": "U6B-CANDIDATE-D1-BURST",
+      "variant": "candidate",
+      "dpr": 1,
+      "A_pacing": "same baseline",
+      "B": "same immediate original8Moves",
+      "purpose": "Primary latency comparison; final/Undo/Redo canonical and pixels."
+    },
+    {
+      "id": "U6B-CANDIDATE-D1-PACED",
+      "variant": "candidate",
+      "dpr": 1,
+      "A_pacing": "original30second paced trace; record actual duration, no result hold that inflates primary timing",
+      "B": "same immediate original8Moves",
+      "purpose": "Prove active preparation progress is not defeated by repeated Move; immediate pan/zoom before drain; subsequent erase and selection on long-masked body."
+    },
+    {
+      "id": "U6B-CANDIDATE-D4-BURST",
+      "variant": "candidate",
+      "dpr": 4,
+      "A_pacing": "same burst trace",
+      "B": "same immediate original8Moves",
+      "purpose": "Supported highDPR integration, immediate navigation and masked selection; final pixels."
+    }
+  ],
+  "web_css": [
+    1431,
+    1010
+  ],
+  "finite_execution": {
+    "native_numeric_oracle_seconds_max": 360,
+    "native_integration_seconds_max": 180,
+    "web_starts_max": 5,
+    "web_total_seconds_max": 900,
+    "web_each_seconds_max": 300,
+    "browser_rss_mib_max": 4096,
+    "one_corrective_web_attempt": "Only after a concrete harness/environment/implementation fault is repaired and frozen; retain failed attempt. Do not use more attempts to sample away a genuine correctness/numeric failure.",
+    "build": "Incremental own source/tests only. Use accepted published Semantic/Skia and retained native build. Never GN/build dependency sources.",
+    "no_parallel_heavy_work": true
+  },
+  "references": [
+    {
+      "path": "runtime/render/tests/cpu_exact_kernel_test.cpp",
+      "sha256": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9"
+    },
+    {
+      "path": "runtime/render/tests/cpu_prefix_continuation_test.cpp",
+      "sha256": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "9844bac0851e1d863e3b0dbf4efba2432f333ecef49e2a8e0c5e12ea61deb658"
+    },
+    {
+      "path": "runtime/composition/tests/cpu_pending_runtime_test.cpp",
+      "sha256": "b0e4d3de460d41710f29840f5617a574dd62526c431c24cf4fef22f9643d8b42"
+    },
+    {
+      "path": "runtime/composition/tests/cpu_tail_attribution_test.cpp",
+      "sha256": "260a4e05f7e28d5dabaa7c9bf9d315d8e4f98a48c250d883151d604da146552d"
+    },
+    {
+      "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+      "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+    }
+  ]
+}

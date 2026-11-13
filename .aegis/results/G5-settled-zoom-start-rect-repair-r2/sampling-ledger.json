@@ -1,0 +1,99 @@
+{
+  "maxChrome": 2,
+  "maxIABpages": 1,
+  "maxSeconds": 480,
+  "charged_seconds": 168,
+  "Chrome": [
+    {
+      "id": "SZ2-CHROME-1",
+      "status": "COMPLETED",
+      "unix": 1794583948.115544,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_rect_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-rect-repair-r2/requests/SZ2-CHROME-1.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 24.007248667,
+        "peak_process_family_rss_kib": 1289600,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 160,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ2-CHROME-1",
+          "lane": "r2",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 25
+    },
+    {
+      "id": "SZ2-CHROME-2",
+      "status": "COMPLETED",
+      "unix": 1794584000.6130052,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_rect_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-rect-repair-r2/requests/SZ2-CHROME-2.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-rect-repair-r2/web/SZ2-CHROME-2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 23.437927333,
+        "peak_process_family_rss_kib": 1296464,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 160,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ2-CHROME-2",
+          "lane": "bc40",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 24
+    }
+  ],
+  "IAB": [
+    {
+      "id": "SZ2-IAB",
+      "status": "COMPLETED",
+      "tab_id": "3",
+      "server_session": 42330,
+      "unix": 1794584109.8604228,
+      "url": "http://127.0.0.1:56564/",
+      "viewport": [
+        1200,
+        800
+      ],
+      "max_seconds": 160,
+      "drift": [],
+      "charged_seconds": 119,
+      "server_started_unix": 1794584087.895,
+      "last_result_unix": 1794584142.863,
+      "ended_unix": 1794584206.304508,
+      "page_closed": true,
+      "viewport_restored": true,
+      "server_stop_requested": true,
+      "rows": 18,
+      "all_pixel_RAF_restored": true,
+      "active_workload_seconds": 55,
+      "charge_basis": "Conservative actual owned server start through post-close/post-stop observation; includes harness bootstrap and completion-to-cleanup time. Earlier provisional charge used server-start to last-result only, now corrected without resampling.",
+      "server_stopped": true,
+      "server_port_released": true
+    }
+  ],
+  "r1_ledger_read_only": ".aegis/results/G5-settled-zoom-start-repair-r1/sampling-ledger.json",
+  "r1charged120unchanged": true
+}

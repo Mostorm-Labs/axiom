@@ -1,0 +1,24 @@
+{
+  "schema": "axiom-settled-zoom-control-design-review-v1",
+  "created_utc": "2026-11-13T14:55:58.426857+00:00",
+  "package": {
+    "path": ".aegis/packages/G5-settled-zoom-start-repair-r1/package.json",
+    "sha256": "c74430fc040aba26ce5161f8b6bd45a2cbb0ae10b7909a8867e3a0c75840c88d"
+  },
+  "design": {
+    "path": ".aegis/results/G5-settled-zoom-start-repair-r1/implementation-design.json",
+    "sha256": "d58f482ef23cbc1fcfa9147d554e0c48e8d0cc631b9ef88528eb782074dde8f5"
+  },
+  "verdict": "CONTINUE_FROZEN_SCOPED_IMPLEMENTATION",
+  "review": "ExistingRender owner retains one bounded job and full-coverage eligibility. Consolidating actual holes within an existing coarse tile can remove repeated source preparation without a visual incomplete-region policy. Extending already-supported preparedGPU to unmaskedv4 is a path-unification candidate and must remain subordinate to actual route/AA/mask/material proof. No secondcanonical owner/API/Worker/budget change.",
+  "required_existing_proof_focus": [
+    "NavigationRegions must only name painted or previously qualified rectangles; disjoint/concave gaps cannot be inferred valid from bounding box",
+    "AA/filter gutter and material scissor preserved across overlapping rectangles; old pixel reuse must not accumulate transparency or erase foreground",
+    "Actual source completion counts and first-present correct camera, complete coverage, sharp overlap and eventualcold exactpixel oracle",
+    "GPU mask/transparent selfintersection/order and explicit CPU/Raster modes",
+    "Historical CPUW5 withheld candidate remains immutable; no multibatchbudget resurrection",
+    "Ordinary ChromeGL proxy separated from IAB/pixel camera correctness and physicalpresentation limits"
+  ],
+  "new_requirements": [],
+  "not_a_gate_PASS": true
+}

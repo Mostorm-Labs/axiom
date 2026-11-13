@@ -1,0 +1,21 @@
+{
+  "requests": {
+    "CL-D4-MIXED-DIAGNOSTIC": "1e75ca4845ce34e037fb324e70320df69e6f0004938cb51397a786abcc2a07d8",
+    "CL-D4-PRIMARY-DIAGNOSTIC": "5c2de40694772aec3b7e963db9b0c2a37d3b06658e99a36ee05a5345ccdcdb91",
+    "CL-D4-PRIMARY-BASELINE": "c580529d302ddb4c6dec5026ea644994725d0be494a715d938e77ee27097ff73",
+    "CL-D4-MIXED-BASELINE": "a24fb3db07109046b98b924613e604a2cfc171240ca97c86207effaa7e5a56f2",
+    "CL-D4-PRIMARY-CANDIDATE": "5d77e2977f0f26a319a858134a6801fffb2909535fc9b3a397107c0e804dac1f",
+    "CL-D4-MIXED-CANDIDATE": "057518dcbc9f75e0846479bb33aaf8c9021c9dcc713ef78a631063148bc87008"
+  },
+  "planned_windows": [
+    "CL-D4-PRIMARY-DIAGNOSTIC",
+    "CL-D4-MIXED-DIAGNOSTIC",
+    "CL-D4-PRIMARY-BASELINE",
+    "CL-D4-MIXED-BASELINE",
+    "CL-D4-PRIMARY-CANDIDATE",
+    "CL-D4-MIXED-CANDIDATE"
+  ],
+  "ordinary": "frozenaftercausalrepair, inputsunchanged",
+  "diagnostic": "frameTimingON UR0OFF originalRRbehavior+phaseobservationonly",
+  "image_debt": "guardfrozenold302neverexpanded"
+}

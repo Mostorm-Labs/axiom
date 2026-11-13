@@ -1,0 +1,533 @@
+{
+  "status": "END_TO_END_REGRESSION_REMAINS_WITH_DOMINANT_STAGE_IDENTIFIED",
+  "rows": [
+    {
+      "case": "normalOFF1600",
+      "status": "OBSERVED",
+      "AUp_ms": 3880.899999976158,
+      "BUp_ms": 308.89999997615814,
+      "Up_to_settled_ms": 5028.699999928474,
+      "sequence_to_settled_ms": 837.1999999284744,
+      "afterAUp_generation": "1",
+      "AUp_contacts": 0,
+      "immediateBDown_contacts": 1,
+      "operation_callbacks": [
+        {
+          "at": 7431.899999976158,
+          "Up_relative_ms": 4192.0,
+          "bytes": 6658294
+        },
+        {
+          "at": 7431.899999976158,
+          "Up_relative_ms": 4192.0,
+          "bytes": 35412
+        },
+        {
+          "at": 12262.599999904633,
+          "Up_relative_ms": 9022.699999928474,
+          "bytes": 1730
+        },
+        {
+          "at": 16615.799999952316,
+          "Up_relative_ms": 13375.899999976158,
+          "bytes": 35412
+        }
+      ],
+      "settled_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "2",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "eb313d8efe45db694605ae2eb66a3734",
+          "ordinal": "2",
+          "presentedGeneration": "2",
+          "runtimeEpoch": "1"
+        },
+        "objects": 40,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 1010,
+          "width": 1431
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "owner_phase_facts": {
+        "pending": 0,
+        "admitted": "0",
+        "committed": "0",
+        "failed": "0",
+        "jobs": "0",
+        "finishedImports": "0",
+        "finishedHits": "0",
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "prepareNs": "0",
+        "workerWaitNs": "0",
+        "importNs": "0",
+        "exactNs": "0",
+        "commitNs": "0",
+        "maxOwnerNs": "0",
+        "maxExactNs": "0",
+        "retainedPathBytes": "0"
+      },
+      "raw": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/normalOFF1600/raw.json",
+        "sha256": "a174ac5a76ba38581328d06c5a41c791258d2fdfd2a4e2b63da8f28286dcf728"
+      },
+      "error": null,
+      "closed": true,
+      "cleanupError": null
+    },
+    {
+      "case": "candidate1600",
+      "status": "OBSERVED",
+      "AUp_ms": 0.3999999761581421,
+      "BUp_ms": 0.20000004768371582,
+      "Up_to_settled_ms": 7178.600000023842,
+      "sequence_to_settled_ms": 7176.299999952316,
+      "afterAUp_generation": "0",
+      "AUp_contacts": 0,
+      "immediateBDown_contacts": 1,
+      "operation_callbacks": [
+        {
+          "at": 8408,
+          "Up_relative_ms": 5452.100000023842,
+          "bytes": 6658294
+        },
+        {
+          "at": 9065.799999952316,
+          "Up_relative_ms": 6109.899999976158,
+          "bytes": 35412
+        },
+        {
+          "at": 15278.5,
+          "Up_relative_ms": 12322.600000023842,
+          "bytes": 1730
+        },
+        {
+          "at": 20331.399999976158,
+          "Up_relative_ms": 17375.5,
+          "bytes": 35412
+        }
+      ],
+      "settled_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "2",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "eb313d8efe45db694605ae2eb66a3734",
+          "ordinal": "2",
+          "presentedGeneration": "2",
+          "runtimeEpoch": "1"
+        },
+        "objects": 40,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 1010,
+          "width": 1431
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "owner_phase_facts": {
+        "pending": 0,
+        "admitted": "2",
+        "committed": "2",
+        "failed": "0",
+        "jobs": "64",
+        "finishedImports": "64",
+        "finishedHits": "616",
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "prepareNs": "11800000",
+        "workerWaitNs": "3990600000",
+        "importNs": "1700000",
+        "exactNs": "77300000",
+        "commitNs": "774300000",
+        "maxOwnerNs": "440300000",
+        "maxExactNs": "6600000",
+        "retainedPathBytes": "8340110"
+      },
+      "raw": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate1600/raw.json",
+        "sha256": "a165321e53b5575e092ec9bea38ed18efb4c08b43dd016c8336fce09373c60cb"
+      },
+      "error": null,
+      "closed": true,
+      "cleanupError": null,
+      "groups": [
+        {
+          "intent": 1,
+          "historical": false,
+          "segments_each": 1600,
+          "count": 16,
+          "unique_geometries": 16,
+          "compute_ms": 3750.000001311302,
+          "yield_ms": 17.69999885559082,
+          "owner_wait_ns": 3836400000,
+          "total_segments": 25600
+        },
+        {
+          "intent": 1,
+          "historical": true,
+          "segments_each": 32,
+          "count": 32,
+          "unique_geometries": 32,
+          "compute_ms": 74.30000030994415,
+          "yield_ms": 1.4999998807907104,
+          "owner_wait_ns": 110600000,
+          "total_segments": 1024
+        },
+        {
+          "intent": 2,
+          "historical": false,
+          "segments_each": 8,
+          "count": 16,
+          "unique_geometries": 16,
+          "compute_ms": 3.2000001668930054,
+          "yield_ms": 0.8000000715255737,
+          "owner_wait_ns": 43600000,
+          "total_segments": 128
+        }
+      ],
+      "job_count": 64,
+      "ready_terminals": 64,
+      "intent_terminals": [
+        {
+          "jobs": "48",
+          "operationOrdinal": "1",
+          "serial": "1",
+          "session": "1",
+          "status": "Committed",
+          "token": [
+            "2",
+            "1",
+            "11068046444225730969",
+            "11068046444225730969",
+            "1",
+            "48",
+            "1",
+            "1"
+          ]
+        },
+        {
+          "jobs": "16",
+          "operationOrdinal": "2",
+          "serial": "2",
+          "session": "2",
+          "status": "Committed",
+          "token": [
+            "2",
+            "1",
+            "11068046444225730969",
+            "11068046444225730969",
+            "1",
+            "64",
+            "1",
+            "2"
+          ]
+        }
+      ]
+    },
+    {
+      "case": "candidate7200",
+      "status": "FAILED",
+      "AUp_ms": 0.2999999523162842,
+      "BUp_ms": 0.10000002384185791,
+      "Up_to_settled_ms": 52202.699999928474,
+      "sequence_to_settled_ms": 52200.799999952316,
+      "afterAUp_generation": "0",
+      "AUp_contacts": 0,
+      "immediateBDown_contacts": 1,
+      "operation_callbacks": [
+        {
+          "at": 61205.10000002384,
+          "Up_relative_ms": 48878.89999997616,
+          "bytes": 29954294
+        },
+        {
+          "at": 63062.60000002384,
+          "Up_relative_ms": 50736.39999997616,
+          "bytes": 35412
+        }
+      ],
+      "settled_state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": true,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "2",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "eb313d8efe45db694605ae2eb66a3734",
+          "ordinal": "2",
+          "presentedGeneration": "2",
+          "runtimeEpoch": "1"
+        },
+        "objects": 40,
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 1010,
+          "width": 1431
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "owner_phase_facts": {
+        "pending": 0,
+        "admitted": "2",
+        "committed": "2",
+        "failed": "0",
+        "jobs": "64",
+        "finishedImports": "64",
+        "finishedHits": "616",
+        "newQueryUnions": "0",
+        "historyUnions": "0",
+        "prepareNs": "46900000",
+        "workerWaitNs": "45173200000",
+        "importNs": "1300000",
+        "exactNs": "161200000",
+        "commitNs": "3388900000",
+        "maxOwnerNs": "1910900000",
+        "maxExactNs": "10200000",
+        "retainedPathBytes": "10108853"
+      },
+      "raw": {
+        "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate7200/raw.json",
+        "sha256": "19eccc162d245db5fd9b700c3833b507e5f82493b886f7bcad235587f254a159"
+      },
+      "error": "AxiomError: SNAPSHOT_DECODE_FAILED\n    at call (http://127.0.0.1:61992/sdk/axiom.mjs:83:29)\n    at http://127.0.0.1:61992/sdk/axiom.mjs:396:59\n    at http://127.0.0.1:61992/sdk/axiom.mjs:134:129",
+      "closed": true,
+      "cleanupError": null,
+      "groups": [
+        {
+          "intent": 1,
+          "historical": false,
+          "segments_each": 7200,
+          "count": 16,
+          "unique_geometries": 16,
+          "compute_ms": 44676.499999165535,
+          "yield_ms": 161.0000011920929,
+          "owner_wait_ns": 45011600000,
+          "total_segments": 115200
+        },
+        {
+          "intent": 1,
+          "historical": true,
+          "segments_each": 32,
+          "count": 32,
+          "unique_geometries": 32,
+          "compute_ms": 79.5,
+          "yield_ms": 1.6999999284744263,
+          "owner_wait_ns": 117500000,
+          "total_segments": 1024
+        },
+        {
+          "intent": 2,
+          "historical": false,
+          "segments_each": 8,
+          "count": 16,
+          "unique_geometries": 16,
+          "compute_ms": 3.1000001430511475,
+          "yield_ms": 0.7000000476837158,
+          "owner_wait_ns": 44100000,
+          "total_segments": 128
+        }
+      ],
+      "job_count": 64,
+      "ready_terminals": 64,
+      "intent_terminals": [
+        {
+          "jobs": "48",
+          "operationOrdinal": "1",
+          "serial": "1",
+          "session": "1",
+          "status": "Committed",
+          "token": [
+            "2",
+            "1",
+            "11068046444225730969",
+            "11068046444225730969",
+            "1",
+            "48",
+            "1",
+            "1"
+          ]
+        },
+        {
+          "jobs": "16",
+          "operationOrdinal": "2",
+          "serial": "2",
+          "session": "2",
+          "status": "Committed",
+          "token": [
+            "2",
+            "1",
+            "11068046444225730969",
+            "11068046444225730969",
+            "1",
+            "64",
+            "1",
+            "2"
+          ]
+        }
+      ]
+    }
+  ],
+  "candidate1600_to_normal_ratio": 1.427526000780708,
+  "candidate1600_vs_failed_CW2": 1.5683698771296086,
+  "dominant7200": {
+    "stage": "16unique7200sequentialleftfold Workerjobs",
+    "compute_ms": 44676.499999165535,
+    "owner_wait_ns": "45173200000",
+    "commit_ns": "3388900000",
+    "max_owner_ns": "1910900000"
+  },
+  "snapshot_failure": "snapshot-limit-proof.json",
+  "no_full_performance_PASS": true
+}

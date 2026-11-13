@@ -1,0 +1,747 @@
+{
+  "schema": "g5-cpu-worker-repair-artifact-manifest-v1",
+  "status": "SEALED_SHARED_REVIEWABLE_NATIVE_BLOCKER",
+  "files": [
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/EvidenceContractPreflight.json",
+      "bytes": 211,
+      "sha256": "3b540a4aa2fdf83ae40150af680b80ca0fc9680fa0e81ffc7d372be0ccb33f9c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/PackageBindingPreflight.json",
+      "bytes": 3079,
+      "sha256": "2ddd54c403e7e40b8cf426f6a89a7e530c771f5820dbce22d1ed3a06eb47338c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/SDK-manifest.json",
+      "bytes": 5341,
+      "sha256": "cc848a763d76f4fafae90d8c3080071b244405f748b7756ab058fcd45aba1498"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/behavior-green.log",
+      "bytes": 973,
+      "sha256": "938ec48acd8d3b6c81431ad48fd28661430c912944508d22a5cb8c45931e5d47"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/behavior-red.log",
+      "bytes": 3111,
+      "sha256": "e63362db7e765f57bb4532f39d48f413b26304db34ead48d4449117778dc581c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/boundaries-final.log",
+      "bytes": 58,
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/bundle-build.log",
+      "bytes": 63,
+      "sha256": "c2ed93ffd93c840755c0e91392ae593b1b52de9b7aaf6c208123feaceb1dde2e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/candidate634.json",
+      "bytes": 94377,
+      "sha256": "67319bdb0eed21bba124ea61271bc78aef07af2a2a76345b164cc0ab595b5e9a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/cleanup.json",
+      "bytes": 393,
+      "sha256": "0e15e77e97e638beeb2558b37c83df9be9670353ee23b470582ce9324112ea66"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/driver-preflight.log",
+      "bytes": 3036,
+      "sha256": "673c162b44dd438ea941f15d374b8ede4c2afcdfb1e117ed8e25c0a3343d1d02"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/driver-preflight2.log",
+      "bytes": 3491,
+      "sha256": "279682219517fdcf6b76a6140996497cc36cefd8e739e5c70c50a5e1826489a7"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/driver-preflight3.log",
+      "bytes": 1437,
+      "sha256": "322631228899af3e4f1b0d126106e98f4e09c265368d2436805977f4b6abbec3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/exact634.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/exact634.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/exact634.worker.json",
+      "bytes": 495,
+      "sha256": "a59154de4f1c2e7221804c99dd165bf93f26f0dc61114821ee6154733a978fa1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/README.md",
+      "bytes": 37750,
+      "sha256": "04683000dfb48f883c03d1a0b891ed83ed6b84da3cda91206333aac7aea2cbf2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/axiom.d.mts",
+      "bytes": 19024,
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/axiom.mjs",
+      "bytes": 222,
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/demo-controls.d.mts",
+      "bytes": 1048,
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/demo-controls.mjs",
+      "bytes": 3268,
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/internal/controller.mjs",
+      "bytes": 2398,
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/internal/transport.d.mts",
+      "bytes": 567,
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/internal/transport.mjs",
+      "bytes": 13629,
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/api/internal/values.mjs",
+      "bytes": 1117,
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/axiom.d.mts",
+      "bytes": 9688,
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/axiom.data",
+      "bytes": 16634361,
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/axiom.mjs",
+      "bytes": 35077,
+      "sha256": "22ff9570fc3c9df3d92a517d42b48983c7e59937daf62c61bb729be749d4ca74"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/axiom.wasm",
+      "bytes": 13496552,
+      "sha256": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/example.html",
+      "bytes": 50814,
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/axiom.mjs",
+      "bytes": 130870,
+      "sha256": "d5fdce76f7e973f0bb2ebff0b67230e10c77162bd22a941e2457cc55094164c4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-build.mjs",
+      "bytes": 227,
+      "sha256": "be7c58967bcbc595877c52c0d0a9937fa72d19a58c6693ff9f1efc64af428159"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-kernel.mjs",
+      "bytes": 13354,
+      "sha256": "dacb0a229c50835b71743762afe83c193f9003cacd16d4f2f56db05bf5fb3cbc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-kernel.wasm",
+      "bytes": 301410,
+      "sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-owner.mjs",
+      "bytes": 687,
+      "sha256": "0258df91b524f92f548ac16be9c25a6d3a4628bbc0a2b641e0afe24be7780444"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/fonts/Excalifont/OFL.txt",
+      "bytes": 4989,
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/nlohmann-json-LICENSE.MIT",
+      "bytes": 1076,
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/noto-cjk-LICENSE.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/noto-cjk-NOTICE.txt",
+      "bytes": 350,
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/semantic/Abseil.txt",
+      "bytes": 11361,
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/semantic/Protobuf.txt",
+      "bytes": 1732,
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/semantic/utf8_range.txt",
+      "bytes": 1091,
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/Expat.txt",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/FreeType.txt",
+      "bytes": 2149,
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/HarfBuzz.txt",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/ICU.txt",
+      "bytes": 27718,
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/Skia.txt",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/Wuffs.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/libjpeg-turbo.txt",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/libpng.txt",
+      "bytes": 5345,
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/libwebp.txt",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/licenses/skia/zlib.txt",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/package.json",
+      "bytes": 442,
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/pointer_input.mjs",
+      "bytes": 3877,
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/serve.py",
+      "bytes": 1424,
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/immutable-sdk/normal/text_input.mjs",
+      "bytes": 12883,
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/implementation-design.json",
+      "bytes": 2164,
+      "sha256": "1b5acace48e9402fb610a152ca7384dd323012e799ee1978e1ae2b618b085e7a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/install-offline.log",
+      "bytes": 6852,
+      "sha256": "62d34d5ef805ffcc8be64602756fa0a70fd7ae2279b0de0afe63d764b20374f1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-build.log",
+      "bytes": 44792,
+      "sha256": "faac89e74130e249abf5282787ed624cd56d050f3c8234ea7d1714a012ab41e3"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-failure-classification.json",
+      "bytes": 2497,
+      "sha256": "5009b58d3234037ca784b825d20e38ab04472b9add7d3ea78e6789d8a609dd8f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-green.json",
+      "bytes": 810,
+      "sha256": "c4e2de35e0fa900a5cb9238c36bb5c5168cea3e054a40a34bc4d706174e6c02c"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-keepers.log",
+      "bytes": 3662,
+      "sha256": "1e132911524f61dbcfccebc0b3f7e98a8b8d679c408a9a649a7e1c11ce04b45d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-keepers.xml",
+      "bytes": 20488,
+      "sha256": "d6eb4fe93a8975c793d1bf617ee1780ca5600418bb3287226a3ac19b63091b46"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-prefix-recheck.log",
+      "bytes": 683,
+      "sha256": "b4d6d617ce9ab789bacc206acac76a1483db4620e767cee1f7030972b93f3591"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-prefix-recheck.xml",
+      "bytes": 647,
+      "sha256": "5aac8bbcf886faf1bbc45911d8f29ffe23de968cc44ab3dba4e66abcf0369b8f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/native-red.json",
+      "bytes": 302,
+      "sha256": "028aa001343ec0c1773ae9bdbf95c39636da46e2643721337b3a217e02523f34"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/next-step-inputs.json",
+      "bytes": 2055,
+      "sha256": "a6655d823faabb23570e43a632c463b6ac25788a2b5a1a19ff60395768df877a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/node-before-driver.log",
+      "bytes": 2389,
+      "sha256": "6c74dfa266c40a9b16e30fecd9fdec32b2c0890a80704312397371b2effc32ac"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/node-final.log",
+      "bytes": 3919,
+      "sha256": "c0f4daf8af36e726be73d3f4dfc87cd70d9231873e3c0c654cae2926f48a6d6a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/node-initial-green.log",
+      "bytes": 2393,
+      "sha256": "460b13931e9af7532dab89a3bd309b6e283df249f09bf2fa6a070ae8fa57834b"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/node-preflight.log",
+      "bytes": 3918,
+      "sha256": "9827eb9c37de1096c532858fdfac7bebb40f89a1997ea9cbb2a8efbba91b983f"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/normal-build.log",
+      "bytes": 58804,
+      "sha256": "9682c73cfc2900f1e6e8505eec5805570cae042a6e43e40e892a692fae4ecce9"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/normal-configure-command.json",
+      "bytes": 3549,
+      "sha256": "33055b01838bc39591fa16b64d50d5aefc2878a504004ee296927b71b6a7d1d0"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/normal-configure.log",
+      "bytes": 655,
+      "sha256": "084e2db7a603bc02b7f29f87241c5e38ee917e4948ffdee0263fce72e2199416"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/normal-sdk-manifest.json",
+      "bytes": 4457,
+      "sha256": "8466037e2964251b61fd5fd1e4017ff94f3c6edd6ee603ae0f667fca43588e0a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/npm-pack.log",
+      "bytes": 4705,
+      "sha256": "26f705e5f65a6093d1d7c79899ef1cdfe667c66e7e588d255ac51a0f5790815a"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/numeric-parity.json",
+      "bytes": 1850,
+      "sha256": "ebaecba086c0885870f655319c1e70346b92957f028041fc89dbdf93dfbc9089"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/offline-package.json",
+      "bytes": 579,
+      "sha256": "ca7e4f3f7e7af7bbd51ad7387d8cc9052894eb91fa97898437917ead0a909713"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/package-consumer.json",
+      "bytes": 511,
+      "sha256": "fbcb67e3c6de18a3dedb92e30104283c75bec97281ea0691a5707b398b297779"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/protocol-lifecycle.json",
+      "bytes": 957,
+      "sha256": "3ec58eed42a769432a6863db0c1f4fa40c97a53e2466642c7cb74c9b2459a764"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/python-final.log",
+      "bytes": 110,
+      "sha256": "378835dfcd1a3745d724bbc79aa32b8ce02046db20c8d9d4d5c73615d1fe5954"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/regressions.json",
+      "bytes": 1228,
+      "sha256": "c8a3732ad864e34f2e6e92d1c2a4743fff41b3b4479441b06e4c0341ff7cba5d"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/result.json",
+      "bytes": 9746,
+      "sha256": "30afd70336a615ba6b0fb24bf87cfdeab1fc1b22edee40299ab40bffee1c3a34"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/root-lifecycle.json",
+      "bytes": 1253,
+      "sha256": "ae0f4b3d33cc2412e0cc92170551fd667729b360cbc7d095bdb180d1f4e4ec36"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/runner-python.log",
+      "bytes": 101,
+      "sha256": "33060fd73862c5e1af97335504d5b45211fce6d229657f556d8deceeadc52ce4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sampling-ledger.json",
+      "bytes": 331,
+      "sha256": "9e74dc21191fb50347303fc0aa29af4cb742eb5a78bd831652e8fcfd015f61f5"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sampling-plan.json",
+      "bytes": 1594,
+      "sha256": "76345cfa592bf37490d525993abc99fb03132a0e19691d6d3270d83854265da1"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/scheduler-pairs.json",
+      "bytes": 691,
+      "sha256": "d0066bed1bbd76561aeb9dbcc2bbcb1099bf7e4325e0adc3bcd568752de89244"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sdk-node.log",
+      "bytes": 860,
+      "sha256": "6efd8b356f5ee96db903d761b02dc189e80a2dff9b9328c7c8c1c296a5892422"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/sdk-types.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/source-delta.patch",
+      "bytes": 26290,
+      "sha256": "e3fa28baccaa710635981ef42bce424753a1b57708944131779154c403d6e1a2"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW1-repair-r1/source-manifest.json",
+      "bytes": 155758,
+      "sha256": "28b8f2086dd61ea8806d9bf21ef1a4a20e11bfb746b87f5047b77be32e0f2b06"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/mostorm-axiom-0.4.3.tgz",
+      "bytes": 19244550,
+      "sha256": "649142b34c6c8c50088a7cbc648c6cae7ca083eeeca7ba05a45643ed2302b300"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/README.md",
+      "bytes": 37750,
+      "sha256": "04683000dfb48f883c03d1a0b891ed83ed6b84da3cda91206333aac7aea2cbf2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/axiom.d.mts",
+      "bytes": 19024,
+      "sha256": "a37b031ec90723b7fca91d336f47b744eb7fc3779353bbb0e160dc128bc2fb59"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/axiom.mjs",
+      "bytes": 222,
+      "sha256": "ed47ee6287f56521020702be1bb117b45385b496c948003d534b00c389e5ba41"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/demo-controls.d.mts",
+      "bytes": 1048,
+      "sha256": "cd472956e051ae266b7f50a5830b12042251e39011c61fcdb05650c4a1fcc66e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/demo-controls.mjs",
+      "bytes": 3268,
+      "sha256": "c783c57b4f1d7156d7ee1ce55067a69195390c3f590d17da183c2e7a74b916bb"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/internal/controller.mjs",
+      "bytes": 2398,
+      "sha256": "7e2c1af8604eceec5ad54783104bfde61abc9a33556c5cddfe9330d9b2459f45"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/internal/transport.d.mts",
+      "bytes": 567,
+      "sha256": "166fe1cd31b6a7acddb1c17e9eeff8637a285fa2e2fc4ff68b81b86c1231325e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/internal/transport.mjs",
+      "bytes": 13629,
+      "sha256": "e85748e96d96141995f73c7ace4e0d154b621ec169d18776afd66370a40830dc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/api/internal/values.mjs",
+      "bytes": 1117,
+      "sha256": "99e24f5e3c57432c217d91b45da2cb5b678a5283f735c71ce55af8d3cc2ffc4e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/axiom.d.mts",
+      "bytes": 9688,
+      "sha256": "8339692b4104150e5e9a9899bd09c44efe579df861283a63262f94f4c93f49f5"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/axiom.data",
+      "bytes": 16634361,
+      "sha256": "71b5890f80d43069a2ed796e3ef61b1767c0d3c9209f01c13063d87c4843a02c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/axiom.mjs",
+      "bytes": 35077,
+      "sha256": "22ff9570fc3c9df3d92a517d42b48983c7e59937daf62c61bb729be749d4ca74"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/axiom.wasm",
+      "bytes": 13496552,
+      "sha256": "894691cf10bead82aefb24844f4be16d70b31fab6f4fa12c1593f54b8efbb682"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/example.html",
+      "bytes": 50814,
+      "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/axiom.mjs",
+      "bytes": 130870,
+      "sha256": "d5fdce76f7e973f0bb2ebff0b67230e10c77162bd22a941e2457cc55094164c4"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-build.mjs",
+      "bytes": 227,
+      "sha256": "be7c58967bcbc595877c52c0d0a9937fa72d19a58c6693ff9f1efc64af428159"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-kernel.mjs",
+      "bytes": 13354,
+      "sha256": "dacb0a229c50835b71743762afe83c193f9003cacd16d4f2f56db05bf5fb3cbc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-kernel.wasm",
+      "bytes": 301410,
+      "sha256": "4560ab3a958a78dc5a6572c6f8576cc4460e031a86c8d17b8501dfe67cf07a83"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-owner.mjs",
+      "bytes": 687,
+      "sha256": "0258df91b524f92f548ac16be9c25a6d3a4628bbc0a2b641e0afe24be7780444"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/fonts/Excalifont/OFL.txt",
+      "bytes": 4989,
+      "sha256": "c80663bd842559a02ae342568da43e59ccfb69e2edcf711392f0fc88a56ddb1b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/nlohmann-json-LICENSE.MIT",
+      "bytes": 1076,
+      "sha256": "46a65cffd1ea955132d95a8dd921640714a8d6b537d2e4e482d31145ae95b603"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/noto-cjk-LICENSE.txt",
+      "bytes": 4301,
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/noto-cjk-NOTICE.txt",
+      "bytes": 350,
+      "sha256": "1eb0b9569413b4e8e5ec356be0e0514df048da1b427644fed04c833e67d23359"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/semantic/Abseil.txt",
+      "bytes": 11361,
+      "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/semantic/Protobuf.txt",
+      "bytes": 1732,
+      "sha256": "6e5e117324afd944dcf67f36cf329843bc1a92229a8cd9bb573d7a83130fea7d"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/semantic/utf8_range.txt",
+      "bytes": 1091,
+      "sha256": "02de69b64fc36d9e938f418e52723e42f0b2b226d58a9cb3c8dcbdf7059f5074"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/Expat.txt",
+      "bytes": 1144,
+      "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/FreeType.txt",
+      "bytes": 2149,
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/HarfBuzz.txt",
+      "bytes": 1971,
+      "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/ICU.txt",
+      "bytes": 27718,
+      "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/Skia.txt",
+      "bytes": 1507,
+      "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/Wuffs.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/libjpeg-turbo.txt",
+      "bytes": 5620,
+      "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/libpng.txt",
+      "bytes": 5345,
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/libwebp.txt",
+      "bytes": 1496,
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/licenses/skia/zlib.txt",
+      "bytes": 910,
+      "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/package.json",
+      "bytes": 442,
+      "sha256": "d9eadd40f0c09e65ca5655998b3609db0270a1824303096855d9451416ac856e"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/pointer_input.mjs",
+      "bytes": 3877,
+      "sha256": "109260f265642333d2c2fa01e00d1e8485e14c03efbbaa0acb500a22b73b19fc"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/serve.py",
+      "bytes": 1424,
+      "sha256": "f05f356e79a98ae82b17e49da120ed6b44fcb08335f8083678f9cde2fdebd47c"
+    },
+    {
+      "path": "out/G5-CPUW1-repair-r1/normal-install/js/text_input.mjs",
+      "bytes": 12883,
+      "sha256": "a933f087664d065d4e77b0c3d2bcaa200f1481e74f15a143f278ee8160e48cc6"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "bytes": 102257,
+      "sha256": "e36364e100e7723367dc19ff5c0d2cd55791c8252c405b6f391e64edbeb85ab8"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "bytes": 35431,
+      "sha256": "30d4c4061b90015680885e3b6ee988f4596c7bea38988d60e1b5ba07689bb118"
+    },
+    {
+      "path": "sdk/web/internal/cpu-worker-client.mjs",
+      "bytes": 7077,
+      "sha256": "1e676c714ae5b10bc6c5abc100d9c57d205fa3a1b29afdb0138a7a7b23c428d8"
+    },
+    {
+      "path": "sdk/web/internal/cpu-worker-thread.mjs",
+      "bytes": 3580,
+      "sha256": "b71cc57f5346064a2504a2c39e136651bac96b231fce8fbac79d7a49980def69"
+    },
+    {
+      "path": "verification/runners/g5/cpu_worker_repair_runner.py",
+      "bytes": 5278,
+      "sha256": "947e1af47b4728c26fa75624dab085154df54fcccd74b663225a6c032b7046cc"
+    },
+    {
+      "path": "verification/runners/g5/cpu_worker_repair_web.mjs",
+      "bytes": 16868,
+      "sha256": "fe1b379cb0776a26f0afb5f0cb796a08ddbb3ced8723328eea2d823109839e66"
+    },
+    {
+      "path": "verification/tests/g5_cpu_worker_repair_driver.test.mjs",
+      "bytes": 8330,
+      "sha256": "6b8e97b6f8d901650dc0b819e911f80d183505055d21c4a68240e821860ba386"
+    },
+    {
+      "path": "verification/tests/g5_cpu_worker_repair_root.test.mjs",
+      "bytes": 1696,
+      "sha256": "e81102846095a8c06246d527dd0222ab6201e02f90033fd8ba94166fd25bc588"
+    },
+    {
+      "path": "verification/tests/g5_cpu_worker_repair_scheduler.test.mjs",
+      "bytes": 2166,
+      "sha256": "2480aa1705e7816c8608030609c2c646bef6457adcd32fd683e5ccb9736ba362"
+    },
+    {
+      "path": "verification/tests/g5_cpu_worker_thread.test.mjs",
+      "bytes": 1983,
+      "sha256": "259015c36702d6d0f4d2e2d15969c165bf6c565ed4d88520b7e700ebd8ef3132"
+    },
+    {
+      "path": "verification/tests/test_g5_cpu_worker_repair_runner.py",
+      "bytes": 1299,
+      "sha256": "095b51226fb0f26156132ee5336f4c2c2d673137a1a37bbea007cae26babfd90"
+    }
+  ],
+  "exclusions": [
+    "manifest self-hash",
+    "reproducible build-web trees; matching installed SDK and npm archive separately bound"
+  ],
+  "package_sha256": "c3fe4a874af1f03032be00297c77c111336bd90736994ec8c68b3afaa2b725a1",
+  "result_sha256": "30afd70336a615ba6b0fb24bf87cfdeab1fc1b22edee40299ab40bffee1c3a34"
+}

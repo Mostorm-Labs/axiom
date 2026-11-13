@@ -1,0 +1,332 @@
+TAP version 13
+# Subtest: actual root Busy keeps Worker alive then publication barrier prevents pump resurrection and permits retry/idempotence
+ok 1 - actual root Busy keeps Worker alive then publication barrier prevents pump resurrection and permits retry/idempotence
+  ---
+  duration_ms: 3.4435
+  ...
+# Subtest: actual pump does not query native, submit or allocate during active close as well as publication barrier
+ok 2 - actual pump does not query native, submit or allocate during active close as well as publication barrier
+  ---
+  duration_ms: 0.387292
+  ...
+# (node:91527) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+ok 3 - complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+  ---
+  duration_ms: 26.061083
+  ...
+# Subtest: complete driver executes all four existing and pending created kinds, timeline and Brush/History
+ok 4 - complete driver executes all four existing and pending created kinds, timeline and Brush/History
+  ---
+  duration_ms: 4.830375
+  ...
+# Subtest: complete driver executes recovery failure/context/real publication release branch
+ok 5 - complete driver executes recovery failure/context/real publication release branch
+  ---
+  duration_ms: 11.444708
+  ...
+# Subtest: complete driver preserves cold failure metadata and refuses invalid pixels
+ok 6 - complete driver preserves cold failure metadata and refuses invalid pixels
+  ---
+  duration_ms: 2.161792
+  ...
+# Subtest: complete driver actually reopens saved canonical bytes through root restore
+ok 7 - complete driver actually reopens saved canonical bytes through root restore
+  ---
+  duration_ms: 1.74525
+  ...
+# (node:91528) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver exercises immediate mixed creation/drag and reports readback failures
+ok 8 - actual driver exercises immediate mixed creation/drag and reports readback failures
+  ---
+  duration_ms: 235.304875
+  ...
+# Subtest: actual server serves matching installed public root, relative assets and fixture bytes
+ok 9 - actual server serves matching installed public root, relative assets and fixture bytes
+  ---
+  duration_ms: 26.104208
+  ...
+# (node:91529) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+ok 10 - complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+  ---
+  duration_ms: 7.987167
+  ...
+# Subtest: complete driver executes all four existing and pending created kinds, timeline and Brush/History
+ok 11 - complete driver executes all four existing and pending created kinds, timeline and Brush/History
+  ---
+  duration_ms: 5.120833
+  ...
+# Subtest: complete driver executes recovery failure/context/real publication release branch
+ok 12 - complete driver executes recovery failure/context/real publication release branch
+  ---
+  duration_ms: 10.829958
+  ...
+# Subtest: complete driver preserves cold failure metadata and refuses invalid pixels
+ok 13 - complete driver preserves cold failure metadata and refuses invalid pixels
+  ---
+  duration_ms: 2.618916
+  ...
+# Subtest: complete driver actually reopens saved canonical bytes through root restore
+ok 14 - complete driver actually reopens saved canonical bytes through root restore
+  ---
+  duration_ms: 3.036333
+  ...
+# Subtest: v2 driver pins every Brush entry before subsequent Worker erasure
+ok 15 - v2 driver pins every Brush entry before subsequent Worker erasure
+  ---
+  duration_ms: 21.634
+  ...
+# Subtest: remaining diagnostic timeline branches execute the same pinned Brush and next erase gates
+ok 16 - remaining diagnostic timeline branches execute the same pinned Brush and next erase gates
+  ---
+  duration_ms: 2.904042
+  ...
+# Subtest: compact recovery reaches actual publication close branch without repeated fourkind loops
+ok 17 - compact recovery reaches actual publication close branch without repeated fourkind loops
+  ---
+  duration_ms: 9.067167
+  ...
+# Subtest: frozen rows retain both edit counts, monotonic confirmed times and excluded Up location
+ok 18 - frozen rows retain both edit counts, monotonic confirmed times and excluded Up location
+  ---
+  duration_ms: 1.241834
+  ...
+# Subtest: actual wheel schedule has six fixed events and independently checked final camera
+ok 19 - actual wheel schedule has six fixed events and independently checked final camera
+  ---
+  duration_ms: 1.082125
+  ...
+# (node:91531) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual consumer executes public fixture and every frozen edit/navigation branch
+ok 20 - actual consumer executes public fixture and every frozen edit/navigation branch
+  ---
+  duration_ms: 54.514458
+  ...
+# Subtest: actual cold consumer preserves readback failure as failure
+ok 21 - actual cold consumer preserves readback failure as failure
+  ---
+  duration_ms: 11.838209
+  ...
+# Subtest: actual server preserves ordinary root bytes and only wraps explicit diagnostic loader
+ok 22 - actual server preserves ordinary root bytes and only wraps explicit diagnostic loader
+  ---
+  duration_ms: 59.828166
+  ...
+# (node:91532) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+ok 23 - complete driver executes normal pair and candidate pair including opaque buffers and Undo/Redo
+  ---
+  duration_ms: 6.958417
+  ...
+# Subtest: complete driver executes all four existing and pending created kinds, timeline and Brush/History
+ok 24 - complete driver executes all four existing and pending created kinds, timeline and Brush/History
+  ---
+  duration_ms: 7.998958
+  ...
+# Subtest: complete driver executes recovery failure/context/real publication release branch
+ok 25 - complete driver executes recovery failure/context/real publication release branch
+  ---
+  duration_ms: 12.202709
+  ...
+# Subtest: complete driver preserves cold failure metadata and refuses invalid pixels
+ok 26 - complete driver preserves cold failure metadata and refuses invalid pixels
+  ---
+  duration_ms: 3.631584
+  ...
+# Subtest: complete driver actually reopens saved canonical bytes through root restore
+ok 27 - complete driver actually reopens saved canonical bytes through root restore
+  ---
+  duration_ms: 2.434917
+  ...
+# Subtest: v2 driver pins every Brush entry before subsequent Worker erasure
+ok 28 - v2 driver pins every Brush entry before subsequent Worker erasure
+  ---
+  duration_ms: 21.560917
+  ...
+# Subtest: remaining diagnostic timeline branches execute the same pinned Brush and next erase gates
+ok 29 - remaining diagnostic timeline branches execute the same pinned Brush and next erase gates
+  ---
+  duration_ms: 6.51275
+  ...
+# Subtest: compact recovery reaches actual publication close branch without repeated fourkind loops
+ok 30 - compact recovery reaches actual publication close branch without repeated fourkind loops
+  ---
+  duration_ms: 8.316917
+  ...
+# Subtest: actual admission tail continues navigation while mutation promise awaits exact owner terminal
+ok 31 - actual admission tail continues navigation while mutation promise awaits exact owner terminal
+  ---
+  duration_ms: 2.293125
+  ...
+# Subtest: actual terminal failure rejects original promise without blocking an unrelated admission
+ok 32 - actual terminal failure rejects original promise without blocking an unrelated admission
+  ---
+  duration_ms: 1.838667
+  ...
+# (node:91547) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver keeps immediate successor sequence and snapshots after timing
+ok 33 - actual driver keeps immediate successor sequence and snapshots after timing
+  ---
+  duration_ms: 577.434833
+  ...
+# Subtest: HTTP qualification module wrap is isolated from ordinary root
+ok 34 - HTTP qualification module wrap is isolated from ordinary root
+  ---
+  duration_ms: 15.029791
+  ...
+# Subtest: actual driver saves failed pendingUp admission instead of emitting success
+ok 35 - actual driver saves failed pendingUp admission instead of emitting success
+  ---
+  duration_ms: 36.646166
+  ...
+# Subtest: actual close preflight Busy preserves active Worker and frame pump
+ok 36 - actual close preflight Busy preserves active Worker and frame pump
+  ---
+  duration_ms: 1.958792
+  ...
+# Subtest: actual root suspends owner requests while delayed executor initializes and leaves frame scheduling independent
+ok 37 - actual root suspends owner requests while delayed executor initializes and leaves frame scheduling independent
+  ---
+  duration_ms: 1.526625
+  ...
+# Subtest: actual root bounded second fatal marks owner unavailable without restart loop
+ok 38 - actual root bounded second fatal marks owner unavailable without restart loop
+  ---
+  duration_ms: 0.754167
+  ...
+# Subtest: actual saved default v2 Brush rejects pinned v4 qualification
+ok 39 - actual saved default v2 Brush rejects pinned v4 qualification # SKIP Historical browser recording pruned by the authorized 2026-11-13 cleanup; regenerate it for evidence reverification.
+  ---
+  duration_ms: 0.338625
+  ...
+# Subtest: retained original Fixed40 contains only pinned v4 Brush inputs
+ok 40 - retained original Fixed40 contains only pinned v4 Brush inputs
+  ---
+  duration_ms: 8.031167
+  ...
+# Subtest: actual table events without a SetTransforms cannot qualify a drag
+ok 41 - actual table events without a SetTransforms cannot qualify a drag # SKIP Historical browser recording pruned by the authorized 2026-11-13 cleanup; regenerate it for evidence reverification.
+  ---
+  duration_ms: 0.12325
+  ...
+# (node:91559) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual repair asset consumer preserves result bytes and independent parity before success
+ok 42 - actual repair asset consumer preserves result bytes and independent parity before success
+  ---
+  duration_ms: 4.528333
+  ...
+# Subtest: actual repair consumer detects missing terminal and saves failing ledger/state before cleanup
+ok 43 - actual repair consumer detects missing terminal and saves failing ledger/state before cleanup
+  ---
+  duration_ms: 2.434541
+  ...
+# Subtest: real HTTP harness separates /app and /assets and supplies worker-src none
+ok 44 - real HTTP harness separates /app and /assets and supplies worker-src none
+  ---
+  duration_ms: 32.846125
+  ...
+# Subtest: actual scheduling consumer covers old ledger shape and candidate independently
+ok 45 - actual scheduling consumer covers old ledger shape and candidate independently
+  ---
+  duration_ms: 8.76675
+  ...
+# Subtest: actual LIFE driver covers real-flow publication failure release and retry without loosening barrier
+ok 46 - actual LIFE driver covers real-flow publication failure release and retry without loosening barrier
+  ---
+  duration_ms: 4.9985
+  ...
+# Subtest: actual CSP consumer retains fault/quota then proves root remains usable
+ok 47 - actual CSP consumer retains fault/quota then proves root remains usable
+  ---
+  duration_ms: 1.9025
+  ...
+# Subtest: actual root private asset binding uses normalized relative assets
+ok 48 - actual root private asset binding uses normalized relative assets
+  ---
+  duration_ms: 1.611917
+  ...
+# Subtest: actual root close retains private binding after publication-pending and retires only on successful retry
+ok 49 - actual root close retains private binding after publication-pending and retires only on successful retry
+  ---
+  duration_ms: 1.562167
+  ...
+# (node:91570) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker uses fair posted tasks for bounded steps and invalidates cancelled turns
+ok 50 - actual Worker uses fair posted tasks for bounded steps and invalidates cancelled turns
+  ---
+  duration_ms: 6.532208
+  ...
+# (node:91571) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual Worker code rejects cancelled timer after a successor starts
+ok 51 - actual Worker code rejects cancelled timer after a successor starts
+  ---
+  duration_ms: 11.948167
+  ...
+# (node:91572) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real client code enforces owner identity, monotonic jobs, queue and cancellation
+ok 52 - real client code enforces owner identity, monotonic jobs, queue and cancellation
+  ---
+  duration_ms: 5.85525
+  ...
+# Subtest: startup custody is registered before ready; root closes it without leaking floor
+ok 53 - startup custody is registered before ready; root closes it without leaking floor
+  ---
+  duration_ms: 1.053375
+  ...
+# Subtest: startup postMessage failure releases quota and same owner can retry generation
+ok 54 - startup postMessage failure releases quota and same owner can retry generation
+  ---
+  duration_ms: 0.864792
+  ...
+# Subtest: unknown terminal is failure; error closes existing ready buffers before releasing grants
+ok 55 - unknown terminal is failure; error closes existing ready buffers before releasing grants
+  ---
+  duration_ms: 1.155042
+  ...
+# Subtest: frozen rows retain both edit counts, monotonic confirmed times and excluded Up location
+ok 56 - frozen rows retain both edit counts, monotonic confirmed times and excluded Up location
+  ---
+  duration_ms: 1.220791
+  ...
+# Subtest: actual wheel schedule has six fixed events and independently checked final camera
+ok 57 - actual wheel schedule has six fixed events and independently checked final camera
+  ---
+  duration_ms: 1.035958
+  ...
+# (node:91580) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual consumer executes public fixture and every frozen edit/navigation branch
+ok 58 - actual consumer executes public fixture and every frozen edit/navigation branch
+  ---
+  duration_ms: 23.809833
+  ...
+# Subtest: actual cold consumer preserves readback failure as failure
+ok 59 - actual cold consumer preserves readback failure as failure
+  ---
+  duration_ms: 2.578292
+  ...
+# Subtest: actual server preserves ordinary root bytes and only wraps explicit diagnostic loader
+ok 60 - actual server preserves ordinary root bytes and only wraps explicit diagnostic loader
+  ---
+  duration_ms: 26.323
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 58
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 1314.701042

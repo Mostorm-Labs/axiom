@@ -6,43 +6,51 @@
 #include <limits>
 
 namespace canvas::render::internal {
+namespace {
+constexpr std::size_t compileKnots=32;
+constexpr auto scratchPatches=ink::CompactContourCompiler::maxPatches(compileKnots);
+constexpr auto scratchCaps=ink::CompactContourCompiler::maxCaps(compileKnots);
+constexpr auto scratchBytes=scratchPatches*sizeof(ink::ContourPatch)+scratchCaps*sizeof(ink::ContourCap);
+constexpr auto baseBytes=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+2*scratchBytes;
+}
 std::size_t PreparedBodyJob::minimumBytes(std::size_t count)noexcept{
-    const auto base=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+
-        64*(sizeof(ink::ContourPatch)+sizeof(ink::ContourCap));
-    const auto blocks=count/32+(count%32!=0),unit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
-    return blocks>(std::numeric_limits<std::size_t>::max()-base)/unit?std::numeric_limits<std::size_t>::max():base+blocks*unit;
+    constexpr auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
+    const auto blocks=count/compileKnots+(count%compileKnots!=0);
+    return blocks>(std::numeric_limits<std::size_t>::max()-baseBytes)/replayUnit?
+        std::numeric_limits<std::size_t>::max():baseBytes+blocks*replayUnit;
 }
 std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const ReferenceCommand& source,SourceRetentions sources,
     std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage){
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source).content.get().stroke;
     const auto count=stroke.knots.size();
-    if(count>std::numeric_limits<std::size_t>::max()-50)return {};
-    constexpr auto extra=std::size_t(64);
-    const auto base=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+65536+
-        extra*(sizeof(ink::ContourPatch)+sizeof(ink::ContourCap));
-    if(base>cap)return {};
-    const auto fullUnit=sizeof(SkPath)+512+sizeof(ink::ContourCap)+sizeof(PreparedNavigationGeometry::Group);
-    const bool full=count+extra<=(cap-base)/fullUnit;
-    const auto blocks=count/32+(count%32!=0);
-    const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
-    if(!full&&blocks>(cap-base)/replayUnit)return {};
-    auto estimate=base+(full?(count+extra)*fullUnit:blocks*replayUnit);
+    if(baseBytes>cap)return {};
+    const auto patchCount=ink::CompactContourCompiler::maxPatches(count);
+    const auto capCount=ink::CompactContourCompiler::maxCaps(count);
+    const auto ribbonCount=patchCount-1;
+    constexpr auto pathUnit=sizeof(SkPath)+512+sizeof(PreparedNavigationGeometry::Group);
+    constexpr auto capUnit=sizeof(ink::ContourCap)+sizeof(PreparedNavigationGeometry::Group);
+    auto fullBytes=baseBytes;
+    bool full=ribbonCount<=(cap-fullBytes)/pathUnit;
+    if(full){fullBytes+=ribbonCount*pathUnit;full=capCount<=(cap-fullBytes)/capUnit;if(full)fullBytes+=capCount*capUnit;}
+    const auto replayBytes=minimumBytes(count);
+    if(!full&&replayBytes>cap)return {};
+    auto estimate=full?fullBytes:replayBytes;
     auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,!full);
-    // The existing compact checkpoint realization is also the quota fallback;
-    // it has the same entry cap and all replay compilation stays observable.
+    // Checkpoint geometry remains the existing quota fallback. Reserve both
+    // compilation and replay scratch before allocating either vector.
     bool replay=!full;
-    if(!token&&full){estimate=base+blocks*replayUnit;if(estimate>cap)return {};
+    if(!token&&full){estimate=replayBytes;if(estimate>cap)return {};
         token=budget->reserve(resources::ResourceClass::kRecorded,estimate,true);replay=true;}
     if(!token)return {};
     resources::ResourceLease reservation(budget,*token);
     auto result=std::make_shared<PreparedNavigationGeometry>();
     auto job=std::make_unique<PreparedBodyJob>(stroke.config);job->replay_=replay;job->budget_=budget;
-    job->emitted_.patches.reserve(extra);job->emitted_.caps.reserve(extra);
-    if(replay){result->replay_.reserve(blocks);
-        result->replayOutput_.patches.reserve(extra);result->replayOutput_.caps.reserve(extra);
+    job->emitted_.patches.reserve(scratchPatches);job->emitted_.caps.reserve(scratchCaps);
+    if(replay){result->replay_.reserve(count/compileKnots+(count%compileKnots!=0));
+        result->replayOutput_.patches.reserve(scratchPatches);result->replayOutput_.caps.reserve(scratchCaps);
     }
-    else {result->ribbons_.reserve(count+extra);result->caps_.reserve(count+extra);
-        result->ribbonGroups_.reserve((count+extra+31)/32);result->capGroups_.reserve((count+extra+31)/32);}
+    else {result->ribbons_.reserve(ribbonCount);result->caps_.reserve(capCount);
+        result->ribbonGroups_.reserve((ribbonCount+31)/32);result->capGroups_.reserve((capCount+31)/32);}
     result->source_=source;result->sourceLeases_=std::move(sources);result->contour_=true;result->ready_=false;
     result->lease_=std::move(reservation);result->bytes_=estimate;result->usage_=usage;usage->bytes+=estimate;
     result->job_=std::move(job);return result;
@@ -86,8 +94,13 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
             body.exactDerivedFinite_=body.exactDerivedFinite_&&PreparedNavigationGeometry::exactCapPath(stroke.config,cap).isFinite();join(blockBounds_,bounds);
             if(!replay_){group(body.capGroups_,body.caps_.size(),bounds);body.caps_.push_back(cap);}++work.pathPrimitives;}
         if(cap_<emitted_.caps.size())return false;
-        const auto emitted=(emitted_.patches.empty()?0:emitted_.patches.size()-1)+emitted_.caps.size();
-        if(replay_)body.replay_.push_back({*checkpoint_,blockKnot_,blockCount_,primitive_,primitive_+emitted,blockBounds_});primitive_+=emitted;
+        if(replay_){
+            const auto ribbons=emitted_.patches.empty()?0:emitted_.patches.size()-1;
+            const auto caps=emitted_.caps.size();
+            body.replay_.push_back({*checkpoint_,blockKnot_,blockCount_,body.replayRibbonCount_,body.replayRibbonCount_+ribbons,
+                                   body.replayCapCount_,body.replayCapCount_+caps,blockBounds_});
+            body.replayRibbonCount_+=ribbons;body.replayCapCount_+=caps;
+        }
         if(cursor_!=knots.size()){phase_=Phase::kCompile;return false;}
         // All source and path/bounds work was charged above. No final footprint
         // traversal or whole-history constructor is hidden in publication.

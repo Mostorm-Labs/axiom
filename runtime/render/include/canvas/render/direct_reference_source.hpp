@@ -8,6 +8,7 @@ namespace canvas::render {
 
 class DirectReferenceSource final {
   public:
+    [[nodiscard]] static foundation::Result<ReferenceCommand> presentationCommand(const RuntimeSceneRecord&);
     [[nodiscard]] static foundation::Result<ReferenceDrawList> build(
         const FrameState& frame,
         const VisibilityResult& visibility,

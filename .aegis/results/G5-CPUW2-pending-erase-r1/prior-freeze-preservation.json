@@ -1,0 +1,104 @@
+{
+  "prior_CWR_result": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/result.json",
+    "sha256": "f3bf2d7b2260c131076e37288e5780e0c7d84271329b9ad91ff7ef0ce87d3854"
+  },
+  "prior_CWR_manifest": {
+    "path": ".aegis/results/G5-CPUW1-repair-r2/artifact-manifest.json",
+    "sha256": "eedce6e67acb90ef17de39bb25d5e8f8ac4dda67d01260922db377b1887980e4"
+  },
+  "old_results_raw_SDK_not_modified": true,
+  "live_source_supersession": {
+    "runtime/composition/CMakeLists.txt": {
+      "accepted": "eb273ebe1926999c5ccc0c3ad4fffb9824ed589dce649b57b00f8df12faabbc1",
+      "current": "489af414dec1421e22e1e38d5c7e59947eaecd8fcee0efe4f10e8a3c25cf3182"
+    },
+    "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp": {
+      "accepted": "e29bd7bb3ea0c2140aae58584097925bb6c3f2794694743ab8d1f2d3f46760e9",
+      "current": "a465f9deefe34d3bc955ecebd0b7e6af07b8f7aef76fffa093b11d6a26b44a77"
+    },
+    "runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp": {
+      "accepted": "99bcbfa1dcaae37568006d37eb8504a9d60035a5bfecab2d2d9cc349338231a2",
+      "current": "6037ab88e5d676508ffa2132d2c6a6b794b3c2281be6ca3ebf7b6f9efbc81bc7"
+    },
+    "runtime/composition/src/canvas_runtime_facade.cpp": {
+      "accepted": "aec89ed818b94669c5623532b9e33df507efadf3b49a018018f710b048c64570",
+      "current": "70d85d23ecdd0bee4cb4414cea2cbf8274b0be15c6dc56751422c865bb1e9756"
+    },
+    "runtime/composition/src/public_composition.cpp": {
+      "accepted": "52931182675d72d04736569cd2eb129788cecb9403b9517344ab22e536a7c8db",
+      "current": "b9e3e33060fd09931f000a2b29500cc9f7a8fa5d1b460d2c8dd190e5babdfea9"
+    },
+    "runtime/composition/src/runtime_composition.cpp": {
+      "accepted": "c0eb178969ee6e0a70bec90ba58afdce8ac632d5d990b8d669924cc91138c437",
+      "current": "384f6915331853438f2e3db3621a1ea97ebdbd77ff1de927a8f91c741abadf0b"
+    },
+    "runtime/interaction/CMakeLists.txt": {
+      "accepted": "bbe6531cf560942514351643795c17eda919b39756a167280600ce5431a78d92",
+      "current": "6c7a7d5820583b0d8b583ec8de46974b29e2ad15c2914df4a968616e9804d6b6"
+    },
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": {
+      "accepted": "772987ee78104ec2f7341dcb88d4039acbfc27a46507382cf7d03d2545529796",
+      "current": "1a82e01ec180040397ac1ed09d51d0ef794e8877d79019d631cd656d4abd3d6c"
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "accepted": "b375052d7cba50d16abfb6c45faff60945422ae066d8e14739babdf455f21cf0",
+      "current": "d17ac67cff28cbd910e9602b17d753380dcbf3acd97481f19a15326016c555fc"
+    },
+    "runtime/interaction/src/canvas_partial_erase.cpp": {
+      "accepted": "7032a9dadf9955919d0c6d1e1888f5455f3e155d9b7d5c8be2dc2d15442251ae",
+      "current": "a15d8468b6996572d744a1bd93c9ef2fb2966b120708144c4fe52150a33d59a0"
+    },
+    "runtime/render/CMakeLists.txt": {
+      "accepted": "5b45eeaddf55dd54e24169d8bd3126b0888167010c459f17b85fb3ad9f595344",
+      "current": "89f4971f76b82dd8e2805959e9dd243594d5784cbc81677becbc308a37123f98"
+    },
+    "runtime/render/include/canvas/render/skia_renderer.hpp": {
+      "accepted": "aeb1cd99faf2967b75708d997723bfa8b945961501e9e0ca6d794868f90bad40",
+      "current": "599dbc6e3cbe17c7bdcdaef3cc4a8817a303026ef2d7192652850d2e7ce177b8"
+    },
+    "runtime/render/src/cpu_worker_bridge.cpp": {
+      "accepted": "4c7874bb8651b7a2f164c211abb8b1ccf53d57534f7917ea6ee6048e1ad50d50",
+      "current": "8b6a10137d9a846796c573dea434d2db2947f0998381dac545846e74915fb604"
+    },
+    "runtime/render/src/cpu_worker_protocol.cpp": {
+      "accepted": "3eba9faca1f256e517358b0028793f2a41f61dfff2bfd112513004212638c5ee",
+      "current": "c57f25ecafd035f27c8ea7945ff20e928775f7790204b1728683f5e64f11e459"
+    },
+    "runtime/render/src/cpu_worker_protocol.hpp": {
+      "accepted": "c36ef0665eb00e0c363d058bcd5b9a184a1b3856b62f8b124f7fb659197d92f4",
+      "current": "63130360b989a6ea2a9468642a7d885eb0049e398e80a4fdcbbc934a99636da1"
+    },
+    "runtime/render/src/selection_region_geometry.cpp": {
+      "accepted": "8706672229aeca8cae3816cdf44e13b2ad7ea0e1d319a7064b77732a7e1c7ca7",
+      "current": "b29a437f04dc0ced27f708819383045278f3297b73f8498440555c44b6cfd0dd"
+    },
+    "runtime/render/src/selection_region_geometry_internal.hpp": {
+      "accepted": "d44ff10b0dfe4efb22d9cfc264b76b53e0ba7ca5e8af5f6681a78cb71cbb3fdb",
+      "current": "e44c36968e872ef79a365c27600bbc2b896067df0942d6dc84e27b2ddc94341d"
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "accepted": "67ccd56edcc8f3f7ded806daf777f41ed226fff6f685f81f3d62b498529fe7b1",
+      "current": "9d6e957ec89bf8ac58c9da1f1d3232c148d6e16a029c7576a19d92b5046bfd4f"
+    },
+    "sdk/common/session.cpp": {
+      "accepted": "e36364e100e7723367dc19ff5c0d2cd55791c8252c405b6f391e64edbeb85ab8",
+      "current": "76aa1b10118d58e4b22cd7c8422249e90e5f0894e78b07924d44ff3f0e1277f5"
+    },
+    "sdk/web/axiom.mjs": {
+      "accepted": "30d4c4061b90015680885e3b6ee988f4596c7bea38988d60e1b5ba07689bb118",
+      "current": "6ed8d143ca7f66a435de0d7ab6385726d2f296293107df6faee095c19208f89f"
+    },
+    "sdk/web/cpu-worker.cmake": {
+      "accepted": "42b9ad8714ab12eac3e6978c82c66246ced8a6b9483781caaca347a5ee18b803",
+      "current": "a20bd02c2232e03b77dc30cb9e1089a3305fb7ca2b159c985d510a7f68d1e7d3"
+    },
+    "verification/tests/g5_cpu_worker_repair_root.test.mjs": {
+      "accepted": "e81102846095a8c06246d527dd0222ab6201e02f90033fd8ba94166fd25bc588",
+      "current": "d0d94050ff9a7469e2a877795aa881543e67dbb5d6ef09b90f43246fac0f9784"
+    }
+  },
+  "accepted_source_reconstruction": "out/G5-CPUW2-pending-erase-r1/accepted-source contains exactbeforebytes forinitialchangedfiles; acceptedCWRfull source-delta.patch remains authoritative forothers",
+  "new_task_results_only": true,
+  "old_user_Demos_and_documents_untouched": true
+}

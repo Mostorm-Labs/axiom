@@ -1,0 +1,149 @@
+{
+  "max_Chrome_starts": 4,
+  "max_IAB_pages": 2,
+  "max_seconds": 900,
+  "charged_seconds": 120,
+  "Chrome": [
+    {
+      "id": "SZ-BASE-1",
+      "status": "COMPLETED",
+      "unix": 1794581488.170746,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/requests/SZ-BASE-1.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/web/SZ-BASE-1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 15.706390541000001,
+        "peak_process_family_rss_kib": 1300752,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 150,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ-BASE-1",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 16
+    },
+    {
+      "id": "SZ-BASE-2",
+      "status": "COMPLETED",
+      "unix": 1794581532.148712,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/requests/SZ-BASE-2.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/web/SZ-BASE-2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 15.119970667,
+        "peak_process_family_rss_kib": 1319456,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 150,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ-BASE-2",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 16
+    },
+    {
+      "id": "SZ-CAND-1",
+      "status": "COMPLETED",
+      "unix": 1794582824.481256,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/requests/SZ-CAND-1.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/web/SZ-CAND-1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 16.253804249999998,
+        "peak_process_family_rss_kib": 1343392,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 150,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ-CAND-1",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 17
+    },
+    {
+      "id": "SZ-CAND-2",
+      "status": "COMPLETED",
+      "unix": 1794582855.089155,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/settled_zoom_start_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/requests/SZ-CAND-2.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-settled-zoom-start-repair-r1/web/SZ-CAND-2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 15.3264995,
+        "peak_process_family_rss_kib": 1350960,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 150,
+        "last_stage": {
+          "stage": "case-done",
+          "id": "SZ-CAND-2",
+          "name": "central-short",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 16
+    }
+  ],
+  "IAB": [
+    {
+      "id": "SZ-IAB-BASE",
+      "status": "COMPLETED",
+      "page": "isolatedcuaIAB1",
+      "origin": "http://127.0.0.1:52730/",
+      "charged_seconds": 40,
+      "charge_basis": "ceilconservative40s incl pagelaunch+6case controls, server240stimer not runwall",
+      "rows": 6,
+      "source_mutations_during_window": 0,
+      "pixel_and_timing_separate": true,
+      "observed_page_span_ms": 26402.3,
+      "charge_policy_note": "original40s conservativecharge retained, no reduction"
+    },
+    {
+      "id": "SZ-IAB-CAND",
+      "status": "COMPLETED",
+      "page": "isolatedcuaIAB2",
+      "charged_seconds": 15,
+      "observed_page_span_ms": 14800.299999952316,
+      "rows": 6,
+      "samecanonical_restore": true,
+      "source_mutations_during_window": 0
+    }
+  ]
+}

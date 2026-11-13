@@ -547,3 +547,33 @@ Version readback: `readBuildInfo()` reports `sdkVersion` (`X.Y.Z.Build`),
 `sdkSemver` (`X.Y.Z`) and numeric `buildNumber`. npm `version` stays X.Y.Z with
 separate buildNumber metadata. Local builds use Build=0; release artifacts share
 one pipeline build number. See sdk/VERSIONING.md.
+
+Private CPU compute assets are shipped under `internal/cpu-worker-*` with a matching build identity. They contain the shared C++ exact-path kernel compiled as an isolated, CPU-only WASM module. Current root editing remains synchronous; these assets do not activate pending Up or change commit/presentation semantics. Consumers continue importing the package root. Partial results are never document data.
+
+
+Private CW2 development profile: `AXIOM_CPU_PENDING_ERASE` defaults OFF. The
+controlled candidate build connects partial-erase DOM Up to the existing Runtime
+pending owner and same-build CPU Worker; readState and operation events remain
+committed-state facts. Candidate pending erase admits subsequent erasing and
+viewport navigation; competing canonical mutations explicitly reject Busy until
+that queue drains. This is an intermediate controlled profile, not general
+mixed-editing activation. Worker construction uses the already charged fixed
+64 MiB heap; the resident8 MiB path cache and normal public exports remain
+unchanged. No private Worker/pending modules are consumer business APIs.
+
+
+0.5.0 release profile: published Web SDK/Demo builds explicitly enable
+AXIOM_CPU_PENDING_ERASE. The preceding OFF/CW2 paragraphs describe development
+checkpoints. The existing Runtime admits ordered pending erase/create/transform/
+History work while the same-build isolated CPU Worker computes exact paths.
+The controlled erase domain remains algorithm-v4 compact round/marker with
+translation/rotation/uniform scale; unsupported document brush mixes use the
+existing legacy path. One fixed 64 MiB Worker and at most eight intents remain.
+Pending state is a read-only DTO; mutation promises resolve at terminal Runtime
+commit/failure, never at admission. Worker tail latency and physical-platform
+qualification remain open. Native package build profiles do not enable this Web
+executor. All assets must come from the same installed package.
+
+An ordered local intent that fails after admission rejects its promise and reports
+CPU_PENDING_FAILED via onError. For example, publication capacity denial returns
+a terminal LOCAL_INTENT_FAILED event without advancing canonical generation.

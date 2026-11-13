@@ -1,0 +1,80 @@
+{
+  "schema": "axiom-retained-mixed-navigation-accounting-v1",
+  "created_utc": "2026-11-13T04:59:50.750301+00:00",
+  "scope": "Read-only secondary planning input; not this reference-only package obligation",
+  "rows": [
+    {
+      "role": "BASELINE",
+      "row": "append-zoom-out-immediate",
+      "source": {
+        "path": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-BASELINE/append-zoom-out-immediate/raw.json.gz",
+        "sha256": "7dac5bc43db5caadb9ab5f7a4d3a53e3c6cb8952f7b5a36bd9c6491238d1c7ab"
+      },
+      "first_wheel_to_complete_camera_frame_ms": 8831.0,
+      "SDK_RAF_callbacks": 524,
+      "sum_RAF_callback_intervals_ms": 4989.500003814697,
+      "RAF_callback_p95_ms": 9.199999928474426,
+      "RAF_callback_max_ms": 50.89999997615814,
+      "outside_callback_elapsed_ms": 3841.4999961853027,
+      "canonical_present_notifications_in_interval": 1,
+      "default_FBO_content_operations": 1
+    },
+    {
+      "role": "BASELINE",
+      "row": "partial-erase-zoom-out-immediate",
+      "source": {
+        "path": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-BASELINE/partial-erase-zoom-out-immediate/raw.json.gz",
+        "sha256": "e99220a26279645cc06b78a70ba6fc3d96da346c639e5de66a1bb1c5f27e5f10"
+      },
+      "first_wheel_to_complete_camera_frame_ms": 8795.600000023842,
+      "SDK_RAF_callbacks": 526,
+      "sum_RAF_callback_intervals_ms": 4881.599998474121,
+      "RAF_callback_p95_ms": 9.0,
+      "RAF_callback_max_ms": 35.39999997615814,
+      "outside_callback_elapsed_ms": 3914.0000015497208,
+      "canonical_present_notifications_in_interval": 1,
+      "default_FBO_content_operations": 1
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "append-zoom-out-immediate",
+      "source": {
+        "path": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-CANDIDATE/append-zoom-out-immediate/raw.json.gz",
+        "sha256": "b906e680e1e03cf8038f66dee11ff052f44b11a3db7ab57ab5899485017c40af"
+      },
+      "first_wheel_to_complete_camera_frame_ms": 8926.299999952316,
+      "SDK_RAF_callbacks": 534,
+      "sum_RAF_callback_intervals_ms": 5140.900000691414,
+      "RAF_callback_p95_ms": 9.399999976158142,
+      "RAF_callback_max_ms": 37.90000009536743,
+      "outside_callback_elapsed_ms": 3785.3999992609024,
+      "canonical_present_notifications_in_interval": 1,
+      "default_FBO_content_operations": 1
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "partial-erase-zoom-out-immediate",
+      "source": {
+        "path": "out/G5-postworker-render-reuse-r1/web/RR-ZOOM-D4-CANDIDATE/partial-erase-zoom-out-immediate/raw.json.gz",
+        "sha256": "968a7de9091aee3633f431bc20b2b36425fb59c00b24d94f672102854877de59"
+      },
+      "first_wheel_to_complete_camera_frame_ms": 8758.5,
+      "SDK_RAF_callbacks": 523,
+      "sum_RAF_callback_intervals_ms": 4879.900000333786,
+      "RAF_callback_p95_ms": 9.100000023841858,
+      "RAF_callback_max_ms": 35.0,
+      "outside_callback_elapsed_ms": 3878.599999666214,
+      "canonical_present_notifications_in_interval": 1,
+      "default_FBO_content_operations": 1
+    }
+  ],
+  "interpretation": [
+    "Hundreds of small owner RAF calls precede first default-framebuffer update. The~9s tail is not one9s uninterruptedCPUcall in these mixedzoomrows.",
+    "About4.9-5.1s lies inside observedSDKRAFcallbacks and3.8-3.9s outside. Outside is not automaticallyGPUwait; inside includesdriver/native calls, not necessarilypureCPU.",
+    "Currentcamera canonical feedback only, earliestLODpixels unqualified.",
+    "Candidate counters do not identify which stage dominates. Future optimization needs actual coverage/progress/validation/submission instrumentation before changingpolicy.",
+    "Static100ms quiet handoff andallcoverage-beforepublish are hypotheses to inspect; do not retunequiettime orstepquantum to hideunresolvedfrontier."
+  ],
+  "production_edits": false,
+  "new_sampling": false
+}

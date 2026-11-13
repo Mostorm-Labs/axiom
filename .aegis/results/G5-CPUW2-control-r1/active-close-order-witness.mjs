@@ -1,0 +1,6 @@
+import fs from 'node:fs';import vm from 'node:vm';
+const root=fs.readFileSync('sdk/web/axiom.mjs','utf8');const start=root.indexOf('      async close(){'),end=root.indexOf('\n    };',start),method=root.slice(start,end).trim();
+let stopped=0,attempted=0;const err=code=>Object.assign(new Error(code),{code});
+const context={AxiomError:class extends Error{},unbindCpuWorkerOwner:()=>{},call:(command,args)=>{if(command==='cpuPending'&&args.action==='closePreflight')return {ok:true};if(command==='close'){++attempted;throw err('BUSY');}},schedule:()=>{},cleanup:()=>{},tail:Promise.resolve(),text:{finish:async()=>true,dispose:()=>{}},cpuWorkers:new Set([{close:async()=>++stopped}]),disposeInput:undefined,closed:false,closing:false,closeBarrier:false,module:{}};
+vm.createContext(context);vm.runInContext('globalThis.api={'+method+'}',context);let code;try{await context.api.close();}catch(e){code=e.code;}
+console.log(JSON.stringify({condition:'native Down active; current preflight pending0/reserved1 succeeds',code,executor_terminated:stopped,native_close_calls:attempted,root_closed:context.closed,root_closing:context.closing,source_sha256:(await import('node:crypto')).createHash('sha256').update(root).digest('hex'),classification:'implementation defect already sent; corroborative VM ordering witness, not native or browser proof'}));

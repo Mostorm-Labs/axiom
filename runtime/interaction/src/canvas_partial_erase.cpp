@@ -3,6 +3,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/render/selection_region_geometry.hpp"
 #include "partial_erase_geometry.hpp"
+#include "cpu_pending_erase_state.hpp"
 #include <algorithm>
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
 #include <cstdio>
@@ -60,12 +61,46 @@ bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& l
     for(auto& entry:list.entries)
         if((entry.record.kind==semantic::ObjectKind::kVectorStroke || entry.record.kind==semantic::ObjectKind::kDabStroke) && textWritable(entry.record.objectId))
             entry.presentationEraseActive=true;
+    const auto appendTrace=[&](std::span<const foundation::WorldPoint> trace,double radius){
+        // Pure presentation mask generation uses the captured world trace;
+        // no new PathOps or semantic target decision is made here.
+        for(auto& entry:list.entries){
+            if(!entry.presentationEraseActive)continue;
+            auto mask=partialEraseGeometry(trace,entry.record.transform,radius);
+            if(!mask)return false;
+            entry.presentationEraseMasks.push_back({{},std::move(*mask)});
+        }
+        return true;
+    };
+    if(cpuPending_){
+        std::vector<const CpuPendingEraseState::Intent*> ordered;
+        for(const auto& p:cpuPending_->slots)if(p&&p->serial)ordered.push_back(p.get());
+        std::sort(ordered.begin(),ordered.end(),[](const auto* a,const auto* b){return a->serial<b->serial;});
+        for(auto& entry:list.entries){
+            if(!entry.presentationEraseActive)continue;
+            std::uint64_t born=0;
+            if(!semanticObjects_.contains(entry.record.objectId))for(const auto* p:ordered)for(const auto& created:p->creates)if(created.id==entry.record.objectId)born=p->serial;
+            auto pose=entry.record.transform;
+            if(const auto* canonical=sceneCoordinator_->runtimeScene().find(entry.record.objectId))pose=canonical->transform;
+            else if(const auto* object=pendingObject(entry.record.objectId))pose=object->transform;
+            for(const auto* p:ordered){
+                if(p->kind==CpuPendingEraseState::Kind::Transform)for(const auto& item:p->transforms.items)if(item.object_id==entry.record.objectId)pose=item.transform;
+                if(p->kind!=CpuPendingEraseState::Kind::Erase||p->trace.empty()||p->serial<born)continue;
+                auto mask=partialEraseGeometry(p->trace,pose,p->radius);if(!mask)return false;
+                entry.presentationEraseMasks.push_back({{},std::move(*mask)});
+            }
+        }
+    }
     for(const auto& [pointer,trace]:eraserTraces_) {
         (void)pointer;
         // The renderer clips this disposable mask against the actual source.
         // A precise CPU PathOps intersection here repeats contour/mask work on
         // every frame without changing pixels. Keep it at the canonical commit
         // boundary, where no-op/history semantics require exact target filtering.
+        if(cpuPending_){
+            const auto found=std::find_if(cpuPending_->slots.begin(),cpuPending_->slots.end(),[&](const auto& p){return p&&p->session==pointer&&!p->serial;});
+            if(found!=cpuPending_->slots.end()){if(!appendTrace(trace,(*found)->radius))return false;continue;}
+        }
         auto masks=partialEraseTargets(trace,false);if(!masks)return false;
         for(const auto& item:*masks)for(auto& entry:list.entries)if(entry.record.objectId==item.object_id)
             entry.presentationEraseMasks.insert(entry.presentationEraseMasks.end(),item.masks.begin(),item.masks.end());

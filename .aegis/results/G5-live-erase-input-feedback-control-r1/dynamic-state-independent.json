@@ -1,0 +1,156 @@
+{
+  "schema": "axiom-live-erase-independent-operations-v1",
+  "created_utc": "2026-11-13T08:51:20.872636+00:00",
+  "method": "Offline savedrootOperations/Snapshots withretainedfieldreader; no newrender/test/SDKbehavior",
+  "rows": {
+    "LE-ORDINARY": {
+      "raw_sha256": "809c387f84164823f5b3bc302d86a527eac4ac66f28b52dade4f8325e2d8ff2c",
+      "objects": [
+        40,
+        43
+      ],
+      "oldmask_count": 80,
+      "newmask_count": 120,
+      "original_bodies_properties_placements_masks_preserved": true,
+      "operations": [
+        {
+          "file": "operation-0.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-1.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-2.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-3.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-4.bin.gz",
+          "payload_kind": 5
+        },
+        {
+          "file": "operation-5.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-6.bin.gz",
+          "payload_kind": 5
+        },
+        {
+          "file": "operation-7.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-8.bin.gz",
+          "payload_kind": 5
+        }
+      ],
+      "actualpendingdraw": true,
+      "pendingdrag": false,
+      "input_errors": [],
+      "frame_errors": [],
+      "root_errors": [],
+      "repeated_aggregate_loss": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    "LE-DIAGNOSTIC": {
+      "raw_sha256": "b082e1f23d51494589695b91ae76c06911df07632d5f941d4a8d452e4024b4ae",
+      "objects": [
+        40,
+        43
+      ],
+      "oldmask_count": 80,
+      "newmask_count": 120,
+      "original_bodies_properties_placements_masks_preserved": true,
+      "operations": [
+        {
+          "file": "operation-0.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-1.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-2.bin.gz",
+          "payload_kind": 12,
+          "targets": 40,
+          "masks": 40,
+          "segments": 6400
+        },
+        {
+          "file": "operation-3.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-4.bin.gz",
+          "payload_kind": 5
+        },
+        {
+          "file": "operation-5.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-6.bin.gz",
+          "payload_kind": 5
+        },
+        {
+          "file": "operation-7.bin.gz",
+          "payload_kind": 10
+        },
+        {
+          "file": "operation-8.bin.gz",
+          "payload_kind": 5
+        }
+      ],
+      "actualpendingdraw": true,
+      "pendingdrag": false,
+      "input_errors": [],
+      "frame_errors": [],
+      "root_errors": [],
+      "repeated_aggregate_loss": 3682,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    }
+  },
+  "qualification": "Fieldchecks corroborateactualrootcodec, not independentsemanticreplayoracle orfullpixelcoverage; userrootcause unproven. Repeatedaggregate loss explicitlyseparate."
+}

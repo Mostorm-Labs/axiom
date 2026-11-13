@@ -1,0 +1,22 @@
+import fs from'node:fs/promises';import path from'node:path';import http from'node:http';import {chromium}from'../../node_modules/playwright/index.mjs';
+import{installIdleObserver}from'./idle_input_feedback_observer.mjs';import{installNavigationObserver}from'./navigation_observer.mjs';
+export const cases=[{name:'outside-one-stroke',count:1,points:1600,edit:'draw',ampX:900,ampY:600},{name:'outside-three-strokes-masked',count:3,points:1600,edit:'erase',ampX:900,ampY:600},{name:'central-short',count:1,points:256,edit:'draw',ampX:300,ampY:45}].map(q=>({...q,dpr:2,fresh:true,preSettle:true,ratio:.5,wheelCount:24,version:'frozen'}));
+export function createServer(sdk,result){return http.createServer(async(req,res)=>{try{const n=new URL(req.url,'http://local').pathname;
+ if(req.method==='POST'){let body='';for await(const c of req)body+=c;if(n==='/result')result.rows.push(JSON.parse(body));else result.errors.push(body);await result.save();res.end('ok');return;}
+ let body,type='text/javascript';if(n==='/'){body='<title>Axiom isolated settled zoom</title><style>html,body{margin:0}#mount{position:relative;width:1200px;height:800px}#status{position:fixed;top:0;left:0;pointer-events:none}</style><div id="mount"></div><pre id="status"></pre><script type="module" src="/iab-run.mjs"></script>';type='text/html';}
+ else if(n==='/sdk/internal/axiom.mjs')body="import factory from '/engine/internal/axiom.mjs';export default async options=>{const m=await factory(options);window.idleObservation.engine(m);return m;};";
+ else if(n==='/readback.mjs')body=await fs.readFile(new URL('./live_erase_feedback_pixels.mjs',import.meta.url));
+ else if(n==='/observer.mjs'){const text=await fs.readFile(new URL('./idle_input_feedback_observer.mjs',import.meta.url),'utf8');body=text;}
+ else if(n==='/navigation-observer.mjs')body=await fs.readFile(new URL('./navigation_observer.mjs',import.meta.url));
+ else if(n==='/run-config.json'){body=JSON.stringify(result.runConfig??{});type='application/json';}
+ else if(n==='/iab-run.mjs')body=await fs.readFile(new URL('./settled_zoom_start_iab_run.mjs',import.meta.url));
+ else if(n==='/consumer.mjs')body=await fs.readFile(new URL('./settled_zoom_start_consumer.mjs',import.meta.url));
+ else{const prefix=n.startsWith('/sdk/')?'/sdk/':n.startsWith('/engine/')?'/engine/':null;if(!prefix)throw Error('route');const rel=n.slice(prefix.length);if(rel.includes('..'))throw Error('path');body=await fs.readFile(path.join(sdk,rel));type=rel.endsWith('.wasm')?'application/wasm':rel.endsWith('.mjs')?'text/javascript':'application/octet-stream';}
+ if(n==='/'&&result.autoRun===false)body=body.replace('<script type="module" src="/iab-run.mjs"></script>','');res.setHeader('Content-Type',type);res.end(body);
+ }catch(e){res.statusCode=404;res.end(String(e));}});}
+export async function run(request,out){await fs.mkdir(out,{recursive:true});let browser,server;const result={id:request.id,status:'STARTED',rows:[],errors:[],autoRun:false};result.save=async()=>fs.writeFile(path.join(out,'raw.json'),JSON.stringify({...result,save:undefined},null,2)+'\n');
+ try{server=createServer(request.sdk,result);await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:false,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+ for(const spec of cases){const page=await browser.newPage({viewport:{width:1200,height:800},deviceScaleFactor:2});page.on('pageerror',e=>result.errors.push(String(e)));await page.addInitScript(installIdleObserver);await page.addInitScript({content:'window.installNav='+installNavigationObserver.toString()});await page.goto('http://127.0.0.1:'+server.address().port+'/');
+ const row=await page.evaluate(async q=>{const{run}=await import('/consumer.mjs');return run(q);},spec);result.rows.push(row);await result.save();console.log(JSON.stringify({stage:'case-done',id:request.id,name:spec.name,status:row.status}));await page.close();if(row.status!=='OBSERVED')throw Error(row.failure||'casefailure');}
+ result.status=result.errors.length?'FAILED':'OBSERVED';}catch(e){result.status='FAILED';result.error=String(e.stack??e);}finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await result.save();}return result;}
+if(process.argv[1]===new URL(import.meta.url).pathname){const request=JSON.parse(await fs.readFile(process.argv[2],'utf8'));if((await run(request,process.argv[3])).status!=='OBSERVED')process.exitCode=1;}

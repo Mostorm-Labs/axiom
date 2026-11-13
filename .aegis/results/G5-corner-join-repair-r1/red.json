@@ -1,0 +1,9 @@
+{
+  "actual_old_code": true,
+  "production_unchanged": true,
+  "exit_code": -6,
+  "expected_failure": "corner is disconnected from incoming/outgoing neck",
+  "observed": "shape node=1 neck=0 support=1 patches=5 caps=1\nlibc++abi: terminating due to uncaught exception of type std::runtime_error: corner is disconnected from incoming/outgoing neck\n",
+  "old_compiler_sha256": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+  "before_png": "out/G5-corner-join-repair-r1/before/sparse-hairpin.png"
+}

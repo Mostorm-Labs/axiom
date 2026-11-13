@@ -1,0 +1,33 @@
+{
+  "URL": "http://127.0.0.1:4333/example.html",
+  "PID": 82528,
+  "command": [
+    "/opt/homebrew/bin/python3.12",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/canonical_latency_demo.py",
+    "--directory",
+    "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/candidate-install/js",
+    "--port",
+    "4333"
+  ],
+  "asset_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-canonical-convergence-latency-r1/candidate-install/js",
+  "experimental": true,
+  "profile": "local0.4.3.0/timingOFF/UR0OFF/privateCPUWorkerON",
+  "label": "收敛收益有限；擦除后缩小仍有长尾；图片302像素资格待确认",
+  "HTML_overlay": "server response only, sampledSDKassets unchanged",
+  "HTTP_checks": {
+    "label_present": true,
+    "wasm_exact_SHA256": "6d510e0628e210ce2e2eba4d659044a56bd55da1e9f1a8aa04a0608d76b7fe1c",
+    "servedHTML_sha256": "c65fff17b55f1ea7ac89955cb7911fdde4e5b3dbbf0bb65e1beca77c81957198",
+    "browser_starts": 0
+  },
+  "source": "verification/runners/g5/canonical_latency_demo.py",
+  "preserved": [
+    "4331",
+    "4332",
+    "4330",
+    "4328",
+    "4298"
+  ],
+  "default_promotion": false,
+  "live_log": "out/G5-canonical-convergence-latency-r1/demo-live.log excludedfromimmutablemanifest"
+}

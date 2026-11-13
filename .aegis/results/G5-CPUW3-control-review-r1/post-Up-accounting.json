@@ -1,0 +1,54 @@
+{
+  "classification": "CORROBORATIVE_OFFLINE_LATENCY_ACCOUNTING_NOT_PHASE_ATTRIBUTION",
+  "rows": [
+    {
+      "row": "candidate1600",
+      "source": {
+        "path": ".aegis/results/G5-CPUW3-complete-interaction-r1/local-web/G5CWC-PAIRS/candidate1600/raw.json",
+        "sha256": "618ac45d3cd52d4f537cfeaa55c96c78c293795bfa610bfdd31cd585462a5846"
+      },
+      "actual_down_to_Up_ms": 158.0,
+      "A_observation_to_settled_ms": 9580.399999976158,
+      "total_worker_compute_ms": 3766.0999995470047,
+      "worker_compute_of_jobs_submitted_after_Up_ms": 3766.0999995470047,
+      "post_Up_intersection_of_submit_to_terminal_intervals_ms": 3798.4000000953674,
+      "post_Up_outside_those_intervals_ms": 5781.999999880791,
+      "jobs": 64
+    },
+    {
+      "row": "candidate7200burst",
+      "source": {
+        "path": ".aegis/results/G5-CPUW3-complete-interaction-r1/local-web/G5CWC-PAIRS/candidate7200burst/raw.json",
+        "sha256": "0b6aad1bc3312094ab526236dad68deb18c55a8fa01c134e78b6e7537e766146"
+      },
+      "actual_down_to_Up_ms": 633.7000000476837,
+      "A_observation_to_settled_ms": 54536.699999928474,
+      "total_worker_compute_ms": 42047.69999933243,
+      "worker_compute_of_jobs_submitted_after_Up_ms": 42047.69999933243,
+      "post_Up_intersection_of_submit_to_terminal_intervals_ms": 42165.699999690056,
+      "post_Up_outside_those_intervals_ms": 12371.000000238419,
+      "jobs": 64
+    },
+    {
+      "row": "candidate7200paced",
+      "source": {
+        "path": ".aegis/results/G5-CPUW3-complete-interaction-r1/local-web/G5CWC-PAIRS/candidate7200paced/raw.json",
+        "sha256": "5ae2a43311bfe50078e13cd7e587c74a5bbc1dbbd7a1539dda4c791d11520a1f"
+      },
+      "actual_down_to_Up_ms": 33015.5,
+      "A_observation_to_settled_ms": 29574.399999976158,
+      "total_worker_compute_ms": 42922.6999976635,
+      "worker_compute_of_jobs_submitted_after_Up_ms": 17568.09999847412,
+      "post_Up_intersection_of_submit_to_terminal_intervals_ms": 18287.000000357628,
+      "post_Up_outside_those_intervals_ms": 11287.39999961853,
+      "jobs": 282
+    }
+  ],
+  "limitations": [
+    "Intervals include transport/queue/yield, not pure Worker compute.",
+    "Outside intervals include owner preparation/import/exact/staging/presentation, RAF and other waits. Cannot call all of it CPU time.",
+    "No observed timing rerun; raw intervals do not establish a concurrency speedup or identify11s rootcause.",
+    "A-Up observation uses captured instant just after Up; do not replace original driver total timing with this overlapping accounting."
+  ],
+  "scope": "Follow-up design evidence only. Current r2 correctness closure not expanded."
+}

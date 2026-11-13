@@ -60,11 +60,17 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     if (!isTargetCurrent(request.target)) return {CanvasControlError::kStaleTarget, "stale target"};
     auto& runtime = runtime_;
     const auto& p = request.payload;
+    if(runtime_.cpuPendingBusy() && p.kind!=CanvasControlPayloadKind::kPanBy &&
+       p.kind!=CanvasControlPayloadKind::kZoomAt && p.kind!=CanvasControlPayloadKind::kSetZoom &&
+       p.kind!=CanvasControlPayloadKind::kEraserOptions && p.kind!=CanvasControlPayloadKind::kSelectTool &&
+       p.kind!=CanvasControlPayloadKind::kSelectCreationPreset && p.kind!=CanvasControlPayloadKind::kSelectedTransform && p.kind!=CanvasControlPayloadKind::kUndo && p.kind!=CanvasControlPayloadKind::kRedo)
+      return {CanvasControlError::kBusy,"pending canonical erase"};
     const bool singleObjectEdit=p.kind==CanvasControlPayloadKind::kSelectedAppearance||p.kind==CanvasControlPayloadKind::kSelectedSize||
         p.kind==CanvasControlPayloadKind::kSelectedTransform||p.kind==CanvasControlPayloadKind::kSelectedOrder||
         p.kind==CanvasControlPayloadKind::kSelectedLock||p.kind==CanvasControlPayloadKind::kSelectedVisible||p.kind==CanvasControlPayloadKind::kUnlockSelected;
     if (singleObjectEdit&&runtime.selectedObjectCount()>1)
       return {CanvasControlError::kUnsupported,"multi-object editing is not supported by this command"};
+    const auto pendingBefore=runtime.lastPendingLocalSerial();
     bool applied = false;
 
     switch (p.kind) {
@@ -172,7 +178,9 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     }
     if (applied) {
     if(p.kind==CanvasControlPayloadKind::kSelectTool || p.kind==CanvasControlPayloadKind::kSelectPreset || p.kind==CanvasControlPayloadKind::kSelectCreationPreset)runtime.setTextTool(p.kind==CanvasControlPayloadKind::kSelectTool && p.tool==CanvasToolKind::kText);
-      ++revision_; return {}; }
+      ++revision_;
+      if(runtime.lastPendingLocalSerial()!=pendingBefore){const CanvasControlReceiptKey key{request.clientId,request.requestId};for(auto& slot:pendingControls_)if(!slot.second){slot={key,runtime.lastPendingLocalSerial()};break;}CanvasControlApplyResult result;result.pendingSerial=runtime.lastPendingLocalSerial();return result;}
+      return {}; }
     return CanvasControlApplyResult{CanvasControlError::kBusy, "runtime rejected request"};
   }
 
@@ -190,7 +198,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.cameraTranslationY = runtime.viewportGesture().translationY;
     out.canUndo = runtime.canUndo(); out.canRedo = runtime.canRedo();
     out.semanticGeneration = runtime.semanticGeneration().value();
-    out.selectedObjectCount = static_cast<std::uint32_t>(runtime.selectedObjectCount());
+    out.selectedObjectCount = runtime.pendingSelectionCreated()?0:static_cast<std::uint32_t>(runtime.selectedObjectCount());
     out.selectionSummary=runtime.selectionSummary();
     out.selectionAcquisitionMode=runtime.selectionAcquisitionMode();
     out.selectionRevision=runtime.selection_.revision();
@@ -268,10 +276,15 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     return out;
   }
 
+  void completePendingControls(CanvasControlService& service){
+    const auto facts=runtime_.cpuPendingFacts();
+    for(auto& slot:pendingControls_)if(slot.second)for(const auto& terminal:facts.terminals)if(terminal.serial==slot.second){service.completeDeferred(slot.first,slot.second,terminal.status=="Committed"||terminal.status=="NoOp",revision_);slot={};break;}
+  }
   void setTarget(CanvasTargetKey target) noexcept { target_ = target; }
   const CanvasTargetKey& target() const noexcept { return target_; }
 
  private:
+  std::array<std::pair<CanvasControlReceiptKey,std::uint64_t>,8> pendingControls_{};
   interaction::CanvasEditingRuntime& runtime_;
   CanvasTargetKey target_{1U, 1U, 1U, 1U};
   std::uint64_t revision_ = 1;
@@ -545,8 +558,10 @@ std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(Ca
 }
 std::size_t CanvasRuntimeFacade::process(std::uint64_t ownerSequence) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;
+  binding_->completePendingControls(*service_);
   controlSequence_.store(ownerSequence, std::memory_order_release);
   const auto result = processIngress(ownerSequence);
+  binding_->completePendingControls(*service_);
   processing_ = false;
   return result;
 }

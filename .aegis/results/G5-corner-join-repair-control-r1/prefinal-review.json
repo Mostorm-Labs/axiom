@@ -1,0 +1,33 @@
+{
+  "schema": "axiom-corner-independent-prefinal-review-v1",
+  "created_utc": "2026-11-13T09:53:35.808971+00:00",
+  "fresh_focused_CTest": {
+    "command": "ctest --test-dir out/G5-CPUW-checkpoint-20261113/build-native -R '^(G5CornerJoin|G5CanonicalPreparedBodyBounded|G5PreparedGeometry|InkV2Material-quality)$' --output-on-failure",
+    "pass": 4,
+    "fail": 0
+  },
+  "source_review": {
+    "owner": "existingCompactContourCompiler",
+    "change": "Incomingflush toactualsamepressure/taper support, internalquadraticcenterbridge, outgoingstateactualanchor; properroundcircle/ellipse union remains. O(1)state no newcanonicaldata.",
+    "bounds": "maxPatches2N+35/maxCapsN+18 saturate; stagingandreplayscratchprecharges include worstcase andactualpaths. Perinput32/path32 testsready491-495KiB8192pointturnlease.",
+    "checkpoint_order": "Globalribbonandcaprangesensurerasterfullsequenceallribbons->allcaps, strictunchangedboundedpixelassert nowpasses; no toleranceweakening. Metadata sizeofReplayBlockcountsnewrangefields.",
+    "test_contract_adjustment": "SmoothC1stillrequired; atconnectedroundnode actualboundaryC0andnonC1insidelegitcorner accepted. CornerC1neverwasphysicallypossibleat180cusp.",
+    "old_nonsharp_same": "40604bytes SHA46f398551910be0337e9ff3c2057f8559ede68d1971dfc1503cfa2218acb5489 exactforstraightandsmoothsyntheticfixtures",
+    "visual_QA": "Beforeisolateddisk; afterconnectedroundhairpin,no detacheddot. Webroundactualsimulatedpressurelastcornerssubpixel, notrepresentativeconstantwidth; validatepayloadandnativeindependentshape separately."
+  },
+  "source_refs": {
+    "runtime/ink/include/canvas/ink/compact_contour.hpp": "a8eb929cde49db9820c1e0dc6ce4470d94869f8e386abf56d7342803e801c36f",
+    "runtime/ink/src/compact_contour.cpp": "972d5a1e88db43c73dfd044a36a926c69f0ebb35355e7db127ba8975e0c5b5a2",
+    "runtime/render/src/prepared_body_job.cpp": "08479e0e12b4977103236f8a47ac42a97a498c168617072ce2921f90ef3ed2a3",
+    "runtime/render/src/skia_prepared_geometry.cpp": "46a29a458f903ec666685a73d73e1492cc8e11a0543c9afa2a1b0639298fb5b9",
+    "runtime/render/src/skia_prepared_geometry.hpp": "fa1532dc43a07c324616e638a3abc1f4c110b023b3e183cd49dec98d10317b76",
+    "runtime/render/tests/corner_join_test.cpp": "309592776ee5d0c9a9f87c47a21c58a20f8d862a800dcd2748101c4266e51b7e",
+    "runtime/render/tests/ink_v2_material_test.cpp": "1119ec93bced11cec0fd912cc6c6eac9a30ca7dcb02e3dc4bebf0fec046cef3c"
+  },
+  "claim_limits": [
+    "No finalresultreviewyet",
+    "No wholeG5/perf/idleclosure",
+    "Useroriginalknotsnotcaptured",
+    "NativefullsurfacepreviewvsDirecttiledAAinitialdifference recorded asmethodlimit"
+  ]
+}

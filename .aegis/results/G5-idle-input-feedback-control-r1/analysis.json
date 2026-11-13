@@ -1,0 +1,60 @@
+{
+  "schema": "axiom-idle-input-feedback-readonly-analysis-v1",
+  "created_utc": "2026-11-13T07:05:31.549004+00:00",
+  "observation_ref": {
+    "path": ".aegis/results/G5-idle-input-feedback-control-r1/observations.json",
+    "sha256": "1281c193ac74ade4bfaeaddb7593ae9a2590a4c91858136bfaaaa11976a420b9"
+  },
+  "status": "READ_ONLY_ATTRIBUTION_WITH_UNPROVEN_CAUSE",
+  "manual_reload": "Human confirmed; video new-empty document at9to10s is explained. Separate no-refresh loss report remains open.",
+  "priority_hypotheses": [
+    {
+      "priority": 1,
+      "hypothesis": "Pending commit/render progress and preview-to-replacement visibility handoff can delay or lose display continuity.",
+      "support": [
+        "Amber preview appears while old footer count22 unchanged; pre-refresh blank with same footer.",
+        "Retained log shows repeated exact cache preparation pending; underlying source returns Retry.",
+        "Existing owner handles pending intents, coverBrushDisplays, qualified canonical receipts and preview retirement."
+      ],
+      "falsifier": "Correctly matched commit, physically preserved replacement pixels and continuous preview at symptom would redirect diagnosis to input cancellation/provider rather than handoff.",
+      "unknown": "No same-instant document/generation/pending/session/work/visible-pixel trace exists for pre-refresh symptom."
+    },
+    {
+      "priority": 2,
+      "hypothesis": "A true frame exception can terminate RAF continuation until new input/completion.",
+      "support": [
+        "SDK render clears scheduled; catch emits error without rescheduling.",
+        "Web adapter can reject owner opportunity or GPU fence."
+      ],
+      "falsifier": "Only Retry with active RAF progress and no actual frame error rejects this explanation.",
+      "current_support": "No corresponding error in retained logs; conditional source risk only."
+    }
+  ],
+  "idle_conclusion": "No20minuteTTL found in inspected owners; long foreground idle and cold driver/JIT/resource residence effects not reproduced or disproven. Existing navigation prewarm40ms/quiet100ms is unrelated.",
+  "warmup": "May hide cold first-use latency only; cannot correct a lost committed display, wrongly retired preview, cancelled input, or failed scheduling. Do not add permanent warmup/background RAF as a guessed repair.",
+  "minimal_successor_diagnosis": {
+    "same_document": true,
+    "no_user_tab_reload": true,
+    "cases": [
+      "first short draw and first object drag immediately after known stable state",
+      "same foreground page after about20minutes idle, first short draw and first object drag"
+    ],
+    "capture": [
+      "real monotonic Down/Move/Up/Cancel and session/contact identities",
+      "document/runtime identity, semantic generation and object count before/after",
+      "pending intent phase/terminal and canonical applied/presented generation",
+      "preview visibility/covered/cancel/retire plus matching replacement work/fence outcome",
+      "RAF live/stop and concrete Retry vs Rejected reason",
+      "actual visible content during failure and eventual recovery"
+    ],
+    "scope_limit": "No broad performance matrix, budget change, new Worker, persistence feature or old proof rewrite."
+  },
+  "source_owner": "SDK DOM adapter → existing input/session/Runtime owners → OperationEngine canonical state; Scene/Render derived display and unique WebGL context owners. Public API unchanged.",
+  "execution_limits": "No production/SDK mutation/build/browser sampling/reload; only supplied video and existing tab DOM/retained console read. Paired implementer read-only audit returned. No fix or idle closure claim.",
+  "limitations": [
+    "Footer count can be stale UI; it is not a semantic Snapshot proof.",
+    "BUSY status is sticky until show refreshes; disabled buttons alone do not prove current Runtime deadlock.",
+    "Retained console timestamps were batched by tool; cannot infer real duration/frequency.",
+    "One video does not establish renderer/GPU context loss or semantic data loss."
+  ]
+}

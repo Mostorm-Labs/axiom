@@ -1,0 +1,65 @@
+{
+  "correction": ".aegis/results/G5-postworker-render-reuse-control-r1/oracle-driver-correction.json",
+  "correction_sha256": "b90e54ba4e8d1bf5906997164da7193af8f4fd0dfae5b8aaa7e9b3bcfec30290",
+  "prior_attempts": "oracle-ledger.json (unchanged)",
+  "starts_max": 2,
+  "seconds_each": 180,
+  "seconds_total": 360,
+  "RSS_MiB": 2048,
+  "attempts": [
+    {
+      "row": "append-zoom-out-immediate",
+      "status": "COMPLETED",
+      "original_request": "out/G5-postworker-render-reuse-r1/oracle/append-zoom-out-immediate/pixels-request.json",
+      "original_request_sha256": "dd82e148aadfa8bc8737e0c8dc5b4425cc5581038c96b8c080a62633a2b90479",
+      "request": "out/G5-postworker-render-reuse-r1/oracle-corrective/append-zoom-out-immediate/request.json",
+      "request_sha256": "71f3bc19f43bb4c5aa8ef1435eaedfc3253d6006bb526628aff3ebcead29b386",
+      "rehydrated_snapshot_sha256": "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+      "basis_change": "pathonly/samebytes; all otherrequestvalues unchanged",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/oracle-corrective/append-zoom-out-immediate/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/oracle-corrective/append-zoom-out-immediate/original"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 35.67539470898919,
+        "peak_process_family_rss_kib": 615552,
+        "rss_limit_kib": 2097152,
+        "timeout_s": 180,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "output_prefix": "out/G5-postworker-render-reuse-r1/oracle-corrective/append-zoom-out-immediate/original"
+    },
+    {
+      "row": "partial-erase-zoom-out-immediate",
+      "status": "COMPLETED",
+      "original_request": "out/G5-postworker-render-reuse-r1/oracle/partial-erase-zoom-out-immediate/pixels-request.json",
+      "original_request_sha256": "52f5930821cc92a288dc35e9e9439ad616d952229e2f077675bf03b9aec7e654",
+      "request": "out/G5-postworker-render-reuse-r1/oracle-corrective/partial-erase-zoom-out-immediate/request.json",
+      "request_sha256": "eb530d4093a4797934c52b1e7dc8942cab459d3cf6469936e3c997369af9bbcb",
+      "rehydrated_snapshot_sha256": "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+      "basis_change": "pathonly/samebytes; all otherrequestvalues unchanged",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/oracle-corrective/partial-erase-zoom-out-immediate/request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postworker-render-reuse-r1/oracle-corrective/partial-erase-zoom-out-immediate/original"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 35.65811224991921,
+        "peak_process_family_rss_kib": 617168,
+        "rss_limit_kib": 2097152,
+        "timeout_s": 180,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "output_prefix": "out/G5-postworker-render-reuse-r1/oracle-corrective/partial-erase-zoom-out-immediate/original"
+    }
+  ]
+}

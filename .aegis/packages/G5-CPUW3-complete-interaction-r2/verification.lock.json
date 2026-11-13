@@ -1,0 +1,169 @@
+{
+  "status": "FROZEN_CORRECTED_COMPLETE_WORKER_INTERACTION_VERIFICATION_R2",
+  "obligations": [
+    {
+      "id": "CW3-SNAPSHOT",
+      "requirement": "Supported documentcapture is decodable and atomicrestore",
+      "failure_mode": "Successful capture cannotrestore; oversizeddecodeallocates beforeguard",
+      "oracle": "Savedoriginal35,456,391BcanonicalderivedbyoriginalOperationEngine; SnapshotCodecpreflight/encode/decodeindependentexpectedwire/digest; actualrootSDKcapture/restore/UndoRedo",
+      "acceptance": "35.46MBroundtripwithsameobjects/manifest/digests;128MiBboundary-1/exact/+1consistentencode/decode, boundedpreflightbeforeexpensiveallocation;Operation32/Object16/collections65535unchanged;malformed/stalecapability/digest/limitrejectionnomutation. Native+WASM sameadmission.",
+      "blocking_reason": "Otherwisethecurrentuserdocumentcanbeeditedbutnotrestored.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-PREFIX",
+      "requirement": "Use active preparation andverifiedappend withoutredoingunchangedprefix",
+      "failure_mode": "EveryUprecomputes16longpaths;unknowncheckpointfalsehit; tap/tailforkwrongresult",
+      "oracle": "Frozenoriginalmonolithicleftfold vsstreamedprefix/pathserialization/suffix acrossnative+actualWorker; countsatkernelentry",
+      "acceptance": "Prefix/suffix/fork/cancel/pressure/rebindexactlyoriginalnumeric;realMovepreparesbeforeUp, finalonlysuffix/unpreparedtargets;knownReadygeometryreuseverifiedfullvalues. <=2Workerssameglobalbounds/aggregatecustody16MiB,1MiBwire/fixed64each;noall-at-onceCPUfallback. Reportburst/paced30s/7200totalworkandUpdrain, 3sgoal5sreferenceflexible, noperformancewinfrompausedinput.",
+      "blocking_reason": "Wrongprefixproofcorruptserasure; noactualactiveprepmeanslargestremainingcauseuntouched.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-TIMELINE",
+      "requirement": "Namedobjectcreation/dragandbrushcanfollowpendingeraseimmediatelywithorderedapply",
+      "failure_mode": "Busy-onlyrestrictionorfalseApplied;newobjectunhittable;oldmaskfixedworld;staleinversewipesmask",
+      "oracle": "ActualsharedRuntimeinput/History/OperationEngineandactualpublicSDKDemoeventchainwithheldA, originalserializedsequentialreferenceDocument/Sceneandpixels",
+      "acceptance": "AUp→createBshape/sticky/table/image→dragBbeforeAterminal pluspreexisting4kindsdrag, brush/eraser/UndoRedo/NAV. CanonicalonlyAthenBthenC, eachonce, Bpartialimagefailuretruthful;pendingcreateHUD/pointtool/selectionpromotioncorrect. A mask staysobjectlocalthroughdragthenC, activeBnotcancelledfromunrelatedmaskgeneration, finalUndoRedooriginal. Capacity8/rejectwithoutloss/radius/cancel fullidentity.",
+      "blocking_reason": "This is theexplicitusergoal leftoutoftheeraseronlycandidate.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-FEEDBACK",
+      "requirement": "Allcontinuousfeedback/presentationrecoversanddoesnotstarve",
+      "failure_mode": "Inputacceptedbutnocorrectpixels/newpose;AcompletionclearsB;Retryblanksframe;maincommitblocksinput",
+      "oracle": "Coldcorrectnesspixelswhileheldpendingandimmediateunpausedchain, uniqueRuntime/displayreceiptrosters;originalCPUstrictAAreferenceforfinalandorderedmaskedtransforms",
+      "acceptance": "CorrectA+B/Cbody/localmask/zorder/opacity/text/table/imagefeedbackundernewcamera;historybarrierNAVworks;mainownerpreparebudgetshared andnoinfinitebusyloop. DPR1/2/4 functionalmatrix, boundedcachepressure/context/delayedexecutor andretrylastsuccessfulpixels. ActualfeedbackmeasuredseparatefromRAF/GPUComplete, 33msp95directionand3s/5sdrainreferenceflexible; performancefindingsdonotfalsifyfunctionalcompletedbutarenotclaimedpassed.",
+      "blocking_reason": "Acceptedbutinvisible/incorrectfollowuprecreatesoriginalbug.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-LIFECYCLE",
+      "requirement": "Rejected/failure/cancel/context/close/Historymutations preserveallintentandresourcecustody",
+      "failure_mode": "Orphanqueue,resourcefloorleak,unhandledpromise,doublecommit,fakeUndo/remoteack",
+      "oracle": "Actualownerfaulttestsandoneactualbrowserfailurechain/DataPortpackets;nodeVMonlyforadaptermechanism",
+      "acceptance": "Failed/NoOpA→unrelatedBprogress;failedcreateonlydependentsfail;preUppointercancelvsealedintent;8slot/byteboundstale/foreign/duplicate/fullbuildresultreject;fataldelayedready/secondfailurecontextrebind noownerfreeze;Busyclosebeforeteardownthenqualifiedfinish→publicationpending→releaseexactpacket→retry0leases. Remote/replaynoovertake andpromiseonlyrealterminal.",
+      "blocking_reason": "Concurrency/lifecyclechangesotherwise loseacceptedwork ormisreportcommit.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-BOUNDARY",
+      "requirement": "Publicreadandasynccontractsremainaccurateandpackagedbuildmatches",
+      "failure_mode": "SDKduplicatesorderstate;pendingselectionclaimedcanonical;privateAPIleak;JS/WASMmismatch",
+      "oracle": "MatchingnormalOFF/candidateONnpmoutsidecheckoutrootJS+TSandRuntime/DLLsource/packageexports/installchecks;actualprivateSessionports",
+      "acceptance": "ReadonlypendingDTOexactshape/losslessintegers/bufferlifetime,mutationpromisesactualcommit/NAVindependent. NoHEAP/privateimportsneededbyconsumer. NormalSDKnoqualification/privateheaders;generatedroot/declarations/resources/WASM/Worker/BuildInfoallmatchlocalBuild0undernewuserAGENTS. Keepcurrent logicalSemVer unlesspublicreleaseexplicitlyrequested;SDKreleaseoutofscope.",
+      "blocking_reason": "Pendingstateandworkersmustnotbreakconsumerboundary.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    },
+    {
+      "id": "CW3-EVIDENCE",
+      "requirement": "Independentverificationandstablecompletefunctionalclosure",
+      "failure_mode": "FastUp/native-onlytestmisrepresentsfullgoal;missingfailuredata;movingfinishline",
+      "oracle": "Frozenoriginal634/7200andCPUAAcorpora;actualrunnerpreflight/immutableSDK/source+request/terminalquotaledgerwithrawfailurecapture",
+      "acceptance": "Originalnumeric/Operation/Snapshot/restoredscene/UndoRedoparity;strictpixelsoriginalAAthresholdonly. Fullperintent/job/executor/phase/commit/receiptlinks+ownedrawprotocol/opbytespreservedincludingfailures. Allregressionsscopedwithnames, reuseunchangedvalidproofwhereapplicable;do notrerunjustfortotals. Independentcontrolreviewrequired,produceronlyREADY.",
+      "blocking_reason": "Concurrencymechanismsneedrealendtoendproofandfailureattribution.",
+      "blocking": true,
+      "existing_coverage": "CW1/CWRacceptedkernel/cancel/assetproof;CWH historicalreplay0+numeric1600proof, insufficientfornewpendingmixedtimelineandprefix/snapshotrange."
+    }
+  ],
+  "nonblocking": [
+    "Performance3s/5sreferenceor33msp95notahardnewnumber;reportimprovement/regressionandresidual",
+    "PhysicalMacphotonandformal1Mscale/otherplatformGPUqualificationremainseparate",
+    "Duplicateartifactlocations/proof-of-proofnotrequiredifexistingindependentoraclecoversfailure"
+  ],
+  "red_preconditions": [
+    "Original35.46MBencode/decodeasymmetryreproducedbeforeSnapshotfix",
+    "Originalactivepreparation0/full16newpostUpworkmechanismcounterREDbeforeprefixchange",
+    "OriginalDOMnoneraserpendingBusy/noCreateBbeforeAbehaviorREDbeforequeueintegration"
+  ],
+  "performance_reporting": "Keep actual r1 1600/7200 tails9.59/54.56/29.59s and fast Up; no 3s/5s claim. Do not alter algorithm, trace timing, f32, pool or budgets during this focused correctness closure. A separate approved optimization may use previously authorized two-worker policy later; no claim implemented.",
+  "prior_verification": {
+    "path": ".aegis/packages/G5-CPUW3-complete-interaction-r1/verification.lock.json",
+    "sha256": "1a3d47060fac0f845e40e1483fe87f4f555613166f8552d28dccb216bd224390"
+  },
+  "corrective_obligations": [
+    {
+      "id": "V2-PINNED-V4",
+      "requirement": "The mixed sequence actually tests the frozen supported v4 brush domain.",
+      "invariant": "Every newly drawn Brush object remains compact v4 round with selected profile round-handdrawn revision4. Every intended A is admitted to the Worker queue.",
+      "failure_mode": "A v2 default object silently disables document-wide candidate path; apparent Worker test exercises main CPU legacy.",
+      "impact": "Invalid end-to-end claim and future UI freeze undetected.",
+      "existing_independent_coverage": [
+        "Saved r1 wire inspection proves actual v2 fallback; native v4 kernel parity already valid."
+      ],
+      "residual_proof_gap": "Correct actual public Brush selection/readback and following erase not yet run.",
+      "oracle": "Real sdk.selectBrush(\"round-handdrawn\",4), then sdk.selectTool(\"ink\"); independently decode generated Operation/Snapshot content and check kindVersion/algorithm/family before next erase. Assert pending erase and zero new main whole-query unions.",
+      "fixture": "Original Fixed40 plus unchanged actual public-created mixed objects.",
+      "exact_execution": "Driver regression must fail on omitted selection/default v2; corrected mixed branch must select it explicitly at each Brush entry including recovery/DataPort. Saved final wire confirms content.",
+      "evidence_required": "driver-preflight.json + mixed raw/wire + mixed-verification.json",
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Detects wrong actual domain selected by JS driver, which kernel/unit parity cannot detect.",
+      "blocking_justification": "The previous formal mixed run was invalid for the intended Worker capability."
+    },
+    {
+      "id": "V2-TABLE-POSE",
+      "requirement": "An existing table follows a pointer drag while predecessor erase is pending.",
+      "invariant": "Correct table body receives input, transform intent exists, feedback pose changes and later original SetTransforms applies once.",
+      "failure_mode": "Grid resize or click is mislabeled object drag, leaving actual table drag unverified.",
+      "impact": "Named user-visible object flow can stay broken despite a green mixed summary.",
+      "existing_independent_coverage": [
+        "Native queued transform coverage",
+        "r1 other existing objects and new table actual transform"
+      ],
+      "residual_proof_gap": "Existing table body actual pointer transform and pixel feedback.",
+      "oracle": "Choose an interior cell-body location away from grid/resize/text/selection handles; for original table use approx quarter bounds x1089.75,y423.75 at camera1 and recompute from live bounds/camera. Assert transform kind and same id before release, nonzero requested translation, terminal actual SetTransforms and changed pose. Cancel must restore prior pose.",
+      "fixture": "Unchanged original mixed table via public creation.",
+      "exact_execution": "Preflight normal public table body drag/cancel without heavy Worker; then held-A table row at DPR2. Freeze point in request before formal window.",
+      "evidence_required": "table-drag-attribution.json + actual mixed raw/Operations/reference pixels",
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Runtime pointer-to-table routing and pending transform evidence, absent from sequential replay equality.",
+      "blocking_justification": "Replay can match an unchanged table and therefore does not prove the promised interaction."
+    },
+    {
+      "id": "V2-PIXEL-ATTRIBUTION",
+      "requirement": "Preserve final and held feedback geometry/material correctness with accepted AA edge differences only.",
+      "invariant": "Reference pixels and independent geometric AA edges are defined without consulting candidate pixel differences; original <=2 exterior channel threshold and original2-device-pixel boundary stroke stay unchanged.",
+      "failure_mode": "Renderer error is waived as AA, or oracle misses an internal stroke/fill edge and rejects correct AA.",
+      "impact": "Incorrect scene erasure/outline/order can ship, or false blocker prevents completion.",
+      "existing_independent_coverage": [
+        "r1 original v4 numeric/Operation parity",
+        "14 byte-identical sequential snapshots",
+        "D3 image-only cold pixels qualified"
+      ],
+      "residual_proof_gap": "19 fixed ellipse pixels and held-pending geometry/camera composition.",
+      "oracle": "First offline attribute saved initial ellipse and all19 coordinates to full reference geometry, stroke/fill paint and device transform. Compare isolated original CPU/GPU saved representations where available; use analytic material-boundary/path stroke edges. An oracle correction may add only omitted genuine reference boundaries using original width; no dilated failure pixels, whole-object exclusion, percentage tolerance or candidate-generated expectation. If genuine production defect, use saved RED and smallest existing-Render repair. Held A/B/C expected scene comes from original sequential OperationEngine + uncached reference on exact captured input/pose/mask (C++ exact math), not candidate projection/cache/counters. Original known-bad pose/mask/order or omitted v4 selection must falsify relevant behavioral oracle.",
+      "fixture": "Existing saved14 stage images and original mixed objects; same IDs/trace/opacity/z-order; no ellipse removal.",
+      "exact_execution": "Offline classification and deterministic RED/GREEN before formal sampling; bind corrected reference source/binary/requests. Capture held object states before releasing A, at unchanged Move and later terminal pose; use independently replayed eventual ordered values for that same pose/trace. Keep canonical metadata honest. Final and held actual pixels at DPR2 plus focused DPR1/4.",
+      "evidence_required": "pixel-attribution.json + pixel-oracle-contract.json + feedback-pixels.json",
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Detects visual feedback/mask/order errors invisible to canonical byte equality and resolves demonstrated reference blindspot.",
+      "blocking_justification": "Existing r1 strict comparisons fail and held-pending correctness has no independent pixel proof."
+    },
+    {
+      "id": "V2-REMAINING-LIFECYCLE",
+      "requirement": "Complete the originally frozen continuous and recovery sequences.",
+      "invariant": "A erase, masked dragB, eraseC, repeated erase, four-kind pending create/drag, Brush/History/NAV progress in owner order; failure affects only dependencies; close/DataPort/quota cleanup is truthful.",
+      "failure_mode": "Feedback disappears, accepted intent lost, unhandled promise, stale completion clears newer display, resources leak or close falsely succeeds.",
+      "impact": "Original user issue recurs after next edit/context/resource change.",
+      "existing_independent_coverage": [
+        "r1 native68 and adapter/package evidence",
+        "r1 three existing and four pending created transforms with exact sequential snapshot parity"
+      ],
+      "residual_proof_gap": "MaskedA/B/C, actual table, strict held feedback, DPR1/4 actual recovery and failure/DataPort full chain.",
+      "oracle": "Same original owner/receipt identities and OperationEngine sequential reference, exact state/History/pixel/custody observers. No mocked Runtime truth; private test fault seams may delay/fail Worker/context only. Public SDK mutation promises remain unresolved until actual terminal.",
+      "fixture": "Same Fixed40 mixed scene,24 confirmed Move for continuity; reuse exact1600/7200 numeric/prefix and35.46MB restore proof if owning production source unchanged.",
+      "exact_execution": "One mixedDPR2 formal window and focused DPR1 then DPR4 recovery windows; remaining original lifecycle cases use native focused fault tests plus real browser failure/context/DataPort chain, not a Cartesian expansion.",
+      "evidence_required": "mixed-verification.json + lifecycle-and-memory.json + feedback-pixels.json + completion-matrix.json",
+      "classification": "blocking",
+      "new_evidence_unique_detection_value": "Actual web context/DOM/Worker/promise integration is not established by native proof alone.",
+      "blocking_justification": "These are old frozen mandatory user sequences not reached in r1."
+    }
+  ],
+  "proof_reuse": "Source/delta dependency map governs reuse. Verification-only changes do not invalidate original numeric, Snapshot and installed SDK proof. Production correctness changes rerun only directly affected focused tests/actual browser rows, and affected S/P original numeric if their math/codec/protocol owner changes. Report source compatibility, never count old evidence as new runs."
+}

@@ -1,0 +1,49 @@
+{
+  "status": "REQUIRED_FOCUS_PASSED_WITH_EXACT_REUSED_EVIDENCE",
+  "native": {
+    "tests": 27,
+    "passed": 27,
+    "failed": 0,
+    "junit": "native-keepers.xml"
+  },
+  "corrected_oracle": {
+    "old": "RED_ALL16_GET_EXTRA25600",
+    "current": "GREEN_ALL16_GET0_PARTIAL1599",
+    "production_change": false
+  },
+  "Node": {
+    "tests": 14,
+    "passed": 14,
+    "failed": 0,
+    "log": "node-final.log",
+    "command": "node --experimental-vm-modules --test fivefrozenfiles"
+  },
+  "runner_Python": {
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "log": "runner-python.log"
+  },
+  "prior_accepted": {
+    "ref": "accepted-source-reuse.json",
+    "SDK_Node_scripts": 4,
+    "Python_total": 11,
+    "TypeScript": "PASS",
+    "boundary_contracts": 120,
+    "original_exact_rows": 634,
+    "exact_mismatches": 0,
+    "source_unchanged_for_reused_evidence": true
+  },
+  "browser": {
+    "starts": 3,
+    "charged_seconds": 35,
+    "cases": 6,
+    "all_OBSERVED": true
+  },
+  "preserved_failures": [
+    "r1 frozen native first remainder7 andidle recheck3 unchanged",
+    "r2 old single-slot RED expected",
+    "r2 node-missing-vm-flag.log environment invocation requires --experimental-vm-modules; corrected command passes14"
+  ],
+  "no_full_G5_or_performance_PASS": true
+}

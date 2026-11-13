@@ -1,0 +1,117 @@
+{
+  "classification": "FINITE_MATCHED_OBSERVATIONS",
+  "rows": [
+    {
+      "id": "RR-D1-CANDIDATE",
+      "status": "OBSERVED",
+      "input_down_to_up_ms": 111750.5,
+      "AB_up_to_drain_ms": 10233.400000095367,
+      "C_down_to_drain_ms": 5457.600000023842,
+      "C_up_to_drain_ms": 5456.899999976158,
+      "A_Up_handler_ms": 0.5,
+      "B_Down_handler_ms": 0.2999999523162842,
+      "B_Down_dispatch_after_A_Up_ms": 0.40000009536743164,
+      "first_A_canonical_notification_ms": 10198.900000095367,
+      "first_AB_canonical_notification_ms": 10198.900000095367,
+      "operation_notification_A_ms": 4735.100000023842,
+      "masked_selection_ms": 83.39999997615814,
+      "Worker_jobs": 76,
+      "errors": [],
+      "closed": true,
+      "native_span_available": false,
+      "raw": "out/G5-postworker-render-reuse-r1/web/RR-D1-CANDIDATE/raw.json.gz",
+      "sha256": "aab674faeda94fd9014ae638e13ac7987274684951dd8f81a972c44bd42288ef",
+      "feedback_qualification": "onFrame canonical presented-generation notification; no earliest subsequent displayed-frame pixel witness in primary",
+      "snapshot_SHA256": {
+        "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+        "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+        "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+        "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+      }
+    },
+    {
+      "id": "RR-D4-BASELINE",
+      "status": "OBSERVED",
+      "input_down_to_up_ms": 159544.10000002384,
+      "AB_up_to_drain_ms": 28293.399999976158,
+      "C_down_to_drain_ms": 17481.100000023842,
+      "C_up_to_drain_ms": 17480.299999952316,
+      "A_Up_handler_ms": 0.5,
+      "B_Down_handler_ms": 0.2999999523162842,
+      "B_Down_dispatch_after_A_Up_ms": 0.5,
+      "first_A_canonical_notification_ms": 28248.5,
+      "first_AB_canonical_notification_ms": 28248.5,
+      "operation_notification_A_ms": 17459,
+      "masked_selection_ms": 83.29999995231628,
+      "Worker_jobs": 76,
+      "errors": [],
+      "closed": true,
+      "native_span_available": false,
+      "raw": "out/G5-postworker-render-reuse-r1/web/RR-D4-BASELINE/raw.json.gz",
+      "sha256": "b184cf930b8d7820a6aabe93da608cd7d157ba4045767280f6921e1a8f453956",
+      "feedback_qualification": "onFrame canonical presented-generation notification; no earliest subsequent displayed-frame pixel witness in primary",
+      "snapshot_SHA256": {
+        "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+        "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+        "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+        "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+      }
+    },
+    {
+      "id": "RR-D4-CANDIDATE",
+      "status": "OBSERVED",
+      "input_down_to_up_ms": 11373.300000071526,
+      "AB_up_to_drain_ms": 13736.299999952316,
+      "C_down_to_drain_ms": 11566,
+      "C_up_to_drain_ms": 11565.399999976158,
+      "A_Up_handler_ms": 0.3999999761581421,
+      "B_Down_handler_ms": 0.20000004768371582,
+      "B_Down_dispatch_after_A_Up_ms": 0.2999999523162842,
+      "first_A_canonical_notification_ms": 13693.799999952316,
+      "first_AB_canonical_notification_ms": 13693.799999952316,
+      "operation_notification_A_ms": 4520.299999952316,
+      "masked_selection_ms": 85.29999995231628,
+      "Worker_jobs": 76,
+      "errors": [],
+      "closed": true,
+      "native_span_available": false,
+      "raw": "out/G5-postworker-render-reuse-r1/web/RR-D4-CANDIDATE/raw.json.gz",
+      "sha256": "6b3e704544156f4ee5de707e2a89f4eed226ae838ca9f44b3c9a3bbdcff1af15",
+      "feedback_qualification": "onFrame canonical presented-generation notification; no earliest subsequent displayed-frame pixel witness in primary",
+      "snapshot_SHA256": {
+        "AB": "05cf92a48d23a61d3291c729d476c4020fc5725f3058ab64fcdd0b14b3a5557a",
+        "undo": "a04da71d9749dd31fc1850126c598df5f596c2f109aa857d09a0a7b99660b434",
+        "redo": "9e13727c057cb62871ef2843082543dd27e7fb74f61cf3a3b9d30af50f6dd241",
+        "followup": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163"
+      }
+    }
+  ],
+  "cautions": [
+    "Input variation is real, do not treat relative CPU/GPU work as wall performance without matched evidence.",
+    "onOperation is a notification, not atomic commit timestamp. Ordinary build has no native spans.",
+    "C_down_to_drain differs from C_up_to_drain.",
+    "EarlyGL is proxy, no physical input-to-photon claim."
+  ],
+  "paired_D4": {
+    "input_down_to_up_ms": {
+      "baseline": 159544.10000002384,
+      "candidate": 11373.300000071526,
+      "change_percent": -92.87137537516598
+    },
+    "AB_up_to_drain_ms": {
+      "baseline": 28293.399999976158,
+      "candidate": 13736.299999952316,
+      "change_percent": -51.450514961213955
+    },
+    "C_down_to_drain_ms": {
+      "baseline": 17481.100000023842,
+      "candidate": 11566,
+      "change_percent": -33.83711551341606
+    },
+    "C_up_to_drain_ms": {
+      "baseline": 17480.299999952316,
+      "candidate": 11565.399999976158,
+      "change_percent": -33.8375199509865
+    }
+  }
+}

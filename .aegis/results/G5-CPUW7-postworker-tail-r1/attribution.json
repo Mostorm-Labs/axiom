@@ -1,0 +1,175 @@
+{
+  "schema": "axiom-postworker-attribution-v1",
+  "phases": [
+    {
+      "phase": "AB",
+      "elapsed_ms": 27001.900000095367,
+      "owner_interval_union_ms": 19323.80000000028,
+      "RAF_callback_wall_ms": 21440.899999022484,
+      "outside_owner_ms": 7678.100000095088,
+      "not_all_outside_isCPU": true,
+      "actual_atomic_commits": [
+        {
+          "serial": "1",
+          "session": "1",
+          "ordinal": "1",
+          "generation": "1",
+          "at_ns": 112178400000,
+          "relative_to_Up_ms": 9638.100000095365
+        },
+        {
+          "serial": "2",
+          "session": "2",
+          "ordinal": "2",
+          "generation": "2",
+          "at_ns": 122210300000,
+          "relative_to_Up_ms": 19670.000000095373
+        }
+      ],
+      "operation_notifications": [
+        {
+          "at": 118210.39999997616,
+          "generation": "1",
+          "bytes": 29954294,
+          "commit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "e8313d8efe45db694605ae2eb66a3734",
+            "ordinal": "1",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "1"
+          }
+        },
+        {
+          "at": 122220.79999995232,
+          "generation": "2",
+          "bytes": 35412,
+          "commit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "eb313d8efe45db694605ae2eb66a3734",
+            "ordinal": "2",
+            "presentedGeneration": "0",
+            "runtimeEpoch": "1"
+          }
+        }
+      ],
+      "Worker_compute_ms": 67.299999833107,
+      "Worker_yield_ms": 1.9999995231628418,
+      "GPU_retirement_proxy": {
+        "records": 1300,
+        "max_queued": 6,
+        "max_waiting_ordered": 0,
+        "max_unknown_abandon": 0,
+        "execution_time": null
+      },
+      "RAF_gap_max_ms": 16.0,
+      "longtasks": [
+        {
+          "started": 102543.89999997616,
+          "duration": 5451
+        },
+        {
+          "started": 112177.39999997616,
+          "duration": 6033
+        },
+        {
+          "started": 118475.5,
+          "duration": 65
+        },
+        {
+          "started": 122328.70000004768,
+          "duration": 74
+        }
+      ],
+      "RAF_callback_interval_union_ms": 21440.899999022484,
+      "within_RAF_outside_owner_ms": 2117.0999990222044,
+      "outside_RAF_callback_ms": 5561.000001072884,
+      "outside_owner_interpretation": "Includes remaining JS/native bookkeeping inside RAF callbacks plus time outside callbacks; not a pure scheduling gap or pure CPU measurement."
+    },
+    {
+      "phase": "C",
+      "elapsed_ms": 25155.700000047684,
+      "owner_interval_union_ms": 17642.50000000102,
+      "RAF_callback_wall_ms": 22762.900000333786,
+      "outside_owner_ms": 7513.200000046665,
+      "not_all_outside_isCPU": true,
+      "actual_atomic_commits": [
+        {
+          "serial": "3",
+          "session": "3",
+          "ordinal": "5",
+          "generation": "5",
+          "at_ns": 201841500000,
+          "relative_to_Up_ms": 14469.100000071514
+        }
+      ],
+      "operation_notifications": [
+        {
+          "at": 201927.29999995232,
+          "generation": "5",
+          "bytes": 6210,
+          "commit": {
+            "cloudSynced": 0,
+            "localDurable": 0,
+            "operationId": "ec313d8efe45db694605ae2eb66a3734",
+            "ordinal": "5",
+            "presentedGeneration": "4",
+            "runtimeEpoch": "1"
+          }
+        }
+      ],
+      "Worker_compute_ms": 82.200000166893,
+      "Worker_yield_ms": 4.1000001430511475,
+      "GPU_retirement_proxy": {
+        "records": 1700,
+        "max_queued": 17,
+        "max_waiting_ordered": 2,
+        "max_unknown_abandon": 0,
+        "execution_time": null
+      },
+      "RAF_gap_max_ms": 13.299999952316284,
+      "longtasks": [
+        {
+          "started": 187373.29999995232,
+          "duration": 9597
+        },
+        {
+          "started": 197705.5,
+          "duration": 74
+        },
+        {
+          "started": 201838.70000004768,
+          "duration": 88
+        }
+      ],
+      "RAF_callback_interval_union_ms": 22762.900000333786,
+      "within_RAF_outside_owner_ms": 5120.400000332767,
+      "outside_RAF_callback_ms": 2392.7999997138977,
+      "outside_owner_interpretation": "Includes remaining JS/native bookkeeping inside RAF callbacks plus time outside callbacks; not a pure scheduling gap or pure CPU measurement."
+    }
+  ],
+  "nested_stage_details": "phase-accounting.json",
+  "diagnostic_raw": {
+    "path": "out/G5-CPUW7-postworker-tail-r1/web/W7-D4-DIAGNOSTIC/raw.json.gz",
+    "sha256": "bb1fa1080cbb2edc3f06c91a7d7f88e389e209c9dafdcc835bb755f41deaa7dc"
+  },
+  "clock_sync": {
+    "offset_ms": 4.768367034557741e-08,
+    "start_interval_ms": 0.0,
+    "end": {
+      "before": 226240.5,
+      "after": 226240.60000002384,
+      "nowNs": "226240600000"
+    }
+  },
+  "observation_loss": 0,
+  "limits": [
+    "onOperation notifications are not atomicapply; internal commit markers independent",
+    "GPU records prove orderedretirementproxy, no hardwareduration",
+    "mask_primitive_draws0 is uncovered route, notabsenceofmaskreplay",
+    "statecounters SET notsummed; resource values max notsum",
+    "Onlydiagnosticrendercounters qualified, normalbuild noextraobserverABI",
+    "outside_owner_ms is partitioned into within_RAF_outside_owner_ms and outside_RAF_callback_ms; only the latter is outside observed RAF callbacks, not automatically scheduler/GPU time."
+  ]
+}

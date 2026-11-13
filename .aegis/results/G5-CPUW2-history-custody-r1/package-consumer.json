@@ -1,0 +1,37 @@
+{
+  "status": "MATCHED_INSTALLED_AND_EXTRACTED_NPM_PRIMARY_CONSUMER_PARTIAL_PASS",
+  "normal_manifest": {
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1/normal-sdk-manifest.json",
+    "sha256": "df7b3b37dba9b4f6dd1cdb377c1ae36d796a0e6503857946e021c755d83432d1"
+  },
+  "candidate_manifest": {
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1/candidate-sdk-manifest.json",
+    "sha256": "4457a4e04904794f9509167ac10c75584360d9802484f403813af2801e058805"
+  },
+  "external_manifest": {
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1/external-sdk-manifest.json",
+    "sha256": "e72d48434bc61e61160748ba48e4a61dc30040bfce3036bec872bfdc8430d4e5"
+  },
+  "files_each": 42,
+  "normal_default_OFF": true,
+  "candidate_ON": true,
+  "root_public_API_and_types_version_unchanged": true,
+  "no_public_privateAPI_required": true,
+  "qualification": "Verificationfactorywrap privateengine plusWorkerwitness for sparsefacts; ordinarypublicSDKpackage itself unchangedexports",
+  "primary_actual_external": [
+    "candidate1600OBSERVED",
+    "candidate7200SnapshotDecodeFailedAfterCommit"
+  ],
+  "SDK_Node_logs": [
+    "sdk-api.log",
+    "sdk-controller.log",
+    "sdk-input.log",
+    "sdk-control.log"
+  ],
+  "strict_types": "sdk-types.log",
+  "affected_CWRclose_root_VM": "node-final.log",
+  "missing": [
+    "CandidateactualCSP/relativebase/CWRclosingafterpendingnewfault testnotrun",
+    "FEEDBACK/FAILURES realbranches notrun"
+  ]
+}

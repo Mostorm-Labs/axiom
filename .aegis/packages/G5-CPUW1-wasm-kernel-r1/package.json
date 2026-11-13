@@ -1,0 +1,69 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-CPUW1-wasm-kernel-r1",
+  "status": "FROZEN_AUTHORIZED_CW1_REAL_WASM_WORKER_FOUNDATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "task_anchor": {
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "completed_through": [
+      "HP_TP_CFH_published",
+      "LQP_partial_validity_published_diagnostic_gap_preserved",
+      "pre_worker_tag_pushed",
+      "human_immediate_feedback_ordered_commit_choice_confirmed"
+    ],
+    "next_action": "Validate identity/bindings/tag and existing owners, freeze CW1 ImplementationDesign and independent original numeric oracle/RED, implement shared C++ CPU kernel and actual separate Worker WASM, continue full scoped closure."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-CPUW1-wasm-kernel-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "6fab34924c6359c8b6e05130b9d41eeaaffb5abb13bb72926c9392b947d32cc9"
+  },
+  "trusted_basis_ref": {
+    "path": "trusted-basis.json",
+    "sha256": "6da6fdbe76a3d235bc3dc2cae958da43f75d8bd482a86efbe7d871f742a5e95e"
+  },
+  "design_contract_ref": {
+    "path": "design-contract.json",
+    "sha256": "44641a5a7ca5ddeade0d5a9c5bd373b88003be0e726098913e5de97a8171e01a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "7316e4693b3f1c722aaa744e90b0a6982d33a5e54214861a2dd59974c0a856c6"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "86234ee1f9a5de66c96983b6f374c576499780f8d08bfaed30bf3f8f4b8d1b75"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "a3874edea9c28ddca70f151cbd3b90c9b22e79caf75deb20ccb18b2a018a3481"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "5ec882d25ae76a8f8ceb34747ba491b41062ab4521567ccfde3664e755dcfb9f"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "105df64e666cb83b0c4066be599042878ccab597d86459f4928cae3a6e6fae45"
+  }
+}

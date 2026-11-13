@@ -1,0 +1,24 @@
+{
+  "status": "EXACT_PINNED_SOURCE_RECONSTRUCTION",
+  "base": "89325c4648b11c0540fdc859cb0556b945481c1e",
+  "accepted_CFH_delta": {
+    "path": ".aegis/results/G5-crossframe-history-pressure-r1/source-delta.patch",
+    "sha256": "c3e53ce3d3a92e9e6a8e473cd71fc1976b2f5721ba48962a2b3017ed8528f62e"
+  },
+  "original": {
+    "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/selection_region_geometry.cpp",
+    "sha256": "49c16bc7af2b71877ebaba3058b028465a64d87dddc142b5f737b370e370bdd3"
+  },
+  "test_only_adapter": {
+    "path": "out/G5-CPUW1-repair-r2/old-source/runtime/render/src/single_slot_observed.cpp",
+    "sha256": "c7fd77b64ee44dbc4e895177f767276a4b20ac8ea509bbea60e69840d7eb336b"
+  },
+  "original_binding": {
+    "path": "out/G5-CPUW1-repair-r2/old-source-binding.json",
+    "sha256": "2f2a968a4fdde932b415cc65b08059db9280651f7dc57cbfec7dc7f760d851b4"
+  },
+  "build_commands": "old-build-commands.json",
+  "tested_break": "Old single-slot repeats and discards object-local prefixes; all16 final get total25600 real unions",
+  "old_observer_actual": true,
+  "old_compatibility": "Old API lacks newer budget/owner edgecases, so OLD variant only excludes those and candidate monotonic assertion; same bounded append/round-robin/all16get/original numeric oracle retained"
+}

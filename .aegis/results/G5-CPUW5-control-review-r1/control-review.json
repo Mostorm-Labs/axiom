@@ -1,0 +1,188 @@
+{
+  "schema": "axiom-cpuw5-independent-control-review-v1",
+  "reviewed_at_utc": "2026-11-12T17:01:24.450748+00:00",
+  "reviewer_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "producer_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "repository": {
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "remote": "git@github.com:Mostorm-Labs/axiom.git",
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+    "index_empty": true
+  },
+  "subject": {
+    "package_sha256": "e0ab78b6106a8864ad0b5e9e6822d02f4fea02fb58d13bcbe42980f219ca14f8",
+    "result_sha256": "0954d434b0e7b6dc4469c6920dba9fa14c07c18c06919ccb79c07e3213bfa77a",
+    "artifact_manifest_sha256": "a887e8c11ff4831e7f8b9b90f50abc55220dac959fae82dec632a3801735b490"
+  },
+  "frozen_requirement_audit": {
+    "repair_target": "NOT_ACHIEVED",
+    "ZF1": "partial mechanism attribution only",
+    "ZF2": "batching observed, integrated progress/fault proof incomplete",
+    "ZF3": "pixel qualification incomplete;1651initialmismatches not independently attributed as productregression",
+    "ZF4": "PERFORMANCE_UNMET;3formalpairedmedians not completed;no qualified newDemo",
+    "control_disposition": "Stop repeating no-benefit experiments; archive and withdraw only CPUW5candidate edits. This is not a human requested goalpause or a productfix."
+  },
+  "frozen_evidence_audit": {
+    "artifacts_checked": 1481,
+    "artifact_bytes": 233282493,
+    "candidate_source_files_checked": 1279,
+    "SDKs": {
+      "ordinary": {
+        "files": 42,
+        "mismatches": []
+      },
+      "diagnostic": {
+        "files": 42,
+        "mismatches": []
+      }
+    },
+    "errors": [],
+    "ordinary_single_neighbor_pairs": [
+      {
+        "target": "append-zoom-out-immediate",
+        "baseline": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 773.5,
+          "Up_to_GL_proxy_ms": 844.2000000476837,
+          "first_input_queue_ms": 70.70000004768372,
+          "max_RAF_ms": 69.70000004768372,
+          "qualified_NAV_submit_ms": null
+        },
+        "withdrawn_candidate": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 913.3999999761581,
+          "Up_to_GL_proxy_ms": 966.8999999761581,
+          "first_input_queue_ms": 53.5,
+          "max_RAF_ms": 35.300000071525574,
+          "qualified_NAV_submit_ms": null
+        }
+      },
+      {
+        "target": "partial-erase-zoom-out-immediate",
+        "baseline": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 853.3999999761581,
+          "Up_to_GL_proxy_ms": 881.0,
+          "first_input_queue_ms": 27.600000023841858,
+          "max_RAF_ms": 26.800000071525574,
+          "qualified_NAV_submit_ms": null
+        },
+        "withdrawn_candidate": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 942.8000000715256,
+          "Up_to_GL_proxy_ms": 969.3000000715256,
+          "first_input_queue_ms": 26.5,
+          "max_RAF_ms": 16.699999928474426,
+          "qualified_NAV_submit_ms": null
+        }
+      },
+      {
+        "target": "append-zoom-in-immediate",
+        "baseline": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 1192.8000000715256,
+          "Up_to_GL_proxy_ms": 1261.8000000715256,
+          "first_input_queue_ms": 69.0,
+          "max_RAF_ms": 268.39999997615814,
+          "qualified_NAV_submit_ms": null
+        },
+        "withdrawn_candidate": {
+          "status": "OBSERVED",
+          "handler_to_first_GL_proxy_ms": 1236.1000000238419,
+          "Up_to_GL_proxy_ms": 1289.7000000476837,
+          "first_input_queue_ms": 53.60000002384186,
+          "max_RAF_ms": 243.0,
+          "qualified_NAV_submit_ms": null
+        }
+      }
+    ],
+    "no_statistical_or_3pair_median_claim": true,
+    "diagnostic_mechanisms": [
+      {
+        "target": "diag-append-zoom-out-immediate",
+        "continuation_records": 8,
+        "max_batches": 2,
+        "max_commands": 2048,
+        "max_NAV_steps": 128,
+        "NAV_submits": 0,
+        "loss": {
+          "statistical": 0,
+          "critical": 0
+        },
+        "CPU_walltime_not_GPU_execution": {
+          "flush_CPU": {
+            "records": 10,
+            "calls": 18,
+            "inclusive_ms": 17.2,
+            "max_aggregate_interval_ms": 6.7
+          },
+          "submit_CPU": {
+            "records": 10,
+            "calls": 18,
+            "inclusive_ms": 0.2,
+            "max_aggregate_interval_ms": 0.1
+          }
+        }
+      },
+      {
+        "target": "diag-partial-erase-zoom-out-immediate",
+        "continuation_records": 4,
+        "max_batches": 2,
+        "max_commands": 2017,
+        "max_NAV_steps": 128,
+        "NAV_submits": 0,
+        "loss": {
+          "statistical": 0,
+          "critical": 0
+        },
+        "CPU_walltime_not_GPU_execution": {
+          "flush_CPU": {
+            "records": 9,
+            "calls": 12,
+            "inclusive_ms": 9.2,
+            "max_aggregate_interval_ms": 3.9
+          },
+          "submit_CPU": {
+            "records": 9,
+            "calls": 12,
+            "inclusive_ms": 0.0,
+            "max_aggregate_interval_ms": 0.0
+          }
+        }
+      }
+    ],
+    "prior_controlstop": "R2F1started before controlstop,18of26rows preserved; not a correctnessfailure"
+  },
+  "repository_reality_audit": {
+    "live_restoration": {
+      "G5-CPUW4-edit-navigation-r1": {
+        "count": 1269,
+        "mismatches": []
+      },
+      "G5-CPUW3-lifecycle-repair-r3": {
+        "count": 1261,
+        "mismatches": []
+      }
+    },
+    "restored_CPUW5_production_files": 13,
+    "dependent_CPP_tests_archived_removed_live": 5,
+    "old_baseline_CMake_unchanged": true,
+    "old4330_HTTP200_and_assets_preserved": true,
+    "new_Demo": null,
+    "no_commit_push_tag_release": true
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Private mechanism policy tests do not replace full actualowner fault/pixelqualification.",
+      "GPU pendingticket2 stops continuation after2batches;0NAVacceptedsubmits. MoreCPUallowance did not produce firstfeedbackgain.",
+      "Cold1651pixelmismatch has unresolved attribution and does not establish baseline/productregression.",
+      "Next repair requires a different coverage reuse/composition/submission design supported by realwork attribution; do not repeat quota/quiet tuning."
+    ]
+  },
+  "verdict": "ACCEPT_FAILURE_ARCHIVE_AND_EXACT_WITHDRAWAL",
+  "user_bug_fixed": false,
+  "P34_G5_performance_release_PASS": false,
+  "continue_coding_authorized_package": false
+}

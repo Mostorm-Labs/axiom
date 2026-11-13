@@ -1,0 +1,121 @@
+{
+  "schema": "axiom-cpuw5-r2-verification-lock-v1",
+  "status": "FROZEN_CURRENT_FOR_CPUW5_R2",
+  "trusted_refs": {
+    "cpuw4_result": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/result.json",
+      "sha256": "cdcbeae9fc778716991c423eb257d107a34db5ce2839a768601457cee3f5a058"
+    },
+    "source": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-manifest.json",
+      "sha256": "ef88efb26e881e8ccf7047e83e3adc05f9d16abc5e4b2c31542535fa22335305"
+    },
+    "delta": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/source-delta-manifest.json",
+      "sha256": "b5c07760c98195f5c3c64ef30e8272d86e00322a22cd0146fe75f60115b3f2dc"
+    },
+    "baseline": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/baseline-and-attribution.json",
+      "sha256": "542101c1d7396659fb054e3bdc1e51f567689055989e431e9d16435ee481cfd4"
+    },
+    "phases": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/phase-accounting.json",
+      "sha256": "8ce307570bdde221c6c32cd0660a46cf2a02f52e0e4960b0ef13a6fa29c39d58"
+    },
+    "fixture": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/fixture-and-inputs.json",
+      "sha256": "564323952267db8b3ca8076a3395aa9b77ce46e6257fbf50d1477482620c9b4a"
+    },
+    "sdk": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/SDK-manifest.json",
+      "sha256": "7af8cf0231f1ecc37047670833fb5f26289bd38f91421e45bbee8ae1bef34842"
+    },
+    "ledger": {
+      "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/sampling-ledger.json",
+      "sha256": "5f2e9419fe0286236f0f08cac32d053846927d6bd32fcb75f281bf4ad995a007"
+    },
+    "control_review": {
+      "path": ".aegis/results/G5-CPUW4-control-review-r1/control-review.json",
+      "sha256": "53842c30387f0597d16c694c256c99ef52ca174098afb0890fb3c4c1567731fc"
+    },
+    "r3_result": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/result.json",
+      "sha256": "e2f413dfd558eaddbb89d370171a9a34fb54cd7337be0d69d3ed2c82a01a2093"
+    },
+    "r3_reference": {
+      "path": ".aegis/results/G5-CPUW3-lifecycle-repair-r3/reference-manifest.json",
+      "sha256": "009182faa6bd1fe67fc949f99d5c7bc013fbd58b825771a7208c2568f24724e6"
+    },
+    "original_reference": {
+      "path": "verification/runners/g5/cpu_complete_v2_reference.cpp",
+      "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+    },
+    "original_reference_binary": {
+      "path": "out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+      "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+    },
+    "pixel_oracle": {
+      "path": "verification/runners/g5/ur0/pixel_oracle.mjs",
+      "sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+    },
+    "fixed_inputs": {
+      "path": "verification/runners/g5/cpu_edit_navigation_contract.mjs",
+      "sha256": "09168bfbb5208f974db0b5701f1a74fd559ccd2d9922094b309a84fc7695bbaa"
+    }
+  },
+  "obligations": [
+    {
+      "id": "ZF1-CAUSE",
+      "requirement": "Show whole-plane invalidation unnecessarily discards proven unchanged regions for the actual edit→zoomout chain and implement an explicit complete-source derived proof.",
+      "oracle": "OldactualbodyReject traces + test original retainedplane old/new completeScene on exactsource+Operation; independent originaluncached old/new pixels outside conservative damage equal. Prior coldquery12turn REDs are preserved diagnostics, not new fullcontract oracle.",
+      "acceptance": "Old narrow mask-only proof is still conservative; test shows it rejects wholeplane even though a particular disjoint region is equal. New proof certifies only equal regions with actualcompletequery. No loosening oldfunction/whole/hintsemantics.",
+      "evidence_required": [
+        "preflight.json",
+        "cause-and-design.json",
+        "red-green.json",
+        "region-proof.json"
+      ],
+      "classification": "blocking"
+    },
+    {
+      "id": "ZF2-BOUNDED-PROGRESS",
+      "requirement": "Repair coherent current-scene frontier completion and navigation/canonical scheduling while keeping aggregate bounds and eventual exact progress. Complete Runtime query and conservative pixel-valid regions must reduce actual missing work, while original partial region aggregatebudgets/fairness remain.",
+      "oracle": "Scoped old/new private tests at small work budgets; multiple camera moves, source/mask basis changes, pressure/unavailable/rebind and canonical fairness through existing owners. Read counters for actual contour/knot/target/source progression and loss of admitted work.",
+      "acceptance": "Current-source regions only publish after full z/mask completion; useful work survives demand changes; first feedback improves rather than only shifting work into huge RAF/GPU submissions. Allocation denial holds lastsuccess and resumes/terminates, no no-progress spin; exact work cannot starve.",
+      "evidence_required": [
+        "red-green.json",
+        "bounded-progress.json",
+        "regressions.json"
+      ],
+      "classification": "blocking"
+    },
+    {
+      "id": "ZF3-PIXELS-SEMANTICS",
+      "requirement": "Preserve mixed brush geometry/material/masks/z order, exposed content, camera and canonical operation truth.",
+      "oracle": "Original pinned CPU sequential OperationEngine/fullScene/uncached draw binary plus existing independent boundary comparator. For coarse feedback use original untiled commands at exact declared world texel grid/density/gutter then original sampling; candidate prepared paths/masks/region validity do not generate expected content. Final DPR2 uses original channel2 outside independent2devicepxAA boundary; image ties only exact r3 qualified rule. New editproof expected unaffected pixels must be generated by separately applying original OperationEngine to oldSnapshot and rendering both old/current with pinned fullScene/uncached source outside candidate. No proof output used to compute expected damage, and wrongmask/addedsource/order negatives must be rejected or excluded. R2 referencegrid adapter may import originaldrawsource but cannot link candidateproof/cache/prepared implementation into the oracle.",
+      "acceptance": "Cold targetfeedback and final pixel/coverage proof plus final/undo/redo snapshot parity. Navigation emits0editOperations; each edit applies once. Wrong camera/missing source/stale mask must remain detectable. No skipping materials or enlarging AA tolerances. Existing orthogonal r3 lifecycle/Worker proof reused by exact dependency mapping. Verify outside actualdeclaredvalid region equality against independentold/new reference; masks oldnew pointwise Clear locality plus finite transformedhulls andactualsourcegrid. For changedbody/order/unknownsource/newresource no new proof authorization. Region count/work/metadata exhaustion failclosed.",
+      "evidence_required": [
+        "feedback-and-final-pixels.json",
+        "semantic-parity.json",
+        "reference-manifest.json",
+        "region-proof.json"
+      ],
+      "classification": "blocking"
+    },
+    {
+      "id": "ZF4-PERFORMANCE-DELIVERY",
+      "requirement": "Improve ordinary edit-to-zoom-out feedback with matching candidate Demo and honest limits.",
+      "oracle": "Same originalSDK versus candidate with ordinaryReleaseDIAG_OFF/TIMING_OFF, fixed fixture/input/flags and3paired blocks per2targetrows+zoomincontrol; separate private diagnostic/cold pixel qualification.",
+      "acceptance": "Both target medians of handler-to-firstcontentproxy improve by at least30% over same-window neighboring baseline (report all pair maxima and Up-to-feedback too); no >20% AND >8ms control/regression beyond pairednoise. Engineering objective firstfeedback≤150ms after handler; 150ms is a goal, not requirement to fake/expand. If meaningful paired reduction achieved but residual remains, deliver qualified narrowcandidate with findings; if not, preserve useful change but report PERFORMANCE_UNMET and no claim fixed. Must finish scoped correctness before usertestDemo. NewDemo may carry explicit performancecandidate limitation after correctness passes.",
+      "evidence_required": [
+        "paired-performance.json",
+        "SDK-manifest.json",
+        "demo-manifest.json",
+        "result.json"
+      ],
+      "classification": "blocking"
+    }
+  ],
+  "supporting_evidence": "Full global G5/UR0 qualification, allplatform matrices, fullCTest totals and new cryptographic proof-of-proof are not blocking. Matching submit/frame/provider/camera/currentScene directly observed at navigation execution plus source/input binding suffices; no requirement to reconstruct unrelated setup commits. G5 bounded trace critical/statloss must be checked. Missing full historical completion qualification is explicit, not silently replaced by GLproxy.",
+  "terminal_interpretation": "Complete the one defined region-proof+frontier repair through existing owners. Need not meet coldemptytarget12turn which by construction lacks initialretainedpixels; preserve it as faileddiagnostic. No claim fixed unless correctness and pairedtargets meetZF4. Missingproof safety is an explicitblocker, not implicitpermission to skippixels."
+}

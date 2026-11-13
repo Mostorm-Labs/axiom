@@ -1,0 +1,385 @@
+{
+  "rows": [
+    {
+      "id": "RR-D4-BASELINE",
+      "status": "QUALIFIED",
+      "compared_pixels": 19789193,
+      "aa_boundary_pixels": 3335767,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "snapshot_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "camera": {
+        "scale": 1.0941742658615112,
+        "x": -73.3472900390625,
+        "y": -41.38238525390625
+      },
+      "width": 5724,
+      "height": 4040,
+      "actual_sha256": "b32347b32c220fdf367477349e8577589e94a335677a573ad2a9d7ad3a667f95",
+      "reference_sha256": "cdd0babd137ad85cf69f0a3d496b0472f239eefdcb8350de10aa05fad7ec710a",
+      "reference_edge_sha256": "d65c7e3cf6a53c2c8dad44ebbcf7e05ed2aa89b1cf1c06473163857743d90d89",
+      "reference_request": "out/G5-CPUW6b-local-exact-union-r1/oracle/1ca3a97f9863fd7f0d1c-pixels-request.json",
+      "reference_request_sha256": "d62a780edff498d0ce60ec3417502d457e58734f737a792d997a8005eb06b3fb",
+      "reference_prefix": "out/G5-CPUW6b-local-exact-union-r1/oracle/1ca3a97f9863fd7f0d1c",
+      "reuse": "exact fullsnapshot/currentcamera/target/resources/originalCPUbinary+brush+AA policy",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 4,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 269129.09999990463,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-lkubypao86-canonical",
+          "identity": "canvas-1",
+          "width": 5724,
+          "height": 4040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 5724,
+          "drawingBufferHeight": 4040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 5724,
+          "height": 4040,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 269201.59999990463
+      }
+    },
+    {
+      "id": "RR-D4-CANDIDATE",
+      "status": "QUALIFIED",
+      "compared_pixels": 19789193,
+      "aa_boundary_pixels": 3335767,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "snapshot_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "camera": {
+        "scale": 1.0941742658615112,
+        "x": -73.3472900390625,
+        "y": -41.38238525390625
+      },
+      "width": 5724,
+      "height": 4040,
+      "actual_sha256": "088f4713bdcc50df6767a6e992ee3d9ad09006348238aa591041bf633f9072e6",
+      "reference_sha256": "cdd0babd137ad85cf69f0a3d496b0472f239eefdcb8350de10aa05fad7ec710a",
+      "reference_edge_sha256": "d65c7e3cf6a53c2c8dad44ebbcf7e05ed2aa89b1cf1c06473163857743d90d89",
+      "reference_request": "out/G5-CPUW6b-local-exact-union-r1/oracle/1ca3a97f9863fd7f0d1c-pixels-request.json",
+      "reference_request_sha256": "d62a780edff498d0ce60ec3417502d457e58734f737a792d997a8005eb06b3fb",
+      "reference_prefix": "out/G5-CPUW6b-local-exact-union-r1/oracle/1ca3a97f9863fd7f0d1c",
+      "reuse": "exact fullsnapshot/currentcamera/target/resources/originalCPUbinary+brush+AA policy",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 4,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 103616.29999995232,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-r8b0tckzm3-canonical",
+          "identity": "canvas-1",
+          "width": 5724,
+          "height": 4040
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 5724,
+          "drawingBufferHeight": 4040,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 5724,
+          "height": 4040,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 103663.5
+      }
+    },
+    {
+      "id": "RR-D1-CANDIDATE",
+      "status": "QUALIFIED",
+      "compared_pixels": 1233021,
+      "aa_boundary_pixels": 212289,
+      "hud_excluded_pixels": 0,
+      "interior_mismatched_pixels": 0,
+      "max_interior_delta": 0,
+      "witnesses": [],
+      "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds",
+      "snapshot_sha256": "5d169e2c9c053d1407d99082bdb696a171a3161846b3f7bb86c931964933f163",
+      "camera": {
+        "scale": 1.0941742658615112,
+        "x": -73.3472900390625,
+        "y": -41.38238525390625
+      },
+      "width": 1431,
+      "height": 1010,
+      "actual_sha256": "5a6fb451107154bfd29e973596b410c3a1d8d2dc1f040a453fc477c5ba670ac9",
+      "reference_sha256": "6cbd1836526821991b4233fd69581cb07ef3d0b941090a5b367097fa55fbee71",
+      "reference_edge_sha256": "6ba1d2bc5ee1514c8b7992115d939915eb6dd933664edc87a9452715d7442a6d",
+      "reference_request": "out/G5-CPUW6b-local-exact-union-r1/oracle/678c06c09443e5680564-pixels-request.json",
+      "reference_request_sha256": "a9edf9a6a74dc404ef7a643258c6fb1b9deed078e1ed33b111c060a69e158e77",
+      "reference_prefix": "out/G5-CPUW6b-local-exact-union-r1/oracle/678c06c09443e5680564",
+      "reuse": "exact fullsnapshot/currentcamera/target/resources/originalCPUbinary+brush+AA policy",
+      "readback": {
+        "schema": "g5-qualified-default-readback-v1",
+        "id": 4,
+        "role": "canonical",
+        "status": "VALID",
+        "started": 169298.30000007153,
+        "selected": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 1,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "errors": {
+          "preexisting": {
+            "codes": [],
+            "truncated": false
+          },
+          "setup": {
+            "codes": [],
+            "truncated": false
+          },
+          "read": {
+            "codes": [],
+            "truncated": false
+          },
+          "restore": {
+            "codes": [],
+            "truncated": false
+          }
+        },
+        "restoration": {
+          "status": "RESTORED",
+          "failures": []
+        },
+        "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+        "canvas": {
+          "id": "axiom-sdk-1-h7n2cxwk8ge-canonical",
+          "identity": "canvas-1",
+          "width": 1431,
+          "height": 1010
+        },
+        "context": {
+          "identity": "context-2",
+          "attributes": {
+            "alpha": true,
+            "antialias": false,
+            "depth": true,
+            "desynchronized": false,
+            "failIfMajorPerformanceCaveat": false,
+            "powerPreference": "default",
+            "premultipliedAlpha": true,
+            "preserveDrawingBuffer": true,
+            "stencil": true,
+            "xrCompatible": false
+          },
+          "drawingBufferWidth": 1431,
+          "drawingBufferHeight": 1010,
+          "lost": false
+        },
+        "before": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "rectangle": {
+          "x": 0,
+          "y": 0,
+          "width": 1431,
+          "height": 1010,
+          "origin": "top-left",
+          "readY": 0
+        },
+        "defaultReadBufferBefore": 1029,
+        "defaultReadBufferAfter": 1029,
+        "after": {
+          "readFramebuffer": "DEFAULT",
+          "drawFramebuffer": "DEFAULT",
+          "readBuffer": 1029,
+          "pixelPackBuffer": "NONE",
+          "pack": {
+            "PACK_ALIGNMENT": 4,
+            "PACK_ROW_LENGTH": 0,
+            "PACK_SKIP_ROWS": 0,
+            "PACK_SKIP_PIXELS": 0
+          }
+        },
+        "finished": 169303
+      }
+    }
+  ]
+}

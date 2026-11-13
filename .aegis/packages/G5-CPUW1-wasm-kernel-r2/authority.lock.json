@@ -1,0 +1,52 @@
+{
+  "status": "CURRENT_USER_AUTHORIZED_FIRST_CPU_WORKER_IMPLEMENTATION_SLICE",
+  "human_source": {
+    "thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "request": "给当前提交节点打上tag，然后开始独立 CPU Worker方案的改造吧",
+    "clarification": "几何及精确查询计算继续使用同一份C++编译为WASM，JS仅承载消息/调度",
+    "prior_choice": "立即显示编辑反馈，按原顺序提交；navigation也持续响应"
+  },
+  "accepted_checkpoint": {
+    "revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "tag": "g5-pre-cpu-worker-20261111-e275da6e",
+    "tag_is": "development checkpoint; no SDK release/version claim"
+  },
+  "authority": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "3d63dab9338ca96915bf26cafdb18dd82a1cf0bd3c5591ceeb212bfa5ddbf90c"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "statements": [
+    "Current slice implements the shared CPU exact-path kernel, resumable job representation and an actual separate Web Worker/WASM executor. It does not activate asynchronous canonical commits yet. This is the first vertical slice of user-authorized CPU Worker migration, not the full promised immediate-next-edit behavior.",
+    "Existing Runtime/Interaction remains sole input/admission/state/OperationEngine/History owner. Render owns derived caches, qualified publication and GPU context. Worker owns only isolated CPU computation/job scratch. No Worker RuntimeComposition, SemanticDocument, OperationEngine, Scene owner or GPU surface.",
+    "All geometry, validation of geometry values, f32 conversion, stroke construction, sequential PathOps and path decode happen in shared C++ compiled to WASM. JS may perform bounded transport/envelope checks, transfer buffers, scheduling/cancel and lifecycle only, never implement a second geometry/hit/brush/mask algorithm.",
+    "Extract existing local erasePath Sweep/Filled implementation into one private Render CPU implementation consumed by main and Worker targets. Preserve original f32/persegment Round stroke/sequential leftfold union/order/filled-fillrule/failure/finiteness semantics. No worldunion-theninverse, balancing, approximation or AA/Brush changes.",
+    "Represent partial work with fully qualified immutable source and a cursor/computed-prefix path; partial never masquerades as complete. Native reference path remains independently frozen as oracle, not calling the extracted optimized implementation for expected results.",
+    "No background job can directly update existing non-atomic usage/caches or mutable replayOutput. Transfer an independent task-owned value/byte representation, no pointer/Skia context/SDK internals cross JS business exports.",
+    "Use accepted prebuilt singlethreaded Skia/Semantic supplies. A separate Worker may instantiate CPU-only WASM without pthread/sharedmemory. No dependency source rebuild/newlock/native std::thread pool/OffscreenCanvas/GPU owner move in CW1.",
+    "Sidecar is private normal-package infrastructure, linked from same build/package and bound to its kernel/protocol identity; root SDK business exports remain unchanged. CW1 may compile/package sidecar but must not silently activate asynchronous editing/public-contract behavior before CW2.",
+    "Later CW2 must model Up as input terminal plus pending semantic work; clear pointer contacts and preserve original confirmed coordinates, then owner validates and atomically commits in order. CW3 must cover immediate eraser/nav/shape/sticky/table/image/UndoRedo. These later product behaviors are authorized goals but are not to be implemented by guessing missing semantics in CW1.",
+    "Preserve all prior HP/TP/CFH/LQP evidence including LQP FROZEN_PROOF_INCOMPLETE and retained local raw files. CW1 does not retroactively close the missing Web Up roots."
+  ]
+}

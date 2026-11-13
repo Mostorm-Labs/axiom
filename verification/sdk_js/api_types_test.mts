@@ -108,3 +108,8 @@ await sdk.setBrushConfig({family:7});
 void sdk.setBrushConfig({family:1,version:2,thinning:.99,streamline:.13,smoothing:.61,easing:1,pressureModel:2,startTaper:0,endTaper:16,startCap:true,endCap:true});
 // @ts-expect-error pressure model is a closed versioned enum
 void sdk.setBrushConfig({family:1,pressureModel:3});
+
+const pendingState=sdk.readState().pending;
+if(pendingState){const serial:string=pendingState.intents[0].token.serial;void serial;
+// @ts-expect-error pending DTO is read-only
+pendingState.intents.push({});}

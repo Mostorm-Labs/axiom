@@ -1,0 +1,102 @@
+{
+  "continue_until_terminal_state": true,
+  "implementation": {
+    "required_changes": [
+      "Preflight repo/package identities and preserve current dirtydelta/SDKresults. Reuse prior readonlyfacts; distinguish manualrefresh at~10s from pre-refreshblank.",
+      "Implement a small finite repo-native root-SDK diagnostic driver and capped private observations only where required. Freeze observer/source/build/inputbefore firstlaunch. Do not rewrite production behavior.",
+      "Complete IF-WARM, necessary IF-SHORT and one actual20minIF-IDLE. Keep all failed/notreproduced facts. Reconcile draw admission/commit/preview visibility/current camera replacement plus RAF and resources.",
+      "Run focused diagnosticdriver/ring/clock tests plus existing affectedowner handoff/frame tests only when observation files changed. No allproject or longperformance matrix.",
+      "Materialize concise exact diagnosis/result with proposed minimalproductionrepair ifcausal, otherwise preciseunknown/no-repro; proactively callback control, stop."
+    ],
+    "forbidden_changes": [
+      "No production behavior fix in this diagnosis package, including catch-retryloop, overlayclearpolicy, forcepresent orwarmup; no guessedprewarm orpermanentRAF.",
+      "No Brush/pressure/geometry/corner-cap modification; no semantic/maskcodec/math/order/OperationEngine change; no newpublicAPI/debugconsumerinterface orsecondowner.",
+      "No budgets/threads/Workers/quanta/timers/quiettime changes. No persistence/exportfeature, image302qualification orbroadUR3/4/5matrices.",
+      "No user4333/4331/4332reload,input,defaultpromotion orassetmodification. Allactualtests isolated. No commit/push/tag/mainmerge/cleanup/stash/reset/gitclean/newworktree/subagents.",
+      "No old evidence edits, tolerance widening, failures hidden as success, logcollectortimestamp treated asli veevent, noGPUhardwaretimeinference."
+    ]
+  },
+  "scope": {
+    "production_observation_only": [
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/cpu_pending_erase.cpp",
+      "runtime/interaction/src/pending_local_intents.cpp",
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/webgl_surface_backend.cpp",
+      "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp",
+      "sdk/web/web_runtime_adapter.cpp",
+      "sdk/web/axiom.mjs",
+      "sdk/common/session.cpp",
+      "verification/sdk_web_external/consumer/pointer_input.mjs"
+    ],
+    "observations": "Existing privatecompile guards or verification-only harness, nohotwork normalOFF, no new publicqualifiedseam. Any helper header minimal internalonly.",
+    "tests_tools": [
+      "verification/runners/g5/idle_input_feedback_*",
+      "verification/tests/g5_idle_input_feedback*",
+      "verification/tests/test_g5_idle_input_feedback*",
+      "affected existingowner tests+their CMakeLists onlyif needed"
+    ],
+    "docs": [
+      "docs/planning/G5_IDLE_INPUT_FEEDBACK_20261113.md"
+    ],
+    "result_root": ".aegis/results/G5-idle-input-feedback-diagnostic-r1",
+    "out_root": "out/G5-idle-input-feedback-diagnostic-r1"
+  },
+  "tests": {
+    "required": [
+      "IF1",
+      "IF2",
+      "IF3",
+      "IF4"
+    ],
+    "scope": "Driver observation canbe testedwithout mocking realedit; actualrootSDKdriver required; nativeexistingowner focused tests if source observationchanged."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  },
+  "evidence": {
+    "blocking": [
+      "IF1",
+      "IF2",
+      "IF3",
+      "IF4"
+    ],
+    "corroborative": [
+      "olduserfootercount/BUSY",
+      "oldbatchedconsole",
+      "3s5sbands",
+      "priorperformancecounters",
+      "OSforegroundwhenunobservable"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Frozen diagnostic sequence completed or precise environmental/finite blocker fully recorded, no claimedfix.",
+      "Actual symptom causallylocalized with identity chain OR honest finite no-reproduction with eliminatedhypotheses and residualuncertainty.",
+      "Exact sources/assets/inputs/results reviewable, allownedcleanup, oldworkanduserdocs unchanged."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "REPOSITORY_IDENTITY_OR_AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT_OR_BINDING",
+      "ENVIRONMENT_OR_FOREGROUND_VISIBILITY_QUALIFICATION",
+      "FROZEN_DIAGNOSTIC_ORACLE_FAILURE",
+      "EXECUTION_LIMIT",
+      "TASK_OR_VERIFICATION_DESIGN_DEFECT"
+    ],
+    "policy": "Ordinary driver/compile issues repaired inscope and rerun only within corrective budget. No broadened finishline. No-repro is valid diagnosticterminal, not fixPASS."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "notifications": "Human-authorized bidirectional: before each browser run and realidle start/end, causal finding/blocker/final resultSHA. No waitACK for CLEAR/preflight/RED/diagnostic. Stop after package; codefix requires successor scope.",
+    "materialization": "Same-repository shared-controlled-worktree exactpatch/newfiles/hashrefs; no mandatorycommit."
+  }
+}

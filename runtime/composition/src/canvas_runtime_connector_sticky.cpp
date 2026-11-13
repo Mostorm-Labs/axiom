@@ -64,6 +64,7 @@ StickyCommandReceipt CanvasRuntimeFacade::createSticky(const StickyCreateRequest
   semantic::ObjectRecord object{}; object.id=request.objectId.isZero()?runtime_.allocateTextIdentity():request.objectId; if(object.id.isZero())return rejectSticky(ConnectorFailureReason::kObjectRejected); object.kind=semantic::ObjectKind::kSticky; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
   runtime_.materializeAppearance(object.properties,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kConnector);
   if (!assignRootOrderKey(runtime_.textObjects(), object.placement)) return rejectSticky(ConnectorFailureReason::kInvalidRequest);
+  if(runtime_.pendingLocalEnabled()){if(!runtime_.enqueuePendingCreate({object},true))return rejectSticky(ConnectorFailureReason::kObjectRejected);StickyCommandReceipt r;r.state=ConnectorCommandState::kPending;r.pendingSerial=runtime_.lastPendingLocalSerial();r.reason=ConnectorFailureReason::kNone;r.objectId=object.id;return r;}
   const auto f=runtime_.allocateOperationId(), i=runtime_.allocateOperationId();
   if(f.isZero()||i.isZero()) return rejectSticky(ConnectorFailureReason::kObjectRejected);
   semantic::Operation forward{f,runtime_.textDocument(),1,1,semantic::InsertObjectsOp{{object}}};

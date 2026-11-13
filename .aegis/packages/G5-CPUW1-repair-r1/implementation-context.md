@@ -1,0 +1,8 @@
+# CW1 consolidated repair
+User already authorized independentCPUWorker migration and that all geometry/exactmath remainsC++→WASM. Tag e275da6e checkpoint pushed. CW1dirty foundation acceptedpartial: real19Workeroriginalpathparity/heartbeat/64MiBsameRenderownerbudget. FullCW1blockedassetBase/CSP andqueueledgerproof; cannotactivateUp.
+
+PreserveallvalidCW1work andraw. ReviewG5-CPUW1-control-r1/control-review.json bindsfacts. Current16querycompute4.392s vs total22.851s from3220eight-segmentsteps. Suspect nestedsetTimeout0 workerstepwait, needcontrolledoldimmutable/newpair. FixWorkerturnscheduler usingfairqueuedtasks,same8/2mslimits,canceloutsideunion stillworks. Never microtaskdrain oronehugebatch.
+
+FixrootprivateassetBase URL usesnormalizedassets (currentlyrawrelativebaseinvalid). Keepownerbinding on failedcanonicalclose untilsuccess, terminateregisteredworkers/releasegrants safely, ownergeneration notreset. ExistingDataPort canforcePUBLICATION_PENDINGclose; retainpacketrelease thenretry, notfakenoopclose.
+
+Freezeonecohesivetestplan,offlineactualdrivernegativebeforebrowser. Savefullperexecutoradmissionandterminalledgers beforeclose/newclient (CW1firstgenerationmissing),actualCSPworker-src none andassetsrelocatedpath,referencewithsamegeometry. RequestreturnedbytesareSkPathdespiteold.rgbaextension; preserve. Threewindows180+120+120=420 noextrastarts. NormalrootbusinessAPIs/types/math/commitunchanged, noasyncUpyet. Stopafterrepairreview; ControlpreparesCW2withrealsupport7200/chunk/owneringress/receipt semantics.

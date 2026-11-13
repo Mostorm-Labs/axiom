@@ -104,6 +104,7 @@ runtime::SelectionSummary CanvasEditingRuntime::selectionSummary() const noexcep
         unavailable(R::kClosed);
         return out;
     }
+    if(pendingSelectionCreated()){out.selectionRevision=selection_.revision();out.semanticGeneration=semanticGeneration_.current().value();return out;}
     try {
         out = selection_.summary(semanticObjects_);
         out.semanticGeneration = semanticGeneration_.current().value();

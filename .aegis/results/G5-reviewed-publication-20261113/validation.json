@@ -1,0 +1,82 @@
+{
+  "schema": "axiom-reviewed-publication-validation-v1",
+  "created_utc": "2026-11-13T10:40:10.693126+00:00",
+  "branch": "codex/g5-cpu-worker",
+  "base": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "scope": [
+    "G5-postworker-render-reuse-r1",
+    "G5-mixed-reference-qualification-r1",
+    "G5-canonical-convergence-latency-r1",
+    "G5-idle-input-feedback-diagnostic-r1",
+    "G5-live-erase-input-feedback-r1",
+    "G5-corner-join-repair-r1",
+    "G5-checkpoint-publication-integration-r1"
+  ],
+  "verification": {
+    "native_initial_selected": {
+      "passed": 50,
+      "failed": 1,
+      "total": 51,
+      "log": {
+        "path": "out/G5-reviewed-publication-20261113/native-tests.log",
+        "sha256": "478e2fe82c84a5127deaa8d24925ed471ac155007e6d00e0babce221ab2f30a6"
+      },
+      "retained_failure": "G5CpuPostworkerReplayReuse: ADJACENT_DRAW_RANGES_RECOMPILED_SAME_CHECKPOINT"
+    },
+    "native_corrected_focused": {
+      "passed": 13,
+      "failed": 0,
+      "log": {
+        "path": "out/G5-reviewed-publication-20261113/integration-focused-tests.log",
+        "sha256": "836d7e1c44112a5f349d9e086e31efc9f3557480415da21dacddff51a85e9fda"
+      },
+      "description": "Includes failed replay regression, corner, prepared body, render reuse, exact locality/parity/history"
+    },
+    "node": {
+      "passed": 29,
+      "failed": 0,
+      "files": 9,
+      "log": {
+        "path": "out/G5-reviewed-publication-20261113/node-all-tests.log",
+        "sha256": "84fd2456ce8fe1d35bbbc34c617fe9776b6b669dcb087de3eb60b1e5c689900e"
+      }
+    },
+    "python": {
+      "passed": 12,
+      "failed": 0,
+      "log": {
+        "path": "out/G5-reviewed-publication-20261113/python-tests.log",
+        "sha256": "823f19da8128d15b672a05316ca20895f29087004a101a36cf1db75adfffe04d"
+      }
+    },
+    "runtime_boundaries": {
+      "passed_contracts": 120,
+      "command": "python3 tools/check_runtime_boundaries.py --root ."
+    },
+    "diff_check": {
+      "source_docs_tests_tools": "PASS: git diff --cached --check -- explicit77sourcepaths",
+      "frozen_evidence_archives": {
+        "exit": 2,
+        "whitespace_warnings": 25,
+        "scope": "Only .aegis immutable package text and archived patches, including exact CRLF context. Preserve hashed historical bytes; no source whitespace failures.",
+        "log_sha256": "6e605ca0044718753d62dbbe256ea2ace44b1ce3aaa79d6e1cd2c4d4fbc7d483"
+      }
+    },
+    "SDK": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-r1/SDK-manifest.json",
+      "sha256": "84785f9ff4f771148d161dc7c87334e3d35b11efb6b972b1d4538017001a635a"
+    },
+    "integration_review": {
+      "path": ".aegis/results/G5-checkpoint-publication-integration-control-r1/control-review.json",
+      "sha256": "21e9d2a33367e96245f6db9157b280ae425d45d9ba72256d7670865450ed8279"
+    }
+  },
+  "publication_policy": "Explicit reviewed source/docs/tests/tools + compact recent package/result/control records. Raw images/videos/WASM/build artifacts and unrelated old untracked evidence remain local.",
+  "limits": [
+    "No overall G5/P34/release/performance PASS",
+    "Idle drawing/preview defect remains open",
+    "PostWorker convergence and immediate zoom-out latency remain open",
+    "Global mixed image pixel qualification remains open"
+  ],
+  "user_Demos": "4331-4334 preserved; no assets overwritten"
+}

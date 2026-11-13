@@ -1,0 +1,15 @@
+{
+  "anchor": "c5ba55996319e96c801f4e275814473137d7e85c",
+  "files": {
+    "runtime/render/tests/cpu_local_exact_original.hpp": "ee446d2b5219ae44b14ce5fdbdbc977821710af871349e06ab3ea3f2e7185563",
+    "runtime/render/tests/cpu_exact_kernel_test.cpp": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9",
+    "runtime/render/tests/cpu_prefix_continuation_test.cpp": "ede76b8cd8f0489fff3223c3b2173a45db19eba24850a1645a9634774215d3d0",
+    "verification/runners/g5/cpu_complete_v2_reference.cpp": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a",
+    "out/G5-CPUW3-complete-interaction-r2/cpu-reference": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603",
+    "runtime/render/src/selection_region_geometry.cpp": "9844bac0851e1d863e3b0dbf4efba2432f333ecef49e2a8e0c5e12ea61deb658"
+  },
+  "reference_isolation": "test-only original sequential function + anchored component/history/selection evaluator with pathCache calls physically removed; oldfullkernel/protocol/reference files unchanged",
+  "invalid_suffix": "anchored wire/admission finite scanner precedes originalraw helper; originalraw NaN shortcutMiss preserved inr2 output; admitted oracleInvalid",
+  "pixel_policy": "original ur0/pixel_oracle.mjs unchanged <=2outside independentAA",
+  "pixel_policy_sha256": "dba87ac4edd0a36d51360e7e2adeb2433efab569ffe357c617952610261c7be1"
+}

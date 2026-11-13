@@ -1,0 +1,49 @@
+<!doctype html><meta charset="utf-8"><title>Root SDK CPU Worker consumer</title>
+<style>#mount{width:800px;height:600px}</style><div id="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime,SDK_VERSION,SDK_SEMVER,SDK_BUILD_NUMBER} from './axiom.mjs';
+const results=[],errors=[],packets=[],held=[];let sdk,hold=false,created=0,jobs=0,terminals=0,sequence=0;
+const check=(v,m)=>{if(!v)throw Error(m);results.push(m);};
+const pause=()=>new Promise(r=>setTimeout(r,16));
+const until=async(fn,label)=>{const start=performance.now();while(!fn()){if(performance.now()-start>30000)throw Error('timeout '+label);await pause();}};
+const NativeWorker=window.Worker;
+window.Worker=class extends NativeWorker{
+ constructor(...args){super(...args);++created;}
+ postMessage(value,...args){if(value?.type==='run')++jobs;return super.postMessage(value,...args);}
+ set onmessage(callback){super.onmessage=event=>{if(event.data?.type==='terminal'){++terminals;if(hold){held.push(()=>callback(event));return;}}callback(event);};}
+};
+const pointer=(phase,x,y)=>{const r=sdk.canvas.getBoundingClientRect(),e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'pen',clientX:r.left+x,clientY:r.top+y,pressure:.5,buttons:phase==='up'?0:1,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:++sequence*8});sdk.canvas.dispatchEvent(e);};
+const stable=()=>until(()=>{const s=sdk.readState();return !s.pending?.intents.length&&!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration;},'canonical settle');
+try{
+ sdk=await createRuntime({mount:document.getElementById('mount'),permission:'localSingleUser',builtinFonts:false,onOperation:b=>packets.push(b),onError:e=>errors.push(String(e))});
+ sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+ const buildInfo=sdk.readBuildInfo();check(buildInfo.sdkVersion===SDK_VERSION&&buildInfo.sdkSemver===SDK_SEMVER&&buildInfo.buildNumber===SDK_BUILD_NUMBER,'matching root and engine build');
+ check(created===1,'one actual module Worker started');
+ await sdk.selectBrush('round-handdrawn',4);await sdk.selectTool('ink');
+ pointer('down',100,250);for(let i=1;i<=64;++i)pointer('move',100+i*7,250+20*Math.sin(i/8));pointer('up',548,250);await stable();
+ check(sdk.readState().objects===1,'real v4 stroke committed');
+ await sdk.setEraser({mode:2,diameter:32});hold=true;const before=sdk.readState();
+ pointer('down',300,180);for(let i=1;i<=12;++i)pointer('move',300,180+i*12);pointer('up',300,324);
+ check(sdk.readState().activeContacts===0,'Up releases contact before compute completion');
+ check(sdk.readState().pending.intents.some(i=>i.kind==='erase'),'erase represented by Runtime pending DTO');
+ await until(()=>jobs>0&&held.length>0,'real Worker result');
+ check(sdk.readState().generation===before.generation,'held real Worker result has no canonical mutation');
+ await sdk.selectShape('rectangle');pointer('down',600,100);pointer('move',720,180);pointer('up',720,180);
+ const pending=sdk.readState();check(pending.pending.intents.some(i=>i.kind==='create'),'creation admitted behind erase');
+ check(pending.objects===1&&pending.generation===before.generation,'later creation does not overtake erase');
+ const provisional=pending.pending.selection.primary;check(!!provisional&&!pending.selected.includes(provisional),'pending object identity excluded from canonical selection');
+ await sdk.panBy(8,4);check(sdk.readState().camera.x!==before.camera.x,'navigation responds during pending compute');
+ await sdk.close().then(()=>{throw Error('close accepted pending edit');},e=>check(e.code==='BUSY','pending close explicitly Busy'));
+ hold=false;while(held.length)held.shift()();await stable();
+ check(sdk.readState().objects===2&&terminals>0,'real Worker results and ordered creation committed');
+ check(packets.length>=3,'real operations published after commit');
+ await sdk.undo();await stable();check(sdk.readState().objects===1,'one Undo removes queued creation');
+ await sdk.redo();await stable();check(sdk.readState().objects===2,'Redo restores creation');
+ const snapshot=await sdk.captureSnapshot({generation:sdk.readState().generation,documentRevision:'1',recoveryFrontier:[8,1,16,1,24,1]});
+ check(snapshot.bytes.length>0&&snapshot.checkpointDigest.length===32,'committed snapshot is owned and digested');
+ const id=sdk.readState().documentId;await sdk.close();
+ sdk=await createRuntime({mount:document.getElementById('mount'),documentId:id,restore:{bytes:snapshot.bytes,metadata:{documentRevision:'1',recoveryFrontier:[8,1,16,1,24,1],checkpointDigest:snapshot.checkpointDigest,resourceBinding:'1'}},permission:'localSingleUser',builtinFonts:false,onError:e=>errors.push(String(e))});
+ check(sdk.readState().objects===2,'same-build fresh owner restores Worker-edited document');await sdk.close();
+ check(errors.length===0,'no Runtime errors');document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,buildInfo,workers:created,jobs,terminals});
+}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(e.stack||e),errors,jobs,terminals,state:sdk?.readState()});}
+</script>

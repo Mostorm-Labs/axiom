@@ -1,0 +1,58 @@
+{
+  "status": "BLOCKED_CONFIRMED_SCOPED_CAUSE_CLOSED_FULL_CW2_NOT_ACCEPTED",
+  "result_sha256": "e83d3a36bf08a8a3ce00072725d1300b1512682c9ec960005410ad9d411e42de",
+  "artifact_manifest_sha256": "b07d6975723b94a2497af89b061355bef7e2987b4c79a9736aff873d2f9460ed",
+  "artifact_files": 883,
+  "artifact_mismatches": [],
+  "source_files": 1228,
+  "source_mismatches": [],
+  "independent_attribution_sha256": "725892a9c5af03a93c5648211158687fe7260eafc0877bbe9bdd0b3e09c0badf",
+  "snapshot_error": {
+    "conclusion": "encode accepts snapshot largerthan32MiB;decode preflight rejects kLimitExceeded",
+    "decode_error": 7,
+    "decode_ok": false,
+    "encode_ok": true,
+    "encoded_bytes": 35456391,
+    "limit_bytes": 33554432,
+    "objects": 40,
+    "operations": [
+      {
+        "bytes": 29954294,
+        "decode_error": 0,
+        "disposition": 0
+      },
+      {
+        "bytes": 35412,
+        "decode_error": 0,
+        "disposition": 0
+      }
+    ],
+    "status": "REPRODUCED",
+    "causal_binding": {
+      "fixture": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "fixture_sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c",
+      "operations": [
+        {
+          "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate7200/operation-0.axsnap",
+          "sha256": "51213879796fc380d3629bb2bf80a0f316d5cf5c1b116e72233ea0eb6b8227f8"
+        },
+        {
+          "path": ".aegis/results/G5-CPUW2-history-custody-r1/local-web/G5CWH-PAIRS/candidate7200/operation-1.axsnap",
+          "sha256": "39b166e3d5552d5c4f740c47cd8af2abb669f29b715668d626c2395d8254a998"
+        }
+      ],
+      "offline_probe": ".aegis/results/G5-CPUW2-history-custody-r1/offline-snapshot-limit.cpp",
+      "offline_probe_sha256": "8d7c99e32e5468edf1b3b906e9e65a56dbd9092a6ff52fb5e62e0af9aa8aa348",
+      "original_owner": "SnapshotBootstrapper→OperationEngine→SnapshotCodec encode/decode, unchangedSemantic owner",
+      "error_name": "SemanticError::kLimitExceeded"
+    }
+  },
+  "normalOFF_1600_Up_ms": 3880.899999976158,
+  "candidate_1600_Up_ms": 0.3999999761581421,
+  "normalOFF_1600_total_ms": 5028.699999928474,
+  "candidate1600_total_ms": 7178.600000023842,
+  "candidate7200_total_ms": 52202.699999928474,
+  "verified_behavior": "MainUpisolated+fullhistoricalCPUreplay0; actual2commitsandpresented2 at7200. Strictpendingfeedback/navfaultandAAclosure notrun; no defaultON.",
+  "next_scope": "Separately align snapshotencode/decode admission/limits andevaluate exactnumeric-preservingincrementalWorkerpreparation/reuse; no broadBrush/schema/workerpoolchangewithout explicitdesign.",
+  "publication": "Checkpointtagverifiedremote, workerchangeslocaluncommitted; no furthercommitpush requested."
+}

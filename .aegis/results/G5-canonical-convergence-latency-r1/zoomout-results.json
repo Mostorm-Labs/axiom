@@ -1,0 +1,166 @@
+{
+  "rows": [
+    {
+      "role": "BASELINE",
+      "row": "partial-erase-zoom-out-immediate",
+      "status": "OBSERVED",
+      "Up_handler_ms": 172.29999995231628,
+      "Up_to_firstwheel_ms": 27.399999976158142,
+      "input_queue_delays_ms": [
+        27.399999976158142,
+        16.199999976157414,
+        -0.10000004768335202,
+        1.600000047683352,
+        0.8000000238425855,
+        0.8999999761581421
+      ],
+      "wheel_handlers_ms": [
+        0.5,
+        0.3999999761581421,
+        0.30000007152557373,
+        0.2999999523162842,
+        0.3999999761581421,
+        0.20000004768371582
+      ],
+      "firstGL_proxy_ms": 8861.100000023842,
+      "canonical_currentcamera_feedback_ms": 8875.600000023842,
+      "Up_to_settled_ms": 8983.899999976158,
+      "RAFs": 531,
+      "RAFs_sum_ms": 4943.200000286102,
+      "RAF_p95_ms": 9.100000023841858,
+      "RAF_max_ms": 37.5,
+      "outside_RAF_ms": 3932.3999997377396,
+      "errors": [],
+      "closed": true,
+      "camera": {
+        "scale": 1.2750000953674316,
+        "x": -62.75006103515625,
+        "y": -26.25
+      },
+      "feedback_scope": "all6wheels+canonicalgeneration/currentcamera onFrame; earliestLOD notqualified",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-BASELINE/partial-erase-zoom-out-immediate"
+    },
+    {
+      "role": "BASELINE",
+      "row": "append-zoom-out-immediate",
+      "status": "OBSERVED",
+      "Up_handler_ms": 2.399999976158142,
+      "Up_to_firstwheel_ms": 95.20000004768372,
+      "input_queue_delays_ms": [
+        95.20000004768372,
+        84.29999999999927,
+        67.9999999761585,
+        51.399999999999636,
+        34.90000004768444,
+        18.399999976158142
+      ],
+      "wheel_handlers_ms": [
+        1.1999999284744263,
+        0.30000007152557373,
+        0.10000002384185791,
+        0.20000004768371582,
+        0.19999992847442627,
+        0.20000004768371582
+      ],
+      "firstGL_proxy_ms": 8620.100000023842,
+      "canonical_currentcamera_feedback_ms": 8648.399999976158,
+      "Up_to_settled_ms": 8839.0,
+      "RAFs": 515,
+      "RAFs_sum_ms": 4864.300000786781,
+      "RAF_p95_ms": 9.100000023841858,
+      "RAF_max_ms": 48.699999928474426,
+      "outside_RAF_ms": 3784.099999189377,
+      "errors": [],
+      "closed": true,
+      "camera": {
+        "scale": 1.2750000953674316,
+        "x": -62.75006103515625,
+        "y": -26.25
+      },
+      "feedback_scope": "all6wheels+canonicalgeneration/currentcamera onFrame; earliestLOD notqualified",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-BASELINE/append-zoom-out-immediate"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "partial-erase-zoom-out-immediate",
+      "status": "OBSERVED",
+      "Up_handler_ms": 169.5,
+      "Up_to_firstwheel_ms": 26.600000023841858,
+      "input_queue_delays_ms": [
+        26.600000023841858,
+        15.40000002384113,
+        0.3000000476840796,
+        3.500000023841494,
+        -0.09999995231555658,
+        1.2999999523162842
+      ],
+      "wheel_handlers_ms": [
+        0.5,
+        0.2999999523162842,
+        0.19999992847442627,
+        0.2999999523162842,
+        0.2999999523162842,
+        0.30000007152557373
+      ],
+      "firstGL_proxy_ms": 8744.399999976158,
+      "canonical_currentcamera_feedback_ms": 8758.100000023842,
+      "Up_to_settled_ms": 8866.299999952316,
+      "RAFs": 524,
+      "RAFs_sum_ms": 4868.700001716614,
+      "RAF_p95_ms": 9.0,
+      "RAF_max_ms": 33.700000047683716,
+      "outside_RAF_ms": 3889.399998307228,
+      "errors": [],
+      "closed": true,
+      "camera": {
+        "scale": 1.2750000953674316,
+        "x": -62.75006103515625,
+        "y": -26.25
+      },
+      "feedback_scope": "all6wheels+canonicalgeneration/currentcamera onFrame; earliestLOD notqualified",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-CANDIDATE/partial-erase-zoom-out-immediate"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "append-zoom-out-immediate",
+      "status": "OBSERVED",
+      "Up_handler_ms": 2.8000000715255737,
+      "Up_to_firstwheel_ms": 95.5,
+      "input_queue_delays_ms": [
+        95.5,
+        84.99999992847461,
+        68.89999995231665,
+        52.399999999999636,
+        35.899999928474244,
+        19.5
+      ],
+      "wheel_handlers_ms": [
+        1.100000023841858,
+        0.40000009536743164,
+        0.20000004768371582,
+        0.19999992847442627,
+        0.30000007152557373,
+        0.19999992847442627
+      ],
+      "firstGL_proxy_ms": 3912.5,
+      "canonical_currentcamera_feedback_ms": 3994.0,
+      "Up_to_settled_ms": 4185.899999976158,
+      "RAFs": 235,
+      "RAFs_sum_ms": 2391.2999999523163,
+      "RAF_p95_ms": 30.399999976158142,
+      "RAF_max_ms": 49.89999997615814,
+      "outside_RAF_ms": 1602.7000000476837,
+      "errors": [],
+      "closed": true,
+      "camera": {
+        "scale": 1.2750000953674316,
+        "x": -62.75006103515625,
+        "y": -26.25
+      },
+      "feedback_scope": "all6wheels+canonicalgeneration/currentcamera onFrame; earliestLOD notqualified",
+      "source": "out/G5-canonical-convergence-latency-r1/web/CL-D4-MIXED-CANDIDATE/append-zoom-out-immediate"
+    }
+  ],
+  "imagequalification": "open302, canonical_latency_guard required",
+  "singlepair": true
+}

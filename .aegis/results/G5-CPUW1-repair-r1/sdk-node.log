@@ -1,0 +1,34 @@
+TAP version 13
+# JS SDK public error contract PASS
+# Subtest: verification/sdk_js/api_test.mjs
+ok 1 - verification/sdk_js/api_test.mjs
+  ---
+  duration_ms: 112.760292
+  ...
+# Only a completed GPU fence may prepare again in the same opportunity
+# Subtest: verification/sdk_js/frame_retry_test.mjs
+ok 2 - verification/sdk_js/frame_retry_test.mjs
+  ---
+  duration_ms: 95.209125
+  ...
+# canvas control API tests PASS
+# Subtest: verification/sdk_web_external/control_api_test.mjs
+ok 3 - verification/sdk_web_external/control_api_test.mjs
+  ---
+  duration_ms: 100.872
+  ...
+# pointer input tests PASS
+# Subtest: verification/sdk_web_external/pointer_input_test.mjs
+ok 4 - verification/sdk_web_external/pointer_input_test.mjs
+  ---
+  duration_ms: 85.450667
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 123.505583

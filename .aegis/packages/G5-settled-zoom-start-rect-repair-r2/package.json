@@ -1,0 +1,51 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-settled-zoom-start-rect-repair-r2",
+  "status": "FROZEN_AUTHORIZED_SINGLE_VARIABLE_SUCCESSOR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "bc40e42cd83b290152703631b2ba80a9329a78f4",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-settled-zoom-start-rect-repair-r2"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "354732c4e35b36a5c3e44f570e8d3eb5730be6b7055685d93cee32bdf8741213"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "3cc6fecf271a6f354b320273b6b560d99bfd90fc005adcc5a7c117467e99a0ba"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5f33b22348b75a360faf6e39e70926a3abe9a2a15ce54d7ea916ea471e822a2c"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0d91f34612b5be071385028dbc14ebd03cdebcc0e1699135dcd07353403d7625"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "84f9da99385efe0849019812948fa8c473a817899e064262b84ed08475646f20"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "sha256": "26519a75cb17fc9616e21bc0f2558dc305f91c1b48f5e844d979bb3547f71ef7"
+  }
+}

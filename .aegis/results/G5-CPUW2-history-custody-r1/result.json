@@ -1,0 +1,273 @@
+{
+  "schema": "g5-cpu-worker-history-custody-result-v1",
+  "task_id": "G5-CPUW2-history-custody-r1",
+  "status": "BLOCKED",
+  "blocker": "FROZEN_VERIFICATION_FAILURE",
+  "secondary_blocker": "TOTAL_TAIL_REGRESSION_REMAINS",
+  "result_revision": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+  "execution_ref": "refs/heads/codex/geometry-navigation-integration",
+  "package": {
+    "path": ".aegis/packages/G5-CPUW2-history-custody-r1/package.json",
+    "sha256": "8a5bef1e1281b608246120e4de3cc0ef00bf24641a0c5bbf2cc0afb53581a4b3"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1",
+    "artifact_manifest": "artifact-manifest.json"
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-CPUW2-history-custody-r1/source-delta.patch",
+    "sha256": "2722e1db190b792000a33e4e72a6d204886a2e47c7a3bf57d1f2232148796667",
+    "preserves_all_accepted_CW1_CWR_CW2_dirty": true
+  },
+  "evidence_input_refs": {
+    "PackageBindingPreflight.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/PackageBindingPreflight.json",
+      "sha256": "c2bd8b7352b60f45f876d2e35a7e177606a0ad207f1c07ab57c1c2b087798ad6"
+    },
+    "EvidenceContractPreflight.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/EvidenceContractPreflight.json",
+      "sha256": "00fc326a5c30e97cc95e42eccba6591782a1e401c19da8dae8108d7a3d7f50c9"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/implementation-design.json",
+      "sha256": "4d2e450916e7f19db00654f91caf2a012aa02eed848f6174f123ef81f8c0b3ae"
+    },
+    "native-red.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/native-red.json",
+      "sha256": "18cd84982e4567995da94658aa06078a6f8404378fffc4d5f660a2eff6e40a17"
+    },
+    "native-green.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/native-green.json",
+      "sha256": "8651b14f8ed49dbe08eab66b73a51e2487f8061e20932ce264f02e1ab89494da"
+    },
+    "history-path-custody.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/history-path-custody.json",
+      "sha256": "87866d414ef7a3cec50bf6243781155d6ee7975ae3414aadde9c3e634d97b82f"
+    },
+    "memory-lifecycle.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/memory-lifecycle.json",
+      "sha256": "d48f5da34c04474f17497c62611d25faf0fb7336d6db590bfc5bb9829f67e838"
+    },
+    "ordered-state-faults.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/ordered-state-faults.json",
+      "sha256": "2d81b2ebb79d044a53e0883a7ca482d1bf6fc9cba5f542638d49cb4ecf261759"
+    },
+    "browser-feedback.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/browser-feedback.json",
+      "sha256": "57de8b9dbc9510c4ead97ca05a1b90ed0e5b34531ef6325d1a43b466153f04f0"
+    },
+    "numeric-pixel-parity.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/numeric-pixel-parity.json",
+      "sha256": "7e00c0dbb4e1f60e465dc31fa4a4a74ba2a15164b2a104fbcb77c9e3c52ba15e"
+    },
+    "scheduler-and-tail.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/scheduler-and-tail.json",
+      "sha256": "6c7fea6565cd51986d73566f6de625d654ee7c672c07374e6fffac519415cd45"
+    },
+    "package-consumer.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/package-consumer.json",
+      "sha256": "c2c95cd44f3bf9bb1333df4d7d189b3e60b1229591ec14e1b5377eee9d46729f"
+    },
+    "regressions.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/regressions.json",
+      "sha256": "41eef9c8be59a230bffcc2fb155de38f667abb4d4e650e53d7b6760a267beeb0"
+    },
+    "sampling-plan.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/sampling-plan.json",
+      "sha256": "b34a41493ad4ce86eae8148e3546b56f0bd1ed876dec584f1b477402825ae90d"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/sampling-ledger.json",
+      "sha256": "e79c5a90a2824e94adcbb6ecb26004a9b063a0f97aa8756b4ff13de0e5babb31"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/source-manifest.json",
+      "sha256": "aa9e12a2b743b9130c9f3875d7fa1a4c9a3491677982146b3f3e795b7b23cf9e"
+    },
+    "SDK-manifest.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/SDK-manifest.json",
+      "sha256": "ee6f00cfae7b30f12dd0f8174abf589bb951fd7d04dad7d4fa117d691bfe2f5e"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/cleanup.json",
+      "sha256": "c87c4dac4a35d082c52830042639431adb2a8eedfd33c66446ae11b8d86f10f4"
+    },
+    "next-step-inputs.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/next-step-inputs.json",
+      "sha256": "1e843b7ee68dcf0c2943c52009f7d8228cad6829510af90a50c7fd37d7fc6789"
+    },
+    "browser-job-custody.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/browser-job-custody.json",
+      "sha256": "94ff43118566eeac8fe7d9784684c266db244b9d7af8347e7bed6bc873d43257"
+    },
+    "snapshot-limit-proof.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/snapshot-limit-proof.json",
+      "sha256": "2f75631fd10da2af4dce6658f551f6d40d29f71b0bb56022fdaac60e8fd25740"
+    },
+    "scope-reconciliation.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/scope-reconciliation.json",
+      "sha256": "b3a440dbe0d28c334da4e37ac1248fe855ef9fd6e0878637b46c089afc2b7042"
+    },
+    "prior-preservation.json": {
+      "path": ".aegis/results/G5-CPUW2-history-custody-r1/prior-preservation.json",
+      "sha256": "d551e599b4a9fc649153d0746c1ba16520cfb0719b42c8065d8e1951d99f0caf"
+    }
+  },
+  "causal_repair": {
+    "accepted_scope": "ExistingcacheReadyimport/fullraw+pathcharge/criticalpin/historylookup;candidateinstance64existingdesktopbudget",
+    "native_old_actual_RED": [
+      {
+        "segments": 1600,
+        "actual_main_full_unions": 1604
+      },
+      {
+        "segments": 7200,
+        "actual_main_full_unions": 14404
+      }
+    ],
+    "native_GREEN": "Historicalfullkernelunions0 fortwo differentB;legacynewBown4unionsallowed",
+    "real_1600_7200": {
+      "main_newquery_unions": 0,
+      "main_history_unions": 0,
+      "finished_imports_each": 64,
+      "Worker_ready_terminals_each": 64,
+      "intent_commits_each": 2,
+      "presented_generation_each": "2"
+    },
+    "geometry_identity": "All64inputpayloadsfullvalueunique percase: A16new+32fixtureexisting32segments+ B16new8segments;no groupduplication",
+    "native_cache": {
+      "distinct7200": 16,
+      "resident_actual_bytes": 9388862,
+      "heldclear_findable": true,
+      "lastrelease0": true,
+      "cardinality_afterclear512": true
+    },
+    "normal_default_OFF": true
+  },
+  "frozen_failure": {
+    "window": "G5CWH-PAIRS",
+    "case": "candidate7200",
+    "phase": "ColdSnapshotafterA/Bcanonicalcommitandqualifiedpresentation",
+    "error": "SNAPSHOT_DECODE_FAILED",
+    "offline_actual_error": "SemanticError::kLimitExceeded(7)",
+    "snapshot_encoded_bytes": 35456391,
+    "decode_byte_cap": 33554432,
+    "encode_ok": true,
+    "decode_ok": false,
+    "causal_owner": "SnapshotCodec encode/decode size asymmetry, outsideRender package",
+    "primary_done_before_failure": true,
+    "receipt": {
+      "generation": "2",
+      "presentedGeneration": "2",
+      "pending": 0,
+      "committed": 2
+    },
+    "buffers_saved": "Full128input/result protocol buffers across2cases, both7200Operationbytes, failurepixel/raw/ownerjobpurpose/phase",
+    "no_Semantic_limit_or_fixture_modification": true
+  },
+  "performance": {
+    "normal1600_Up_ms": 3880.899999976158,
+    "candidate1600_Up_ms": 0.3999999761581421,
+    "normal1600_Up_to_settled_ms": 5028.699999928474,
+    "candidate1600_Up_to_settled_ms": 7178.600000023842,
+    "tail_ratio": 1.427526000780708,
+    "candidate7200_Up_ms": 0.2999999523162842,
+    "candidate7200_Up_to_settled_ms": 52202.699999928474,
+    "dominant7200": {
+      "stage": "16unique7200sequentialleftfold Workerjobs",
+      "compute_ms": 44676.499999165535,
+      "owner_wait_ns": "45173200000",
+      "commit_ns": "3388900000",
+      "max_owner_ns": "1910900000"
+    },
+    "scope": "FastUpadmission/historicalmainfallbackrepair doesnotestablishendtoendperformancePASS",
+    "remaining": "16unique7200unchangedleftfoldWorkercompute~44.6765s,commit~3.3889s;futureincrementalprep/reuse designmustpreservenumericorder"
+  },
+  "verification": {
+    "native_evidence": "native-green.json",
+    "original27": 27,
+    "fresh634_mismatches": 0,
+    "strict_original7200_bound_reference": true,
+    "actual_edgecases": [
+      "radiusfreeze",
+      "8193overflowexplicitrejectandpointerreuse",
+      "directownerTable/background/remoteguards",
+      "sourcecancelactivevssealed",
+      "contextloss",
+      "fatalownerbind",
+      "actualframes/qualifiedroster"
+    ],
+    "native_unique_executed_tests": 39,
+    "Node14": true,
+    "Python2": true,
+    "SDK_Node4": true,
+    "TypeScript": true,
+    "boundary_contracts": 120,
+    "paired1600": {
+      "twoOperationbytes_equal": true,
+      "final_Undo_RedoSnapshotbytes_equal": true,
+      "raw_GPU1pixelabovethreshold_unqualified": true
+    },
+    "not_complete": "No independentCPUAAstrictpixelqualification orfullfault/feedbackbrowserclosure"
+  },
+  "sampling": {
+    "starts": 1,
+    "max_starts": 3,
+    "charged_seconds": 126,
+    "cap_seconds": 600,
+    "unused_seconds": 474,
+    "unused_starts": 2,
+    "unused_is_not_retry_authority": true,
+    "old410_notcarried": true,
+    "source_stable": true,
+    "driver_sha256": "8a31d69142223f1c697eee78a4c746ccb8dd9f527385fb8a148a58a422b7c970",
+    "runner_sha256": "7eeb1c1c5346acb3fdad6caaa8f00921be66f0145a7b68bd23ae4ba5abe75ba5",
+    "guard": "nonzero_exit at125.963652209seconds",
+    "owned_cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "SDK": {
+    "normal_WASM": "dcc682da3840e50c11d1847225f410320310ba90857725af6ded6fcb62b42390",
+    "candidate_WASM": "a526131d485391b60d0ce25098a48431585112c19e71da24f917a49c44193ee6",
+    "worker_WASM": "f9af13b0221446871f158fca9bb9a62f6ec0eb8badc86043b40a9f3ede72c580",
+    "kernel": "ba40b7ac1fae9e4d6670d5316b4bef4d",
+    "matching_normal_candidate_external42each": true,
+    "external_consumer": "/private/tmp/axiom-cwh-67df47630b3c/package",
+    "normal_default_OFF": true
+  },
+  "limits": {
+    "candidate_local_resident": 67108864,
+    "normal_default_explicit8": 8388608,
+    "synchronous_CPU_construction": 8388608,
+    "optional_flatten_policy": 8388608,
+    "shared_global": 536870912,
+    "Worker_fixed_heap": 67108864,
+    "entries": 512,
+    "request_result": 1048576,
+    "transport": 16777216
+  },
+  "remaining_required": [
+    "G5CWH-FEEDBACK actualheldAactiveB/wheelpanpinchpixels",
+    "G5CWH-FAILURES delayedfatal/context/publicationclose/release/retry actualbrowser",
+    "StrictindependentCPUAAoriginalpixels final/Undo/Redo/fullink+heldfeedback",
+    "7200coldSnapshot/UndoRedo blockcodecsize",
+    "Fullglobalresident/staging/faultleaseclosureandremainingfieldproof"
+  ],
+  "scope_note": "CWRVMtestcontextfixtureaddedpendingRestart/pendingReplacement tokeepactualclosekeeper;detailedscope-reconciliation.json;no publicproduction API expansion",
+  "preservation": {
+    "old_raw_results_SDK_unchanged": true,
+    "allaccepted_dirty_preserved": true,
+    "olduserDemo4298_and4324_4325_4326_4327_untouched": true,
+    "no_existing_tab_document_access": true
+  },
+  "new_Demo": false,
+  "no_commit_push": true,
+  "no_default_or_CW3_activation": true,
+  "no_official_G5_P34_or_performance_PASS": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "next": "IndependentcontrolreviewwithseparateSemanticcodecsize/admissiondecision andnumericpreservingworkreusepackage;no production edits ornewwindowsundersealedrun"
+}

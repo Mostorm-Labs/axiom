@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-render-reuse-RED-scoped-review-v1",
+  "created_utc": "2026-11-13T03:22:08.732399+00:00",
+  "verdict": "CAUSAL_WORK_RED_OBSERVED_CORRECTNESS_AND_GREEN_PENDING",
+  "inputs": {
+    "out/G5-postworker-render-reuse-r1/red-canonical.json": "e0d41ef49a79814184bb5a487e9792b521b1dab3f66c602e8f5c805317be1898",
+    "out/G5-postworker-render-reuse-r1/red-warm.json": "c21713efa2846b5386ad8f2d9af16aaaf8001bfab21c402a9baf7a856add2010",
+    "out/G5-postworker-render-reuse-r1/red-cold.json": "0324ed914d89ebb1ce1d65b1c9998e1f514d2126aaa08568d48896c0b5a18a7b",
+    "runtime/render/tests/postworker_render_reuse_test.cpp": "70401054b76cc0dcaef19b252fc58186ddace7c0ffce96adc14a47dfa3179514",
+    "runtime/render/tests/canonical_prepared_body_test.cpp": "5e51ebd1c148b366f03a0a01062be9c50ddb3b84cdeeba5c027d016e8b4d3837",
+    ".aegis/results/G5-postworker-render-reuse-r1/fixture-material-classes.json": "a16db7aee48b86b81c553609daa5b3a8ce58f69088759ecc976fa4c186871d20"
+  },
+  "facts": {
+    "red-canonical.json": {
+      "failure": "IDENTICAL_CANONICAL_MATERIAL_REPLAYED_PER_OBJECT",
+      "rows": [
+        {
+          "CPU_tiles": 0,
+          "body_builds": 1,
+          "copies": 1,
+          "coverage_steps": 16,
+          "pixels_equal": true
+        },
+        {
+          "CPU_tiles": 0,
+          "body_builds": 1,
+          "copies": 8,
+          "coverage_steps": 128,
+          "pixels_equal": true
+        }
+      ],
+      "work_regression_pass": false
+    },
+    "red-warm.json": {
+      "body_builds": 0,
+      "coverage_tiles": 4,
+      "failure": "LIVE_ERASE_DISCARDED_QUALIFIED_CANONICAL_PIXELS",
+      "pixels_equal": true,
+      "work_regression_pass": false
+    },
+    "red-cold.json": {
+      "coverage_steps": 32,
+      "coverage_tiles": 1026,
+      "failure": "COLD_TRANSIENT_BYPASSED_AGGREGATE_ALLOWANCE",
+      "provider_unchanged": false,
+      "status": 0,
+      "work_regression_pass": false
+    }
+  },
+  "review": [
+    "Canonical actual renderer step counts16 vs128 for1 vs8 equivalent copies prove per-object work amplification in this targeted fixture. The old independent reference passes the existing non-AA pixel rule.",
+    "Warm actual transient renderer rebuilds4 GPU tiles despite completed same-basis canonical pixels; independent output matches.",
+    "Cold old path returns Accepted and changes provider rather than yielding. Its1026tile count is not directly comparable to4096step allowance; corrected GREEN must measure steps or actual allowance plus nonpublication and eventual progress.",
+    "Existing workingSetEdges computes independent primitive boundaries; channel tolerance2 outside edges is inherited. No candidate-derived expanded edge bands allowed. Initial exact-byte failure must remain archived.",
+    "Fixed40 equivalence report is an offline negative filter, not production pixel qualification. Class size13/12 does not establish unchanged equivalence after actual A/B/C masks or resulting performance.",
+    "Microsecond/second focused unit RED/GREEN cases remain required tests, not the3 heavy native benchmark starts. Producer informed of distinction."
+  ],
+  "producer_informed": true,
+  "additional_completion_obligations_added": false,
+  "official_gate_PASS": false,
+  "control_production_edits": false
+}

@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/platform/web_runtime_adapter.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
@@ -18,6 +19,7 @@ namespace canvas::platform {
 namespace {
 WebFrameResult rejected(const char* stage) noexcept {
   std::fprintf(stderr, "Axiom Web frame rejected: %s\n", stage);
+  AXIOM_IF_EVENT("frame_rejected stage=%s",stage);
   return WebFrameResult::kRejected;
 }
 struct Fence final {
@@ -39,6 +41,7 @@ struct Fence final {
     if (!sync) return 1;
     if (emscripten_webgl_make_context_current(context) != EMSCRIPTEN_RESULT_SUCCESS) return 0;
     const auto result = glClientWaitSync(sync, 0, 0);
+    AXIOM_IF_EVENT("fence_poll context=%d result=%u",int(context),unsigned(result));
     return result == GL_ALREADY_SIGNALED || result == GL_CONDITION_SATISFIED ? 1
          : result == GL_TIMEOUT_EXPIRED ? 2 : 0;
   }

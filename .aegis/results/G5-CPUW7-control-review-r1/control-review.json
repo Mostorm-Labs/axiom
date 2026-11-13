@@ -1,0 +1,73 @@
+{
+  "schema": "axiom-cpuw7-independent-scoped-review-v1",
+  "created_utc": "2026-11-13T00:07:25.481968+00:00",
+  "reviewer_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "producer_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "subject": {
+    "package_sha256": "baae41ce53ed301d195486d2baf1c70596c4640ae347b34e72b83fefe1966acf",
+    "result_path": ".aegis/results/G5-CPUW7-postworker-tail-r1/result.json",
+    "result_sha256": "8c0fca2b5a6103ff1ec6f74f9f2d952874d941778bffc982e120f341cbe179c6",
+    "source_delta_sha256": "e69f113af4de927e374dc44f15e41dd2787e75d0d2b2d950c5543ca07175a437"
+  },
+  "published_checkpoint": {
+    "commit": "5102b2bf76cd1bd0759ab17cce2d68146577e4e6",
+    "remote": "origin/codex/g5-cpu-worker",
+    "prior_CPUW6b_pushed": true,
+    "CPUW7_committed_or_pushed": false
+  },
+  "binding_audit": {
+    "references_checked": 233,
+    "artifact_files": 150,
+    "source_files": 13,
+    "demo_assets": 42,
+    "errors": [],
+    "experimental_demo_http": 200
+  },
+  "independent_verification": [
+    "Fresh control CTest7/7: CPUW6b core5 plus PostworkerReplayReuse and PreparedGeometry.",
+    "Fresh control Node8/8: postworkerobserver, Workerthread, Workertransport and orderedpromises;120runtimeboundaries andpublicSDKerrorcontract passed.",
+    "Read actual paired raw and rebuilt phase counts: C909owner/617canonical(616retry),162334coverage steps,12.718M replayknots,0bodybuild/compile,5600GPUcoverage tiles/0CPUtiles; noallocationdenials inthatCinterval.",
+    "Source mechanism reviewed: drawContour receives32primitive ranges but compilerappend replays full256knotcheckpoint. New witness is internal immutableblock pointer in existing charged scratch; visitExact/buildReplay invalidate before rewriting scratch. No extraGeometry/Pixel cache orcanonicalmutation owner.",
+    "Observed RED10783compiledKnots vs7199sourceKnots; GREEN7199, exact same fullpixels and beforeafterresidentbudget. SamecachedRangeA→exactfarB→rangeA invalidation verified. Independentoriginal fullContour oracle unchanged.",
+    "Actual internal atomic commit marker differs from delayed onOperation notification. Separate owner/canonical roles notadditive; clocksyncbounded andloss0. Corrected C outsideowner7.5132s = insideRAFoutsideowner5.1204s + outsideRAF2.3928s.",
+    "Independently gzipdecoded D4paired AB/Undo/Redo/followup fullsnapshots byteequal; Worker76jobs inboth andallterminal,153.4msbaseline/150.9mscandidate.",
+    "Two actualcandidate finalCfiveOperation chains independently replayed by retained originalOperationEngine, byteequal. D4/D1 finalC pixels qualified with exactfullsnapshot/camera/target independentoldreference; interior0mismatch. Control checked matchingcamera/DPR5724x4040/validdefaultframebufferreadback.",
+    "Source/driver/SDK stable across each frozenwindow. FourcompletedOBSERVED windows/1042ceilseconds/zero corrective starts/cleanup0. Original4331assetidentityunchanged;4332explicitexperimentalonly."
+  ],
+  "verdict": "ACCEPT_SCOPED_CAUSAL_WORK_REDUCTION_AND_ATTRIBUTION_HOLD_OVERALL_PERFORMANCE_PROMOTION",
+  "performance": {
+    "ordinary_D4_primary_ms": {
+      "baseline": 27879.2,
+      "candidate": 38528.4,
+      "observed_change_fraction": 0.38197652730029064
+    },
+    "ordinary_D4_next_C_ms": {
+      "baseline": 27574.9,
+      "candidate": 18763.5,
+      "observed_change_fraction": -0.319544223187891
+    },
+    "ordinary_D1_candidate_ms": {
+      "primary": 10592.5,
+      "C": 6174.6
+    },
+    "D1_fresh_baseline": false
+  },
+  "material_limits": [
+    "One frozen pairedrun with verylargeD4inputvariation234.03s/222.42s; no statisticallyrobust overallperformance claim, no attribution ofprimaryregressiontochange alone.",
+    "D4primarygot slower whileCgotfaster; overalluserlatencybugnotfixed and3s/5s directions unmet.",
+    "Older71.85s C case didnotrecur exactly inthisdiagnostic; cannotclaimclosed.",
+    "StampmeasuredC1.3568s vsowner17.6425s issecondary andunchanged. Mostobservedcost is transientfullcoverage andcanonicalreplay/steps, plusremainingcallback/gapwork.",
+    "Ordinarycandidateinternalreplaycountersnotrecorded; causalworkreductionprovenbytargetedtest, notfreshhardwareGPUtiming.",
+    "GPUcoverage target type/retirementproxydoesnotestablishGPUhardwareexecutiontime."
+  ],
+  "default_demo": "http://127.0.0.1:4331/example.html",
+  "experimental_demo": "http://127.0.0.1:4332/example.html",
+  "next_scope": "Before broadeningstamp, review remaining synchronous transientfull-scene redraw andboundedcanonical162334coverage-step chain. Freeze another causal repair only after mapping attempt/progress/replaycost; no threadcount/budgetincrease inferred.",
+  "overall_user_tail_fixed": false,
+  "official_G5_P34_or_release_PASS": false,
+  "preserved_state": {
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "5102b2bf76cd1bd0759ab17cce2d68146577e4e6",
+    "CPUW7_changes": "retained uncommitted; no automatic further implementation"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "status": "FROZEN_CW1_IMPLEMENTATION_CONTRACT_NOT_FULL_EDITING_ACTIVATION",
+  "ownership": {
+    "semantic": "existing Runtime/Interaction → OperationEngine only",
+    "kernel": "Render-private CPU path construction, shared exact code",
+    "job": "task-owned immutable inputs + distinct mutable cursor/compiler/SkPath/scratch",
+    "cache": "existing Render owner only; main and isolated Worker never share a mutable C++ cache",
+    "transport": "sdk/web private Worker module; no geometry in JS"
+  },
+  "execution": [
+    "Factor erasePath once into a private CPU kernel usable with immutable Sweep/Filled geometry and resumable cursor; monolithic mode drains exactly that kernel, with independent anchored original reference retained for qualification. Existing cache/get/advance consume same primitive builder, avoid parallel duplicated formulas.",
+    "Shared CPU job envelope: protocol version, kernel-build identity, full runtime/document lifetime and job/attempt identity, source/prefix version and request ID, payload length/count. All uint64 identities transported losslessly (binary or strings), never JS unsafe numbers. Full value proof still required before owner result admission; hash indexes alone insufficient.",
+    "Separate WASM module has no main owner/DOM/fonts/preloaded resources/GPU setup. CPU PathOps uses accepted locked Skia. Export only bounded private job create/step/readResult/cancel/release style ABI or equivalent; exported bytes have explicit copy/borrow/release rules. No worker context created by geometry calls.",
+    "Private binary transport preferred for dense geometry; validate lengths/counts/finite/variant/fillrule/overflow before allocation. Semantic canonical Operation/Snapshot codecs unchanged. Ephemeral SkPath serialize/ReadFromMemory allowed only exact same locked Skia/toolchain/kernel identity; full byte consumption/finiteness/outputbound validated. Never turn SkPath bytes into persistent document data.",
+    "One Worker per runtime candidate; bounded task queue, step size and bytes. Worker step yields to its message loop so Cancel/close are observed between indivisible unions. Ready/Failed/Cancelled/Stale are exactly once and identity-bound. No Atomics.wait, blocking spin, main future.get/join or synchronous XHR.",
+    "Owner grants quota before work/transport allocation; every queued input, retained source/result, WASM linear capacity, transfer/COW overlap and task scratch accounted at the appropriate boundary. Existing8MiB512 resident and desktop256/512/64 profiles unchanged. No second hardbudget or hidden heap multiplier.",
+    "Before any browser window freeze numeric queue/request/workerheap/output limits in ImplementationDesign; initial worker linear memory cap <=64MiB, queued job count<=8, payload/result each<=8MiB and combined transport<=16MiB. Refuse unsupported request safely rather than truncate or silently main-thread drain. If accepted locked SDK cannot execute within these caps return structural blocker with measured need; do not raise caps silently. Actual JS/WASM heap floor+RSS separate from ResourceBudget estimates.",
+    "Source data may be resident/deduped by full immutable identity/content; request incremental append and bounded output import avoid O(points×copies×frames) duplication. At minimum measure fresh-vs-resident transport bytes explicitly. No promise that separately-instantiated WASM shares memory.",
+    "Worker failure/cancel does not change canonical state. Stop admitting, terminate/acknowledge old Worker, reclaim grants on actual ownership release. No stale completion can publish. Owner may later choose cooperative fallback using same job protocol, but CW1 cannot silently turn Worker failures into synchronous full path redraw/query.",
+    "Web packaged private sidecar is resolved relative to matching asset base and included in install/npm artifacts, no private deep imports required of users. Existing root entry/types/SDK version remain as-is (no publish/release), samebuild compatibility mandatory.",
+    "Existing mainthread full editing behavior remains unchanged in CW1; normal interactive demo still existing synchronous Up. Qualification page must actually run C++ WASM path work in real Worker, not mock. Do not call CW1 full interaction improvement."
+  ],
+  "future_slices": [
+    {
+      "id": "CW2",
+      "goal": "Pending semantic work + immutable request freeze + owner ordered commit continuation; Worker result does not force caller wait. InputUp endscontact, pendingintent is not fakecommit. Defining rebase/failure/Undo/remote ordering under existingowner precedes mutation."
+    },
+    {
+      "id": "CW3",
+      "goal": "Immediate subsequent edit feedback for eraser/nav/shape/sticky/table/image, sequentialcanonicalcommit and qualifiedhandoff, fixedcontinuousmatrix, not standaloneWorker proof."
+    }
+  ],
+  "human_approved_behavior": "New editing displays immediately and commits in original order, both nav and mixed objects included. CW1 intentionally builds prerequisites; do not substitute nav-only as final goal."
+}

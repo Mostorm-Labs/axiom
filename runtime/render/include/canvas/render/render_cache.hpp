@@ -47,6 +47,7 @@ struct RenderPreparationBudget final {
     std::size_t maxCoverageSteps=4096;
 };
 struct MaskHistoryWork final {
+    std::uint64_t finishedImports=0,finishedHits=0,finishedDenials=0;
     std::uint64_t identityHits=0,admissions=0,valueRecords=0,valuePrimitives=0,flattenedPrimitives=0,copiedBytes=0;
     std::uint64_t primitiveBuilds=0,prefixReuses=0,resets=0,denied=0,exactPathHits=0,exactPathLookups=0;
     std::uint64_t historicalDifferences=0,componentIntersections=0,newQueryBuilds=0;
@@ -77,6 +78,8 @@ struct RenderCacheWork final {
     std::uint64_t eraseFullFrames=0,eraseDamageFrames=0,eraseDamagePixels=0;
     std::uint64_t bodyTileBuilds=0,bodyTileHits=0,maskTileUpdates=0,maskPrimitiveDraws=0,maskTileResets=0;
     std::size_t inkLayerBytes=0;
+    std::uint64_t bodyPixelBuilds=0,bodyPixelHits=0;
+    std::size_t bodyPixelBytes=0;
     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
     std::size_t retainedBytes=0,entries=0;
     std::uint64_t coverageBuilds=0,coverageHits=0,scratchAllocations=0;

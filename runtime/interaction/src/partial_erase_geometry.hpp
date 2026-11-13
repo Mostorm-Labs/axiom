@@ -6,6 +6,15 @@
 #include <optional>
 #include <cmath>
 namespace canvas::interaction {
+inline std::optional<semantic::EraseCubicSegment> partialEraseSimilaritySegment(
+    foundation::WorldPoint a,foundation::WorldPoint b,const semantic::Transform2D& transform,double radius){
+ const double determinant=transform.a*transform.d-transform.b*transform.c;
+ const double scale=std::hypot(transform.a,transform.b);
+ if(!std::isfinite(determinant)||determinant==0||!std::isfinite(scale)||scale==0)return {};
+ const auto local=[&](double px,double py){const auto x=px-transform.tx,y=py-transform.ty;return semantic::Vec2{(transform.d*x-transform.c*y)/determinant,(transform.a*y-transform.b*x)/determinant};};
+ return semantic::EraseCubicSegment{{local(a.x,a.y),radius/scale},{local(b.x,b.y),radius/scale},
+   local(a.x+(b.x-a.x)/3.0F,a.y+(b.y-a.y)/3.0F),local(a.x+(b.x-a.x)*2.0F/3.0F,a.y+(b.y-a.y)*2.0F/3.0F)};
+}
 // Same local mask for live presentation and the canonical AddEraseMasks commit.
 inline std::optional<semantic::EraseMaskGeometry> partialEraseGeometry(
     std::span<const foundation::WorldPoint> trace, const semantic::Transform2D& transform, double radius) {

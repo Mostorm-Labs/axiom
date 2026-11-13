@@ -1,0 +1,75 @@
+{
+  "status": "CURRENT_HUMAN_AUTHORIZED_SCOPED_IMPLEMENTATION",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2"
+  },
+  "human_request": "先回答前三个批注，然后进入下一轮第2、3项：减少临时画面整场景重放，优化 canonical 分步绘制；并检查编辑后立即缩小卡顿。",
+  "coordination": {
+    "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "human_authorized_bidirectional_completion_callbacks": true,
+    "single_production_writer": "01a1c345-6500-7ea0-984d-707b72878bd1"
+  },
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "accepted_basis": [
+    {
+      "path": ".aegis/results/G5-CPUW7-control-review-r1/control-review.json",
+      "sha256": "bb806cd5c29a7ead284a466edbe58fdd038043f80c55329841cffc00f869e30e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW7-postworker-tail-r1/phase-accounting.json",
+      "sha256": "35897510613a682293a60caaa55fb0a0d5e16a09aadf634306391d640fbb1818"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW7-postworker-tail-r1/paired-performance.json",
+      "sha256": "8ed2db1a8050023df3fdc1a8e8bfb5db284f4616fab65a01f77a878684dfa096"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW7-postworker-tail-r1/result.json",
+      "sha256": "8c0fca2b5a6103ff1ec6f74f9f2d952874d941778bffc982e120f341cbe179c6"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW5-control-review-r1/control-review.json",
+      "sha256": "f6ce6f78b172178f180dbe601842949ec197ae37c0ab134cbd60eaa99d84ff52"
+    }
+  ],
+  "decisions": [
+    "OperationEngine remains the sole atomic canonical writer. CanvasEditingRuntime/Composition own input, pending intents, ordering, History and receipts. Scene/Render remain derived. The one CPU-only Worker continues shared C++/WASM computation; GPU context stays with its existing owner.",
+    "This package performs the two authorized Render slices: transient ordered-content/coverage reuse, then canonical locality/progress/replay reduction. Inspect both paths, use current measurements, and implement causally justified changes without a new renderer or broad redesign. Do not return after diagnostics if an in-scope repair remains executable.",
+    "Already measured: diagnostic C25.156s includes owner transient9.593s and canonical6.373s, scene stamp1.357s. Canonical617 attempts/162334 coverage steps and7.327M replay inputs. Counters demonstrate expensive work, not all wasted work; identify the exact redundant or irrelevant chain before edits.",
+    "Offline raw recheck: all76 Worker jobs in W7-D4-DIAGNOSTIC sum178.7ms submit-to-terminal,149.5ms compute,133888 input and111888 output bytes. This bounds only the job envelopes; it excludes pre-issue owner work and post-result handling. GPU hardware duration and memcpy duration are unknown.",
+    "Separate geometry reuse, body coverage, history/active masks, ordered composition and navigation validity. Preserve complete original canonical masks, original primitive order/grid/paint/AA, transparency, self-intersections and object z-order. Approximate navigation is feedback only and must not assert canonical receipt.",
+    "Completed work can be reused only with exact immutable source/body/config/mask/resource/camera/metrics/provider/context/lifetime evidence as relevant. Hash-only, ID-only or bare-pointer equality is insufficient. Across mask-only or viewport changes, invalidate only dependent derived state with a proven valid region; never certify newly exposed nonempty areas as background.",
+    "No main merge in this package: main was assessed but not authorized as this user-selected repair. Freeze current branch for matched comparisons. Keep0.4.3.0 local Build0 and default OFF normal-SDK Worker policy; preserve all existing assets and user documents.",
+    "No additional Worker, pthread/SAB, GPU thread migration, memory ceiling increase, quota/quiet-delay tuning, unsupported brush Worker expansion, legacy synchronous union integration, or Scene-stamp optimization in this round. Those are separately assessed later.",
+    "Use accepted SemanticSDKv2 and prebuilt Skia. Latest human AGENTS instructions govern published dependency consumption and release/build identity. Do not rebuild SDK dependencies or change locks.",
+    "3s/5s are reporting bands and optimization directions, not a new all-or-nothing gate. A structural gain alone does not establish user-visible improvement. A slower or inconclusive result must be reported without changing the default Demo."
+  ]
+}

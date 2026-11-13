@@ -1,0 +1,340 @@
+{
+  "schema": "axiom-independent-idle-twentyminute-check-v1",
+  "created_utc": "2026-11-13T08:19:28.353156+00:00",
+  "raw_ref": {
+    "path": "out/G5-idle-input-feedback-diagnostic-r1/web/IF-FOREGROUND-IDLE/raw.json",
+    "sha256": "f3b64a8c0c8f53cb895cf1277059038eca85eb141bba5c1f665da96873b9179b"
+  },
+  "idle": {
+    "duration_ms": 1200003.0,
+    "qualification": {
+      "qualified": false,
+      "reasons": [
+        "runtime_not_idle"
+      ],
+      "elapsed_ms": 1200003,
+      "focus_before": true,
+      "focus_after": true,
+      "physical_frontmost": "not continuously observed; browser-visible plus event focus only"
+    },
+    "same_document": true,
+    "same_generation": true,
+    "same_objects": true,
+    "same_target": true,
+    "RAF_during_interval": 29,
+    "calls_during_interval": 29,
+    "all_frame_ok": true,
+    "GL_writes_delta": 0,
+    "interval_lifecycle_events": 0,
+    "noncontinuous_physical_frontmost_unqualified": true,
+    "RAF_trigger_unattributed": true
+  },
+  "sequences": [
+    {
+      "name": "warm",
+      "state_before": {
+        "documentId": "99999999999999999999999999999999",
+        "generation": "0",
+        "objects": 40,
+        "activeContacts": 0,
+        "pending": {
+          "intents": [],
+          "revision": "1",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        }
+      },
+      "state_after": {
+        "documentId": "99999999999999999999999999999999",
+        "generation": "3",
+        "objects": 42,
+        "activeContacts": 0,
+        "pending": {
+          "intents": [],
+          "revision": "43",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        },
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "f69305e10c4edfe0d3444d039688dc37",
+          "ordinal": "3",
+          "presentedGeneration": "3",
+          "runtimeEpoch": "1"
+        }
+      },
+      "same_target_id": true,
+      "target_id": "80202ea91a27b2511dd5fd34cf6c40a5",
+      "pose_before": [
+        1,
+        0,
+        0,
+        1,
+        15,
+        15
+      ],
+      "pose_after": [
+        1,
+        0,
+        0,
+        1,
+        255.9243664741516,
+        103.23529052734375
+      ],
+      "actions": {
+        "A": {
+          "pointer_calls": 66,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 64,
+            "2": 1
+          },
+          "callback_p95_ms": 3.3000000715255737,
+          "callback_max_ms": 10.800000071525574
+        },
+        "B": {
+          "pointer_calls": 66,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 64,
+            "2": 1
+          },
+          "callback_p95_ms": 19.299999952316284,
+          "callback_max_ms": 24.100000023841858
+        },
+        "drag": {
+          "pointer_calls": 34,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 32,
+            "2": 1
+          },
+          "callback_p95_ms": 6.700000047683716,
+          "callback_max_ms": 14.399999976158142
+        }
+      }
+    },
+    {
+      "name": "post-idle",
+      "state_before": {
+        "documentId": "99999999999999999999999999999999",
+        "generation": "3",
+        "objects": 42,
+        "activeContacts": 0,
+        "pending": {
+          "intents": [],
+          "revision": "43",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        }
+      },
+      "state_after": {
+        "documentId": "99999999999999999999999999999999",
+        "generation": "6",
+        "objects": 44,
+        "activeContacts": 0,
+        "pending": {
+          "intents": [],
+          "revision": "87",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        },
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "f29305e10c4edfe0d3444d039688dc37",
+          "ordinal": "6",
+          "presentedGeneration": "6",
+          "runtimeEpoch": "1"
+        }
+      },
+      "same_target_id": true,
+      "target_id": "80202ea91a27b2511dd5fd34cf6c40a5",
+      "pose_before": [
+        1,
+        0,
+        0,
+        1,
+        255.9243664741516,
+        103.23529052734375
+      ],
+      "pose_after": [
+        1,
+        0,
+        0,
+        1,
+        491.21849489212036,
+        175.88257694244385
+      ],
+      "actions": {
+        "A": {
+          "pointer_calls": 66,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 64,
+            "2": 1
+          },
+          "callback_p95_ms": 3.600000023841858,
+          "callback_max_ms": 3.9000000953674316
+        },
+        "B": {
+          "pointer_calls": 66,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 64,
+            "2": 1
+          },
+          "callback_p95_ms": 21.899999976158142,
+          "callback_max_ms": 25.199999928474426
+        },
+        "drag": {
+          "pointer_calls": 34,
+          "all_admitted": true,
+          "phases": {
+            "0": 1,
+            "1": 32,
+            "2": 1
+          },
+          "callback_p95_ms": 7.0,
+          "callback_max_ms": 7.100000023841858
+        }
+      }
+    }
+  ],
+  "postidle_ROI": [
+    {
+      "label": "post-idle-draw-A-move16",
+      "layers": [
+        {
+          "role": "canonical",
+          "visibility": "",
+          "amber": 0,
+          "dark": 1546,
+          "sha_matches": true
+        },
+        {
+          "role": "preview",
+          "visibility": "visible",
+          "amber": 166,
+          "dark": 0,
+          "sha_matches": true
+        }
+      ]
+    },
+    {
+      "label": "post-idle-draw-A-move32",
+      "layers": [
+        {
+          "role": "canonical",
+          "visibility": "",
+          "amber": 0,
+          "dark": 1546,
+          "sha_matches": true
+        },
+        {
+          "role": "preview",
+          "visibility": "visible",
+          "amber": 344,
+          "dark": 0,
+          "sha_matches": true
+        }
+      ]
+    },
+    {
+      "label": "post-idle-draw-B-move16",
+      "layers": [
+        {
+          "role": "canonical",
+          "visibility": "",
+          "amber": 0,
+          "dark": 1572,
+          "sha_matches": true
+        },
+        {
+          "role": "preview",
+          "visibility": "visible",
+          "amber": 166,
+          "dark": 0,
+          "sha_matches": true
+        }
+      ]
+    },
+    {
+      "label": "post-idle-draw-B-move32",
+      "layers": [
+        {
+          "role": "canonical",
+          "visibility": "",
+          "amber": 0,
+          "dark": 1572,
+          "sha_matches": true
+        },
+        {
+          "role": "preview",
+          "visibility": "visible",
+          "amber": 344,
+          "dark": 0,
+          "sha_matches": true
+        }
+      ]
+    },
+    {
+      "label": "post-idle-draw-settled",
+      "layers": [
+        {
+          "role": "canonical",
+          "visibility": "",
+          "amber": 0,
+          "dark": 1598,
+          "sha_matches": true
+        },
+        {
+          "role": "preview",
+          "visibility": "hidden",
+          "amber": 0,
+          "dark": 0,
+          "sha_matches": true
+        }
+      ]
+    }
+  ],
+  "ring_losses": {
+    "frames": 0,
+    "events": 0,
+    "logs": 0,
+    "tasks": 0,
+    "workers": 0,
+    "calls": 0,
+    "terminals": 0,
+    "nativeFrames": 0
+  },
+  "root_errors": [],
+  "verdict": "NO_SYMPTOM_REPRODUCTION_IN_RESTORED_STABLE_FIXTURE_WITH_IDLE_QUALIFICATION_LIMIT",
+  "limitations": [
+    "No active consecutive partialeraser generation beforeidle; restored80historymasks32segments each",
+    "SparsewhileDowncaptures cannot exclude a shortblankbetween",
+    "Sameopaquecoordinates overlap earlierdraw; combine acceptedinput,newOps/objectvaluesandamberfeedback",
+    "No matching frozeninput user22objectdocument",
+    "No causeidentified for29idleRAF; sourcehover/resize are onlycandidates",
+    "ReturnedFRAME_REJECTEDcode pairedwithoktrue is not rejection"
+  ],
+  "no_new_sampling_or_behavior_fix": true
+}

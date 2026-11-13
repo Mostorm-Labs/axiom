@@ -1,0 +1,39 @@
+{
+  "R2-CAUSE": {
+    "status": "SATISFIED_SCOPED",
+    "evidence": [
+      "r1-to-r2-source.patch",
+      "implementation-design.json",
+      "native-tests.json"
+    ],
+    "claim": "r1 source pass reduction retained; r2 removes complexclip and actually repaints bounding demand before publishing validity. Measured startup improved, but physical GPU clip cost not independently instrumented."
+  },
+  "R2-PIXELS": {
+    "status": "SATISFIED_WITH_EXISTING_AA_EDGE_LIMITS",
+    "control_clarification": {
+      "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/final-pixel-acceptance-clarification.json",
+      "sha256": "56884fa2a76e3998a3dfdfb1cf31ae0fa58ef140c7e73ead8539565ee41cb17c"
+    },
+    "evidence": [
+      "semantic-pixel-observation.json",
+      "independent-final-boundary-attribution.json",
+      "native-tests.json"
+    ],
+    "full_RGBA_exact": false,
+    "claim": "same36 state rows/camera/0operations;4/5/0diffpixels all fixedsource-only1pixelband; allnonedge exactCPU; independent native completefirstframe/guard checks passed"
+  },
+  "R2-PERF": {
+    "status": "SCOPED_CRITERIA_SUPPORTED",
+    "evidence": [
+      "performance-observation.json",
+      "sampling-ledger.json"
+    ],
+    "claim": "bothprimary >=20percent medianstartup and fewer missed opportunities, supportedIAB. No r1longRAF/inputlatenessregression; detailed schedulinggap and eventualsettled fluctuations retained. Not generic performancePASS."
+  },
+  "R2-RETURN": {
+    "status": "READY_FOR_CONTROL_REVIEW_WITH_AA_EDGE_LIMITS",
+    "url": "http://127.0.0.1:4335/example.html",
+    "old_pages_preserved": true,
+    "commit_push": false
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "axiom-idle-input-diagnostic-evidence-v1",
+  "obligations": [
+    "IF1",
+    "IF2",
+    "IF3",
+    "IF4"
+  ],
+  "required": [
+    "preflight.json",
+    "diagnostic-plan.json",
+    "inputs.json",
+    "source-manifest.json",
+    "SDK-manifest.json",
+    "sampling-ledger.json",
+    "warm-observation.json",
+    "idle-observation.json",
+    "causal-analysis.json",
+    "preservation-check.json",
+    "cleanup.json",
+    "artifact-manifest.json",
+    "result.json"
+  ],
+  "minimum": "Exact package/source/build/input identity + actualmonotonic typed events + realidlevisibility + enough alignedsemantic/presented/display state and pixels to distinguish missinginput vs missingdisplay. Not artifacts-for-artifacts; credible independent equivalents accepted withmapping.",
+  "storage": {
+    "compact_MiB": 16,
+    "compressed_raw_MiB": 256,
+    "screenshots": "Onlyrepresentativeframes/ROI, no20minutecontinuousvideo/pixels",
+    "old_live_log": "read-only basis snapshot onlyifneeded; do not freeze appendonlylivefile itself"
+  },
+  "claims": "No repair/fullidle/worldplatform/G5/P34PASS. Passive visibility isnot physicalfirstphoton. diagnosticcost cannot be ordinaryperformance. Globalimage302 remains separate."
+}

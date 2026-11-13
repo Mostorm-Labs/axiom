@@ -1,0 +1,42 @@
+{
+  "status": "CURRENT_MEASUREMENT_ONLY",
+  "human_request": "提交并推送当前改动，然后开始看看7200段擦除抬笔后约30s长尾收敛问题",
+  "pushed_base": "c5ba55996319e96c801f4e275814473137d7e85c",
+  "refs": {
+    "fixed40": {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+    },
+    "historical_accounting": {
+      "path": ".aegis/results/G5-CPUW3-control-review-r1/post-Up-accounting.json",
+      "sha256": "c4569701946117d45fa7f8f18041741c3ac99924b28a47e9bcb6b023c5e11939"
+    },
+    "cleanup": {
+      "path": ".aegis/results/LOCAL_ARTIFACT_RETENTION_20261113.md",
+      "sha256": "69e63258288368fea458c3fafbc34551657704a25d4ff12cf4db77347a7a2824"
+    },
+    "source_test": {
+      "path": "runtime/composition/tests/cpu_pending_runtime_test.cpp",
+      "sha256": "b0e4d3de460d41710f29840f5617a574dd62526c431c24cf4fef22f9643d8b42"
+    },
+    "kernel": {
+      "path": "runtime/render/src/cpu_exact_path_kernel.cpp",
+      "sha256": "c409d489d8c04d740c24a302025e98d09eb008fa2126cb69c6723e739f041bad"
+    },
+    "pending_owner": {
+      "path": "runtime/interaction/src/cpu_pending_erase.cpp",
+      "sha256": "68612a17cb76be1ade9854abd508f2016df8ddbc87bb1970ecd7e06ff7a0e6a9"
+    },
+    "new_checkpoint": {
+      "path": ".aegis/results/G5-CPUW-checkpoint-20261113/verification.json",
+      "sha256": "26371e6a486a7770dcd516d0ff16273f7f98ca0b74a355b9899f3ddc36ccc1dc"
+    }
+  },
+  "decisions": [
+    "No production fix in this package. Attribute actual computation before a later repair. Existing canonical Runtime/OperationEngine, sharedRender, one64MiBWASMWorker owner unchanged.",
+    "Use exact retainedFixed40/40bodies/16localtranslations/two32-segment masks and original f32 trace7200points. No alternateeasierinput. Oldbrowserpaced29.594s/burst54.56s are historicalsummaries only; rawpruned, notnewmeasurement.",
+    "Reuse newnativeRelease libraries and lockedprebuiltSkia/Semantic fromout/G5-CPUW-checkpoint-20261113/build-native. No dependency/source rebuild. SameC++CpuExactPathJob executes surrogateWorker sequentially in native harness, so report synchronousnativeattribution, notnewWebWorker latency.",
+    "Only measurementtestharness plus concise result docs. No production/cache/protocol/Brush/PathOps/order/f32/scheduling/budget/platform/Worker policy changes. No commit/push/tag/newDemo orold4330change here.",
+    "No proof recursion/matrixexpansion. Need one strong phasebreakdown and groundednextchain, notcompleteG5/perfqualification."
+  ]
+}

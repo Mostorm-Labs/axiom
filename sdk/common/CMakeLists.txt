@@ -33,3 +33,10 @@ if(BUILD_TESTING AND NOT EMSCRIPTEN AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
   target_compile_definitions(axiom_native_transport_host PRIVATE
     NATIVE_TEST_CJK="${AXIOM_HOST_FONT_PATH}" NATIVE_TEST_FONTS="${AXIOM_HOST_FONT_CATALOG_ROOT}")
 endif()
+
+if(BUILD_TESTING AND NOT EMSCRIPTEN AND AXIOM_CPU_PENDING_ERASE)
+ add_executable(axiom_cpu_pending_receipt_tests cpu_pending_receipt_test.cpp)
+ target_link_libraries(axiom_cpu_pending_receipt_tests PRIVATE axiom_sdk_session)
+ target_compile_definitions(axiom_cpu_pending_receipt_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+ add_test(NAME CpuPendingReceipt COMMAND axiom_cpu_pending_receipt_tests)
+endif()

@@ -1,0 +1,125 @@
+{
+  "status": "PRIOR_RESULTS_RAW_SDK_IDENTICAL_LIVE_SOURCE_SUPERSEDED_EXPLICITLY",
+  "prior_result": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/result.json",
+    "sha256": "8e669aff7b64984cc4cb7ad3bcb46a5b3a6e03b94a8599b6283453520b086bae"
+  },
+  "prior_manifest": {
+    "path": ".aegis/results/G5-CPUW2-pending-erase-r1/artifact-manifest.json",
+    "sha256": "181ad56c838ecf6dfe2241ebb6a9f3fa3b7c411b6535d7a4618448e29634b508"
+  },
+  "unchanged_artifacts": 364,
+  "scoped_live_source_successors": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "previous": "489af414dec1421e22e1e38d5c7e59947eaecd8fcee0efe4f10e8a3c25cf3182",
+      "current": "007bf850d86e2475ef6908aa3863cb20a7c564b86059a127759d94e040675973"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "previous": "a465f9deefe34d3bc955ecebd0b7e6af07b8f7aef76fffa093b11d6a26b44a77",
+      "current": "6852bfd9a7290007b6ad6f344905c95b3f81f36b1d086f07f8341219e592b345"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp",
+      "previous": "6037ab88e5d676508ffa2132d2c6a6b794b3c2281be6ca3ebf7b6f9efbc81bc7",
+      "current": "ec500714ed47800b13452fe75bcb8825a9e02d83f7ae81380ab33b39adc4ab13"
+    },
+    {
+      "path": "runtime/composition/src/public_composition.cpp",
+      "previous": "b9e3e33060fd09931f000a2b29500cc9f7a8fa5d1b460d2c8dd190e5babdfea9",
+      "current": "edfb5ad1f0803be89b8a5b944a554dc3d4759805ef19031efe7049790c7f6997"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "previous": "384f6915331853438f2e3db3621a1ea97ebdbd77ff1de927a8f91c741abadf0b",
+      "current": "59bf4000d748719437f1db6cff0519503a24310eae6823fc977aa67ce19990d5"
+    },
+    {
+      "path": "runtime/composition/tests/cpu_pending_runtime_test.cpp",
+      "previous": "0cdf35163e5a6b963540cb9e8f118f486a4f0cdc1baa2bfefa519021d4054e3f",
+      "current": "ff95863a16aa1afa4464ea1139d15e4e8a6f5f37bfec2c88abf0ac72551b4ada"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "previous": "1a82e01ec180040397ac1ed09d51d0ef794e8877d79019d631cd656d4abd3d6c",
+      "current": "689c588ef9dbd967714a56a2ddd7c488032cce70c98a1aa6544e5ffe6af140b7"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/internal/cpu_pending_erase.hpp",
+      "previous": "9b0a50e8ae30ddc51be747201ac73460396e1cc1d2a0e6b01acb27c15d57326f",
+      "current": "6fc804294cd766366e808e9e61e1cd29842a935a4343c21469dbaf59fb7aeb73"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "previous": "d17ac67cff28cbd910e9602b17d753380dcbf3acd97481f19a15326016c555fc",
+      "current": "b338ddcdac5097870d5ab2fbb0421e51c8f14a91c927f3db0983a763cc99aa3f"
+    },
+    {
+      "path": "runtime/interaction/src/cpu_pending_erase.cpp",
+      "previous": "f86c40d78e6c34363ca7627cb289973d48c32dc4ae693896c57a08fbfbf2e2e4",
+      "current": "5ef4b7c414f160161121060c0752a1123aaa5d66782fe45f915c96f71d0cf64a"
+    },
+    {
+      "path": "runtime/interaction/src/cpu_pending_erase_state.hpp",
+      "previous": "c1e709402513eee105e7e2cf285a30dc3be63ae0898ecc58c7378c2dae922dc3",
+      "current": "fce2c02979769971b8adde66fd6ae74781012b9d941e2666e8bc8c2a17ce60e6"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "previous": "89f4971f76b82dd8e2805959e9dd243594d5784cbc81677becbc308a37123f98",
+      "current": "a6ae64eb8748a9c310210b03609700d691de7746dd553877ea8ece414fa750ec"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "previous": "599dbc6e3cbe17c7bdcdaef3cc4a8817a303026ef2d7192652850d2e7ce177b8",
+      "current": "a667e6cb85f0f660d8539dc335659eafd3e06fe6ae5980408209f0bbfb1f6ffb"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "previous": "b29a437f04dc0ced27f708819383045278f3297b73f8498440555c44b6cfd0dd",
+      "current": "9844bac0851e1d863e3b0dbf4efba2432f333ecef49e2a8e0c5e12ea61deb658"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "previous": "e44c36968e872ef79a365c27600bbc2b896067df0942d6dc84e27b2ddc94341d",
+      "current": "4f8a03dd0f83717d74298cc4c51153f946f22417d4aeb5c3bcf3a2cb89298f7d"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "previous": "9d6e957ec89bf8ac58c9da1f1d3232c148d6e16a029c7576a19d92b5046bfd4f",
+      "current": "6f1c82a61e80209a5d4a18694bffbf5150806e4bc9d9267c4d89eec5040250ab"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "previous": "76aa1b10118d58e4b22cd7c8422249e90e5f0894e78b07924d44ff3f0e1277f5",
+      "current": "2dadee553165bd3f75ce9aa75406e0a0538ad1ae5c5b64e77446207791c7e3b6"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "previous": "6ed8d143ca7f66a435de0d7ab6385726d2f296293107df6faee095c19208f89f",
+      "current": "a38a45c21c3af6a237fa41dc0c2b55a11dd84fdcb911e1ea60e3423b70b246b9"
+    },
+    {
+      "path": "verification/runners/g5/cpu_pending_web.mjs",
+      "previous": "a912e1da62045e8145c7886ce280c7b2c53b31daf966dba4935fa93ea71877ad",
+      "current": "8a31d69142223f1c697eee78a4c746ccb8dd9f527385fb8a148a58a422b7c970"
+    },
+    {
+      "path": "verification/tests/g5_cpu_pending_driver.test.mjs",
+      "previous": "209d6800176b71942e0a962fbca89b2a4d330b0e42c073175c3cfacfe1589549",
+      "current": "4aad78486e6d514583f8673246c1c1a940a145624f8bd3e1872eab4e6d12880f"
+    },
+    {
+      "path": "verification/tests/g5_cpu_pending_root.test.mjs",
+      "previous": "2eb12a5553185c0009e81e1a3ccb38fe7e3ce6d81e7cf6a1b3cd6c686c5291a5",
+      "current": "12c063803465d2c3fe0feb2b90920d25e4e86cf65126932567bb18fdf41a5d12"
+    },
+    {
+      "path": "verification/tests/g5_cpu_worker_repair_root.test.mjs",
+      "previous": "d0d94050ff9a7469e2a877795aa881543e67dbb5d6ef09b90f43246fac0f9784",
+      "current": "e26d86e22ecc97c6c89d294a82fbe39338399f1c1bd287dac491ba556d8d0cbc"
+    }
+  ],
+  "old_Demos": true
+}

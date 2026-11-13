@@ -1,0 +1,74 @@
+{
+  "status": "CURRENT_HUMAN_AUTHORIZED_NARROW_IMPLEMENTATION",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "revision": "5102b2bf76cd1bd0759ab17cce2d68146577e4e6"
+  },
+  "human_request": "提交并推送，然后开始下一轮：拆清提交、Scene 和绘制等待，再针对实测瓶颈处理 stamp。",
+  "paired_messaging": "Control01a1c344-e48c-7db3-8c35-39732cb81dc5 directs implementation01a1c345-6500-7ea0-984d-707b72878bd1; human authorizes proactive callbacks.",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "accepted_basis": [
+    {
+      "path": ".aegis/results/G5-CPUW6b-control-review-r1/control-review.json",
+      "sha256": "1fa7a460d6aa95fd2d949b812702df27d663c41ad52fc67d4aca16c7bfe8e837"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/result.json",
+      "sha256": "86709ebfc3b6f37022f26ced6b724e7a4d1bf54702f1bcd0b6c57c2c4f8845d4"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/web-results.json",
+      "sha256": "8602259af729ce08807ab5de8597cd92ad10d13adaa9c29bc6fb5897fa57b75e"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/phase-accounting.json",
+      "sha256": "594779bdd775f7d20e5175680abf33a5da390b5c5a4256b0ca4008f08f5d20b7"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/roundjoin-amendment.json",
+      "sha256": "598916558f16d8ec44317ad3a5b8b512b984e34966ab7d11283a2b2345d9b4a8"
+    },
+    {
+      "path": ".aegis/results/G5-CPUW6b-local-exact-union-r1/demo-manifest.json",
+      "sha256": "4f1fa92d05ba39258216967b3539d05cd8580ac92581f1cbc0355d3312aff73a"
+    }
+  ],
+  "decisions": [
+    "Preserve CanvasEditingRuntime/Composition pending intent, input, commit order, History and publication ownership. OperationEngine remains the only canonical atomic writer. Scene/Render are derived. CPUWorker remains bounded sharedC++/WASM geometry executor only.",
+    "First attribute the actual postWorker delay with original dense input and ordered history; then implement one causally demonstrated dominant repeat/preparation/progress chain in this same package. Do not return at instrumentation/native-green while the scoped repair remains executable. Do not assume native stamp1.716s explains browserD4 followup71.849s.",
+    "Distinguish actual prepare/atomic commit/Scene publish/Session dispatch/operation-listener event/canonical submit/platform receipt. onOperation timing is delivery time, not an exact internal commit timestamp. Similarly GLsubmit is not GPUexecution orphysicalpixel latency.",
+    "Allow exact immutable stamp/encoding/Scene reuse and cooperative progress within existing owners, or bounded Render preparation/invalidation/resource-wait repair where measurements prove the cause. Preserve complete original masks, exact geometry/paint/AA/order and atomic receipt/display fences. One coherent causal repair, no blanket renderer rewrite.",
+    "Stamp changes must preserve exact old content-generation behavior and full projection/incremental equivalence, or retain exact original fallback. Hash equality alone is not identity proof. Source owner+pointee+body/config/ordered fullmask contents/IDs/generation dependencies qualify reuse. Mask insertion/reorder/removal/UndoRedo and unknown storage must remain correct.",
+    "Do not preempt/drain indivisible PathOps, increase budgets/quotas, hide pending intents, bypass validation orCanonicalVisible, drop accepted input, report fake Applied, publish unfinished scratch orstale/blank frames. Preserve final6bRoundJoin and8193history/513selection fixes.",
+    "No publicSDK APIs/DTO/schema/Brush/math/f32/union representation change, threadcount/platform expansion, pthread/SAB/GPUthread, newdependency orlock changes. One64MiBWorker/8pending/1MiBmessages/16MiBtransport and512shared/256optional/64entry MiB remain.",
+    "Published Semanticv2+R1FullSkia only. Latest human AGENTS SemVer+Build overrides stale on-disk version paragraph. Localbuild remains0.4.3.0; no release/tag/commitpush within this package.",
+    "Preserve4331/4330/4328/4298 and alluserdocuments/assets. NewSDK/build/results/Demo use newCPUW7 paths andport. Do not restore withdrawnCPUW5navigation experiments or retune navigation quotas/quiet delays.",
+    "Finite attribution and correctness/performance evidence; reuse accepted identical proofs, no14row/fullDPRmatrix repeat bydefault. Keep source/numeric/semantic evidence compact and raw compressed. Performance residuals remain explicit."
+  ]
+}

@@ -107,6 +107,12 @@ class NpmPublicationTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.prepare(archive, root / 'npm')
 
+    def test_same_build_worker_sidecars_are_required_for_root_consumer(self):
+        expected={'internal/cpu-worker-kernel.mjs','internal/cpu-worker-kernel.wasm',
+                  'internal/cpu-worker-build.mjs','internal/cpu-worker-client.mjs',
+                  'internal/cpu-worker-thread.mjs','internal/cpu-worker-owner.mjs'}
+        self.assertTrue(expected.issubset(JS_REQUIRED), 'Root SDK needs all matching Worker sidecars')
+
     def test_never_overwrites_existing_work(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); archive = self.archive(root); output = root / 'npm'

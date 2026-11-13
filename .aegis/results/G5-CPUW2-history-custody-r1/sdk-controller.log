@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: Web and native share public errors and an async controller factory
+ok 1 - Web and native share public errors and an async controller factory
+  ---
+  duration_ms: 0.724583
+  ...
+# Subtest: Controller copies queued arguments and preserves nested async reads
+ok 2 - Controller copies queued arguments and preserves nested async reads
+  ---
+  duration_ms: 1.410125
+  ...
+# Subtest: Unsubscribe and close gate queued event callbacks
+ok 3 - Unsubscribe and close gate queued event callbacks
+  ---
+  duration_ms: 0.838
+  ...
+# Subtest: Failed close retains the controller so the data owner can release custody
+ok 4 - Failed close retains the controller so the data owner can release custody
+  ---
+  duration_ms: 0.261792
+  ...
+# Subtest: Close rejects new commands while the underlying owner is draining
+ok 5 - Close rejects new commands while the underlying owner is draining
+  ---
+  duration_ms: 0.319709
+  ...
+# Subtest: Listener rejection propagates to SDK dispatch to retain the operation cursor
+ok 6 - Listener rejection propagates to SDK dispatch to retain the operation cursor
+  ---
+  duration_ms: 0.230459
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13.545375

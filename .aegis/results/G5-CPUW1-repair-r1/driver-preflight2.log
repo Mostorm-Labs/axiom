@@ -1,0 +1,70 @@
+TAP version 13
+# (node:24019) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual repair asset consumer preserves result bytes and independent parity before success
+ok 1 - actual repair asset consumer preserves result bytes and independent parity before success
+  ---
+  duration_ms: 3.67725
+  ...
+# Subtest: actual repair consumer detects missing terminal and saves failing ledger/state before cleanup
+ok 2 - actual repair consumer detects missing terminal and saves failing ledger/state before cleanup
+  ---
+  duration_ms: 1.719625
+  ...
+# Subtest: real HTTP harness separates /app and /assets and supplies worker-src none
+ok 3 - real HTTP harness separates /app and /assets and supplies worker-src none
+  ---
+  duration_ms: 62.145209
+  ...
+# Subtest: actual scheduling consumer covers old ledger shape and candidate independently
+ok 4 - actual scheduling consumer covers old ledger shape and candidate independently
+  ---
+  duration_ms: 9.314083
+  ...
+# Subtest: actual LIFE driver covers real-flow publication failure release and retry without loosening barrier
+not ok 5 - actual LIFE driver covers real-flow publication failure release and retry without loosening barrier
+  ---
+  duration_ms: 3.680125
+  location: '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Error: queued cancel terminal
+        at check (vm:module(0):4:83)
+        at Module.consumer (vm:module(0):47:408)
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at async exercise (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:28:414)
+        at async TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:38:126)
+        at async Test.run (node:internal/test_runner/test:980:9)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+    + actual - expected
+    
+    + 'FAILED'
+    - 'OBSERVED'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'OBSERVED'
+  actual: 'FAILED'
+  operator: 'strictEqual'
+  stack: |-
+    check (vm:module(0):4:83)
+    Module.consumer (vm:module(0):47:408)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async exercise (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:28:414)
+    async TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:38:126)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+    TestContext.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_cpu_worker_repair_driver.test.mjs:38:156)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:980:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 363.210459

@@ -1,0 +1,27 @@
+{
+  "HEAD": "bc40e42cd83b290152703631b2ba80a9329a78f4",
+  "branch": "codex/g5-cpu-worker",
+  "changed": {
+    "runtime/render/src/skia_navigation_tiles.cpp": "e2a4a24739dfdde42541d93d087281af442c85a02ccbf6c7344e434b319be6d4",
+    "runtime/render/src/skia_navigation_tiles.hpp": "baee7f6ca2a9184a7362a871f979d5d0ae7f3fa37779df82140bdf0ee50d7d20",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/render/CMakeLists.txt": "caa66d6ac78dcdf3148f4097fae3db4fbc140cdfc7965b1cfe5bc1466f318e11"
+  },
+  "newfiles": {
+    "docs/planning/G5_SETTLED_ZOOM_START_20261113.md": "3f6b9558e2ad8ccf5951c3131bcce07066976ff50d0cb440968d882caf30b4f4",
+    "runtime/render/tests/settled_zoom_start_test.cpp": "7e755a8c2fc7fd5d3083e6555f1728d99a236b88daa420933aa855a4c5d7226c",
+    "verification/runners/g5/settled_zoom_start_consumer.mjs": "92e9963b84859d015ecfd38214a7236574de2f5d06680f0c1cf5f37c5f848583",
+    "verification/runners/g5/settled_zoom_start_iab_run.mjs": "d48d5a5e1dfeef6b6f8a3abdbf5a8019fe4b1cb6b683d597229d37619310d0c1",
+    "verification/runners/g5/settled_zoom_start_iab_server.mjs": "0546475c780b952963aafd078e617131b20cf328ec7647e00b4f4e5105a00b81",
+    "verification/runners/g5/settled_zoom_start_metrics.mjs": "8254c2cbdfb89845266e232fffe694f08e02167dac05f62c48a15ddb33923aa9",
+    "verification/runners/g5/settled_zoom_start_runner.py": "6e09284243d05d5d16513a625b47fd79b9824b80ba0aec8f6f6be4be4b50fdd7",
+    "verification/runners/g5/settled_zoom_start_web.mjs": "c96fa9d0783f7802f950ab3d0b6f05335e733113784ac5dc5b5930404be80294",
+    "verification/tests/g5_settled_zoom_start.test.mjs": "6149e8c398616993b5eba49b34d5573990efb3d9d04a704e10b34384011341b5"
+  },
+  "candidate_status": "UNQUALIFIED_UNMET, retainedbycontrol instruction, no Demo/publish",
+  "sourcefreezeduringChrome": true,
+  "IABsourcebasis": "candidate-SDK-manifest.json before/after sourcefields; actualunchangedsincethisfreeze",
+  "renderer_delta": "invalidcrossScenequerybindingadmission only; noRuntimeSZ01/SZ02",
+  "public_API_or_brush_change": false,
+  "post_sampling_new_helpers": "metrics purefunction tests only, no product/driver/SDKmutationduringmeasuredruns"
+}

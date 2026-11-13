@@ -1,0 +1,112 @@
+{
+  "schema": "g5-cpu-worker-three-windows-v1",
+  "cap_seconds": 390,
+  "charged_seconds": 35,
+  "attempts": [
+    {
+      "id": "G5CPUW1-PARITY",
+      "status": "COMPLETED",
+      "limit_seconds": 150,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-wasm-kernel-r1/parity-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 26.488446666999998,
+        "peak_process_family_rss_kib": 1110480,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 150,
+        "last_stage": {
+          "stage": "closed",
+          "id": "G5CPUW1-PARITY",
+          "status": "OBSERVED",
+          "summary": {
+            "status": "OBSERVED",
+            "jobs": 19
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 27,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    },
+    {
+      "id": "G5CPUW1-LIFECYCLE",
+      "status": "COMPLETED",
+      "limit_seconds": 120,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-wasm-kernel-r1/lifecycle-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-LIFECYCLE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.109621542,
+        "peak_process_family_rss_kib": 1169200,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 120,
+        "last_stage": {
+          "stage": "closed",
+          "id": "G5CPUW1-LIFECYCLE",
+          "status": "OBSERVED",
+          "summary": {
+            "status": "OBSERVED",
+            "jobs": 4
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 5,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    },
+    {
+      "id": "G5CPUW1-EXTERNAL",
+      "status": "COMPLETED",
+      "limit_seconds": 120,
+      "rss_mib": 4096,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_worker_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW1-wasm-kernel-r1/external-request.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-EXTERNAL"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.915034917,
+        "peak_process_family_rss_kib": 1110880,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 120,
+        "last_stage": {
+          "stage": "closed",
+          "id": "G5CPUW1-EXTERNAL",
+          "status": "OBSERVED",
+          "summary": {
+            "status": "OBSERVED",
+            "jobs": 1
+          }
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "source_stable": true,
+      "charged_seconds": 3,
+      "worker_status": "OBSERVED",
+      "hard_stop": false
+    }
+  ]
+}

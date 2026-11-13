@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Darwin-c++"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="Gin-3.local"
+	time="3"
+	timestamp="2026-11-11T21:44:50"
+	>
+	<testcase name="G5LongQueryPreparationPath" classname="G5LongQueryPreparationPath" time="3.36361" status="fail">
+		<failure message="Subprocess aborted"/>
+		<properties/>
+		<system-out>libc++abi: terminating due to uncaught exception of type std::runtime_error: ELIGIBLE_STABLE_PREFIX_STALLED_BEFORE_FINAL_UP
+{"final_remainder_unions":3,"path_equal":true,"prepared_segments":25597,"resident":2117805,"status":"RED"}
+</system-out>
+	</testcase>
+</testsuite>

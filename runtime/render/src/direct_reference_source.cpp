@@ -526,6 +526,8 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
 
 } // namespace
 
+foundation::Result<ReferenceCommand> DirectReferenceSource::presentationCommand(const RuntimeSceneRecord& record){return commandFor(record);}
+
 enum class SourceSelection { kComplete, kNavigation };
 enum class SourceEncoding { kNone, kCanonical };
 

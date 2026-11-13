@@ -1,0 +1,490 @@
+{
+  "status": "SCOPED_NUMERIC_PARITY_QUALIFIED",
+  "kernel": "runtime/render/src/cpu_exact_path_kernel.cpp",
+  "original_reference": {
+    "anchor": "e275da6e1f23d09179785bc8a7c18dcddf2e4de7",
+    "monolithic_source": "original-erasePath.txt",
+    "sha256": "1e364468bbca23fd76d7f2a79e15b4584ccbe1fe5cfaa48d2693cd54be086fa9",
+    "independent_test_source": "runtime/render/tests/cpu_exact_kernel_test.cpp",
+    "sha256_test": "2a4bec10f46a9a1527800f8516cd001f3dec1bc76213ccb3564d4b571c7ceaa9"
+  },
+  "checks": [
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 0,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/0-worker.rgba",
+      "result_sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/0.path",
+      "expected_sha256": "5f2f7f35ad5aacc1f62d63aa882cf93f9084e645d643bc51fc502c1db1e6a361",
+      "request_sha256": "4186447526d345d9f5b6f7eedf63c5162c55579997aad81b6bea655da5940af4",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 1,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/1-worker.rgba",
+      "result_sha256": "770e2b86021c8b7bf73c9181ce257a8c9331da2b99f439d3127f538100f530b5",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/1.path",
+      "expected_sha256": "d6e211fdd4c17f633223e41511fbd86cb6383f01daf76100a71ccb37cdc1cf4e",
+      "request_sha256": "5dbecb91b6c9db7a6afdf57900e0cdf4d189ad18d20bfd247388a297c3e15417",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "2",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 10,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/10-worker.rgba",
+      "result_sha256": "db785f147befaedcf134248f68ea7af43946dbe7fe13af893bc13576e0e662ba",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/10.path",
+      "expected_sha256": "d1d585d0e276b6126cac0011cde7111e0bfa49edd1e70a24379e5e4d03df0354",
+      "request_sha256": "25f5be064e0ebb804e7d8ffdcb5c03e84f7e598594b2ca1692f20af4bdd88fa9",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "11",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 11,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/11-worker.rgba",
+      "result_sha256": "a4f39bde220bc56563a51f18444134f0cfd7971e104aeb593f3e324539d901cf",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/11.path",
+      "expected_sha256": "0650ceb456d95da94bca83aa6f0a8b02f6952f766e89ae1ef4bff1634dd1e5f1",
+      "request_sha256": "85b3252b9617a152cfba350906e16d16f494855b69bb9f4bbd00e25154eadf5e",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "12",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 12,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/12-worker.rgba",
+      "result_sha256": "d66ca2e20de5ff21622e1665fbac81bbcfc4d6e3f0caa3aa56d235066684d9ff",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/12.path",
+      "expected_sha256": "b2f07b31af7e9f5f894c64aa4fd6e809c81ba9a7ad4912a167e15e9fdf508264",
+      "request_sha256": "4901383847ba2d33293e29fade5f3d90a7e74add72202045751084fa6560acf7",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "13",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 13,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/13-worker.rgba",
+      "result_sha256": "192f23f9cc66335c3d8c88c866eb3f7964f8b95471517de58ab3873ef29ebb30",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/13.path",
+      "expected_sha256": "2951aa50b2a6dc76fe4c30559af6cdde616b6a8b0bc978a725930ecea197f083",
+      "request_sha256": "08c9d9852313ee3dc8c2eecf3fc2d57f706cd696740df161263b9d367dabc563",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "14",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 14,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/14-worker.rgba",
+      "result_sha256": "81b9435e2cee568d120bfeec182731e84379018b5adca9ed58f83a2b7205a81d",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/14.path",
+      "expected_sha256": "5e2eb694583b158247696a39bb823b93aacf6f4c9cd3ddcf99f217958d0dac9f",
+      "request_sha256": "66df34bb136e421b4f944ce86a16ad8d1ee1cd90bde1f83741693f4a1500e5b2",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "15",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 15,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/15-worker.rgba",
+      "result_sha256": "8a151fd7de61f7c5672b2ef9e968d55310d5b79f82fa08f1e8395576952be6e8",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/15.path",
+      "expected_sha256": "c3de027f07e04a75df1b251c2ee57795e1b0948a3b29782d8ad13322154155bb",
+      "request_sha256": "1ca291b45172ba18bb7cb06ee9eab5f00ffa7c4f3e11f7137e4461a4292f28f9",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "16",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 16,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/16-worker.rgba",
+      "result_sha256": "50eb6cba2fc605df3a05959e8a480c36c5d335783b1c1118061f5f083d53b145",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/16.path",
+      "expected_sha256": "a63bad644d3aba259e301fc59a6f3f5037472cfcd9c0015e00391ee46afa1c8c",
+      "request_sha256": "0c67f99bbb2ef8320951447d0ca85fa6fae2f6674f410a9683bbd29821d969e1",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "17",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 17,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/17-worker.rgba",
+      "result_sha256": "5e06c988e3ffaeac501551f8ebb64762d06466ca45be507baaf9942175d2a7aa",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/17.path",
+      "expected_sha256": "5f2f7f35ad5aacc1f62d63aa882cf93f9084e645d643bc51fc502c1db1e6a361",
+      "request_sha256": "2da423a68592d5ff11ab744df8642ec1207a944b759b6a3470ffafb31d8579ee",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "18",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 18,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/18-worker.rgba",
+      "result_sha256": "3e3dd6eba6ef4e3f312477cd42e9b619651a5dd8cbabff7eb9d1ef142b8e888c",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/18.path",
+      "expected_sha256": "63cd8fb3eaeeed0faf335e1d7c56e8371ac3e468da0666f84f5fcd9f226344a0",
+      "request_sha256": "2e7094b8ab1ea3732a420f5baab9dd0a5a1b44a178e476a86151e27f6bce7b71",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "19",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 2,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/2-worker.rgba",
+      "result_sha256": "69feca3a5e203ca9e771e7f910a4b5da21e6c4a8167a28025df2615be86247a7",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/2.path",
+      "expected_sha256": "1bfb09093ab4510b70e37016667d6b9b3a8b0735d33227e8add49dea3bfe8fcc",
+      "request_sha256": "5e54ea5db332ba7b4c27a621c56608c0a332a35d29ddb93456f477152cfc1fb1",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "3",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 3,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/3-worker.rgba",
+      "result_sha256": "77fd2c05573bff01883c7d52add7dc3f12affcf023f03f73a14c73e2f521ea29",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/3.path",
+      "expected_sha256": "09b2dc074dd4efa5bcfcf2a2297d2920fd091b2aa04cedd8d2fb16776eb3df73",
+      "request_sha256": "f4c5d7bc2c0bd5329a54be5d45855b94862f3e4afc471fd90a0339218ce56a96",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "4",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 4,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/4-worker.rgba",
+      "result_sha256": "c56389ca9ef72661c8d516db8c192a597278938cfa0e42741460fc3dd3d94dac",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/4.path",
+      "expected_sha256": "5b0c621a69f6f5a4a2e0f4effe06e1b8b28c88b054b99b44e68f18920963411e",
+      "request_sha256": "8f4fc19e2d1c0869feee5663c316c7d28407e63f9162d04e8999db94d047f9cd",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "5",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 5,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/5-worker.rgba",
+      "result_sha256": "59c502fa151515e9a954e35c35fab87a5ce5670dc5c1a5c432e452316c167d9c",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/5.path",
+      "expected_sha256": "258156e3d5cd5bb8c362096dfe87849c9f6d8f6408dff2ac6840e81074125ab6",
+      "request_sha256": "c4d91f5399de105cf4588c8c359783194e1b3dfa1161c4cfcdea06162f6a78ed",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "6",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 6,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/6-worker.rgba",
+      "result_sha256": "812832834d5bf41df0a13593f70c18b5795261ceefd8fd286caafc85f67adac5",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/6.path",
+      "expected_sha256": "2928ca1ef4630fe92f371299593e34bbc5620c608cd5374c9a6758a6deb9cff5",
+      "request_sha256": "ff1fc33b1b5ba112450f22e7f99cd15f835299adb6e7aba880bd526bb2443135",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "7",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 7,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/7-worker.rgba",
+      "result_sha256": "e2023b2b8e5406690d9365a80c906010a8ec69afedd6c9322b1330a2a56e83c3",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/7.path",
+      "expected_sha256": "2b43d5d0cb93de304b741495800ca7cd13ebe4b55cac20170eb61dadb55b6bdd",
+      "request_sha256": "b65e025364bc6687854e99ed5021c5a0b6a519cacac688f68bad26c4c4f0398c",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "8",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 8,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/8-worker.rgba",
+      "result_sha256": "58d9b4a92209214fa7fb49f5ff680cb121ea8db291d56ba2c3c7f759d99d8a22",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/8.path",
+      "expected_sha256": "02ffdcbe9a4ce70a671e78e5070e9f27f9ac9ca18216a51054e74ec927741853",
+      "request_sha256": "09fbc6d9b8898592257d2c1900491b38648c5ccc12217a0352ff3e92c5f38e50",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "9",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-PARITY",
+      "index": 9,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-PARITY/9-worker.rgba",
+      "result_sha256": "a3c36e977b10683211e368a6f03c03393947084292f871d159389d722b981150",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/9.path",
+      "expected_sha256": "ed460e8c4cfabbf60477cd29cbe902cb26f59cbcaf64d395f0434bcc88658dbd",
+      "request_sha256": "b0937014c85178c4e1b133d3b64e3d0ffd62cbd9694d3fc70500026f99360f17",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "10",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-EXTERNAL",
+      "index": 0,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-EXTERNAL/0-worker.rgba",
+      "result_sha256": "7df1fd047c0b00b3fe96a267d55427a70575a9edcbc275b3f109fca1967170f1",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/0.path",
+      "expected_sha256": "5f2f7f35ad5aacc1f62d63aa882cf93f9084e645d643bc51fc502c1db1e6a361",
+      "request_sha256": "4186447526d345d9f5b6f7eedf63c5162c55579997aad81b6bea655da5940af4",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-LIFECYCLE",
+      "index": 1,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-LIFECYCLE/1-worker.rgba",
+      "result_sha256": "770e2b86021c8b7bf73c9181ce257a8c9331da2b99f439d3127f538100f530b5",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/1.path",
+      "expected_sha256": "d6e211fdd4c17f633223e41511fbd86cb6383f01daf76100a71ccb37cdc1cf4e",
+      "request_sha256": "5dbecb91b6c9db7a6afdf57900e0cdf4d189ad18d20bfd247388a297c3e15417",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "1",
+        "2",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    },
+    {
+      "window": "G5CPUW1-LIFECYCLE",
+      "index": 2,
+      "result_path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/local-web/G5CPUW1-LIFECYCLE/2-worker.rgba",
+      "result_sha256": "e97c0db87d2263dca8451b51de492b068ed47ab41fd927aea4011279334fc67e",
+      "expected_path": "out/G5-CPUW1-wasm-kernel-r1/requests/2.path",
+      "expected_sha256": "1bfb09093ab4510b70e37016667d6b9b3a8b0735d33227e8add49dea3bfe8fcc",
+      "request_sha256": "5e54ea5db332ba7b4c27a621c56608c0a332a35d29ddb93456f477152cfc1fb1",
+      "path_bytes_equal": true,
+      "identity_words": [
+        "1",
+        "1",
+        "0",
+        "72057594037927936",
+        "3",
+        "14",
+        "1",
+        "1"
+      ],
+      "kernel_build": "6a625488bad6f0bdcd67657fb55fd6bc"
+    }
+  ],
+  "main_WASM_vs_Worker_byte_equal": true,
+  "main_result_sha256": "8d5a93133a2362c1d5fbb94cf5e616d1accb21901cda06fe32ba7543970dd451",
+  "variants": {
+    "0-15": "1600 segment distinct object-local queries",
+    "16": "separate complete request for first800segments; NOT cross-message append or residentprefix reuse",
+    "17": "separate request with mutable controlpoint fork",
+    "18": "Filled evenOdd simple triangle"
+  },
+  "exact634": "exact-parity.json",
+  "limits": [
+    "No actual Worker7200samples or large nonuniformFilledcommands; count<=1900",
+    "No samejobappend/source-resident reuse protocol implemented",
+    "Native f32/finite tests do not establish allvariantWorkerfault cases"
+  ],
+  "not_claimed": "WholeBrush/interactionmigrationorapproximation"
+}

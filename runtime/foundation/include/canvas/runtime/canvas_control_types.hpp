@@ -181,6 +181,7 @@ struct CanvasControlReceipt final {
   CanvasControlError error = CanvasControlError::kNone;
   std::uint64_t appliedRevision = 0;
   std::string detail;
+  std::uint64_t pendingSerial=0;
   std::optional<SectionOutcome> section{};
 };
 

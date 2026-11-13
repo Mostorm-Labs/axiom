@@ -1,0 +1,109 @@
+{
+  "status": "PREFLIGHT_NO_BROWSER_STARTED",
+  "primary_dimensions": {
+    "dpr": 2,
+    "css": [
+      1431,
+      1010
+    ]
+  },
+  "baseline": "original r3 candidate Release DIAG_OFF TIMING_OFF",
+  "fixture": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-CPUW4-edit-navigation-r1/local-web/CPUW4-D4-CORRECTIVE/author/fixture.axsnap",
+    "sha256": "17f0f5ceaa10b0de2f808dd5deed40e44295a4179a43a388d14dd731cb949fbe",
+    "metadata": {
+      "documentRevision": "54",
+      "recoveryFrontier": [
+        8,
+        1,
+        16,
+        1,
+        24,
+        1
+      ],
+      "checkpointDigest": [
+        129,
+        110,
+        152,
+        232,
+        77,
+        56,
+        240,
+        227,
+        253,
+        186,
+        30,
+        247,
+        159,
+        221,
+        40,
+        106,
+        47,
+        173,
+        8,
+        252,
+        23,
+        162,
+        63,
+        17,
+        157,
+        38,
+        202,
+        184,
+        234,
+        224,
+        184,
+        169
+      ],
+      "resourceBinding": "1"
+    },
+    "author_window": "CPUW4-D4-CORRECTIVE",
+    "author_operations": 12,
+    "object_count": 49
+  },
+  "rows": [
+    "append-zoom-in-immediate",
+    "append-zoom-in-settled",
+    "append-zoom-out-immediate",
+    "append-zoom-out-settled",
+    "append-pan-immediate",
+    "append-pan-settled",
+    "partial-erase-zoom-in-immediate",
+    "partial-erase-zoom-in-settled",
+    "partial-erase-zoom-out-immediate",
+    "partial-erase-zoom-out-settled",
+    "partial-erase-pan-immediate",
+    "partial-erase-pan-settled"
+  ],
+  "hypothesis_cap": 2,
+  "development": {
+    "max_starts": 4,
+    "total_seconds": 600,
+    "each_seconds": 180,
+    "rss_mib": 4096
+  },
+  "final": {
+    "max_starts": 2,
+    "total_seconds": 480,
+    "each_seconds": 240,
+    "rss_mib": 4096
+  },
+  "primary_interval": "Up return -> nexttask firstDOMwheel and planned5subsequent16.7ms; no capture/snapshot/trace drains",
+  "camera": {
+    "scale": 1.5,
+    "x": -200,
+    "y": -120
+  },
+  "targets_selection": "afterbaseline worstimmediate zoom-out/pan peredit+onezoom-incontrol freezebeforeproduction",
+  "requests": {
+    "CPUW4-D1-BASELINE": "844ca74170425b3effb13f6f1658d81ab279d176ed4811984124aae3d0a23b12",
+    "CPUW4-D4-CORRECTIVE": "870f696000a9440c83728d59c6afbc60d7dd3b7628ac20004e49a44deb0fdad0",
+    "CPUW4-D2-BASELINE": "e5ed728aff8d76e9c1a79dc91ed5c704a567281beaab55663d90ab297481e14a",
+    "CPUW4-D3-BASELINE-TRACE": "bbd1eda58428335da63eb41ea23324ecfbd9eb10c79451b7c2f4286dafb6a0ad"
+  },
+  "actual_NAV_event_anchor": [
+    715,
+    505
+  ],
+  "anchor_note": "WebIDL WheelEvent clientX long canonical integer readback; same frozen geometry and every A/B event"
+}

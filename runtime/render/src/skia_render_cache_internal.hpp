@@ -62,6 +62,8 @@ class SkiaRenderCache final {
         return discovered;
     }
     bool hasPixels(const ReferenceTraversalEntry&)const;
+    // Cold transient material uses this same cooperative canonical preparation.
+    Preparation prepareTransientMaterial(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*);
     bool compositePreparedFrame(SkCanvas&);
     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
@@ -130,7 +132,7 @@ class SkiaRenderCache final {
         std::uint64_t seen=0;
     };
     std::map<foundation::ObjectId,BodyDependency> bodyDependencies_;
-    bool stagedBodies_=false;
+    bool stagedBodies_=false,stagedMaterial_=false;
     // An active mask may reuse resident immutable bodies without inheriting
     // the previous whole-frame pixel working-set admission failure.
     bool movingEraseBodies_=false;
@@ -158,8 +160,33 @@ class SkiaRenderCache final {
     void planRuns(SkCanvas&,const FramePlan&);
     void captureRunEntry(const FramePlan&,std::size_t,const sk_sp<SkImage>&,int x=0,int y=0);
     bool validRun(const RetainedRun&,const FramePlan&)const;
-    struct Entry {RenderCacheValidity validity;sk_sp<SkImage> image;SkIRect bounds;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
+    struct Material final {
+        std::shared_ptr<const PreparedNavigationGeometry> body;
+        ReferenceCommand command;
+        scene::SharedVector<semantic::EraseMaskRecord> masks;
+        semantic::Transform2D transform;
+        semantic::PropertyBag properties;
+        SourceRetentions sources;
+        resources::ResourceLease pixels,metadata;
+        std::uint64_t targetEpoch=0,resourceEpoch=0;
+    };
+    struct Entry {RenderCacheValidity validity;sk_sp<SkImage> image;SkIRect bounds;std::size_t bytes=0;std::uint64_t used=0;
+        std::shared_ptr<Material> material;resources::ResourceLease metadata;};
+    bool equivalentMaterial(const ReferenceTraversalEntry&,const ReferenceTraversalEntry&);
+    bool aliasMaterial(const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&);
+    void eraseEntry(std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash>::iterator);
     std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash> entries_;
+    // One most-recent complete isolated body material, before permanent or
+    // presentation masks. Same owner and optional budget as material entries.
+    struct BodyPixels final {
+        sk_sp<SkImage> image;SkIRect crop;
+        std::shared_ptr<Material> material;
+        std::size_t bytes=0;
+    };
+    std::optional<BodyPixels> bodyPixels_;
+    bool restoreBodyPixels(SkCanvas&,const ReferenceTraversalEntry&,const SkIRect&);
+    void retainBodyPixels(SkCanvas&,const ReferenceTraversalEntry&,const SkIRect&);
+
     struct TileEntry {std::uint64_t generation;sk_sp<SkImage> image;SkIRect device;resources::ResourceLease lease;};
     std::map<TileKey,TileEntry> tileEntries_;
     bool tiledFrame_=false;

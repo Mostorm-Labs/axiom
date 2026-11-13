@@ -1,0 +1,22 @@
+{
+  "schema": "axiom-independent-idle-result-binding-audit-v1",
+  "created_utc": "2026-11-13T08:30:02.151798+00:00",
+  "subject": {
+    "path": ".aegis/results/G5-idle-input-feedback-diagnostic-r1/result.json",
+    "sha256": "9291ab707e1fe06f67192bd08771be7aa9f6da809b020e9ec9027152b4614cc5"
+  },
+  "counts": {
+    "evidence_refs": 14,
+    "artifacts": 167,
+    "sources": 10,
+    "SDK_assets": {
+      "ordinary": 42,
+      "diagnostic": 42
+    },
+    "attempts": 4,
+    "seconds": 1269
+  },
+  "failures": [],
+  "initial_audit_correction": "Manifest items is an array, not files map. Earlier zeroitems parse corrected; actual167artifacts nowchecked.",
+  "status": "VERIFIED"
+}

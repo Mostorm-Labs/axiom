@@ -1,0 +1,1962 @@
+{
+  "rows": [
+    {
+      "role": "BASELINE",
+      "row": "append-zoom-out-immediate",
+      "stage": "feedback",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "2120027295cf51011b8939c9b71ecb9a873e3fe9c34790a5be19b51d658d0c12",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "BASELINE",
+      "row": "append-zoom-out-immediate",
+      "stage": "final",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "2120027295cf51011b8939c9b71ecb9a873e3fe9c34790a5be19b51d658d0c12",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "BASELINE",
+      "row": "append-zoom-out-immediate",
+      "stage": "redo",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "f63b1d33f1cf81f4692f98e337cf097878d636bbc28b1691bbe92aecb551b2a3",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "25d2a25a8b186e05d5c3c75e99e5b212bfe297e6cfdfab386d4054b3b437e24f",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "BASELINE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "feedback",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "362df1a81df29fcdc49737bb7494f3513c29f772afc37b1f96c4e87e8fca114d",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "BASELINE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "final",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "362df1a81df29fcdc49737bb7494f3513c29f772afc37b1f96c4e87e8fca114d",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "BASELINE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "redo",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "a9ec361a0cc1f316499c70d909313a331ad5e2202bb9e48722bb1d5d35b4d132",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "5cb019ebb54d1b8fe1fd740a32b961f92885a15f6135a1731b176d47375fddd6",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "append-zoom-out-immediate",
+      "stage": "feedback",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "2802fccfc6485e1014213a20064359eca4554527fd6b8aacffaec05e924f1f19",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "append-zoom-out-immediate",
+      "stage": "final",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "2802fccfc6485e1014213a20064359eca4554527fd6b8aacffaec05e924f1f19",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "cbbc46e5e1094b7c1472d2b6f1029ac0749d44e0d52a63999e3dd7686c5907ac",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "append-zoom-out-immediate",
+      "stage": "redo",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17365031,
+        "aa_boundary_pixels": 5759929,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17365031,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "6750ed20c5c5293029651b54cd71b19717187738595e96d86616f36a8465092b",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "25d2a25a8b186e05d5c3c75e99e5b212bfe297e6cfdfab386d4054b3b437e24f",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "feedback",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "fe9553fcb32288a0e736a27a97db11cbd8e83c88ae51b3490a03b19218f0c7c4",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "final",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "fe9553fcb32288a0e736a27a97db11cbd8e83c88ae51b3490a03b19218f0c7c4",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "df09c51d8515c36985d90fa49a3ec557370d0d2a2ec377b0ac70c11938911bbe",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    },
+    {
+      "role": "CANDIDATE",
+      "row": "partial-erase-zoom-out-immediate",
+      "stage": "redo",
+      "oldCPU": {
+        "status": "FAILED",
+        "compared_pixels": 17390216,
+        "aa_boundary_pixels": 5734744,
+        "hud_excluded_pixels": 0,
+        "interior_mismatched_pixels": 302,
+        "max_interior_delta": 240,
+        "witnesses": [
+          {
+            "pixel": 20272515,
+            "actual": [
+              53,
+              35,
+              213,
+              255
+            ],
+            "reference": [
+              168,
+              219,
+              166,
+              255
+            ]
+          },
+          {
+            "pixel": 20272516,
+            "actual": [
+              227,
+              187,
+              77,
+              255
+            ],
+            "reference": [
+              193,
+              101,
+              15,
+              255
+            ]
+          },
+          {
+            "pixel": 20272517,
+            "actual": [
+              36,
+              68,
+              253,
+              255
+            ],
+            "reference": [
+              60,
+              131,
+              104,
+              255
+            ]
+          },
+          {
+            "pixel": 20272518,
+            "actual": [
+              15,
+              104,
+              118,
+              255
+            ],
+            "reference": [
+              208,
+              193,
+              128,
+              255
+            ]
+          },
+          {
+            "pixel": 20272519,
+            "actual": [
+              181,
+              196,
+              241,
+              255
+            ],
+            "reference": [
+              123,
+              117,
+              44,
+              255
+            ]
+          },
+          {
+            "pixel": 20272520,
+            "actual": [
+              247,
+              44,
+              62,
+              255
+            ],
+            "reference": [
+              154,
+              133,
+              136,
+              255
+            ]
+          },
+          {
+            "pixel": 20272521,
+            "actual": [
+              83,
+              156,
+              43,
+              255
+            ],
+            "reference": [
+              24,
+              212,
+              240,
+              255
+            ]
+          },
+          {
+            "pixel": 20272522,
+            "actual": [
+              229,
+              111,
+              14,
+              255
+            ],
+            "reference": [
+              69,
+              183,
+              65,
+              255
+            ]
+          }
+        ],
+        "rule": "<=2 channel levels outside independent CPU geometry AA boundary; HUD excluded only from public selection bounds"
+      },
+      "guard": {
+        "status": "SCOPED_NO_NEW_REGRESSION",
+        "new_residual_pixels": 0,
+        "changed_known_pixels": 0,
+        "baseline_exterior_regression_pixels": 0,
+        "strict_compared_pixels": 17390216,
+        "known_image_pixels": 302,
+        "image_correctness": "OPEN;oldCPUfailureunchanged",
+        "witnesses": []
+      },
+      "actual_sha256": "4cc1fdce1b09a2fb5e71bd184f84fe58b3dec3c66e1e1546368971a5922e84bd",
+      "basis": {
+        "snapshot_content_digest": "samefullcanonicalcontentverifiedperstage",
+        "full_snapshot_SHA": "5cb019ebb54d1b8fe1fd740a32b961f92885a15f6135a1731b176d47375fddd6",
+        "camera": {
+          "scale": 1.2750000953674316,
+          "x": -62.75006103515625,
+          "y": -26.25
+        },
+        "target": [
+          5724,
+          4040
+        ],
+        "image": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+        "source_path": "image+snapshot+shader+matrix unchanged"
+      },
+      "known_freeze": "known-image-residual-freeze.json"
+    }
+  ],
+  "image_qualification": "OPEN302; scoped knownbaselineguard only",
+  "imagepath": "source-delta dependencyaudit required"
+}

@@ -1,0 +1,42 @@
+TAP version 13
+# (node:54789) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual driver keeps immediate successor sequence and snapshots after timing
+ok 1 - actual driver keeps immediate successor sequence and snapshots after timing
+  ---
+  duration_ms: 575.202916
+  ...
+# Subtest: HTTP qualification module wrap is isolated from ordinary root
+ok 2 - HTTP qualification module wrap is isolated from ordinary root
+  ---
+  duration_ms: 27.060791
+  ...
+# Subtest: actual driver saves failed pendingUp admission instead of emitting success
+ok 3 - actual driver saves failed pendingUp admission instead of emitting success
+  ---
+  duration_ms: 37.421875
+  ...
+# Subtest: actual close preflight Busy preserves active Worker and frame pump
+ok 4 - actual close preflight Busy preserves active Worker and frame pump
+  ---
+  duration_ms: 1.175833
+  ...
+# Subtest: actual root suspends owner requests while delayed executor initializes and leaves frame scheduling independent
+ok 5 - actual root suspends owner requests while delayed executor initializes and leaves frame scheduling independent
+  ---
+  duration_ms: 0.93725
+  ...
+# Subtest: actual root bounded second fatal marks owner unavailable without restart loop
+ok 6 - actual root bounded second fatal marks owner unavailable without restart loop
+  ---
+  duration_ms: 0.622375
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 877.659333

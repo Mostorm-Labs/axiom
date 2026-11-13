@@ -1,0 +1,19 @@
+{
+  "status": "FROZEN_REVIEWABLE_SHARED_WORKTREE",
+  "materialization": "Same repository controlled worktree, exact uncommitted source delta and newfiles hashes, package/resultrefs accessible to control; no evidence-only commit required",
+  "required": [
+    "preflight",
+    "design",
+    "actualRED/GREEN",
+    "work beforeafter",
+    "native regressions",
+    "rootSDK ordinarypaired and separatepixel",
+    "IAB result",
+    "source/SDK/input/snapshot/operation refs",
+    "preservation/cleanup",
+    "result.json"
+  ],
+  "timing_limits": "No firstGL=photon or onFrame=firstfeedback claim. Pixel reads are not pooled with ordinary performance. Keep ring loss perphase; setup input telemetry loss cannot become lossless input claim.",
+  "history": "out/G5-small-zoom-diagnostic-20261113 and all prior .aegis results immutable",
+  "bounded_artifacts": "Reuse existing probe/observers; compact reports + exact rawrefs, avoid duplicate entire source/SDK trees or huge repeated tracing."
+}

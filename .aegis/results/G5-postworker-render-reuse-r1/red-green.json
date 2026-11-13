@@ -1,0 +1,106 @@
+{
+  "canonical": {
+    "red": {
+      "path": "out/G5-postworker-render-reuse-r1/red-canonical.json",
+      "sha256": "e0d41ef49a79814184bb5a487e9792b521b1dab3f66c602e8f5c805317be1898",
+      "observed": {
+        "failure": "IDENTICAL_CANONICAL_MATERIAL_REPLAYED_PER_OBJECT",
+        "rows": [
+          {
+            "CPU_tiles": 0,
+            "body_builds": 1,
+            "copies": 1,
+            "coverage_steps": 16,
+            "pixels_equal": true
+          },
+          {
+            "CPU_tiles": 0,
+            "body_builds": 1,
+            "copies": 8,
+            "coverage_steps": 128,
+            "pixels_equal": true
+          }
+        ],
+        "work_regression_pass": false
+      }
+    },
+    "green": {
+      "path": "out/G5-CPUW-checkpoint-20261113/build-native/runtime/render/render-reuse-canonical.json",
+      "sha256": "c18f1502b1cc00934dee220dd569b44460c73ac67535ff7d32d2909d9c37875e",
+      "observed": {
+        "failure": "IDENTICAL_CANONICAL_MATERIAL_REPLAYED_PER_OBJECT",
+        "rows": [
+          {
+            "CPU_tiles": 0,
+            "body_builds": 1,
+            "copies": 1,
+            "coverage_steps": 16,
+            "pixels_equal": true
+          },
+          {
+            "CPU_tiles": 0,
+            "body_builds": 1,
+            "copies": 8,
+            "coverage_steps": 16,
+            "pixels_equal": true
+          }
+        ],
+        "work_regression_pass": true
+      }
+    },
+    "note": "Exact byte oracle first failure retained in red-canonical.log. Existing independent CPU workingSetEdges and exterior channel<=2 used, no candidate-derived edge widening."
+  },
+  "warm": {
+    "red": {
+      "path": "out/G5-postworker-render-reuse-r1/red-warm.json",
+      "sha256": "c21713efa2846b5386ad8f2d9af16aaaf8001bfab21c402a9baf7a856add2010",
+      "observed": {
+        "body_builds": 0,
+        "coverage_tiles": 4,
+        "failure": "LIVE_ERASE_DISCARDED_QUALIFIED_CANONICAL_PIXELS",
+        "pixels_equal": true,
+        "work_regression_pass": false
+      }
+    },
+    "green": {
+      "path": "out/G5-CPUW-checkpoint-20261113/build-native/runtime/render/render-reuse-warm.json",
+      "sha256": "da76e351424d65c7666c3174cead33a826f3a0d69fca1d03d2d9e2de482451ab",
+      "observed": {
+        "body_builds": 0,
+        "coverage_tiles": 0,
+        "failure": "LIVE_ERASE_DISCARDED_QUALIFIED_CANONICAL_PIXELS",
+        "pixels_equal": true,
+        "work_regression_pass": true
+      }
+    }
+  },
+  "cold": {
+    "red": {
+      "path": "out/G5-postworker-render-reuse-r1/red-cold.json",
+      "sha256": "0324ed914d89ebb1ce1d65b1c9998e1f514d2126aaa08568d48896c0b5a18a7b",
+      "observed": {
+        "coverage_steps": 32,
+        "coverage_tiles": 1026,
+        "failure": "COLD_TRANSIENT_BYPASSED_AGGREGATE_ALLOWANCE",
+        "provider_unchanged": false,
+        "status": 0,
+        "work_regression_pass": false
+      }
+    },
+    "green": {
+      "path": "out/G5-CPUW-checkpoint-20261113/build-native/runtime/render/render-reuse-cold.json",
+      "sha256": "240830f1868a0f0823715562cd71a11ea09d7dd1118d73eec797fe31471de399",
+      "observed": {
+        "completed_attempts": 15,
+        "completed_present_count": 2,
+        "coverage_steps": 132,
+        "coverage_tiles": 18,
+        "failure": "COLD_TRANSIENT_BYPASSED_AGGREGATE_ALLOWANCE",
+        "provider_unchanged": true,
+        "status": 2,
+        "work_regression_pass": true
+      }
+    },
+    "note": "Original cold RED used identical poses and10^3 GPUtiles in Accepted call. Strengthened final regression uses32unique transforms, same allowanced step deltas, Retry/provider pixels unchanged AND stable completion. Tile count and coverage step units kept separate."
+  }
+}

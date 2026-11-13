@@ -1,0 +1,75 @@
+{
+  "schema": "g5-scoped-control-review-v1",
+  "status": "PARTIAL_COMPUTE_ISOLATION_ACCEPTED_REPAIR_REQUIRED",
+  "blocker": "FROZEN_PROOF_INCOMPLETE",
+  "result": {
+    "path": ".aegis/results/G5-CPUW1-wasm-kernel-r1/result.json",
+    "sha256": "d5f763ad308e5fd0460921bcd2bb4ece26f03140f2fd3801a4bbab333fe82037"
+  },
+  "package": {
+    "path": ".aegis/packages/G5-CPUW1-wasm-kernel-r2/package.json",
+    "sha256": "ff4a4a8589c3345f9ca0d91965105c42f603036e16a8775de954198cdea21e99"
+  },
+  "independent_reviews": {
+    "independent-artifact-audit": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-artifact-audit.json",
+      "sha256": "3ab5a718e301578daa3c3a4e2d59547b322baa459f74039ca2b38fca38ca85eb"
+    },
+    "independent-latency-audit": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-latency-audit.json",
+      "sha256": "c1d4aff1ee55c255393bfa4696564e45d2046bd0728aac360cc6bc1001c5a6b6"
+    },
+    "independent-native": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-native.xml",
+      "sha256": "9665521c909288252d5c30ec083a0bd47f58936d0682bd27c992bf9bf41f3479"
+    },
+    "independent-source-sdk-audit": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-source-sdk-audit.json",
+      "sha256": "7757afbc98ae90ceaef64b4de92ab980511c07783292a8f3f6d6193ff6a6f4db"
+    },
+    "independent-worker-path-audit": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/independent-worker-path-audit.json",
+      "sha256": "c87636689449e4097481e9874934ac11b6dbef97e5f6d6be2ec9bc2fc8cd4163"
+    },
+    "tag-checkpoint": {
+      "path": ".aegis/results/G5-CPUW1-control-r1/tag-checkpoint.json",
+      "sha256": "4cbb1370e318dbe78f4fbbc33c71da3baa2b2072714792dec224899cf6b543a7"
+    }
+  },
+  "accepted_partial": [
+    "SharedC++ exact localSweep/Filled kernel integratedmonolithic/prefix; realCPU-onlyWorkerWASM noDOM/GPU/canonicalowner.",
+    "Independentcontrolhashaudit274artifacts,1205sources,84normal/externalSDKfiles; no source drift across3windows35/390chargedseconds.",
+    "Controlreran3native(kernel/protocol/prefix),4actualclientVMtests,120boundaries; producer27native/634exact/SDKtypes bound.",
+    "Controlrecomputed23pathpayloadchecks (19PARITYWorker+1mainWASM+2LIFECYCLE+1EXTERNAL) againstanchorednativeoriginal; samepayloadbytes.",
+    "ActuallongWorker mainheartbeat287ticks/maxgap6.9ms, sameRender64MiBfloorgrant, cancel→nextready/foreign/malformed/transportdenial/modulefailrecover, outsideSDKrootcreateUndoRedo prove scopedisolation andbasis."
+  ],
+  "blocking_findings": [
+    {
+      "priority": 1,
+      "kind": "performance",
+      "file": "sdk/web/internal/cpu-worker-thread.mjs",
+      "finding": "step8 setTimeout0 incurs severe noncompute delay: 16longqueriescompute4392.1ms vs total22850.9ms. Isolationonly, notusableUpmigration throughput. Timerclamphypothesis needscontrolledcausalpair.",
+      "required": "Boundedyield scheduling that permitscancel/controlmessages withoutnesttimerdelay; samealgorithm/turnbudget, measurecompute/yield/e2e separately."
+    },
+    {
+      "priority": 1,
+      "kind": "implementation",
+      "file": "sdk/web/axiom.mjs",
+      "finding": "Privateownerbindinguses newURL(internal/,rawassetBaseURL) vsmainnormalizedassets; relativeassetbasecanthrow. closeunbindbeforecanonicalclose failures losesbinding.",
+      "required": "Use normalizedmatchingbase, preservecustody/bindingthroughfailedclose, testsactualrelocatedbase/CSP/rootclosepending."
+    },
+    {
+      "priority": 1,
+      "kind": "evidence",
+      "finding": "FrozenEXTERNALneverexercisedexplicitassetBase orCSP; firstLIFECYCLEexecutorcompleteadmission/terminalledgernotpersisted.",
+      "required": "Correctfrozenrunner before newcontrolledsparseverification. Awaitedpromises and404 notsubstitutes."
+    }
+  ],
+  "additional_limits": [
+    "1900primitivecapdoesnotcover7200trace/largeFilled; noresident-source orcross-messageappend (800fixtureindependentrequest). Notclaimcomplete30sworkloadsupport.",
+    "Resultimport/custodyneedsCW2ownerconsumptioncontract. No asyncUp orimmediatesubsequenteditingactivation yet.",
+    "MainextraWASM64MiBlogicalgrant observeseligibility, notproofphysicalGCretirement. OldLQPgap/contextidlefindingsunchanged."
+  ],
+  "next_authorized": "UserauthorizedWorkerimplementationcontinues. Controlpreparesoneconsolidatedrepair+reverification slice preservingvalidCW1work, thenCW2pendingcommit/CW3continuousfeedback. No humanpermissionloop forroutinein-scopefixes.",
+  "official_gate": false
+}

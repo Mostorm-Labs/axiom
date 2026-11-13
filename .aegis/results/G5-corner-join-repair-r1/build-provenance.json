@@ -1,0 +1,19 @@
+{
+  "source_revision": "ced1c27c070d5176cf6e3c40e5a99169311fd3a2",
+  "dirty": true,
+  "version": "0.4.3.0",
+  "native_build": "out/G5-CPUW-checkpoint-20261113/build-native",
+  "Web_build": "out/G5-postworker-render-reuse-r1/build-web",
+  "configure_command": "out/G5-corner-join-repair-r1/configure-command.json",
+  "normal_flags": {
+    "frameTiming": false,
+    "UR0": false,
+    "privateCPUWorker": true,
+    "memoryProfile": "DESKTOP"
+  },
+  "dependency_policy": "acceptedlockedSemantic+Skia consumed, no sourceSDKrebuild",
+  "ordinary_SDK_manifest": "SDK-manifest.json",
+  "compile_retry_logs_preserved": true,
+  "native_link_warning": "prebuilt duplicate static libraries; retainedlogs",
+  "build_inputs_frozen_before_browser": true
+}

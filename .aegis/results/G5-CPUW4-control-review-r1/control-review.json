@@ -1,0 +1,275 @@
+{
+  "schema": "axiom-cpuw4-independent-control-review-v1",
+  "reviewed_at_utc": "2026-11-12T14:23:12.489332+00:00",
+  "reviewer_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "producer_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "repository": {
+    "remote": "git@github.com:Mostorm-Labs/axiom.git",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/g5-cpu-worker",
+    "HEAD": "53cd1d6625232c2112c8db272e61fa6da2a0910b",
+    "index_empty": true
+  },
+  "subject": {
+    "package_sha256": "a8d0cf80d70519ec57c3b2dc1a4181bd117791f2e7327ccba65e74b5f5ce9f88",
+    "result_path": ".aegis/results/G5-CPUW4-edit-navigation-r1/result.json",
+    "result_sha256": "cdcbeae9fc778716991c423eb257d107a34db5ce2839a768601457cee3f5a058",
+    "artifact_manifest_sha256": "40ad827e36a41aca17667ea3964b8964bb2804967fd4c60a9a49f6091d5b82bc"
+  },
+  "frozen_requirement_audit": {
+    "terminal_alternative_authorized": true,
+    "accepted_terminal": "ATTRIBUTED_NO_REPAIR",
+    "EN1": "partial attribution, no validated single in-scope defect",
+    "EN2": "not implemented",
+    "EN3": "baseline semantic equality only; new pixels/UndoRedo not run",
+    "EN4": "no-repair return; no new Demo",
+    "repair_or_performance_PASS": false
+  },
+  "frozen_evidence_audit": {
+    "artifact_files": 159,
+    "artifact_bytes": 133547835,
+    "current_source_files": 1269,
+    "r3_source_files_unchanged": 1261,
+    "SDK_asset_counts": {
+      "baseline": 42,
+      "diagnostic": 42
+    },
+    "ordinary_rows": [
+      {
+        "id": "append-zoom-in-immediate",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 72.39999997615814,
+        "first_GL_content_proxy_after_NAV_ms": 1396.5,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "append-zoom-in-settled",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 4.699999928474426,
+        "first_GL_content_proxy_after_NAV_ms": 1.399999976158142,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "append-zoom-out-immediate",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 70.5,
+        "first_GL_content_proxy_after_NAV_ms": 813.6000000238419,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "append-zoom-out-settled",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 4.299999952316284,
+        "first_GL_content_proxy_after_NAV_ms": 1051.1000000238419,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "append-pan-immediate",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 71.79999995231628,
+        "first_GL_content_proxy_after_NAV_ms": 1263.7000000476837,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "append-pan-settled",
+        "status": "OBSERVED",
+        "event_count": 162,
+        "NAV_count": 6,
+        "queue_ms": 4.700000047683716,
+        "first_GL_content_proxy_after_NAV_ms": 1119.0,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-zoom-in-immediate",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 28.700000047683716,
+        "first_GL_content_proxy_after_NAV_ms": 1497.6999999284744,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-zoom-in-settled",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 4.700000047683716,
+        "first_GL_content_proxy_after_NAV_ms": 12.0,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-zoom-out-immediate",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 29.700000047683716,
+        "first_GL_content_proxy_after_NAV_ms": 1010.2999999523163,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-zoom-out-settled",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 4.800000071525574,
+        "first_GL_content_proxy_after_NAV_ms": 887.1999999284744,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-pan-immediate",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 28.399999976158142,
+        "first_GL_content_proxy_after_NAV_ms": 1332.6000000238419,
+        "camera_qualified_NAV_ms": null
+      },
+      {
+        "id": "partial-erase-pan-settled",
+        "status": "OBSERVED",
+        "event_count": 26,
+        "NAV_count": 6,
+        "queue_ms": 4.699999928474426,
+        "first_GL_content_proxy_after_NAV_ms": 1362.1000000238419,
+        "camera_qualified_NAV_ms": null
+      }
+    ],
+    "diagnostic_rows": [
+      {
+        "id": "diag-append-target",
+        "loss": {
+          "statistical": 0,
+          "critical": 0
+        },
+        "decoded_errors": 0,
+        "qualified_completions": 0,
+        "missing_bindings": [
+          {
+            "reason": "actual owner for job/basis unavailable",
+            "seq": "1196"
+          },
+          {
+            "reason": "commit owner unavailable",
+            "seq": "1196"
+          },
+          {
+            "reason": "actual owner for job/basis unavailable",
+            "seq": "1192"
+          },
+          {
+            "reason": "Scene commit outside observed owner/window",
+            "seq": "1192"
+          },
+          {
+            "reason": "frame Scene publication outside observed window",
+            "seq": "11505",
+            "work": "3"
+          }
+        ]
+      },
+      {
+        "id": "diag-erase-target",
+        "loss": {
+          "statistical": 0,
+          "critical": 0
+        },
+        "decoded_errors": 0,
+        "qualified_completions": 0,
+        "missing_bindings": [
+          {
+            "reason": "frame Scene publication outside observed window",
+            "seq": "12588",
+            "work": "3"
+          }
+        ]
+      },
+      {
+        "id": "diag-in-control",
+        "loss": {
+          "statistical": 0,
+          "critical": 0
+        },
+        "decoded_errors": 0,
+        "qualified_completions": 0,
+        "missing_bindings": [
+          {
+            "reason": "actual owner for job/basis unavailable",
+            "seq": "1196"
+          },
+          {
+            "reason": "commit owner unavailable",
+            "seq": "1196"
+          },
+          {
+            "reason": "actual owner for job/basis unavailable",
+            "seq": "1192"
+          },
+          {
+            "reason": "Scene commit outside observed owner/window",
+            "seq": "1192"
+          },
+          {
+            "reason": "frame Scene publication outside observed window",
+            "seq": "11108",
+            "work": "3"
+          }
+        ]
+      }
+    ],
+    "semantic_replay_byte_equal": [
+      true,
+      true,
+      true
+    ],
+    "all_hash_and_boundary_errors": []
+  },
+  "repository_reality_audit": {
+    "CPUW4_production_delta": [],
+    "accepted_prior_changes_preserved": true,
+    "new_verification_sources": 8,
+    "normal_SDK_or_budget_changes": false,
+    "no_new_sampling_or_commit_push": true
+  },
+  "independent_test": {
+    "command": "node --experimental-vm-modules --test verification/tests/g5_cpu_edit_navigation_contract.test.mjs verification/tests/g5_cpu_edit_navigation_driver.test.mjs",
+    "pass": 5,
+    "fail": 0,
+    "initial_invocation_without_experimental_vm_modules": {
+      "pass": 3,
+      "fail": 2,
+      "failure": "vm.SourceTextModule is not a constructor",
+      "classification": "review command omitted required Node VM flag; corrected command passed without source change"
+    }
+  },
+  "findings": [
+    {
+      "classification": "NON_BLOCKING_FINDING_FOR_NO_REPAIR_TERMINAL",
+      "detail": "Three setup/driver failures consumed 3 of 4 development starts. Corrective fourth window completed ordinary12+diagnostic3. Retain failures; do not describe total quota as full optimization experiments."
+    },
+    {
+      "classification": "LIMITATION",
+      "detail": "Default FBO/onFrame only proxy; decoded qualified completions0 and missing owner/Scene links preclude exact navigation submit latency and full cause closure."
+    },
+    {
+      "classification": "LIMITATION",
+      "detail": "Immediate zoom-in also waited; exact user document/directional pattern not fully reproduced."
+    },
+    {
+      "classification": "FOLLOWUP",
+      "detail": "Prioritize attribution of exposed-frontier completion and safe display continuity in existing Runtime/Render; separately attribute measured post-Up Scene/canonical/preview queue. No unsupported proof relaxation, new Worker or budget increase."
+    }
+  ],
+  "verdict": "ACCEPT_NO_REPAIR_TERMINAL_WITH_FINDINGS",
+  "user_issue_fixed": false,
+  "official_G5_P34_or_release_PASS": false
+}

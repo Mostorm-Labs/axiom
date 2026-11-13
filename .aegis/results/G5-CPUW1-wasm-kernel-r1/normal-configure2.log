@@ -1,0 +1,18 @@
+-- Configuring done (0.7s)
+CMake Error at sdk/web/cpu-worker.cmake:16 (target_link_libraries):
+  Target "axiom_cpu_worker_kernel" links to:
+
+    CanvasSkia::Skia
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+Call Stack (most recent call first):
+  sdk/web/CMakeLists.txt:34 (include)
+
+
+-- Generating done (0.1s)
+CMake Generate step failed.  Build files cannot be regenerated correctly.

@@ -27,7 +27,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SDK_VERSION: 0.4.4
+  SDK_VERSION: 0.5.0
   AXIOM_BUILD_NUMBER: ${{ inputs.release_build_number || '0' }}
   AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
 

@@ -1,0 +1,21 @@
+{
+  "id": "G5CWH-PAIRS",
+  "status": "FAILED",
+  "rows": [
+    {
+      "id": "normalOFF1600",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "candidate1600",
+      "status": "OBSERVED"
+    },
+    {
+      "id": "candidate7200",
+      "status": "FAILED",
+      "error": "AxiomError: SNAPSHOT_DECODE_FAILED\n    at call (http://127.0.0.1:61992/sdk/axiom.mjs:83:29)\n    at http://127.0.0.1:61992/sdk/axiom.mjs:396:59\n    at http://127.0.0.1:61992/sdk/axiom.mjs:134:129"
+    }
+  ],
+  "errors": [],
+  "error": "Error: frozen case failure stop\n    at run (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_pending_web.mjs:100:587)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_pending_web.mjs:102:123"
+}

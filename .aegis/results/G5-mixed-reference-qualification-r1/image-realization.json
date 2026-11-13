@@ -1,0 +1,235 @@
+{
+  "status": "UNPROVEN_REFERENCE_REALIZATION",
+  "image_SHA256": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+  "image_dimensions": [
+    880,
+    880
+  ],
+  "image_semantic": {
+    "id": "e4313d8efe45db694605ae2eb66a377b",
+    "kind": 2,
+    "contentField": 2,
+    "pose": [
+      1.0,
+      0.0,
+      0.0,
+      1.0,
+      800.0,
+      700.0
+    ],
+    "properties": {},
+    "parent": null,
+    "order": "ff29808080808080",
+    "opacity": 1.0,
+    "image": {
+      "resource": "b176b55520a33c844f1cbd52e779d1db",
+      "iw": 880.0,
+      "ih": 880.0,
+      "mode": 1,
+      "width": 120.0,
+      "height": 120.0,
+      "crop": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ]
+    },
+    "bounds": [
+      0.0,
+      0.0,
+      120.0,
+      120.0
+    ]
+  },
+  "camera": {
+    "scale": 1.2750000953674316,
+    "x": -62.75006103515625,
+    "y": -26.25
+  },
+  "device": [
+    5724,
+    4040
+  ],
+  "source_analysis": [
+    {
+      "device": [
+        4011,
+        3540
+      ],
+      "source_x": {
+        "value": 262.4181932622728,
+        "numerator": "63788352",
+        "denominator": "243079"
+      },
+      "source_y": {
+        "value": 108.5616994200788,
+        "numerator": "79167208",
+        "denominator": "729237"
+      },
+      "tie": false,
+      "deterministic_rational_texel": [
+        262,
+        108
+      ],
+      "f32Y": {
+        "device_scale": 5.100000381469727,
+        "device_offset": 3465.000244140625,
+        "Fit_f32": 0.13636364042758942,
+        "source_to_device_scale": 0.6954545974731445,
+        "inverse_scale": 1.437908411026001,
+        "inverse_translate": -4982.35302734375,
+        "CPU_illustrative_unfused": 108.5615234375,
+        "CPU_illustrative_fma": 108.56169891357422,
+        "device_quad_endpoints": [
+          3465.000244140625,
+          4077.000244140625
+        ],
+        "normalized_interpolated_illustrative": 0.1233656033873558,
+        "normalized_times_dimension": 108.56172943115234,
+        "notes": "These exact f32 sequences are diagnostic possibilities; GPU rasterizer interpolation/viewport/subtexel quantization precision not identified. No expectedset follows."
+      },
+      "occlusion": "coordinate-onlydiagnostic; currentconservativebodyboundsincludeUp999andcannotqualifynewimageexpectedset"
+    },
+    {
+      "device": [
+        4011,
+        3541
+      ],
+      "source_x": {
+        "value": 262.4181932622728,
+        "numerator": "63788352",
+        "denominator": "243079"
+      },
+      "source_y": {
+        "value": 109.99960780925817,
+        "numerator": "80215784",
+        "denominator": "729237"
+      },
+      "tie": false,
+      "deterministic_rational_texel": [
+        262,
+        109
+      ],
+      "f32Y": {
+        "device_scale": 5.100000381469727,
+        "device_offset": 3465.000244140625,
+        "Fit_f32": 0.13636364042758942,
+        "source_to_device_scale": 0.6954545974731445,
+        "inverse_scale": 1.437908411026001,
+        "inverse_translate": -4982.35302734375,
+        "CPU_illustrative_unfused": 109.99951171875,
+        "CPU_illustrative_fma": 109.9996109008789,
+        "device_quad_endpoints": [
+          3465.000244140625,
+          4077.000244140625
+        ],
+        "normalized_interpolated_illustrative": 0.12499959021806717,
+        "normalized_times_dimension": 109.99964141845703,
+        "notes": "These exact f32 sequences are diagnostic possibilities; GPU rasterizer interpolation/viewport/subtexel quantization precision not identified. No expectedset follows."
+      },
+      "occlusion": "coordinate-onlydiagnostic; currentconservativebodyboundsincludeUp999andcannotqualifynewimageexpectedset"
+    },
+    {
+      "device": [
+        4011,
+        3542
+      ],
+      "source_x": {
+        "value": 262.4181932622728,
+        "numerator": "63788352",
+        "denominator": "243079"
+      },
+      "source_y": {
+        "value": 111.43751619843755,
+        "numerator": "27088120",
+        "denominator": "243079"
+      },
+      "tie": false,
+      "deterministic_rational_texel": [
+        262,
+        111
+      ],
+      "f32Y": {
+        "device_scale": 5.100000381469727,
+        "device_offset": 3465.000244140625,
+        "Fit_f32": 0.13636364042758942,
+        "source_to_device_scale": 0.6954545974731445,
+        "inverse_scale": 1.437908411026001,
+        "inverse_translate": -4982.35302734375,
+        "CPU_illustrative_unfused": 111.4375,
+        "CPU_illustrative_fma": 111.43751525878906,
+        "device_quad_endpoints": [
+          3465.000244140625,
+          4077.000244140625
+        ],
+        "normalized_interpolated_illustrative": 0.12663356959819794,
+        "normalized_times_dimension": 111.43753814697266,
+        "notes": "These exact f32 sequences are diagnostic possibilities; GPU rasterizer interpolation/viewport/subtexel quantization precision not identified. No expectedset follows."
+      },
+      "occlusion": "coordinate-onlydiagnostic; currentconservativebodyboundsincludeUp999andcannotqualifynewimageexpectedset"
+    }
+  ],
+  "pinned_Skia_commit": "b6d106297ff9ef2ff8094033695d045e87775581",
+  "source_excerpts": {
+    "src/gpu/ganesh/geometry/GrQuad.cpp": {
+      "local_sha256": "b07501f10afee9cc126b9da9d3de949edb4e052d25ac2e6c8d1203f95eecc0b8",
+      "pinned_sha256": "b07501f10afee9cc126b9da9d3de949edb4e052d25ac2e6c8d1203f95eecc0b8",
+      "status": "PINNED_SOURCE_MATCH",
+      "lines": [
+        26,
+        44
+      ],
+      "excerpt": "    SkMatrix::TypeMask tm = m.getType();\n    SkASSERT(tm <= (SkMatrix::kScale_Mask | SkMatrix::kTranslate_Mask));\n\n    V4f r = V4f::Load(&rect);\n    if (tm > SkMatrix::kIdentity_Mask) {\n        const V4f t{m.getTranslateX(), m.getTranslateY(), m.getTranslateX(), m.getTranslateY()};\n        if (tm <= SkMatrix::kTranslate_Mask) {\n            r += t;\n        } else {\n            const V4f s{m.getScaleX(), m.getScaleY(), m.getScaleX(), m.getScaleY()};\n            r = r * s + t;\n        }\n    }\n    *xs = skvx::shuffle<0, 0, 2, 2>(r);\n    *ys = skvx::shuffle<1, 3, 1, 3>(r);\n}\n\nstatic void map_quad_general(const V4f& qx, const V4f& qy, const SkMatrix& m,\n                             V4f* xs, V4f* ys, V4f* ws) {"
+    },
+    "src/gpu/ganesh/ops/TextureOp.cpp": {
+      "local_sha256": "9a82780972865d2512c65524f40337202ffe92b339503c6988740f04f2f05e5c",
+      "pinned_sha256": "9a82780972865d2512c65524f40337202ffe92b339503c6988740f04f2f05e5c",
+      "status": "PINNED_SOURCE_MATCH",
+      "lines": [
+        99,
+        181
+      ],
+      "excerpt": "\n// Describes function for normalizing src coords: [x * iw, y * ih + yOffset] can represent\n// regular and rectangular textures, w/ or w/o origin correction.\nstruct NormalizationParams {\n    float fIW; // 1 / width of texture, or 1.0 for texture rectangles\n    float fInvH; // 1 / height of texture, or 1.0 for tex rects, X -1 if bottom-left origin\n    float fYOffset; // 0 for top-left origin, height of [normalized] tex if bottom-left\n};\nNormalizationParams proxy_normalization_params(const GrSurfaceProxy* proxy,\n                                               GrSurfaceOrigin origin) {\n    // Whether or not the proxy is instantiated, this is the size its texture will be, so we can\n    // normalize the src coordinates up front.\n    SkISize dimensions = proxy->backingStoreDimensions();\n    float iw, ih, h;\n    if (proxy->backendFormat().textureType() == GrTextureType::kRectangle) {\n        iw = ih = 1.f;\n        h = dimensions.height();\n    } else {\n        iw = 1.f / dimensions.width();\n        ih = 1.f / dimensions.height();\n        h = 1.f;\n    }\n\n    if (origin == kBottomLeft_GrSurfaceOrigin) {\n        return {iw, -ih, h};\n    } else {\n        return {iw, ih, 0.0f};\n    }\n}\n\n// Normalize the subset. If 'subsetRect' is null, it is assumed no subset constraint is desired,\n// so a sufficiently large rect is returned even if the quad ends up batched with an op that uses\n// subsets overall. When there is a subset it will be inset based on the filter mode. Normalization\n// and y-flipping are applied as indicated by NormalizationParams.\nSkRect normalize_and_inset_subset(GrSamplerState::Filter filter,\n                                  const NormalizationParams& params,\n                                  const SkRect* subsetRect) {\n    static constexpr SkRect kLargeRect = {-100000, -100000, 1000000, 1000000};\n    if (!subsetRect) {\n        // Either the quad has no subset constraint and is batched with a subset constrained op\n        // (in which case we want a subset that doesn't restrict normalized tex coords), or the\n        // entire op doesn't use the subset, in which case the returned value is ignored.\n        return kLargeRect;\n    }\n\n    auto ltrb = skvx::Vec<4, float>::Load(subsetRect);\n    auto flipHi = skvx::Vec<4, float>({1.f, 1.f, -1.f, -1.f});\n    if (filter == GrSamplerState::Filter::kNearest) {\n        // Make sure our insetting puts us at pixel centers.\n        ltrb = skvx::floor(ltrb*flipHi)*flipHi;\n    }\n    // Inset with pin to the rect center.\n    ltrb += skvx::Vec<4, float>({ GrTextureEffect::kLinearInset,  GrTextureEffect::kLinearInset,\n                                 -GrTextureEffect::kLinearInset, -GrTextureEffect::kLinearInset});\n    auto mid = (skvx::shuffle<2, 3, 0, 1>(ltrb) + ltrb)*0.5f;\n    ltrb = skvx::min(ltrb*flipHi, mid*flipHi)*flipHi;\n\n    // Normalize and offset\n    ltrb = ltrb * skvx::Vec<4, float>{params.fIW, params.fInvH, params.fIW, params.fInvH} +\n               skvx::Vec<4, float>{0.f, params.fYOffset, 0.f, params.fYOffset};\n    if (params.fInvH < 0.f) {\n        // Flip top and bottom to keep the rect sorted when loaded back to SkRect.\n        ltrb = skvx::shuffle<0, 3, 2, 1>(ltrb);\n    }\n\n    SkRect out;\n    ltrb.store(&out);\n    return out;\n}\n\n// Normalizes logical src coords and corrects for origin\nvoid normalize_src_quad(const NormalizationParams& params,\n                        GrQuad* srcQuad) {\n    // The src quad should not have any perspective\n    SkASSERT(!srcQuad->hasPerspective());\n    skvx::Vec<4, float> xs = srcQuad->x4f() * params.fIW;\n    skvx::Vec<4, float> ys = srcQuad->y4f() * params.fInvH + params.fYOffset;\n    xs.store(srcQuad->xs());\n    ys.store(srcQuad->ys());\n}\n\n// Count the number of proxy runs in the entry set. This usually is already computed by\n// SkGpuDevice, but when the BatchLengthLimiter chops the set up it must determine a new proxy count"
+    },
+    "src/gpu/ganesh/ops/QuadPerEdgeAA.cpp": {
+      "local_sha256": "3ae73b9e96c48bc1faa9f98c72221c12ef54d9a7c9c2b61404db0ba45f5e4cea",
+      "pinned_sha256": "3ae73b9e96c48bc1faa9f98c72221c12ef54d9a7c9c2b61404db0ba45f5e4cea",
+      "status": "PINNED_SOURCE_MATCH",
+      "lines": [
+        737,
+        777
+      ],
+      "excerpt": "\n                // If there is a texture, must also handle texture coordinates and reading from\n                // the texture in the fragment shader before continuing to fragment processors.\n                if (gp.fSampler.isInitialized()) {\n                    // Texture coordinates clamped by the subset on the fragment shader; if the GP\n                    // has a texture, it's guaranteed to have local coordinates\n                    args.fFragBuilder->codeAppend(\"float2 texCoord;\");\n                    if (gp.fLocalCoord.cpuType() == kFloat3_GrVertexAttribType) {\n                        // Can't do a pass through since we need to perform perspective division\n                        GrGLSLVarying v(gp.fLocalCoord.gpuType());\n                        args.fVaryingHandler->addVarying(gp.fLocalCoord.name(), &v);\n                        args.fVertBuilder->codeAppendf(\"%s = %s;\",\n                                                       v.vsOut(), gp.fLocalCoord.name());\n                        args.fFragBuilder->codeAppendf(\"texCoord = %s.xy / %s.z;\",\n                                                       v.fsIn(), v.fsIn());\n                    } else {\n                        args.fVaryingHandler->addPassThroughAttribute(gp.fLocalCoord.asShaderVar(),\n                                                                      \"texCoord\");\n                    }\n\n                    // Clamp the now 2D localCoordName variable by the subset if it is provided\n                    if (gp.fTexSubset.isInitialized()) {\n                        args.fFragBuilder->codeAppend(\"float4 subset;\");\n                        args.fVaryingHandler->addPassThroughAttribute(gp.fTexSubset.asShaderVar(),\n                                                                      \"subset\",\n                                                                      Interpolation::kCanBeFlat);\n                        args.fFragBuilder->codeAppend(\n                                \"texCoord = clamp(texCoord, subset.LT, subset.RB);\");\n                    }\n\n                    // Now modulate the starting output color by the texture lookup\n                    args.fFragBuilder->codeAppendf(\n                            \"%s = %s(\",\n                            args.fOutputColor,\n                            (gp.fSaturate == Saturate::kYes) ? \"saturate\" : \"\");\n                    args.fFragBuilder->appendTextureLookupAndBlend(\n                            blendDst, SkBlendMode::kModulate, args.fTexSamplers[0],\n                            \"texCoord\", &fTextureColorSpaceXformHelper);\n                    args.fFragBuilder->codeAppend(\");\");\n                } else {\n                    // Saturate is only intended for use with a proxy to account for the fact"
+    },
+    "src/core/SkMatrix.cpp": {
+      "local_sha256": "5ed211a7bf3c0ce5f808857bbd9cc305bc64f478a326cf53441138530d3f9826",
+      "pinned_sha256": "5ed211a7bf3c0ce5f808857bbd9cc305bc64f478a326cf53441138530d3f9826",
+      "status": "PINNED_SOURCE_MATCH",
+      "lines": [
+        615,
+        631
+      ],
+      "excerpt": "SkMatrix& SkMatrix::setConcat(const SkMatrix& a, const SkMatrix& b) {\n    TypeMask aType = a.getType();\n    TypeMask bType = b.getType();\n\n    if (a.isTriviallyIdentity()) {\n        *this = b;\n    } else if (b.isTriviallyIdentity()) {\n        *this = a;\n    } else if (only_scale_and_translate(aType | bType)) {\n        this->setScaleTranslate(a.fMat[kMScaleX] * b.fMat[kMScaleX],\n                                a.fMat[kMScaleY] * b.fMat[kMScaleY],\n                                a.fMat[kMScaleX] * b.fMat[kMTransX] + a.fMat[kMTransX],\n                                a.fMat[kMScaleY] * b.fMat[kMTransY] + a.fMat[kMTransY]);\n    } else {\n        SkMatrix tmp;\n\n        if ((aType | bType) & kPerspective_Mask) {"
+    },
+    "src/opts/SkRasterPipeline_opts.h": {
+      "local_sha256": "849ecf600bf6181fc44f101e4c84c451fba13b00f12dbfbe64bd035fc1803541",
+      "pinned_sha256": "849ecf600bf6181fc44f101e4c84c451fba13b00f12dbfbe64bd035fc1803541",
+      "status": "PINNED_SOURCE_MATCH",
+      "lines": [
+        3672,
+        3685
+      ],
+      "excerpt": "HIGHP_STAGE(matrix_translate, const float* m) {\n    r += m[0];\n    g += m[1];\n}\nHIGHP_STAGE(matrix_scale_translate, const float* m) {\n    r = mad(r,m[0], m[2]);\n    g = mad(g,m[1], m[3]);\n}\nHIGHP_STAGE(matrix_2x3, const float* m) {\n    auto R = mad(r,m[0], mad(g,m[1], m[2])),\n         G = mad(r,m[3], mad(g,m[4], m[5]));\n    r = R;\n    g = G;\n}"
+    }
+  },
+  "accepted_normalized_texture_path": "Device_drawTexture\u2192drawTexture/TextureOp normalizeslocalquad by1/texturebackingdimensions\u2192QuadPerEdgeAA varying\u2192hardware nearest texture lookup",
+  "missing": [
+    "actualbackend choice TextureOp vsFillRect whencaps/AA",
+    "GPU varying andviewport precision/subtexel nearestselection domain at discontinuity",
+    "exactbackingdimensions/textureorigin realization from retainedframefacts"
+  ],
+  "result": "No adjacenttexel alternatevalues applied. SourceY3541.5 is not exactrational tie. CPUillustrativef32 sequences remain below110; GPU choice cannot be proven from normalizedsource alone. Preserve302 unexplained.",
+  "new_browser": 0,
+  "new_fullscene_RGBA": 0
+}

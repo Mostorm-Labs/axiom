@@ -1,0 +1,55 @@
+{
+  "status": "FROZEN_VERIFICATION_FAILURE",
+  "native": {
+    "tests": 27,
+    "passed": 26,
+    "failures": 1,
+    "junit": "native-keepers.xml",
+    "failed": [
+      "G5LongQueryPreparationPath"
+    ],
+    "idle_recheck": "native-prefix-recheck.xml",
+    "idle_recheck_failed": true
+  },
+  "Node": {
+    "passed": 14,
+    "failed": 0,
+    "log": "node-final.log"
+  },
+  "sdkNode": {
+    "scripts": 4,
+    "failed": 0,
+    "log": "sdk-node.log"
+  },
+  "Python": {
+    "passed": 11,
+    "failed": 0,
+    "log": "python-final.log"
+  },
+  "TypeScript": {
+    "status": "PASS",
+    "log": "sdk-types.log"
+  },
+  "boundaries": {
+    "contracts": 120,
+    "log": "boundaries-final.log"
+  },
+  "exact634": {
+    "rows": 634,
+    "mismatches": 0,
+    "proof": "numeric-parity.json"
+  },
+  "browser": {
+    "starts": 0,
+    "charged_seconds": 0,
+    "status": "NOT_RUN"
+  },
+  "preserved_failures": [
+    "behavior-red.log expected3RED",
+    "driver-preflight.log missingterminalassertion expectation mismatch fixed before sampling",
+    "driver-preflight2.log VMfixture cancellation pacing mismatch fixed before sampling",
+    "native-keepers.log remainder7",
+    "native-prefix-recheck.log remainder3"
+  ],
+  "no_full_PASS": true
+}
