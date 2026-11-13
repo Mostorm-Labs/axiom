@@ -5,12 +5,42 @@
 
 #define NOMINMAX
 #include <windows.h>
+#include <dbghelp.h>
 #include <cassert>
 #include <cstdio>
 #include <thread>
 #include <type_traits>
 
+namespace {
+LONG WINAPI reportNativeFailure(EXCEPTION_POINTERS* failure) {
+  const auto process=GetCurrentProcess();
+  SymSetOptions(SYMOPT_UNDNAME|SYMOPT_DEFERRED_LOADS);
+  (void)SymInitialize(process,nullptr,TRUE);
+  std::fprintf(stderr,"NATIVE_FAILURE code=%08lx address=%p\n",
+      static_cast<unsigned long>(failure->ExceptionRecord->ExceptionCode),
+      failure->ExceptionRecord->ExceptionAddress);
+  auto context=*failure->ContextRecord;
+  STACKFRAME64 frame{};
+  frame.AddrPC={context.Rip,0,AddrModeFlat};
+  frame.AddrFrame={context.Rbp,0,AddrModeFlat};
+  frame.AddrStack={context.Rsp,0,AddrModeFlat};
+  for(unsigned i=0;i<32;++i){
+    alignas(SYMBOL_INFO) char storage[sizeof(SYMBOL_INFO)+MAX_SYM_NAME]{};
+    auto* symbol=reinterpret_cast<SYMBOL_INFO*>(storage);
+    symbol->SizeOfStruct=sizeof(SYMBOL_INFO);symbol->MaxNameLen=MAX_SYM_NAME;
+    DWORD64 offset=0;
+    if(SymFromAddr(process,frame.AddrPC.Offset,&offset,symbol))
+      std::fprintf(stderr,"NATIVE_STACK %s+%llu\n",symbol->Name,static_cast<unsigned long long>(offset));
+    else std::fprintf(stderr,"NATIVE_STACK address=%llu\n",static_cast<unsigned long long>(frame.AddrPC.Offset));
+    if(!StackWalk64(IMAGE_FILE_MACHINE_AMD64,process,GetCurrentThread(),&frame,&context,
+        nullptr,SymFunctionTableAccess64,SymGetModuleBase64,nullptr))break;
+  }
+  std::fflush(stderr);
+  return EXCEPTION_EXECUTE_HANDLER;
+}
+}
 int main() {
+  SetUnhandledExceptionFilter(reportNativeFailure);
   // External Debug UI consumers need the adapter to be a diagnostics provider.
   assert((std::is_base_of_v<canvas::runtime::PlatformDiagnostics,
                             canvas::platform::WindowsRuntimeAdapter>));
