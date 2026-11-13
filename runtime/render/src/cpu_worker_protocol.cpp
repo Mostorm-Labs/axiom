@@ -5,8 +5,8 @@
 #include <limits>
 namespace canvas::render::internal {
 namespace {
-void u32(std::vector<std::uint8_t>& b,std::uint32_t v){for(unsigned i=0;i<4;++i)b.push_back(v>>(i*8));}
-void u64(std::vector<std::uint8_t>& b,std::uint64_t v){for(unsigned i=0;i<8;++i)b.push_back(v>>(i*8));}
+void u32(std::vector<std::uint8_t>& b,std::uint32_t v){for(unsigned i=0;i<4;++i)b.push_back(static_cast<std::uint8_t>(v>>(i*8)));}
+void u64(std::vector<std::uint8_t>& b,std::uint64_t v){for(unsigned i=0;i<8;++i)b.push_back(static_cast<std::uint8_t>(v>>(i*8)));}
 std::uint32_t read32(std::span<const std::uint8_t>b,std::size_t p){std::uint32_t n=0;for(unsigned i=0;i<4;++i)n|=std::uint32_t(b[p+i])<<(8*i);return n;}
 std::uint64_t read64(std::span<const std::uint8_t>b,std::size_t p){std::uint64_t n=0;for(unsigned i=0;i<8;++i)n|=std::uint64_t(b[p+i])<<(8*i);return n;}
 void point(std::vector<std::uint8_t>& b,semantic::Vec2 v){u64(b,std::bit_cast<std::uint64_t>(v.x));u64(b,std::bit_cast<std::uint64_t>(v.y));}

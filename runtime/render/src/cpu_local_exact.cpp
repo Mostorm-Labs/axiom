@@ -65,7 +65,7 @@ struct LocalMaskIndex final {
             if(ready){auto built=filled.detach();if(!built.isFinite()){invalid=true;return false;}
                 pieces[0].bounds=built.getBounds();pieces[0].path=built;pieces[0].ready=true;}
         }
-        if(ready)for(unsigned i=0;i<12;++i)stamp[i]=digest[i/4]>>((i%4)*8);
+        if(ready)for(unsigned i=0;i<12;++i)stamp[i]=static_cast<std::uint8_t>(digest[i/4]>>((i%4)*8));
         return ready;
     }
 };

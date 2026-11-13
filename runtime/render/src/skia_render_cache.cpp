@@ -862,7 +862,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             if(!pending_){
                 if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
                 const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
-                auto* target=(directComposite?composite_:scratch_)->getCanvas();
+                target=(directComposite?composite_:scratch_)->getCanvas();
                 if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
                 configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
                 const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
