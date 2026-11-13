@@ -12,6 +12,7 @@
 #include "change_set_builder.hpp"
 #include "protobuf_codec_internal.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include "canvas/semantic/idempotency.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
