@@ -1,0 +1,28 @@
+{
+  "stage": "NC1 diagnostic before firstsampling",
+  "checks": [
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "diagnostic_line_only_delta": true,
+      "new_event_lines": 3
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "diagnostic_line_only_delta": true,
+      "new_event_lines": 3
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "diagnostic_line_only_delta": true,
+      "new_event_lines": 2
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "diagnostic_line_only_delta": true,
+      "new_event_lines": 4
+    }
+  ],
+  "defaultOFF": "AXIOM_IF_EVENT disabledmacro evaluatesnoargs; existing AXIOM_ENABLE_FRAME_TIMING only",
+  "behavior_change": false,
+  "ordinary_measurement_requires_OFF": true
+}

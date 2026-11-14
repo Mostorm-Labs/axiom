@@ -1,0 +1,79 @@
+{
+  "schema": "axiom-postcommit-navigation-HTTP-SDK-check-v1",
+  "source_hashes_match": true,
+  "SDK_HTTP": [
+    {
+      "role": "candidate",
+      "port": 4337,
+      "assets": [
+        {
+          "path": "axiom.mjs",
+          "sha256": "eadc9f7c112e44add432a1f33828dbab23866d48de04fb2f2086cfb699fe47a6",
+          "bytes": 38735,
+          "HTTP": 200
+        },
+        {
+          "path": "axiom.d.mts",
+          "sha256": "a7a6748edd23d3512a1227bf9e357f83573344237c5ca2a2d0068e0688bb3266",
+          "bytes": 9722,
+          "HTTP": 200
+        },
+        {
+          "path": "axiom.wasm",
+          "sha256": "14d01e704979d85ccaed85d07b5ed9aca8629ec59bb3bc5bcc8afa812074c1de",
+          "bytes": 13804855,
+          "HTTP": 200
+        },
+        {
+          "path": "internal/cpu-worker-kernel.wasm",
+          "sha256": "3f8010f893b134a4d418b3b03ba2e225354f70e7a9582816f5451b28aa0b8cdb",
+          "bytes": 305151,
+          "HTTP": 200
+        },
+        {
+          "path": "example.html",
+          "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+          "bytes": 50814,
+          "HTTP": 200
+        }
+      ]
+    },
+    {
+      "role": "baseline",
+      "port": 4336,
+      "assets": [
+        {
+          "path": "axiom.mjs",
+          "sha256": "eadc9f7c112e44add432a1f33828dbab23866d48de04fb2f2086cfb699fe47a6",
+          "bytes": 38735,
+          "HTTP": 200
+        },
+        {
+          "path": "axiom.d.mts",
+          "sha256": "a7a6748edd23d3512a1227bf9e357f83573344237c5ca2a2d0068e0688bb3266",
+          "bytes": 9722,
+          "HTTP": 200
+        },
+        {
+          "path": "axiom.wasm",
+          "sha256": "f63aef7295c32d370decd319e904c536d1964f1388a790d242f2c711fc4e62fc",
+          "bytes": 13804814,
+          "HTTP": 200
+        },
+        {
+          "path": "internal/cpu-worker-kernel.wasm",
+          "sha256": "3f8010f893b134a4d418b3b03ba2e225354f70e7a9582816f5451b28aa0b8cdb",
+          "bytes": 305151,
+          "HTTP": 200
+        },
+        {
+          "path": "example.html",
+          "sha256": "d9b16683b45a439c3248d11370e58fa370771a05a3f052a30e11901dd703aa51",
+          "bytes": 50814,
+          "HTTP": 200
+        }
+      ]
+    }
+  ],
+  "no_browser_open_reload_or_user_document_read": true
+}

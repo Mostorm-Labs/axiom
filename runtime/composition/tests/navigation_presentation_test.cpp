@@ -6,6 +6,7 @@ using namespace canvas;
 void require(bool ok,const char* msg){if(!ok)throw std::runtime_error(msg);}
 class DemandRuntime final : public interaction::CanvasEditingRuntime {
 public:
+ auto cameraChangedAt() const {return navigationChangedAt_;}
  void bounded(){navigationExactPreparation_=true;}
  void ordinary(){navigationExactPreparation_=false;}
  bool attempt(std::uint64_t id){return presentCanonicalFrame(id,0,false);}
@@ -103,7 +104,7 @@ void deferredShapeDrag(){
  require(c.loseSurface(),"transient target loss");
 }
 void drawAfterZoom(bool settling, bool cancel){
- interaction::CanvasEditingRuntime r;
+ DemandRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"draw-after-zoom"),"draw setup");
  require(r.selectBrushProfile("round-handdrawn",4),"draw brush");
  r.setPlatformPresentationDeferred(true);
@@ -121,7 +122,7 @@ void drawAfterZoom(bool settling, bool cancel){
  require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,exact.metricsGeneration,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"draw initial feedback");
  const auto generation=r.semanticGeneration();const auto scene=r.sceneRevision();
  require(r.setViewportZoomAt(2,128,64),"draw zoom");
- const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ const auto start=r.cameraChangedAt();
  bool presented=false;require(r.serviceNavigationPresentation(start,presented),"draw navigation");
  if(settling){
   unsigned tries=0;while(r.serviceNavigationPresentation(start+std::chrono::seconds(1),presented))require(++tries<128,"draw settle setup");
@@ -149,7 +150,7 @@ void drawAfterZoom(bool settling, bool cancel){
  require(!r.serviceNavigationPresentation(start+std::chrono::seconds(3),presented),"draw lost target reused");
 }
 void handPanUsesNavigationFeedback(){
- interaction::CanvasEditingRuntime r;
+ DemandRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"hand-pan"),"hand pan setup");
  require(r.selectBrushProfile("round-handdrawn",4),"hand pan brush");
  r.setPlatformPresentationDeferred(true);
@@ -176,7 +177,7 @@ void handPanUsesNavigationFeedback(){
          toolFrame.metricsGeneration,render::PresentOutcome::kPresented,
          render::PresentEvidenceKind::kPlatformQualified,{}}),"hand pan tool feedback");
  require(r.setViewportZoomAt(2.0F,128,64),"hand pan zoom");
- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ bool presented=false;const auto now=r.cameraChangedAt();
  unsigned steps=0;
  while(!presented){
   require(r.serviceNavigationPresentation(now,presented),"hand pan navigation feedback rejected");
@@ -185,7 +186,7 @@ void handPanUsesNavigationFeedback(){
  require(!r.lastSubmittedCanonicalFrame(),"hand pan emitted exact canonical receipt during navigation");
 }
 void selectPinchUsesNavigationFeedback(){
- interaction::CanvasEditingRuntime r;
+ DemandRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"select-pinch"),"select pinch setup");
  r.setPlatformPresentationDeferred(true);
  unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
@@ -210,7 +211,7 @@ void selectPinchUsesNavigationFeedback(){
  coalesced.samples={first,second};
  require(r.acceptPlatformBatch(coalesced,second.timestampNs),"coalesced pinch sample");
  require(r.cameraGeneration()==beforeCoalesced+1,"coalesced pinch advanced camera more than once");
- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ bool presented=false;const auto now=r.cameraChangedAt();
  unsigned steps=0;
  while(!presented){
   require(r.serviceNavigationPresentation(now,presented),"select pinch navigation feedback rejected");
@@ -221,7 +222,7 @@ void selectPinchUsesNavigationFeedback(){
  batch(2,input::PointerPhase::kUp,160,55);
 }
 void selectedWheelNavigationUsesFeedback(){
- interaction::CanvasEditingRuntime r;
+ DemandRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"selected-wheel"),"selected wheel setup");
  r.setPlatformPresentationDeferred(true);
  semantic::ObjectRecord image;
@@ -250,7 +251,7 @@ void selectedWheelNavigationUsesFeedback(){
  const auto before=r.cameraGeneration();
  require(r.setViewportZoomAt(1.35F,128,64),"selected wheel zoom");
  require(r.cameraGeneration()==before+1,"selected wheel camera");
- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ bool presented=false;const auto now=r.cameraChangedAt();
  unsigned steps=0;
  while(!presented){
   require(r.serviceNavigationPresentation(now,presented),"selected wheel navigation rejected");
@@ -265,7 +266,7 @@ void selectedWheelNavigationUsesFeedback(){
  for(unsigned i=0;i<24;++i){
   if(i%3==0)require(r.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,3,-2}),"selected wheel pan");
   else require(r.setViewportZoomAt(i%3==1?1.5F:1.15F,128,64),"selected wheel alternating zoom");
-  require(r.serviceNavigationPresentation(now+std::chrono::milliseconds(i*16),presented),"selected wheel lost feedback on repeated input");
+  require(r.serviceNavigationPresentation(r.cameraChangedAt()+std::chrono::milliseconds(16),presented),"selected wheel lost feedback on repeated input");
   require(!r.lastSubmittedCanonicalFrame(),"selected wheel rebuilt exact frame during navigation");
   require(r.selectionOverlay()&&r.selectionOverlay()->viewGeneration()==r.cameraGeneration(),"selected wheel chrome lags repeated camera");
  }
@@ -326,7 +327,7 @@ int main(){
  require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,exact.metricsGeneration,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"exact feedback");
  const auto generation=r.semanticGeneration();const auto scene=r.sceneRevision();
  require(r.setViewportZoomAt(1.1F,100,60),"zoom");
- const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ const auto start=r.cameraChangedAt();
  bool presented=false;
  // Incomplete disposable feedback must not gate canonical settlement after
  // the existing quiet interval. Sustained input still owns navigation first.
@@ -339,10 +340,11 @@ int main(){
  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty()&&
          r.semanticGeneration()==generation&&r.sceneRevision()==scene,"settle fallback fabricated canonical receipt");
  r.normalCoverage();require(r.setViewportZoomAt(1.2F,100,60),"fresh navigation camera");
- require(r.serviceNavigationPresentation(start,presented),"navigation work missing");
+ const auto freshCamera=r.cameraChangedAt();
+ require(r.serviceNavigationPresentation(freshCamera,presented),"navigation work missing");
  unsigned coldSteps=0;
  while(!presented){
-  require(r.serviceNavigationPresentation(start,presented),"cold navigation abandoned");
+  require(r.serviceNavigationPresentation(freshCamera,presented),"cold navigation abandoned");
   require(++coldSteps<128,"complete navigation coverage never presented");
  }
  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty(),"navigation created canonical coverage");

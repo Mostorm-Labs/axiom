@@ -1,0 +1,140 @@
+{
+  "schema": "axiom-postcommit-navigation-row-custody-audit-v1",
+  "row_count": 16,
+  "rows": [
+    {
+      "window": "NC-DIAG-BASE",
+      "key": "baseline-diagnostic-zoom",
+      "metadata_sha256": "f2a04609923ecd63bb769bbee52cc5cf365969cd9be9126fa89567cd25d2ee7a",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-DIAG-BASE",
+      "key": "baseline-diagnostic-pan",
+      "metadata_sha256": "f1e27e409c620889c2feca76f4c862948b2899e2a68d5ef95158344c00efc7dd",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-DIAG-CAND",
+      "key": "candidate-diagnostic-zoom",
+      "metadata_sha256": "d2656c6c0542b1b2879eaf5f7a9f1b1d882caceed222db8a763810737f954d9c",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-DIAG-CAND",
+      "key": "candidate-diagnostic-pan",
+      "metadata_sha256": "5ceeeb69aba270c4a164cef36c60e9ba0af76d234b0be727a6ad8a3b58aab2b9",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-1",
+      "key": "baseline-zoom",
+      "metadata_sha256": "d66bafda4c5987ee8c1d32fd976759d9cdecdc93cb4140f5b4c00110298fc37d",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-1",
+      "key": "baseline-pan",
+      "metadata_sha256": "db66933c46a6f2a893e153e6048713750dcc688ff660ecf87868e15912acb7c7",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-1",
+      "key": "candidate-zoom",
+      "metadata_sha256": "d99893111043a80afdd5dce357494ec7e9abdc90698ff2f9053b857e7d090349",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-1",
+      "key": "candidate-pan",
+      "metadata_sha256": "1e423bca62d4828b7928fd253e1bff3fe60cb3b3e61cfb88582801abbdb70d46",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-2",
+      "key": "candidate-zoom",
+      "metadata_sha256": "e22ea6224fe014ee836ae8909e89b61023de2a20813178d9f4267ed5c32f0e8a",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-2",
+      "key": "candidate-pan",
+      "metadata_sha256": "60d0c72f6e1a616c383b294e3173eeb1ce17dc139c6821f81ac833d163c8b449",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-2",
+      "key": "baseline-zoom",
+      "metadata_sha256": "d1d7e8851840476a3df0ed9e4d1dcf4a845c54da860c0f9399ff69302be900b3",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-ORD-2",
+      "key": "baseline-pan",
+      "metadata_sha256": "42793b32b69dca1eab552859d58a63f843386152fd0584dcc9abf680fa7b67b4",
+      "buffers_checked": 0,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-PIXEL",
+      "key": "baseline-zoom",
+      "metadata_sha256": "aed9d402143d5d5ff4dd4bfb607781aa23509d2a782dd1a4d1906ef5036d500e",
+      "buffers_checked": 5,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-PIXEL",
+      "key": "baseline-pan",
+      "metadata_sha256": "042828a22061992a32327d8ddf551d630dd0717eb187c8fa35aad2ac84cd9888",
+      "buffers_checked": 5,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-PIXEL",
+      "key": "candidate-zoom",
+      "metadata_sha256": "158acb9c1bfd9f381e722a6066d88c849d65f7acd0ce2796ad3b2b1718824eac",
+      "buffers_checked": 5,
+      "closed": true,
+      "critical_ring_loss": 0
+    },
+    {
+      "window": "NC-PIXEL",
+      "key": "candidate-pan",
+      "metadata_sha256": "5fd7cfd7824b6e30a573d64470e402ba388e58ccb055a7b3ab525d8c6390770e",
+      "buffers_checked": 5,
+      "closed": true,
+      "critical_ring_loss": 0
+    }
+  ],
+  "pixel_final_identity": "Baselineandcandidatefinalzoom/panRGBAexactlymatch (separatelycomputed).",
+  "limits": [
+    "Middlecoarseframeisnotidenticaltofinal; candidateandbaselinecoarseframeshaveexactmatchingsourcehashes;correctnessqualificationreportstillunderreview.",
+    "NoGLerrorqueueconsumed;useexistingqualifiedtarget/context/restorationwitnesslimits."
+  ],
+  "new_sampling": false
+}

@@ -22,6 +22,7 @@ class InkPlaygroundHistoryTestAccess {public:
  static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
+ static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
  static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
  static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
  static void step(interaction::CanvasEditingRuntime& r,std::chrono::steady_clock::time_point began=std::chrono::steady_clock::now()){r.serviceCpuPendingEraseStep(began);}
@@ -48,9 +49,9 @@ class PostPublicationFaultSink final:public interaction::LocalOperationSink {
  interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
 };
 int main(int argc,char**argv){try{
- require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+ require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
  auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
- if(mode.starts_with("progress")){
+ if(mode.starts_with("progress")||mode.starts_with("postcommit")){
   const auto first=std::find_if(s.objects.begin(),s.objects.end(),[](const auto& o){return std::holds_alternative<semantic::CompactStrokeContent>(o.content);});require(first!=s.objects.end(),"progress actualstroke");auto base=*first;s.objects.clear();
   for(unsigned n=0;n<3;++n){auto o=base;o.id=foundation::ObjectId::fromUint64(970000+n);o.transform={1,0,0,1,0,0};o.erase_masks.clear();auto& c=std::get<semantic::CompactStrokeContent>(o.content);c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({350.+i*.6,240.+n*3+20*std::sin(i*.05),32768});s.objects.push_back(std::move(o));}
   require(semantic::SnapshotCodec::populateRequirements(s)&&semantic::SnapshotCodec::bindDigests(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1),"progress realfixturebind");
@@ -119,7 +120,7 @@ int main(int argc,char**argv){try{
   require(!core.submit({{over}}),"oversize silentlyaccepted");require(!core.platformKey(71,1)&&core.cpuPendingFacts().pending==0,"oversizepointerorintentleak");
   pointer(input::PointerPhase::kDown,420,160);pointer(input::PointerPhase::kCancel,420,160);require(editor.semanticGeneration().value()==0,"overflowprefixcommitted");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"overflowlease");require(core.close(),"overflowclose");return 0;
  }
- if(mode.starts_with("camera")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
+ if(mode.starts_with("camera")||mode.starts_with("postcommit")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
  pointer(input::PointerPhase::kDown,420,160);for(unsigned i=1;i<=length;++i)pointer(input::PointerPhase::kMove,float(420+7*std::sin(i*.17)),float(160+170.*i/length));
  if(mode=="activepaced"){
   // Active input no longer eagerly unions sixteen whole masks. Cancellation
@@ -140,6 +141,63 @@ int main(int argc,char**argv){try{
  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1&&!core.platformKey(71,1),"Up pending/contact independently retired");
  require(ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps==before.maskHistory.queryUnionOps,"new query union inUp");
  require(!core.close()&&!editor.canUndo(),"pending close/Undo must Busy");
+ if(mode.starts_with("postcommit")){
+  // Same production input/real C++ Worker kernel and OperationEngine. Only the
+  // existing navigation opportunity clock is advanced deterministically.
+  const auto changedAt=std::chrono::steady_clock::now();
+  require(mode=="postcommitpan"?editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,70,-30}):editor.setViewportZoomAt(.7F,600,400),"postcommit camera input");
+  const auto camera=editor.viewportGesture();const auto cameraGeneration=editor.cameraGeneration();unsigned requests=0;
+  for(unsigned i=0;core.cpuPendingFacts().pending&&i<512;++i){
+   editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();if(request.empty())continue;++requests;
+   const auto value=render::internal::cpuDecodeRequest(request);require(bool(value),"postcommit actualrequest");render::internal::CpuExactPathJob kernel(value->geometry,value->prefixCount,value->prefixPath);while(!kernel.ready())require(kernel.advance(8,2000),"postcommit kernel");const auto n=kernel.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+n);std::copy_n(request.begin(),128,result.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,n);word(100,value->piece?3:2);if(!value->piece)for(unsigned k=104;k<128;++k)result[k]=0;kernel.path().writeToMemory(result.data()+128);require(core.queueCpuPendingCompletion(value->identity.words,result,true),"postcommit realcompletion");
+  }
+  require(requests>0&&!core.cpuPendingFacts().pending&&core.cpuPendingFacts().committed==1&&editor.semanticGeneration().value()==generation+1,"postcommit actualatomiccommit");
+  require(editor.cameraGeneration()==cameraGeneration,"commit changed camera");
+  bool presented=false;const bool navigationHeld=editor.serviceNavigationPresentation(changedAt+std::chrono::milliseconds(101),presented);
+  json result{{"mode",mode},{"real_kernel_requests",requests},{"committed",1},{"camera_generation",cameraGeneration},{"generation",editor.semanticGeneration().value()},{"navigation_held_after_original_quiet",navigationHeld},{"navigation_presented",presented}};
+  std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
+  require(!navigationHeld&&!presented,"NO_NEW_QUIET_WINDOW_AFTER_PENDING_COMMIT");
+  const auto snapshot=editor.snapshotObjects();
+  const auto decodePixels=[&]{std::vector<std::uint8_t> pixels(1431U*1010U*4U);require(editor.activeSurfaceProvider()->readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"postcommit pixels");return pixels;};
+  const auto priorPixels=decodePixels();const auto beforePresents=editor.activeSurfaceProvider()->presentCount();
+  runtime::RuntimeFrameOpportunity submitted;
+  for(unsigned i=0;i<128;++i){require(core.serviceFrameOpportunity(false,submitted),"postcommit canonicalopportunity");if(submitted.canonicalWork)break;require(decodePixels()==priorPixels,"retrychangedlastsuccessfuldisplay");require(i<127,"postcommit canonicalnotcomplete");}
+  require(submitted.canonicalWork&&editor.activeSurfaceProvider()->presentCount()>beforePresents,"postcommit completedproviderframe");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)>0,"commit prematurelyretireddisplay");
+  auto wrong=*submitted.canonicalWork;wrong.frame.surfaceGeneration=render::SurfaceGeneration{wrong.frame.surfaceGeneration.value()+1};
+  require(!core.receivePlatformPresented({wrong,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"foreignsurfacequalifieddisplay");
+  const auto actual=decodePixels();
+  const auto projected=projectRuntimeScene(snapshot,editor.semanticGeneration());
+  render::FrameState f{render::ViewId{1},render::CameraState{{(715.5F-camera.translationX)/camera.scale,(505.F-camera.translationY)/camera.scale},camera.scale,0,render::CameraGeneration{cameraGeneration}},
+      {-camera.translationX/camera.scale,-camera.translationY/camera.scale,(1431-camera.translationX)/camera.scale,(1010-camera.translationY)/camera.scale},
+      {1431,1010,1431,1010,1,1},editor.semanticGeneration(),SceneRevision{editor.sceneRevision()},render::SurfaceGeneration{editor.surface().generation},render::MetricsGeneration{editor.surface().metricsGeneration},render::FrameId{1},{0,0,1431,1010}};
+  render::ReferenceDrawList draw{f};draw.viewportClip={0,0,1431,1010};draw.worldToView={camera.scale,0,0,camera.scale,camera.translationX,camera.translationY};
+  for(const auto& record:projected.records){auto command=render::DirectReferenceSource::presentationCommand(record);require(bool(command),"independentreferencecommand");draw.entries.push_back({record,true,std::move(command.value())});}
+  render::FramePlan plan{f,std::move(draw),s.background,false,true};
+  auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(1431,1010));require(render::internal::drawReferencePlanToSkCanvas(*oracle->getCanvas(),plan).code==render::BackendSubmissionCode::kAccepted,"independentfullreference");std::vector<std::uint8_t> expected(actual.size());require(oracle->readPixels(SkImageInfo::Make(1431,1010,kRGBA_8888_SkColorType,kPremul_SkAlphaType),expected.data(),1431*4,0,0),"oracle readback");
+  std::size_t diff=0;unsigned maxDelta=0;for(std::size_t i=0;i<actual.size();++i){diff+=actual[i]!=expected[i];maxDelta=std::max(maxDelta,unsigned(std::abs(int(actual[i])-int(expected[i]))));}result["native_fullframe_diff_channels"]=diff;result["native_fullframe_max_delta"]=maxDelta;
+  std::cerr<<"fullframe compare channels="<<diff<<" max="<<maxDelta<<std::endl;
+  // Fractional device transforms may quantize only AA edge channels. Derive
+  // the fixed one-device-pixel contour band from source geometry alone.
+  auto edge=SkSurfaces::Raster(SkImageInfo::MakeA8(1431,1010));edge->getCanvas()->clear(SK_ColorTRANSPARENT);SkPaint boundary;boundary.setColor(SK_ColorWHITE);boundary.setAntiAlias(true);boundary.setStyle(SkPaint::kStroke_Style);boundary.setStrokeWidth(2);
+  for(const auto& record:projected.records){const auto& c=std::get<semantic::CompactStrokeContent>(record.content.get()).stroke;const auto contour=ink::compileCompactContour(c.config,c.knots);const auto& t=record.transform;const float z=camera.scale;SkMatrix matrix;matrix.setAll(z*t.a,z*t.c,z*t.tx+camera.translationX,z*t.b,z*t.d,z*t.ty+camera.translationY,0,0,1);
+   for(std::size_t i=0;i+1<contour.patches.size();++i)edge->getCanvas()->drawPath(render::internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)).makeTransform(matrix),boundary);
+   for(const auto cap:contour.caps){SkPathBuilder circle;circle.addCircle(cap.x,cap.y,cap.radius);edge->getCanvas()->drawPath(circle.detach().makeTransform(matrix),boundary);}
+  }
+  std::vector<std::uint8_t> edges(1431U*1010U);require(edge->readPixels(edge->imageInfo(),edges.data(),1431,0,0),"independentedge readback");
+  std::size_t outside=0;for(std::size_t i=0;i<actual.size();++i)outside+=actual[i]!=expected[i]&&!edges[i/4];result["nonedge_changed_channels"]=outside;
+  require(!outside,"postcommit finalpixels differ independentDirect outside source contour AA");
+  require(core.receivePlatformPresented({*submitted.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"qualifiedcurrentcanonicalfeedback");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)==0,"matchingvisible didnotretiredisplay");
+  require(editor.snapshotObjects()==snapshot,"presentationchangedcanonical");
+  // New input must restart the existing100ms quiet period; same-camera
+  // no-op zoom must not reset it and foreign/inactive work cannot qualify.
+  require(editor.setViewportZoomAt(.8F,600,400),"postcommit freshaction");const auto fresh=ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor);
+  require(editor.setViewportZoomAt(.8F,0,0)&&ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor)==fresh,"no-op reset quiet time");
+  require(editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(99),presented),"freshcamera releasedbeforeoriginalquiet");
+  require(!editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(100),presented),"freshcamera stayedpastquiet");
+  require(editor.cameraGeneration()!=cameraGeneration,"freshcamera generation");std::ofstream(argv[2])<<result.dump(2)<<'\n';return 0;
+ }
  if(mode.starts_with("progress")){
   using P=interaction::CpuPendingEraseState::Phase;auto head=[&]{return ink_playground::InkPlaygroundHistoryTestAccess::head(editor);};
   unsigned stages=0,requests=0;bool reached=false;

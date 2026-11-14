@@ -1,0 +1,59 @@
+{
+  "HEAD": "911c149b18dbb26632b4273ff60259d53eb18560",
+  "branch": "codex/g5-cpu-worker",
+  "source": {
+    "runtime/composition/CMakeLists.txt": "f7c781d09fbeeb666ae8e1c3955da7e9ddd8b2d9d2c209be5b6286a78a83d364",
+    "runtime/composition/src/runtime_composition.cpp": "83bdb0e1cfa5a8ade36f41b348db93b56854d0fe517d76ba01746665a6e05678",
+    "runtime/composition/tests/cpu_pending_runtime_test.cpp": "b4b5b00b8e3adfc2519556c174694e3d7b832cd6871fc8c4971c8da641a0e259",
+    "runtime/composition/tests/navigation_presentation_test.cpp": "1cf72897ad10de5c79c48cdd0e1c0b908668281590a3e6a458d23f47ddbf4d5e",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "27aded4ef9415c9bbbcf3e6fda31ca8f49d13dd419f96db57ad1f91c932c59b9",
+    "runtime/render/src/skia_render_cache.cpp": "6e250b6038a52ad2cd5824f30adabb48dc17105374cf191b8374678ffbc2073b",
+    "runtime/render/src/skia_renderer.cpp": "58c15a7cb332f428a15ec3bebc9b01d34eebfb11fb2c828db65e888a4f48ecb6"
+  },
+  "source_delta": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/source-delta.patch",
+    "sha256": "e406b4a3d43e918d0bd13925ac724da967fbded88c1306f2e4dd6532e1f378f1"
+  },
+  "behavior_change": "OnlyexistingRuntimecommoncamerainvalidation recordsnavigationCameraGeneration/navigationChangedAt/active beforeeligibility. 100ms thresholdandallbudgets/guards unchanged.",
+  "diagnostic_only": "12existingAXIOM_IF_EVENT lines defaultOFF; no behavior/state branch. DiagnosticandordinaryseparateSDKinstalls. No Render geometry/material/coverage/tilechanges.",
+  "tools": {
+    "verification/runners/g5/postcommit_navigation_analyze.py": "c28f102693ac23ad619306643ae2429d6d33553e9e0413a67c5524d2b4598d80",
+    "verification/runners/g5/postcommit_navigation_observer.mjs": "4dd8d4bcd780b7602235ea88138ce4c817f8e6de4d91153478f92f6dac6e08f4",
+    "verification/runners/g5/postcommit_navigation_pixel_consumer.mjs": "f2bbecee5eb0dae7c24346a5155ea69b0fd215a3655f45af15143d3a77dd4a3b",
+    "verification/runners/g5/postcommit_navigation_runner.py": "f1de5c1dad7e17a28e27061bad3bd3380094fc52705729ed784bf1946a89c400",
+    "verification/runners/g5/postcommit_navigation_web.mjs": "72839a0159874945730ea7075b162221c313f91ea258336dd351a5af7cdd3c42"
+  },
+  "normal_baseline": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/candidate-SDK-manifest.json",
+    "sha256": "29b97bf7f6ea23b8299a228df7870a547e12fb0e09afc85936a7c8ba9df4655e"
+  },
+  "normal_candidate": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/candidate-SDK-manifest.json",
+    "sha256": "ef3be853c5ba64f32b9c329f1abdd24d61b4c23e9e27e812ea0092002e92f150"
+  },
+  "diag_baseline": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/baseline-diagnostic-SDK-manifest.json",
+    "sha256": "1bf7ad7fc3e648cc4fcb79519de172b174423968916b7aa460e4af17e60c4bff"
+  },
+  "diag_candidate": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/candidate-diagnostic-SDK-manifest.json",
+    "sha256": "337ea1a0bd0d702aef683ea74c8860bbdcceac36916d3b4cc2ac1d3bd456830f"
+  },
+  "descriptor_locks": {
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  },
+  "SDKconsumer": {
+    "rootJS": "2970c87ceef5599b37764a90c069348dc1552125e9b929b70d1cd8db40d5c643",
+    "types": "1464878062616e2cde98d09a77e275325cc3fe1cdef9f2b80327e7fc796f0c76",
+    "changed": false
+  },
+  "build_steps": {
+    "path": "out/G5-postcommit-navigation-feedback-r1/build-steps.json",
+    "sha256": "ec924262046ca3fc01709fb0137c255c9a3cef1a9f9a1965033cbbc620eb331c"
+  },
+  "doc": {
+    "path": "docs/planning/G5_POSTCOMMIT_NAVIGATION_FEEDBACK_20261114.md",
+    "sha256": "cbc8b0f1523516217bf983d2a4273fe7c345f0c46a0769535505d7a1fe31c2d7"
+  }
+}

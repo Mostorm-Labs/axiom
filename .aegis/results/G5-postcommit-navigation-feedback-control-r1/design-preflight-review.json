@@ -1,0 +1,22 @@
+{
+  "schema": "axiom-postcommit-navigation-design-review-v1",
+  "design_ref": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/implementation-design.json",
+    "sha256": "2af2f659d0f10a8193bfe40f956592ea11cb299a40be488b2449a607948bd1f2"
+  },
+  "preflight_ref": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/preflight.json",
+    "sha256": "b9e0d8fa4a190623278577e8512a18ccf7ecbd5f746e45328d438a441584f745"
+  },
+  "verdict": "CLEAR_FOR_FROZEN_NC1_DIAGNOSTIC_INVESTIGATION",
+  "reason": "Current design preserves stated owners/identity/allowance and keeps H1/H2 hypotheses conditional. No production behavior repair or scope expansion approved by this checkpoint.",
+  "checks": [
+    "Same911c+42assetbaseline",
+    "Diagnostic-only compiledOFFbydefault andnoSDKexposure",
+    "Equivalentcorrectfeedback distinguishedfromGLproxy",
+    "ActualREDrequired before conditionalNC2",
+    "Finitebrowserandbinarypersistencedefined upfront",
+    "No newblockingobligations beyond NC1-NC4"
+  ],
+  "first_incomplete_action": "Identify actual path/retry/progress from baseline diagnostics and compare retained oldraw; proceed percontract withoutACK."
+}

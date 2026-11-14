@@ -199,6 +199,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
     if(stagedBodies_&&(!updates.erase.continuous||updates.erase.bounds))resetPreparation();
+    AXIOM_IF_EVENT("nc_cache_begin semantic=%llu scene=%llu camera=%llu transient=%u changed=%u target_changed=%u contributions=%llu erase_continuous=%u erase_bounds=%u cursor=%llu pending=%u",(unsigned long long)f.sceneGeneration.value(),(unsigned long long)f.sceneReadToken.value(),(unsigned long long)f.camera.generation.value(),unsigned(transient),unsigned(changed),unsigned(targetChanged),(unsigned long long)updates.contributions.size(),unsigned(updates.erase.continuous),unsigned(updates.erase.bounds.has_value()),(unsigned long long)preparationCursor_,unsigned(bool(pending_)));
     eraseDamage_=updates.erase;
     if(transient){
         if(changed||!hasPendingErase_)pendingErase_=updates.erase;
@@ -1162,6 +1163,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
     return !damageFailed_;
 }
 void SkiaRenderCache::resetPreparation(){
+    AXIOM_IF_EVENT("nc_reset semantic=%llu scene=%llu camera=%llu cursor=%llu pending=%u composite_ready=%u body_dependencies=%llu",(unsigned long long)(frame_?frame_->sceneGeneration.value():0),(unsigned long long)(frame_?frame_->sceneReadToken.value():0),(unsigned long long)(frame_?frame_->camera.generation.value():0),(unsigned long long)preparationCursor_,unsigned(bool(pending_)),unsigned(compositeReady_),(unsigned long long)bodyDependencies_.size());
     AXIOM_FRAME_TIMING_ADD(prepare_resets,1);
     pending_.reset();admissions_.clear();admissionReady_=false;preparationCursor_=0;
     composite_.reset();compositeLease_.reset();preparedFrame_.reset();streamFrame_=false;compositeReady_=false;

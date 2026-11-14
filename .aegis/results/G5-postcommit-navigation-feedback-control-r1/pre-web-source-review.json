@@ -1,0 +1,16 @@
+{
+  "schema": "axiom-postcommit-navigation-pre-web-review-v1",
+  "stage": "ConditionalNC2implemented; native focused3GREEN; full/pixel/ordinary stillrequired",
+  "redgreen_ref": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/red-green.json",
+    "sha256": "27d4509bae758c61f70df92abf7fe80bed52c0c61bf089ece56586b0aa23e832"
+  },
+  "behavior_delta": "--- HEAD-runtime\n\n+++ candidate-runtime\n\n@@ -3906,8 +3906,14 @@\n\n     G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());\n     submittedDisplayRoster_.bound = false;\n   }\n   navigationRequested_ = true;\n+  // Quiet time belongs to the camera change, including opportunities spent\n+  // drawing pending editing feedback. First postcommit eligibility must not\n+  // start another complete quiet interval for this unchanged camera.\n+  navigationCameraGeneration_ = cameraGeneration();\n+  navigationChangedAt_ = std::chrono::steady_clock::now();\n+  navigationActive_ = true;\n   if (partialEraseFeedbackActive()) transientOverlayDirty_ = true;\n   G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));\n   return true;\n }\n",
+  "findings": [
+    "Only commonprivatecamerainvalidation adds assignments to existinggeneration/time/activefields; allother4sourceeventsdiagnosticdefaultOFF.",
+    "Nochange100msthreshold/quota/Operation/coverage/CanonicalVisible gates.",
+    "Syntheticnavigationtests changedclockoriginfromepoch toactualprivatecameraowner;99/100checks retained.",
+    "NewlogicalREDusesrealcommitthenexplicitserviceclock +101ms; no ordinarylatencyclaimfromthisclock."
+  ],
+  "remaining_review": "Nativeall31+2, actualwholeframeandWebinterim/finalpixel/identity proof, normalSDKpairedtiming; ensure firstcorrectfeedbackdoesnotworsenwithoutacknowledgment."
+}

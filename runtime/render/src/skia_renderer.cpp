@@ -422,6 +422,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
     if(cache){
         const auto bodies=cache->prepareBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
+        AXIOM_IF_EVENT("nc_prepare role=canonical phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("canonical body cannot fit preparation capacity"):BackendSubmissionResult::retry("canonical body preparation pending");
         }
@@ -465,6 +466,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
                     renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
             };
             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_,&allowance);
+            AXIOM_IF_EVENT("nc_prepare role=canonical phase=material code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(prepared),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
         }
         catch(const std::bad_alloc&){cache->clear();prepared=internal::SkiaRenderCache::Preparation::kResourcePending;}
         target->restore();
@@ -1173,6 +1175,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
     if(cache){
         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
+        AXIOM_IF_EVENT("nc_prepare role=transient phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient body cannot fit preparation capacity"):BackendSubmissionResult::retry("transient body preparation pending");
         }
@@ -1188,6 +1191,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     if(gpuLiveV4&&renderCacheOptions_.enabled&&cache&&!cache->stagedBodies()){
         const auto material=cache->prepareTransientMaterial(*canvas,plan,allowance,images_,&textResources_);
+        AXIOM_IF_EVENT("nc_prepare role=transient phase=material code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(material),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
         if(material!=internal::SkiaRenderCache::Preparation::kReady){
             provider.release();return material==internal::SkiaRenderCache::Preparation::kRejected?
                 BackendSubmissionResult::rejected("transient material capacity rejected"):

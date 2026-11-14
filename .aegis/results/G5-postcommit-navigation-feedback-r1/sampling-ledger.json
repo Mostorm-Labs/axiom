@@ -1,0 +1,173 @@
+{
+  "diagnostic_Chrome": [
+    {
+      "id": "NC-DIAG-BASE",
+      "status": "COMPLETED",
+      "unix": 1794615900.6648152,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/requests/NC-DIAG-BASE.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/web/NC-DIAG-BASE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.053766833999999,
+        "peak_process_family_rss_kib": 1215424,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 90,
+        "last_stage": {
+          "stage": "case-done",
+          "action": "pan",
+          "lane": "baseline-diagnostic",
+          "status": "OBSERVED",
+          "saved": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 5
+    },
+    {
+      "id": "NC-DIAG-CAND",
+      "status": "COMPLETED",
+      "unix": 1794617467.695395,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/requests/NC-DIAG-CAND.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/web/NC-DIAG-CAND"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.117748,
+        "peak_process_family_rss_kib": 1148272,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 90,
+        "last_stage": {
+          "stage": "case-done",
+          "action": "pan",
+          "lane": "candidate-diagnostic",
+          "status": "OBSERVED",
+          "saved": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 5
+    }
+  ],
+  "ordinary_Chrome": [
+    {
+      "id": "NC-ORD-1",
+      "status": "COMPLETED",
+      "unix": 1794617509.2408729,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/requests/NC-ORD-1.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/web/NC-ORD-1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 5.4879683329999995,
+        "peak_process_family_rss_kib": 1180752,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 90,
+        "last_stage": {
+          "stage": "case-done",
+          "action": "pan",
+          "lane": "candidate",
+          "status": "OBSERVED",
+          "saved": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 6
+    },
+    {
+      "id": "NC-ORD-2",
+      "status": "COMPLETED",
+      "unix": 1794617542.224494,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/requests/NC-ORD-2.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/web/NC-ORD-2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.688389208,
+        "peak_process_family_rss_kib": 1208016,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 90,
+        "last_stage": {
+          "stage": "case-done",
+          "action": "pan",
+          "lane": "baseline",
+          "status": "OBSERVED",
+          "saved": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 5
+    }
+  ],
+  "pixel_Chrome": [
+    {
+      "id": "NC-PIXEL",
+      "status": "COMPLETED",
+      "unix": 1794617557.90022,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/requests/NC-PIXEL.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-feedback-r1/web/NC-PIXEL"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 6.430642,
+        "peak_process_family_rss_kib": 1412720,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 90,
+        "last_stage": {
+          "stage": "case-done",
+          "action": "pan",
+          "lane": "candidate",
+          "status": "OBSERVED",
+          "saved": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 7
+    }
+  ],
+  "IAB": 0,
+  "caps": {
+    "diagnostic_Chrome_starts": 2,
+    "ordinary_Chrome_starts": 2,
+    "pixel_Chrome_starts": 1,
+    "IAB_pages": 0,
+    "total_wall_seconds": 600,
+    "one_diagnostic_session_per_baseline_or_candidate": true,
+    "ordinary_rows": 8,
+    "pixel_rows": 4,
+    "counterbalance": "ordinary1 baseline\u2192candidate; ordinary2 candidate\u2192baseline; each zoom/pan. Pixel baseline/candidate zoom/pan in one session; hold real completion only when needed to qualify phase, never count held duration as performance.",
+    "limit_handling": "All failures/counts charged. Offline store/predicate/ACK tests first. Stop precise evidence or environment blocker if caps exhausted; no automatic supplemental package or new matrix."
+  },
+  "charged_seconds": 28,
+  "prior_packages_read_only": true
+}

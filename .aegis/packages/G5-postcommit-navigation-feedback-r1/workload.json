@@ -1,0 +1,63 @@
+{
+  "fixture": {
+    "request": {
+      "path": "out/G5-pending-navigation-owner-progress-r1/requests/PN-CHROME-1.json",
+      "sha256": "54ed91bc4eaaa8c427721fa2e1da815da099b8481455423746b43b2761359490"
+    },
+    "snapshot_sha256": "95d10c7efd1ff64cae8ace863e96d134ea9cbc67ffd1156ca33118cf90d1d60b",
+    "objects": 3,
+    "knots_per_stroke": 256,
+    "v4": true
+  },
+  "sequence": [
+    "Restore exactly the same existing fixture through createRuntime root SDK. Wait initial stable only.",
+    "partialEraser diameter32; Down430,150;24Moves x430,y150+16*i; same original timestamps and 20ms active opportunity beforeUp.",
+    "Up430,534 followed by same-task zoom0.7 at600,400 orpan70,-30; no erase/canonical settle between Up andnavigation.",
+    "Record actual pending state, camera/scene identity, frame opportunities/route/outcomes and Operation callbacks until complete, then normal close."
+  ],
+  "baseline": {
+    "revision": "911c149b18dbb26632b4273ff60259d53eb18560",
+    "ordinary_SDK_manifest": {
+      "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/candidate-SDK-manifest.json",
+      "sha256": "29b97bf7f6ea23b8299a228df7870a547e12fb0e09afc85936a7c8ba9df4655e"
+    },
+    "root": "out/G5-pending-navigation-owner-progress-r1/candidate-install/js",
+    "privateWorker": true,
+    "frame_timing": false,
+    "UR0": false,
+    "resource_profile": "DESKTOP"
+  },
+  "comparison_context_only": {
+    "old_source": "376f263034000668b9b701c301d62d66a633e886",
+    "old_GL_proxy": "May be stale-camera/transient source; cannot require equivalence without pixels."
+  },
+  "finite_browser_limits": {
+    "diagnostic_Chrome_starts": 2,
+    "ordinary_Chrome_starts": 2,
+    "pixel_Chrome_starts": 1,
+    "IAB_pages": 0,
+    "total_wall_seconds": 600,
+    "one_diagnostic_session_per_baseline_or_candidate": true,
+    "ordinary_rows": 8,
+    "pixel_rows": 4,
+    "counterbalance": "ordinary1 baseline→candidate; ordinary2 candidate→baseline; each zoom/pan. Pixel baseline/candidate zoom/pan in one session; hold real completion only when needed to qualify phase, never count held duration as performance.",
+    "limit_handling": "All failures/counts charged. Offline store/predicate/ACK tests first. Stop precise evidence or environment blocker if caps exhausted; no automatic supplemental package or new matrix."
+  },
+  "pixel_storage": "Use tested per-row gzip EvidenceStore or equivalent bounded binary files with hash ACKs, never aggregate full-frame base64 JSON. Use <=900x600 ROI if native whole-frame proof retained. Target/default FBO/PBO/pixel pack/context/readback state must be restored.",
+  "ordinary_measurement": [
+    "Up→actual nextnav input",
+    "nextnav→firstGLproxy withdraw function andRAFidentity",
+    "nextnav→first currentcamera+mask frame bounds (separate qualification, not ordinary pixel reads)",
+    "Up→canonical Operation callback",
+    "commit→qualified canonical frame",
+    "ownerCPU by actual phase, RAF waits and allocation/resource retry counts separately"
+  ],
+  "not_in_scope": [
+    "7200segments or32longlines",
+    "mixedbrush Worker fallback extension",
+    "20minute idle",
+    "DPR1/4 orallplatformmatrix",
+    "UR3/4scale",
+    "newthreads/budgets/prewarm"
+  ]
+}
