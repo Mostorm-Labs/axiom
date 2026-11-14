@@ -1016,9 +1016,11 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
         (void)observeTextTap(sample);
     }
     if (viewportContactsChanged) {
+      const auto previousGeneration = cameraGeneration();
       const auto contacts = coordinator_->viewportSamples();
       if (contacts.size() >= 2U && !viewportController_->updateGesture(contacts[0], contacts[1]))
         return false;
+      if (!invalidateViewportChange(previousGeneration)) return false;
       canonicalPresentationDirty_ = true;
     }
     if (routed.terminalCancel) cancelAllPointers();
@@ -1045,6 +1047,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     inkBatch.clear();
     return accepted;
   };
+  auto cameraBefore = cameraGeneration();
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routedSamples) {
     if (!sample.key.valid()) continue;
@@ -1059,6 +1062,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
           if ((dx != 0.0F || dy != 0.0F) && !applyViewportNavigation(
                   {interaction::ViewportNavigationKind::kWheelPan, -dx, -dy,
                    sample.x, sample.y, 1.0F})) return false;
+          cameraBefore = cameraGeneration();
           it->second = {sample.x, sample.y};
         }
       } else if (sample.phase == input::PointerPhase::kUp ||
@@ -1139,14 +1143,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   const bool viewportChanged = viewportBefore.scale != viewportAfter.scale ||
       viewportBefore.translationX != viewportAfter.translationX ||
       viewportBefore.translationY != viewportAfter.translationY;
-  if (viewportChanged && previewController_ != nullptr && previewController_->active()) {
-    if (!previewController_->updateViewport(viewportAfter.scale,
-                                             viewportAfter.translationX,
-                                             viewportAfter.translationY)) {
-      return false;
-    }
-  }
-  if(viewportChanged){navigationRequested_=true;++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
+  if (viewportChanged && cameraBefore != cameraGeneration() &&
+      !invalidateViewportChange(cameraBefore)) return false;
   if (viewportChanged && activeSurfaceProvider() != nullptr && surface_.available) {
     // A viewport-only frame redraws the canonical document but is not the
     // canonical-visible receipt for the active brush commit.  Retained amber
@@ -3896,6 +3894,24 @@ interaction::ContactDisposition CanvasEditingRuntime::pointerDisposition(
   return coordinator_->disposition(key);
 }
 
+bool CanvasEditingRuntime::invalidateViewportChange(std::uint64_t previousGeneration) noexcept {
+  const auto viewport = viewportController_->state();
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+                                          viewport.translationY)) return false;
+  if (previousGeneration == cameraGeneration()) return true;
+  ++previewDisplayRevision_;
+  previewDisplayDirty_ = previewActive();
+  if (submittedDisplayRoster_.bound && submittedDisplayRoster_.camera != cameraGeneration()) {
+    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
+    submittedDisplayRoster_.bound = false;
+  }
+  navigationRequested_ = true;
+  if (partialEraseFeedbackActive()) transientOverlayDirty_ = true;
+  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  return true;
+}
+
 bool CanvasEditingRuntime::applyViewportNavigation(
     const interaction::ViewportNavigationSample& sample) noexcept {
   std::lock_guard lock(previewStateMutex_);
@@ -3905,30 +3921,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
     return false;
   }
 
-  const auto viewport = viewportController_->state();
-  // Navigation is also a preview-surface transform invalidation.  Without
-  // this update an already-retained amber outline keeps its pre-gesture
-  // matrix until the next brush sample arrives, which makes the pinch appear
-  // to be applied one input event late.
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale,
-                                           viewport.translationX,
-                                           viewport.translationY)) {
-    return false;
-  }
-
-  // Navigation changes the canonical camera even when no new semantic or
-  // brush input arrives.  Treat it as an independent canonical-surface
-  // invalidation so the Web/Android/Windows display cannot remain at the old
-  // transform until the next pointer sample happens to trigger a frame.
-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
-    submittedDisplayRoster_.bound=false;
-  }
-  navigationRequested_=true;
-  if(partialEraseFeedbackActive())transientOverlayDirty_=true;
-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;
@@ -3953,19 +3946,7 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
   const float translationX = anchorX - ratio * (anchorX - current.translationX);
   const float translationY = anchorY - ratio * (anchorY - current.translationY);
   if (!viewportController_->setCamera(zoom, translationX, translationY)) return false;
-  const auto viewport = viewportController_->state();
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
-                                           viewport.translationY)) {
-    return false;
-  }
-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
-    submittedDisplayRoster_.bound=false;
-  }
-  navigationRequested_=true;
-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;
@@ -3978,6 +3959,8 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
 
 bool CanvasEditingRuntime::fitViewportToContent(
     const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
+  std::lock_guard lock(previewStateMutex_);
+  const auto previousCameraGeneration = cameraGeneration();
   if (viewportController_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
     return false;
   }
@@ -4000,12 +3983,7 @@ bool CanvasEditingRuntime::fitViewportToContent(
   const float translationX = surface_.logicalWidth * 0.5F - fit.zoom * fit.centerX;
   const float translationY = surface_.logicalHeight * 0.5F - fit.zoom * fit.centerY;
   if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
-  const auto viewport = viewportController_->state();
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
-                                          viewport.translationY)) {
-    return false;
-  }
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;

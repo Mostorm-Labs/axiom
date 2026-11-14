@@ -1,0 +1,483 @@
+diff --git a/runtime/composition/CMakeLists.txt b/runtime/composition/CMakeLists.txt
+index 2cc13c9d..11f3236d 100644
+--- a/runtime/composition/CMakeLists.txt
++++ b/runtime/composition/CMakeLists.txt
+@@ -361,7 +361,7 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_CPU_PENDING_ER
+  target_include_directories(axiom_cpu_pending_runtime_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}" "${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host" "${AXIOM_HOST_FONT_INCLUDE}")
+  target_compile_definitions(axiom_cpu_pending_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1 AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  set(_cpu_pending_fixture "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap")
+- foreach(mode noop twocommit long failure context fatal frame radius overflow guards sourcecancel mixedcommit mixedframe mixedsticky mixedtable mixedimage mixedbrush historybarrier activecancel activepaced activebasis failedcreate failuremixed quota8 timeline stampabort stampfilled hierarchy dependencychain rejectcleanup focus focuschanged metadatapressure postpublishfault)
++ foreach(mode progresswait progressunavailable progresstarget progressstamp progresshistory progresspublication progressbudget camerazoomout camerazoomin camerafit camerapan camerapantool cameratouch cameraselectiontouch noop twocommit long failure context fatal frame radius overflow guards sourcecancel mixedcommit mixedframe mixedsticky mixedtable mixedimage mixedbrush historybarrier activecancel activepaced activebasis failedcreate failuremixed quota8 timeline stampabort stampfilled hierarchy dependencychain rejectcleanup focus focuschanged metadatapressure postpublishfault)
+   add_test(NAME G5CpuPendingRuntime-${mode} COMMAND axiom_cpu_pending_runtime_tests "${_cpu_pending_fixture}" "${CMAKE_CURRENT_BINARY_DIR}/cpu-pending-${mode}.json" "${mode}")
+   set_tests_properties(G5CpuPendingRuntime-${mode} PROPERTIES TIMEOUT 120)
+  endforeach()
+diff --git a/runtime/composition/tests/cpu_pending_runtime_test.cpp b/runtime/composition/tests/cpu_pending_runtime_test.cpp
+index 09707877..4b5958ed 100644
+--- a/runtime/composition/tests/cpu_pending_runtime_test.cpp
++++ b/runtime/composition/tests/cpu_pending_runtime_test.cpp
+@@ -10,8 +10,8 @@
+ #include <iostream>
+ #include <cstdlib>
+ #include <new>
+-namespace {bool cpuFailNextAllocation=false;}
+-void* operator new(std::size_t n){if(cpuFailNextAllocation){cpuFailNextAllocation=false;throw std::bad_alloc();}if(auto p=std::malloc(n?n:1))return p;throw std::bad_alloc();}
++namespace {bool cpuFailNextAllocation=false;canvas::interaction::CanvasEditingRuntime* cpuFaultRuntime=nullptr;std::uint64_t cpuFaultGeneration=UINT64_MAX;}
++void* operator new(std::size_t n){if(cpuFailNextAllocation){cpuFailNextAllocation=false;if(cpuFaultRuntime)cpuFaultGeneration=cpuFaultRuntime->semanticGeneration().value();throw std::bad_alloc();}if(auto p=std::malloc(n?n:1))return p;throw std::bad_alloc();}
+ void operator delete(void* p)noexcept{std::free(p);}
+ void operator delete(void* p,std::size_t)noexcept{std::free(p);}
+ #include "host_font_resources.hpp"
+@@ -22,6 +22,9 @@ class InkPlaygroundHistoryTestAccess {public:
+  static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
+  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
+  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
++ static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
++ static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
++ static void step(interaction::CanvasEditingRuntime& r,std::chrono::steady_clock::time_point began=std::chrono::steady_clock::now()){r.serviceCpuPendingEraseStep(began);}
+  static bool publishReady(interaction::CanvasEditingRuntime& r){const auto* p=r.cpuPending_->head();return p&&p->phase==interaction::CpuPendingEraseState::Phase::CommitPreparing&&p->publicationPrepared;}
+  static auto& compiler(interaction::CanvasEditingRuntime& r){return *r.sceneCompiler_;}
+  static auto full(interaction::CanvasEditingRuntime& r){return r.sceneCompiler_->compileFull(semantic::SemanticReadView(r.semanticObjects_,r.semanticGeneration_.current()));}
+@@ -34,11 +37,32 @@ class InkPlaygroundHistoryTestAccess {public:
+ #include "../../render/src/cpu_worker_protocol.hpp"
+ #include "../../interaction/src/partial_erase_geometry.hpp"
+ #include "../../render/src/cpu_exact_path_kernel.hpp"
++class PostPublicationFaultSink final:public interaction::LocalOperationSink {
++ public:
++ interaction::LocalOperationSink* inner;bool armed=false;
++ explicit PostPublicationFaultSink(interaction::LocalOperationSink* sink):inner(sink){}
++ bool preparePublication(std::span<const semantic::Operation> ops) noexcept override{return !inner||inner->preparePublication(ops);}
++ bool prepareEncodedPublication(const semantic::Operation& op,std::span<const std::uint8_t> bytes)noexcept override{const bool ok=!inner||inner->prepareEncodedPublication(op,bytes);if(ok&&!armed){armed=true;cpuFailNextAllocation=true;}return ok;}
++ void abortPreparedPublication()noexcept override{if(inner)inner->abortPreparedPublication();}
++ void applied(const semantic::Operation& op,const semantic::CanonicalCommitRecord& record)noexcept override{if(inner)inner->applied(op,record);}
++ interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
++};
+ int main(int argc,char**argv){try{
+- require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+- auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");const auto& s=*decoded.snapshot;
++ require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
++ auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
++ if(mode.starts_with("progress")){
++  const auto first=std::find_if(s.objects.begin(),s.objects.end(),[](const auto& o){return std::holds_alternative<semantic::CompactStrokeContent>(o.content);});require(first!=s.objects.end(),"progress actualstroke");auto base=*first;s.objects.clear();
++  for(unsigned n=0;n<3;++n){auto o=base;o.id=foundation::ObjectId::fromUint64(970000+n);o.transform={1,0,0,1,0,0};o.erase_masks.clear();auto& c=std::get<semantic::CompactStrokeContent>(o.content);c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({350.+i*.6,240.+n*3+20*std::sin(i*.05),32768});s.objects.push_back(std::move(o));}
++  require(semantic::SnapshotCodec::populateRequirements(s)&&semantic::SnapshotCodec::bindDigests(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1),"progress realfixturebind");
++  if(mode=="progressfixture"){
++   auto encoded=semantic::SnapshotCodec::encode(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(encoded.ok(),"fixture encode");std::ofstream stream(std::string(argv[2])+".axsnap",std::ios::binary);stream.write(reinterpret_cast<const char*>(encoded.bytes.data()),encoded.bytes.size());std::ofstream(argv[2])<<json{{"documentId",s.document_id.value().bytes},{"metadata",{{"documentRevision",std::to_string(s.document_revision)},{"recoveryFrontier",s.recovery_frontier},{"checkpointDigest",s.checkpoint_digest},{"resourceBinding","1"}}},{"objects",s.objects.size()},{"knots",256},{"fixture_source","Fixed40 bound config,3strokes same nativeB work"}}.dump(2)<<'\n';return 0;
++  }
++
++ }
++
+  runtime::RuntimeCompositionCore core;require(core.openDocument(s.document_id),"open");require(core.restoreSnapshotBeforeSurface(s,{s.document_id,s.document_revision,s.recovery_frontier,s.checkpoint_digest},1)==runtime::DocumentRestoreStatus::kRestored,"restore");
+  auto& editor=core.qualificationRuntime();ink_playground::InkPlaygroundHistoryTestAccess::profile(editor);
++ PostPublicationFaultSink faultSink(ink_playground::InkPlaygroundHistoryTestAccess::sink(editor));if(mode=="postpublishfault"){cpuFaultRuntime=&editor;editor.setLocalOperationSink(&faultSink);}
+  require(core.bindSurface(1431,1010)&&core.registerSource(71)&&core.setPlatformPresentationDeferred(true),"bind");
+  const auto frame=[&]{runtime::RuntimeFrameOpportunity work;require(core.serviceFrameOpportunity(false,work),"actualframeopportunity");if(work.previewWork)require(core.finishFrameOpportunity({work.previewWork,true}),"previewack");if(work.canonicalWork)require(core.receivePlatformPresented({*work.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"canonicalack");};
+  if(mode=="stampabort"||mode=="stampfilled"){
+@@ -95,6 +119,7 @@ int main(int argc,char**argv){try{
+   require(!core.submit({{over}}),"oversize silentlyaccepted");require(!core.platformKey(71,1)&&core.cpuPendingFacts().pending==0,"oversizepointerorintentleak");
+   pointer(input::PointerPhase::kDown,420,160);pointer(input::PointerPhase::kCancel,420,160);require(editor.semanticGeneration().value()==0,"overflowprefixcommitted");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"overflowlease");require(core.close(),"overflowclose");return 0;
+  }
++ if(mode.starts_with("camera")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
+  pointer(input::PointerPhase::kDown,420,160);for(unsigned i=1;i<=length;++i)pointer(input::PointerPhase::kMove,float(420+7*std::sin(i*.17)),float(160+170.*i/length));
+  if(mode=="activepaced"){
+   // Active input no longer eagerly unions sixteen whole masks. Cancellation
+@@ -115,6 +140,78 @@ int main(int argc,char**argv){try{
+  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1&&!core.platformKey(71,1),"Up pending/contact independently retired");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps==before.maskHistory.queryUnionOps,"new query union inUp");
+  require(!core.close()&&!editor.canUndo(),"pending close/Undo must Busy");
++ if(mode.starts_with("progress")){
++  using P=interaction::CpuPendingEraseState::Phase;auto head=[&]{return ink_playground::InkPlaygroundHistoryTestAccess::head(editor);};
++  unsigned stages=0,requests=0;bool reached=false;
++  for(;stages<4096;++stages){
++   auto* h=head();if(h&&h->phase==P::CommitPreparing){reached=true;break;}
++   ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
++   auto request=core.takeCpuPendingRequest();if(request.empty())continue;
++   if(mode=="progresswait"){
++    const auto before=core.cpuPendingFacts();for(unsigned i=0;i<4;++i){const auto old=head()->preparationProgress();const auto count=core.cpuPendingFacts().opportunities;editor.serviceCpuPendingErases();require(core.cpuPendingFacts().opportunities==count+1&&head()->preparationProgress()==old&&head()->phase==P::Waiting&&!head()->completion,"Worker wait busyloop or fake progress");}
++    require(core.cpuPendingFacts().jobs==before.jobs&&editor.semanticGeneration().value()==generation,"Worker wait changed jobs/canonical");std::ofstream(argv[2])<<json{{"mode",mode},{"actual_request",request.size()},{"turns",4},{"steps_per_turn",1},{"canonical_unchanged",true}}.dump(2)<<'\n';return 0;
++   }
++   if(mode=="progressunavailable"){
++    require(core.loseSurface(),"progress surface loss");const auto old=head()->preparationProgress();const auto count=core.cpuPendingFacts().opportunities;editor.serviceCpuPendingErases();require(head()->preparationProgress()==old&&core.cpuPendingFacts().opportunities==count&&editor.semanticGeneration().value()==generation,"unavailable owner spinned/published");std::ofstream(argv[2])<<json{{"mode",mode},{"no_preparation_steps",true},{"canonical_unchanged",true}}.dump(2)<<'\n';return 0;
++   }
++   ++requests;const auto decoded=render::internal::cpuDecodeRequest(request);require(bool(decoded),"progress actualrequest");render::internal::CpuExactPathJob kernel(decoded->geometry,decoded->prefixCount,decoded->prefixPath);while(!kernel.ready())require(kernel.advance(8,2000),"progress actualkernel");const auto size=kernel.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+size);std::copy_n(request.begin(),128,result.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,size);word(100,decoded->piece?3:2);if(!decoded->piece)for(unsigned k=104;k<128;++k)result[k]=0;kernel.path().writeToMemory(result.data()+128);require(core.queueCpuPendingCompletion(decoded->identity.words,result,true),"progress completion");
++  }
++  std::cerr<<"progressreached="<<reached<<" requests="<<requests<<" proofs="<<(head()?head()->proofs.size():0)<<" phase="<<(head()?int(head()->phase):-1)<<" stages="<<stages<<" error="<<core.cpuPendingFacts().error<<std::endl;
++  require(reached&&requests>0&&head()->proofs.size()==3,"progress actual3targetcommitprecondition");
++  if(mode=="progressstamp"||mode=="progresshistory"||mode=="progresspublication")while(!head()->preparedErase->ready())ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
++  if(mode=="progressstamp"){
++   // A real partially consumed stamp cursor must continue without a new frame.
++   while(head()->sceneStamp.target==0)ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
++   require(head()->sceneStamp.target<3,"stamp precondition");
++  }
++  if(mode=="progresshistory"||mode=="progresspublication")while(head()->sceneStamp.target<3)ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
++  if(mode=="progresspublication")ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
++  const auto beforeTargets=head()->sceneStamp.target;const auto beforeReady=head()->preparedErase->ready();const auto committed=core.cpuPendingFacts().committed;
++  if(mode=="progressbudget"){
++   const auto prior=head()->preparationProgress();ink_playground::InkPlaygroundHistoryTestAccess::step(editor,std::chrono::steady_clock::now()-std::chrono::microseconds(8000));require(head()->preparationProgress()==prior&&!head()->preparedErase->ready()&&editor.semanticGeneration().value()==generation,"expired turn published");
++  }else{
++   const auto at=std::chrono::steady_clock::now();editor.serviceCpuPendingErases();const auto ns=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-at).count();
++   auto* after=head();const bool complete=core.cpuPendingFacts().committed==committed+1;
++   const bool useful=complete||(after&&(after->preparedErase->ready()!=beforeReady||after->sceneStamp.target>beforeTargets+1));
++   json r{{"mode",mode},{"actual_requests",requests},{"prior_stages",stages},{"owner_ns",ns},{"ready_before",beforeReady},{"stamp_before",beforeTargets},{"complete",complete},{"useful_multiple_internal_stages",useful},{"pending",core.cpuPendingFacts().pending}};std::ofstream(argv[2])<<r.dump(2)<<'\n';std::cout<<r.dump()<<std::endl;
++   require(useful,"INTERNAL_PREPARATION_PROGRESS_FORCED_TO_NEXT_OWNER_TURN");
++  }
++  return 0;
++ }
++ if(mode.starts_with("camera")){
++  // Hold the actual encoded kernel job, never synthesize a pending flag. The
++  // existing Composition must keep rendering transient feedback while waiting.
++  std::vector<std::uint8_t> held;
++  for(unsigned i=0;i<512;++i){frame();if(held.empty())held=core.takeCpuPendingRequest();if(!held.empty()&&!editor.transientOverlayDirty())break;require(i<511,"camera waitingclean");}
++  require(!held.empty()&&core.cpuPendingFacts().state=="WaitingWorker"&&core.cpuPendingFacts().pending==1,"camera actual Worker wait");
++  const auto read=[&]{std::vector<std::uint8_t> result(1431U*1010U*4U);require(editor.activeSurfaceProvider()->readbackRgba(result).code==render::BackendSubmissionCode::kAccepted,"camera readback");return result;};
++  const auto old=read();const auto oldCamera=editor.viewportGesture();const auto oldCameraGeneration=editor.cameraGeneration();
++  const auto previewRevision=editor.previewDisplayRevision();
++  require(editor.setViewportZoomAt(oldCamera.scale,400,300)&&editor.cameraGeneration()==oldCameraGeneration&&!editor.transientOverlayDirty()&&editor.previewDisplayRevision()==previewRevision,"camera no-op invalidateddisplay");
++  require(!editor.setViewportZoomAt(NAN,400,300)&&!editor.fitViewportToContent(foundation::WorldRect{0,0,NAN,5})&&editor.cameraGeneration()==oldCameraGeneration&&!editor.transientOverlayDirty(),"invalid camera damaged state");
++  if(mode=="camerapantool"){
++   require(editor.setPanTool(true),"camera pantool select");pointer(input::PointerPhase::kDown,700,500);const auto rev=editor.previewDisplayRevision();pointer(input::PointerPhase::kMove,770,530);require(editor.previewDisplayRevision()==rev+1,"one paninput invalidated samecamera twice");pointer(input::PointerPhase::kUp,770,530);
++  }else if(mode=="camerafit")require(editor.fitViewportToContent(foundation::WorldRect{0,0,2800,1600}),"camera fit");
++  else if(mode=="camerapan")require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,70,-30}),"camera pan");
++  else if(mode=="cameratouch"||mode=="cameraselectiontouch"){
++   if(mode=="cameraselectiontouch")require(editor.setSelectionMode(true),"camera selectwhilepending");
++   const auto touch=[&](unsigned id,input::PointerPhase phase,float x,float y){input::PlatformPointerSample p{};p.source=71;p.pointer=id;p.sequence=++sequence;p.timestampNs=90000000000+sequence*8000000;p.x=x;p.y=y;p.pressure=.5;p.phase=phase;p.capabilities.tool=input::PointerTool::kFinger;require(core.submit({{p}}),"camera touchinput");};
++   touch(2,input::PointerPhase::kDown,500,400);touch(3,input::PointerPhase::kDown,700,400);
++   for(unsigned i=0;i<64&&editor.transientOverlayDirty();++i)frame();
++   touch(3,input::PointerPhase::kMove,850,450);
++  }else require(editor.setViewportZoomAt(mode=="camerazoomin"?1.5F:.7F,700,500),"camera zoom");
++  require(editor.cameraGeneration()!=oldCameraGeneration,"camera unchanged fixture");
++  const bool dirtyAtChange=editor.transientOverlayDirty();
++  for(unsigned i=0;i<256;++i){frame();if(!editor.transientOverlayDirty())break;require(i<255,"camera transientconverge");}
++  const auto actual=read();
++  // Existing pan admission increments its generation even for zero delta.
++  // This is an independent redraw control at the exact same transform.
++  require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,0,0}),"camera panoracle");
++  for(unsigned i=0;i<256;++i){frame();if(!editor.transientOverlayDirty())break;require(i<255,"camera oracleconverge");}
++  const auto expected=read();std::size_t changed=0,mismatch=0;for(std::size_t i=0;i<actual.size();++i){changed+=expected[i]!=old[i];mismatch+=actual[i]!=expected[i];}
++  json result{{"mode",mode},{"pending",core.cpuPendingFacts().pending},{"state",core.cpuPendingFacts().state},{"dirty_at_camera",dirtyAtChange},{"camera",editor.cameraGeneration()},{"canonical_generation",editor.semanticGeneration().value()},{"changed_channels",changed},{"mismatched_channels",mismatch},{"held_actual_request_bytes",held.size()}};std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
++  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1,"camera prematurelycommitted");require(changed>0,"camera oracle unchanged");require(actual==expected,"PENDING_CAMERA_FRAME_STALE_UNTIL_ZERO_PAN");require(dirtyAtChange,"camera forgot transientinvalidation");return 0;
++ }
+  const auto unchanged=editor.semanticGeneration().value();
+  semantic::Operation forbidden{semantic::OperationId{foundation::ObjectId::fromUint64(880001)},s.document_id,1,1,semantic::SetDocumentBackgroundOp{foundation::DocumentBackground{}}};
+  require(editor.applyExternalOperation(forbidden,semantic::ApplySource::kRemoteSync).disposition!=semantic::ApplyDisposition::kApplied&&editor.semanticGeneration().value()==unchanged,"remote overtookpending");
+@@ -185,7 +282,7 @@ int main(int argc,char**argv){try{
+  if(mode=="metadatapressure"){const auto desired=511U*1024U*1024U;while(editor.cpuWorkerGrantBytes()<desired){const auto bytes=std::min<std::size_t>(80U*1024U*1024U,desired-editor.cpuWorkerGrantBytes());const auto grant=editor.reserveCpuWorkerGrant(9,bytes);require(grant,"native deterministic quota pressure");pressure.push_back(grant);}}
+  json jobs=json::array();unsigned opportunities=0;bool postFault=false;bool faulted=false,contextTested=false,rebound=false;
+  while(core.cpuPendingFacts().pending&&opportunities++<1024){
+-  if(mode=="postpublishfault"&&!postFault&&ink_playground::InkPlaygroundHistoryTestAccess::publishReady(editor)){cpuFailNextAllocation=true;postFault=true;}
++  if(mode=="postpublishfault")postFault=faultSink.armed;
+   if(mode=="frame"||mode=="edgeframe"||mode=="mixedframe"||mode=="mixedimage")frame();else editor.serviceCpuPendingErases();
+   if(mode=="fatal"&&faulted&&!rebound&&core.cpuPendingFacts().state!="WaitingWorker"){
+    editor.suspendCpuPendingExecutor();const auto issued=core.cpuPendingFacts().jobs;for(unsigned i=0;i<4;++i)editor.serviceCpuPendingErases();require(core.cpuPendingFacts().jobs==issued,"suspendedissuedoldexecutorjob");
+@@ -207,6 +304,7 @@ render::internal::CpuExactPathJob job(value->geometry,value->prefixCount,value->
+  if(mode=="activebasis"){
+   require(editor.selectionTransformActive(),"A mask commit cancelled active transform");pointer(input::PointerPhase::kMove,930,590);pointer(input::PointerPhase::kUp,930,590);editor.serviceCpuPendingErases();require(core.cpuPendingFacts().pending==0&&editor.pendingObject(mixedId)->transform.tx==880,"active transform did not rebase after generation");return 0;
+  }
++ if(mode=="postpublishfault"){require(faultSink.armed&&cpuFaultGeneration>generation&&cpuFaultGeneration!=UINT64_MAX,"postpublish fault not exercised after atomic mutation");require(ink_playground::InkPlaygroundHistoryTestAccess::full(editor).hasValue(),"postpublish recovery failed");cpuFaultRuntime=nullptr;editor.setLocalOperationSink(faultSink.inner);}
+  const auto facts=core.cpuPendingFacts();json result{{"Up_ms",upMs},{"pending",facts.pending},{"committed",facts.committed},{"failed",facts.failed},{"noops",facts.noops},{"error",facts.error},{"jobs",jobs},{"opportunities",opportunities},{"generation",editor.semanticGeneration().value()},{"geometry_reuses",facts.geometryReuse},{"max_owner_ns",facts.maxOwnerNs},{"max_exact_ns",facts.maxExactNs},{"newquery_unions_main",ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps-before.maskHistory.queryUnionOps}};
+  std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
+  if(mode=="failuremixed"){require(!facts.pending&&facts.failed==1&&facts.committed==2&&editor.pendingObject(mixedId)&&editor.pendingObject(mixedId)->transform.tx==870,"failed A lost unrelated create/drag");return 0;}
+diff --git a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+index 68140714..7b808e7d 100644
+--- a/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
++++ b/runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp
+@@ -201,6 +201,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
+   void suspendCpuPendingExecutor()noexcept;
+ 
+  private:
++  [[nodiscard]] bool invalidateViewportChange(std::uint64_t previousGeneration) noexcept;
+   friend class canvas::runtime::CanvasRuntimeFacade;
+   friend class canvas::runtime::MultiSelectionPort;
+ #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index d6e3e5f0..8f63ae9d 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -1016,9 +1016,11 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+         (void)observeTextTap(sample);
+     }
+     if (viewportContactsChanged) {
++      const auto previousGeneration = cameraGeneration();
+       const auto contacts = coordinator_->viewportSamples();
+       if (contacts.size() >= 2U && !viewportController_->updateGesture(contacts[0], contacts[1]))
+         return false;
++      if (!invalidateViewportChange(previousGeneration)) return false;
+       canonicalPresentationDirty_ = true;
+     }
+     if (routed.terminalCancel) cancelAllPointers();
+@@ -1045,6 +1047,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+     inkBatch.clear();
+     return accepted;
+   };
++  auto cameraBefore = cameraGeneration();
+   const auto viewportBefore = viewportController_->state();
+   for (const auto& sample : routedSamples) {
+     if (!sample.key.valid()) continue;
+@@ -1058,7 +1061,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+           const float dy = sample.y - it->second.second;
+           if ((dx != 0.0F || dy != 0.0F) && !applyViewportNavigation(
+                   {interaction::ViewportNavigationKind::kWheelPan, -dx, -dy,
+-                   sample.x, sample.y, 1.0F})) return false;
++                   sample.x, sample.y, 1.0F})) return false;
++          cameraBefore = cameraGeneration();
+           it->second = {sample.x, sample.y};
+         }
+       } else if (sample.phase == input::PointerPhase::kUp ||
+@@ -1139,14 +1143,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
+   const bool viewportChanged = viewportBefore.scale != viewportAfter.scale ||
+       viewportBefore.translationX != viewportAfter.translationX ||
+       viewportBefore.translationY != viewportAfter.translationY;
+-  if (viewportChanged && previewController_ != nullptr && previewController_->active()) {
+-    if (!previewController_->updateViewport(viewportAfter.scale,
+-                                             viewportAfter.translationX,
+-                                             viewportAfter.translationY)) {
+-      return false;
+-    }
+-  }
+-  if(viewportChanged){navigationRequested_=true;++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
++  if (viewportChanged && cameraBefore != cameraGeneration() &&
++      !invalidateViewportChange(cameraBefore)) return false;
+   if (viewportChanged && activeSurfaceProvider() != nullptr && surface_.available) {
+     // A viewport-only frame redraws the canonical document but is not the
+     // canonical-visible receipt for the active brush commit.  Retained amber
+@@ -3896,6 +3894,24 @@ interaction::ContactDisposition CanvasEditingRuntime::pointerDisposition(
+   return coordinator_->disposition(key);
+ }
+ 
++bool CanvasEditingRuntime::invalidateViewportChange(std::uint64_t previousGeneration) noexcept {
++  const auto viewport = viewportController_->state();
++  if (previewController_ != nullptr && previewController_->active() &&
++      !previewController_->updateViewport(viewport.scale, viewport.translationX,
++                                          viewport.translationY)) return false;
++  if (previousGeneration == cameraGeneration()) return true;
++  ++previewDisplayRevision_;
++  previewDisplayDirty_ = previewActive();
++  if (submittedDisplayRoster_.bound && submittedDisplayRoster_.camera != cameraGeneration()) {
++    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
++    submittedDisplayRoster_.bound = false;
++  }
++  navigationRequested_ = true;
++  if (partialEraseFeedbackActive()) transientOverlayDirty_ = true;
++  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
++  return true;
++}
++
+ bool CanvasEditingRuntime::applyViewportNavigation(
+     const interaction::ViewportNavigationSample& sample) noexcept {
+   std::lock_guard lock(previewStateMutex_);
+@@ -3905,30 +3921,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
+     return false;
+   }
+ 
+-  const auto viewport = viewportController_->state();
+-  // Navigation is also a preview-surface transform invalidation.  Without
+-  // this update an already-retained amber outline keeps its pre-gesture
+-  // matrix until the next brush sample arrives, which makes the pinch appear
+-  // to be applied one input event late.
+-  if (previewController_ != nullptr && previewController_->active() &&
+-      !previewController_->updateViewport(viewport.scale,
+-                                           viewport.translationX,
+-                                           viewport.translationY)) {
+-    return false;
+-  }
+-
+-  // Navigation changes the canonical camera even when no new semantic or
+-  // brush input arrives.  Treat it as an independent canonical-surface
+-  // invalidation so the Web/Android/Windows display cannot remain at the old
+-  // transform until the next pointer sample happens to trigger a frame.
+-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
+-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
+-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
+-    submittedDisplayRoster_.bound=false;
+-  }
+-  navigationRequested_=true;
+-  if(partialEraseFeedbackActive())transientOverlayDirty_=true;
+-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
++  if (!invalidateViewportChange(previousCameraGeneration)) return false;
+   if (surface_.available && activeSurfaceProvider() != nullptr) {
+     if (platformPresentationDeferred_) {
+       canonicalPresentationDirty_ = true;
+@@ -3953,19 +3946,7 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
+   const float translationX = anchorX - ratio * (anchorX - current.translationX);
+   const float translationY = anchorY - ratio * (anchorY - current.translationY);
+   if (!viewportController_->setCamera(zoom, translationX, translationY)) return false;
+-  const auto viewport = viewportController_->state();
+-  if (previewController_ != nullptr && previewController_->active() &&
+-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+-                                           viewport.translationY)) {
+-    return false;
+-  }
+-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
+-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
+-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
+-    submittedDisplayRoster_.bound=false;
+-  }
+-  navigationRequested_=true;
+-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
++  if (!invalidateViewportChange(previousCameraGeneration)) return false;
+   if (surface_.available && activeSurfaceProvider() != nullptr) {
+     if (platformPresentationDeferred_) {
+       canonicalPresentationDirty_ = true;
+@@ -3977,7 +3958,9 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
+ }
+ 
+ bool CanvasEditingRuntime::fitViewportToContent(
+-    const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
++    const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
++  std::lock_guard lock(previewStateMutex_);
++  const auto previousCameraGeneration = cameraGeneration();
+   if (viewportController_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
+     return false;
+   }
+@@ -4000,12 +3983,7 @@ bool CanvasEditingRuntime::fitViewportToContent(
+   const float translationX = surface_.logicalWidth * 0.5F - fit.zoom * fit.centerX;
+   const float translationY = surface_.logicalHeight * 0.5F - fit.zoom * fit.centerY;
+   if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
+-  const auto viewport = viewportController_->state();
+-  if (previewController_ != nullptr && previewController_->active() &&
+-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+-                                          viewport.translationY)) {
+-    return false;
+-  }
++  if (!invalidateViewportChange(previousCameraGeneration)) return false;
+   if (surface_.available && activeSurfaceProvider() != nullptr) {
+     if (platformPresentationDeferred_) {
+       canonicalPresentationDirty_ = true;
+diff --git a/runtime/interaction/src/cpu_pending_erase.cpp b/runtime/interaction/src/cpu_pending_erase.cpp
+index c3f7ca7e..c31728c2 100644
+--- a/runtime/interaction/src/cpu_pending_erase.cpp
++++ b/runtime/interaction/src/cpu_pending_erase.cpp
+@@ -196,10 +196,11 @@ void CanvasEditingRuntime::serviceCpuPendingErases()noexcept{
+   AXIOM_FRAME_TIMING_SET(pending_serial,serial);
+   AXIOM_FRAME_TIMING_SET(pending_phase,static_cast<unsigned>(before->phase));
+   const auto phase=before->phase;const auto next=before->next,reuse=before->reuseScan;
++  const auto preparation=before->preparationProgress();
+   if(servicePendingLocalHead())return;
+   serviceCpuPendingEraseStep(began);
+   const auto* after=cpuPending_->head();
+-  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse)break;
++  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse&&after->preparationProgress()==preparation)break;
+   if(after&&after->phase==CpuPendingEraseState::Phase::Waiting&&!after->completion)break;
+  }
+ }
+@@ -425,7 +426,8 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
+    struct StageCost{CpuPendingEraseState& s;unsigned stage;std::chrono::steady_clock::time_point began;~StageCost(){const auto ns=std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-began).count());s.maximumCommitStageNs=std::max(s.maximumCommitStageNs,ns);if(stage==4)s.sceneStampPrepareNs+=ns;else if(stage==0)s.targetPrepareNs+=ns;else if(stage==1)s.historyPrepareNs+=ns;else if(stage==2)s.publicationPrepareNs+=ns;else s.publishNs+=ns;}} stageCost{state,stage,commitAt};
+    if(!p->preparedErase->ready()){
+     AXIOM_FRAME_TIMING_SCOPE(targetTiming,target_prepare);
+-    if(!p->preparedErase->advance(1,8000)){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
++    const auto remaining=std::chrono::duration_cast<std::chrono::microseconds>(allowance-(std::chrono::steady_clock::now()-began)).count();
++    if(remaining>0&&!p->preparedErase->advance(1,static_cast<std::uint64_t>(remaining))){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
+    }
+    if(p->sceneStamp.target<std::get<semantic::AddEraseMasksOp>(p->preparedErase->operation().payload).items.size()){
+     AXIOM_FRAME_TIMING_SCOPE(stampTiming,scene_stamp);
+diff --git a/runtime/interaction/src/cpu_pending_erase_state.hpp b/runtime/interaction/src/cpu_pending_erase_state.hpp
+index f2ed416f..ef1f15e5 100644
+--- a/runtime/interaction/src/cpu_pending_erase_state.hpp
++++ b/runtime/interaction/src/cpu_pending_erase_state.hpp
+@@ -4,6 +4,7 @@
+ #include "canvas/scene/scene_types.hpp"
+ #include "canvas/semantic/operation.hpp"
+ #include <array>
++#include <tuple>
+ #include "pending_scene_preparation.hpp"
+ namespace canvas::interaction {
+ struct CpuPendingEraseState final {
+@@ -37,6 +38,16 @@ struct CpuPendingEraseState final {
+   std::vector<Prefix> prefixes;
+   std::size_t nextPrefix=0,activeTarget=0,jobPrefix=0;
+   bool activeJob=false,activeCancelled=false;
++  // Constant-size facts from the actual owners, never a synthetic iteration
++  // counter or full payload comparison. Current stamp primitive resets are
++  // disambiguated by target/mask/header and job identity.
++  auto preparationProgress() const noexcept {
++   const auto* job=sceneStamp.target<sceneStamp.jobs.size()?sceneStamp.jobs[sceneStamp.target].get():nullptr;
++   return std::tuple{preparedErase.get(),preparedErase?preparedErase->progress():semantic::PreparedEraseOperation::Progress{},
++       sceneStamp.operation.get(),sceneStamp.target,sceneStamp.jobs.size(),job,
++       job?job->mask:0U,job?job->primitive:0U,job&&job->header,job&&job->ready,
++       sceneStamp.failed,preparedHistory.has_value(),publicationPrepared};
++  }
+   Phase phase=Phase::Active;
+   std::uint64_t session=0,serial=0,traceGrant=0,payloadGrant=0,grantExecutor=0,payloadExecutor=0;
+   std::size_t payloadBytes=0,candidateCapacity=0;
+diff --git a/runtime/semantic/include/canvas/semantic/operation_engine.hpp b/runtime/semantic/include/canvas/semantic/operation_engine.hpp
+index c90bb80b..e12c3dc4 100644
+--- a/runtime/semantic/include/canvas/semantic/operation_engine.hpp
++++ b/runtime/semantic/include/canvas/semantic/operation_engine.hpp
+@@ -28,6 +28,14 @@ class PreparedEraseOperation final {
+  public:
+   ~PreparedEraseOperation();
+   bool advance(std::size_t maxTargets,std::uint64_t maxMicroseconds);
++  // Private Runtime preparation contract; never a consumer SDK capability.
++  struct Progress final {
++    std::size_t target = 0;
++    unsigned finalPhase = 0;
++    bool complete = false, failed = false;
++    bool operator==(const Progress&) const = default;
++  };
++  [[nodiscard]] Progress progress() const noexcept;
+   bool ready()const noexcept;
+   const Operation& operation()const noexcept;
+   std::span<const std::uint8_t> encoded()const noexcept;
+diff --git a/runtime/semantic/src/operation_engine.cpp b/runtime/semantic/src/operation_engine.cpp
+index 67fe4a56..2c8f49e5 100644
+--- a/runtime/semantic/src/operation_engine.cpp
++++ b/runtime/semantic/src/operation_engine.cpp
+@@ -108,6 +108,9 @@ class PreparedEraseOperation::State final {
+ };
+ PreparedEraseOperation::PreparedEraseOperation(std::unique_ptr<State> value):state_(std::move(value)){}
+ PreparedEraseOperation::~PreparedEraseOperation()=default;
++PreparedEraseOperation::Progress PreparedEraseOperation::progress() const noexcept {
++ return {state_->cursor,state_->finalPhase,state_->complete,state_->failed};
++}
+ bool PreparedEraseOperation::ready()const noexcept{return state_->complete&&!state_->failed;}
+ const Operation& PreparedEraseOperation::operation()const noexcept{return state_->input;}
+ std::span<const std::uint8_t> PreparedEraseOperation::encoded()const noexcept{return state_->encoded;}
+@@ -125,6 +128,7 @@ bool PreparedEraseOperation::advance(std::size_t maxTargets,std::uint64_t micros
+ #endif
+   ++s.cursor;
+  }
++ if(std::chrono::steady_clock::now()-began>=std::chrono::microseconds(micros))return true;
+  if(s.cursor==items.size()){
+   // Separate aggregate validation, fallible ledger reservation and final
+   // changeset allocation so none buys an extra per-object time allowance.
+diff --git a/runtime/semantic/tests/cpu_erase_preparation_test.cpp b/runtime/semantic/tests/cpu_erase_preparation_test.cpp
+index 8fdbee8a..d38de9b6 100644
+--- a/runtime/semantic/tests/cpu_erase_preparation_test.cpp
++++ b/runtime/semantic/tests/cpu_erase_preparation_test.cpp
+@@ -6,6 +6,38 @@
+ #include <fstream>
+ #include "protobuf_codec_internal.hpp"
+ using namespace canvas::semantic;
++TEST(CpuErasePreparation, ProgressWitnessIsBoundedAndStagedBytesMatchSequentialApply){
++ IndexedObjectStore stagedStore,referenceStore;AppliedOperationLedger stagedLedger,referenceLedger;
++ SemanticGenerationState generation,referenceGeneration;CanonicalCommitClock clock{RuntimeEpoch{1}},referenceClock{RuntimeEpoch{1}};OperationEngine engine;
++ const auto document=DocumentId{ObjectId::fromUint64(1)};
++ SweptCircleMask sweep;sweep.segments={{{{1,1},2},{{4,4},2},{2,2},{3,3}}};AddEraseMasksOp payload;
++ for(unsigned i=0;i<3;++i){
++  ObjectRecord object;object.id=ObjectId::fromUint64(7+i);object.kind=ObjectKind::kVectorStroke;object.kind_version=3;object.placement.order_key=OrderKey{{static_cast<std::uint8_t>(128+i)}};
++  CompactStrokeContent compact;compact.stroke.config=canvas::foundation::InkBrushConfig{};compact.stroke.knots={{1,1,32768},{4,4,32768}};object.content=compact;
++  Operation insert{OperationId{ObjectId::fromUint64(20+i)},document,1,3,AddStrokeOp{object}};
++  ASSERT_EQ(engine.apply(insert,ApplySource::kLocalInteraction,stagedStore,stagedLedger,generation,clock).disposition,ApplyDisposition::kApplied);
++  ASSERT_EQ(engine.apply(insert,ApplySource::kLocalInteraction,referenceStore,referenceLedger,referenceGeneration,referenceClock).disposition,ApplyDisposition::kApplied);
++  payload.items.push_back({object.id,{{ObjectId::fromUint64(30+i),sweep}}});
++ }
++ const Operation erase{OperationId{ObjectId::fromUint64(40)},document,1,1,payload};
++ auto prepared=engine.prepareErase(erase,stagedStore,stagedLedger,generation,clock);ASSERT_TRUE(prepared);
++ const auto initial=prepared->progress();ASSERT_TRUE(prepared->advance(1,0));EXPECT_EQ(prepared->progress(),initial);
++ ASSERT_TRUE(prepared->advance(0,8000));EXPECT_EQ(prepared->progress(),initial);
++ unsigned targetProgress=0,finalProgress=0;
++ while(!prepared->ready()){
++  const auto before=prepared->progress();ASSERT_TRUE(prepared->advance(1,8000));const auto after=prepared->progress();
++  EXPECT_NE(before,after);EXPECT_LE(after.target-before.target,1U);targetProgress+=after.target>before.target;finalProgress+=after.finalPhase>before.finalPhase;
++  for(const auto& item:payload.items)EXPECT_TRUE(stagedStore.find(item.object_id)->erase_masks.empty());
++  EXPECT_EQ(generation.current().value(),3U);
++ }
++ EXPECT_EQ(targetProgress,3U);EXPECT_GE(finalProgress,2U);EXPECT_TRUE(prepared->progress().complete);
++ EXPECT_EQ(std::vector<std::uint8_t>(prepared->encoded().begin(),prepared->encoded().end()),SemanticCodec::encodeProtobufOperation(erase).bytes);
++ ASSERT_EQ(engine.apply(erase,ApplySource::kLocalInteraction,referenceStore,referenceLedger,referenceGeneration,referenceClock).disposition,ApplyDisposition::kApplied);
++ ASSERT_EQ(engine.commitErase(*prepared,ApplySource::kLocalInteraction,generation,clock).disposition,ApplyDisposition::kApplied);
++ for(const auto& item:payload.items)EXPECT_EQ(*stagedStore.find(item.object_id),*referenceStore.find(item.object_id));
++ EXPECT_EQ(generation.current(),referenceGeneration.current());EXPECT_EQ(clock.lastCommittedOrdinal(),referenceClock.lastCommittedOrdinal());
++ EXPECT_EQ(engine.commitErase(*prepared,ApplySource::kLocalInteraction,generation,clock).disposition,ApplyDisposition::kRejected);
++}
+ TEST(CpuErasePreparation, StagesTargetsWithoutPublishingAndRejectsChangedBasis){
+  IndexedObjectStore objects;AppliedOperationLedger ledger;SemanticGenerationState generation;CanonicalCommitClock clock{RuntimeEpoch{1}};OperationEngine engine;
+  ObjectRecord object;object.id=ObjectId::fromUint64(7);object.kind=ObjectKind::kVectorStroke;object.kind_version=3;object.placement.order_key=OrderKey{{128}};CompactStrokeContent compact;compact.stroke.config=canvas::foundation::InkBrushConfig{};compact.stroke.knots={{1,1,32768},{4,4,32768}};object.content=compact;

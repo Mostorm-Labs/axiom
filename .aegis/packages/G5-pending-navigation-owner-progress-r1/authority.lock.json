@@ -1,0 +1,56 @@
+{
+  "status": "CURRENT_HUMAN_AUTHORIZED_TWO_SCOPED_DEFECTS",
+  "human_request": "开始做1、2吧: 1统一擦除待提交时相机变化反馈, 2修正提交准备进度判断。保持本会话设计/独审，配对coding会话实现。",
+  "sources": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    }
+  ],
+  "diagnostic_evidence": [
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/report.md",
+      "sha256": "a32bccf9774e24f71a5cccc938af720e50a2f6e691a3950397b112e597ae1787"
+    },
+    {
+      "path": "out/G5-small-zoom-diagnostic-20261113/diagnosis.json",
+      "sha256": "60c57e4d3e8bae59a419cc9912a8afb0840edc7fe393628935ca8466527dd14e"
+    }
+  ],
+  "existing_accepted_work": {
+    "path": ".aegis/results/G5-settled-zoom-start-rect-control-r2/control-review.json",
+    "sha256": "eee849d231725199fc52b5aea51d1ea8d207dc0a19b4f38af373df9e7af58ad4"
+  },
+  "invariants": [
+    "CanvasEditingRuntime owns viewport/transient dirty/pending intents; Composition decides frame route; no platform workaround",
+    "OperationEngine owns full atomic canonical mutation; History/Scene/publication maintain existing order and exact payloads",
+    "One current pending owner allowance of8000us across productive steps; no pertargetfresh8ms or spin onWorker/resource wait",
+    "No earlypreviewclear/falseCanonicalVisible/falsecanonicalreceipt/staleScene orhead identity reuse",
+    "Human permits existing AAedge differences; geometry/pressure/masks/alpha/zorder unchanged",
+    "Use accepted lockedSemantic/Skia SDK, no dependency/version/SDKconsumercontract changes"
+  ],
+  "current_starting_source": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "f20edaa197630f0924e59b9bfde5b23e1a2bff20461a098def500179eb21cbde",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "f57abb57ba4e9acb6f8fc4514a1cc4aa92a4667efd4dc0d401a5acbb99c0cff5",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "f5d9bb0273a8bceb943b1ffc9f67ee35898261ccd696115af8d9c78b9d4890ca",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "e4d5641fc89f65b845d94099faefe11ca404fb490d6b229327b9080ecf0da85b",
+    "runtime/interaction/src/pending_scene_preparation.hpp": "0804695991aa1006291e3df3d971bf14e767359047f0dc500adc96da030fa67f",
+    "runtime/semantic/src/operation_engine.cpp": "a58666ea636389f31efee0604999b70254a707e01c97ca61ac116d9c44289bad",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": "019c3ff3dd7402ded20b945ca9393fcf1eb51a585040ebc9becfaba5649806cb",
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee",
+    "runtime/composition/tests/cpu_pending_runtime_test.cpp": "31b5f161bf1512939df3e97f0aa8b81096883f5169f76b688c5c48cf6af8ac03",
+    "runtime/composition/tests/navigation_presentation_test.cpp": "bf487a5ffd60f1394cc8098152b421b53943ebb62674feedb5c10f5c601c7170",
+    "runtime/semantic/tests/cpu_erase_preparation_test.cpp": "7eb027b0041ed931c8744b109465309a9fdb81e9c6ba593f2dec68275b921145",
+    "runtime/composition/CMakeLists.txt": "8d0ff08691edc3674c8e2e0c199f7958b3090657376b4d86482dbfc9bea20800",
+    "runtime/semantic/CMakeLists.txt": "8b04ac32b48915015f66410ca900bb800ea41bed58e5cb5112280bb5df115718"
+  },
+  "scope_note": "This package implements only steps1/2, not long canonical render tail or broadUR3/UR4/thread expansion. HistoricalAGENTSversiontext overridden by latesthumanSemVer+Build policy; noversionchange."
+}

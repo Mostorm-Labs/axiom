@@ -1,0 +1,96 @@
+{
+  "schema": "axiom-pending-navigation-held-worker-r2-result-v1",
+  "task_id": "G5-pending-navigation-held-worker-proof-r2",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_FINDINGS",
+  "package": {
+    "path": ".aegis/packages/G5-pending-navigation-held-worker-proof-r2/package.json",
+    "sha256": "0b28a15099736000e60e1c82354d8eb07f4b7680e2d65f5a32b63292d7f011ef"
+  },
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "376f263034000668b9b701c301d62d66a633e886",
+  "parent_result": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/result.json",
+    "sha256": "d087e0c5b407a4c71f3156ebc22b94d47f0c918ed5a478249a069c73ab5dc4d5"
+  },
+  "IO_result": {
+    "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/result.json",
+    "sha256": "55b8c5d0ee44a366229e57ae79207347489b812712c1d14e6a5aa4cff3ca95e0"
+  },
+  "prior_failed_qualification": {
+    "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/result.json",
+    "sha256": "934b8492e0b4b17b26b03151089a5125a320dc1a34d886a30bdbf9e59aa10639"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/preflight.json",
+      "sha256": "806587e9dcecb1540f40fe845c481352a71d885f6a0aee79e3cb09b1712aa67f"
+    },
+    "driver-freeze.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/driver-freeze.json",
+      "sha256": "15ee955c7746d78584b0ffd7041e729e0f504d4fa6f87dc428cf4f0e2d187a41"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/sampling-ledger.json",
+      "sha256": "5b3b9bc5a4a7bdb305333e9a7aec1225ca419dc2a13c42fa9258e1f1329f39ca"
+    },
+    "pixel-custody-semantic-audit.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/pixel-custody-semantic-audit.json",
+      "sha256": "49be1981ff17c1a424e65e854b7eb0e5eac052098143b1e2d31576a5009c94e1"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/preservation-check.json",
+      "sha256": "e6504817f00edeb34e5a36f8a6262a06e0ca3fd92a7431618531100481f6c466"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/cleanup.json",
+      "sha256": "8ea96802ddb1150176edb0f980dea960c695f168960fb9a9f3905783b5f4f0f8"
+    },
+    "demo-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/demo-manifest.json",
+      "sha256": "7404b497b1566ce9e34d50cae76d27db7c998b2db590a74510b24fb3c897eff6"
+    },
+    "combined-completion.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/combined-completion.json",
+      "sha256": "c07db0b5e9a0ec6dbcf57bb1a11929a9d08d3abea74650b440c6f9c38eb29efb"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/artifact-manifest.json",
+      "sha256": "dbdea4dde8e6501a96a351da001dd690f4b2263803f9328acb6f7c7a71f5c360"
+    }
+  },
+  "HW1": "ActualWASMReadyterminal268bytes key/status/SHA0d991951812ef74171384b154cf37c60ad1ebb1f5163e11fb610fc580993c559 held andreleasedexactlyonce unchanged; singlecanonicalAddEraseMasks3targets, generation0->1, matchedpriorgeometry.",
+  "HW2": "WhileWaitingWorker/pending1/generation0/0operations rootzoom changed70647channels in900x600ROI, exactsamecameraPancontrol0mismatch; alltargetidentity/readbackstate restored.",
+  "HW3": "OriginalPN1/2/3/4jointproofcomplete withfindings; unchangedproduction9 andcandidate42, oldfailurestatuses/ledgersretained.",
+  "tests": "Offline3actualpredicate/sourceguards+2existingrealgatecustodytests passed; no newnative/broadtest/SDKbuild; parent31native/7Node/120boundaries andIOproofreused.",
+  "sampling": {
+    "IAB_pages": 1,
+    "Chrome": 0,
+    "ordinarytiming": false,
+    "active_ms": 935.5999999046326,
+    "active_cap_seconds": 90,
+    "conservative_server_lifecycle_seconds": 115,
+    "server_cap_seconds": 180,
+    "prior_seconds": [
+      167,
+      118,
+      130
+    ],
+    "r1overrun130unchanged": true
+  },
+  "cleanup": "Actualpendingdrained/canonicalvisiblebeforeSDKclosetrue; Worker/navrestored, ownpage/serverclosed, viewportreset. Demo4336onlyserverretained.",
+  "demoURL": "http://127.0.0.1:4336/example.html",
+  "demoPID": 56707,
+  "HTTP_assets_exact": 42,
+  "findings": [
+    "Ordinaryzoom/panfirstGLproxy~25->55ms slower despiteerasecallback~205->39ms; no overallperformancePASS",
+    "Controlledrealterminaldelay test verifiespendingcamera branch, not ordinaryphysicalinputlatency orfirstphoton",
+    "ROIproof combinedwithnativewholeframe; no allscene/longidle/longtailclosure",
+    "PriorfailedharnessaggregateIO/r1predicateand130sdeadlineoverrun remainhistoricalresults, notrewritten"
+  ],
+  "source_SDK_drift": 0,
+  "commit_push": false,
+  "overall_G5_P34_performance_PASS": false,
+  "return_surface": "CONTROL_REVIEW",
+  "callback_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "stop": "Scopedclosurecomplete; no furtherworkuntilhuman/controlnewinstruction"
+}

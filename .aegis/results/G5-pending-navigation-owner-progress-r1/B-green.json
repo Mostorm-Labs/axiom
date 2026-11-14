@@ -1,0 +1,61 @@
+{
+  "cases": {
+    "cpu-pending-progresspublication": {
+      "actual_requests": 1,
+      "complete": true,
+      "mode": "progresspublication",
+      "owner_ns": 45042,
+      "pending": 0,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 3,
+      "useful_multiple_internal_stages": true
+    },
+    "cpu-pending-progressstamp": {
+      "actual_requests": 1,
+      "complete": true,
+      "mode": "progressstamp",
+      "owner_ns": 190458,
+      "pending": 0,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 1,
+      "useful_multiple_internal_stages": true
+    },
+    "cpu-pending-progressunavailable": {
+      "canonical_unchanged": true,
+      "mode": "progressunavailable",
+      "no_preparation_steps": true
+    },
+    "cpu-pending-progresshistory": {
+      "actual_requests": 1,
+      "complete": true,
+      "mode": "progresshistory",
+      "owner_ns": 51708,
+      "pending": 0,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 3,
+      "useful_multiple_internal_stages": true
+    },
+    "cpu-pending-progresswait": {
+      "actual_request": 2048,
+      "canonical_unchanged": true,
+      "mode": "progresswait",
+      "steps_per_turn": 1,
+      "turns": 4
+    },
+    "cpu-pending-progresstarget": {
+      "actual_requests": 1,
+      "complete": true,
+      "mode": "progresstarget",
+      "owner_ns": 611209,
+      "pending": 0,
+      "prior_stages": 11,
+      "ready_before": false,
+      "stamp_before": 0,
+      "useful_multiple_internal_stages": true
+    }
+  },
+  "actual_owner_and_engine": true
+}

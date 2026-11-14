@@ -1,0 +1,34 @@
+{
+  "same_snapshot": {
+    "path": "out/G5-pending-navigation-owner-progress-r1/small-fixture.json.axsnap",
+    "sha256": "95d10c7efd1ff64cae8ace863e96d134ea9cbc67ffd1156ca33118cf90d1d60b",
+    "bytes": 15214
+  },
+  "root_inputs": "3restored256knot v4 actualconfig, erase24moves x430150->534;20ms natural activeframe, UpsameDOMtask zoom/pan; nextdraw selectiononlymicrotask no stabilitywait",
+  "performance": "ordinarynoGPUreadbacks; existingprivatecpuPendingcalls passivelyobserved, no extracommands. Onepixelphase3fullopportunities separateIABdocs",
+  "not_claimed": "firstGLphysicalphoton, absolute8msOSdeadline, globaltailSLO",
+  "driver_source": {
+    "verification/runners/g5/pending_navigation_progress_consumer.mjs": "9ee42cfdd869f79368239a88b76490721fcdb1fc672a58581b289a0963065c66",
+    "verification/runners/g5/pending_navigation_progress_iab.mjs": "68ccd3de15dd0ea024d7e37ed43005750a5574ce568c29477e05f41e2f1452d9",
+    "verification/runners/g5/pending_navigation_progress_iab_server.mjs": "dc951ed43e86c36ab72c34c68e11bd75e53014e91e68a11b7b093738aa6a0557",
+    "verification/runners/g5/pending_navigation_progress_observer.mjs": "7f998902aa8d4d23e34a891abefa4b70eba253fc3d19b3dac0f81c5c9d5ab68d",
+    "verification/runners/g5/pending_navigation_progress_runner.py": "84b51ffb0d3ef0dc08fa60b5d273e23b86aa28eb0d4807d6b414f0dc9b8489d7",
+    "verification/runners/g5/pending_navigation_progress_web.mjs": "dfd974866e0eaa1b09ee4ce97e2a6d9f8db6f7c81ef130327794d47934941405"
+  },
+  "SDK_manifest_refs": [
+    "baseline-SDK-manifest.json",
+    "candidate-SDK-manifest.json"
+  ],
+  "source": {
+    "runtime/composition/CMakeLists.txt": "cb506b630f28e937a6d77bb1195d929de49d792645877dc2edde4812e473ffb2",
+    "runtime/composition/tests/cpu_pending_runtime_test.cpp": "685a04dab46b91109ed665d35f2b00baeb33a95b29da576190498c6f0ea02c48",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "2701e0757a9eb1a8950368d776f7723f783753c4af46974574c7a0cae11adcab",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "c0af3e82b26d65289a504bb870cbe390f8960a8d3fd914c1596c738c217e85db",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "aa02b6de5310d5a9786875be7219015a530855fd714c72c3739d05e56365cb11",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "0af3dac83bbbbb147df488a525e4c88e49a6bb73e4841731459903494471c041",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": "2ffb9fbb3905953a3b1caedcbbcfd5af3b15efbf79d7262d3444586cccbe6fa3",
+    "runtime/semantic/src/operation_engine.cpp": "a7ec30a8cd4606089eb8d8485650f9503b98c08d53a35087855cd207416470de",
+    "runtime/semantic/tests/cpu_erase_preparation_test.cpp": "d631a2ece6f13158343d4dd5576a4e95b17d61a40bf487739dd7303aca066dec"
+  },
+  "nextdraw": "awaitselectTool onlyasynchronousadmission, no stabilitywait; actual Up->Down measured, notsameDOMtask; pixelPreviewtarget+visibility+move8/16 recorded."
+}

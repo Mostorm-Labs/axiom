@@ -1,0 +1,35 @@
+{
+  "status": "CONTROL_AUTHORIZED_EVIDENCE_ONLY_IO_DEFECT_REPAIR",
+  "human_request": "Complete user-authorized plansteps1/2. Do not leave verifiedproductionfix asunfinished solelydue to test-harnessstorageomission.",
+  "parent_package": {
+    "path": ".aegis/packages/G5-pending-navigation-owner-progress-r1/package.json",
+    "sha256": "04f70758820c580d813324adf9d188eec665da1ae2ae45f49a34e9dcafa8e3e7"
+  },
+  "classification": "P31_EVIDENCE_IO_OMISSION; parentfrozenblockingPN4 storage structurallyfails at9throw. This successor freezes boundedmissingproof only, not newimplementationorperformance matrix.",
+  "cause": "Node MAX_STRING_LENGTH536870888;8rows421102604bytes,next>=627103653; aggregateJSON.stringifythrows, handler404, callerfetchdidnotcheckoksoUICOMPLETEfalse. Actualreportedbyimplementation; requiredurablecausefacts.",
+  "preserve": [
+    "Parentordinary12Chrome+6IABandA/Bactualnativeproofs remainvalid",
+    "Parent8durablerows/167scharged/pagesallpreserved; missing4notclaimedcompleted",
+    "No historicalresult rewritten; newresult clearlysupplementsparent",
+    "SameexistingAApermission/correctcurrentcamera/atomicorder"
+  ],
+  "production_frozen": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "c0af3e82b26d65289a504bb870cbe390f8960a8d3fd914c1596c738c217e85db",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "2701e0757a9eb1a8950368d776f7723f783753c4af46974574c7a0cae11adcab",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "aa02b6de5310d5a9786875be7219015a530855fd714c72c3739d05e56365cb11",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "0af3dac83bbbbb147df488a525e4c88e49a6bb73e4841731459903494471c041",
+    "runtime/semantic/src/operation_engine.cpp": "a7ec30a8cd4606089eb8d8485650f9503b98c08d53a35087855cd207416470de",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": "2ffb9fbb3905953a3b1caedcbbcfd5af3b15efbf79d7262d3444586cccbe6fa3",
+    "runtime/render/src/skia_navigation_tiles.cpp": "ca6269c5d9d53ee000608638ce3740c3aa6250117c312262d19585f0ca850e1d",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee"
+  },
+  "candidateSDK": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/candidate-SDK-manifest.json",
+    "sha256": "29b97bf7f6ea23b8299a228df7870a547e12fb0e09afc85936a7c8ba9df4655e"
+  },
+  "baselineSDK": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/baseline-SDK-manifest.json",
+    "sha256": "7be15c0b6da9e1b85b3047cb8641b963896c193f8ec2aabe9ece5ee4391578c8"
+  }
+}

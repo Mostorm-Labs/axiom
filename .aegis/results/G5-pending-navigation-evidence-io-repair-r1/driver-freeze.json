@@ -1,0 +1,27 @@
+{
+  "request": {
+    "path": "out/G5-pending-navigation-evidence-io-repair-r1/requests/PNIO-IAB.json",
+    "sha256": "a32ee7c49739185c8a0207788df5ffc21af018a96873f0a19ed9c155807b380d"
+  },
+  "newtools": {
+    "verification/runners/g5/pending_navigation_evidence_io_client.mjs": "822910d934bcfea3d1484416b4d51a577e62e27dd1a5e9752cc89c79c0292a6c",
+    "verification/runners/g5/pending_navigation_evidence_io_page.mjs": "4cb96a7e11f0378863c392b3a8be1226dd0479e98cf6e16a8b5c9b5f7cb64045",
+    "verification/runners/g5/pending_navigation_evidence_io_server.mjs": "f63475d4c30d664245d5b32fd045e508197d1653f532fa6322abbc6210e25916",
+    "verification/runners/g5/pending_navigation_evidence_io_store.mjs": "7fb0e6d46ec6478089fd604eb9886ff1d2afc9a39fc73b7251599f7412518059"
+  },
+  "test": {
+    "path": "verification/tests/g5_pending_navigation_evidence_io.test.mjs",
+    "sha256": "8c7de9b9850e3e85a35d4030b2028a65ea2229b71c1f62b8c7422ce8056ad026"
+  },
+  "parentref": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/result.json",
+    "sha256": "d087e0c5b407a4c71f3156ebc22b94d47f0c918ed5a478249a069c73ab5dc4d5"
+  },
+  "IO1": {
+    "actual_old_rangeerror": "parentoffline-io-reproduction.json reference retained",
+    "actual_HTTP500_negative": "out/G5-pending-navigation-evidence-io-repair-r1/old-HTTP-failure-red.json",
+    "newtests": 4,
+    "status": "passed",
+    "initial_missingmodules_test_not_actualRED": true
+  }
+}

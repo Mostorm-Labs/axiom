@@ -1,0 +1,21 @@
+{
+  "request": {
+    "path": "out/G5-pending-navigation-held-worker-proof-r2/requests/PNHW2-IAB.json",
+    "sha256": "7d8511db14f7c5e58a9b86e2407dd0f9c31dc5fc7687f91384db71239cfeda8c"
+  },
+  "tools": {
+    "verification/runners/g5/pending_navigation_held_worker_r2_consumer.mjs": "39e25cab3a15133bee20746448faee2f72fc9e267ff45794eb904c44293202d2",
+    "verification/runners/g5/pending_navigation_held_worker_r2_page.mjs": "3df0850b26076468a369713a162457a9892768678662ae9842171e13ec29ad3c",
+    "verification/runners/g5/pending_navigation_held_worker_r2_predicate.mjs": "8805cdc151034445d663a69c21e93c36cbc472694b75c0fa3e1385b043d4751c",
+    "verification/runners/g5/pending_navigation_held_worker_r2_server.mjs": "c4a4f7193f14207157659d5ce86c83840791eb11222694580408df07cd9fc5b1"
+  },
+  "gate": {
+    "path": "verification/runners/g5/pending_navigation_held_worker_gate.mjs",
+    "sha256": "b34e4e83b6b9e41aed78b3df0e0968ea33b1c50a13340623de283f6c18125f65"
+  },
+  "offline_tests": {
+    "path": "out/G5-pending-navigation-held-worker-proof-r2/offline-tests.log",
+    "sha256": "032a9232057d73cc8d0328ebd5c5856fd6afd561f60b7c1b44c7b1648e5fbaeb"
+  },
+  "source_confirmation": "Actualmoduleimport tests3 r1bug/fixedretrytrue/nocontent andconsumerusesimport/drainsbeforeclose; gatecustody2 tests passed. NoRetryFalsepattern inr2consumer."
+}

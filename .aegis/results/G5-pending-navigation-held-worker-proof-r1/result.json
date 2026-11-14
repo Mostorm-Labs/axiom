@@ -1,0 +1,84 @@
+{
+  "schema": "axiom-pending-navigation-held-worker-result-v1",
+  "task_id": "G5-pending-navigation-held-worker-proof-r1",
+  "status": "BLOCKED_EVIDENCE",
+  "terminal_class": "ORACLE_INAPPLICABLE",
+  "root_classification": "VERIFICATION_TEST_IMPLEMENTATION_DEFECT",
+  "package": {
+    "path": ".aegis/packages/G5-pending-navigation-held-worker-proof-r1/package.json",
+    "sha256": "0733349d65480805c2e40a0a07d81081f40ccd156177522c667708fc156c2082"
+  },
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "376f263034000668b9b701c301d62d66a633e886",
+  "parent_result": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/result.json",
+    "sha256": "d087e0c5b407a4c71f3156ebc22b94d47f0c918ed5a478249a069c73ab5dc4d5"
+  },
+  "IO_result": {
+    "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/result.json",
+    "sha256": "55b8c5d0ee44a366229e57ae79207347489b812712c1d14e6a5aa4cff3ca95e0"
+  },
+  "obligations": {
+    "HW1": "PARTIAL realReady268byteskey/hashheld andcleanupreleasedonce, actualWaitingWorker1/generation0 proved; no finalatomicterminalproof",
+    "HW2": "UNMET0pixels zoomneverreached: badretryfalsepredicate; no productfailureinferred",
+    "HW3": "UNMET requiredWebpendingcamera branchstillmissing, no4336; validA/Bnativeordinary/IOevidence retained"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/preflight.json",
+      "sha256": "e0f0983e710d68e249ac18ab11f2cabf0e2b9734d762f5216a845a38890efa02"
+    },
+    "driver-freeze.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/driver-freeze.json",
+      "sha256": "11c8bfaa5589eb2a97a7d92fa27726c44649f294e7828ebb3b76766617239dcb"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/sampling-ledger.json",
+      "sha256": "93f15f631ebd04191f5855ad0f69a4c21dbf6af04a112da8677fc20812a99aae"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/source-manifest.json",
+      "sha256": "c584e4054d902017c50bed128147b849dce94bb6280a39e8b35c6e959a5b8485"
+    },
+    "failure-analysis.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/failure-analysis.json",
+      "sha256": "a2ee67f772c19b048117d16f5b130590665d71691f55091338539a515e021307"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/preservation-check.json",
+      "sha256": "1a593e4f794ee8165f4146579e1778e82a8ba06f6d56e97fb75891791eca2203"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/cleanup.json",
+      "sha256": "f6cd25506581eb8c8f80a685d45309b9fea81f81e43192c632ca022f8fc51904"
+    },
+    "combined-completion.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/combined-completion.json",
+      "sha256": "9de8746d793bb77568017ba60523a9d85d198f02154db5441ca9421a89603b62"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/artifact-manifest.json",
+      "sha256": "8dc26a4680e0f55caa640fd1c629a772f73a08eaff6f928cc55d8030a13d5f47"
+    }
+  },
+  "source_SDK_drift": 0,
+  "sampling": {
+    "IAB": 1,
+    "Chrome": 0,
+    "charged_seconds": 130,
+    "frozen_cap_seconds": 90,
+    "deadline_breach": true,
+    "prior167and118unchanged": true,
+    "cumulative_conservative_seconds": 415,
+    "no_second_page_or_retry": true
+  },
+  "executor_responsibility": "RecognizedSDKretrytrue semantics butfailedtoassertstringreplacement; sourcepredicate notfixedbeforelaunch. Missingqualifyingpredicate guard. Exactsourceandfailedfactsretained.",
+  "production_status": "A/Bimplementedandnativeverified, no productrollbackornewchanges. NotfullyqualifiedagainstoriginalPN4.",
+  "demoURL": null,
+  "existing_demo_4335_preserved": true,
+  "commit_push": false,
+  "overall_G5_P34_performance_PASS": false,
+  "return_surface": "CONTROL_REVIEW",
+  "callback_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "stop": "Controlexplicitstop, no newpage/build/repairpackage/commit/push"
+}

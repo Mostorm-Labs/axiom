@@ -201,6 +201,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void suspendCpuPendingExecutor()noexcept;
 
  private:
+  [[nodiscard]] bool invalidateViewportChange(std::uint64_t previousGeneration) noexcept;
   friend class canvas::runtime::CanvasRuntimeFacade;
   friend class canvas::runtime::MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)

@@ -1,0 +1,13 @@
+# Pending navigation and owner progress repair
+
+User explicitly authorized only plan steps1/2. Worktree /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom; codex/g5-cpu-worker@376f263034000668b9b701c301d62d66a633e886, source clean.4335exactmatchingSDK is currentknownbaseline, preserveuserpage/assets.
+
+A: applyViewportNavigation marks transientOverlayDirty_ ifpartialEraseFeedbackActive(), setViewportZoomAt doesnot. fitViewportToContent directlysetCamera also omits commonpreviewdisplay/roster/navigation invalidation. Composition prioritizes pending transient: editingTransienttrue skipsnormalnavigation; cleantransientnotredrawn. ExtendexistingCanvasEditingRuntime cameraowner, e.g.smallprivate commonaftercamera helper, no shellfix. Preserveproper camera-generation/noop/previewroster andsuccessfailure semantics.
+
+B: serviceCpuPendingErases one8msloop compares onlyserial/job/phase/next/reuseScan. InsideCommitPreparing, PreparedEraseOperation cursor/finalPhase/ready andSceneStampJobmask/primitive/header/target thenHistory/publication canadvancebutouterunchangedendsownerturn. NeedactualO1privateprogress outcome, notcopyhashwholepayload, fakeincrementorunboundedspin. preparedErase.advance currentlyreceivesfresh8000; passoriginalremainingallowance perstep, Scenealreadyremaining. Preserveoneexistingtime/iterationceiling andatomiccommit. localnoneraseheadpathisnotnewoptimizationtarget.
+
+Actualtestsalreadyexist in composition/tests/cpu_pending_runtime_test.cpp with realprotocolkernel/engine and qualificationowneraccess. Existingfixed40initial.axsnap5.47MB is present. Semantictestsforstaging/stalebasis/encodedwire exist; somehistoricalbinarytestGTEST_SKIPisnot newfailure orproof. AddprecisefailingtestsforA/B beforeproduction, thenrunexistingordered/failure/context/stamp/postpublishfault. FaultinjectiontimingmayhaveassumedoneRAFperstage; retainactualfaultcoverage atsamephase.
+
+RootSDKordinarybaseline from out/G5-settled-zoom-start-rect-repair-r2/candidate-install/js is376matching4335; freezebeforecandidateincrementalbuild. Buildnativeexisting out/G5-CPUW-checkpoint-20261113/build-native; buildwebout/G5-postworker-render-reuse-r1/build-web usinglockedprebuilts. Newcandidateinstall innewout; timingOFF/UR0OFF/privateWorkerON/DESKTOP/local0.4.3.0. New4336 onlyafterbothscopedproofs. Old4335/4334 untouched.
+
+Use2Chromeoppositebaseline/candidatelanes +oneIABisolatedpage; realUp->zoom sameDOMtask withoutsettle; reportactualpendingratherthanassume. No7200longtail/20minidle/snapshotUI/newframework. ReturnexactA/Bresultsandmetrics/limitswithcallbackcontrol, no commit/push.

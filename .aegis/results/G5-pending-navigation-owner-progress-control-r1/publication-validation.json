@@ -1,0 +1,103 @@
+{
+  "schema": "axiom-pending-navigation-publication-validation-v1",
+  "created_utc": "2026-11-13T23:59:45.498387+00:00",
+  "branch": "codex/g5-cpu-worker",
+  "parent_HEAD": "376f263034000668b9b701c301d62d66a633e886",
+  "scope": "Publish completed pending-erase viewport invalidation and owner preparation progress fixes with source, focused tests, verification drivers, compact scoped evidence and independent control review.",
+  "review_verdict": "ACCEPT_SCOPED_CAMERA_AND_PREPARATION_PROGRESS_FIXES_WITH_FINDINGS",
+  "fresh_verification": {
+    "native_CTest": {
+      "passed": 31,
+      "failed": 0,
+      "elapsed_seconds": 41.3
+    },
+    "Node": {
+      "passed": 16,
+      "failed": 0
+    },
+    "runtime_boundary_contracts": 120,
+    "git_diff_check": "PASS",
+    "logs": {
+      "publication-native-tests.log": {
+        "path": ".aegis/results/G5-pending-navigation-owner-progress-control-r1/publication-native-tests.log",
+        "sha256": "4f44b8a94202e6db4bd5f8eeb8df4c54ff2524b0e7d65be48a62818adcc62cac"
+      },
+      "publication-node-tests.log": {
+        "path": ".aegis/results/G5-pending-navigation-owner-progress-control-r1/publication-node-tests.log",
+        "sha256": "e9be693b42686c2c9ad3ba75ed7fe0b0073e3a3324a9f6a30b28cc81c386e710"
+      },
+      "publication-boundary-check.log": {
+        "path": ".aegis/results/G5-pending-navigation-owner-progress-control-r1/publication-boundary-check.log",
+        "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+      }
+    },
+    "staged_diff_check": {
+      "source_tools_docs_and_other_evidence": "PASS",
+      "preserved_patch_context_exception": {
+        "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/source-delta.patch",
+        "lines": [
+          184,
+          244,
+          269,
+          321
+        ],
+        "reason": "Exact single-space unified-diff context markers for existing blank lines; not source trailing whitespace. Frozen historical patch retained byte-for-byte."
+      }
+    }
+  },
+  "frozen_source_hashes_verified": 23,
+  "preserved_result_records": [
+    {
+      "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/result.json",
+      "sha256": "d087e0c5b407a4c71f3156ebc22b94d47f0c918ed5a478249a069c73ab5dc4d5",
+      "status": "BLOCKED_EVIDENCE"
+    },
+    {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/result.json",
+      "sha256": "55b8c5d0ee44a366229e57ae79207347489b812712c1d14e6a5aa4cff3ca95e0",
+      "status": "BLOCKED_EVIDENCE"
+    },
+    {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r1/result.json",
+      "sha256": "934b8492e0b4b17b26b03151089a5125a320dc1a34d886a30bdbf9e59aa10639",
+      "status": "BLOCKED_EVIDENCE"
+    },
+    {
+      "path": ".aegis/results/G5-pending-navigation-held-worker-proof-r2/result.json",
+      "sha256": "d5585ac1d02a9d8dc819164b617679d732920764e5453cfbdc16c9dfa8cb5939",
+      "status": "READY_FOR_CONTROL_REVIEW_WITH_FINDINGS"
+    }
+  ],
+  "evidence_status": "Combined control review accepts scoped fixes. Historical parent IO and first held-worker harness failures remain unchanged; final IO/r2 supplements supply missing proof. No new browser sampling for publication.",
+  "observations": {
+    "Chrome_zoom_median_Up_to_operation_callback_ms": [
+      205.15,
+      39.1
+    ],
+    "Chrome_pan_median_Up_to_operation_callback_ms": [
+      211.9,
+      51.2
+    ],
+    "Chrome_zoom_median_first_content_GL_proxy_ms": [
+      25.05,
+      54.6
+    ],
+    "Chrome_pan_median_first_content_GL_proxy_ms": [
+      27.95,
+      50.55
+    ],
+    "first_GL_proxy_is_not_correct_camera_or_physical_present": true
+  },
+  "limitations": [
+    "No overall G5/P34 or release completion claim.",
+    "No current large-scene or long-idle closure; old heavy post-Worker timings must be re-established on current source."
+  ],
+  "next_recommendation": [
+    "Attribute first correct navigation feedback across pending-to-committed Scene/presentation handoff; check repeated transient/canonical preparation. Current composition ordering is a hypothesis, not an established cause.",
+    "Re-establish the fixed heavy long-erase baseline on this commit and attribute Worker return, owner commit, Scene preparation and canonical convergence before selecting another optimization.",
+    "Then close continuous interaction and idle recovery gaps; no new Worker, budget or platform expansion yet."
+  ],
+  "publication_selection": "Explicit per-file pathspec only; excludes unrelated historical evidence and build/media/raw binary artifacts.",
+  "demo_preserved": "http://127.0.0.1:4336/example.html",
+  "next_implementation_started": false
+}

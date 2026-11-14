@@ -1,0 +1,40 @@
+{
+  "PackageBindingPreflight": "CLEAR",
+  "EvidenceContractPreflight": "CLEAR",
+  "package_sha256": "04f70758820c580d813324adf9d188eec665da1ae2ae45f49a34e9dcafa8e3e7",
+  "HEAD": "376f263034000668b9b701c301d62d66a633e886",
+  "branch": "codex/g5-cpu-worker",
+  "position": "ANCHOR_DESCENDANT_WITHOUT_CURSOR/exactanchor; zeroimplementationcompleted",
+  "refs": {
+    "authority.lock.json": "d15afe7d106a2dcadac4a0c3addb4fdafb2a62afc7639fa5bbc9e009429a7c3c",
+    "verification.lock.json": "370b2719574f3f278dbce84cac5a3e61d9a43f60ce4120d950bc237bf322240a",
+    "execution-contract.json": "3ed54ed35cde00d933a344619859a3a8dd12e8616e301041d55c544cabf324b3",
+    "implementation-context.md": "a7b535c4b0bfd3944c0f9dbf3be27e9ed3df6154b0ac82a4ddb75cfc1a1d9cd8",
+    "evidence-contract.json": "593c1642e374259516027871add1578757113a9ec560ad11a206b95086f0c4d6",
+    "workload.json": "28bb19debd9fa4e7772cdc30fd7bd72e7287d1e87320f370ebe501582e8fe0b8"
+  },
+  "preserved_preimages": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "f20edaa197630f0924e59b9bfde5b23e1a2bff20461a098def500179eb21cbde",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "f57abb57ba4e9acb6f8fc4514a1cc4aa92a4667efd4dc0d401a5acbb99c0cff5",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "f5d9bb0273a8bceb943b1ffc9f67ee35898261ccd696115af8d9c78b9d4890ca",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "e4d5641fc89f65b845d94099faefe11ca404fb490d6b229327b9080ecf0da85b",
+    "runtime/interaction/src/pending_scene_preparation.hpp": "0804695991aa1006291e3df3d971bf14e767359047f0dc500adc96da030fa67f",
+    "runtime/semantic/src/operation_engine.cpp": "a58666ea636389f31efee0604999b70254a707e01c97ca61ac116d9c44289bad",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": "019c3ff3dd7402ded20b945ca9393fcf1eb51a585040ebc9becfaba5649806cb",
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee",
+    "runtime/composition/tests/cpu_pending_runtime_test.cpp": "31b5f161bf1512939df3e97f0aa8b81096883f5169f76b688c5c48cf6af8ac03",
+    "runtime/composition/tests/navigation_presentation_test.cpp": "bf487a5ffd60f1394cc8098152b421b53943ebb62674feedb5c10f5c601c7170",
+    "runtime/semantic/tests/cpu_erase_preparation_test.cpp": "7eb027b0041ed931c8744b109465309a9fdb81e9c6ba593f2dec68275b921145",
+    "runtime/composition/CMakeLists.txt": "8d0ff08691edc3674c8e2e0c199f7958b3090657376b4d86482dbfc9bea20800",
+    "runtime/semantic/CMakeLists.txt": "8b04ac32b48915015f66410ca900bb800ea41bed58e5cb5112280bb5df115718"
+  },
+  "baselineSDK_assets": 42,
+  "fixture_refs": [
+    {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+    }
+  ],
+  "index_empty": true,
+  "unix": 1794588667.023844
+}

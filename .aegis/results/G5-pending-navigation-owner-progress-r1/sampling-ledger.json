@@ -1,0 +1,93 @@
+{
+  "maxChrome": 2,
+  "maxIABpages": 1,
+  "maxSeconds": 480,
+  "charged_seconds": 167,
+  "Chrome": [
+    {
+      "id": "PN-CHROME-1",
+      "status": "COMPLETED",
+      "unix": 1794590074.031832,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/pending_navigation_progress_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-pending-navigation-owner-progress-r1/requests/PN-CHROME-1.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-pending-navigation-owner-progress-r1/web/PN-CHROME-1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 8.185739208000001,
+        "peak_process_family_rss_kib": 1254224,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 160,
+        "last_stage": {
+          "stage": "case-done",
+          "lane": "candidate",
+          "action": "nextdraw",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 9
+    },
+    {
+      "id": "PN-CHROME-2",
+      "status": "COMPLETED",
+      "unix": 1794590109.085526,
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/pending_navigation_progress_web.mjs",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-pending-navigation-owner-progress-r1/requests/PN-CHROME-2.json",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-pending-navigation-owner-progress-r1/web/PN-CHROME-2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 7.784178042,
+        "peak_process_family_rss_kib": 1239088,
+        "rss_limit_kib": 3145728,
+        "timeout_s": 160,
+        "last_stage": {
+          "stage": "case-done",
+          "lane": "baseline",
+          "action": "nextdraw",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "drift": [],
+      "charged_seconds": 8
+    }
+  ],
+  "IAB": [
+    {
+      "id": "PN-IAB",
+      "status": "FAILED",
+      "tab_id": "4",
+      "server_session": 66554,
+      "unix": 1794590170.17344,
+      "url": "http://127.0.0.1:65360/",
+      "max_seconds": 160,
+      "viewport": [
+        1200,
+        800
+      ],
+      "drift": [],
+      "server_started_unix": 1794590137.65,
+      "last_result_unix": 1794590167.672,
+      "ended_unix": 1794590287.263194,
+      "page_closed": true,
+      "viewport_reset": true,
+      "server_stopped": true,
+      "rows": 8,
+      "all_pixel_RAF_restored": true,
+      "charged_seconds": 150,
+      "charge_basis": "Conservative actual serverstart through postclose/stop observed; includes setup and cleanup"
+    }
+  ],
+  "historical_ledgers_unchanged": true
+}

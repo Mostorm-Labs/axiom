@@ -1,0 +1,1795 @@
+{
+  "schema": "axiom-pending-navigation-progress-analysis-v1",
+  "raw_refs": [
+    {
+      "path": "out/G5-pending-navigation-owner-progress-r1/web/PN-CHROME-1/raw.json",
+      "sha256": "d40f9ade96f2e5fa8c84f29c96acfc85a6c1a641b3020e168fa2956856d6d47d",
+      "rows": 6
+    },
+    {
+      "path": "out/G5-pending-navigation-owner-progress-r1/web/PN-CHROME-2/raw.json",
+      "sha256": "bd138bd48053903565545339ff39d707ddda1f79403e1f553d0f78c5d2aab1b1",
+      "rows": 6
+    },
+    {
+      "path": "out/G5-pending-navigation-owner-progress-r1/iab/PN-IAB/raw.json",
+      "sha256": "b489158c839342605b2838ddaf198b1b446159249ae7535859995ba9c84fc207",
+      "rows": 8
+    }
+  ],
+  "ordinary_rows": [
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "baseline",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 203.60000002384186,
+      "Up_to_stable_ms": 429.39999997615814,
+      "first_content_GL_proxy_ms": 23.899999976158142,
+      "max_RAF_callback_ms": 8.700000047683716,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 175.10000002384186,
+      "preparing_CPU_ms": 7.3,
+      "maximum_owner_CPU_ms": 6.6,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "17111ac48f4146619dd03dce4019c8927e8137450b0558ed5b62138d4e092c70",
+          "Up_to_callback_ms": 203.60000002384186,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "baseline",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 207.90000009536743,
+      "Up_to_stable_ms": 425.90000009536743,
+      "first_content_GL_proxy_ms": 24.0,
+      "max_RAF_callback_ms": 8.600000023841858,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 175.19999992847443,
+      "preparing_CPU_ms": 7.4,
+      "maximum_owner_CPU_ms": 6.5,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "a7cb20b2319000e1ec9e77645c607c1b6a823552a8464d9f5b4450007b95e7cf",
+          "Up_to_callback_ms": 207.90000009536743,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "baseline",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.8000000715255737,
+      "Up_to_first_operation_callback_ms": 224.40000009536743,
+      "Up_to_stable_ms": 332.2000000476837,
+      "first_content_GL_proxy_ms": 167.29999995231628,
+      "max_RAF_callback_ms": 12.100000023841858,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 176.70000004768372,
+      "preparing_CPU_ms": 7.2,
+      "maximum_owner_CPU_ms": 6.3,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "45254a30e64a67d1382fd37723954b2e42a3ce2442932787b3f778033cfe75b2",
+          "Up_to_callback_ms": 224.40000009536743,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "1f43516afa067e33fb36577c74b82d78d42fa829fe3d19c44a117d7205321bfe",
+          "Up_to_callback_ms": 224.70000004768372
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "candidate",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 38.5,
+      "Up_to_stable_ms": 261.39999997615814,
+      "first_content_GL_proxy_ms": 53.800000071525574,
+      "max_RAF_callback_ms": 9.0,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 8.100000023841858,
+      "preparing_CPU_ms": 6.6,
+      "maximum_owner_CPU_ms": 8.0,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "1d412e68f51006f028c331a167fb62c43a51938c213f82e73a87b21d92f33898",
+          "Up_to_callback_ms": 38.5,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "candidate",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 50.0,
+      "Up_to_stable_ms": 266.10000002384186,
+      "first_content_GL_proxy_ms": 49.39999997615814,
+      "max_RAF_callback_ms": 9.099999904632568,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 8.0,
+      "preparing_CPU_ms": 6.5,
+      "maximum_owner_CPU_ms": 8.1,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "cb399db3d2c76051498544d946b2de314c270f2a0fd6cb828cd0dbe59520fcd6",
+          "Up_to_callback_ms": 50.0,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-1",
+      "lane": "candidate",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.8000000715255737,
+      "Up_to_first_operation_callback_ms": 57.200000047683716,
+      "Up_to_stable_ms": 302.2000000476837,
+      "first_content_GL_proxy_ms": 53.799999952316284,
+      "max_RAF_callback_ms": 10.199999928474426,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 8.100000023841858,
+      "preparing_CPU_ms": 6.6,
+      "maximum_owner_CPU_ms": 8.1,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "dc9768beed18cbf996f10e9d767c1fa08b3fcc5fab1f13a979846283e595911a",
+          "Up_to_callback_ms": 57.200000047683716,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "6322f3ce5c3e84e1e8d3081aa06e3d080f97d0ab2f4a4213ededa2ce4606f1ae",
+          "Up_to_callback_ms": 174.20000004768372
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "candidate",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 39.700000047683716,
+      "Up_to_stable_ms": 264.60000002384186,
+      "first_content_GL_proxy_ms": 55.40000009536743,
+      "max_RAF_callback_ms": 9.399999976158142,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 7.700000047683716,
+      "preparing_CPU_ms": 6.9,
+      "maximum_owner_CPU_ms": 8.2,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "bbadb96e30f3afbb6c22d28922453ecc00999deb2d0c9cde8c1683ca11ae7f82",
+          "Up_to_callback_ms": 39.700000047683716,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "candidate",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 52.39999997615814,
+      "Up_to_stable_ms": 266.09999990463257,
+      "first_content_GL_proxy_ms": 51.700000047683716,
+      "max_RAF_callback_ms": 9.200000047683716,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 8.0,
+      "preparing_CPU_ms": 6.4,
+      "maximum_owner_CPU_ms": 8.0,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "5c51605b8bc4d5280d46df2b468fe1d0e6e5a78e380a0f3ade92577b38c0ebd0",
+          "Up_to_callback_ms": 52.39999997615814,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "candidate",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.6999999284744263,
+      "Up_to_first_operation_callback_ms": 58.89999997615814,
+      "Up_to_stable_ms": 305.39999997615814,
+      "first_content_GL_proxy_ms": 63.200000047683716,
+      "max_RAF_callback_ms": 11.700000047683716,
+      "preparing_passive_observations": 0,
+      "owner_frames_with_observed_preparing_after_step": 0,
+      "preparing_observation_span_ms": null,
+      "preparing_CPU_ms": 6.2,
+      "maximum_owner_CPU_ms": 9.7,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "8822dec4e49e92809ad5af5c4a2bbe36cf0f33a2656186b404d100eeccb167ee",
+          "Up_to_callback_ms": 58.89999997615814,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "461067c6174d0a01a5ed953d44cb2f5bd22e4de2e367c9f6cf2a6bec442b898d",
+          "Up_to_callback_ms": 186.29999995231628
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "baseline",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 206.69999992847443,
+      "Up_to_stable_ms": 427.89999997615814,
+      "first_content_GL_proxy_ms": 26.200000047683716,
+      "max_RAF_callback_ms": 8.799999952316284,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 175.0,
+      "preparing_CPU_ms": 7.8,
+      "maximum_owner_CPU_ms": 6.8,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "2dc4c8d8916f666d54b460acde9960d8df6517ff064e23f4e593e717d058872f",
+          "Up_to_callback_ms": 206.69999992847443,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "baseline",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 215.89999997615814,
+      "Up_to_stable_ms": 432.3000000715256,
+      "first_content_GL_proxy_ms": 31.899999976158142,
+      "max_RAF_callback_ms": 8.899999976158142,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 175.09999990463257,
+      "preparing_CPU_ms": 7.8,
+      "maximum_owner_CPU_ms": 6.6,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "2aba1d3e8fd123048026a4ebdbd6fd31afcb247ec7b6036e33e6bc20d7dad15a",
+          "Up_to_callback_ms": 215.89999997615814,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "web/PN-CHROME-2",
+      "lane": "baseline",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.600000023841858,
+      "Up_to_first_operation_callback_ms": 236.20000004768372,
+      "Up_to_stable_ms": 360.39999997615814,
+      "first_content_GL_proxy_ms": 177,
+      "max_RAF_callback_ms": 10.399999976158142,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 176.39999997615814,
+      "preparing_CPU_ms": 7.6,
+      "maximum_owner_CPU_ms": 6.0,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "3006192e8899b8176822c6af1e7de0495fe6005e4bf7e07dbe679cc288de9b9f",
+          "Up_to_callback_ms": 236.20000004768372,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "78e414baff1867c2f3698371f802ae80c424a238982f51b225e6ba375568b63a",
+          "Up_to_callback_ms": 236.5
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "baseline",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 222.30000007152557,
+      "Up_to_stable_ms": 442.2000000476837,
+      "first_content_GL_proxy_ms": 37.0,
+      "max_RAF_callback_ms": 9.799999952316284,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 175.59999990463257,
+      "preparing_CPU_ms": 11.9,
+      "maximum_owner_CPU_ms": 6.8,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "4c3dabe0402086301668b57f72b4397dafd53c7f3f0982c2c1f099d9228db34d",
+          "Up_to_callback_ms": 222.30000007152557,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "baseline",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 208.39999997615814,
+      "Up_to_stable_ms": 424.60000002384186,
+      "first_content_GL_proxy_ms": 19.59999990463257,
+      "max_RAF_callback_ms": 7.600000023841858,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 181.20000004768372,
+      "preparing_CPU_ms": 1.7,
+      "maximum_owner_CPU_ms": 0.6,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "6fbb4ae3fdd3032888f67fac1991e64ec8cb9180dd7b525492bccb8d28c043c8",
+          "Up_to_callback_ms": 208.39999997615814,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "baseline",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.600000023841858,
+      "Up_to_first_operation_callback_ms": 386.7999999523163,
+      "Up_to_stable_ms": 494.0,
+      "first_content_GL_proxy_ms": 316.7999999523163,
+      "max_RAF_callback_ms": 149.89999997615814,
+      "preparing_passive_observations": 44,
+      "owner_frames_with_observed_preparing_after_step": 11,
+      "preparing_observation_span_ms": 181.5,
+      "preparing_CPU_ms": 1.7,
+      "maximum_owner_CPU_ms": 3.1,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "610d4c08ef690c1b22e29c40897a68ed51ff09cd284de2e2dabfc696fe9668a5",
+          "Up_to_callback_ms": 386.7999999523163,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "f17095568436878282d4df2186fda21c43301e9229d60b971a11a27dfa72022c",
+          "Up_to_callback_ms": 387.0
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "candidate",
+      "action": "zoom",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 51.5,
+      "Up_to_stable_ms": 263.7000000476837,
+      "first_content_GL_proxy_ms": 67.59999990463257,
+      "max_RAF_callback_ms": 9.299999952316284,
+      "preparing_passive_observations": 4,
+      "owner_frames_with_observed_preparing_after_step": 1,
+      "preparing_observation_span_ms": 8.0,
+      "preparing_CPU_ms": 6.2,
+      "maximum_owner_CPU_ms": 8.0,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "1e9ad3f7b9edde1ca8387f572dec7a0116a2ab519766804f5ef40b9c6af6b934",
+          "Up_to_callback_ms": 51.5,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "candidate",
+      "action": "pan",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": null,
+      "Up_to_first_operation_callback_ms": 33.60000002384186,
+      "Up_to_stable_ms": 267.7999999523163,
+      "first_content_GL_proxy_ms": 32.799999952316284,
+      "max_RAF_callback_ms": 9.0,
+      "preparing_passive_observations": 0,
+      "owner_frames_with_observed_preparing_after_step": 0,
+      "preparing_observation_span_ms": null,
+      "preparing_CPU_ms": 1.4,
+      "maximum_owner_CPU_ms": 1.6,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        3
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "cf1d20cd8127fd61376945b896a61ab077862f670afe3ca931e5c89bde5fdb82",
+          "Up_to_callback_ms": 33.60000002384186,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": -70,
+        "y": 30
+      },
+      "generation": "1",
+      "presented_generation": "1",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "candidate",
+      "action": "nextdraw",
+      "pixel": false,
+      "actual_erase_pending_at_navigation_or_nextDown": true,
+      "Up_to_nextDown_ms": 2.600000023841858,
+      "Up_to_first_operation_callback_ms": 38,
+      "Up_to_stable_ms": 324.2999999523163,
+      "first_content_GL_proxy_ms": 34.699999928474426,
+      "max_RAF_callback_ms": 22.799999952316284,
+      "preparing_passive_observations": 0,
+      "owner_frames_with_observed_preparing_after_step": 0,
+      "preparing_observation_span_ms": null,
+      "preparing_CPU_ms": 1.5,
+      "maximum_owner_CPU_ms": 2.8,
+      "original_objects_preserved_excluding_added_masks": true,
+      "new_mask_geometry_by_original_object": {
+        "10cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "11cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ],
+        "12cd0e00000000000000000000000000": [
+          "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+        ]
+      },
+      "objects": [
+        3,
+        4
+      ],
+      "operations": [
+        {
+          "kind": 12,
+          "sha256": "ac1de809a8ad09b4069646302c1d0f8eccc038cf27d9c1fddad30eb1116f0257",
+          "Up_to_callback_ms": 38,
+          "targets": [
+            "10cd0e00000000000000000000000000",
+            "11cd0e00000000000000000000000000",
+            "12cd0e00000000000000000000000000"
+          ],
+          "geometry_sha256": [
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ],
+            [
+              "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+            ]
+          ]
+        },
+        {
+          "kind": 10,
+          "sha256": "a849dffdfee8a51286d89ede521f9bddbd17bb369e9f478b8d490665bf5b66f5",
+          "Up_to_callback_ms": 187.5
+        }
+      ],
+      "initial_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "final_camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "generation": "2",
+      "presented_generation": "2",
+      "root_errors": [],
+      "pending_observer_lost": 0,
+      "critical_ring_loss": {
+        "frames": 0,
+        "events": 0,
+        "logs": 0,
+        "tasks": 0,
+        "workers": 0,
+        "calls": 0,
+        "terminals": 0,
+        "nativeFrames": 0,
+        "triggers": 0
+      }
+    }
+  ],
+  "paired_medians": [
+    {
+      "browser": "Chrome",
+      "action": "zoom",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 205.14999997615814,
+          "first_content_GL_proxy_ms": 25.05000001192093,
+          "preparing_observation_span_ms": 175.05000001192093,
+          "preparing_CPU_ms": 7.55,
+          "owner_frames_with_observed_preparing_after_step": 11.0,
+          "maximum_owner_CPU_ms": 6.699999999999999
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 39.10000002384186,
+          "first_content_GL_proxy_ms": 54.6000000834465,
+          "preparing_observation_span_ms": 7.900000035762787,
+          "preparing_CPU_ms": 6.75,
+          "owner_frames_with_observed_preparing_after_step": 1.0,
+          "maximum_owner_CPU_ms": 8.1
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    },
+    {
+      "browser": "Chrome",
+      "action": "pan",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 211.9000000357628,
+          "first_content_GL_proxy_ms": 27.94999998807907,
+          "preparing_observation_span_ms": 175.1499999165535,
+          "preparing_CPU_ms": 7.6,
+          "owner_frames_with_observed_preparing_after_step": 11.0,
+          "maximum_owner_CPU_ms": 6.55
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 51.19999998807907,
+          "first_content_GL_proxy_ms": 50.55000001192093,
+          "preparing_observation_span_ms": 8.0,
+          "preparing_CPU_ms": 6.45,
+          "owner_frames_with_observed_preparing_after_step": 1.0,
+          "maximum_owner_CPU_ms": 8.05
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    },
+    {
+      "browser": "Chrome",
+      "action": "nextdraw",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 230.30000007152557,
+          "first_content_GL_proxy_ms": 172.14999997615814,
+          "preparing_observation_span_ms": 176.55000001192093,
+          "preparing_CPU_ms": 7.4,
+          "owner_frames_with_observed_preparing_after_step": 11.0,
+          "maximum_owner_CPU_ms": 6.15
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 58.05000001192093,
+          "first_content_GL_proxy_ms": 58.5,
+          "preparing_observation_span_ms": 8.100000023841858,
+          "preparing_CPU_ms": 6.4,
+          "owner_frames_with_observed_preparing_after_step": 0.5,
+          "maximum_owner_CPU_ms": 8.899999999999999
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    },
+    {
+      "browser": "IAB",
+      "action": "zoom",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 222.30000007152557,
+          "first_content_GL_proxy_ms": 37.0,
+          "preparing_observation_span_ms": 175.59999990463257,
+          "preparing_CPU_ms": 11.9,
+          "owner_frames_with_observed_preparing_after_step": 11,
+          "maximum_owner_CPU_ms": 6.8
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 51.5,
+          "first_content_GL_proxy_ms": 67.59999990463257,
+          "preparing_observation_span_ms": 8.0,
+          "preparing_CPU_ms": 6.2,
+          "owner_frames_with_observed_preparing_after_step": 1,
+          "maximum_owner_CPU_ms": 8.0
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    },
+    {
+      "browser": "IAB",
+      "action": "pan",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 208.39999997615814,
+          "first_content_GL_proxy_ms": 19.59999990463257,
+          "preparing_observation_span_ms": 181.20000004768372,
+          "preparing_CPU_ms": 1.7,
+          "owner_frames_with_observed_preparing_after_step": 11,
+          "maximum_owner_CPU_ms": 0.6
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 33.60000002384186,
+          "first_content_GL_proxy_ms": 32.799999952316284,
+          "preparing_observation_span_ms": null,
+          "preparing_CPU_ms": 1.4,
+          "owner_frames_with_observed_preparing_after_step": 0,
+          "maximum_owner_CPU_ms": 1.6
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    },
+    {
+      "browser": "IAB",
+      "action": "nextdraw",
+      "lanes": {
+        "baseline": {
+          "Up_to_first_operation_callback_ms": 386.7999999523163,
+          "first_content_GL_proxy_ms": 316.7999999523163,
+          "preparing_observation_span_ms": 181.5,
+          "preparing_CPU_ms": 1.7,
+          "owner_frames_with_observed_preparing_after_step": 11,
+          "maximum_owner_CPU_ms": 3.1
+        },
+        "candidate": {
+          "Up_to_first_operation_callback_ms": 38,
+          "first_content_GL_proxy_ms": 34.699999928474426,
+          "preparing_observation_span_ms": null,
+          "preparing_CPU_ms": 1.5,
+          "owner_frames_with_observed_preparing_after_step": 0,
+          "maximum_owner_CPU_ms": 2.8
+        }
+      },
+      "same_original_mask_geometry_ignoring_new_random_identity": true
+    }
+  ],
+  "retained_pixel_rows": [
+    {
+      "window": "iab/PN-IAB",
+      "lane": "baseline",
+      "action": "zoom",
+      "samples": [
+        {
+          "label": "before-up",
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canonical_sha256": "495a059ebea8cb2985b7505af93fdd7294f37a76977c5e66ca0a308b1cd497b8",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-1",
+          "camera": {
+            "scale": 0.699999988079071,
+            "x": 180,
+            "y": 120
+          },
+          "canonical_sha256": "495a059ebea8cb2985b7505af93fdd7294f37a76977c5e66ca0a308b1cd497b8",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-2",
+          "camera": {
+            "scale": 0.699999988079071,
+            "x": 180,
+            "y": 120
+          },
+          "canonical_sha256": "54f535663d9c0b262675cacdc1609e034246ca6e6ae39c685a1836535e1fe01d",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-3",
+          "camera": {
+            "scale": 0.699999988079071,
+            "x": 180,
+            "y": 120
+          },
+          "canonical_sha256": "54f535663d9c0b262675cacdc1609e034246ca6e6ae39c685a1836535e1fe01d",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "final",
+          "camera": {
+            "scale": 0.699999988079071,
+            "x": 180,
+            "y": 120
+          },
+          "canonical_sha256": "54f535663d9c0b262675cacdc1609e034246ca6e6ae39c685a1836535e1fe01d",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        }
+      ]
+    },
+    {
+      "window": "iab/PN-IAB",
+      "lane": "baseline",
+      "action": "pan",
+      "samples": [
+        {
+          "label": "before-up",
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "canonical_sha256": "495a059ebea8cb2985b7505af93fdd7294f37a76977c5e66ca0a308b1cd497b8",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-1",
+          "camera": {
+            "scale": 1,
+            "x": -70,
+            "y": 30
+          },
+          "canonical_sha256": "495a059ebea8cb2985b7505af93fdd7294f37a76977c5e66ca0a308b1cd497b8",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-2",
+          "camera": {
+            "scale": 1,
+            "x": -70,
+            "y": 30
+          },
+          "canonical_sha256": "5e2edb3042e45a6d9745260064bb6785606f53221c3cfc3b886f5c9c4bdc6c58",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "opportunity-3",
+          "camera": {
+            "scale": 1,
+            "x": -70,
+            "y": 30
+          },
+          "canonical_sha256": "5e2edb3042e45a6d9745260064bb6785606f53221c3cfc3b886f5c9c4bdc6c58",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        },
+        {
+          "label": "final",
+          "camera": {
+            "scale": 1,
+            "x": -70,
+            "y": 30
+          },
+          "canonical_sha256": "5920a72352d35fe8f0e6badbaa29e16ff84c88e08e255d6a236d5bade14517cd",
+          "canonical_target_status": "VALID",
+          "preview_target_status": "VALID",
+          "preview_visibility": "hidden"
+        }
+      ]
+    }
+  ],
+  "canonical_geometry_preservation": "All original body/config/pressure/placement unchanged; each target added the same exact mask geometry across lanes. Newly allocated Operation/Mask/Object identities are random per Runtime, so browser encodedbytes are not cross-lane identical; independent native staged/sequential test proves exact sameinputwire/store behavior.",
+  "limits": [
+    "Only2baselinepixelrows persisted. Candidatepixel andnextdrawpreviewpixels missing due aggregateJSONstringlimit; no firstcorrectcamera/previewclaim.",
+    "Passive PreparingAtomicCommit observations are not individual ownerframes. A complete stage within one frame can be unobserved after-step; actual native witness is authoritative for mechanism.",
+    "FirstGL defaulttarget call is not currentcamera/completeframe/physicalphoton. OnOperation callback is canonical publication notification, not persistence/GPUvisibility.",
+    "Owner allowance is cooperative8000us originalturn, no preemption; atomic/target costs may exceed. No globalperformanceSLO orlongtailclosure.",
+    "Original6IABordinaryrecords andcriticalobserver rings accumulate acrosssamepage; timestamps isolatepercase, phase strings alone insufficient."
+  ],
+  "status": "VALID_NATIVE_AND_ORDINARY_FACTS_BUT_BLOCKED_REQUIRED_CANDIDATE_PIXEL_EVIDENCE"
+}

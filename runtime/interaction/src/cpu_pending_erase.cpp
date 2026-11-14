@@ -196,10 +196,11 @@ void CanvasEditingRuntime::serviceCpuPendingErases()noexcept{
   AXIOM_FRAME_TIMING_SET(pending_serial,serial);
   AXIOM_FRAME_TIMING_SET(pending_phase,static_cast<unsigned>(before->phase));
   const auto phase=before->phase;const auto next=before->next,reuse=before->reuseScan;
+  const auto preparation=before->preparationProgress();
   if(servicePendingLocalHead())return;
   serviceCpuPendingEraseStep(began);
   const auto* after=cpuPending_->head();
-  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse)break;
+  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse&&after->preparationProgress()==preparation)break;
   if(after&&after->phase==CpuPendingEraseState::Phase::Waiting&&!after->completion)break;
  }
 }
@@ -425,7 +426,8 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
    struct StageCost{CpuPendingEraseState& s;unsigned stage;std::chrono::steady_clock::time_point began;~StageCost(){const auto ns=std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-began).count());s.maximumCommitStageNs=std::max(s.maximumCommitStageNs,ns);if(stage==4)s.sceneStampPrepareNs+=ns;else if(stage==0)s.targetPrepareNs+=ns;else if(stage==1)s.historyPrepareNs+=ns;else if(stage==2)s.publicationPrepareNs+=ns;else s.publishNs+=ns;}} stageCost{state,stage,commitAt};
    if(!p->preparedErase->ready()){
     AXIOM_FRAME_TIMING_SCOPE(targetTiming,target_prepare);
-    if(!p->preparedErase->advance(1,8000)){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
+    const auto remaining=std::chrono::duration_cast<std::chrono::microseconds>(allowance-(std::chrono::steady_clock::now()-began)).count();
+    if(remaining>0&&!p->preparedErase->advance(1,static_cast<std::uint64_t>(remaining))){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
    }
    if(p->sceneStamp.target<std::get<semantic::AddEraseMasksOp>(p->preparedErase->operation().payload).items.size()){
     AXIOM_FRAME_TIMING_SCOPE(stampTiming,scene_stamp);

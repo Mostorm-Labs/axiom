@@ -1,0 +1,58 @@
+{
+  "cases": {
+    "cpu-pending-progresspublication": {
+      "actual_requests": 1,
+      "complete": false,
+      "mode": "progresspublication",
+      "owner_ns": 1083,
+      "pending": 1,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 3,
+      "useful_multiple_internal_stages": false
+    },
+    "cpu-pending-progressstamp": {
+      "actual_requests": 1,
+      "complete": false,
+      "mode": "progressstamp",
+      "owner_ns": 69709,
+      "pending": 1,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 1,
+      "useful_multiple_internal_stages": false
+    },
+    "cpu-pending-progresshistory": {
+      "actual_requests": 1,
+      "complete": false,
+      "mode": "progresshistory",
+      "owner_ns": 19500,
+      "pending": 1,
+      "prior_stages": 11,
+      "ready_before": true,
+      "stamp_before": 3,
+      "useful_multiple_internal_stages": false
+    },
+    "cpu-pending-progresstarget": {
+      "actual_requests": 1,
+      "complete": false,
+      "mode": "progresstarget",
+      "owner_ns": 246000,
+      "pending": 1,
+      "prior_stages": 11,
+      "ready_before": false,
+      "stamp_before": 0,
+      "useful_multiple_internal_stages": false
+    }
+  },
+  "actual_RED": "INTERNAL_PREPARATION_PROGRESS_FORCED_TO_NEXT_OWNER_TURN",
+  "failures": [
+    "target",
+    "SceneStamp",
+    "History",
+    "publication"
+  ],
+  "guardpassed": "expiredoriginalbudgetnopublish",
+  "fixture": "3 actualv4/256knots/realprotocolkernel/3hits; nofakesemanticowner",
+  "earlier_invalidharness": "B-red-tests/fixture logs had incompleteWorkerresponseheader andfailedimport; notRED. CorrectactualprotocolretainedB-red-actual.log."
+}

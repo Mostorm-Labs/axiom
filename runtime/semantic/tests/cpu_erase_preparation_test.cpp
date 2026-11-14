@@ -6,6 +6,38 @@
 #include <fstream>
 #include "protobuf_codec_internal.hpp"
 using namespace canvas::semantic;
+TEST(CpuErasePreparation, ProgressWitnessIsBoundedAndStagedBytesMatchSequentialApply){
+ IndexedObjectStore stagedStore,referenceStore;AppliedOperationLedger stagedLedger,referenceLedger;
+ SemanticGenerationState generation,referenceGeneration;CanonicalCommitClock clock{RuntimeEpoch{1}},referenceClock{RuntimeEpoch{1}};OperationEngine engine;
+ const auto document=DocumentId{ObjectId::fromUint64(1)};
+ SweptCircleMask sweep;sweep.segments={{{{1,1},2},{{4,4},2},{2,2},{3,3}}};AddEraseMasksOp payload;
+ for(unsigned i=0;i<3;++i){
+  ObjectRecord object;object.id=ObjectId::fromUint64(7+i);object.kind=ObjectKind::kVectorStroke;object.kind_version=3;object.placement.order_key=OrderKey{{static_cast<std::uint8_t>(128+i)}};
+  CompactStrokeContent compact;compact.stroke.config=canvas::foundation::InkBrushConfig{};compact.stroke.knots={{1,1,32768},{4,4,32768}};object.content=compact;
+  Operation insert{OperationId{ObjectId::fromUint64(20+i)},document,1,3,AddStrokeOp{object}};
+  ASSERT_EQ(engine.apply(insert,ApplySource::kLocalInteraction,stagedStore,stagedLedger,generation,clock).disposition,ApplyDisposition::kApplied);
+  ASSERT_EQ(engine.apply(insert,ApplySource::kLocalInteraction,referenceStore,referenceLedger,referenceGeneration,referenceClock).disposition,ApplyDisposition::kApplied);
+  payload.items.push_back({object.id,{{ObjectId::fromUint64(30+i),sweep}}});
+ }
+ const Operation erase{OperationId{ObjectId::fromUint64(40)},document,1,1,payload};
+ auto prepared=engine.prepareErase(erase,stagedStore,stagedLedger,generation,clock);ASSERT_TRUE(prepared);
+ const auto initial=prepared->progress();ASSERT_TRUE(prepared->advance(1,0));EXPECT_EQ(prepared->progress(),initial);
+ ASSERT_TRUE(prepared->advance(0,8000));EXPECT_EQ(prepared->progress(),initial);
+ unsigned targetProgress=0,finalProgress=0;
+ while(!prepared->ready()){
+  const auto before=prepared->progress();ASSERT_TRUE(prepared->advance(1,8000));const auto after=prepared->progress();
+  EXPECT_NE(before,after);EXPECT_LE(after.target-before.target,1U);targetProgress+=after.target>before.target;finalProgress+=after.finalPhase>before.finalPhase;
+  for(const auto& item:payload.items)EXPECT_TRUE(stagedStore.find(item.object_id)->erase_masks.empty());
+  EXPECT_EQ(generation.current().value(),3U);
+ }
+ EXPECT_EQ(targetProgress,3U);EXPECT_GE(finalProgress,2U);EXPECT_TRUE(prepared->progress().complete);
+ EXPECT_EQ(std::vector<std::uint8_t>(prepared->encoded().begin(),prepared->encoded().end()),SemanticCodec::encodeProtobufOperation(erase).bytes);
+ ASSERT_EQ(engine.apply(erase,ApplySource::kLocalInteraction,referenceStore,referenceLedger,referenceGeneration,referenceClock).disposition,ApplyDisposition::kApplied);
+ ASSERT_EQ(engine.commitErase(*prepared,ApplySource::kLocalInteraction,generation,clock).disposition,ApplyDisposition::kApplied);
+ for(const auto& item:payload.items)EXPECT_EQ(*stagedStore.find(item.object_id),*referenceStore.find(item.object_id));
+ EXPECT_EQ(generation.current(),referenceGeneration.current());EXPECT_EQ(clock.lastCommittedOrdinal(),referenceClock.lastCommittedOrdinal());
+ EXPECT_EQ(engine.commitErase(*prepared,ApplySource::kLocalInteraction,generation,clock).disposition,ApplyDisposition::kRejected);
+}
 TEST(CpuErasePreparation, StagesTargetsWithoutPublishingAndRejectsChangedBasis){
  IndexedObjectStore objects;AppliedOperationLedger ledger;SemanticGenerationState generation;CanonicalCommitClock clock{RuntimeEpoch{1}};OperationEngine engine;
  ObjectRecord object;object.id=ObjectId::fromUint64(7);object.kind=ObjectKind::kVectorStroke;object.kind_version=3;object.placement.order_key=OrderKey{{128}};CompactStrokeContent compact;compact.stroke.config=canvas::foundation::InkBrushConfig{};compact.stroke.knots={{1,1,32768},{4,4,32768}};object.content=compact;

@@ -1,0 +1,40 @@
+{
+  "status": "FROZEN_EVIDENCE_STORAGE_AND_MISSING_PN4_PIXELS",
+  "obligations": [
+    {
+      "id": "IO1",
+      "requirement": "Durableboundedper-row/typedpixelstorageandtruthfulHTTPcompletion",
+      "oracle": "Offlineharnessnegatives: persistencefailureorHTTPnon2xxcannotbeCOMPLETE; missing/duplicate/unknownrowsdetected; storedmetadatahash/bytecounts matchingraw",
+      "acceptance": "No aggregateJSONcontainingallbase64 buffers. Eachactualrow/savedpixelwrittenindependently withawaitack; compactindexonly. Usebinary/gzip buffers+metadataandSHA forpixels; indexbounded withno embeddedfullpixels. Preserveold8rowarchive asreadonly, identifyV8capcause, donotdiscardfailure.",
+      "evidence_required": [
+        "cause.json",
+        "storagerepairdiff/tests",
+        "readbackfilehashaudit"
+      ]
+    },
+    {
+      "id": "IO2",
+      "requirement": "Recoveronlymissing4pixelproofs onexactproduction/SDK withtruecurrentpendingstate",
+      "oracle": "ActualRootSDKpixelcanvas/previewvisibilityatDown/move8/16, currentcamera/maskalignment whilepending, finalstateunchanged/acceptedops andindependentCPU/oldreferencepixels existingpolicy",
+      "acceptance": "Allfournewrowsdurableorpreciseactualblocker; canonical/previewtargetsVALID/restored. Knownordinarytimingsnotrecomputedfrompixelrun. Baselinepan/zoomproofreusedbyhash; currentcandidatewhilependingcamera mustmatchverifiednativecurrentcamera behavior, finalstate+pixels preserved. Nextdrawimmediatefeedback mustprovevisibleprepared/amber/canonical pixel notobjectcountonly.",
+      "evidence_required": [
+        "4rowmetadata/rawpixelbinaryrefs",
+        "actualpending/camera/witness",
+        "finalsnapshot/Operationrefs",
+        "independentpixelsemanticcomparison"
+      ]
+    },
+    {
+      "id": "IO3",
+      "requirement": "Finishparentsteps1/2reviewablecombinedreturn, no productionchange",
+      "oracle": "ExactsourceSDKhashes beforeafter, allparent/supplementlinks, cleanup",
+      "acceptance": "OnlyifPN1/2/3andPN4requiredproofnowjointlycomplete prepareordinary4336andreturnREADY_FOR_CONTROL_REVIEW_WITH_FINDINGS(e.g.navigationGLtimingtradeoff); noextraoptimization. NoallG5/performance/idleclaim, noagentcommitpush.",
+      "evidence_required": [
+        "combinedresult+parentresultrefandprecisestatus",
+        "sourceSDKpreservation",
+        "cleanup",
+        "4336manifestifqualified"
+      ]
+    }
+  ]
+}

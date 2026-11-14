@@ -108,6 +108,9 @@ class PreparedEraseOperation::State final {
 };
 PreparedEraseOperation::PreparedEraseOperation(std::unique_ptr<State> value):state_(std::move(value)){}
 PreparedEraseOperation::~PreparedEraseOperation()=default;
+PreparedEraseOperation::Progress PreparedEraseOperation::progress() const noexcept {
+ return {state_->cursor,state_->finalPhase,state_->complete,state_->failed};
+}
 bool PreparedEraseOperation::ready()const noexcept{return state_->complete&&!state_->failed;}
 const Operation& PreparedEraseOperation::operation()const noexcept{return state_->input;}
 std::span<const std::uint8_t> PreparedEraseOperation::encoded()const noexcept{return state_->encoded;}
@@ -125,6 +128,7 @@ bool PreparedEraseOperation::advance(std::size_t maxTargets,std::uint64_t micros
 #endif
   ++s.cursor;
  }
+ if(std::chrono::steady_clock::now()-began>=std::chrono::microseconds(micros))return true;
  if(s.cursor==items.size()){
   // Separate aggregate validation, fallible ledger reservation and final
   // changeset allocation so none buys an extra per-object time allowance.

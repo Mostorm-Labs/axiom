@@ -1,0 +1,22 @@
+{
+  "actual_V8_failure": {
+    "path": "out/G5-pending-navigation-owner-progress-r1/offline-io-reproduction.json",
+    "sha256": "3d322ad7400fd9833a0ab74bca62ebda2789e188c77d0cdf647ccdb35584125c"
+  },
+  "actual_HTTP_failure": {
+    "path": "out/G5-pending-navigation-evidence-io-repair-r1/old-HTTP-failure-red.json",
+    "sha256": "54207f87a460f9bb5a1313e702fce71359a379a2c28533bd0d70f6aa44b53ff8"
+  },
+  "offline_storage_tests": {
+    "path": "out/G5-pending-navigation-evidence-io-repair-r1/IO-green-tests.log",
+    "sha256": "f6e38c29ae952a61f1e9ca2f45593ad39c1e1d667f206b12efcac7344940f78f"
+  },
+  "initial_missingmodules_test": {
+    "path": "out/G5-pending-navigation-evidence-io-repair-r1/IO-red-tests.log",
+    "classification": "preimplementationtestnotexecuted/missingmodule; actualRED is retainedV8+HTTPnegative, notmissingmodule"
+  },
+  "IO1": "4tests pass actualfilesystemfailure/HTTPnegative/missingduplicateunknown/keycount/binaryhash checks",
+  "bounded_persistence": "Single row transport300MiB; pixel/snapshot/operation independentlygzip before8MiBmetadata+64KiBindex; noaggregatebase64. SuccessHTTP only after awaitedfiles/index+key/count/hashACK.",
+  "consumer": "Original parentinput/factory/driverunchanged. NewpageawaitACK checks andcompleteindex4rows.",
+  "ancillary_unknown_route": "One Error:path atserver received ancillary route notrecorded asURL. Preserveuncertainty; no rowfailed, fourdurableACK independentlyverified."
+}

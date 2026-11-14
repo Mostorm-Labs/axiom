@@ -1,0 +1,41 @@
+{
+  "Chrome_starts": 0,
+  "IAB_max": 1,
+  "IAB": [
+    {
+      "id": "PNIO-IAB",
+      "status": "COMPLETED",
+      "tab_id": "5",
+      "server_session": 27845,
+      "unix": 1794590897.032927,
+      "url": "http://127.0.0.1:50220/",
+      "viewport": [
+        1200,
+        800
+      ],
+      "cap_seconds": 180,
+      "server_started_unix": 1794590864.587,
+      "last_ACK_unix": 1794590901.385,
+      "ended_unix": 1794590982.126622,
+      "page_closed": true,
+      "viewport_reset": true,
+      "server_stopped": true,
+      "durable_rows": 4,
+      "buffer_count": 62,
+      "errors": [
+        {
+          "at_unix": 1794590879.054,
+          "message": "Error: path\n    at Server.<anonymous> (file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/pending_navigation_evidence_io_server.mjs:23:113)\n    at Server.emit (node:events:518:28)\n    at parserOnIncoming (node:_http_server:1153:12)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)"
+        }
+      ],
+      "charged_seconds": 118
+    }
+  ],
+  "max_seconds": 180,
+  "charged_seconds": 118,
+  "parent": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-pending-navigation-owner-progress-r1/sampling-ledger.json",
+    "sha256": "e849074335b746a7fe0cb01693bfff47bbd90d34fdc70585ddec43db8a7a9677",
+    "charged_seconds": 167
+  }
+}

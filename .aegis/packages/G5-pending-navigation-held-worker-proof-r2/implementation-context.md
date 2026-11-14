@@ -1,0 +1,3 @@
+# Correct known test predicate, complete existing proof
+
+This is a narrow control-issued repair of the prior held-worker qualification harness. Remove retry!==true from completeContent; actual frame content plus a few quiet natural intervals is completion witness for old transient. A reserved pending erase keeps retry true by design. Add offline regression before browser. Keep all frozen realkernelterminalcustody/ROI/samecamera zeroPan/singleatomiccommit protocol unchanged. Parent production unchanged. After realterminalrelease await actualdrain/canonical beforeclose. All oldfailures/130s overrun stay recorded. One isolatedpage, no new performance or businesswork; finish existing originalsteps1/2 and4336.
