@@ -828,7 +828,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
         provider.release();preparationTarget.active=false;
         (void)validationService();
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background,validationProofs_,currentComposition&&currentComposition->background.mode==foundation::BackgroundMode::kPlain&&!currentComposition->transparentBackground&&currentComposition->background.color[3]==1.0F,renderCache_?renderCache_->navigationBodies():nullptr);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background,validationProofs_,currentComposition&&currentComposition->background.mode==foundation::BackgroundMode::kPlain&&!currentComposition->transparentBackground&&currentComposition->background.color[3]==1.0F,renderCache_?renderCache_->navigationBodies():nullptr,backgroundOnly);
         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}

@@ -1,0 +1,181 @@
+{
+  "task": "G5-post-navigation-settle-r1",
+  "status": "BLOCKED",
+  "classification": "VERIFICATION_DESIGN_OR_TASK_PACKAGE_DEFECT",
+  "subclassification": "OBSERVER_INTERFERENCE_DPR4_IMMEDIATE_SYNC_READBACK_VS_33_4MS_CAMERA_GATE",
+  "continue_execution": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/packages/G5-post-navigation-settle-r1/package.json",
+    "bytes": 3196,
+    "sha256": "841c0b9582cd3cf8966dbb10b13aaac674be0247e985ae08216a1895d7f00d93"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "executionRef": "refs/heads/codex/g5-exposure-region-checkpoint",
+  "taskAnchor": "230ee4c52ee36361abb26c527f29c86e9a8cebb7",
+  "ambientBranch": "codex/g5-cpu-worker",
+  "ambientHEAD": "6df8e16c1b1e45654532d2eb4cb8513f335c7a39",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-post-navigation-settle-r1/result.json"
+  },
+  "productPerformance": {
+    "ordinary8": "ALL_ABSOLUTE_GAP_P95_PAIRED_STABLE_PASS",
+    "DPR2CmedianStableMs": [
+      251.14999997615814,
+      254.20000004768372
+    ],
+    "DPR4BmedianStableMs": [
+      885.2999999523163,
+      861.2499998807907
+    ],
+    "DPR4CmedianStableMs": [
+      392.85000002384186,
+      419.4500000476837
+    ],
+    "causalRecordedOwnerB_Cms": {
+      "wheel": [
+        611.5,
+        49
+      ],
+      "touch": [
+        567.2,
+        44.1
+      ]
+    },
+    "notPureGPUExecutionTime": true,
+    "phaseAttribution": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/stop-attribution.json",
+      "bytes": 1316,
+      "sha256": "b764e876423f291474d8ac84069fa7f10937fa9efe8c4124858ba5fdcb818939"
+    }
+  },
+  "camera": {
+    "DPR2C": "33.4window0missbothroutes",
+    "DPR4C": "frozenguardfailed;12wheeldeadlineoccupiedbysynchronousreadback;touchgap116.9ms",
+    "observer": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/observer-interference.json",
+      "bytes": 10857,
+      "sha256": "cbf5f53faa1aee5a9bf8815d88a4db76104451105968a60c01cedc5b1a41823c"
+    },
+    "noCameraPASSBySubtractingReadback": true
+  },
+  "pixels": {
+    "referenceCapturesAndFinals": 78,
+    "mandatory6EachCapturedRoute": "finiteprofiles",
+    "D2pairedProfiles": "measured",
+    "D2finalBCByteExact": true,
+    "D2touchCPU346": "allimageinterior inheritedB=C noabsoluteWaiver",
+    "DPR4wheel5130": "allmaxdifference3on3sticky/tablehorizontalrows, notimage;strict2fails;noD4Bcapturecannotclassifyintroduced/inherited",
+    "DPR4touch1984": "allimageinterior;noabsoluteWaiver",
+    "strictFinding": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/dpr4-strict-pixel-finding.json",
+      "bytes": 3708,
+      "sha256": "0f97205c1ea1a1770c1a54a6573c35b0c966f0779009104b91a20b6c985fd934"
+    },
+    "secondaryClassification": "FROZEN_ABSOLUTE_CPU_PIXEL_FAILURE_UNPAIRED_D4",
+    "noHighImpactCorrectnessRootCauseClaim": true,
+    "PS4Closed": false
+  },
+  "native": {
+    "required21": "PASSserial",
+    "injectedColdCost4000": "finiteRefreshandactual2msHardDeadlinePass",
+    "actual49Presents": 44,
+    "threshold42": true,
+    "productionSeamMixed": "GPUquerypublicationcompose/originalAApolicy representativePASS",
+    "nativeRegression": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/native-regressions.json",
+      "bytes": 4453,
+      "sha256": "046b8b818e472ae901042337595b1b01c52cebe7de065e2b9afdec6fad082c4b"
+    }
+  },
+  "sourceDelta": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/implementation-delta.json",
+    "bytes": 3559,
+    "sha256": "3253919186d7deed2596b8561fa054e21ecaa28dfa5a2fab6ee87d8357084d53"
+  },
+  "SDKsource": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/SDK-source-input-manifest.json",
+    "bytes": 4614,
+    "sha256": "d773ad001f15826000b7e9ef0c3116280e1346d4720ab5c3f43eadc40ffb42a1"
+  },
+  "driverFreeze": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/browser-freeze.json",
+    "bytes": 13593,
+    "sha256": "2c40fbc6a189c5cf175c8565b4082455549b67ced2336f479bd57b124bde918b"
+  },
+  "opticalComparison": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/optical-comparison.json",
+    "bytes": 30646,
+    "sha256": "bd84fed7e1b5f690eebd8ee1aad8d35741df1de858f4c57811acf44dbd301432"
+  },
+  "ordinaryComparison": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/browser-comparison.json",
+    "bytes": 23847,
+    "sha256": "e65ab8932f3cb97b98d0778078115f8b0ebd8ac80b872ae918a4120203fa056e"
+  },
+  "spend": {
+    "diagnostic": {
+      "starts": 4,
+      "chargedSeconds": 127,
+      "capSeconds": 480
+    },
+    "functional": {
+      "starts": 2,
+      "chargedSeconds": 15,
+      "capSeconds": 360
+    },
+    "formal": {
+      "starts": 11,
+      "chargedSeconds": 362,
+      "capSeconds": 1560
+    },
+    "offlineReferences": {
+      "newUnique": 36,
+      "reused": 16,
+      "chargedSeconds": 512,
+      "capUnique": 128,
+      "capSeconds": 1800
+    }
+  },
+  "cleanup": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/cleanup.json",
+    "bytes": 5234,
+    "sha256": "ab5944b00fe6399bb3107db08e54a4c1cce33907bc407ecb4aaf2b1d08274a09"
+  },
+  "preservation": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/preservation.json",
+    "bytes": 1721,
+    "sha256": "433e19e41db50e25e81fe94e7ab01d649e6f319f0b506640dabc2ce3a392967f"
+  },
+  "preview": {
+    "URL": "http://127.0.0.1:4341/example.html",
+    "PID": 70446,
+    "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/install-accepted-normal-C/js",
+    "sourceSHA": "34575494a04c3078a015275bda1525a6b7b34812f937dbb8e49d28753c8c828c",
+    "SDKSHA": "8432e7facf92c1cdcd27a9f0fcb0429e4d20b3ae0a9b56bfe0a32ef8aa27af88",
+    "WASMSHA": "dc174d9e4e4494840d000dca1330931230d88a6e036996f2d4fc5c3aa6b5e981",
+    "leftRunning": true,
+    "status": "EXPERIMENTAL_RETAINED_ORDINARY_TAIL_PASS_CAMERA_OBSERVER_AND_ABSOLUTE_PIXEL_NOTQUALIFIED"
+  },
+  "functional": "2DPRPASSpre-finallegacy-onlydelta accuratelybound",
+  "failedOrUnexecuted": [
+    "WH-OPT-C-D4 actualcamerafrozenguardFAILEDobserverinterference",
+    "WH-OPT-B-D4 notrunafterstop",
+    "DPR4B/Cpairedoptical notqualified",
+    "AbsoluteCPUfinalD2touch/D4wheel/D4touchfail",
+    "finaldensityrerunafterlastlegacyguardnotexecuted",
+    "image/textnativecasesrepresentativeonly"
+  ],
+  "artifactManifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/artifact-manifest.json",
+    "bytes": 288327,
+    "sha256": "c46a6115fa9237cc4325c0631ea6f55ece88dd3741ffa759cc9327f62da8208b"
+  },
+  "noGateP34ReleasePerformancePASS": true,
+  "noCommitPush": true,
+  "primaryCheckpointTagAndUserDocsPreserved": true,
+  "nextOwner": "CONTROL_REVIEW / P20 obserververificationredesign andPS4strictpixelsreview",
+  "afterCallback": "STOP"
+}

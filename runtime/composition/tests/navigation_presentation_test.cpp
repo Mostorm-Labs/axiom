@@ -2,10 +2,13 @@
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include <stdexcept>
 #include <iostream>
+#include "../../render/tests/navigation-sharing-serialize.hpp"
+#include <fstream>
 using namespace canvas;
 void require(bool ok,const char* msg){if(!ok)throw std::runtime_error(msg);}
 class DemandRuntime final : public interaction::CanvasEditingRuntime {
 public:
+ auto navWork()const{return skiaRenderer_.navigationWork();}
  auto cameraChangedAt() const {return navigationChangedAt_;}
  void bounded(){navigationExactPreparation_=true;}
  void ordinary(){navigationExactPreparation_=false;}
@@ -342,10 +345,10 @@ int main(){
  r.normalCoverage();require(r.setViewportZoomAt(1.2F,100,60),"fresh navigation camera");
  const auto freshCamera=r.cameraChangedAt();
  require(r.serviceNavigationPresentation(freshCamera,presented),"navigation work missing");
- unsigned coldSteps=0;
+ canvas::render::internal::ns::reset();unsigned coldSteps=0;
  while(!presented){
   require(r.serviceNavigationPresentation(freshCamera,presented),"cold navigation abandoned");
-  require(++coldSteps<128,"complete navigation coverage never presented");
+  if(coldSteps==126){std::ofstream("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/correctness/cold-navigation-trace.json")<<canvas::render::internal::ns::exportRows().dump(2);const auto w=r.navWork();std::cerr<<"coldwork "<<w.queries<<" init"<<w.initializations<<" sources"<<w.sourceSteps<<" steps"<<w.knotSteps<<" built"<<w.tilesBuilt<<" yields"<<w.budgetYields<<std::endl;}require(++coldSteps<128,"complete navigation coverage never presented");
  }
  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty(),"navigation created canonical coverage");
  unsigned refinementSteps=0;

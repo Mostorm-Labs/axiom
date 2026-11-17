@@ -1,0 +1,3206 @@
+[
+  {
+    "route": "wheel",
+    "inputEnded": 7310,
+    "stableAt": 8202.100000143051,
+    "stableElapsedMs": 892.1000001430511,
+    "tailOwnerCalls": 14,
+    "exclusiveCPURecordedMs": 611.5,
+    "residualElapsedNotCPUms": 280.60000014305115,
+    "exclusivePhaseMs": {
+      "owner": 0.1,
+      "pump": 0.0,
+      "resource": 0.6000000000000001,
+      "navigation": 2.7000000000000006,
+      "canonical": 16.3,
+      "render": 2.4,
+      "validation": 0.0,
+      "cacheBegin": 0.8999999999999999,
+      "bodies": 0.1,
+      "materials": 567.3000000000001,
+      "sceneDraw": 0.0,
+      "flush": 0.3,
+      "present": 0.0,
+      "fullBody": 20.8
+    },
+    "counterTotals": {
+      "coverageSteps": 18147,
+      "geometryAdvances": 0,
+      "gpuTiles": 954,
+      "cpuTiles": 0,
+      "maskPrimitives": 0,
+      "bodyTileBuilds": 62,
+      "bodyTileHits": 0,
+      "rasterGroups": 19,
+      "fullBodyCalls": 16,
+      "fullBodyPending": 3
+    },
+    "postInputFrames": [
+      {
+        "at": 8149,
+        "frame": {
+          "presented": "3"
+        }
+      }
+    ],
+    "traceDropped": 0,
+    "rows": [
+      {
+        "at": 7315.400000095367,
+        "startNs": 7314700000,
+        "endNs": 7315400000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.7,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.6,
+            "selfMs": 0.6,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 1,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7331.700000047684,
+        "startNs": 7331500000,
+        "endNs": 7331700000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7346.900000095367,
+        "startNs": 7346600000,
+        "endNs": 7346900000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7365.5,
+        "startNs": 7365200000,
+        "endNs": 7365500000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7380.400000095367,
+        "startNs": 7380000000,
+        "endNs": 7380300000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7398.799999952316,
+        "startNs": 7398500000,
+        "endNs": 7398800000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 7429.299999952316,
+        "startNs": 7414400000,
+        "endNs": 7429200000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 14.8,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 14.7,
+            "selfMs": 14.2,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 0.5,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 3,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1,
+          "geometryAdvances": 0,
+          "gpuTiles": 1,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 536302209,
+          "gpuEpochs": 1,
+          "pendingRelease": 244922736,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 7441.900000095367,
+        "startNs": 7430000000,
+        "endNs": 7441900000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 11.9,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 11.8,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 11.4,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 11.3,
+            "selfMs": 11.3,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 4,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1656,
+          "geometryAdvances": 0,
+          "gpuTiles": 356,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 1,
+          "compileInputs": 0,
+          "used": 597027313,
+          "gpuEpochs": 2,
+          "pendingRelease": 244922736,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 7459.700000047684,
+        "startNs": 7448100000,
+        "endNs": 7459600000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 11.5,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 11.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 11.0,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 10.8,
+            "selfMs": 10.8,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 6,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1614,
+          "geometryAdvances": 0,
+          "gpuTiles": 333,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 2,
+          "compileInputs": 0,
+          "used": 411913441,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 7641.799999952316,
+        "startNs": 7465200000,
+        "endNs": 7641700000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 176.5,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 176.4,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 176.0,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 175.7,
+            "selfMs": 169.5,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 6.2,
+            "selfMs": 6.2,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 8,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 98,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 587478697,
+          "gpuEpochs": 3,
+          "pendingRelease": 0,
+          "staging": 57114696
+        }
+      },
+      {
+        "at": 7787.100000143051,
+        "startNs": 7642200000,
+        "endNs": 7787100000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 144.9,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 144.8,
+            "selfMs": 0.5,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 144.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 143.9,
+            "selfMs": 138.8,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 5.1,
+            "selfMs": 5.1,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 8,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 50,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 587478297,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 57114696
+        }
+      },
+      {
+        "at": 7990.799999952316,
+        "startNs": 7787700000,
+        "endNs": 7990700000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 203.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 202.8,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 202.4,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 202.0,
+            "selfMs": 197.0,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 5.0,
+            "selfMs": 5.0,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 8,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 51,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 587478297,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 57114696
+        }
+      },
+      {
+        "at": 8037.700000047684,
+        "startNs": 7991100000,
+        "endNs": 8037600000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 46.5,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 46.3,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 46.2,
+            "selfMs": 1.5,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 44.2,
+            "selfMs": 39.7,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "fullBody": {
+            "inclusiveMs": 4.5,
+            "selfMs": 4.5,
+            "calls": 13
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 1,
+          "needsPaint": 1,
+          "canonicalWork": 1,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 8,
+          "yields": 0,
+          "fullBodyCalls": 13,
+          "fullBodyPending": 0,
+          "coverageSteps": 2588,
+          "geometryAdvances": 0,
+          "gpuTiles": 65,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 62,
+          "bodyTileBuilds": 62,
+          "bodyTileHits": 0,
+          "rasterGroups": 16,
+          "cacheHits": 62,
+          "entries": 39,
+          "compileInputs": 0,
+          "used": 690970201,
+          "gpuEpochs": 2,
+          "pendingRelease": 56573896,
+          "staging": 57114696
+        }
+      },
+      {
+        "at": 8148.799999952316,
+        "startNs": 8148500000,
+        "endNs": 8148800000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 362,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 0,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      }
+    ]
+  },
+  {
+    "route": "touch",
+    "inputEnded": 17666.5,
+    "stableAt": 18502.200000047684,
+    "stableElapsedMs": 835.7000000476837,
+    "tailOwnerCalls": 14,
+    "exclusiveCPURecordedMs": 567.1999999999999,
+    "residualElapsedNotCPUms": 268.5000000476838,
+    "exclusivePhaseMs": {
+      "owner": 0.1,
+      "pump": 0.0,
+      "resource": 0.30000000000000004,
+      "navigation": 2.1,
+      "canonical": 18.6,
+      "render": 3.0,
+      "validation": 0.1,
+      "cacheBegin": 0.6,
+      "bodies": 0.0,
+      "materials": 521.3,
+      "sceneDraw": 0.0,
+      "flush": 0.2,
+      "present": 0.0,
+      "fullBody": 20.9
+    },
+    "counterTotals": {
+      "coverageSteps": 18137,
+      "geometryAdvances": 0,
+      "gpuTiles": 954,
+      "cpuTiles": 0,
+      "maskPrimitives": 0,
+      "bodyTileBuilds": 58,
+      "bodyTileHits": 0,
+      "rasterGroups": 18,
+      "fullBodyCalls": 15,
+      "fullBodyPending": 3
+    },
+    "postInputFrames": [
+      {
+        "at": 18465.200000047684,
+        "frame": {
+          "presented": "5"
+        }
+      }
+    ],
+    "traceDropped": 0,
+    "rows": [
+      {
+        "at": 17681.10000014305,
+        "startNs": 17680700000,
+        "endNs": 17681100000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.4,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.4,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 1,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17697.700000047684,
+        "startNs": 17697400000,
+        "endNs": 17697700000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.3,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17713,
+        "startNs": 17712800000,
+        "endNs": 17712900000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17731.60000014305,
+        "startNs": 17731500000,
+        "endNs": 17731600000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17748.200000047684,
+        "startNs": 17748000000,
+        "endNs": 17748200000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17765,
+        "startNs": 17764800000,
+        "endNs": 17765000000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 1,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      },
+      {
+        "at": 17798.10000014305,
+        "startNs": 17781300000,
+        "endNs": 17798000000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 16.7,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 16.7,
+            "selfMs": 16.1,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 0.6,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 3,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1,
+          "geometryAdvances": 0,
+          "gpuTiles": 1,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 685353993,
+          "gpuEpochs": 1,
+          "pendingRelease": 244922736,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 17810.299999952316,
+        "startNs": 17798400000,
+        "endNs": 17810200000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 11.8,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 11.7,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 11.3,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 11.1,
+            "selfMs": 11.1,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 4,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1587,
+          "geometryAdvances": 0,
+          "gpuTiles": 348,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 1,
+          "compileInputs": 0,
+          "used": 746030617,
+          "gpuEpochs": 2,
+          "pendingRelease": 244922736,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 17824.900000095367,
+        "startNs": 17813700000,
+        "endNs": 17824700000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 11.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 10.8,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 10.5,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 10.4,
+            "selfMs": 10.4,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 6,
+          "yields": 1,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 1723,
+          "geometryAdvances": 0,
+          "gpuTiles": 354,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 2,
+          "compileInputs": 0,
+          "used": 560884425,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 540800
+        }
+      },
+      {
+        "at": 17995.5,
+        "startNs": 17830600000,
+        "endNs": 17995400000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 164.8,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 164.7,
+            "selfMs": 0.6,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 164.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 163.9,
+            "selfMs": 157.8,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 6.1,
+            "selfMs": 6.1,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 9,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 86,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 1,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 736443209,
+          "gpuEpochs": 3,
+          "pendingRelease": 0,
+          "staging": 57127108
+        }
+      },
+      {
+        "at": 18139.5,
+        "startNs": 17996000000,
+        "endNs": 18139300000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 143.3,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 143.1,
+            "selfMs": 0.3,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 142.8,
+            "selfMs": 0.5,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 142.1,
+            "selfMs": 136.8,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 5.3,
+            "selfMs": 5.3,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 9,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 49,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 736442809,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 57127108
+        }
+      },
+      {
+        "at": 18313.5,
+        "startNs": 18140100000,
+        "endNs": 18313400000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 173.3,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 173.1,
+            "selfMs": 0.5,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 172.6,
+            "selfMs": 0.6,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 171.9,
+            "selfMs": 166.7,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 5.2,
+            "selfMs": 5.2,
+            "calls": 1
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 1,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 1,
+          "cursor": 9,
+          "yields": 1,
+          "fullBodyCalls": 1,
+          "fullBodyPending": 1,
+          "coverageSteps": 4096,
+          "geometryAdvances": 0,
+          "gpuTiles": 51,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 3,
+          "compileInputs": 0,
+          "used": 736442809,
+          "gpuEpochs": 2,
+          "pendingRelease": 0,
+          "staging": 57127108
+        }
+      },
+      {
+        "at": 18359,
+        "startNs": 18314200000,
+        "endNs": 18359000000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 44.8,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "canonical": {
+            "inclusiveMs": 44.6,
+            "selfMs": 0.4,
+            "calls": 1
+          },
+          "render": {
+            "inclusiveMs": 44.2,
+            "selfMs": 1.3,
+            "calls": 1
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.1,
+            "selfMs": 0.1,
+            "calls": 1
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "materials": {
+            "inclusiveMs": 42.6,
+            "selfMs": 38.3,
+            "calls": 1
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "fullBody": {
+            "inclusiveMs": 4.3,
+            "selfMs": 4.3,
+            "calls": 12
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 1,
+          "needsPaint": 1,
+          "canonicalWork": 1,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 9,
+          "yields": 0,
+          "fullBodyCalls": 12,
+          "fullBodyPending": 0,
+          "coverageSteps": 2538,
+          "geometryAdvances": 0,
+          "gpuTiles": 65,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 58,
+          "bodyTileBuilds": 58,
+          "bodyTileHits": 0,
+          "rasterGroups": 15,
+          "cacheHits": 61,
+          "entries": 38,
+          "compileInputs": 0,
+          "used": 746757613,
+          "gpuEpochs": 2,
+          "pendingRelease": 56586308,
+          "staging": 57127108
+        }
+      },
+      {
+        "at": 18465,
+        "startNs": 18464800000,
+        "endNs": 18465000000,
+        "phases": {
+          "owner": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "pump": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 1
+          },
+          "resource": {
+            "inclusiveMs": 0.2,
+            "selfMs": 0.2,
+            "calls": 1
+          },
+          "navigation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "canonical": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "render": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "validation": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "cacheBegin": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "bodies": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "materials": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "sceneDraw": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "flush": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "present": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          },
+          "fullBody": {
+            "inclusiveMs": 0.0,
+            "selfMs": 0.0,
+            "calls": 0
+          }
+        },
+        "facts": {
+          "camera": 1085,
+          "scene": 1,
+          "semantic": 0,
+          "surface": 1,
+          "metrics": 1,
+          "navigationPending": 0,
+          "navigationPresented": 0,
+          "canonicalRequested": 0,
+          "needsPaint": 0,
+          "canonicalWork": 0,
+          "bodiesStatus": 0,
+          "materialStatus": 0,
+          "cursor": 0,
+          "yields": 0,
+          "fullBodyCalls": 0,
+          "fullBodyPending": 0,
+          "coverageSteps": 0,
+          "geometryAdvances": 0,
+          "gpuTiles": 0,
+          "cpuTiles": 0,
+          "maskPrimitives": 0,
+          "maskUpdates": 0,
+          "bodyTileBuilds": 0,
+          "bodyTileHits": 0,
+          "rasterGroups": 0,
+          "cacheHits": 0,
+          "entries": 0,
+          "compileInputs": 0,
+          "used": 0,
+          "gpuEpochs": 0,
+          "pendingRelease": 0,
+          "staging": 0
+        }
+      }
+    ]
+  }
+]

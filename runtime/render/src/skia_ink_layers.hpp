@@ -11,6 +11,7 @@ namespace canvas::render::internal {
 // result pixels are qualified by an exact ordered mask-primitive prefix.
 // No surface/framebuffer/receipt validity is inferred from a tile hit.
 class SkiaInkLayers final {
+    friend struct PostNavigationBodyTestAccess;
  public:
     static constexpr int tileSize=128,maskGuard=8;
     bool draw(SkCanvas& destination,SkSurface& scratch,const ReferenceTraversalEntry&,
@@ -47,7 +48,7 @@ class SkiaInkLayers final {
     std::map<NavigationBodyKey,NavigationBody> navigationBodies_;
     struct FullBody {std::shared_ptr<const PreparedNavigationGeometry> geometry;sk_sp<SkImage> pixels;sk_sp<SkSurface> building;
         std::unique_ptr<CompactStrokeRasterJob> raster;SkMatrix matrix;resources::ResourceLease lease,staging;
-        std::uint64_t used=0;std::size_t bytes=0;};
+        std::uint64_t used=0;std::size_t bytes=0;bool completeSupport=true;};
     std::map<NavigationBodyKey,FullBody> fullBodies_;
     void bindNavigationBudget(const std::shared_ptr<resources::ResourceBudgetManager>&);
     bool evictNavigationBody();

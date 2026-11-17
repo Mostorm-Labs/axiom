@@ -3,6 +3,7 @@
 #undef main
 #include "../src/skia_navigation_tiles.hpp"
 #include "canvas/semantic/snapshot.hpp"
+#include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include <nlohmann/json.hpp>
@@ -17,6 +18,7 @@
 using nlohmann::json;
 namespace canvas::render::internal {
 struct ContinuousZoomProbe {
+ static void poisonLegacy(SkiaNavigationTiles&n){for(auto&c:n.legacyCompactCosts_)c.observe(4000);}
  static json policyState(const SkiaNavigationTiles&n){return {{"displayLast",n.displayLastUs_},{"displayEWMA",n.displayEwmaUs_},{"quantumEWMA",n.quantumEwmaUs_},{"qualityAge",n.qualityAge_},{"demands",n.qualityDemands_.size()},{"tiles",n.tiles_.size()},{"job",bool(n.job_)},{"suspended",bool(n.refinement_)}};}
  static void exposeFrontier(SkiaNavigationTiles&n,const foundation::WorldRect&visible){
   const foundation::WorldRect strip{visible.right-1,visible.top,visible.right,visible.bottom};
@@ -168,9 +170,26 @@ json samePresentationRED(std::shared_ptr<NativeMetalCompletion> c){
  ns::clock={};ns::gateHook={};zoom_observation::observer={};json out={{"real_Metal",true},{"deterministic_clock_only_not_latency",true},{"same_presentation_refinement_delayed",witnessed},{"nonempty_finer_content_positive",positive},{"witness",attempts}};std::cout<<out.dump()<<'\n';require(!witnessed,"OLD_READY_REFINEMENT_HELD_UNTIL_NEXT_PRESENTATION");require(positive,"NO_POSITIVE_SAME_PRESENT_CONTENT_REFINEMENT");return out;
 }
 #endif
+
+#if defined(__APPLE__)
+json legacyColdRefresh(std::shared_ptr<NativeMetalCompletion> c){
+ ZoomTarget target(c);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"legacyRefreshTarget");SkiaNavigationTiles nav;RenderCacheOptions options;auto budget=std::make_shared<resources::ResourceBudgetManager>();
+ auto e=source();auto content=std::get<CompactStrokeReferenceCommand>(e.command).content.get();content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",1).package.compactConfig;content.stroke.knots={{40,50,32768},{120,50,32768}};e.record.content=content;e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(e.record.content)};
+ NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>&out){for(unsigned n=0;n<16;++n){auto copy=e;copy.record.objectId=ObjectId::fromUint64(n+1);out.push_back(copy);}return true;};
+ auto f=zoomFrame(2);FrameState frame{f.viewId,f.camera,{0,0,256,128},{256,128,512,256,2,1},f.sceneGeneration,f.sceneReadToken,f.surfaceGeneration,f.metricsGeneration,f.frameId,{0,0,256,128}};
+ auto clock=std::chrono::steady_clock::time_point{};ns::clock=[&]{return clock;};ns::gateHook=[&](unsigned){clock+=std::chrono::microseconds(10);};options.navigationMaxSteps=1;
+ clock={};require(nav.render(target,{1,0,0},frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"legacyRefreshSetup");ContinuousZoomProbe::poisonLegacy(nav);const auto before=nav.work.sourceSteps;options.navigationMaxSteps=64;json rows=json::array();
+ for(unsigned i=0;i<5&&nav.work.sourceSteps==before;++i){clock={};require(nav.render(target,{1,0,0},frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"legacyRefreshRender");c->context->flushAndSubmit(GrSyncCpu::kYes);rows.push_back({{"call",i},{"sourceSteps",nav.work.sourceSteps-before},{"virtualElapsedUs",std::chrono::duration_cast<std::chrono::microseconds>(clock.time_since_epoch()).count()}});}
+ const auto progress=nav.work.sourceSteps;clock={};ns::gateHook=[&](unsigned){clock+=std::chrono::microseconds(2000);};
+ require(nav.render(target,{1,0,0},frame,query,1,options,budget).code==BackendSubmissionCode::kAccepted,"legacyExpiredRender");
+ require(nav.work.sourceSteps==progress,"LEGACY_REFRESH_BYPASSED_REAL_DEADLINE");
+ ns::clock={};ns::gateHook={};require(nav.work.sourceSteps>before,"COLD_ESTIMATE_PREVENTS_BOUNDED_RESAMPLING");return{{"virtualClockNotLatency",true},{"rows",rows},{"same2msBudget",true}};
+}
+#endif
 int main(int argc,char**argv){try{
 #if defined(__APPLE__)
  require(argc>=2,"output path");auto autorelease=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");auto d=MTLCreateSystemDefaultDevice(),q=message(d,"newCommandQueue");auto c=std::make_shared<NativeMetalCompletion>();GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(d),sk_cfp<GrMTLHandle>(q)};c->context=GrDirectContexts::MakeMetal(backend);require(bool(c->context),"required actual Metal");
+ if(argc>1&&std::string_view(argv[1])=="--legacy-refresh"){std::cout<<legacyColdRefresh(c).dump()<<std::endl;return 0;}
  if(argc>1&&std::string_view(argv[1])=="--continuation"){continuationCase(c,argc>2?unsigned(std::stoul(argv[2])):4,argc>3?argv[3]:"normal");return 0;}
  if(argc>1&&std::string_view(argv[1])=="--static-target"){std::cout<<staticTarget(c).dump()<<std::endl;return 0;}
  if(argc>1&&std::string_view(argv[1])=="--target-streaming"){std::cout<<targetAndStreaming(c).dump()<<std::endl;return 0;}

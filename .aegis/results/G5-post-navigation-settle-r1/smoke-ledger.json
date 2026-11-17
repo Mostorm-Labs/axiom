@@ -1,0 +1,52 @@
+{
+  "attempts": [
+    {
+      "DPR": 2,
+      "status": "PASS",
+      "driverSHA": "ccf8f1c6c63a27f500385f769faf59d99b8fe37900ef5e37bbaff1c1e68d4b9b",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/smoke.mjs",
+          "2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 7.063620125,
+        "peak_process_family_rss_kib": 1497568,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "charged_seconds": 8
+    },
+    {
+      "DPR": 4,
+      "status": "PASS",
+      "driverSHA": "ccf8f1c6c63a27f500385f769faf59d99b8fe37900ef5e37bbaff1c1e68d4b9b",
+      "guard": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/smoke.mjs",
+          "4"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 6.395060459,
+        "peak_process_family_rss_kib": 1753232,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "charged_seconds": 7
+    }
+  ],
+  "charged_seconds": 15,
+  "cap_seconds": 360,
+  "corrective_starts": 0,
+  "performance_sampling": false
+}

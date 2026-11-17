@@ -1,0 +1,173 @@
+{
+  "status": "USER_REQUESTED_NONRELEASE_CHECKPOINT_KNOWN_QUALIFICATION_LIMITS",
+  "user_authorization": "2026-11-17 Asia/Shanghai: 现在这个版本还不错，先提交并推送当前改动，然后打上tag做下标记",
+  "parent": "230ee4c52ee36361abb26c527f29c86e9a8cebb7",
+  "branch": "codex/g5-exposure-region-checkpoint",
+  "tag": "g5-post-navigation-settle-20261117",
+  "source_manifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/normal-source-C.json",
+    "bytes": 146429,
+    "sha256": "34575494a04c3078a015275bda1525a6b7b34812f937dbb8e49d28753c8c828c"
+  },
+  "SDK_manifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/normal-SDK-C.json",
+    "bytes": 4290,
+    "sha256": "8432e7facf92c1cdcd27a9f0fcb0429e4d20b3ae0a9b56bfe0a32ef8aa27af88"
+  },
+  "served_WASM_SHA256": "dc174d9e4e4494840d000dca1330931230d88a6e036996f2d4fc5c3aa6b5e981",
+  "source_correspondence": "All1207 normal4341source paths must match committedtree. Changes copied only from hash-bound candidate; originalperformanceworktree and oldsource/SDKs remain untouched.",
+  "owners": [
+    "ExistingSkiaInkLayers demandcrop/exactbasis/pendingresume",
+    "ExistingSkiaNavigationTiles authoritativeparentemptyproof/negativecache/legacycostrefresh",
+    "SkiaRenderer privatehandoff"
+  ],
+  "publicSDK_schema_Operation_Brushalgorithm_change": false,
+  "memory_build_profile_MiB": [
+    512,
+    1024,
+    128
+  ],
+  "policy_note": "Same candidate explicitCMake profile; defaults/version/dependencylocks unchanged. No upfrontallocation orbudgettuning inthischeckpoint.",
+  "verified_performance": {
+    "ordinary_windows": 8,
+    "DPR2_settle_median_wheel_touch_ms": [
+      251.15,
+      254.2
+    ],
+    "DPR4_baseline_wheel_touch_ms": [
+      885.3,
+      861.25
+    ],
+    "DPR4_candidate_wheel_touch_ms": [
+      392.85,
+      419.45
+    ],
+    "candidate_max_content_submission_gap_ms": [
+      26.9,
+      48.9
+    ],
+    "not_physical_or_displayframe_p95": true
+  },
+  "remaining_qualification": [
+    "DPR4immediatefullframeRGBAreadback41–68msinterfereswith33.4mscameraoracle; originalguardfailed, no subtractionwaiver",
+    "DPR4strictCPUfinalwheel5130nonAApixels delta3>tolerance2 on3materialscanlines; no matchingDPR4baseline tocategorizeintroduced/inherited",
+    "DPR4pairedopticalbaseline notcapturedafterstop; imageCPUdifferencesnotwaived"
+  ],
+  "implementation_result": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/result.json",
+    "bytes": 7645,
+    "sha256": "b373610cf00aa690e3f1537ed743875b54936800f2eec3e2b0e70f89a3df66ea"
+  },
+  "independent_review": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-control-r1/control-review.json",
+    "bytes": 6367,
+    "sha256": "cbeef4a0e15878419696656cf52c983f5fbb89c8ae9a410ac216fa1d8f82e19a"
+  },
+  "evidence_boundary": "Commitcontains result/package/sourceSDKindices andsmalltestlogs. Large rawpixel/Snapshot/reference/SDKbinaries remain content-addressed localartifacts asrecorded, not uploadedtoGit.",
+  "candidate_delta": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "bytes": 28984,
+      "sha256": "4abe268e80b9484136ff4e124cecb4f1e41dad418b6a7698149523f628d9bea1",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "bytes": 43700,
+      "sha256": "119f8242b92846fdf7f9db2d76fb21f0b0694153cfa39c86a3f91f7907aa2d0d",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/tests/navigation_display_workavoidance_test.cpp",
+      "bytes": 19872,
+      "sha256": "702f0b8f3f3cea1837fd8010c4717e7467ed33700e1dd4fcde78cefe6dfd6eaf",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/tests/continuous_zoom_quality_test.cpp",
+      "bytes": 39511,
+      "sha256": "80a1c494a06dc6c30b568689e7f9718adf301b6094145eda1c261d0af9883e7b",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "bytes": 32601,
+      "sha256": "1d241e4118ae0c90e012d0ac79c27228340bfa874f02e41a9ea3f112b7859969",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "bytes": 98082,
+      "sha256": "3280cd68a4597441880b6ac410b53df939897e6b175a73b5b0ec5e81aa411c12",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "bytes": 127013,
+      "sha256": "b14c088384894c56012adef86de253b813dfdc9e296bd69ab2a6916d57f72407",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "bytes": 7350,
+      "sha256": "326d9254a5430f211c64a0f5025740b1dcda58d23ec7b425d01d30d0ba1126bd",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "bytes": 6144,
+      "sha256": "45a8f283c8efceb85dac2b9e6dacbbe747b9cfccce652dca71798dff932197ab",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/composition/tests/post_navigation_settle_pixels_test.cpp",
+      "bytes": 16030,
+      "sha256": "e9738baedf93941c29faa727f3b20ae5ea76559324d60a7f6f2cbdc84f8c82a2",
+      "status": "added",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/composition/tests/navigation_presentation_test.cpp",
+      "bytes": 27862,
+      "sha256": "083eb3a223f0404e52c0949516c3681c080c94d3f0f0dc2935949c8649c91357",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/composition/tests/post_navigation_settle_body_test.cpp",
+      "bytes": 6770,
+      "sha256": "07eeefd61afb51377e8473f8cccd3ae28c6950885b4aefa53247bb783a347ae7",
+      "status": "added",
+      "origin": "frozen4341normal"
+    },
+    {
+      "path": "runtime/composition/tests/web_navigation_handoff_test.cpp",
+      "bytes": 8924,
+      "sha256": "523c5e66ebbdc50681ad3c5d8ff5168f6a888a75b07ff51df6951a2e510521c7",
+      "status": "modified",
+      "origin": "frozen4341normal"
+    }
+  ],
+  "SDK_release": false,
+  "version_change": false,
+  "old_tag_rewritten": false,
+  "live_demo": "http://127.0.0.1:4341/example.html",
+  "originalperformance_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "preserve_live_ports": [
+    4336,
+    4337,
+    4338,
+    4339,
+    4340,
+    4341
+  ]
+}

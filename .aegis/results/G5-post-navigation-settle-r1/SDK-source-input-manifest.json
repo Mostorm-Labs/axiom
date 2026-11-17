@@ -1,0 +1,95 @@
+{
+  "status": "MATCHING_NORMALOFF_AND_BC_OPTICAL_FROZEN",
+  "baselineCommit": "230ee4c5",
+  "baselineSDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-SDK-C.json",
+    "bytes": 4280,
+    "sha256": "ea476abada7f4a91b35a3d6033f1c27d3029a97cd5bab193ff21175cdd78782a"
+  },
+  "normalSource": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/normal-source-C.json",
+    "bytes": 146429,
+    "sha256": "34575494a04c3078a015275bda1525a6b7b34812f937dbb8e49d28753c8c828c"
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/normal-SDK-C.json",
+    "bytes": 4290,
+    "sha256": "8432e7facf92c1cdcd27a9f0fcb0429e4d20b3ae0a9b56bfe0a32ef8aa27af88"
+  },
+  "opticalSources": {
+    "B": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/optical-source-B.json",
+      "bytes": 146291,
+      "sha256": "bb3b8a70fc6161b6be44ffeb479e719dec3d9f41a2ceb5d1d3da625387da35b7"
+    },
+    "C": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/optical-source-C.json",
+      "bytes": 146429,
+      "sha256": "e60f65282eda00067c0dfb98cc7a0d3e2efa38e9e620363eb2ff4ea3f9cbf6a0"
+    }
+  },
+  "opticalSDKs": {
+    "B": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/optical-SDK-B.json",
+      "bytes": 4282,
+      "sha256": "e7b3a0216cc477830a0c3d21c9f87a1e7bba610d92a4448206266b745823d8e9"
+    },
+    "C": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/optical-SDK-C.json",
+      "bytes": 4291,
+      "sha256": "5f6003faea850efcabc5fb98ab9f30647ec970d42b388195565aed9316fef337"
+    }
+  },
+  "actualCompileInputs": {
+    "normal-C": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/normal-C-actual-compile-inputs.json",
+      "bytes": 1078259,
+      "sha256": "66a0afe8e88d3606ef0aaef68c463636e6a4da8800e914fc433c1aa2533f39a5"
+    },
+    "optical-C": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/optical-C-actual-compile-inputs.json",
+      "bytes": 1103478,
+      "sha256": "b6cb8399c3d44dbb8ab781cf0cd86710a8c183a5848461c344bcb645f82f0a56"
+    },
+    "optical-B": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/optical-B-actual-compile-inputs.json",
+      "bytes": 1103478,
+      "sha256": "8eeba291bdfddef2da565ca7af3e15b3836411a425bdfe07c652cb70f4a3fadd"
+    }
+  },
+  "normalConfig": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/normal-C-build-steps.json",
+    "bytes": 3381,
+    "sha256": "cba332157a89d990c6b087bd2f1ab9eced4bccc96d31660cf5d9ddbce960b71e"
+  },
+  "normalMacros": "allOFF/qualificationOFF",
+  "diagnosticMacro": "OnlyactualpresenthookCONTINUOUS_ZOOM, no coarsePSownertrace in finaloptical",
+  "memoryMiB": [
+    512,
+    1024,
+    128
+  ],
+  "version": "0.4.3.0 unchanged",
+  "functionalSDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/first4341-normal-SDK-C.json",
+    "bytes": 4281,
+    "sha256": "77dcbd99e9367dd3c94e1f23624efb4d21200cfd8ae85d98079a5042cd91bfc1"
+  },
+  "functionalSource": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/first4341-normal-source-C.json",
+    "bytes": 146429,
+    "sha256": "09ce61e5ec6e7b17643e6a480e746583dbc80c530a7093ae11da5dafd6d80901"
+  },
+  "functionalToFinalChangedAssets": {
+    "axiom.wasm": {
+      "functional": "fa8b38252fd1c2110c34c3a3c9c7e5a79a170f1da29f438d6edbb51e24d989fc",
+      "final": "dc174d9e4e4494840d000dca1330931230d88a6e036996f2d4fc5c3aa6b5e981"
+    }
+  },
+  "functionalToFinalChangedSources": [
+    "runtime/render/tests/continuous_zoom_quality_test.cpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_navigation_tiles.hpp"
+  ],
+  "functionalDeltaMeaning": "Legacyalgorithm1coarseestimatedcost boundedresample+harddeadline state only; v4functionalwrapper/input/resources unchanged. Finalnormal builtmatching but noadditionalfunctionalbrowserstarts. Native21anddeterministic4000us/hard2ms test coverthisdelta."
+}

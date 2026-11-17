@@ -1,0 +1,162 @@
+{
+  "status": "DIAGNOSTIC_NATIVEPAIR_MECHANISM",
+  "raw": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/early/PS-DIAG-C-D2-4/raw.json",
+  "metrics": [
+    {
+      "route": "wheel",
+      "proxy": {
+        "gaps": {
+          "count": 5338,
+          "median": 0,
+          "p95": 16.5,
+          "maximum": 29.59999990463257
+        },
+        "direction_boundaries": [
+          {
+            "index": 60,
+            "gap_ms": 16.699999809265137
+          },
+          {
+            "index": 120,
+            "gap_ms": 16.5
+          },
+          {
+            "index": 180,
+            "gap_ms": 16.799999952316284
+          },
+          {
+            "index": 240,
+            "gap_ms": 17.5
+          },
+          {
+            "index": 300,
+            "gap_ms": 16.800000190734863
+          }
+        ],
+        "deadline_lateness": {
+          "count": 360,
+          "median": 0.03333338101765548,
+          "p95": 0.8666667143506857,
+          "maximum": 4.099999904632568
+        },
+        "dispatch": {
+          "count": 360,
+          "median": 0.2999999523162842,
+          "p95": 0.5,
+          "maximum": 1
+        },
+        "settle_ms": 236.40000009536743,
+        "content_submissions": 5337,
+        "input_count": 360
+      },
+      "camera": {
+        "successfulPresents": 359,
+        "max_gap_ms": 29.59999990463257,
+        "boundaries": [
+          {
+            "index": 60,
+            "gap_ms": 16.899999856948853
+          },
+          {
+            "index": 120,
+            "gap_ms": 16.5
+          },
+          {
+            "index": 180,
+            "gap_ms": 16.899999856948853
+          },
+          {
+            "index": 240,
+            "gap_ms": 17.5
+          },
+          {
+            "index": 300,
+            "gap_ms": 16.90000009536743
+          }
+        ],
+        "missed33_4msWindows": [],
+        "finalCurrent": true,
+        "pass": true
+      }
+    },
+    {
+      "route": "touch",
+      "proxy": {
+        "gaps": {
+          "count": 6011,
+          "median": 0,
+          "p95": 16.5,
+          "maximum": 37.80000019073486
+        },
+        "direction_boundaries": [
+          {
+            "index": 60,
+            "gap_ms": 16.700000047683716
+          },
+          {
+            "index": 120,
+            "gap_ms": 16.5
+          },
+          {
+            "index": 180,
+            "gap_ms": 16.59999990463257
+          },
+          {
+            "index": 240,
+            "gap_ms": 16.899999856948853
+          },
+          {
+            "index": 300,
+            "gap_ms": 16.699999809265137
+          }
+        ],
+        "deadline_lateness": {
+          "count": 360,
+          "median": 5.700000047683716,
+          "p95": 6.933333476383268,
+          "maximum": 18.83333333333212
+        },
+        "dispatch": {
+          "count": 360,
+          "median": 16.40000009536743,
+          "p95": 17.200000047683716,
+          "maximum": 21.5
+        },
+        "settle_ms": 270.2000000476837,
+        "content_submissions": 6010,
+        "input_count": 360
+      },
+      "camera": {
+        "successfulPresents": 359,
+        "max_gap_ms": 37.90000009536743,
+        "boundaries": [
+          {
+            "index": 60,
+            "gap_ms": 16.800000190734863
+          },
+          {
+            "index": 120,
+            "gap_ms": 16.600000143051147
+          },
+          {
+            "index": 180,
+            "gap_ms": 16.600000143051147
+          },
+          {
+            "index": 240,
+            "gap_ms": 16.90000009536743
+          },
+          {
+            "index": 300,
+            "gap_ms": 16.799999952316284
+          }
+        ],
+        "missed33_4msWindows": [],
+        "finalCurrent": true,
+        "pass": true
+      }
+    }
+  ],
+  "noOrdinaryLatencyInference": true,
+  "newParentEmptyProof": "OnlyauthoritativeRuntimebackgroundquery; originalquerybudget; nonemptynegativecachechargedbounded64; noRenderpayload parentbuild"
+}

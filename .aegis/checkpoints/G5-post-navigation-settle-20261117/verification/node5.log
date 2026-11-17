@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: final input window includes successful present after inputEnded
+ok 1 - final input window includes successful present after inputEnded
+  ---
+  duration_ms: 0.677334
+  ...
+# Subtest: real47ms window miss is retained
+ok 2 - real47ms window miss is retained
+  ---
+  duration_ms: 0.079458
+  ...
+# Subtest: DPR4 slow checkpoint cannot relax frozen absolute stablelimit
+ok 3 - DPR4 slow checkpoint cannot relax frozen absolute stablelimit
+  ---
+  duration_ms: 0.134583
+  ...
+# Subtest: available failed pair blocks nextwindow admission
+ok 4 - available failed pair blocks nextwindow admission
+  ---
+  duration_ms: 0.178
+  ...
+# Subtest: nested inclusive cost is excluded from sum
+ok 5 - nested inclusive cost is excluded from sum
+  ---
+  duration_ms: 0.568708
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 85.366708

@@ -237,7 +237,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const CanonicalViewportTransform& camera,const FrameState& frame,const NavigationSourceQuery& query,
     std::uint64_t resourceEpoch,const RenderCacheOptions& options,
     std::shared_ptr<resources::ResourceBudgetManager> budget,bool allowPrewarm,const RetainedNavigationSource* retainedSource, SkiaTextResources* textResources, ImageResourceResolver* images,
-    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements,std::shared_ptr<PreparedGeometryCache> prepared,std::uint32_t background,std::shared_ptr<ReferenceValidationCache> validation,bool opaquePlainBackground,std::shared_ptr<SkiaInkLayers> sharedBodies){
+    const std::function<void(SkCanvas&)>& drawOverlay,std::shared_ptr<SourceRetentionPool> sourcePool,std::shared_ptr<GpuResourceRetirement> retirements,std::shared_ptr<PreparedGeometryCache> prepared,std::uint32_t background,std::shared_ptr<ReferenceValidationCache> validation,bool opaquePlainBackground,std::shared_ptr<SkiaInkLayers> sharedBodies,const NavigationBackgroundQuery& backgroundOnly){
 #if defined(AXIOM_NAV_SHARING_OBSERVATION)
     ns::begin(0);ns::End nsEnd;
     if(ns::state.row){auto&r=*ns::state.row;r.view=frame.viewId.value();r.semantic=frame.sceneGeneration.value();r.scene=frame.sceneReadToken.value();r.resource=resourceEpoch;r.surface=frame.surfaceGeneration.value();r.metrics=frame.metricsGeneration.value();r.camera=frame.camera.generation.value();r.frame=frame.frameId.value();r.cameraBits={std::bit_cast<std::uint32_t>(camera.scale),std::bit_cast<std::uint32_t>(camera.translationX),std::bit_cast<std::uint32_t>(camera.translationY)};r.dimensions={frame.metrics.physicalWidth,frame.metrics.physicalHeight};r.budgetNs=options.navigationMicroseconds*1000;r.beforeJobs={ns::job(job_.get()),ns::job(refinement_.get())};}
@@ -329,7 +329,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         return ns::result(BackendSubmissionResult::retry("world navigation ineligible"));
     if(background_!=background||budgetOwner_.lock()!=budget||provider_!=&provider||surface_!=frame.surfaceGeneration.value()||resource_!=resourceEpoch||
        (last_&&(last_->viewId!=frame.viewId||last_->metrics!=frame.metrics||last_->metricsGeneration!=frame.metricsGeneration))){
-        cancel();if(!externalBodies)bodyLayers_->clear();tiles_.clear();sources_.clear();qualityDemands_.clear();schedulingLease_.reset();schedulingAdmitted_=false;displayEstimateValid_=false;checkpointCosts_={};displayCosts_={};qualityAge_=0;work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
+        cancel();if(!externalBodies)bodyLayers_->clear();tiles_.clear();sources_.clear();qualityDemands_.clear();nonemptyParents_.clear();schedulingLease_.reset();schedulingAdmitted_=false;displayEstimateValid_=false;checkpointCosts_={};legacyCompactCosts_={};legacyRefresh_={};displayCosts_={};qualityAge_=0;work.retainedBytes=0;last_.reset();fallbackFocus_.reset();dirty_=true;level_.reset();
         background_=background;budgetOwner_=budget;provider_=&provider;surface_=frame.surfaceGeneration.value();resource_=resourceEpoch;
     }
     if(!schedulingAdmitted_){const auto token=budget->reserve(resources::ResourceClass::kRecorded,sizeof(checkpointCosts_)+sizeof(displayCosts_)+sizeof(streamingCursor_)+64*(sizeof(TileKey)+sizeof(NavigationRegions)+sizeof(double)*2+64)+256,true);if(!token)return ns::result(BackendSubmissionResult::retry("navigation scheduling metadata unavailable"));schedulingLease_=resources::ResourceLease(budget,*token);schedulingAdmitted_=true;}
@@ -480,9 +480,30 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const bool finish=g&&g->isContour()&&job->primitive+(job->gpuCoarse?128:32)>=g->primitiveCount();
         return finish?Checkpoint::CompactFinish:Checkpoint::Compact;
     };
-    const auto expired=[&](Checkpoint kind){PC_NAV_TICK();const auto estimate=checkpointCosts_[unsigned(kind)].reserve();
+    const auto legacyCost=[&](const Job* job)->CostEstimate*{
+        if(!job||job->source>=job->sources->entries.size())return nullptr;
+        const auto*c=std::get_if<CompactStrokeReferenceCommand>(&job->sources->entries[job->source].command);
+        if(!c||c->content.get().stroke.config.algorithmVersion==4)return nullptr;
+        const auto range=compactRange(job->sources->entries[job->source]);
+        return &legacyCompactCosts_[job->knot+32>=range.second?1:0];
+    };
+    const auto expired=[&](Checkpoint kind){PC_NAV_TICK();const auto*legacy=legacyCost(job_.get());const auto estimate=
+        (kind==Checkpoint::Compact&&legacy)?legacy->reserve():checkpointCosts_[unsigned(kind)].reserve();
         NS_IF(ns::state.row->displayReserveUs=displayReserve;ns::state.row->checkpointEstimateUs=estimate);
         const auto elapsed=std::chrono::duration<double,std::micro>(PC_NAV_NOW()-started).count();
+        const bool hardExpired=elapsed+displayReserve>=options.navigationMicroseconds;
+        if(kind==Checkpoint::Compact&&legacy&&elapsed+displayReserve+estimate>=options.navigationMicroseconds&&!hardExpired&&
+           steps==0&&queries==0&&initializations==0){
+            // A cold nonpreemptible legacy source cannot permanently forbid
+            // resampling the same bounded32knot leaf. After two distinct idle
+            // owner opportunities, admit at most one existing quantum against
+            // the real remaining deadline. This is estimator refresh only:
+            // clock/step/GPUcaps and every subsequent checkpoint still apply.
+            auto& refresh=legacyRefresh_[std::size_t(legacy-legacyCompactCosts_.data())];
+            if(refresh.probeTick==tick_)return hardExpired;
+            if(refresh.deferredTick!=tick_){refresh.deferredTick=tick_;++refresh.deferrals;}
+            if(refresh.deferrals>=3){refresh.deferrals=0;refresh.probeTick=tick_;return hardExpired;}
+        }
         return elapsed+displayReserve+estimate>=options.navigationMicroseconds;
     };
     std::map<TileKey,std::shared_ptr<const Sources>> desired;
@@ -718,6 +739,28 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             }
             NS_IF(auto&c=ns::state.row->selected;c.x=next->x;c.y=next->y;c.scale=next->scale;c.region=next->region;c.targetDensity=std::ldexp(1.,next->scale);c.role=prewarm?8U:(!work.coverageComplete?1U:2U));
             if(initializations>=initializationLimit){NS_GATE(InitCap,queries,initializations,steps,gpuPrimitives);deferred=true;break;}
+            if(next->region&&opaquePlainBackground&&backgroundOnly){
+                auto parent=*next;parent.region=0;
+                const auto known=sources_.find(parent);
+                if(known!=sources_.end()&&known->second->scene==scene&&known->second->emptyProof)next=parent;
+                else if((!nonemptyParents_.contains(parent)||nonemptyParents_.at(parent).scene!=scene)&&queries<queryLimit&&!expired(Checkpoint::Query)){
+                    const auto region=expanded(grid_.bounds(parent),std::ldexp(double(gutter),-parent.scale));
+                    ++queries;++work.queries;const auto t=PC_NAV_NOW();
+                    const bool empty=backgroundOnly(region);
+                    checkpointCosts_[unsigned(Checkpoint::Query)].observe(std::chrono::duration<double,std::micro>(PC_NAV_NOW()-t).count());
+                    if(empty){
+                        const auto bytes=sizeof(Sources)+128;auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
+                        if(token){auto source=std::make_shared<const Sources>(Sources{scene,{},{},resources::ResourceLease(budget,*token),{},bytes,true,
+                            NavigationSceneEmptyProof{region,frame.sceneGeneration.value(),scene,frame.viewId.value(),frame.surfaceGeneration.value(),frame.metricsGeneration.value()},region});
+                            if(sources_.size()>=maximumTiles)sources_.erase(sources_.begin());sources_.insert_or_assign(parent,source);desired.emplace(parent,std::move(source));next=parent;}
+                    }else{
+                        // Only raw Scene emptiness is probed, never prepare a
+                        // dense parent payload before the localized child.
+                        auto token=budget->reserve(resources::ResourceClass::kRecorded,sizeof(NonemptyParent)+sizeof(TileKey)+128,true);
+                        if(token){if(nonemptyParents_.size()>=64)nonemptyParents_.erase(nonemptyParents_.begin());nonemptyParents_.insert_or_assign(parent,NonemptyParent{scene,resources::ResourceLease(budget,*token)});}
+                    }
+                }
+            }
             if(!load(*next)){if(deferred)break;return ns::result(BackendSubmissionResult::retry("world navigation unsupported sources"));}
             if(expired(Checkpoint::Setup)){NS_GATE(TimeAfterSetup,queries,initializations,steps,gpuPrimitives);deferred=true;break;}
             if(desired.at(*next)->emptyProof&&opaquePlainBackground){
@@ -928,13 +971,13 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
             if(expired(checkpoint(job_.get()))){NS_GATE(TimeAfterSetup,queries,initializations,steps,gpuPrimitives);deferred=true;break;}
         }
         auto& job=*job_;(void)job.lease.markGpuUse();
-        const auto quantumStarted=PC_NAV_NOW();const auto quantumKey=job.key;const auto quantumClass=checkpoint(&job);
+        const auto quantumStarted=PC_NAV_NOW();const auto quantumKey=job.key;const auto quantumClass=checkpoint(&job);auto* quantumLegacy=legacyCost(&job);
         const auto quantumBefore=work.knotSteps+work.sourceSteps+work.tilesBuilt+work.contourPrimitivesDrawn;
         bool quantumQuality=false;[[maybe_unused]] bool quantumFrontier=false;const auto quantumBounds=grid_.bounds(job.key);
         for(const auto&p:patches)if(!p.plainBackground&&p.density<std::ldexp(1.,job.key.scale)&&intersects(p.area,quantumBounds))
             for(const auto&e:job.sources->entries)quantumQuality|=intersects(e.record.worldBounds,p.area)&&intersects(e.record.worldBounds,job.demand);
         for(const auto&h:missing)quantumFrontier|=intersects(h,quantumBounds);
-        auto quantumRecord=ns::Exit{[&]{if(work.knotSteps+work.sourceSteps+work.tilesBuilt+work.contourPrimitivesDrawn>quantumBefore){usefulQualityThisCall|=quantumQuality;NS_IF(ns::state.row->qualityAdvances+=quantumQuality;ns::state.row->frontierAdvances+=quantumFrontier);const double us=std::chrono::duration<double,std::micro>(PC_NAV_NOW()-quantumStarted).count();checkpointCosts_[unsigned(quantumClass)].observe(us);quantumEwmaUs_=checkpointCosts_[unsigned(quantumClass)].ewma;const auto found=qualityDemands_.find(quantumKey);if(found!=qualityDemands_.end()){found->second.age=0;found->second.costUs=found->second.costUs>0?.75*found->second.costUs+.25*us:us;}}}};
+        auto quantumRecord=ns::Exit{[&]{if(work.knotSteps+work.sourceSteps+work.tilesBuilt+work.contourPrimitivesDrawn>quantumBefore){usefulQualityThisCall|=quantumQuality;NS_IF(ns::state.row->qualityAdvances+=quantumQuality;ns::state.row->frontierAdvances+=quantumFrontier);const double us=std::chrono::duration<double,std::micro>(PC_NAV_NOW()-quantumStarted).count();auto& cost=quantumLegacy?*quantumLegacy:checkpointCosts_[unsigned(quantumClass)];cost.observe(us);quantumEwmaUs_=cost.ewma;const auto found=qualityDemands_.find(quantumKey);if(found!=qualityDemands_.end()){found->second.age=0;found->second.costUs=found->second.costUs>0?.75*found->second.costUs+.25*us:us;}}}};
 
         G5_ROUTE(g5NavJob,job.cpuCoverage?g5::Route::nav_coarse_cpu:(job.gpuCoarse?g5::Route::nav_coarse_gpu:g5::Route::nav_unprepared));
         G5_TARGET(job.coverage,!job.cpuCoverage);

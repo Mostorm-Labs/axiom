@@ -45,7 +45,7 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={},std::uint32_t background=0xffffffffU,std::shared_ptr<ReferenceValidationCache> validation={},bool opaquePlainBackground=false,std::shared_ptr<SkiaInkLayers> sharedBodies={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={},std::uint32_t background=0xffffffffU,std::shared_ptr<ReferenceValidationCache> validation={},bool opaquePlainBackground=false,std::shared_ptr<SkiaInkLayers> sharedBodies={},const NavigationBackgroundQuery& backgroundOnly={});
  private:
     using ValidRegions=NavigationRegions;
     struct Sources {
@@ -112,12 +112,17 @@ class SkiaNavigationTiles final {
     std::uint32_t qualityAge_=0;
     struct QualityDemand {unsigned age=0;std::uint64_t seen=0;double costUs=0;resources::ResourceLease metadata;};
     std::map<TileKey,QualityDemand> qualityDemands_;
+    struct NonemptyParent {std::uint64_t scene=0;resources::ResourceLease metadata;};
+    std::map<TileKey,NonemptyParent> nonemptyParents_;
     struct CostEstimate {
         double last=0,ewma=0;bool known=false;
         void observe(double us){last=us;ewma=known?.75*ewma+.25*us:us;known=true;}
         double reserve()const{return known?std::max(last,ewma):0;}
     };
     enum class Checkpoint:unsigned {Query,Setup,Compact,CompactFinish,Other,Publish,Count};
+    std::array<CostEstimate,2> legacyCompactCosts_{};
+    struct CostRefresh {std::uint64_t deferredTick=0,probeTick=0;unsigned deferrals=0;};
+    std::array<CostRefresh,2> legacyRefresh_{};
     std::array<CostEstimate,unsigned(Checkpoint::Count)> checkpointCosts_{};
     // Target dimensions/basis are reset together. Comparable displays are
     // additionally separated by logarithmic batch count; a publication cannot

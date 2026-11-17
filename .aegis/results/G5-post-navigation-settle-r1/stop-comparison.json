@@ -1,0 +1,72 @@
+{
+  "status": "DPR2_DPR4_FIXED_STABLE_LIMITS_MET",
+  "rows": [
+    {
+      "DPR": 2,
+      "route": "wheel",
+      "Bmedian": 347.9500000476837,
+      "Cmedian": 251.14999997615814,
+      "absolute": 386.8100001096725,
+      "relative": 500.14250005483626,
+      "p95Limit": 33.4,
+      "pass": true
+    },
+    {
+      "DPR": 2,
+      "route": "touch",
+      "Bmedian": 364.4999998807907,
+      "Cmedian": 254.20000004768372,
+      "absolute": 398.82749989032743,
+      "relative": 519.1749998629093,
+      "p95Limit": 33.4,
+      "pass": true
+    },
+    {
+      "DPR": 4,
+      "route": "wheel",
+      "Bmedian": 885.2999999523163,
+      "Cmedian": 392.85000002384186,
+      "absolute": 558.2174999177455,
+      "relative": 1118.0949999451636,
+      "p95Limit": 33.4,
+      "pass": true
+    },
+    {
+      "DPR": 4,
+      "route": "touch",
+      "Bmedian": 861.2499998807907,
+      "Cmedian": 419.4500000476837,
+      "absolute": 573.1100001096725,
+      "relative": 1090.4374998629091,
+      "p95Limit": 33.4,
+      "pass": true
+    }
+  ],
+  "causalDPR4Baseline": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/stop-attribution-B.json",
+    "bytes": 78770,
+    "sha256": "be2ce4a91b6be21c1426516f4a144cd90bb8b34c3a9d820040913cbee9e8cbaa"
+  },
+  "causalDPR4Candidate": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/stop-attribution-C.json",
+    "bytes": 64983,
+    "sha256": "9dcd86b7755eecccda1c3576a796497a24f1877dd0954ca8881ed3669b10b8f1"
+  },
+  "phaseEvidence": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/stop-attribution.json",
+    "bytes": 1316,
+    "sha256": "b764e876423f291474d8ac84069fa7f10937fa9efe8c4124858ba5fdcb818939"
+  },
+  "ordinaryDPR4B_Cmedian": {
+    "wheel": [
+      885.2999999523163,
+      392.85000002384186
+    ],
+    "touch": [
+      861.2499998807907,
+      419.4500000476837
+    ]
+  },
+  "budgetsUnchanged": true,
+  "elapsedNotPureCPU": true
+}

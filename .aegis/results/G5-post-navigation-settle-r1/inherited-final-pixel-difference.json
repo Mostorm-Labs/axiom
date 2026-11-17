@@ -1,0 +1,174 @@
+{
+  "status": "D2_B_C_BYTEEXACT_AT_SAMEPOSE_INHERITED_IMAGE_SAMPLING_DIFFERENCE",
+  "rows": [
+    {
+      "route": "wheel",
+      "actualB_SHA": "a8a1560fb09dc6682a3a8c2f2773964d012e1cea764896e9b9ba95848c2ca108",
+      "actualC_SHA": "a8a1560fb09dc6682a3a8c2f2773964d012e1cea764896e9b9ba95848c2ca108",
+      "byteExactB_C": true,
+      "Bpose": [
+        2.250000238418579,
+        0,
+        0,
+        2.250000238418579,
+        -1343.754638671875,
+        -901.2526245117188
+      ],
+      "Cpose": [
+        2.250000238418579,
+        0,
+        0,
+        2.250000238418579,
+        -1343.754638671875,
+        -901.2526245117188
+      ],
+      "samePose": true,
+      "metadataB": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-B-D2/wheel-final.json",
+      "metadataC": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-C-D2/wheel-final.json"
+    },
+    {
+      "route": "touch",
+      "actualB_SHA": "0c7e5a546be5aef5a8f79aa9c31018866e652f3eddb7924b08a5944d4cdc1c1b",
+      "actualC_SHA": "0c7e5a546be5aef5a8f79aa9c31018866e652f3eddb7924b08a5944d4cdc1c1b",
+      "byteExactB_C": true,
+      "Bpose": [
+        2.25,
+        0,
+        0,
+        2.25,
+        -1344.375,
+        -901.25
+      ],
+      "Cpose": [
+        2.25,
+        0,
+        0,
+        2.25,
+        -1344.375,
+        -901.25
+      ],
+      "samePose": true,
+      "metadataB": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-B-D2/touch-final.json",
+      "metadataC": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-C-D2/touch-final.json"
+    }
+  ],
+  "absoluteCPUOracleNotWaived": true,
+  "imageDomainMembership": [
+    {
+      "case": "WH-OPT-C-D2",
+      "route": "wheel",
+      "failedPixels": 0,
+      "insideProjectedImage": 0,
+      "outsideProjectedImage": 0,
+      "imageWorld": [
+        800.0,
+        700.0,
+        920.0,
+        820.0
+      ],
+      "projectedImage": [
+        912.4911041259766,
+        1347.4950847625732,
+        1452.4911613464355,
+        1887.4951419830322
+      ],
+      "pose": [
+        2.250000238418579,
+        0,
+        0,
+        2.250000238418579,
+        -1343.754638671875,
+        -901.2526245117188
+      ],
+      "referenceKey": "2375f3157890351d461900ee"
+    },
+    {
+      "case": "WH-OPT-C-D2",
+      "route": "touch",
+      "failedPixels": 346,
+      "insideProjectedImage": 346,
+      "outsideProjectedImage": 0,
+      "imageWorld": [
+        800.0,
+        700.0,
+        920.0,
+        820.0
+      ],
+      "projectedImage": [
+        911.25,
+        1347.5,
+        1451.25,
+        1887.5
+      ],
+      "pose": [
+        2.25,
+        0,
+        0,
+        2.25,
+        -1344.375,
+        -901.25
+      ],
+      "referenceKey": "25017c51b5f80f7d36439126"
+    },
+    {
+      "case": "WH-OPT-C-D4",
+      "route": "wheel",
+      "failedPixels": 5130,
+      "insideProjectedImage": 0,
+      "outsideProjectedImage": 5130,
+      "imageWorld": [
+        800.0,
+        700.0,
+        920.0,
+        820.0
+      ],
+      "projectedImage": [
+        1824.9822082519531,
+        2694.9901695251465,
+        2904.982322692871,
+        3774.9902839660645
+      ],
+      "pose": [
+        2.250000238418579,
+        0,
+        0,
+        2.250000238418579,
+        -1343.754638671875,
+        -901.2526245117188
+      ],
+      "referenceKey": "c38084ba4a478310ab27181a"
+    },
+    {
+      "case": "WH-OPT-C-D4",
+      "route": "touch",
+      "failedPixels": 1984,
+      "insideProjectedImage": 1984,
+      "outsideProjectedImage": 0,
+      "imageWorld": [
+        800.0,
+        700.0,
+        920.0,
+        820.0
+      ],
+      "projectedImage": [
+        1822.5,
+        2695.0,
+        2902.5,
+        3775.0
+      ],
+      "pose": [
+        2.25,
+        0,
+        0,
+        2.25,
+        -1344.375,
+        -901.25
+      ],
+      "referenceKey": "990b6064bd6ef0d486d938f5"
+    }
+  ],
+  "worldBoundsSource": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/correctness/mixed-bounds.json",
+    "fixtureSHA": "17f0f5ceaa10b0de2f808dd5deed40e44295a4179a43a388d14dd731cb949fbe"
+  }
+}

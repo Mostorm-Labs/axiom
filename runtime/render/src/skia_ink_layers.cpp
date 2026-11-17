@@ -312,10 +312,43 @@ SkiaInkLayers::BodyPreparation SkiaInkLayers::prepareNavigationBody(const Refere
  auto bounds=matrix.mapRect(body->support());bounds.outset(4,4);
  if(!bounds.isFinite()||bounds.width()>16384||bounds.height()>16384||std::max({std::abs(bounds.left()),std::abs(bounds.top()),std::abs(bounds.right()),std::abs(bounds.bottom())})>1048576)return BodyPreparation::kUnavailable;
  SkIRect crop;bounds.roundOut(&crop);if(crop.isEmpty())return BodyPreparation::kUnavailable;
+ bindNavigationBudget(budget);
+ // Keep the first full-support world representation for future cold exposure.
+ // A second exact-density raster does not need to reproduce already cached
+ // offscreen support. Its sampling witness explicitly retains only demanded
+ // pixels plus guard; it may never authorize pixels outside that range.
+ // Resume a crop that was actually admitted even if its optional full-body
+ // precursor was evicted during that admission. Match the full object->pixel
+ // matrix after restoring its integer origin, and require currentdemand+guard
+ // still inside the same charged crop. No new job or replacement key.
+ bool resumeCrop=false;
+ for(auto&[pendingKey,item]:fullBodies_)if(item.geometry==body&&item.raster&&!item.completeSupport&&pendingKey.context==canvas.recordingContext()){
+  const float dx=matrix.getTranslateX()-item.matrix.getTranslateX(),dy=matrix.getTranslateY()-item.matrix.getTranslateY();
+  auto restored=item.matrix;restored.postTranslate(dx,dy);
+  if(restored!=matrix||dx!=std::floor(dx)||dy!=std::floor(dy))continue;
+  auto demand=canvas.getDeviceClipBounds();demand.outset(4,4);if(!demand.intersect(crop))continue;
+  const auto range=SkIRect::MakeXYWH(int(dx),int(dy),pendingKey.crop[0],pendingKey.crop[1]);
+  if(!range.contains(demand))continue;
+  crop=range;resumeCrop=true;break;
+ }
+ const bool hasComplete=std::any_of(fullBodies_.begin(),fullBodies_.end(),[&](const auto&row){return row.second.geometry==body&&row.second.pixels&&row.second.completeSupport;});
+ // An already complete exact basis wins before considering a smaller crop.
+ // Otherwise the second equal copy would build a redundant cropped image.
+ SkMatrix fullMatrix;fullMatrix.setConcat(SkMatrix::Translate(float(-crop.left()),float(-crop.top())),matrix);
+ const auto fullInfo=SkImageInfo::MakeN32Premul(crop.width(),crop.height());
+ const auto fullKey=navigationKey(*body,fullInfo,canvas.recordingContext(),fullMatrix,SkIRect::MakeWH(crop.width(),crop.height()));
+ if(const auto exact=fullBodies_.find(fullKey);exact!=fullBodies_.end()&&exact->second.pixels){
+  exact->second.used=++tick_;(void)exact->second.lease.markGpuUse();out=exact->second.pixels;basis=exact->second.matrix;++navigationWork_.hits;return BodyPreparation::kReady;
+ }
+ bool completeSupport=!resumeCrop;
+ if(hasComplete&&!resumeCrop){
+  auto demand=canvas.getDeviceClipBounds();demand.outset(4,4);
+  auto selected=crop;if(!selected.intersect(demand))return BodyPreparation::kUnavailable;
+  completeSupport=selected==crop;crop=selected;
+ }
  const auto bytes=std::size_t(crop.width())*crop.height()*4;
  const auto metadata=sizeof(FullBody)+sizeof(NavigationBodyKey)+sizeof(CompactStrokeRasterJob)+512;
  if(bytes*2+metadata>options.maxEntryBytes||bytes*2+metadata>options.maxBytes)return BodyPreparation::kUnavailable;
- bindNavigationBudget(budget);
  SkMatrix normalized;normalized.setConcat(SkMatrix::Translate(float(-crop.left()),float(-crop.top())),matrix);
  // V4 white coverage is a scalar encoded in N32 channels, independent of
  // the final target's color space. Match canonical CompactCoverageTargets
@@ -332,7 +365,7 @@ SkiaInkLayers::BodyPreparation SkiaInkLayers::prepareNavigationBody(const Refere
   }
   resources::ResourceLease resident(budget,*token);
   const auto temporary=budget->reserve(resources::ResourceClass::kScratch,bytes,true,0);if(!temporary)return BodyPreparation::kPending;
-  FullBody item;item.geometry=body;item.matrix=normalized;item.lease=std::move(resident);item.staging=resources::ResourceLease(budget,*temporary);item.bytes=charge;item.used=++tick_;
+  FullBody item;item.geometry=body;item.completeSupport=completeSupport;item.matrix=normalized;item.lease=std::move(resident);item.staging=resources::ResourceLease(budget,*temporary);item.bytes=charge;item.used=++tick_;
   item.building=canvas.makeSurface(info);if(!item.building)return BodyPreparation::kPending;
   auto*draw=item.building->getCanvas();draw->clear(SK_ColorBLACK);draw->setMatrix(normalized);
   const auto&stroke=compact->content.get().stroke;
@@ -369,6 +402,17 @@ bool SkiaInkLayers::projectNavigationBody(const std::shared_ptr<const PreparedNa
   // Projection may downsample a complete known-density source. Upsampling
   // cannot satisfy a sharper target; retain the existing exact raster path.
   if(imageToDestination.hasPerspective()||imageToDestination.getMaxScale()>1.000001F){++navigationWork_.projectionDensityMiss;continue;}
+  if(!item.completeSupport){
+   SkMatrix destinationInverse;if(!canvas.getTotalMatrix().invert(&destinationInverse))continue;
+   // Demand is the actual destination sampling region, never an object
+   // support intersection masquerading as pixel validity. Unknown source
+   // pixels outside the retained crop must force a different representation.
+   auto demand=SkRect::Make(canvas.getDeviceClipBounds());demand.outset(2,2);
+   SkMatrix targetToImage;targetToImage.setConcat(item.matrix,destinationInverse);
+   const auto needed=targetToImage.mapRect(demand);
+   const auto valid=SkRect::MakeLTRB(2,2,float(item.pixels->width()-2),float(item.pixels->height()-2));
+   if(!needed.isFinite()||!valid.contains(needed))continue;
+  }
   (void)item.lease.markGpuUse();item.used=++tick_;canvas.save();canvas.resetMatrix();canvas.concat(imageToDestination);
   canvas.drawImage(item.pixels,0,0,SkSamplingOptions(SkFilterMode::kLinear));canvas.restore();++navigationWork_.hits;return true;
  }
