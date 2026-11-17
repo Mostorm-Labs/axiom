@@ -5,6 +5,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "cpu_worker_protocol.hpp"
 #include "cpu_local_exact.hpp"
 #include "resource_reclaim.hpp"
+#include "reference_validation_cache.hpp"
 #include "render_execution.hpp"
 #include "render_memory_budget.hpp"
 
@@ -75,6 +76,22 @@ struct ObservationCounters final {
 #endif
 
 SkiaRenderer::SkiaRenderer():renderCacheOptions_(internal::configuredRenderCacheOptions()){}
+internal::ReferenceValidationCache* SkiaRenderer::validationService()const noexcept{
+    try{
+        if(!renderCacheOptions_.enabled)return nullptr;
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
+        if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
+        if(!validationProofs_)validationProofs_=std::make_shared<internal::ReferenceValidationCache>();
+        validationProofs_->bind(renderCacheOptions_,resourceBudget_,sourceRetention_);
+        const auto pressure=internal::validationPressure(validationProofs_,resourceBudget_);
+        sourceRetention_->setValidationPressure(pressure);
+        if(preparedGeometry_)preparedGeometry_->setValidationPressure(pressure);
+        if(eraseQueries_)eraseQueries_->setValidationPressure(pressure);
+        if(localExact_)localExact_->setValidationPressure(pressure);
+        return validationProofs_.get();
+    }catch(const std::bad_alloc&){return nullptr;}
+}
+
 SkiaRenderer::~SkiaRenderer(){
     localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();
     // Seal quota before old contexts can abandon their completion callbacks.
@@ -82,6 +99,7 @@ SkiaRenderer::~SkiaRenderer(){
     clearRenderCache();gpuRetirements_.reset();
 }
 void SkiaRenderer::serviceResourceRetirements(ResourceServiceMode mode)noexcept {
+    if(mode!=ResourceServiceMode::kOwnerOpportunity&&validationProofs_)validationProofs_->clear();
     if(mode==ResourceServiceMode::kBeginSurfaceTransition)preserveWorldPreparation_=true;
     if(mode==ResourceServiceMode::kEndSurfaceTransition)preserveWorldPreparation_=false;
     if(gpuRetirements_)gpuRetirements_->service();
@@ -371,7 +389,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(entry.record.objectId.isZero()||!uniqueSources.insert(entry.record.objectId).second){
             provider.release();return BackendSubmissionResult::rejected("invalid or duplicated render source identity");
         }
-    const auto validation=internal::validateReferencePlan(plan);
+    const auto validation=internal::validateReferencePlan(plan,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -382,11 +400,14 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kCanonical,plan,
         *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
         renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+    if(internal::temporaryRetirementFault)internal::temporaryRetirementFault(*gpuRetirements_,resourceBudget_);
+#endif
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
-        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads,internal::validationPressure(validationProofs_,resourceBudget_));
     gpu.bindFrame(plan.frame,resourceEpoch_);
     if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
-    if(gpuContext&&!gpu.ready()){
+    if(gpuContext&&(!gpu.ready()||gpuRetirements_->blocked())){
         const auto completion=provider.gpuCompletionService();
         const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
         internal::ExecutionDecision unavailable;
@@ -403,9 +424,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);renderCache_->maskHistory=eraseQueries_;
-        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
+        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
+        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;renderCache_->validationProofs=validationProofs_;
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
         AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
@@ -487,7 +509,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if(gpu.ready())gpu.touch();
     const auto result = (cache && (preparation||cache->stagedBodies()) && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
         ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
-        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
+        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache,nullptr,validationProofs_.get());
     AXIOM_FRAME_TIMING_END(sceneTiming);
     if(execution.pending()||execution.rejected()){
         provider.release();return execution.rejected()?BackendSubmissionResult::rejected("execution target rejected"):BackendSubmissionResult::retry("coverage target pending");
@@ -594,7 +616,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,
         GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,
         resources::kPixelResourceClasses&~resources::resourceClassMask(resources::ResourceClass::kCanonicalFrame)&
-        ~resources::resourceClassMask(resources::ResourceClass::kNavigation));
+        ~resources::resourceClassMask(resources::ResourceClass::kNavigation),internal::validationPressure(validationProofs_,resourceBudget_));
     gpu.bindFrame(current,resourceEpoch_);
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::retry("navigation completion unavailable");}
     gpu.touch();
@@ -656,6 +678,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     // Composition authority is a validated current plan, independent of cached
     // exact pixels. Unknown policy cannot authorize regional reuse.
@@ -663,7 +686,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(currentComposition){
         const auto& p=*currentComposition;
         if(p.frame!=current||provider.generation()!=current.surfaceGeneration.value()||
-           internal::validateReferencePlan(p).code!=BackendSubmissionCode::kAccepted||
+           internal::validateReferencePlan(p,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable).code!=BackendSubmissionCode::kAccepted||
            p.background.mode!=foundation::BackgroundMode::kPlain||p.transparentBackground||
            p.background.color[3]!=1.0F||p.referenceDrawList.viewportClip!=foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight})
             return BackendSubmissionResult::retry("current navigation composition unproven");
@@ -702,7 +725,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){invalidQueryBinding=true;reject();return;}
         ReferenceDrawList validation{.frame=current,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip=current.viewportClip.isFiniteAndOrdered()?current.viewportClip:foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight};
         validation.entries=entries;
-        if(internal::validateReferencePlan(FramePlan{current,std::move(validation)}).code!=BackendSubmissionCode::kAccepted){reject();return;}
+        if(internal::validateReferencePlan(FramePlan{current,std::move(validation)},validationService(),internal::HistoryValidationPolicy::kPublishedImmutable).code!=BackendSubmissionCode::kAccepted){reject();return;}
         const auto difference=internal::maskPixelDifference(cache->sources->entries,entries);
         if(!difference.compatible){++navigationTiles_->work.regionalPlaneBodyRejects;reject();return;}
         auto regions=cache->valid;
@@ -804,7 +827,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
         provider.release();preparationTarget.active=false;
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background);
+        (void)validationService();
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background,validationProofs_,currentComposition&&currentComposition->background.mode==foundation::BackgroundMode::kPlain&&!currentComposition->transparentBackground&&currentComposition->background.color[3]==1.0F,renderCache_?renderCache_->navigationBodies():nullptr);
         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}
@@ -819,7 +843,7 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     if(!cpuGrants_.empty())return;
     localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 void SkiaRenderer::clearCpuLocalSelection()noexcept{localSelection_.clear();}
 bool SkiaRenderer::cpuLocalSelectionPending()const noexcept{return !localSelection_.empty();}
 SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
@@ -837,6 +861,7 @@ std::uint64_t SkiaRenderer::reserveCpuWorkerGrant(std::uint64_t executor,std::si
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);
+        if(!token&&validationProofs_){validationProofs_->reclaimFor(resourceBudget_);token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);}
         if(!token){
             // Real denial: release only reconstructible derived sources. GPU
             // leases stay charged until their existing completion callbacks.
@@ -869,8 +894,9 @@ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneReco
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);
+        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
         const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
         return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
     }catch(const std::bad_alloc&){return canvas::render::intersectEraseGeometry(record,geometry);}
@@ -882,7 +908,7 @@ std::vector<std::uint8_t> SkiaRenderer::encodeCpuPendingRequest(
  return internal::cpuEncodeRequest(request);
 }
 std::optional<resources::ResourceLease> SkiaRenderer::reserveCpuPendingMetadata(std::size_t bytes)noexcept{
- try{if(!resourceBudget_)return {};auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};return resources::ResourceLease(resourceBudget_,*token);}catch(...){return {};}
+ try{if(!resourceBudget_)return {};auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token&&validationProofs_){validationProofs_->reclaimFor(resourceBudget_);token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);}if(!token)return {};return resources::ResourceLease(resourceBudget_,*token);}catch(...){return {};}
 }
 void SkiaRenderer::setCpuPendingPreparation(bool value)noexcept{
  cpuPendingPreparation_=value;
@@ -896,7 +922,9 @@ SkiaRenderer::CpuDecisionPin SkiaRenderer::requestCpuLocalExact(const RuntimeSce
  if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
  if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
  preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
  if(!localExact_)localExact_=std::make_shared<internal::LocalExactCache>();
+ (void)validationService();
  auto index=localExact_->request(g,resourceBudget_,renderCacheOptions_.maxEntryBytes);if(!index)return {};
  return std::make_shared<internal::LocalExactJob>(r,std::move(index),*localExact_,*preparedGeometry_,renderCacheOptions_,resourceBudget_);
 }
@@ -940,7 +968,7 @@ SkiaRenderer::CpuPathPin SkiaRenderer::importCpuPendingPath(
   // Precharge the entire allowed import footprint BEFORE the decoder can
   // allocate. Worker heap custody does not cover the main module's heap.
   constexpr std::size_t importLimit=8U*1024U*1024U;
-  auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,importLimit,true,0);
+  auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,importLimit,true,0);
   if(!token){if(resourcePending)*resourcePending=true;return {};}
   resources::ResourceLease pin(resourceBudget_,*token);
   auto path=internal::cpuDecodePath(bytes.subspan(128));if(!path)return {};
@@ -949,8 +977,9 @@ SkiaRenderer::CpuPathPin SkiaRenderer::importCpuPendingPath(
   if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
   if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
   preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
   if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-  eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);
+  eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
   eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);
   return eraseQueries_->publishFinished(geometry,*path,resourceBudget_,std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4));
  }catch(...){return {};}
@@ -962,7 +991,7 @@ SelectionGeometryHit SkiaRenderer::confirmCpuPendingErase(const RuntimeSceneReco
   // All live history paths mustbe ready BEFORE the originalexact evaluator.
   // These strongpins survive temporaryallocations/evictions duringthis call.
   if(record.eraseMasks.size()>512)return SelectionGeometryHit::kInvalid;
-  auto metadataToken=resourceBudget_->reserve(resources::ResourceClass::kScratch,4096+record.eraseMasks.size()*sizeof(CpuPathPin),true);
+  auto metadataToken=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kScratch,4096+record.eraseMasks.size()*sizeof(CpuPathPin));
   if(!metadataToken)return SelectionGeometryHit::kInvalid;
   resources::ResourceLease metadata(resourceBudget_,*metadataToken);
   std::vector<CpuPathPin> history;history.reserve(record.eraseMasks.size());
@@ -982,7 +1011,7 @@ bool SkiaRenderer::retainCpuPendingHandoff(std::uint64_t serial,const std::vecto
  try{
   if(!serial||!resourceBudget_||cpuPathHandoffs_.size()>=128)return false;
   const auto bytes=sizeof(CpuPathHandoff)+256+pins.size()*sizeof(CpuPathPin);
-  auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return false;
+  auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,bytes);if(!token)return false;
   CpuPathHandoff h;h.metadata=resources::ResourceLease(resourceBudget_,*token);h.pins=pins;
   cpuPathHandoffs_.insert_or_assign(serial,std::move(h));return true;
  }catch(...){return false;}
@@ -1013,7 +1042,7 @@ SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeScene
                 if(old==localSelection_.end()){*pending=true;return SelectionGeometryHit::kInvalid;}
                 localSelection_.erase(old);
             }
-            auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint),true);
+            auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint));
             if(!token){*pending=true;return SelectionGeometryHit::kInvalid;}
             CpuLocalSelection candidate;candidate.lease=resources::ResourceLease(resourceBudget_,*token);
             found=localSelection_.emplace(record.objectId,std::move(candidate)).first;
@@ -1021,7 +1050,7 @@ SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeScene
         auto& slot=found->second;
         if(!slot.job||slot.points.size()!=points.size()||!std::equal(slot.points.begin(),slot.points.end(),points.begin(),[](const auto& a,const auto& b){return a.x==b.x&&a.y==b.y;})||!slot.job->matches(record,geometry)){
             if(slot.points.size()<points.size()){
-                auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint),true);
+                auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,sizeof(CpuLocalSelection)+256+points.size()*sizeof(foundation::WorldPoint));
                 if(!token){*pending=true;return SelectionGeometryHit::kInvalid;}
                 slot.lease=resources::ResourceLease(resourceBudget_,*token);
             }
@@ -1101,7 +1130,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
        acquired.frame.surface->height()!=int(plan.frame.metrics.physicalHeight)){
         provider.release();return BackendSubmissionResult::rejected("stale transient target");
     }
-    const auto validation=internal::validateReferencePlan(plan);
+    const auto validation=internal::validateReferencePlan(plan,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,
         *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
@@ -1123,10 +1152,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+    if(internal::temporaryRetirementFault)internal::temporaryRetirementFault(*gpuRetirements_,resourceBudget_);
+#endif
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,gpuContext,
-        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads);
+        internal::GpuResourceRetirement::canonicalAllocations,internal::GpuResourceRetirement::canonicalReads,internal::validationPressure(validationProofs_,resourceBudget_));
     gpu.bindFrame(plan.frame,resourceEpoch_);
-    if(gpuContext&&!gpu.ready()){
+    if(gpuContext&&(!gpu.ready()||gpuRetirements_->blocked())){
         const auto completion=provider.gpuCompletionService();
         const bool permanent=!completion||!completion->state()||completion->state()->abandoned.load()||gpuRetirements_->blocked();
         internal::ExecutionDecision unavailable;
@@ -1146,9 +1178,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         if(!sourceRetention_)sourceRetention_=std::make_shared<internal::SourceRetentionPool>();
         if(!preparedGeometry_)preparedGeometry_=std::make_shared<internal::PreparedGeometryCache>();
         preparedGeometry_->setRetentionPool(sourceRetention_);
+        (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);renderCache_->maskHistory=eraseQueries_;
-        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;
+        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
+        renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;renderCache_->validationProofs=validationProofs_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
             selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{},true);cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
@@ -1244,7 +1277,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         if(!compatible())transientDisplay_.reset();
         if(!transientDisplay_){
             const auto bytes=sizeof(internal::TransientDisplaySurface)+128;
-            const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);
+            const auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,bytes);
             if(!token){provider.release();return BackendSubmissionResult::retry("transient display metadata pending");}
             resources::ResourceLease metadata(resourceBudget_,*token);
             try{transientDisplay_=std::make_shared<internal::TransientDisplaySurface>();}
@@ -1256,7 +1289,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                 }
             }else{
                 const auto info=acquired.frame.surface->imageInfo();const auto bytes=std::size_t(info.width())*info.height()*4;
-                const auto pixels=resourceBudget_->reserve(resources::ResourceClass::kCanonicalFrame,bytes,true);
+                const auto pixels=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kCanonicalFrame,bytes);
                 if(!pixels){transientDisplay_.reset();provider.release();return BackendSubmissionResult::retry("transient display target pending");}
                 transientDisplay_->pixels=resources::ResourceLease(resourceBudget_,*pixels);
                 transientDisplay_->surface=canvas->makeSurface(info);
@@ -1305,7 +1338,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
                 selectionOverlay->readOnlyOutlines.empty() && selectionOverlay->candidateOutlines.empty() &&
                 selectionOverlay->acquisitionOutline.empty()))
                 scene=BackendSubmissionResult::retry("erase feedback allocation unavailable");}
-            else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
+            else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk,nullptr,nullptr,validationProofs_.get());
         }
     }catch(const std::bad_alloc&){
         canvas->restoreToCount(sceneSaveCount);clearRenderCache();
@@ -1419,7 +1452,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview completion metadata unavailable");}
-    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,resources::kPixelResourceClasses,internal::validationPressure(validationProofs_,resourceBudget_));
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview GPU completion unavailable");}
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::preview,true,geometry.documentEpoch,geometry.session,geometry.sessionGeneration,geometry.revision,geometry.surfaceGeneration.value(),resourceEpoch_,g5::bits(geometry.viewport.scale),g5::bits(geometry.viewport.translationX),g5::bits(geometry.viewport.translationY),static_cast<std::uint64_t>(acquired.frame.surface->width()),static_cast<std::uint64_t>(acquired.frame.surface->height()),g5::bits(geometry.logicalToPhysicalX),g5::bits(geometry.logicalToPhysicalY));
     gpu.touch();
@@ -1607,7 +1640,7 @@ BackendSubmissionResult SkiaRenderer::clearPreview(
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview clear completion metadata unavailable");}
-    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()));
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,resources::kPixelResourceClasses,internal::validationPressure(validationProofs_,resourceBudget_));
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview clear GPU completion unavailable");}
     gpu.touch();
     acquired.frame.surface->getCanvas()->clear(SK_ColorTRANSPARENT);

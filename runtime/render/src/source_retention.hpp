@@ -6,8 +6,22 @@
 #include <optional>
 #include <functional>
 #include <limits>
+#include <functional>
 
 namespace canvas::render::internal {
+using ValidationPressure = std::function<void(const std::shared_ptr<resources::ResourceBudgetManager>&)>;
+// Owner-local optional proof reclamation, never a budget-manager callback.
+// Only an actual mandatory reserve denial may invoke it, then retry the exact
+// reservation once. Local capacity checks remain at the original call sites.
+inline std::optional<std::uint64_t> reserveWithSourcePressure(
+    const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+    const ValidationPressure& reclaim,resources::ResourceClass kind,
+    std::size_t bytes,bool critical,std::size_t resident=std::numeric_limits<std::size_t>::max()){
+    if(!budget)return {};
+    auto token=budget->reserve(kind,bytes,critical,resident);
+    if(!token&&critical&&reclaim){reclaim(budget);token=budget->reserve(kind,bytes,critical,resident);}
+    return token;
+}
 // Conservative retained-source storage estimates; pixel/font/driver resources
 // have separate owners. A shared allocation is charged once per budget owner,
 // not once per alias, frame, tile, or prepared-geometry consumer.
@@ -114,6 +128,7 @@ class SourceRetentionPool final {
     std::shared_ptr<SourceRetentionUsage> usage_=std::make_shared<SourceRetentionUsage>();
     static constexpr std::size_t viewCharge=sizeof(SourceRetention::View)+sizeof(resources::ResourceLease)+128;
     static constexpr std::size_t ownerCharge=sizeof(SourceRetention)+sizeof(Owners::value_type)+256;
+    ValidationPressure pressure_;
     template<class F>std::shared_ptr<const SourceRetention> retain(std::shared_ptr<const void> storage,const void* type,F&& footprint,
         const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){
         const SourceRetention::View view{storage.get(),type};
@@ -123,7 +138,7 @@ class SourceRetentionPool final {
             // Preserve full validation and the existing allocation bound for
             // an unproven aliased view; ownership alone never skips this work.
             if(bytes>shared->bytes){++usage_->denied;return {};}
-            auto token=budget->reserve(resources::ResourceClass::kRecorded,viewCharge,critical);
+            auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,viewCharge,critical);
             if(!token){++usage_->denied;++usage_->quotaDenials;return {};}
             resources::ResourceLease admission(budget,*token);
             shared->views.emplace(view,std::move(admission));shared->indexBytes+=viewCharge;usage_->indexBytes+=viewCharge;
@@ -136,7 +151,7 @@ class SourceRetentionPool final {
         ++usage_->footprintEvaluations;const auto bytes=footprint();
         if(bytes>std::numeric_limits<std::size_t>::max()-ownerCharge-viewCharge){++usage_->denied;return {};}
         const auto metadata=ownerCharge+viewCharge;
-        auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes+metadata,critical);
+        auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,bytes+metadata,critical);
         if(!token){++usage_->denied;++usage_->quotaDenials;return {};}
         resources::ResourceLease lease(budget,*token);
         auto result=std::make_shared<SourceRetention>();result->storage=std::move(storage);result->lease=std::move(lease);
@@ -149,7 +164,13 @@ class SourceRetentionPool final {
         index_->entries.insert_or_assign(result->storage,result);++usage_->admissions;return result;
     }
   public:
+    void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
     const SourceRetentionUsage& statistics()const noexcept{return *usage_;}
+    template<class T>std::shared_ptr<const SourceRetention> getContent(const scene::ImmutableValue<T>& content,
+        const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){
+        if(!budget||!content.shared())return {};bind(budget);
+        return retain(content.shared(),sourceTypeTag<T>(),[&]{return sourceContentBytes(content.get());},budget,critical);
+    }
     std::shared_ptr<const SourceRetention> getMasks(const scene::SharedVector<semantic::EraseMaskRecord>& masks,
         const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){
         if(!budget||masks.empty())return {};bind(budget);

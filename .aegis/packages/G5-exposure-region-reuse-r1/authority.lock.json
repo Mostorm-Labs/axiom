@@ -1,0 +1,35 @@
+{
+  "status": "CURRENT_USER_AUTHORIZED_EXPOSURE_REUSE_VERTICAL_SLICE",
+  "authorized_at_local": "2026-11-17 Asia/Shanghai",
+  "human_request": "Annotation1: 保留查询估计修正 → 改曝光块的任务与复用方式 → 让原49对象复现真正产生新画面 → 验证连续缩小最长空窗≤100ms、轮廓／擦除／遮挡正确。用户：可以，先按照这个做一条闭环。",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 11364,
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "docs/notion/manifest.yaml",
+      "bytes": 11224,
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "bytes": 4508,
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    }
+  ],
+  "owners": [
+    "RuntimeComposition/CanvasEditingRuntime retain frame scheduling, camera admission and authoritative Scene query/receipt ownership.",
+    "Scene returns ordered local derived sources; SkiaRenderer/SkiaNavigationTiles plus existing geometry/material/mask/resource caches own region work, raster reuse, qualified publication and presentation.",
+    "OperationEngine remains sole canonical writer. GPU completion/ResourceBudgetManager own actual physical retirement and accounting."
+  ],
+  "authorized_change": "Substantive internal Render regional-task and representation-reuse change is now authorized, replacing previous one-small-adjustment constraint for THIS task only. Existing renderer/services evolve; no new renderer, canonical owner, thread model or public SDK contract.",
+  "semantics": [
+    "An output block is complete only after every relevant source/material/per-object mask is composed in original z-order. Unknown holes never become white/transparent/background without authoritative proof.",
+    "Completed regional outputs may join still-valid retained/older tile regions; full current viewport validity still gates presentation. Partial publication alone is not the first-frame solution.",
+    "Geometry equality does not prove pixel equality. Body coverage reuse and masked/material result reuse require distinct complete keys and precise invalidation.",
+    "Navigation feedback is not CanonicalVisible or canonical commit. All view/Scene/resource/provider/context/surface/metrics stamps and late-completion guards remain."
+  ],
+  "policy": "Conversation X.Y.Z.Build and repository instructions take precedence over historical on-disk version prose. No release/version/lock changes. More useful residency permitted within existing experimental512/1024/128MiB profile, no upfront allocation."
+}

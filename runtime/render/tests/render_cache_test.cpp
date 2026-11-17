@@ -2227,6 +2227,8 @@ int main(int argc,char** argv) {
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"cold quality reference");
             checkNavigationColdFrontier(provider,reference);return finishNative(0);
         }
+        if(argc>1&&std::string_view(argv[1])=="--qc-outer-proof"){TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"qcreference");checkRetainedBackground(provider,reference);return finishNative(0);}
+        if(argc>1&&std::string_view(argv[1])=="--pc-quality-only"){TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"pcqualityreference");checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);checkNavigationRefinementProgress(provider);return finishNative(0);}
         if(argc>1&&std::string_view(argv[1])=="--quality-only"){
             TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"quality reference");
             checkNavigationSharpOverlap(provider,reference);checkNavigationColdFrontier(provider,reference);

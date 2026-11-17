@@ -11,8 +11,9 @@ class SkiaGpuLifetime final {
   SkiaGpuLifetime(GpuResourceRetirement& queue,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
       SkiaSurfaceProvider& provider,GrDirectContext* context,
       resources::ResourceClassMask classes=resources::kPixelResourceClasses,
-      resources::ResourceClassMask existing=resources::kPixelResourceClasses)noexcept
-      :context_(context),queue_(queue),budget_(budget),provider_(provider),classes_(classes),existing_(existing){
+      resources::ResourceClassMask existing=resources::kPixelResourceClasses,
+      ValidationPressure pressure={})noexcept
+      :context_(context),queue_(queue),budget_(budget),provider_(provider),classes_(classes),existing_(existing),pressure_(std::move(pressure)){
     admit();
   }
   bool restart()noexcept {
@@ -24,7 +25,7 @@ class SkiaGpuLifetime final {
     if(!context_){ready_=true;return;}
     try{
       auto payload=std::make_unique<std::shared_ptr<GpuResourceRetirement::Ticket>>();
-      ticket_=queue_.begin(budget_,provider_.gpuCompletionService(),classes_,existing_);
+      ticket_=queue_.begin(budget_,provider_.gpuCompletionService(),classes_,existing_,pressure_);
       if(!ticket_)return;
       ticket_->expectSubmission();
       *payload=ticket_;payload_=std::move(payload);ready_=true;
@@ -71,6 +72,7 @@ class SkiaGpuLifetime final {
   const std::shared_ptr<resources::ResourceBudgetManager> budget_;
   SkiaSurfaceProvider& provider_;
   resources::ResourceClassMask classes_,existing_;
+  ValidationPressure pressure_;
   RenderExecutionScope* execution_=RenderExecutionScope::current();
   std::shared_ptr<GpuResourceRetirement::Ticket> ticket_;
   std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> payload_;

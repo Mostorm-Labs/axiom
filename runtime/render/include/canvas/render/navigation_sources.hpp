@@ -6,9 +6,15 @@
 namespace canvas::render {
 // Internal render query. The Runtime owns Scene traversal/order; Render may
 // request an expanded world region, never inspect or mutate the document.
+struct NavigationSceneEmptyProof final {
+    foundation::WorldRect region{};
+    std::uint64_t semanticGeneration=0,sceneRevision=0,view=0,surface=0,metrics=0;
+    bool operator==(const NavigationSceneEmptyProof&)const=default;
+};
 struct NavigationSourceDiagnostics final {
     std::uint64_t chunkCandidates=0,indexNodes=0,indexFallbacks=0,payloadCopyBytes=0,payloadAliases=0;
     bool observed=false;
+    std::optional<NavigationSceneEmptyProof> sceneEmptyProof;
     // Authoritative Runtime query binding. Legacy unstamped internal queries
     // remain usable for same-Scene regeneration, never cross-Scene pixel proof.
     bool sceneStamped=false;
@@ -33,6 +39,7 @@ class NavigationSourceQuery final {
 // Uncertain/failed queries return false. Never inferred from render chunk hints.
 using NavigationBackgroundQuery = std::function<bool(const foundation::WorldRect&)>;
 struct NavigationWork final {
+    std::uint64_t bodyCoverageHits=0,bodyCoverageMisses=0,bodyCoverageBuilds=0,bodyCoverageBytes=0,bodyCoverageEntries=0,regionQueries=0,regionPublications=0;
     bool pending=false, presented=false, coverageComplete=false;
     std::uint64_t tilesBuilt=0, knotSteps=0, sourceSteps=0, fallbackUses=0, evictions=0;
     // Charged bytes include live jobs and evicted-but-in-flight images.

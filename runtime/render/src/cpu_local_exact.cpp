@@ -78,8 +78,8 @@ std::shared_ptr<LocalMaskIndex> LocalExactCache::request(const semantic::EraseMa
     const auto pieces=sweep?std::max<std::size_t>(1,(count+pieceSize-1)/pieceSize):1;
     const auto bytes=sizeof(LocalMaskIndex)+256+count*(sweep?sizeof(semantic::EraseCubicSegment):sizeof(semantic::PathCommand)+256)+pieces*sizeof(LocalMaskIndex::Piece);
     if(bytes>capacity)return {};
-    auto grant=budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
-    if(!grant){std::erase_if(entries_,[](const auto& p){return p.use_count()==1;});grant=budget->reserve(resources::ResourceClass::kRecorded,bytes,true);}
+    auto grant=reserve(budget,resources::ResourceClass::kRecorded,bytes,true);
+    if(!grant){std::erase_if(entries_,[](const auto& p){return p.use_count()==1;});grant=reserve(budget,resources::ResourceClass::kRecorded,bytes,true);}
     if(!grant)return {};
     resources::ResourceLease admission(budget,*grant);
     if(entries_.size()>=512){auto old=std::find_if(entries_.begin(),entries_.end(),[](const auto& p){return p.use_count()==1;});if(old==entries_.end())return {};entries_.erase(old);}
@@ -96,7 +96,7 @@ LocalExactJob::LocalExactJob(const RuntimeSceneRecord& basis,std::shared_ptr<Loc
     bodyEntry_.record.content=basis.content;
     bodyEntry_.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(basis.content)};
     const auto bytes=sizeof(LocalExactJob)+4096+basis.eraseMasks.size()*(sizeof(std::shared_ptr<LocalMaskIndex>)+sizeof(SkPath)+sizeof(resources::ResourceLease));
-    auto token=budget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return;
+    auto token=cache_.reserve(budget_,resources::ResourceClass::kRecorded,bytes,true);if(!token)return;
     metadata_=resources::ResourceLease(budget_,*token);
     admitted_=true;
     history_.reserve(basis.eraseMasks.size());fallbackPaths_.reserve(basis.eraseMasks.size());fallbackPathLeases_.reserve(basis.eraseMasks.size());
@@ -114,7 +114,7 @@ LocalExactStatus LocalExactJob::advance(PreparationAllowance& allowance){
     if(status_==LocalExactStatus::kHit||status_==LocalExactStatus::kMiss||status_==LocalExactStatus::kInvalid||status_==LocalExactStatus::kNeedFull)return status_;
     if(!admitted_){
         const auto bytes=sizeof(LocalExactJob)+4096+basis_.eraseMasks.size()*(sizeof(std::shared_ptr<LocalMaskIndex>)+sizeof(SkPath)+sizeof(resources::ResourceLease));
-        auto token=budget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token){cache_.reclaimUnused();token=budget_->reserve(resources::ResourceClass::kRecorded,bytes,true);}if(!token)return LocalExactStatus::kPending;
+        auto token=cache_.reserve(budget_,resources::ResourceClass::kRecorded,bytes,true);if(!token){cache_.reclaimUnused();token=cache_.reserve(budget_,resources::ResourceClass::kRecorded,bytes,true);}if(!token)return LocalExactStatus::kPending;
         metadata_=resources::ResourceLease(budget_,*token);
         admitted_=true;
         history_.reserve(basis_.eraseMasks.size());fallbackPaths_.reserve(basis_.eraseMasks.size());fallbackPathLeases_.reserve(basis_.eraseMasks.size());
@@ -203,8 +203,8 @@ bool LocalExactJob::import(std::span<const std::uint8_t> bytes,const std::array<
     if(!waiting_||waitingPiece_>=waiting_->pieces.size())return false;
     // Bounded32-segment PathOps output is at most the existing1MiB envelope;
     // reserve before decoding and retain the exact actual path footprint.
-    auto grant=budget_->reserve(resources::ResourceClass::kRecorded,2U*1024U*1024U,true);
-    if(!grant){cache_.reclaimUnused();grant=budget_->reserve(resources::ResourceClass::kRecorded,2U*1024U*1024U,true);}
+    auto grant=cache_.reserve(budget_,resources::ResourceClass::kRecorded,2U*1024U*1024U,true);
+    if(!grant){cache_.reclaimUnused();grant=cache_.reserve(budget_,resources::ResourceClass::kRecorded,2U*1024U*1024U,true);}
     if(!grant){if(resourcePending)*resourcePending=true;return false;}
     resources::ResourceLease lease(budget_,*grant);auto path=cpuDecodePath(bytes.subspan(128));if(!path)return false;
     const auto footprint=path->approximateBytesUsed()+256;if(footprint>2U*1024U*1024U||!lease.shrink(footprint))return false;
@@ -222,7 +222,7 @@ bool LocalExactJob::advanceSelectionFallback(PreparationAllowance& allowance){
             const auto count=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size();else return g.path.commands.size();},old->geometry);
             auto estimate=cpuConstructionEstimate(count,128+count*80,std::holds_alternative<semantic::SweptCircleMask>(old->geometry));
             if(!estimate){status_=LocalExactStatus::kInvalid;return false;}
-            auto token=budget_->reserve(resources::ResourceClass::kScratch,*estimate,true);if(!token)return false;
+            auto token=cache_.reserve(budget_,resources::ResourceClass::kScratch,*estimate,true);if(!token)return false;
             fallbackLease_=resources::ResourceLease(budget_,*token);fallbackJob_=std::make_unique<CpuExactPathJob>(old->geometry);++work_.fullFallbacks;
         }
         ++allowance.steps;const auto before=fallbackJob_->cursor();
@@ -230,7 +230,7 @@ bool LocalExactJob::advanceSelectionFallback(PreparationAllowance& allowance){
         work_.pieceUnions+=fallbackJob_->cursor()-before;
         if(!fallbackJob_->ready())continue;
         const auto bytes=fallbackJob_->path().approximateBytesUsed()+128;
-        auto token=budget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return false;
+        auto token=cache_.reserve(budget_,resources::ResourceClass::kRecorded,bytes,true);if(!token)return false;
         resources::ResourceLease lease(budget_,*token);
         fallbackPaths_.push_back(fallbackJob_->path());fallbackPathLeases_.push_back(std::move(lease));
         fallbackJob_.reset();fallbackLease_.reset();
@@ -260,7 +260,7 @@ bool LocalExactJob::advanceSelectionFallback(PreparationAllowance& allowance){
 bool LocalExactJob::advanceLocalPiece(PreparationAllowance& allowance){
     if(status_!=LocalExactStatus::kNeedPiece||!waiting_)return false;
     if(!localPiece_){
-        auto grant=budget_->reserve(resources::ResourceClass::kScratch,256U*1024U,true);if(!grant){cache_.reclaimUnused();grant=budget_->reserve(resources::ResourceClass::kScratch,256U*1024U,true);}if(!grant)return false;
+        auto grant=cache_.reserve(budget_,resources::ResourceClass::kScratch,256U*1024U,true);if(!grant){cache_.reclaimUnused();grant=cache_.reserve(budget_,resources::ResourceClass::kScratch,256U*1024U,true);}if(!grant)return false;
         localPieceLease_=resources::ResourceLease(budget_,*grant);
         const auto* sweep=std::get_if<semantic::SweptCircleMask>(&waiting_->geometry);if(!sweep)return false;
         semantic::SweptCircleMask subset;const auto first=waitingPiece_*pieceSize;
@@ -273,7 +273,7 @@ bool LocalExactJob::advanceLocalPiece(PreparationAllowance& allowance){
     work_.pieceUnions+=localPiece_->cursor()-before;
     if(!localPiece_->ready())return false;
     const auto bytes=localPiece_->path().approximateBytesUsed()+256;
-    auto token=budget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return false;
+    auto token=cache_.reserve(budget_,resources::ResourceClass::kRecorded,bytes,true);if(!token)return false;
     auto& p=waiting_->pieces[waitingPiece_];p.path=localPiece_->path();p.ready=true;p.lease=resources::ResourceLease(budget_,*token);
     localPiece_.reset();localPieceLease_.reset();waiting_.reset();status_=LocalExactStatus::kPending;return true;
 }

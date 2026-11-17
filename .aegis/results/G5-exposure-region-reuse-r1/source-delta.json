@@ -1,0 +1,127 @@
+{
+  "status": "ISOLATED_TASKCOPIES_ONLY",
+  "baseline": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-quality-candidate-continuation-r1/normal-source-C.json",
+    "bytes": 133437,
+    "sha256": "313e93828178f5fb61aa5152b69c6feb193fcb0cd084b89f1d86d2bdc53ee8ae"
+  },
+  "changed": [
+    "runtime/render/include/canvas/render/navigation_sources.hpp",
+    "runtime/render/include/canvas/render/tile/tile_grid.hpp",
+    "runtime/render/tests/canonical_prepared_body_test.cpp",
+    "runtime/render/tests/navigation-sharing-serialize.hpp",
+    "runtime/render/tests/continuous_zoom_quality_test.cpp",
+    "runtime/render/src/skia_ink_layers.cpp",
+    "runtime/render/src/compact_raster_internal.hpp",
+    "runtime/render/src/skia_navigation_tiles.cpp",
+    "runtime/render/src/skia_render_cache_internal.hpp",
+    "runtime/render/src/navigation_sharing_observation.hpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/skia_navigation_tiles.hpp",
+    "runtime/render/src/skia_ink_layers.hpp",
+    "runtime/render/src/skia_compact_material.cpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "runtime/composition/CMakeLists.txt",
+    "runtime/composition/tests/exposure_region_reuse_cache_test.cpp",
+    "runtime/composition/tests/web_navigation_handoff_test.cpp"
+  ],
+  "patch": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/B-to-C.patch",
+    "bytes": 99231,
+    "sha256": "f1542cf38334ee10a4a1b952af23ee089f6bd24c8fbeab3898d534caaa41ea84"
+  },
+  "sources": [
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/include/canvas/render/navigation_sources.hpp",
+      "bytes": 4393,
+      "sha256": "b4013eaa53952b190d5d7f30d33ccf718ceabdd95eda078be980d0d97bb896f0"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/include/canvas/render/tile/tile_grid.hpp",
+      "bytes": 4561,
+      "sha256": "080da52c6048e9e79b40ff2bf1d35f5e8d3e909ca4014325f05211da3c4e8353"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/tests/canonical_prepared_body_test.cpp",
+      "bytes": 43697,
+      "sha256": "0c6612fedb642e6c49344c407c0fc53c39811080f7c25c34e3b03c840a2ae953"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/tests/navigation-sharing-serialize.hpp",
+      "bytes": 4362,
+      "sha256": "3f5146fd8368cf86e613e85b98417c71c615396834179e295de27fa2e41fa72a"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/tests/continuous_zoom_quality_test.cpp",
+      "bytes": 36711,
+      "sha256": "ea1022c33a819af8c2af8c77b90187f2ba6dcebd0d6391ea89845940af5797f5"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_ink_layers.cpp",
+      "bytes": 29335,
+      "sha256": "fbd00adee137be9ef392dc4b2c580058a391a3d185f591e83c762aa18adf746a"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/compact_raster_internal.hpp",
+      "bytes": 4435,
+      "sha256": "764de27dff78c1e170ed0a0cc2675ea6b8e7fc019f8cb300cef1b8bf41a88896"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_navigation_tiles.cpp",
+      "bytes": 94203,
+      "sha256": "443bb73e13494e1b761b1b82e0b15327ee9f136425cfa98f654b21ffcf8d8d7f"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_render_cache_internal.hpp",
+      "bytes": 14946,
+      "sha256": "28c8a0fe773a009f93aaf8b2f7a9c1b74ef253435508fec6c100d06e40f481e0"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/navigation_sharing_observation.hpp",
+      "bytes": 7828,
+      "sha256": "1576f612d6ebdc3e6006328bd9ee5ea745343c565ab65c4981debc0907d012ae"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_renderer.cpp",
+      "bytes": 126998,
+      "sha256": "ca232ec69062f34cd1daf4195a842c29a6f001157a6214565048d8378a3b4506"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_navigation_tiles.hpp",
+      "bytes": 6967,
+      "sha256": "1edf6a25ab225bc83a84832162216bb011b25090ccb0339a2ed5e9ffaf4bd359"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_ink_layers.hpp",
+      "bytes": 6070,
+      "sha256": "d5f18942bb9e4e36d92e44ce308027932284a97f460a9c6ce91b6b9414fd5960"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_compact_material.cpp",
+      "bytes": 51030,
+      "sha256": "0db19daa84c34b5feacbbd432b0dda03d5bcd40c14a89f9ab34e34bee4164987"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/render/src/skia_render_cache.cpp",
+      "bytes": 105274,
+      "sha256": "db9e890d1d3cad81d44850f40f5997a6f8385c85f82df405eac51bf065316f46"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/composition/CMakeLists.txt",
+      "bytes": 28104,
+      "sha256": "baf5cf73808b975891dbb6aa359a6c4131e809a951af1eb9f2593e0b0645fddb"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/composition/tests/exposure_region_reuse_cache_test.cpp",
+      "bytes": 8590,
+      "sha256": "21c74d21fe1b8bdddf2d94c18a6be425f45edc643c63efa958f999f5e1683dfa"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-C/runtime/composition/tests/web_navigation_handoff_test.cpp",
+      "bytes": 8256,
+      "sha256": "ef5ddc9f200794ce58e998511ddddd34c9bbc37dd0750ad92f78821920aa3ffe"
+    }
+  ],
+  "publicSDKAPI_OperationHistoryBrush_changes": false,
+  "noPrimaryApplyCommitPush": true
+}

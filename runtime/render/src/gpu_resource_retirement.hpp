@@ -6,6 +6,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <array>
 #include <list>
 #include <algorithm>
+#include "source_retention.hpp"
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
 #include <cstdio>
 #endif
@@ -66,10 +67,11 @@ class GpuResourceRetirement final {
   std::shared_ptr<Ticket> begin(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
       std::shared_ptr<GpuCompletionService> service,
       resources::ResourceClassMask mask=resources::kPixelResourceClasses,
-      resources::ResourceClassMask existing=resources::kPixelResourceClasses){
+      resources::ResourceClassMask existing=resources::kPixelResourceClasses,
+      const ValidationPressure& pressure={}){
     this->service();
     if(!budget||!service||entries_.size()>=1024)return {};
-    const auto token=budget->reserve(resources::ResourceClass::kRecorded,sizeof(Ticket)+sizeof(Entry)+128,true);
+    const auto token=reserveWithSourcePressure(budget,pressure,resources::ResourceClass::kRecorded,sizeof(Ticket)+sizeof(Entry)+128,true);
     if(!token)return {};
     resources::ResourceLease metadata(budget,*token);
     auto ticket=std::make_shared<Ticket>();ticket->budget=budget;ticket->state=service->state();

@@ -1,0 +1,136 @@
+{
+  "task": "G5-exposure-region-reuse-r1",
+  "status": "BLOCKED",
+  "classification": "FROZEN_WEB_HANDOFF_OR_QUALITY_FAILURE",
+  "continue_execution": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/packages/G5-exposure-region-reuse-r1/package.json",
+    "bytes": 2832,
+    "sha256": "dd0450ef9bc7880feb61c6c30336ea920ea6fde5ee6379b6d44d204cc757d6c8"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "6df8e16c1b1e45654532d2eb4cb8513f335c7a39",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-exposure-region-reuse-r1/result.json"
+  },
+  "obligations": {
+    "ER1": "Queryboundary+oldREDbound",
+    "ER2": "Actualnative45/48andsharedproducerconsumer; targetregressionsclosed, specificseam/mixedprojectionmatrixincomplete",
+    "ER3": "Ordinary100msall8pass; DPR4pairedmedianstableguardfails; diagnostic33.4mswindowfailswheel100",
+    "ER4": "Nativepixels/functionalPASS; partialD2opticalonly;DPR4notrun",
+    "ER5": "IsolatedmatchingSDK/hashboundresult/4340preserved"
+  },
+  "achieved": {
+    "nativePresents": 45,
+    "nativeCalls": 48,
+    "requiredMinimum": 42,
+    "noOperationLostTargetAssertions": true,
+    "ctest": {
+      "passed": 21,
+      "total": 21
+    },
+    "functionalDPR2DPR4": true,
+    "ordinaryStarts": 8,
+    "CmaximumGapRangeMs": [
+      34,
+      50
+    ],
+    "BmaximumGapApproximatelyMs": 1133,
+    "zeroNavigationOpsAndSnapshotByteExactAll10": true
+  },
+  "blocker": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/terminal-finding.json",
+    "bytes": 3799,
+    "sha256": "627bcb6dd6c0cfff904f9112b005632023902596bed64d378844dd2b24707bbb"
+  },
+  "additionalBlocker": "DPR4 paired median stable recovery exceeds Bmedian*1.15+100ms: wheelCmedian1081.55ms>558.22ms,touchCmedian859.7ms>573.11ms; discovered during terminal offline fullcomparison",
+  "ordinaryPerformanceOverallPass": false,
+  "browserComparison": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/browser-comparison.json",
+    "bytes": 12200,
+    "sha256": "f3eec1e5507c89bbb4754c02c60d6c272914591edee499e5188a57223fb90c4c"
+  },
+  "cameraHandoff": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/camera-handoff.json",
+    "bytes": 29943,
+    "sha256": "d79c9ee87e5f3dbd38f201c4e1a9bf4b83138c7c2648fa6e337ee71dd9d0f82d"
+  },
+  "optical": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/optical-comparison.json",
+    "bytes": 39231,
+    "sha256": "4011e097dce80e3bbd0deba0a0d7152bdaf19acd74169d6cf8ff21460d18f56b"
+  },
+  "sourceDelta": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/source-delta.json",
+    "bytes": 6821,
+    "sha256": "5f9ee63de8a735016725ee5a4e15f8cac0d0249f24006493167692007c1e61fd"
+  },
+  "SDKsource": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/SDK-source-input-manifest.json",
+    "bytes": 3615,
+    "sha256": "a907d51dafadb734b7441508f3739fc90f1592ee38f52b19966f3252b12b1eee"
+  },
+  "driverFreeze": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/browser-freeze.json",
+    "bytes": 13338,
+    "sha256": "14eeba0bd52f41b1bfcef0608a6970d83cdc5f10a39f6c6c9cd9f96d62dce8d1"
+  },
+  "spend": {
+    "early": {
+      "starts": 4,
+      "chargedSeconds": 84,
+      "cap": 480
+    },
+    "functional": {
+      "starts": 2,
+      "chargedSeconds": 14,
+      "cap": 360
+    },
+    "formal": {
+      "starts": 10,
+      "chargedSeconds": 243,
+      "cap": 1560
+    }
+  },
+  "cleanup": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/cleanup.json",
+    "bytes": 4125,
+    "sha256": "6b224f7902ff6e42525caf6cc880b7fa934ff22034d126c3629a98f4cccc6f0b"
+  },
+  "preservation": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/preservation.json",
+    "bytes": 1324,
+    "sha256": "0a717b62c97f1a718fd47356985c736f0c36522f3e6ce2a2468cd2f082262754"
+  },
+  "unexecuted": [
+    "WH-OPT-C-D4",
+    "WH-OPT-B-D4",
+    "DPR4opticalpixels/referenceprofiles",
+    "remaining32D2independentposeReferences",
+    "dedicated64gutterline/shapeGPUseamoracle",
+    "completefullbodyprojectioninterleavedmixed/qualitymatrix",
+    "final-source samepresent/density rerun"
+  ],
+  "preview": {
+    "URL": "http://127.0.0.1:4340/example.html",
+    "PID": 44610,
+    "leftRunning": true,
+    "status": "EXPERIMENTAL_TRIAL_RETAINED_TERMINAL_33_4MS_HANDOFF_BLOCKER"
+  },
+  "artifactManifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/artifact-manifest.json",
+    "bytes": 212958,
+    "sha256": "ea3f2ea1dc7f8029bb3da870bd1788bd3a6b0289c14b4e55d4bbcb6e5739bffa"
+  },
+  "noOfficialGateP34PerformancePASS": true,
+  "verificationRunnerFinding": "Paired p95/stable comparison ran at terminal offline finalization, not online afterordinary8.2D2opticalstarts admitted before discovery ofDPR4stablefailure; allretained/charged. See terminal-finding.json.",
+  "primaryProductionNotApplied": true,
+  "noCommitPush": true,
+  "nextOwner": "CONTROL_REVIEW",
+  "afterCallback": "STOP"
+}

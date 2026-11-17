@@ -1,0 +1,77 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-exposure-region-reuse-r1",
+  "status": "FROZEN_USER_AUTHORIZED_CLOSED_LOOP",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-cpu-worker",
+  "task_anchor": {
+    "revision": "6df8e16c1b1e45654532d2eb4cb8513f335c7a39",
+    "relation": "ancestor",
+    "actual_baseline_source_manifest": {
+      "path": ".aegis/results/G5-quality-candidate-continuation-r1/normal-source-C.json",
+      "bytes": 133437,
+      "sha256": "313e93828178f5fb61aa5152b69c6feb193fcb0cd084b89f1d86d2bdc53ee8ae"
+    },
+    "primary_preservation": {
+      "path": "out/G5-navigation-progressive-clarity-r1/primary-before.json",
+      "bytes": 133845,
+      "sha256": "fc40d99087abc2621bda714321312670603be3395bb40392beeed20a1bf06f96"
+    }
+  },
+  "resume_cursor": null,
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-exposure-region-reuse-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 2775,
+    "sha256": "26b99c6dfb110e7e084f50ac6bb646ae2c21cb19860ec1d7306a032d9c353219"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 5473,
+    "sha256": "2756df4428f94a31f493fc87b90755af2196cad9f4cfe8159851381fe6eb62ff"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 6764,
+    "sha256": "5be0dec0fd8fd866a5ec1f6a7d6e6c2e03196cb8facc4293e6c9f2f9dc2b16f0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 6013,
+    "sha256": "fd7d97df94775320ecbf81eb2d7b8fbdb29eeb6099d484b33a3d669f8eb6f092"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 2429,
+    "sha256": "5f0eea15ab7e8bba3ca74ce6cc72a75a0b17e3c1b45615769a803b835eecebb7"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 6959,
+    "sha256": "e564fdbd1adf51090d16ca5f267b12b1eea466cf1e168bdaabbfb5d7f4e31d6d"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 4039,
+    "sha256": "58bea31bf26b5834bd3e7ee4d2bcb998a2494f2d2349def0df7bc62fab2b8ce8"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 9500,
+    "sha256": "0b37a5d4b4c15a7ae97c7afdb61d914c70a9a3915c1d1ca5a83aa9a734573654"
+  }
+}

@@ -1,0 +1,497 @@
+{
+  "status": "PERFORMANCE_CHECKPOINT_NOT_RELEASE_NOT_FULL_GATE_PASS",
+  "user_authorization": "2026-11-17 Asia/Shanghai: 提交并推送，保留这版收益，打上标记tag，然后开始下一步",
+  "parent": "6df8e16c1b1e45654532d2eb4cb8513f335c7a39",
+  "branch": "codex/g5-exposure-region-checkpoint",
+  "tag": "g5-exposure-region-reuse-20261117",
+  "source_frozen": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-source-C.json",
+    "bytes": 146029,
+    "sha256": "2349a20e3dd72b3139f97c3ede57a69961b6fe5b8694c396968d86caa8ec7291"
+  },
+  "SDK_frozen": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-SDK-C.json",
+    "bytes": 4280,
+    "sha256": "ea476abada7f4a91b35a3d6033f1c27d3029a97cd5bab193ff21175cdd78782a"
+  },
+  "source_correspondence": "All1204 frozen4340normal source paths verified exactly in committedtree. Prioruncommitteddependencies preserved as candidate actuallycompiled, not primarydirty wholesale. Newbranch leaves primary/index/liveDemos unchanged.",
+  "build_profile_MiB": [
+    512,
+    1024,
+    128
+  ],
+  "profile_note": "4340compiledwith explicit CMake cache/shared/entry overrides512/1024/128. RepositoryDESKTOP defaults256/512/64 remain as frozen candidate; no silentpolicychange.",
+  "actual_gain": "OriginalMixed49 8normal windows max contentGL submission gap1133ms→34..50ms; actualcamera earlyD2 max49.7/38.7ms; no universalframep95claim.",
+  "remaining": [
+    "DPR4stop recovery medians1081.55mswheel/859.70mstouch exceed558.22/573.11 guards",
+    "D2opticalwheel100 newcamera wait47.7ms exceeds33.4 window",
+    "RemainingDPR4optical/completepixelreference/seam/mixedprojection validation"
+  ],
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/result.json",
+    "bytes": 5800,
+    "sha256": "7acbe10e3daed820b3dc57e57f54b7d4bda4e508bbc6d9aabef64c264a75f9b5"
+  },
+  "control_review": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-control-r1/control-review.json",
+    "bytes": 5399,
+    "sha256": "3416f507dbf36eb4f6ff3943cc2963a98604c2b9048de9e5bd1f5669e146e850"
+  },
+  "evidence_boundary": "JSONresults/package/source+SDKindices committed; large raw/browserRGBA/SDKbinaries remain content-addressed same-host artifact refs. Not an assertion allrawbinaryevidence uploaded toGitHub.",
+  "candidate_delta": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "sha256": "89f65404033f3be592cd9255e7128a6f9a27e43e55a0d55cb65bb1c4fc953586",
+      "bytes": 67185,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "baf5cf73808b975891dbb6aa359a6c4131e809a951af1eb9f2593e0b0645fddb",
+      "bytes": 28104,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/resources/include/canvas/resources/resource_budget_manager.hpp",
+      "sha256": "36e5280a81b0f40fb51883c5668239ac3eed7ae766ba2bcc83a0ed56dcabf270",
+      "bytes": 11903,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/reference_validation_cache_test.cpp",
+      "sha256": "fe7220d43d6876dd02ae1180a48b7fe6f5fce04bcd7638b1d4a4a9360812b7a3",
+      "bytes": 56198,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "sha256": "0c6612fedb642e6c49344c407c0fc53c39811080f7c25c34e3b03c840a2ae953",
+      "bytes": 43697,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/navigation-sharing-serialize.hpp",
+      "sha256": "3f5146fd8368cf86e613e85b98417c71c615396834179e295de27fa2e41fa72a",
+      "bytes": 4362,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/temporary_retirement_completion_test.cpp",
+      "sha256": "a81eb542d4b10ed007fefe437377161d00abbf596ff11f11619d66789560c9ac",
+      "bytes": 6552,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/temporary_retirement_wait_test.cpp",
+      "sha256": "687a94ce08e81efcf25fa9b12ad3a7c256af00285c1671e5f617b4e1aa45016c",
+      "bytes": 9674,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/navigation_display_workavoidance_test.cpp",
+      "sha256": "511279f66ba77e6bce18b70bfbafe6e0ea304c536bdd6754e760b7e2d1c915cb",
+      "bytes": 19869,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/render_cache_test.cpp",
+      "sha256": "9b06ed36daa7a1cb01dd4ed469c48ded9c3136431e072d76a4a0084b9aa6da15",
+      "bytes": 289504,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/temporary_retirement_safety_test.cpp",
+      "sha256": "9b8608d96ec549eda2ffdd1e8b71fccc317b6d49b58e2f37f4ac8d183d0311d1",
+      "bytes": 13572,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/continuous_zoom_quality_test.cpp",
+      "sha256": "ea1022c33a819af8c2af8c77b90187f2ba6dcebd0d6391ea89845940af5797f5",
+      "bytes": 36711,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/reference_validation_cache.cpp",
+      "sha256": "58bd19ab0c799bd58170fe3016c1f19ca8926d21492141381891c52ed4565c43",
+      "bytes": 4668,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "fbd00adee137be9ef392dc4b2c580058a391a3d185f591e83c762aa18adf746a",
+      "bytes": 29335,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/compact_raster_internal.hpp",
+      "sha256": "764de27dff78c1e170ed0a0cc2675ea6b8e7fc019f8cb300cef1b8bf41a88896",
+      "bytes": 4435,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_gpu_lifetime.hpp",
+      "sha256": "9a9cba8b6fa2ca49a823fec167bdb7cdda3f7e05abc8e2a98d894ea05f54654f",
+      "bytes": 4156,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/cpu_local_exact.hpp",
+      "sha256": "879f7907f93bb64750137a1d05751b295e6a1e0200aa339d1ab8d3bc1fff8841",
+      "bytes": 3536,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "sha256": "22a6801d8011780ec60e689f4dfaf7d4d98dd59b022f860088eabab634465f95",
+      "bytes": 4783,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "f2ca78449954df7be73a3fb821a53051cbd52768dd0b37bbd4926c9a9ee41397",
+      "bytes": 10738,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "sha256": "7419f37c046b59082e896c1ce8295916c56f6211f46988299e14e718ce6b62a7",
+      "bytes": 94265,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.hpp",
+      "sha256": "354413364502cb5948a0edb95babfa560e163c502a6e77b04638573b7338c36b",
+      "bytes": 1241,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "sha256": "443bb73e13494e1b761b1b82e0b15327ee9f136425cfa98f654b21ffcf8d8d7f",
+      "bytes": 94203,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "sha256": "401056a6393e5247b6ab7c531a80bd1aa67e17c329c47cf81559bfd4fb7b8aa9",
+      "bytes": 79572,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "d41193ea1a8f4ba2e5ad0c6b8ae8ee1c933e4ab9801bd24f78cb067fcbb6eb4e",
+      "bytes": 40706,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "sha256": "28c8a0fe773a009f93aaf8b2f7a9c1b74ef253435508fec6c100d06e40f481e0",
+      "bytes": 14946,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/navigation_sharing_observation.hpp",
+      "sha256": "1576f612d6ebdc3e6006328bd9ee5ea745343c565ab65c4981debc0907d012ae",
+      "bytes": 7828,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "sha256": "b4b525497207fa6a49ad6f0be01bfd9af1228a5f12c3480f67baffb7bacc5a53",
+      "bytes": 8935,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "sha256": "ca232ec69062f34cd1daf4195a842c29a6f001157a6214565048d8378a3b4506",
+      "bytes": 126998,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "sha256": "1edf6a25ab225bc83a84832162216bb011b25090ccb0339a2ed5e9ffaf4bd359",
+      "bytes": 6967,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/reference_validation_cache.hpp",
+      "sha256": "12d9a4ed29b16590eff9d6673b512bf05181107340bef53018e6ff03ab50c539",
+      "bytes": 3611,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "sha256": "d5f18942bb9e4e36d92e44ce308027932284a97f460a9c6ce91b6b9414fd5960",
+      "bytes": 6070,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "sha256": "22c6f2a20aaebb94204fe5d6dbf1810ab2e0cc02b08a442e61218580a9e2514a",
+      "bytes": 13862,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "sha256": "0db19daa84c34b5feacbbd432b0dda03d5bcd40c14a89f9ab34e34bee4164987",
+      "bytes": 51030,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/cpu_local_exact.cpp",
+      "sha256": "4947741c6448d70aa8269e661ba58818fa05821fca7feda1d1588c55c29bf6d6",
+      "bytes": 21168,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/continuous_zoom_observation.hpp",
+      "sha256": "5868c808da294f35816c4bbb440827ad7fb43a1ba3725b0cb26a547dbe126e30",
+      "bytes": 4006,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "sha256": "db9e890d1d3cad81d44850f40f5997a6f8385c85f82df405eac51bf065316f46",
+      "bytes": 105274,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/src/gpu_resource_retirement.hpp",
+      "sha256": "49ed01fe88049bfc6ba59598b6f219991bb909b44b2e5235194c25bc664ff33e",
+      "bytes": 8931,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "sha256": "6a8a0d5b285d71bce056360fac92d8798d1526e95f667054402012f2da808cb4",
+      "bytes": 11400,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/navigation_sources.hpp",
+      "sha256": "b4013eaa53952b190d5d7f30d33ccf718ceabdd95eda078be980d0d97bb896f0",
+      "bytes": 4393,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_scene_renderer.hpp",
+      "sha256": "734dc2d0cb8c78e75080afeadaa196061e198ef5d2082961614eea6ea788d9f6",
+      "bytes": 8282,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/tile/tile_grid.hpp",
+      "sha256": "080da52c6048e9e79b40ff2bf1d35f5e8d3e909ca4014325f05211da3c4e8353",
+      "bytes": 4561,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp",
+      "sha256": "7899ca8bb2826a21d5195649c60ef2d7da353cd16e709cf9b9b305f6efb56050",
+      "bytes": 10102,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/reference_validation_metrics.hpp",
+      "sha256": "ca4293cdb3f75dfad210a8184e75960f7e2338f7683e391ddbe603d6fd6a8a26",
+      "bytes": 716,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/internal/worker_status_metrics.hpp",
+      "sha256": "616e6a40f7fd05bc785263d3c4b2103c28710c878589d29dbd1871b386ca602d",
+      "bytes": 657,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/tests/exposure_region_reuse_cache_test.cpp",
+      "sha256": "21c74d21fe1b8bdddf2d94c18a6be425f45edc643c63efa958f999f5e1683dfa",
+      "bytes": 8590,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/tests/navigation_progressive_proof_test.cpp",
+      "sha256": "ec649cd190aada0964bd5617b51557dc62a8c7c7fc7e6cbad8a487e6047b3f05",
+      "bytes": 6384,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/tests/web_navigation_handoff_test.cpp",
+      "sha256": "ef5ddc9f200794ce58e998511ddddd34c9bbc37dd0750ad92f78821920aa3ffe",
+      "bytes": 8256,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "6d1de9ce78c61d55e30236397daaa9007459bf07074fd218d044d99400b818e4",
+      "bytes": 36503,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/src/public_composition.cpp",
+      "sha256": "6bfdc9515632b86a8c7e50cd578142187c83202ba3bc4268d1f980852858c245",
+      "bytes": 16897,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "58b990f6a27a09cfab4d425358ed0885ae0700b1d6929d3f75aa93f6c1f40bcd",
+      "bytes": 55741,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_platform_access.hpp",
+      "sha256": "b278db036f2c72b067385bd6cba5d08839336c88539d35d01ff4c7a1f6f88c64",
+      "bytes": 1909,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/runtime_composition_core.hpp",
+      "sha256": "52b3013f6ba648af98ab14dacf74ddcbe32d7b9ba7d76a49750fe0f39e7e8a8f",
+      "bytes": 16034,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/interaction/src/cpu_pending_erase.cpp",
+      "sha256": "106d183fec22754eaa927a2ecca20bf144fce95d05bb98e0b8e2e896725f5ed0",
+      "bytes": 41032,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "ddfc11b83d8dc02879cab855bfcf2d77a4adbfd3b8e97761c12dc0add31b0164",
+      "bytes": 330715,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "196ce6f5e746c64402bbecf3838f1c43bf1d945b8644f3b12e5b6f9e75e1435c",
+      "bytes": 66922,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/internal/cpu_pending_erase.hpp",
+      "sha256": "7a813759244cad8550c4a8d12f5806339cf1a42c02adb849d8d54c49534300cb",
+      "bytes": 2250,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/web/axiom.mjs",
+      "sha256": "9350f6dc2798aa2f220b934bcb6605d7bf1fd9b6cf63b9f6371774cbb403ef8d",
+      "bytes": 39111,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/common/cpu_pending_status_test.cpp",
+      "sha256": "85b9ef72f529124236325047d355c65d97c6cd14768a40d544c952a669d70dc0",
+      "bytes": 10329,
+      "status": "added",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/common/CMakeLists.txt",
+      "sha256": "c1f9512d09f4dcb6b53fe26c2a0a761c852ffd8a6b9a8e645fbacdb5f841432e",
+      "bytes": 3322,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/common/cpu_pending_receipt_test.cpp",
+      "sha256": "f6583cab43791fd1b802068b099adf8351ec9ae4f59b4e63855328a0ea65bafc",
+      "bytes": 5837,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/common/session.cpp",
+      "sha256": "a6fe7e7781c812e0b4214028ca272b96e1fd79ca2b8d48f3f5f24ee463976d22",
+      "bytes": 112717,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "sdk/web/internal/cpu-worker-client.mjs",
+      "sha256": "a39dddeb1ee53decba58f3d44ddca77f3257771c92ba4a12e8ecdc902e28d02d",
+      "bytes": 7324,
+      "status": "modified",
+      "source": "frozen4340normal"
+    },
+    {
+      "path": "runtime/render/tests/render_range_traversal_test.cpp",
+      "sha256": "cb36f8d921ba514791efe4fbbc77c4315e0b9d47b41fd0c5d190e4a1a7eb35f3",
+      "bytes": 22626,
+      "status": "added",
+      "source": "priornativecheckdependency; not compiled in4340"
+    }
+  ],
+  "noSDKreleaseVersionChange": true,
+  "preserve_existing": {
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "branch": "codex/g5-cpu-worker",
+    "primary_dirty_state": "kept",
+    "oldDemos": [
+      4336,
+      4337,
+      4338,
+      4339,
+      4340
+    ]
+  }
+}

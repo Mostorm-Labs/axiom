@@ -1,0 +1,93 @@
+{
+  "status": "FROZEN_EXPOSURE_REUSE_CLOSED_LOOP",
+  "obligations": [
+    {
+      "id": "ER1",
+      "requirement": "Preserve actual Query cost fix and prove original failure mechanism, without repeating old accepted diagnosis.",
+      "oracle": "Exact frozen old WH traces/review plus unchanged coldQueryCost RED/GREEN and new fullRuntime RED before C edit.",
+      "acceptance": "Selective query timing measures actual callback only; full load/validation/lease/hard deadline remain. Original wholeRuntime old behavior still RED; evidence binding exact.",
+      "evidence_required": [
+        "preflight.json",
+        "old-red.json",
+        "implementation-design.json"
+      ]
+    },
+    {
+      "id": "ER2",
+      "requirement": "Complete actual exposure subregions using reusable body/mask/pixels, preserving all relevant ordered sources and current-camera valid coverage.",
+      "oracle": "Original Mixed49 fullRuntime >=42/48 successful real new pictures, positive camera/nonempty coverage; focused cached-vs-uncached body/mask/z-order tests and region/source lifecycle/pressure.",
+      "acceptance": "Local completion/publishing plus reuse materially reduces original repeat raster and whole viewport actually presents. No unknown pixels or stale-pose masquerade. All applicable focused regressions pass.",
+      "evidence_required": [
+        "handoff-green.json",
+        "reuse-and-region-work.json",
+        "native-regressions.json",
+        "coverage-lifetimes.json"
+      ]
+    },
+    {
+      "id": "ER3",
+      "requirement": "Eliminate original long shrink handoff gap in actual normal Web rootSDK.",
+      "oracle": "Frozen8ordinary runs B,C,C,B perDPR2/4, bothwheel/touch360input curve; separate successful-present diagnostic pose evidence.",
+      "acceptance": "Every candidate route/repeat max and all5direction-boundary gaps<=100ms; p95 and actual camera gates in metrics; lostinputs0, no intentional dilation or futureframe relabel.",
+      "evidence_required": [
+        "browser-comparison.json",
+        "camera-handoff.json",
+        "sampling-ledger.json",
+        "raw-refs.json"
+      ]
+    },
+    {
+      "id": "ER4",
+      "requirement": "New timely frame keeps outline/width/alpha/selfintersection/per-object erasure/seams/z-order and final state, without extra blur in already sharp regions.",
+      "oracle": "Existing independent CPU/reference geometry and fixed optical profiles at12current-display instants; mandatory6ROI/fullpixel alternatives; rootSDK functionalDPR2/4; final snapshot byte equality and zero navigationOps.",
+      "acceptance": "All frozen metrics quality/state gates. Missing eligible edges reportedUNAVAILABLE, notzero; inherited DirectDPR4 image issue836channels/max240 reported separately, never new blanket waiver. No exact canonical receipt on navigation feedback.",
+      "evidence_required": [
+        "optical-comparison.json",
+        "optical-oracle.json",
+        "final-pixels-state.json",
+        "web-smoke.json"
+      ]
+    },
+    {
+      "id": "ER5",
+      "requirement": "Provide reviewable isolated source/SDK/demo and complete result while preserving existing work/user documents.",
+      "oracle": "Hash-bound source/delta/build/dependency/normalOFF asset manifests, old source/SDK preservation and new independent preview readiness; explicit terminal callback.",
+      "acceptance": "Independent result at same-host shared controlled boundary; all ER obligations satisfied or exact explicit blocker with failed/unexecuted items. No self-issued P34/G5/P1/1C/Windows/releasePASS.",
+      "evidence_required": [
+        "source-delta.json",
+        "SDK-source-input-manifest.json",
+        "dependency-facts.json",
+        "preview-ready.json",
+        "preservation.json",
+        "cleanup.json",
+        "artifact-manifest.json",
+        "result.json"
+      ]
+    }
+  ],
+  "required_focused_regressions": [
+    "G5TileWork",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5ErasedMixedNavigation",
+    "G5RetainedZoomReentry",
+    "G5MixedNavigationReentry",
+    "G5GpuRetirementContract",
+    "G5TemporaryRetirementWait",
+    "G5TemporaryRetirementSafety",
+    "G5TemporaryRetirementCompletion",
+    "G5RenderMemoryBudget",
+    "G5NavigationDisplayWorkavoidance",
+    "G5ProgressiveRuntimeProof",
+    "G5Navigation"
+  ],
+  "additional_required": [
+    "Original fullRuntime Mixed49 positive picture/camera progress, noOperation/generation/snapshot mutation and losttarget checks actually executed.",
+    "Shared body equality; exact identical-copy pixel reuse; different subpixel phase/affine/range/algorithm/material must miss or use correctly distinct representation.",
+    "Mask-only body retention; one copy different masks; overlapping semitransparency and shape/image/text interleaving; gutter seams across subblocks/levels; fullviewport validity despite partial block completion.",
+    "Cold frontier versus retained sharp overlap, pendingcamera/postcommit6 cases, refinement resumption and samepresent; Scene/resource/context/metrics loss invalidation and latecompletion; live/pending/staging memory accounting.",
+    "Small number of Node driver/capture/absolute-gap oracle tests plus current runtime boundary checker; no unnecessary broad historical suite."
+  ],
+  "hosted_required": [],
+  "known_inherited": "Existing DirectDPR4 image discrepancy and typeversion literal drift disclosed; old QC/PC/P1/1C not waived. No universal platform qualification."
+}

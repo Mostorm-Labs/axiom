@@ -48,7 +48,7 @@ int main(){try{
  auto packet=call({{"command","data"},{"action","next"}});require(!packet.at("value").is_null(),"actual publication packet");
  const auto closing=sdk::Json::parse(session.call(sdk::Json{{"command","close"}}.dump()));require(!closing.at("ok").get<bool>()&&closing.at("code")=="PUBLICATION_PENDING","publication barrier");
  const auto preflight=call({{"command","cpuPending"},{"action","closePreflight"}});require(preflight.at("ok").get<bool>(),"readonly preflight during publicationclosing");
- for(const auto* action:{"bind","take","complete","suspend","unavailable","foreign"}){const auto denied=sdk::Json::parse(session.call(sdk::Json{{"command","cpuPending"},{"action",action},{"executor","2"}}.dump()));require(!denied.at("ok").get<bool>()&&denied.at("code")=="DOCUMENT_CLOSING","closing private mutation admitted");}
+ for(const auto* action:{"bind","take","complete","suspend","unavailable","foreign","status","facts"}){const auto denied=sdk::Json::parse(session.call(sdk::Json{{"command","cpuPending"},{"action",action},{"executor","2"}}.dump()));require(!denied.at("ok").get<bool>()&&denied.at("code")=="DOCUMENT_CLOSING","closing private mutation admitted");}
  call({{"command","data"},{"action","release"},{"packet",packet.at("value")}});
  const auto released=sdk::Json::parse(session.call(sdk::Json{{"command","data"},{"action","release"},{"packet",packet.at("value")}}.dump()));require(released.at("ok").get<bool>(),"exact release must remain idempotent");
  auto wrongPacket=packet.at("value");wrongPacket["commit"]["ordinal"]="999";const auto wrong=sdk::Json::parse(session.call(sdk::Json{{"command","data"},{"action","release"},{"packet",wrongPacket}}.dump()));require(!wrong.at("ok").get<bool>(),"foreign packet release accepted");

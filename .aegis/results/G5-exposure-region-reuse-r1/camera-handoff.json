@@ -1,0 +1,1097 @@
+{
+  "status": "FROZEN_33_4MS_CURRENT_CAMERA_GATE_FAILED",
+  "rows": [
+    {
+      "id": "WH-OPT-B-D2",
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/web/WH-OPT-B-D2/raw.json",
+        "bytes": 1403484,
+        "sha256": "9251d4cf176ebd065fec7f66c16c0fd25cefaa41961207690393b2da0eaa151d"
+      },
+      "metrics": [
+        {
+          "route": "wheel",
+          "proxy": {
+            "gaps": {
+              "count": 264,
+              "median": 16.700000047683716,
+              "p95": 18.40000009536743,
+              "maximum": 1133.0999999046326
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 17.5
+              },
+              {
+                "index": 120,
+                "gap_ms": 1133.0999999046326
+              },
+              {
+                "index": 180,
+                "gap_ms": 18.5
+              },
+              {
+                "index": 240,
+                "gap_ms": 18.40000009536743
+              },
+              {
+                "index": 300,
+                "gap_ms": 482.2999999523163
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 0.7333334287008029,
+              "p95": 1.6333332856493143,
+              "maximum": 3.3333333333339397
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 0.2999999523162842,
+              "p95": 0.40000009536743164,
+              "maximum": 1
+            },
+            "settle_ms": 237,
+            "content_submissions": 263,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 263,
+            "max_gap_ms": 1133.2000000476837,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 17.59999990463257
+              },
+              {
+                "index": 120,
+                "gap_ms": 1133.2000000476837
+              },
+              {
+                "index": 180,
+                "gap_ms": 18.299999952316284
+              },
+              {
+                "index": 240,
+                "gap_ms": 18.5
+              },
+              {
+                "index": 300,
+                "gap_ms": 482.39999985694885
+              }
+            ],
+            "missed33_4msWindows": [
+              {
+                "index": 91,
+                "deadline": 2696.799999856949
+              },
+              {
+                "index": 92,
+                "deadline": 2713.799999856949
+              },
+              {
+                "index": 93,
+                "deadline": 2731.299999856949
+              },
+              {
+                "index": 94,
+                "deadline": 2747.0999998092652
+              },
+              {
+                "index": 95,
+                "deadline": 2764.4999999046327
+              },
+              {
+                "index": 96,
+                "deadline": 2780.4999999046327
+              },
+              {
+                "index": 97,
+                "deadline": 2797.4
+              },
+              {
+                "index": 98,
+                "deadline": 2814.299999856949
+              },
+              {
+                "index": 99,
+                "deadline": 2830.4
+              },
+              {
+                "index": 100,
+                "deadline": 2846.9999999046327
+              },
+              {
+                "index": 101,
+                "deadline": 2864.4999999046327
+              },
+              {
+                "index": 102,
+                "deadline": 2880.1999999523164
+              },
+              {
+                "index": 103,
+                "deadline": 2896.9999999046327
+              },
+              {
+                "index": 104,
+                "deadline": 2913.5999998092652
+              },
+              {
+                "index": 105,
+                "deadline": 2930.6999999523164
+              },
+              {
+                "index": 106,
+                "deadline": 2946.9999999046327
+              },
+              {
+                "index": 107,
+                "deadline": 2963.6999999523164
+              },
+              {
+                "index": 108,
+                "deadline": 2980.9
+              },
+              {
+                "index": 109,
+                "deadline": 2995.799999856949
+              },
+              {
+                "index": 110,
+                "deadline": 3013.5999998092652
+              },
+              {
+                "index": 111,
+                "deadline": 3030.0999998092652
+              },
+              {
+                "index": 112,
+                "deadline": 3046.9999999046327
+              },
+              {
+                "index": 113,
+                "deadline": 3063.799999856949
+              },
+              {
+                "index": 114,
+                "deadline": 3080.9999999046327
+              },
+              {
+                "index": 115,
+                "deadline": 3097.0999998092652
+              },
+              {
+                "index": 116,
+                "deadline": 3114.1999999523164
+              },
+              {
+                "index": 117,
+                "deadline": 3129.9999999046327
+              },
+              {
+                "index": 118,
+                "deadline": 3147.0999998092652
+              },
+              {
+                "index": 119,
+                "deadline": 3163.5999998092652
+              },
+              {
+                "index": 120,
+                "deadline": 3180.799999856949
+              },
+              {
+                "index": 121,
+                "deadline": 3197.4
+              },
+              {
+                "index": 122,
+                "deadline": 3214.799999856949
+              },
+              {
+                "index": 123,
+                "deadline": 3230.9999999046327
+              },
+              {
+                "index": 124,
+                "deadline": 3246.4999999046327
+              },
+              {
+                "index": 125,
+                "deadline": 3263.4999999046327
+              },
+              {
+                "index": 126,
+                "deadline": 3280.299999856949
+              },
+              {
+                "index": 127,
+                "deadline": 3296.9999999046327
+              },
+              {
+                "index": 128,
+                "deadline": 3313.299999856949
+              },
+              {
+                "index": 129,
+                "deadline": 3330.1999999523164
+              },
+              {
+                "index": 130,
+                "deadline": 3346.5999998092652
+              },
+              {
+                "index": 131,
+                "deadline": 3363.4
+              },
+              {
+                "index": 132,
+                "deadline": 3380.4999999046327
+              },
+              {
+                "index": 133,
+                "deadline": 3397.0999998092652
+              },
+              {
+                "index": 134,
+                "deadline": 3413.5999998092652
+              },
+              {
+                "index": 135,
+                "deadline": 3430.4999999046327
+              },
+              {
+                "index": 136,
+                "deadline": 3447.0999998092652
+              },
+              {
+                "index": 137,
+                "deadline": 3463.6999999523164
+              },
+              {
+                "index": 138,
+                "deadline": 3481.1999999523164
+              },
+              {
+                "index": 139,
+                "deadline": 3497.0999998092652
+              },
+              {
+                "index": 140,
+                "deadline": 3513.6999999523164
+              },
+              {
+                "index": 141,
+                "deadline": 3532.4
+              },
+              {
+                "index": 142,
+                "deadline": 3546.799999856949
+              },
+              {
+                "index": 143,
+                "deadline": 3563.4999999046327
+              },
+              {
+                "index": 144,
+                "deadline": 3580.4
+              },
+              {
+                "index": 145,
+                "deadline": 3596.9999999046327
+              },
+              {
+                "index": 146,
+                "deadline": 3613.6999999523164
+              },
+              {
+                "index": 147,
+                "deadline": 3630.299999856949
+              },
+              {
+                "index": 148,
+                "deadline": 3647.0999998092652
+              },
+              {
+                "index": 149,
+                "deadline": 3663.5999998092652
+              },
+              {
+                "index": 150,
+                "deadline": 3680.0999998092652
+              },
+              {
+                "index": 151,
+                "deadline": 3697.1999999523164
+              },
+              {
+                "index": 152,
+                "deadline": 3714.1999999523164
+              },
+              {
+                "index": 153,
+                "deadline": 3729.0999998092652
+              },
+              {
+                "index": 154,
+                "deadline": 3746.799999856949
+              },
+              {
+                "index": 155,
+                "deadline": 3763.6999999523164
+              },
+              {
+                "index": 156,
+                "deadline": 3780.9
+              },
+              {
+                "index": 288,
+                "deadline": 5980.2999998569485
+              },
+              {
+                "index": 289,
+                "deadline": 5997.699999952316
+              },
+              {
+                "index": 290,
+                "deadline": 6013.499999904632
+              },
+              {
+                "index": 291,
+                "deadline": 6030.7999998569485
+              },
+              {
+                "index": 292,
+                "deadline": 6047.999999904632
+              },
+              {
+                "index": 293,
+                "deadline": 6063.699999952316
+              },
+              {
+                "index": 294,
+                "deadline": 6080.4
+              },
+              {
+                "index": 295,
+                "deadline": 6096.999999904632
+              },
+              {
+                "index": 296,
+                "deadline": 6113.599999809265
+              },
+              {
+                "index": 297,
+                "deadline": 6130.2999998569485
+              },
+              {
+                "index": 298,
+                "deadline": 6146.699999952316
+              },
+              {
+                "index": 299,
+                "deadline": 6163.699999952316
+              },
+              {
+                "index": 300,
+                "deadline": 6180.9
+              },
+              {
+                "index": 301,
+                "deadline": 6197.699999952316
+              },
+              {
+                "index": 302,
+                "deadline": 6213.599999809265
+              },
+              {
+                "index": 303,
+                "deadline": 6230.599999809265
+              },
+              {
+                "index": 304,
+                "deadline": 6247.9
+              },
+              {
+                "index": 305,
+                "deadline": 6263.599999809265
+              },
+              {
+                "index": 306,
+                "deadline": 6280.599999809265
+              },
+              {
+                "index": 307,
+                "deadline": 6297.999999904632
+              },
+              {
+                "index": 308,
+                "deadline": 6313.4
+              },
+              {
+                "index": 309,
+                "deadline": 6330.499999904632
+              },
+              {
+                "index": 310,
+                "deadline": 6346.999999904632
+              },
+              {
+                "index": 311,
+                "deadline": 6364.2999998569485
+              },
+              {
+                "index": 312,
+                "deadline": 6379.999999904632
+              },
+              {
+                "index": 313,
+                "deadline": 6397.099999809265
+              },
+              {
+                "index": 314,
+                "deadline": 6413.599999809265
+              },
+              {
+                "index": 360,
+                "deadline": 7179.599999809265
+              }
+            ],
+            "finalCurrent": true,
+            "pass": false
+          }
+        },
+        {
+          "route": "touch",
+          "proxy": {
+            "gaps": {
+              "count": 1370,
+              "median": 0,
+              "p95": 17.200000047683716,
+              "maximum": 1133.0999999046326
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 15.799999952316284
+              },
+              {
+                "index": 120,
+                "gap_ms": 1133.0999999046326
+              },
+              {
+                "index": 180,
+                "gap_ms": 17.100000143051147
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.100000143051147
+              },
+              {
+                "index": 300,
+                "gap_ms": 483.7000000476837
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 23.116666714349776,
+              "p95": 24.90000009536743,
+              "maximum": 36
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 16.5,
+              "p95": 18.200000047683716,
+              "maximum": 23.5
+            },
+            "settle_ms": 240.79999995231628,
+            "content_submissions": 1369,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 264,
+            "max_gap_ms": 1133.1999998092651,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 15.700000047683716
+              },
+              {
+                "index": 120,
+                "gap_ms": 1133.1999998092651
+              },
+              {
+                "index": 180,
+                "gap_ms": 17.200000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 17
+              },
+              {
+                "index": 300,
+                "gap_ms": 483.90000009536743
+              }
+            ],
+            "missed33_4msWindows": [
+              {
+                "index": 92,
+                "deadline": 22143.29999985695
+              },
+              {
+                "index": 93,
+                "deadline": 22158.599999809267
+              },
+              {
+                "index": 94,
+                "deadline": 22175.29999985695
+              },
+              {
+                "index": 95,
+                "deadline": 22191.79999985695
+              },
+              {
+                "index": 96,
+                "deadline": 22209.099999809267
+              },
+              {
+                "index": 97,
+                "deadline": 22226.699999952318
+              },
+              {
+                "index": 98,
+                "deadline": 22241.199999952318
+              },
+              {
+                "index": 99,
+                "deadline": 22257.9
+              },
+              {
+                "index": 100,
+                "deadline": 22276.29999985695
+              },
+              {
+                "index": 101,
+                "deadline": 22292.099999809267
+              },
+              {
+                "index": 102,
+                "deadline": 22308.4
+              },
+              {
+                "index": 103,
+                "deadline": 22325.29999985695
+              },
+              {
+                "index": 104,
+                "deadline": 22341.79999985695
+              },
+              {
+                "index": 105,
+                "deadline": 22358.199999952318
+              },
+              {
+                "index": 106,
+                "deadline": 22374.599999809267
+              },
+              {
+                "index": 107,
+                "deadline": 22391.79999985695
+              },
+              {
+                "index": 108,
+                "deadline": 22408.999999904634
+              },
+              {
+                "index": 109,
+                "deadline": 22426.499999904634
+              },
+              {
+                "index": 110,
+                "deadline": 22440.999999904634
+              },
+              {
+                "index": 111,
+                "deadline": 22458.499999904634
+              },
+              {
+                "index": 112,
+                "deadline": 22476.199999952318
+              },
+              {
+                "index": 113,
+                "deadline": 22491.29999985695
+              },
+              {
+                "index": 114,
+                "deadline": 22509.79999985695
+              },
+              {
+                "index": 115,
+                "deadline": 22526.499999904634
+              },
+              {
+                "index": 116,
+                "deadline": 22542.999999904634
+              },
+              {
+                "index": 117,
+                "deadline": 22558.999999904634
+              },
+              {
+                "index": 118,
+                "deadline": 22575.999999904634
+              },
+              {
+                "index": 119,
+                "deadline": 22591.999999904634
+              },
+              {
+                "index": 120,
+                "deadline": 22608.9
+              },
+              {
+                "index": 121,
+                "deadline": 22625.699999952318
+              },
+              {
+                "index": 122,
+                "deadline": 22642.9
+              },
+              {
+                "index": 123,
+                "deadline": 22657.9
+              },
+              {
+                "index": 124,
+                "deadline": 22675.099999809267
+              },
+              {
+                "index": 125,
+                "deadline": 22692.9
+              },
+              {
+                "index": 126,
+                "deadline": 22709.499999904634
+              },
+              {
+                "index": 127,
+                "deadline": 22725.099999809267
+              },
+              {
+                "index": 128,
+                "deadline": 22741.9
+              },
+              {
+                "index": 129,
+                "deadline": 22758.999999904634
+              },
+              {
+                "index": 130,
+                "deadline": 22776.499999904634
+              },
+              {
+                "index": 131,
+                "deadline": 22791.9
+              },
+              {
+                "index": 132,
+                "deadline": 22808.79999985695
+              },
+              {
+                "index": 133,
+                "deadline": 22826.199999952318
+              },
+              {
+                "index": 134,
+                "deadline": 22842.999999904634
+              },
+              {
+                "index": 135,
+                "deadline": 22858.29999985695
+              },
+              {
+                "index": 136,
+                "deadline": 22876.199999952318
+              },
+              {
+                "index": 137,
+                "deadline": 22893.099999809267
+              },
+              {
+                "index": 138,
+                "deadline": 22908.099999809267
+              },
+              {
+                "index": 139,
+                "deadline": 22924.9
+              },
+              {
+                "index": 140,
+                "deadline": 22943.9
+              },
+              {
+                "index": 141,
+                "deadline": 22958.699999952318
+              },
+              {
+                "index": 142,
+                "deadline": 22975.29999985695
+              },
+              {
+                "index": 143,
+                "deadline": 22993.29999985695
+              },
+              {
+                "index": 144,
+                "deadline": 23008.9
+              },
+              {
+                "index": 145,
+                "deadline": 23024.9
+              },
+              {
+                "index": 146,
+                "deadline": 23043.29999985695
+              },
+              {
+                "index": 147,
+                "deadline": 23059.699999952318
+              },
+              {
+                "index": 148,
+                "deadline": 23074.9
+              },
+              {
+                "index": 149,
+                "deadline": 23091.4
+              },
+              {
+                "index": 150,
+                "deadline": 23107.79999985695
+              },
+              {
+                "index": 151,
+                "deadline": 23124.9
+              },
+              {
+                "index": 152,
+                "deadline": 23141.699999952318
+              },
+              {
+                "index": 153,
+                "deadline": 23157.699999952318
+              },
+              {
+                "index": 154,
+                "deadline": 23176.099999809267
+              },
+              {
+                "index": 155,
+                "deadline": 23192.9
+              },
+              {
+                "index": 156,
+                "deadline": 23208.79999985695
+              },
+              {
+                "index": 289,
+                "deadline": 25424.599999809267
+              },
+              {
+                "index": 290,
+                "deadline": 25441.999999904634
+              },
+              {
+                "index": 291,
+                "deadline": 25459.199999952318
+              },
+              {
+                "index": 292,
+                "deadline": 25474.999999904634
+              },
+              {
+                "index": 293,
+                "deadline": 25491.4
+              },
+              {
+                "index": 294,
+                "deadline": 25508.199999952318
+              },
+              {
+                "index": 295,
+                "deadline": 25524.199999952318
+              },
+              {
+                "index": 296,
+                "deadline": 25542.499999904634
+              },
+              {
+                "index": 297,
+                "deadline": 25558.999999904634
+              },
+              {
+                "index": 298,
+                "deadline": 25574.499999904634
+              },
+              {
+                "index": 299,
+                "deadline": 25590.999999904634
+              },
+              {
+                "index": 300,
+                "deadline": 25608.999999904634
+              },
+              {
+                "index": 301,
+                "deadline": 25624.999999904634
+              },
+              {
+                "index": 302,
+                "deadline": 25641.4
+              },
+              {
+                "index": 303,
+                "deadline": 25658.099999809267
+              },
+              {
+                "index": 304,
+                "deadline": 25675.599999809267
+              },
+              {
+                "index": 305,
+                "deadline": 25691.4
+              },
+              {
+                "index": 306,
+                "deadline": 25708.599999809267
+              },
+              {
+                "index": 307,
+                "deadline": 25723.999999904634
+              },
+              {
+                "index": 308,
+                "deadline": 25742.79999985695
+              },
+              {
+                "index": 309,
+                "deadline": 25757.999999904634
+              },
+              {
+                "index": 310,
+                "deadline": 25774.699999952318
+              },
+              {
+                "index": 311,
+                "deadline": 25791.099999809267
+              },
+              {
+                "index": 312,
+                "deadline": 25808.499999904634
+              },
+              {
+                "index": 313,
+                "deadline": 25824.79999985695
+              },
+              {
+                "index": 314,
+                "deadline": 25842.79999985695
+              },
+              {
+                "index": 315,
+                "deadline": 25857.9
+              }
+            ],
+            "finalCurrent": true,
+            "pass": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "WH-OPT-C-D2",
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/web/WH-OPT-C-D2/raw.json",
+        "bytes": 3799105,
+        "sha256": "03c8d9b7f48483e1ed3bb19f8606823277f6885cd34104a24d96bd530acf3d4c"
+      },
+      "metrics": [
+        {
+          "route": "wheel",
+          "proxy": {
+            "gaps": {
+              "count": 5403,
+              "median": 0,
+              "p95": 15.799999952316284,
+              "maximum": 49.90000009536743
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 17
+              },
+              {
+                "index": 120,
+                "gap_ms": 17.09999990463257
+              },
+              {
+                "index": 180,
+                "gap_ms": 15.700000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.699999809265137
+              },
+              {
+                "index": 300,
+                "gap_ms": 15.100000143051147
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 0.466666618983254,
+              "p95": 1.4333332379655985,
+              "maximum": 2.666666666666515
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 0.2999999523162842,
+              "p95": 0.5,
+              "maximum": 0.8000001907348633
+            },
+            "settle_ms": 353.5,
+            "content_submissions": 5402,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 356,
+            "max_gap_ms": 49.89999985694885,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 17.200000047683716
+              },
+              {
+                "index": 120,
+                "gap_ms": 17.299999952316284
+              },
+              {
+                "index": 180,
+                "gap_ms": 15.799999952316284
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.700000047683716
+              },
+              {
+                "index": 300,
+                "gap_ms": 15.200000047683716
+              }
+            ],
+            "missed33_4msWindows": [
+              {
+                "index": 100,
+                "deadline": 2695.9999999046327
+              },
+              {
+                "index": 360,
+                "deadline": 7029.600000047683
+              }
+            ],
+            "finalCurrent": true,
+            "pass": false
+          }
+        },
+        {
+          "route": "touch",
+          "proxy": {
+            "gaps": {
+              "count": 6231,
+              "median": 0,
+              "p95": 15.5,
+              "maximum": 38.09999990463257
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.200000047683716
+              },
+              {
+                "index": 120,
+                "gap_ms": 15.299999952316284
+              },
+              {
+                "index": 180,
+                "gap_ms": 15.399999856948853
+              },
+              {
+                "index": 240,
+                "gap_ms": 15.300000190734863
+              },
+              {
+                "index": 300,
+                "gap_ms": 16.09999990463257
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 22.550000071525574,
+              "p95": 24.5,
+              "maximum": 35.799999952316284
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 16.5,
+              "p95": 18.200000047683716,
+              "maximum": 20.300000190734863
+            },
+            "settle_ms": 357.90000009536743,
+            "content_submissions": 6230,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 359,
+            "max_gap_ms": 38.299999952316284,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.299999952316284
+              },
+              {
+                "index": 120,
+                "gap_ms": 15.399999856948853
+              },
+              {
+                "index": 180,
+                "gap_ms": 15.400000095367432
+              },
+              {
+                "index": 240,
+                "gap_ms": 15.299999952316284
+              },
+              {
+                "index": 300,
+                "gap_ms": 16.100000143051147
+              }
+            ],
+            "missed33_4msWindows": [],
+            "finalCurrent": true,
+            "pass": true
+          }
+        }
+      ]
+    }
+  ],
+  "finding": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/terminal-finding.json",
+    "bytes": 3799,
+    "sha256": "627bcb6dd6c0cfff904f9112b005632023902596bed64d378844dd2b24707bbb"
+  },
+  "absolute100msPassedForCandidate": true,
+  "candidateWheelRealMissIndex": 100,
+  "last360FalseNegativeDisclosedNotBlocking": true,
+  "DPR4": "NOT_RUN_AFTER_TERMINAL_GUARD"
+}

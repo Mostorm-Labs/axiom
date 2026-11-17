@@ -16,8 +16,12 @@ class LocalExactCache final {
         const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t capacity);
     void clear()noexcept;
     void reclaimUnused()noexcept;
+    void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
+    std::optional<std::uint64_t> reserve(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+        resources::ResourceClass kind,std::size_t bytes,bool critical=true){return reserveWithSourcePressure(budget,pressure_,kind,bytes,critical);}
  private:
     std::vector<std::shared_ptr<LocalMaskIndex>> entries_;
+    ValidationPressure pressure_;
 };
 // The entire input/target/history are retained; an imported range can prove only
 // its exact range. Full original geometry is still used by the canonical owner.

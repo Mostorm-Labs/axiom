@@ -1,0 +1,187 @@
+{
+  "fixture": "ExactsameMixed49snapshot SHA17f0f5ce..., one2.3MBimage, allsource/resourcesandinitialcameraunchanged. Neverreduceobjects/masksorreplacea brushasfix. Diagnosecommand/sourceeligibilityonthisexactscene.",
+  "viewport_logical": [
+    1431,
+    1010
+  ],
+  "DPRs": [
+    2,
+    4
+  ],
+  "entropy_seed": 324508639,
+  "gesture": {
+    "sequence": [
+      {
+        "samples": 60,
+        "interval_ms": 16.6666667,
+        "scale_start": 1.0,
+        "scale_end": 2.0,
+        "interpolation": "geometric endpointincluded k1..60",
+        "focus_logical": [
+          715.5,
+          505.0
+        ]
+      },
+      {
+        "samples": 60,
+        "interval_ms": 16.6666667,
+        "scale_start": 2.0,
+        "scale_end": 0.5,
+        "interpolation": "geometric endpointincluded k1..60",
+        "focus_logical": [
+          715.5,
+          505.0
+        ]
+      },
+      {
+        "samples": 60,
+        "interval_ms": 16.6666667,
+        "scale_start": 0.5,
+        "scale_end": 1.5,
+        "interpolation": "geometric endpointincluded k1..60",
+        "focus_logical": [
+          715.5,
+          505.0
+        ]
+      }
+    ],
+    "repeat_cycles": 2,
+    "gap_between_segments_ms": 0,
+    "gap_between_cycles_ms": 0,
+    "second_route_after_idle_ms": 3000,
+    "total_input_samples_each_route": 360,
+    "input_kind": "Route A uses ctrl-wheel events. Each cycle multiplies the cycle-start scale by: 1 -> 2 -> 0.5 -> 1.5, with 60 samples per segment. Cycle 2 therefore starts at 1.5 and ends at 2.25 relative to route start. Route B uses two touch contacts, initial span160 logical px centered at focus, reproducing the same multiplicative spans. Recenter to the original route-start camera via public SDK and settle before the3s idle preceding Route B; do not reset within a route.",
+    "input_schedule": "Use fixedwallclock planneddeadlines, recordactualdispatch. Do notslowgesture toawaitframe/readback/SDKpromise. Allsamples/timestamps preserved/coalescingonlyexistingSDK. No postsegmentsettle. Physicaltrackpad is notsyntheticproof.",
+    "baseline_oracle": "Beforeproductionmutation, actualnativeRender oldcode must showavoidable density downgrade/coarseblur and/ordetailstarvation under samecontinuousdemand, using exactfixtureinputs. Browseroldopticalcapturemaycorroborate. If noRED returnverificationdesignblocker; do notcall merecodechange success.",
+    "curve": "For each segment a->b, sample k in1..60: factor=a*(b/a)^(k/60). Planned deadline=routeStart+sampleIndex*(1000/60)ms. Native route uses the corresponding exact affine about focus. Web records actual camera after each input; no assumption that physical browser native gesture matches synthetic events."
+  },
+  "ordinary_windows": [
+    {
+      "id": "WH-W-D2-B1",
+      "DPR": 2,
+      "lane": "baseline",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D2-C1",
+      "DPR": 2,
+      "lane": "candidate",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D2-C2",
+      "DPR": 2,
+      "lane": "candidate",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D2-B2",
+      "DPR": 2,
+      "lane": "baseline",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D4-B1",
+      "DPR": 4,
+      "lane": "baseline",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D4-C1",
+      "DPR": 4,
+      "lane": "candidate",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D4-C2",
+      "DPR": 4,
+      "lane": "candidate",
+      "mode": "ordinary"
+    },
+    {
+      "id": "WH-W-D4-B2",
+      "DPR": 4,
+      "lane": "baseline",
+      "mode": "ordinary"
+    }
+  ],
+  "optical_windows": [
+    {
+      "id": "WH-OPT-B-D2",
+      "DPR": 2,
+      "lane": "baseline",
+      "mode": "optical"
+    },
+    {
+      "id": "WH-OPT-C-D2",
+      "DPR": 2,
+      "lane": "candidate",
+      "mode": "optical"
+    },
+    {
+      "id": "WH-OPT-C-D4",
+      "DPR": 4,
+      "lane": "candidate",
+      "mode": "optical"
+    },
+    {
+      "id": "WH-OPT-B-D4",
+      "DPR": 4,
+      "lane": "baseline",
+      "mode": "optical"
+    }
+  ],
+  "optical_checkpoints": "Same12inputindices; capturecurrentlydisplayedtargetimmediatelyafterselectedinputeventreturns withlatestactualpresentstampandrequestedstatebyvalue; nofuturepresentFIFO. Intrusiveonlyoptical, nootherlatencyinference.",
+  "timing_quality_fact": "Native actualpresent gauges prove source density/progress; ordinary Web uses lightweight input/GLsubmission observation only. Optical rows use normal SDK if actualpresentbasis can be established independently; otherwise use the authorized identical presentation-stamp diagnostic pair. Diagnosticoptical rows do not qualify ordinarylatency and their possible work-scheduling perturbation is reported. Optical images must be captured after a successful actualpresent at a knowncamera.",
+  "optical_regions": "Independentfixedgeometryedgecenterssource13213andactualreferencepose. MandatoryROIs80/100/120/140/240/300; iflackeligibleedgesusepredefinedindependentfullpixeloracleforthatpose,notcandidatechosenROI. Final360D2unavailabledisclosedwithoutrepeatingoldverificationdeadend.",
+  "limits": {
+    "ordinary_starts": 8,
+    "optical_starts": 4,
+    "per_start_seconds": 120,
+    "identified_harness_environment_corrective_starts": 1,
+    "corrective_seconds": 120,
+    "aggregate_actual_run_seconds": 1560,
+    "RSS_family_MiB": 6144,
+    "compressed_evidence_MiB": 1536,
+    "extra_perf_retries": 0,
+    "IAB_sampling": 0
+  },
+  "run_discipline": "FreezefinalcandidateSDK/profile/driver/workloadbeforefirstbrowsercomparison. BaselineordinarypreservednormalpreviousSDK. Allstartsserial,samebrowserexecutable/version/viewport/flags. No concurrentbuild/profile/heavyanalysis. Onefaultcorrectiveonly identifiedenvironment/harness/storage afterofflineproof; neverforbadquality/performance. Retainallfailed/intermediaterows. No matrixrestart orbest-runselection.",
+  "scope_limit": "Thismatrixprovesrepresentativezoomroute, notalluserdocumentsorphysicalinput. An inheritedcoldstartupslowrowoutsideinputmetrics remainsreportable, notautomaticgatefail unlessitpreventsvalidroute.",
+  "fixture_scope": "Primary paired browser workload is fixed Mixed49. Focused native policy tests also include sparse round-v4 stroke plus shape/text at the same viewport/DPR so quality does not depend on high object count. No additional browser matrix required for sparse fixture.",
+  "optical_build_profile": {
+    "normal_or_diagnostic": "NewB/Cdiagnosticpairwithsameboundedbranch/provenanceobserverfromrespectivenormalexactsource. OrdinaryB=unchanged4339SDK,ordinaryCfreshnormalallmacrosOFF. Observersstoreafterreturninfinite-freeboundedbuffers, no perframeprint. Readbackonlyoptical.",
+    "stamp": "Emit/capture only actual successful provider present with fullview/Scene/resource/surface/metrics/camera generation and complete world-to-view transform, targetpixel dimensions and presentsequence. Bind JSreadback to the latest successful present on that target; no event/currentreadState substitutes for this fact. Existing timingoption can be used, but diagnosticoverhead stays explicit.",
+    "no_probe_project": "Reuse existingprivate diagnostics/nativeobserver; minimal fixed records or boundarylog only. No newpublicSDKexport/debugcommand, no Worker wrapper, no charged layout/stateowner changes. Instrument isolated copies for baseline; never mutate oldnormalSDK or oldbaseline files."
+  },
+  "native": {
+    "role": "Adapt frozen fullRuntime Mixed49 RED with new task output paths only; retain original48calls/>=42presents, then execute noOperation/losttarget assertions too. Actual nativeGPU correctness/progress, not60Hz/WebSLO.",
+    "cases": [
+      "Originalcamera1->.5->1.5and1.5->3->.75withgeometryoffscreen/exposure",
+      "Validretainedsourceplusnonemptynewfrontier,partialregioncompletionandboundedprogress",
+      "source/Scene/resource/provider/metricschangeandlatecompletion",
+      "coldcache/pressureandcontextlossrecovery/reject",
+      "mixedmaskedround/image/text/sticky/tableandnoOperation/CanonicalVisiblepremature"
+    ]
+  },
+  "isolated_preview": "After fullRuntime/native correctness and matching normal rootSDK functionalDPR2/4, independent C on4340 if free else nextunused. Proactively send control URL/PID/source/SDK hashes and experimental readiness, then continue formal evidence without ACK. Preserve4339 and user documents.",
+  "functional_preview_smoke": {
+    "driver_source": "out/G5-quality-candidate-continuation-r1/smoke.mjs",
+    "DPRs": [
+      2,
+      4
+    ],
+    "starts": 2,
+    "per_s": 120,
+    "aggregate_s": 360,
+    "tests": "PublicrootSDKround4draw/duplicate/drag,repeatedpartialeraseimmediatenavigation,UndoRedo,SnapshotthroughCommit/restoreclose,contacts/pendingzero. Existingbaselineexpectationsunchanged. Notlatencymatrix."
+  },
+  "task": "G5-exposure-region-reuse-r1",
+  "diagnosis_limits": {
+    "candidate_starts_max": 4,
+    "per_start_seconds": 120,
+    "aggregate_seconds": 480,
+    "purpose": "After native fullRuntime GREEN, verify actual new-camera progress and causal region/reuse mechanism on original Mixed49. Prior old actualWeb RED is reused, no compulsory repeat of old4diagnostics. Candidate implementation may be debugged within this finite pool before final freeze; no alternate scenes/block-size search."
+  },
+  "workflow": "Reuse prior oldRED→preflight→portqueryfix→regionaltasks/reuse/nativeREDGREEN→earlycandidateWeb→freeze→normalpublicfunctional2→independentpreview→8ordinary+4optical→materialize/callback/STOP."
+}

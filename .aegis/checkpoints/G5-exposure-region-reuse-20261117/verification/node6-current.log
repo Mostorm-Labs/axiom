@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: current display capture keeps stale old camera and immutable request
+ok 1 - current display capture keeps stale old camera and immutable request
+  ---
+  duration_ms: 0.417708
+  ...
+# Subtest: no successful present stays unavailable without future FIFO
+ok 2 - no successful present stays unavailable without future FIFO
+  ---
+  duration_ms: 0.062334
+  ...
+# Subtest: target dimension mismatch rejects instead of relabeling pixels
+ok 3 - target dimension mismatch rejects instead of relabeling pixels
+  ---
+  duration_ms: 0.156083
+  ...
+# Subtest: 100ms absolute gap includes start/end and all direction boundaries
+ok 4 - 100ms absolute gap includes start/end and all direction boundaries
+  ---
+  duration_ms: 0.270166
+  ...
+# Subtest: equal signed SDK translation matches full provider affine
+ok 5 - equal signed SDK translation matches full provider affine
+  ---
+  duration_ms: 0.390291
+  ...
+# Subtest: last-input present after inputEnded is a disclosed analyzer truncation
+ok 6 - last-input present after inputEnded is a disclosed analyzer truncation
+  ---
+  duration_ms: 2.491916
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43.044667

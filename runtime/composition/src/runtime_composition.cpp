@@ -489,6 +489,8 @@ bool RuntimeCompositionCore::queueCpuPendingCompletion(std::array<std::uint64_t,
 }
 interaction::PendingLocalValue RuntimeCompositionCore::pendingLocalValue()const{return runtime_?runtime_->pendingLocalValue():interaction::PendingLocalValue{};}
 interaction::CpuPendingEraseFacts RuntimeCompositionCore::cpuPendingFacts()const noexcept{return runtime_?runtime_->cpuPendingFacts():interaction::CpuPendingEraseFacts{};}
+interaction::CpuPendingEraseStatus RuntimeCompositionCore::cpuPendingStatus()const noexcept{return runtime_?runtime_->cpuPendingStatus():interaction::CpuPendingEraseStatus{};}
+std::optional<interaction::CpuPendingEraseTerminal> RuntimeCompositionCore::cpuPendingTerminal(std::uint64_t serial)const noexcept{return runtime_?runtime_->cpuPendingTerminal(serial):std::nullopt;}
 std::uint64_t RuntimeCompositionCore::reserveCpuWorkerGrant(std::uint64_t e,std::size_t b)noexcept{
  if(std::this_thread::get_id()!=ownerThread_||!canMutate()||!runtime_)return 0;
  return runtime_->reserveCpuWorkerGrant(e,b);
@@ -526,7 +528,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   try{if(auto image=runtime_->pendingHeadImage()){
     bool applied=false;try{applied=controlFacade_->importImage(image->second).state==ImageCommandState::kApplied;}catch(...){}
     runtime_->completePendingImage(image->first,applied);
-  }}catch(...){runtime_->completePendingImage(runtime_->cpuPendingFacts().head,false);}
+  }}catch(...){runtime_->completePendingImage(runtime_->cpuPendingStatus().head,false);}
   {AXIOM_FRAME_TIMING_SCOPE(resourceTiming,resource_service);runtime_->serviceResourceRetirements();}
   runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
@@ -599,7 +601,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   if (out.navigationPending || out.navigationPresented) {
     out.canonicalWork.reset();
   }
-  out.needsPaint = runtime_->cpuPendingFacts().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
+  out.needsPaint = runtime_->cpuPendingStatus().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
       (editingTransient && runtime_->transientOverlayDirty()) ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
   AXIOM_IF_EVENT("nc_route point=outcome semantic=%llu scene=%llu camera=%llu transient=%u transient_rendered=%u transient_dirty=%u nav_pending=%u nav_presented=%u canonical_requested=%u canonical_retry=%u canonical_work=%u needs_paint=%u",(unsigned long long)runtime_->semanticGeneration().value(),(unsigned long long)runtime_->sceneRevision(),(unsigned long long)runtime_->cameraGeneration(),unsigned(editingTransient),unsigned(transientRendered),unsigned(runtime_->transientOverlayDirty()),unsigned(out.navigationPending),unsigned(out.navigationPresented),unsigned(out.canonicalRequested),unsigned(runtime_->canonicalPresentationRetryable()),unsigned(out.canonicalWork.has_value()),unsigned(out.needsPaint));

@@ -126,17 +126,36 @@ void PreparedNavigationGeometry::buildReplay(PreparedGeometryStatistics* work){
 std::size_t PreparedNavigationGeometry::nextVisiblePrimitive(SkCanvas& canvas,std::size_t first,const SkRect* deviceDemand)const{
     AXIOM_FRAME_TIMING_SCOPE(selectTiming,prepared_select);
     first=std::min(first,primitiveCount());const auto clip=compactContourCullBounds(canvas,deviceDemand);
-    if(!clip)return first;
+    if(!clip||first==primitiveCount())return first;
     if(!replay_.empty()){
-        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
-            const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
-            const auto end=pass?replayRibbonCount_+block.capLast:block.last;
-            if(begin==end)continue; // No component in this pass can become visible or need replay.
-            if(end>first&&visibleContour(clip,block.bounds))return std::max(first,begin);
+        for(unsigned pass=0;pass<2;++pass){
+            const auto offset=pass?replayRibbonCount_:0;
+            const auto end=pass?primitiveCount():replayRibbonCount_;
+            if(first>=end)continue;
+            const auto local=first>offset?first-offset:0;
+            // Endpoints are already immutable, ordered compiler output. Locate
+            // the requested range without rediscovering a completed prefix.
+            const auto start=std::upper_bound(replay_.begin(),replay_.end(),local,
+                [pass](std::size_t value,const ReplayBlock& block){
+                    AXIOM_FRAME_TIMING_ADD(prepared_range_probes,1);
+                    return value<(pass?block.capLast:block.last);
+                });
+            for(auto it=start;it!=replay_.end();++it){const auto& block=*it;
+                AXIOM_FRAME_TIMING_ADD(prepared_select_candidates,1);
+                const auto begin=pass?block.capFirst:block.first;
+                const auto last=pass?block.capLast:block.last;
+                if(begin==last)continue;
+                if(visibleContour(clip,block.bounds))return std::max(first,offset+begin);
+            }
         }
     }else{
-        for(const auto& group:ribbonGroups_)if(group.end>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin);
-        for(const auto& group:capGroups_)if(group.end+ribbons_.size()>first&&visibleContour(clip,group.bounds))return std::max(first,group.begin+ribbons_.size());
+        for(auto i=first<ribbons_.size()?first/32:ribbonGroups_.size();i<ribbonGroups_.size();++i){const auto& group=ribbonGroups_[i];
+            AXIOM_FRAME_TIMING_ADD(prepared_select_candidates,1);
+            if(visibleContour(clip,group.bounds))return std::max(first,group.begin);}
+        const auto capFirst=first>ribbons_.size()?first-ribbons_.size():0;
+        for(auto i=capFirst/32;i<capGroups_.size();++i){const auto& group=capGroups_[i];
+            AXIOM_FRAME_TIMING_ADD(prepared_select_candidates,1);
+            if(visibleContour(clip,group.bounds))return std::max(first,group.begin+ribbons_.size());}
     }
     return primitiveCount();
 }
@@ -165,7 +184,18 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
         // Match the full compiler's scalar union order. Interleaving caps
         // between checkpoint ribbons changes integer AA accumulation at self
         // intersections. Global primitive indices are ribbons, then all caps.
-        for(unsigned pass=0;pass<2;++pass)for(const auto& block:replay_){
+        for(unsigned pass=0;pass<2;++pass){
+            const auto offset=pass?replayRibbonCount_:0;
+            const auto passEnd=pass?primitiveCount():replayRibbonCount_;
+            if(first>=passEnd||last<=offset)continue;
+            const auto local=first>offset?first-offset:0;
+            const auto start=std::upper_bound(replay_.begin(),replay_.end(),local,
+                [pass](std::size_t value,const ReplayBlock& block){
+                    AXIOM_FRAME_TIMING_ADD(prepared_range_probes,1);
+                    return value<(pass?block.capLast:block.last);
+                });
+            for(auto it=start;it!=replay_.end();++it){const auto& block=*it;
+            AXIOM_FRAME_TIMING_ADD(prepared_draw_candidates,1);
             const auto begin=pass?replayRibbonCount_+block.capFirst:block.first;
             const auto end=pass?replayRibbonCount_+block.capLast:block.last;
             if(begin==end)continue; // No component in this pass can become visible or need replay.
@@ -188,10 +218,12 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
                 }else{const auto& cap=replayOutput_.caps[local];
                     if(visible(compactContourCapBounds(cap))){drawCap(canvas,config,cap,paint);++work.primitivesDrawn;}}
             }
+            }
         }
         return work;
     }
     for(auto g=first/32;g<ribbonGroups_.size()&&ribbonGroups_[g].begin<last;++g){
+        AXIOM_FRAME_TIMING_ADD(prepared_draw_candidates,1);
         const auto& group=ribbonGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
         for(auto i=std::max(group.begin,first);i<std::min(group.end,last);++i){++work.primitivesTested;
@@ -202,6 +234,7 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
     const auto capFirst=first>ribbons_.size()?first-ribbons_.size():0;
     const auto capLast=last>ribbons_.size()?last-ribbons_.size():0;
     for(auto g=capFirst/32;g<capGroups_.size()&&capGroups_[g].begin<capLast;++g){
+        AXIOM_FRAME_TIMING_ADD(prepared_draw_candidates,1);
         const auto& group=capGroups_[g];
         ++work.chunksVisited;if(!visible(group.bounds))continue;
         for(auto i=std::max(group.begin,capFirst);i<std::min(group.end,capLast);++i){++work.primitivesTested;const auto& cap=caps_[i];
@@ -335,8 +368,8 @@ bool PreparedGeometryCache::evictUnused(){
 }
 std::shared_ptr<PreparedGeometryCache::IndexLease> PreparedGeometryCache::reserveIndex(std::size_t bytes,
     const std::shared_ptr<resources::ResourceBudgetManager>& budget,bool critical){
-    auto token=budget->reserve(resources::ResourceClass::kRecorded,bytes,critical);
-    while(!token&&(evictAlias()||evictUnused()))token=budget->reserve(resources::ResourceClass::kRecorded,bytes,critical);
+    auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,bytes,critical);
+    while(!token&&(evictAlias()||evictUnused()))token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,bytes,critical);
     if(!token)return {};
     resources::ResourceLease reservation(budget,*token);auto result=std::make_shared<IndexLease>();
     result->lease=std::move(reservation);result->usage=usage_;result->bytes=bytes;usage_->indexBytes+=bytes;return result;
@@ -421,10 +454,10 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
         if(sourceBytes>=entryCap||PreparedBodyJob::minimumBytes(count)>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
         try{
-            auto candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_);
+            auto candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_,pressure_);
             // Reclaim only cache-owned work on an actual quota miss. Current
             // frame dependencies and suspended jobs retain their own leases.
-            while(!candidate&&evictUnused())candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_);
+            while(!candidate&&evictUnused())candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_,pressure_);
             if(!candidate)return denied();
             return publish(std::move(candidate),hash,key,std::move(*retained),limits,budget,true);
         }catch(const std::bad_alloc&){return denied();}
@@ -451,14 +484,14 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         const auto replayUnit=sizeof(PreparedNavigationGeometry::ReplayBlock)+512;
         if(scratch>cap-base||blocks>(cap-base-scratch)/replayUnit)return denied();
         const auto replayEstimate=base+scratch+blocks*replayUnit;
-        auto token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
-        while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+        auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
+        while(!token&&evictUnused())token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,replayEstimate,criticalReplay);
         if(!token)return denied();resources::ResourceLease admission(budget,*token);
         try{
             auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;
             candidate->sourceLeases_=*retained;candidate->buildReplay(&work_);
             const auto bytes=candidate->footprint();if(bytes>replayEstimate)return denied();
-            admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
+            admission.reset();token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,bytes,criticalReplay);if(!token)return denied();
             candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
             candidate->usage_=usage_;usage_->bytes+=bytes;
             return publish(candidate,hash,key,std::move(*retained),limits,budget,criticalContour);
@@ -473,8 +506,8 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         const auto patchBytes=patches*sizeof(ink::ContourPatch);
         if(caps>(cap-base-patchBytes)/sizeof(ink::ContourCap))return replay();
         const auto stagingBytes=base+patchBytes+caps*sizeof(ink::ContourCap);
-        auto token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
-        while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kScratch,stagingBytes,false);
+        auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kScratch,stagingBytes,false);
+        while(!token&&evictUnused())token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kScratch,stagingBytes,false);
         if(!token)return criticalContour?replay():denied();stagingLease=resources::ResourceLease(budget,*token);
         try{
             staged.patches.reserve(patches);staged.caps.reserve(caps);
@@ -492,15 +525,15 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         estimate+=staged.caps.capacity()*perCap;
         if(ribbons>(cap-estimate)/perRibbon)return denied();estimate+=ribbons*perRibbon;
     }
-    auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
-    while(!token&&evictUnused())token=budget->reserve(resources::ResourceClass::kRecorded,estimate,false);
+    auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,estimate,false);
+    while(!token&&evictUnused())token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,estimate,false);
     if(!token)return criticalContour?replay():denied();
     resources::ResourceLease admission(budget,*token);
     try{
         auto candidate=std::make_shared<PreparedNavigationGeometry>();candidate->source_=entry.command;candidate->sourceLeases_=*retained;candidate->build(contour?&staged:nullptr,&work_);
         const auto bytes=candidate->footprint();if(bytes>estimate)return denied();
         // Owner-thread transaction: shrink the admitted peak to live storage.
-        admission.reset();token=budget->reserve(resources::ResourceClass::kRecorded,bytes,false);if(!token)return denied();
+        admission.reset();token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,bytes,false);if(!token)return denied();
         candidate->lease_=resources::ResourceLease(budget,*token);candidate->bytes_=bytes;
         candidate->usage_=usage_;usage_->bytes+=bytes;
         return publish(candidate,hash,key,std::move(*retained),limits,budget,criticalContour);

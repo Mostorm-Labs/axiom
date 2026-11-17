@@ -36,7 +36,8 @@ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entr
     pending_serial,pending_phase,pending_jobs,commit_ordinal,after_generation,after_scene,
     stamp_primitives,stamp_bytes,stamp_calls,atomic_start_ns,atomic_end_ns,
     resource_used,resource_pending_release,resource_gpu_epochs,render_pending,render_alloc_denials,
-    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,history_draw_primitives,validation_mask_primitives,prepare_resets,material_alias_hits,count };
+    body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,history_draw_primitives,validation_mask_primitives,prepare_resets,material_alias_hits,
+    prepared_select_candidates,prepared_draw_candidates,prepared_range_probes,count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
@@ -47,7 +48,8 @@ inline constexpr const char* counterNames[]{"candidates","sources","encoded_byte
     "pending_serial","pending_phase","pending_jobs","commit_ordinal","after_generation","after_scene",
     "stamp_primitives","stamp_bytes","stamp_calls","atomic_start_ns","atomic_end_ns",
     "resource_used","resource_pending_release","resource_gpu_epochs","render_pending","render_alloc_denials",
-    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps","history_draw_primitives","validation_mask_primitives","prepare_resets","material_alias_hits"};
+    "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps","history_draw_primitives","validation_mask_primitives","prepare_resets","material_alias_hits",
+    "prepared_select_candidates","prepared_draw_candidates","prepared_range_probes"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;

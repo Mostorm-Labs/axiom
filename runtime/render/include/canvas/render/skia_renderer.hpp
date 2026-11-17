@@ -23,7 +23,7 @@ class SkCanvas;
 
 namespace canvas::render {
 namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
-namespace internal {struct ObjectInteractionWork;}
+namespace internal {struct ObjectInteractionWork;class ReferenceValidationCache;}
 namespace internal {class LocalExactJob;class LocalExactCache;
 enum class LocalExactStatus {kPending,kNeedPiece,kNeedFull,kHit,kMiss,kInvalid};}
 
@@ -151,6 +151,8 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    internal::ReferenceValidationCache* validationService() const noexcept;
+    mutable std::shared_ptr<internal::ReferenceValidationCache> validationProofs_;
     std::shared_ptr<internal::GpuResourceRetirement> gpuRetirements_;
     std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
     struct PartialEraseFrame;

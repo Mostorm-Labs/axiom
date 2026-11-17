@@ -1,0 +1,169 @@
+{
+  "status": "ALL16_BROWSER_FAMILIES_CLEANED_PREVIEW_RETAINED",
+  "attempts": [
+    {
+      "pool": "early",
+      "id": "ER-EARLY-D2-1",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1648752
+    },
+    {
+      "pool": "early",
+      "id": "ER-EARLY-D2-2",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1768512
+    },
+    {
+      "pool": "early",
+      "id": "ER-EARLY-D2-3",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1787952
+    },
+    {
+      "pool": "early",
+      "id": "ER-EARLY-D2-4",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1659696
+    },
+    {
+      "pool": "functional",
+      "id": 2,
+      "cleanup": true,
+      "chargedSeconds": 7,
+      "peakRSSKiB": 1512688
+    },
+    {
+      "pool": "functional",
+      "id": 4,
+      "cleanup": true,
+      "chargedSeconds": 7,
+      "peakRSSKiB": 1753616
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D2-B1",
+      "cleanup": true,
+      "chargedSeconds": 19,
+      "peakRSSKiB": 1440496
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D2-C1",
+      "cleanup": true,
+      "chargedSeconds": 20,
+      "peakRSSKiB": 1550352
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D2-C2",
+      "cleanup": true,
+      "chargedSeconds": 20,
+      "peakRSSKiB": 1572160
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D2-B2",
+      "cleanup": true,
+      "chargedSeconds": 19,
+      "peakRSSKiB": 1447472
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D4-B1",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1554704
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D4-C1",
+      "cleanup": true,
+      "chargedSeconds": 22,
+      "peakRSSKiB": 1671056
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D4-C2",
+      "cleanup": true,
+      "chargedSeconds": 22,
+      "peakRSSKiB": 1668704
+    },
+    {
+      "pool": "formal",
+      "id": "WH-W-D4-B2",
+      "cleanup": true,
+      "chargedSeconds": 21,
+      "peakRSSKiB": 1542784
+    },
+    {
+      "pool": "formal",
+      "id": "WH-OPT-B-D2",
+      "cleanup": true,
+      "chargedSeconds": 39,
+      "peakRSSKiB": 2188736
+    },
+    {
+      "pool": "formal",
+      "id": "WH-OPT-C-D2",
+      "cleanup": true,
+      "chargedSeconds": 40,
+      "peakRSSKiB": 2266768
+    }
+  ],
+  "spend": {
+    "early": {
+      "starts": 4,
+      "chargedSeconds": 84,
+      "cap": 480
+    },
+    "functional": {
+      "starts": 2,
+      "chargedSeconds": 14,
+      "cap": 360
+    },
+    "formal": {
+      "starts": 10,
+      "chargedSeconds": 243,
+      "cap": 1560
+    }
+  },
+  "remainingUnexecuted": [
+    "WH-OPT-C-D4",
+    "WH-OPT-B-D4"
+  ],
+  "preview": {
+    "URL": "http://127.0.0.1:4340/example.html",
+    "PID": 44610,
+    "directory": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/install-normal-C/js",
+    "status": "EXPERIMENTAL_TRIAL_RETAINED_TERMINAL_33_4MS_HANDOFF_BLOCKER",
+    "source_manifest": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-source-C.json",
+      "sha256": "2349a20e3dd72b3139f97c3ede57a69961b6fe5b8694c396968d86caa8ec7291"
+    },
+    "SDK_manifest": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-SDK-C.json",
+      "sha256": "ea476abada7f4a91b35a3d6033f1c27d3029a97cd5bab193ff21175cdd78782a"
+    },
+    "WASM_SHA": "44a9e797c0d17dad86564624f03f5dcd59619715d085fc5055d834296232a665",
+    "functional_DPR2_DPR4": "PASS",
+    "normal_diagnostics": "OFF",
+    "preserved_old_ports": [
+      4336,
+      4337,
+      4338,
+      4339
+    ],
+    "formalOrdinary": "8completed,Cmax34..50ms",
+    "terminalFinding": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/terminal-finding.json",
+      "bytes": 3164,
+      "sha256": "dafb8841c1c6bba5e426333cbb6ce3155f76a62e30563eeb06cbd04087c47f13"
+    }
+  },
+  "oldPIDsPreserved": true,
+  "newOracleStarts": 0
+}

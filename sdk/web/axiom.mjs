@@ -38,21 +38,21 @@ export async function createRuntime({mount, documentId, restore, initialResource
   let pendingWorker=null,pendingTask=null,pendingFailed='0',pendingRestart=null,pendingRestarts=0,pendingReplacement=null,pendingRoot=null,pendingFactory=null;
   const pumpPending=()=>{
     if(!pendingWorker||pendingTask||pendingRestart||closed||closing||closeBarrier)return;
-    const failureFacts=call('cpuPending');
-    if(failureFacts.failed!==pendingFailed){pendingFailed=failureFacts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',failureFacts.error));}
+    let facts=call('cpuPending',{action:'status'});
+    if(facts.failed!==pendingFailed){pendingFailed=facts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',facts.error));}
     if(pendingReplacement){
       if(!call('state').value.surface.available)return;
-      try{call('cpuPending',{action:'bind',executor:pendingReplacement.observation().executor});pendingWorker=pendingReplacement;pendingReplacement=null;}
+      try{call('cpuPending',{action:'bind',executor:pendingReplacement.status().executor});}
       catch(error){void pendingReplacement.close();pendingReplacement=null;call('cpuPending',{action:'unavailable'});emitError(error);return;}
+      pendingWorker=pendingReplacement;pendingReplacement=null;facts=call('cpuPending',{action:'status'});
     }
-    if(pendingWorker.observation().closed){
+    if(pendingWorker.status().closed){
       call('cpuPending',{action:'suspend'});
       if(pendingRestarts>=1){call('cpuPending',{action:'unavailable'});return;}
-      const head=call('cpuPending');if(head.state==='WaitingWorker'||head.state==='OwnerExactConfirmation')return;
+      const head=call('cpuPending',{action:'status'});if(head.state==='WaitingWorker'||head.state==='OwnerExactConfirmation')return;
       if(!call('state').value.surface.available)return;
       ++pendingRestarts;pendingRestart=pendingFactory(pendingRoot).then(next=>{pendingReplacement=next;}).catch(error=>{call('cpuPending',{action:'unavailable'});emitError(error);}).finally(()=>{pendingRestart=null;schedule();});return;
     }
-    const facts=call('cpuPending');
     if(facts.failed!==pendingFailed){pendingFailed=facts.failed;emitError(new AxiomError('CPU_PENDING_FAILED',facts.error));}
     if(!facts.requestReady)return;
     const taken=call('cpuPending',{action:'take'});if(!taken.bytes)return;
@@ -420,8 +420,8 @@ export async function createRuntime({mount, documentId, restore, initialResource
     });
     bindCpuWorkerOwner(api,{basis:()=>call('cpuWorkerGrant',{action:'basis'}).words,assetBaseURL:new URL('internal/',assets),reserve:(executor,bytes)=>{if(closed||closing)throw new AxiomError('CLOSED');return call('cpuWorkerGrant',{action:'reserve',executor,bytes}).token;},release:(executor,token)=>call('cpuWorkerGrant',{action:'release',executor,token}),observe:()=>call('cpuWorkerGrant',{action:'observe',executor:'1'}),attach:worker=>cpuWorkers.add(worker),detach:worker=>cpuWorkers.delete(worker)});
     pendingRoot=api;
-    if(call('cpuPending').capability){
-      try{pendingFactory=(await import('./internal/cpu-worker-client.mjs')).createCpuWorker;pendingWorker=await pendingFactory(api);call('cpuPending',{action:'bind',executor:pendingWorker.observation().executor});}
+    if(call('cpuPending',{action:'status'}).capability){
+      try{pendingFactory=(await import('./internal/cpu-worker-client.mjs')).createCpuWorker;pendingWorker=await pendingFactory(api);call('cpuPending',{action:'bind',executor:pendingWorker.status().executor});}
       catch(error){pendingWorker=null;emitError(error);}
     }
     schedule();return Object.freeze(api);

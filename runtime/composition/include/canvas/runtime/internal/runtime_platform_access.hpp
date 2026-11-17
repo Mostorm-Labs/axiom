@@ -24,6 +24,8 @@ class RuntimePlatformAccess final {
   static std::array<std::uint64_t,4> cpuWorkerBasis(RuntimeComposition&)noexcept;
   static interaction::PendingLocalValue pendingLocalValue(RuntimeComposition&);
   static interaction::CpuPendingEraseFacts cpuPendingFacts(RuntimeComposition&)noexcept;
+  static interaction::CpuPendingEraseStatus cpuPendingStatus(RuntimeComposition&)noexcept;
+  static std::optional<interaction::CpuPendingEraseTerminal> cpuPendingTerminal(RuntimeComposition&,std::uint64_t)noexcept;
   static std::uint64_t reserveCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::size_t)noexcept;
   static bool releaseCpuWorkerGrant(RuntimeComposition&,std::uint64_t,std::uint64_t)noexcept;
   static std::size_t cpuWorkerGrantBytes(RuntimeComposition&)noexcept;

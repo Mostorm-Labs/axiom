@@ -452,6 +452,8 @@ struct EraseMaskPathCache::Impl {
     };
     Work stats;std::shared_ptr<ErasePathUsage> usage=std::make_shared<ErasePathUsage>();
     std::shared_ptr<resources::ResourceBudgetManager> budget;
+    ValidationPressure validationPressure;
+    std::optional<std::uint64_t> reserve(resources::ResourceClass kind,std::size_t bytes,bool critical,std::size_t resident=std::numeric_limits<std::size_t>::max()){return reserveWithSourcePressure(budget,validationPressure,kind,bytes,critical,resident);}
     std::vector<std::shared_ptr<Entry>> entries;
     std::vector<std::shared_ptr<MaskHistoryPlan>> histories;
     std::vector<std::shared_ptr<ExactHistoryProof>> exactHistories;
@@ -529,7 +531,7 @@ struct EraseMaskPathCache::Impl {
         const auto weight=source->bytes+source->indexBytes+metadata;
         std::optional<std::uint64_t> token;
         for(;;){
-            if(usage->bytes<=sourceCapacity-weight)token=budget->reserve(resources::ResourceClass::kRecorded,metadata,true);
+            if(usage->bytes<=sourceCapacity-weight)token=reserve(resources::ResourceClass::kRecorded,metadata,true);
             if(token)break;if(!evict(drawPreparation))return {};
         }
         resources::ResourceLease reservation(budget,*token);
@@ -566,7 +568,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::publishFini
  const auto bytes=sizeof(Entry)+raw+256+path.approximateBytesUsed();
  if(bytes>state.capacity)return {};
  while(state.size()>=512||state.usage->bytes>state.capacity-bytes)if(!state.evict())return {};
- auto token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};
+ auto token=state.reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};
  resources::ResourceLease admission(state.budget,*token);
  auto entry=std::make_shared<Entry>();entry->geometry=geometry;entry->path=path;
  const auto actualRaw=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.capacity()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.capacity()*sizeof(semantic::PathCommand);},entry->geometry);
@@ -588,6 +590,7 @@ void EraseMaskPathCache::beginCohort(std::function<void()> pressure)noexcept{
 }
 void EraseMaskPathCache::endCohort()noexcept{if(impl_->cohortDepth&&!--impl_->cohortDepth){impl_->cohortQueries.clear();impl_->cohortPressure={};impl_->cohortPressureAttempted=false;}}
 void EraseMaskPathCache::setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&pool!=impl_->sources){clear();impl_->sources=std::move(pool);}}
+void EraseMaskPathCache::setValidationPressure(ValidationPressure pressure){impl_->validationPressure=std::move(pressure);}
 EraseMaskPathCache::Work EraseMaskPathCache::work()const noexcept{auto v=impl_->stats;v.bytes=impl_->usage->bytes;v.history.retainedBytes=v.bytes;return v;}
 namespace {
 // A partial path owns only the segments actually folded into it. Unprocessed
@@ -772,7 +775,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
         // paths merely to leave the same amount free in the resident cache.
         // Keep the original per-construction bound/estimate, and charge every
         // byte to the existing shared hard budget before doing any work.
-        token=state.budget->reserve(resources::ResourceClass::kRecorded,estimate,true,0);
+        token=state.reserve(resources::ResourceClass::kRecorded,estimate,true,0);
         if(token)break;if(!state.evict())return denied();
     }
     resources::ResourceLease lease(state.budget,*token);
@@ -803,7 +806,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
         // Both leases overlap until all construction aliases are gone. A
         // conservative double charge is preferable to prematurely shrinking
         // staging or treating a retained CPU path as GPU scratch.
-        resident=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
+        resident=state.reserve(resources::ResourceClass::kRecorded,bytes,true);
         if(resident)break;if(!state.evict())return denied();
     }
     HP_OBSERVE(HistoryPathEvent::kTransfer,nullptr,&geometry,state.usage->bytes,estimate,state.budget->used(),state.size(),historical);
@@ -898,7 +901,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
         for(;;){
             const bool room=state.size()<512&&state.usage->bytes<=drawCapacity-weight;
             if(room)
-                if(auto token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true))return token;
+                if(auto token=state.reserve(resources::ResourceClass::kRecorded,bytes,true))return token;
             if(!state.evict(true)){status=room?MaskHistoryAdmission::kResourcePending:MaskHistoryAdmission::kNotAdmitted;return {};}
         }
     };
@@ -1010,7 +1013,7 @@ std::shared_ptr<ExactHistoryProof> EraseMaskPathCache::exactHistory(const scene:
     std::optional<std::uint64_t> token;
     for(;;){
         if(bytes<=state.capacity&&state.size()<512&&state.usage->bytes<=state.capacity-bytes)
-            token=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
+            token=state.reserve(resources::ResourceClass::kRecorded,bytes,true);
         if(token)break;if(!state.evict())return denied();
     }
     resources::ResourceLease lease(state.budget,*token);
@@ -1076,7 +1079,7 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
                 if(body){
                     // Bounded per-query path/callback scratch; source/replay and
                     // index capacity remain charged to the pinned prepared body.
-                    auto token=impl_->budget->reserve(resources::ResourceClass::kScratch,4096,true);
+                    auto token=impl_->reserve(resources::ResourceClass::kScratch,4096,true);
                     if(token)scratch=resources::ResourceLease(impl_->budget,*token);
                     else {cost.fallbackReason=8;body.reset();}
                 }
@@ -1200,7 +1203,7 @@ SelectionGeometryHit EraseMaskPathCache::selectionQuery(const RuntimeSceneRecord
         work.preparedValidationKnots+=after.validationKnots-before.validationKnots;
         work.contentComparisonKnots+=after.contentComparisonKnots-before.contentComparisonKnots;
         if(!body||!body->ready()||!body->exactValidated())return fallback();
-        auto token=budget->reserve(resources::ResourceClass::kScratch,4096,true);
+        auto token=reserveWithSourcePressure(budget,impl_->validationPressure,resources::ResourceClass::kScratch,4096,true);
         if(!token)return fallback();resources::ResourceLease scratch(budget,*token);
         ++work.bodyUses;work.bodyIdentity=body->identity();
         // Validate every historical path before an empty/disjoint shortcut.

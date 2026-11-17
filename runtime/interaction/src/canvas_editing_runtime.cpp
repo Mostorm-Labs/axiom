@@ -4705,6 +4705,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
           chunkFrame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
       if (!resolved) return false;
       auto visibility = resolved.value();
+      const bool rawSceneEmpty=visibility.backToFront.empty();
       // The Scene query already owns ordering and candidate accounting. The
       // resolver adds the renderer-owned GeometryChunk selections without
       // mutating canonical Scene state.
@@ -4712,10 +4713,11 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       if(!sources)return false;
       const auto& work=sources.value().diagnostics;
       diagnostics={work.chunkCandidatesExamined,work.chunkIndexNodesVisited,work.chunkIndexFallbacks,
-          work.payloadCopyBytes,work.payloadAliases,true};
+          work.payloadCopyBytes,work.payloadAliases,true,{},false,0,0};
       diagnostics.sceneStamped=true;
       diagnostics.semanticGeneration=chunkFrame.sceneGeneration.value();
       diagnostics.sceneRevision=chunkFrame.sceneReadToken.value();
+      if(rawSceneEmpty)diagnostics.sceneEmptyProof=render::NavigationSceneEmptyProof{region,chunkFrame.sceneGeneration.value(),chunkFrame.sceneReadToken.value(),chunkFrame.viewId.value(),chunkFrame.surfaceGeneration.value(),chunkFrame.metricsGeneration.value()};
       entries=std::move(sources.value().entries);return true;
   };
   // Prove exposed strips using the authoritative Scene object query, not

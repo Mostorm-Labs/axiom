@@ -1,0 +1,43 @@
+[
+  {
+    "name": "boundary",
+    "argv": [
+      "python3",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom"
+    ],
+    "exit": 0,
+    "seconds": 0.093102959,
+    "log": "/private/tmp/g5-exposure-checkpoint-save/verification/boundary-current.log",
+    "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+  },
+  {
+    "name": "native21",
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/build-C",
+      "--output-on-failure",
+      "-R",
+      "^(G5GpuRetirementContract|G5NavigationDisplayWorkavoidance|G5TemporaryRetirementWait|G5TemporaryRetirementSafety|G5TemporaryRetirementCompletion|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderMemoryBudget|G5Navigation|G5ProgressiveRuntimeProof|G5CpuPendingRuntime-camera(zoomout|zoomin|fit|pan|pantool|touch))$"
+    ],
+    "exit": 0,
+    "seconds": 20.401896166,
+    "log": "/private/tmp/g5-exposure-checkpoint-save/verification/native21-current.log",
+    "sha256": "34346ec5a1bde29ae51d08e5a370321e0115e016ddf9bbfcc113092e4bcb847e"
+  },
+  {
+    "name": "node6",
+    "exit": 0,
+    "log": "/private/tmp/g5-exposure-checkpoint-save/verification/node6-current.log",
+    "sha256": "ebbe29e722bd30591a7789c757e38497f132c481b0d286eb673f6aba357917df"
+  },
+  {
+    "name": "candidateSourceIdentity",
+    "files": 1204,
+    "mismatches": [],
+    "nativeCompiledRuntimeSourceMatchesCheckpoint": true,
+    "note": "21CTest executables built from frozen candidate businesssource; source equality rechecked before this rerun. No claim thatfullWebgate isclosed."
+  }
+]

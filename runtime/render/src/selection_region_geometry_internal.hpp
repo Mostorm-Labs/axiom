@@ -4,6 +4,7 @@
 #include "canvas/render/render_cache.hpp"
 #include "canvas/render/reference_draw_list.hpp"
 #include <functional>
+#include "source_retention.hpp"
 class SkPath;
 namespace canvas::render::internal {
 class PreparedGeometryCache;
@@ -43,6 +44,7 @@ class EraseMaskPathCache final {
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         PreparedGeometryCache*,const RenderCacheOptions*)noexcept;
     void setRetentionPool(std::shared_ptr<SourceRetentionPool>);
+    void setValidationPressure(ValidationPressure);
     std::shared_ptr<MaskHistoryPlan> history(const scene::SharedVector<semantic::EraseMaskRecord>&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         const std::shared_ptr<MaskHistoryPlan>& previous={},MaskHistoryAdmission* admission=nullptr);

@@ -1,0 +1,134 @@
+{
+  "classification": "FROZEN_WEB_HANDOFF_OR_QUALITY_FAILURE",
+  "frozenGuard": "actual_camera.same_input_frame after two further input opportunities or33.4ms",
+  "actualFailure": {
+    "route": "wheel",
+    "input": {
+      "index": 100,
+      "planned": 2662.5666667620344,
+      "actual": 2662.4000000953674,
+      "ended": 2662.5999999046326,
+      "dispatchMs": 0.19999980926513672,
+      "factor": 0.7937005259840998,
+      "camera": {
+        "scale": 0.7937007546424866,
+        "x": -11.236572265625,
+        "y": 8.936737060546875
+      }
+    },
+    "deadlineMs": 2695.9999999046327,
+    "previousPresent": {
+      "view": "1",
+      "semantic": "0",
+      "scene": "1",
+      "resource": "3",
+      "surface": "1",
+      "metrics": "1",
+      "cameraGeneration": "101",
+      "frame": "9",
+      "sequence": "100",
+      "target": "25068224",
+      "role": "navigation",
+      "affine": [
+        0.8122526407241821,
+        0,
+        0,
+        0.8122526407241821,
+        -28.2115478515625,
+        -2.658172607421875
+      ],
+      "dimensions": [
+        2862,
+        2020
+      ],
+      "at": 2660.4000000953674
+    },
+    "nextPresent": {
+      "view": "1",
+      "semantic": "0",
+      "scene": "1",
+      "resource": "3",
+      "surface": "1",
+      "metrics": "1",
+      "cameraGeneration": "104",
+      "frame": "9",
+      "sequence": "101",
+      "target": "25068224",
+      "role": "navigation",
+      "affine": [
+        0.7578585147857666,
+        0,
+        0,
+        0.7578585147857666,
+        21.55914306640625,
+        31.338165283203125
+      ],
+      "dimensions": [
+        2862,
+        2020
+      ],
+      "at": 2710.2999999523163
+    },
+    "actualNewCameraWaitMs": 47.700000047683716,
+    "displayIntervalMs": 49.89999985694885
+  },
+  "lastInputAnalyzerFinding": {
+    "reportedIndex": 360,
+    "rootCause": "absoluteCamera filters present stamps at inputEnded before checking 33.4ms final-input window",
+    "realFinalInputEnded": 6996.200000047684,
+    "realNextPresent": {
+      "view": "1",
+      "semantic": "0",
+      "scene": "1",
+      "resource": "3",
+      "surface": "1",
+      "metrics": "1",
+      "cameraGeneration": "362",
+      "frame": "9",
+      "sequence": "360",
+      "target": "25068224",
+      "role": "canonical",
+      "affine": [
+        2.250000238418579,
+        0,
+        0,
+        2.250000238418579,
+        -1343.754638671875,
+        -901.2526245117188
+      ],
+      "dimensions": [
+        2862,
+        2020
+      ],
+      "at": 7181.099999904633
+    },
+    "notUsedAsBlockingReason": true
+  },
+  "normalOrdinaryAbsolute100msPassed": true,
+  "noRetryOrThresholdChange": true,
+  "remainingOptical": [
+    "WH-OPT-C-D4",
+    "WH-OPT-B-D4"
+  ],
+  "qualityProfiles": "not evaluated after terminal camera guard;48 immediatecurrentdisplay RGBA+stamps saved",
+  "notProductionFixComplete": true,
+  "additionalOfflineFinding": {
+    "guard": "DPR4postinputstableCmedian<=Bpairedmedian*1.15+100ms",
+    "wheel": {
+      "CmedianMs": 1081.55,
+      "limitMs": 558.22
+    },
+    "touch": {
+      "CmedianMs": 859.7,
+      "limitMs": 573.11
+    },
+    "pass": false,
+    "noNewSampling": true
+  },
+  "runnerFinding": {
+    "onlineGuards": "Absolute ordinary maxima+boundaries and optical actualcamera evaluated online; pairedp95/stablecomparison only evaluated during terminal offline finalization.",
+    "consequence": "DPR4 pairedstablefailure was available afterordinary8 but not discovered until opticalguardstop;2D2opticalstarts occurred before this offlinefinding. All recorded and charged, no rerun.",
+    "status": "VERIFICATION_RUNNER_ADMISSION_FINDING_FOR_CONTROL",
+    "futureFixRequired": "Perform all calculable paired guards before admitting next performancewindow; no retrospective sampling or evidence rewrite."
+  }
+}
