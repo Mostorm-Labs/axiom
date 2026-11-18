@@ -1,0 +1,47 @@
+{
+  "status": "FROZEN_PROSPECTIVE_R2_STORAGE_CONTRACT",
+  "scope": "New r2 evidence plus scratch; immutable r1 artifacts separately inventoried and never rewritten. This is verification filesystem storage, not drawing/GPU memory.",
+  "dimensions": {
+    "logical": [
+      1431,
+      1010
+    ],
+    "DPR2_frame_rgba_bytes": 23124960,
+    "DPR4_frame_rgba_bytes": 92499840
+  },
+  "planned_new_pixels": {
+    "C_fullframes": 20,
+    "C_fullframe_raw_bytes": 1156248000,
+    "B_C_terminal_CPU_reference_frames": 8,
+    "reference_rgba_bytes": 462499200,
+    "reference_edge_bytes": 115624800,
+    "total_raw_bytes": 1734372000,
+    "worst_case_gzip_bytes_for28RGBA_plus8edge": 1754075016
+  },
+  "limits": {
+    "focused_diagnostic_starts": 2,
+    "per_diagnostic_seconds": 180,
+    "ordinary_starts": 4,
+    "correctness_starts": 1,
+    "harness_environment_corrective_starts": 1,
+    "per_ordinary_correctness_corrective_seconds": 360,
+    "aggregate_browser_seconds": 2700,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "accounting": {
+    "retained": "Actual new on-disk bytes of task evidence/raw and manifested frozen verification sources, excluding builds/dependency packages/SDK binaries already separately bound. Count scratch/partial gzip files while present. No deletion of failed outputs to create budget.",
+    "logical": "Cumulative decoded bytes of unique new artifacts, including native outputs, browser buffers and references; compressing does not reset it. Reused r1 artifacts remain exact separately declared inputs.",
+    "scratch": "At most1 fullframe/reference output undergoing persistence at a time; no window-sized .rgba accumulation. Singlebuffer192MiB max, maxDPR4RGBA92499840bytes. Native kernel reference may materialize one .rgba+.edge temporarily then stream compress and free before next frame.",
+    "nonpixel_reserve_bytes": 1610612736,
+    "disk_formula": "Worst-case gzip bound for planned Web pixels/references +1536MiB nonpixel reserve +192MiB serial scratch <4096MiB. Compute actual native fixture output allowance before starts; do not rely on compressibility or post-window compression."
+  },
+  "preflight": "Offline round-trip streaming writer with incompressible chunks, interrupted-write cleanup, raw length/hash and decompression hash checks; dimensions/safe names/offset/total validated. Bind exact resulting writer in final driver manifest. Check free disk>=8GiB and compute peak before first start. No new sampling to test storage.",
+  "capture_persistence": "Each C RGBA target is persisted to gzip immediately with bounded chunk/backpressure, raw incremental SHA and bytecount. Completion includes compressed hash/count and readback target/camera/VALID RESTORED metadata. Analysis streams decode or loads only one comparison pair. Do not drop readback quality or add pixel tolerances.",
+  "guard": "Check projected totals before every start/capture and actual counters continuously. If a limit is hit, clean only owned processes, preserve evidence, return explicit failure. New allowances do not retrospectively waive r1 failure."
+}

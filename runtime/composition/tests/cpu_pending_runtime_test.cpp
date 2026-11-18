@@ -5,6 +5,7 @@
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/snapshot.hpp"
 #include "canvas/render/direct_reference_source.hpp"
+#include "canvas/render/visibility_resolver.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include <nlohmann/json.hpp>
 #include <iostream>
@@ -24,6 +25,8 @@ class InkPlaygroundHistoryTestAccess {public:
  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
  static auto reuse(const interaction::CanvasEditingRuntime& r){std::pair<std::uint64_t,std::uint64_t> out{};for(const auto& p:r.cpuPending_->slots)if(p){out.first+=p->presentationBuilds;out.second+=p->presentationHits;}return out;}
+ static auto renderSources(const interaction::CanvasEditingRuntime& r,const render::FrameState& frame){auto v=render::VisibilityResolver::resolve(frame,*r.runtimeSceneHost_,r.sceneCoordinator_->runtimeScene());require(bool(v),"test actual visibility");auto source=render::DirectReferenceSource::buildTransient(frame,v.value(),r.sceneCoordinator_->runtimeScene());require(bool(source),"test actual sources");return source.value();}
+ static auto frozenTrace(const interaction::CanvasEditingRuntime& r){require(r.cpuPending_&&r.cpuPending_->head(),"test actual frozen trace");return r.cpuPending_->head()->trace;}
  static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
  static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
  static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}

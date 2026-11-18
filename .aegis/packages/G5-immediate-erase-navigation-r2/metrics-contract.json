@@ -1,0 +1,31 @@
+{
+  "performance_scope": "Fixed40, paced480Move longerase, immediate twofinger viewportpan/pinch atDPR2, normalSDK. DPR4 correctness and timing descriptive only.",
+  "definitions": {
+    "origin": "First planned nonzero twofinger Move after Up; record planned, actual dispatch, completion, first cameraGeneration change separately. Also record Up-return to firstcorrect feedback.",
+    "first_feedback": "Actual content submission to intended display target at changed camera, carrying current pending erase suffix or committed equivalent; not input acceptance, overlay-only GL, clear-only GL, oldcamera or emptybuffer.",
+    "maximum_gap": "Longest interval from origin to first qualified content submission, between successive currentcamera valid feedback submissions, and last submission to inputend. Do not count repeated stalecamera writes.",
+    "frame_p95": "Nearest-rank ceil(.95*N) percentile of SDK rAF start intervals during primary navigation including initial delay. Also report callback durations, inputlateness and worst interval.",
+    "cross_lane": "Ordinary GL content submission timings are a proxy; correctness/native route+identity/content conjunction qualifies applicability, not per-frame photon proof. Diagnostic/readback/heldWorker timings never pool into ordinary."
+  },
+  "blocking_primary_targets": {
+    "first_feedback_bound_ms": 100,
+    "maximum_gap_ms": 100,
+    "SDK_RAF_interval_p95_ms": 33,
+    "cases": "Each primary immediate pan and pinch, both ordinary C replicates, start includes planned-time scheduling delay. If cannot meet, report target UNMET; no lowering after measurement."
+  },
+  "nonregression": {
+    "settled_dispatch_p95": "C <= max(B*1.15,B+5ms)",
+    "settled_RAF_p95": "C <= max(B*1.15,B+5ms)",
+    "settled_max_content_proxy_gap": "C <= max(100ms,B+16.7ms)",
+    "post_input_convergence_median": "C <= max(B*1.15,B+50ms); disclose maxima and full Up->commit->visible times",
+    "memory": "Keep existing same B/C profile. Added retained geometry/pixels must be accounted once, pins retired safely; no RSS-derived fake GPU accounting."
+  },
+  "pixel_rules": "Independent original body and sequential per-object legacy mask reference; erased interior/no-resurrection/zorder/opacity exact. Existing independently defined contour-edge AA policy unchanged (channel2 only where already authorized); do not mask whole tiles or enlarge tolerances. Approximate navigation may resample, so interior/world-transform/content witnesses plus exact terminal full-frame oracle; do not demand approximate pixels byteequal to final exact at edges.",
+  "claim_limits": [
+    "Ordinary renderer submission is not physical input-to-photon.",
+    "A native/qualification scenario held Worker delivery is correctness-only.",
+    "No wholeG5/otherplatform/release claim."
+  ],
+  "aggregation": "Nearest-rank percentiles over pooled raw samples for each role/case; also retain per-replicate rows. Max-content-gap comparison uses worst maximum over repeats, never median of maxima. Each primary C replicate must satisfy absolute bounds.",
+  "normal_observer": "Use exact prior v2 observer as reference: state cached at SDK RAF/input boundaries, no SDK/readState/JSON/reentrant work inside GL draw wrappers. Required native/correctness tests separately establish real current-target/content applicability. No hidden forced frames."
+}

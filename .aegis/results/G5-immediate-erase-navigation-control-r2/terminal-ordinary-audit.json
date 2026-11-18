@@ -1,0 +1,515 @@
+{
+  "status": "INDEPENDENT_RAW_RECOMPUTATION",
+  "raw_inputs": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B1-CORRECTIVE/DPR2/raw.json",
+      "bytes": 4452478,
+      "sha256": "98bcfaf10836708976de547129d16feb592640adc117915da133a39b3bf7bcf5"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-C1/DPR2/raw.json",
+      "bytes": 4671114,
+      "sha256": "091c3d455e781c46b9401c8da04400f3823f5086dca729ffe495930848fa3595"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-C2/DPR2/raw.json",
+      "bytes": 4665160,
+      "sha256": "bb31719a9821c1e32e8d418193d68a43da2ec4ef3236e54bd66b27a6dec3ecb8"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B2/DPR2/raw.json",
+      "bytes": 4291416,
+      "sha256": "0c0d31a818b61aade323b55f066a4d0f33a8ae112e6a57729f5ae2adfe1e6b16"
+    }
+  ],
+  "rows": [
+    {
+      "run": "IEN2-W-B1-CORRECTIVE",
+      "role": "B",
+      "case": "immediate-pan",
+      "firstFeedbackMs": null,
+      "upReturnToFeedbackMs": null,
+      "maxContentProxyGapMs": 2091.9333332379647,
+      "SDKRAFp95Ms": 17.59999990463257,
+      "dispatchP95Ms": 18.700000047683716,
+      "convergenceMs": 509.80000019073486,
+      "cameraChanges": 0,
+      "inputLatenessP95Ms": 102.06666676203531,
+      "upReturnToStableMs": 2619.4000000953674
+    },
+    {
+      "run": "IEN2-W-B1-CORRECTIVE",
+      "role": "B",
+      "case": "immediate-pinch",
+      "firstFeedbackMs": null,
+      "upReturnToFeedbackMs": null,
+      "maxContentProxyGapMs": 2133.533333142601,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 18.799999952316284,
+      "convergenceMs": 310.60000014305115,
+      "cameraChanges": 0,
+      "inputLatenessP95Ms": 133.93333323796833,
+      "upReturnToStableMs": 2461.7999999523163
+    },
+    {
+      "run": "IEN2-W-B1-CORRECTIVE",
+      "role": "B",
+      "case": "settled-pan",
+      "firstFeedbackMs": 33.13333328564477,
+      "upReturnToFeedbackMs": 1091.0,
+      "maxContentProxyGapMs": 33.13333328564477,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 18.90000009536743,
+      "convergenceMs": 494.30000019073486,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 19.5,
+      "upReturnToStableMs": 3568.100000143051
+    },
+    {
+      "run": "IEN2-W-B1-CORRECTIVE",
+      "role": "B",
+      "case": "settled-pinch",
+      "firstFeedbackMs": 36.83333333332848,
+      "upReturnToFeedbackMs": 1078.3000001907349,
+      "maxContentProxyGapMs": 81.79999995231628,
+      "SDKRAFp95Ms": 17.200000047683716,
+      "dispatchP95Ms": 19.100000143051147,
+      "convergenceMs": 184.5,
+      "cameraChanges": 115,
+      "inputLatenessP95Ms": 23.4666666189878,
+      "upReturnToStableMs": 3248.9000000953674
+    },
+    {
+      "run": "IEN2-W-C1",
+      "role": "C",
+      "case": "immediate-pan",
+      "firstFeedbackMs": 89.93333347638327,
+      "upReturnToFeedbackMs": 107.60000014305115,
+      "maxContentProxyGapMs": 89.93333347638327,
+      "SDKRAFp95Ms": 17.299999952316284,
+      "dispatchP95Ms": 18.200000047683716,
+      "convergenceMs": 511.09999990463257,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 98.46666661898416,
+      "upReturnToStableMs": 2618
+    },
+    {
+      "run": "IEN2-W-C1",
+      "role": "C",
+      "case": "immediate-pinch",
+      "firstFeedbackMs": 86.93333323796833,
+      "upReturnToFeedbackMs": 104.59999990463257,
+      "maxContentProxyGapMs": 86.93333323796833,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 18.299999952316284,
+      "convergenceMs": 261.7999999523163,
+      "cameraChanges": 118,
+      "inputLatenessP95Ms": 94.70000004768372,
+      "upReturnToStableMs": 2365.5
+    },
+    {
+      "run": "IEN2-W-C1",
+      "role": "C",
+      "case": "settled-pan",
+      "firstFeedbackMs": 64.13333328564477,
+      "upReturnToFeedbackMs": 1101.6000001430511,
+      "maxContentProxyGapMs": 64.13333328564477,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 19.09999990463257,
+      "convergenceMs": 461.0,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 48.799999952316284,
+      "upReturnToStableMs": 3542.9000000953674
+    },
+    {
+      "run": "IEN2-W-C1",
+      "role": "C",
+      "case": "settled-pinch",
+      "firstFeedbackMs": 35.83333333332848,
+      "upReturnToFeedbackMs": 1124.6999998092651,
+      "maxContentProxyGapMs": 35.83333333332848,
+      "SDKRAFp95Ms": 17.59999990463257,
+      "dispatchP95Ms": 18.59999990463257,
+      "convergenceMs": 191.59999990463257,
+      "cameraChanges": 118,
+      "inputLatenessP95Ms": 21.266666809722665,
+      "upReturnToStableMs": 3299.199999809265
+    },
+    {
+      "run": "IEN2-W-C2",
+      "role": "C",
+      "case": "immediate-pan",
+      "firstFeedbackMs": 87.93333347638327,
+      "upReturnToFeedbackMs": 105.60000014305115,
+      "maxContentProxyGapMs": 87.93333347638327,
+      "SDKRAFp95Ms": 17.5,
+      "dispatchP95Ms": 18.600000143051147,
+      "convergenceMs": 461.09999990463257,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 95.56666676203531,
+      "upReturnToStableMs": 2564.2999999523163
+    },
+    {
+      "run": "IEN2-W-C2",
+      "role": "C",
+      "case": "immediate-pinch",
+      "firstFeedbackMs": 103.13333328565204,
+      "upReturnToFeedbackMs": 120.79999995231628,
+      "maxContentProxyGapMs": 103.13333328565204,
+      "SDKRAFp95Ms": 17.699999809265137,
+      "dispatchP95Ms": 56.69999980926514,
+      "convergenceMs": 296.7000000476837,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 852.9666666189805,
+      "upReturnToStableMs": 3166.9000000953674
+    },
+    {
+      "run": "IEN2-W-C2",
+      "role": "C",
+      "case": "settled-pan",
+      "firstFeedbackMs": 35.83333333332848,
+      "upReturnToFeedbackMs": 1112.0999999046326,
+      "maxContentProxyGapMs": 35.83333333332848,
+      "SDKRAFp95Ms": 17.5,
+      "dispatchP95Ms": 18.700000047683716,
+      "convergenceMs": 476.39999985694885,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 23.4666666189878,
+      "upReturnToStableMs": 3573.699999809265
+    },
+    {
+      "run": "IEN2-W-C2",
+      "role": "C",
+      "case": "settled-pinch",
+      "firstFeedbackMs": 36.733333190277335,
+      "upReturnToFeedbackMs": 1311.3999998569489,
+      "maxContentProxyGapMs": 50.0,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 21.59999990463257,
+      "convergenceMs": 202.40000009536743,
+      "cameraChanges": 118,
+      "inputLatenessP95Ms": 73.0,
+      "upReturnToStableMs": 3555.2999999523163
+    },
+    {
+      "run": "IEN2-W-B2",
+      "role": "B",
+      "case": "immediate-pan",
+      "firstFeedbackMs": null,
+      "upReturnToFeedbackMs": null,
+      "maxContentProxyGapMs": 2104.133333524067,
+      "SDKRAFp95Ms": 17.40000009536743,
+      "dispatchP95Ms": 19.5,
+      "convergenceMs": 548.0,
+      "cameraChanges": 0,
+      "inputLatenessP95Ms": 115.03333338101584,
+      "upReturnToStableMs": 2669.800000190735
+    },
+    {
+      "run": "IEN2-W-B2",
+      "role": "B",
+      "case": "immediate-pinch",
+      "firstFeedbackMs": null,
+      "upReturnToFeedbackMs": null,
+      "maxContentProxyGapMs": 2089.9333332379683,
+      "SDKRAFp95Ms": 17.5,
+      "dispatchP95Ms": 18.299999952316284,
+      "convergenceMs": 327.40000009536743,
+      "cameraChanges": 0,
+      "inputLatenessP95Ms": 96.83333333333576,
+      "upReturnToStableMs": 2435.0
+    },
+    {
+      "run": "IEN2-W-B2",
+      "role": "B",
+      "case": "settled-pan",
+      "firstFeedbackMs": 38.733333428695914,
+      "upReturnToFeedbackMs": 1219.9000000953674,
+      "maxContentProxyGapMs": 38.733333428695914,
+      "SDKRAFp95Ms": 17.399999856948853,
+      "dispatchP95Ms": 19.299999952316284,
+      "convergenceMs": 460.0,
+      "cameraChanges": 119,
+      "inputLatenessP95Ms": 24.06666676203895,
+      "upReturnToStableMs": 3662.5
+    },
+    {
+      "run": "IEN2-W-B2",
+      "role": "B",
+      "case": "settled-pinch",
+      "firstFeedbackMs": 48.733333428695914,
+      "upReturnToFeedbackMs": 1238.1000001430511,
+      "maxContentProxyGapMs": 81.90000009536743,
+      "SDKRAFp95Ms": 17.5,
+      "dispatchP95Ms": 19.399999856948853,
+      "convergenceMs": 206.09999990463257,
+      "cameraChanges": 114,
+      "inputLatenessP95Ms": 34.16666666667152,
+      "upReturnToStableMs": 3427.5
+    }
+  ],
+  "aggregate": [
+    {
+      "case": "immediate-pan",
+      "B": {
+        "pooledRAFp95": 17.5,
+        "pooledDispatchp95": 19.5,
+        "worstGapMs": 2104.133333524067,
+        "convergenceMedianMs": 528.9000000953674
+      },
+      "C": {
+        "pooledRAFp95": 17.40000009536743,
+        "pooledDispatchp95": 18.299999952316284,
+        "worstGapMs": 89.93333347638327,
+        "convergenceMedianMs": 486.09999990463257
+      }
+    },
+    {
+      "case": "immediate-pinch",
+      "B": {
+        "pooledRAFp95": 17.5,
+        "pooledDispatchp95": 18.299999952316284,
+        "worstGapMs": 2133.533333142601,
+        "convergenceMedianMs": 319.0000001192093
+      },
+      "C": {
+        "pooledRAFp95": 17.59999990463257,
+        "pooledDispatchp95": 34.09999990463257,
+        "worstGapMs": 103.13333328565204,
+        "convergenceMedianMs": 279.25
+      }
+    },
+    {
+      "case": "settled-pan",
+      "B": {
+        "pooledRAFp95": 17.40000009536743,
+        "pooledDispatchp95": 19.200000047683716,
+        "worstGapMs": 38.733333428695914,
+        "convergenceMedianMs": 477.15000009536743
+      },
+      "C": {
+        "pooledRAFp95": 17.40000009536743,
+        "pooledDispatchp95": 19.09999990463257,
+        "worstGapMs": 64.13333328564477,
+        "convergenceMedianMs": 468.6999999284744
+      }
+    },
+    {
+      "case": "settled-pinch",
+      "B": {
+        "pooledRAFp95": 17.399999856948853,
+        "pooledDispatchp95": 19.399999856948853,
+        "worstGapMs": 81.90000009536743,
+        "convergenceMedianMs": 195.29999995231628
+      },
+      "C": {
+        "pooledRAFp95": 17.5,
+        "pooledDispatchp95": 19.0,
+        "worstGapMs": 50.0,
+        "convergenceMedianMs": 197.0
+      }
+    }
+  ],
+  "checks": [
+    {
+      "case": "immediate-pan",
+      "kind": "convergence",
+      "limit": 608.2350001096725,
+      "met": true
+    },
+    {
+      "case": "immediate-pinch",
+      "kind": "convergence",
+      "limit": 369.0000001192093,
+      "met": true
+    },
+    {
+      "case": "settled-pan",
+      "kind": "convergence",
+      "limit": 548.7225001096725,
+      "met": true
+    },
+    {
+      "case": "settled-pan",
+      "kind": "pooledRAFp95",
+      "B": 17.40000009536743,
+      "C": 17.40000009536743,
+      "limit": 22.40000009536743,
+      "met": true
+    },
+    {
+      "case": "settled-pan",
+      "kind": "pooledDispatchp95",
+      "B": 19.200000047683716,
+      "C": 19.09999990463257,
+      "limit": 24.200000047683716,
+      "met": true
+    },
+    {
+      "case": "settled-pan",
+      "kind": "worstGapMs",
+      "B": 38.733333428695914,
+      "C": 64.13333328564477,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "case": "settled-pinch",
+      "kind": "convergence",
+      "limit": 245.29999995231628,
+      "met": true
+    },
+    {
+      "case": "settled-pinch",
+      "kind": "pooledRAFp95",
+      "B": 17.399999856948853,
+      "C": 17.5,
+      "limit": 22.399999856948853,
+      "met": true
+    },
+    {
+      "case": "settled-pinch",
+      "kind": "pooledDispatchp95",
+      "B": 19.399999856948853,
+      "C": 19.0,
+      "limit": 24.399999856948853,
+      "met": true
+    },
+    {
+      "case": "settled-pinch",
+      "kind": "worstGapMs",
+      "B": 81.90000009536743,
+      "C": 50.0,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "case": "immediate-pan",
+      "run": "IEN2-W-C1",
+      "kind": "absolutePrimary",
+      "firstMet": true,
+      "gapMet": true,
+      "RAFMet": true
+    },
+    {
+      "case": "immediate-pinch",
+      "run": "IEN2-W-C1",
+      "kind": "absolutePrimary",
+      "firstMet": true,
+      "gapMet": true,
+      "RAFMet": true
+    },
+    {
+      "case": "immediate-pan",
+      "run": "IEN2-W-C2",
+      "kind": "absolutePrimary",
+      "firstMet": true,
+      "gapMet": true,
+      "RAFMet": true
+    },
+    {
+      "case": "immediate-pinch",
+      "run": "IEN2-W-C2",
+      "kind": "absolutePrimary",
+      "firstMet": false,
+      "gapMet": false,
+      "RAFMet": true
+    }
+  ],
+  "immediatePinchInitialDelayTimeline": [
+    {
+      "run": "IEN2-W-C1",
+      "origin": 41893.86666671435,
+      "upReturn": 41876.200000047684,
+      "plannedDown": 41877.200000047684,
+      "touchDownActual": 41911.90000009537,
+      "touchDownEnded": 41931.200000047684,
+      "firstMovePlanned": 41893.86666671435,
+      "firstMoveActual": 41944.60000014305,
+      "firstMoveEnded": 41981.299999952316,
+      "firstContent": 41980.799999952316,
+      "delayFirstMoveDispatchFromPlanMs": 50.73333342870319,
+      "contentFromFirstMoveDispatchMs": 36.19999980926514,
+      "RAFsAroundOrigin": [
+        {
+          "relativeStart": -18.866666714347957,
+          "duration": 0.40000009536743164
+        },
+        {
+          "relativeStart": -17.366666714347957,
+          "duration": 32.799999952316284
+        },
+        {
+          "relativeStart": 15.73333342870319,
+          "duration": 2.1999998092651367
+        },
+        {
+          "relativeStart": 33.13333328565204,
+          "duration": 1.7000000476837158
+        },
+        {
+          "relativeStart": 49.83333333333576,
+          "duration": 0.9000000953674316
+        },
+        {
+          "relativeStart": 66.63333328565204,
+          "duration": 1.5
+        },
+        {
+          "relativeStart": 83.63333328565204,
+          "duration": 3.6000001430511475
+        }
+      ]
+    },
+    {
+      "run": "IEN2-W-C2",
+      "origin": 45898.46666661898,
+      "upReturn": 45880.799999952316,
+      "plannedDown": 45881.799999952316,
+      "touchDownActual": 45923.90000009537,
+      "touchDownEnded": 45955,
+      "firstMovePlanned": 45898.46666661898,
+      "firstMoveActual": 45965.59999990463,
+      "firstMoveEnded": 46028.90000009537,
+      "firstContent": 46001.59999990463,
+      "delayFirstMoveDispatchFromPlanMs": 67.13333328565204,
+      "contentFromFirstMoveDispatchMs": 36.0,
+      "RAFsAroundOrigin": [
+        {
+          "relativeStart": -26.066666523613094,
+          "duration": 1.5999999046325684
+        },
+        {
+          "relativeStart": -17.366666714347957,
+          "duration": 40.40000009536743
+        },
+        {
+          "relativeStart": 23.433333476386906,
+          "duration": 1.6999998092651367
+        },
+        {
+          "relativeStart": 32.033333381019474,
+          "duration": 2.0999999046325684
+        },
+        {
+          "relativeStart": 48.433333476386906,
+          "duration": 1.8999998569488525
+        },
+        {
+          "relativeStart": 65.83333333333576,
+          "duration": 1.2000000476837158
+        },
+        {
+          "relativeStart": 83.13333328565204,
+          "duration": 1.8000001907348633
+        },
+        {
+          "relativeStart": 99.83333333333576,
+          "duration": 3.6000001430511475
+        }
+      ]
+    }
+  ],
+  "conclusion": "C2 immediatepinch103.133333ms firstfeedback/maxgap violates frozen100ms bound. Other3 Cprimary rows and all settled/convergence relativechecks met. Largest gap is initial. No additional browser sample or moving acceptance threshold.",
+  "metric_limit": "Content/GL + cached publiccamera proxy only, separately qualified by native/correctness; not per-frame exact targetstamp or photons."
+}

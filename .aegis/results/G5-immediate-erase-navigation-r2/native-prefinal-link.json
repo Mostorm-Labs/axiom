@@ -1,0 +1,1189 @@
+{
+  "rows": [
+    {
+      "name": "G5GpuRetirementContract",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.19632591702975333,
+        "peak_process_family_rss_kib": 6624,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationDisplayWorkavoidance",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_display_workavoidance_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/pc-proof-correctness.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.4149719160050154,
+        "peak_process_family_rss_kib": 22112,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5InkBodyMaskReuse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--body-mask-only"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.1464826250448823,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5RegionalMaskValidity",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--regional-mask-only"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2731817909516394,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskedNavigationProgress",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--masked-progress-only"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.1546237498987466,
+        "peak_process_family_rss_kib": 18432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ErasedMixedNavigation",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--masked-mixed-only"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.3652841669972986,
+        "peak_process_family_rss_kib": 22752,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5EraseExactCanonical",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_erase_exact_canonical_tests",
+          "--verify",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/erase-exact-canonical"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.6411176251713187,
+        "peak_process_family_rss_kib": 16000,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryPlanReuse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--reuse"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.7620726670138538,
+        "peak_process_family_rss_kib": 49616,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryInvalidation",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--invalidation"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.9039393330458552,
+        "peak_process_family_rss_kib": 66816,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryExactParity",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--exact"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.9652488748542964,
+        "peak_process_family_rss_kib": 57424,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CLeaseAccounting",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--lease"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.16380433412268758,
+        "peak_process_family_rss_kib": 3616,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryProgress",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--progress"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.938363082939759,
+        "peak_process_family_rss_kib": 239248,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryAdmission",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--admission"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.15715595800429583,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryProgressSafety",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--progress-safety"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.3112118330318481,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5RenderMemoryBudget",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_memory_budget_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.9541382498573512,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5TransientDisplayHandoff",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+          "--handoff",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/transient-display-handoff"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 8.020600334042683,
+        "peak_process_family_rss_kib": 278368,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5TransientDisplayHandoffInflight",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+          "--handoff-inflight",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/transient-display-handoff-inflight"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 3.576048584189266,
+        "peak_process_family_rss_kib": 324544,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "CPU_tiles": 0,
+          "cycles": 2,
+          "generation": 2,
+          "stage": "switches-complete",
+          "used": 0
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuHistoryCache",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_cpu_history_cache_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 39.110906291985884,
+        "peak_process_family_rss_kib": 33136,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.9183489170391113,
+        "peak_process_family_rss_kib": 33024,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_upper",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--upper"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2166380409616977,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_progress",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--progress"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21805720799602568,
+        "peak_process_family_rss_kib": 464,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_quota",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--quota"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2216672918293625,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_filled",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--filled"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21917866705916822,
+        "peak_process_family_rss_kib": 28304,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_brush",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--brush"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21075912495143712,
+        "peak_process_family_rss_kib": 29888,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_safety",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--safety"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2143234999384731,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_streaming",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--streaming"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2143906659912318,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_lifecycle",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--lifecycle"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.3135630830656737,
+        "peak_process_family_rss_kib": 33168,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_interleaved",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--interleaved"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2172904999461025,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-interleaved",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--repair-interleaved"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21674629184417427,
+        "peak_process_family_rss_kib": 30768,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-reaper",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--repair-reaper"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21536945807747543,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-adoption",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--repair-adoption"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21579320798628032,
+        "peak_process_family_rss_kib": 448,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskRepair_control_reaper",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_nmr_cache_pressure_probe"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.5179420420899987,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskRepair_control_adoption",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_nmr_source_adoption_probe"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.5226037499960512,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_identity",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "identity"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.7132375829387456,
+        "peak_process_family_rss_kib": 13232,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_policy",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "policy"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.1138847079128027,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_superseded",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "superseded"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11773516680113971,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_reverse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "reverse"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11544400011189282,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_GPU",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "GPU"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.2173897500615567,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_cardinality",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "cardinality"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11553675006143749,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_renderer",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "renderer"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 47.42642654199153,
+        "peak_process_family_rss_kib": 124576,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_query",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "query"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.12215133407153189,
+        "peak_process_family_rss_kib": 384,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_strict-confirm",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+          "strict-confirm"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.22627383400686085,
+        "peak_process_family_rss_kib": 2864,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseNavigation",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_immediate_erase_navigation_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/ien.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.085044583072886,
+        "peak_process_family_rss_kib": 276848,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2AReadmissionAcquire",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "acquire"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.9418606669642031,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "baseline-readmission",
+          "denial": "acquire",
+          "accepted": true,
+          "canonical_acquire": 0,
+          "canonical_present": 0,
+          "preview_acquire": 0,
+          "preview_present": 0,
+          "preview_visibility_calls": 0,
+          "semantic_unchanged": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2AReadmissionPresent",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "present"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11794441705569625,
+        "peak_process_family_rss_kib": 8992,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "baseline-readmission",
+          "denial": "present",
+          "accepted": true,
+          "canonical_acquire": 0,
+          "canonical_present": 0,
+          "preview_acquire": 0,
+          "preview_present": 0,
+          "preview_visibility_calls": 0,
+          "semantic_unchanged": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2ANavigation",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "navigation"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11892133392393589,
+        "peak_process_family_rss_kib": 8096,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "baseline-postUp-navigation",
+          "navigation_pending": true,
+          "navigation_presented": true,
+          "canonical_requested": false,
+          "canonical_work": false,
+          "semantic": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2AHandoff",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "handoff"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.11675908300094306,
+        "peak_process_family_rss_kib": 8528,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "qualified-seed",
+          "kind_version": 3,
+          "algorithm_version": 4,
+          "knots": 24,
+          "semantic": 1,
+          "qualified_receipts": 0,
+          "pending_brush": 1,
+          "preview_active": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2ANavigationSafety",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "navigation-safety"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21810699999332428,
+        "peak_process_family_rss_kib": 23808,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "A-committed-pending",
+          "semantic": 2,
+          "scene": 2,
+          "masks": 1
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5EraseExactCanonicalRuntime",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_erase_exact_canonical_runtime_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 2.2496677909512073,
+        "peak_process_family_rss_kib": 97520,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CContinuousInput",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2c_mask_pipeline_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.8148254591505975,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-ienreuse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-ienreuse.json",
+          "ienreuse"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.0088529998902231,
+        "peak_process_family_rss_kib": 72480,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-postcommitzoom",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-postcommitzoom.json",
+          "postcommitzoom"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21711154095828533,
+        "peak_process_family_rss_kib": 109280,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-postcommitpan",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-postcommitpan.json",
+          "postcommitpan"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.21243191603571177,
+        "peak_process_family_rss_kib": 109728,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerazoomout",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerazoomout.json",
+          "camerazoomout"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.5786858340725303,
+        "peak_process_family_rss_kib": 176928,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerazoomin",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerazoomin.json",
+          "camerazoomin"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.5912777911871672,
+        "peak_process_family_rss_kib": 176976,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerapan",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerapan.json",
+          "camerapan"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.5722482921555638,
+        "peak_process_family_rss_kib": 177520,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5CpuPendingRuntime-cameratouch",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-cameratouch.json",
+          "cameratouch"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.5723444169852883,
+        "peak_process_family_rss_kib": 185536,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pan",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native/G5ImmediateEraseGPU-pan.json",
+          "pan"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.234944833209738,
+        "peak_process_family_rss_kib": 420752,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pinch",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native/G5ImmediateEraseGPU-pinch.json",
+          "pinch"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.221518290927634,
+        "peak_process_family_rss_kib": 421120,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ],
+  "passed": 59,
+  "failed": 0,
+  "planned": 59
+}

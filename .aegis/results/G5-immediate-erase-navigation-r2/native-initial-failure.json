@@ -1,0 +1,82 @@
+{
+  "rows": [
+    {
+      "name": "G5GpuRetirementContract",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.6066444998141378,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationDisplayWorkavoidance",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_display_workavoidance_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/pc-proof-correctness.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.7179797920398414,
+        "peak_process_family_rss_kib": 8896,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5InkBodyMaskReuse",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--body-mask-only"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.6060754579957575,
+        "peak_process_family_rss_kib": 7776,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5RegionalMaskValidity",
+      "status": "FAIL",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+          "--regional-mask-only"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": -6,
+        "elapsed_s": 0.20913445786572993,
+        "peak_process_family_rss_kib": 20816,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ],
+  "passed": 3,
+  "failed": 1,
+  "planned": 59
+}

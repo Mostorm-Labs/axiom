@@ -185,6 +185,8 @@ class SkiaRenderer final {
     mutable std::shared_ptr<internal::LocalExactCache> localExact_;
     struct CpuLocalSelection {std::vector<foundation::WorldPoint> points;CpuDecisionPin job;resources::ResourceLease lease;bool complete=false;};
     mutable std::map<foundation::ObjectId,CpuLocalSelection> localSelection_;
+    mutable std::vector<CpuDecisionPin> feedbackMisses_;
+    mutable std::optional<resources::ResourceLease> feedbackMissMetadata_;
     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
     ImageResourceResolver* images_ = nullptr;

@@ -38,6 +38,7 @@ class LocalExactJob final {
     bool advanceSelectionFallback(PreparationAllowance&);
     void cancel()noexcept;
     bool matches(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&)const noexcept;
+    bool provesMiss(const RuntimeSceneRecord& r,const semantic::EraseMaskGeometry& g)const noexcept{return status_==LocalExactStatus::kMiss&&matches(r,g);}
     const LocalExactStatistics& statistics()const noexcept{return work_;}
     const semantic::EraseMaskGeometry& fullGeometry()const noexcept;
  private:

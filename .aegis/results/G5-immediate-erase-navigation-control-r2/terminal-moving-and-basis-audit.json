@@ -1,0 +1,148 @@
+{
+  "status": "CONTROL_RECOMPUTED_MOVING_AND_BASIS",
+  "terminalBasis": [
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "allReadbacksValidRestored": true,
+      "captureCount": 5,
+      "terminalSnapshotByteEqualB": true,
+      "snapshotSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73",
+      "Ccamera": {
+        "scale": 0.3400000035762787,
+        "x": 240,
+        "y": 200
+      },
+      "Bcamera": {
+        "scale": 0.3400000035762787,
+        "x": 240,
+        "y": 200
+      },
+      "operationByteLengthsEqual": true
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "allReadbacksValidRestored": true,
+      "captureCount": 5,
+      "terminalSnapshotByteEqualB": true,
+      "snapshotSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b",
+      "Ccamera": {
+        "scale": 0.3400000035762787,
+        "x": 120,
+        "y": 260
+      },
+      "Bcamera": {
+        "scale": 0.3400000035762787,
+        "x": 120,
+        "y": 260
+      },
+      "operationByteLengthsEqual": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "allReadbacksValidRestored": true,
+      "captureCount": 5,
+      "terminalSnapshotByteEqualB": true,
+      "snapshotSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73",
+      "Ccamera": {
+        "scale": 0.3400000035762787,
+        "x": 240,
+        "y": 200
+      },
+      "Bcamera": {
+        "scale": 0.3400000035762787,
+        "x": 240,
+        "y": 200
+      },
+      "operationByteLengthsEqual": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "allReadbacksValidRestored": true,
+      "captureCount": 5,
+      "terminalSnapshotByteEqualB": true,
+      "snapshotSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b",
+      "Ccamera": {
+        "scale": 0.3400000035762787,
+        "x": 120,
+        "y": 260
+      },
+      "Bcamera": {
+        "scale": 0.3400000035762787,
+        "x": 120,
+        "y": 260
+      },
+      "operationByteLengthsEqual": true
+    }
+  ],
+  "movingRows": [
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "capture": "moving-12.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "capture": "moving-60.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "capture": "moving-12.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "capture": "moving-60.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "capture": "moving-12.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "capture": "moving-60.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "capture": "moving-12.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "capture": "moving-60.rgba",
+      "probeCount": 258,
+      "failureCount": 0,
+      "met": true
+    }
+  ],
+  "limitations": "World-trace interior witnesses and exact same terminal snapshots/cameras; no claim of whole-frame moving equality or independently re-generated body reference. CPU terminal parity audited separately. No new runtime or browser test."
+}

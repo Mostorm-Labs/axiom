@@ -9,5 +9,17 @@
     "cameraChanges": 16,
     "failure": "ACTUAL_GPU_COMPOSITION_TENTATIVE_CANCEL_STARVES_FEEDBACK"
   },
-  "GREEN": null
+  "GREEN": {
+    "status": "LOCAL_MECHANISM_NOT_FINAL_ACCEPTANCE",
+    "actualGPU": [
+      "gpu-sentinel-pan-r2",
+      "gpu-sentinel-pinch"
+    ],
+    "tentativeCancel": "16/16 latestcamera submissions, fullsuffix independentpixels; no globalrewind",
+    "settled": "native19/24 RED ->24/24 after currentplane query priority",
+    "newSuffix": "old MUST_RETRY assertion superseded by fullnewmask independentfreshdraw+cameraresample; oldprefix has67386 differingpixels; actualacceptedimage equals newfullmask",
+    "nohit": "RED EXACT_NOHIT_COMMIT_LOST_COMPLETE_FEEDBACK -> independent actualkMiss retainedproof handoff",
+    "exposure": "RED nonemptyexposure128retry ->currentgrid completes; guardnotweakened",
+    "remaining": "Ordinarymatrix+Ccorrectness/CPUoracle"
+  }
 }

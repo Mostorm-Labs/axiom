@@ -98,7 +98,7 @@ internal::ReferenceValidationCache* SkiaRenderer::validationService()const noexc
 }
 
 SkiaRenderer::~SkiaRenderer(){
-    localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();
+    feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();
     // Seal quota before old contexts can abandon their completion callbacks.
     if(resourceBudget_)resourceBudget_->close();
     clearRenderCache();gpuRetirements_.reset();
@@ -151,6 +151,7 @@ struct SkiaRenderer::NavigationCache final {
     internal::NavigationRegions valid;
     std::uint64_t proofSemantic=0,proofScene=0,resource=0;
     bool isolate=false;
+    std::shared_ptr<const internal::NavigationSourceSnapshot> committedSources;
     std::shared_ptr<internal::TransientDisplaySurface> display;
     TransientDisplayIdentity presentation;
     std::vector<ReferenceTraversalEntry> feedbackSources;
@@ -159,6 +160,7 @@ struct SkiaRenderer::NavigationCache final {
     GrRecordingContext* context=nullptr;
     std::optional<CanonicalViewportTransform> feedbackCamera;
     bool backgroundProofRejected=false;
+    bool feedbackExposureRejected=false;
     bool sameTarget(const void* target,const FrameState& current)const noexcept {
         return image&&frame&&provider==target&&frame->viewId==current.viewId&&
             frame->metrics==current.metrics&&frame->metricsGeneration==current.metricsGeneration&&
@@ -597,6 +599,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
     AXIOM_FRAME_TIMING_END(presentTiming);
     if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
+    else {pendingNavigation_.reset();feedbackMisses_.clear();feedbackMissMetadata_.reset();}
     return presented;
 }
 
@@ -779,7 +782,11 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         cache->backgroundProofRejected=false;++navigationTiles_->work.regionalPlaneProofs;
         }catch(const std::bad_alloc&){++navigationTiles_->work.regionalPlaneRejects;}
     };
-    revalidate(navigationCache_);revalidate(navigationFallback_);
+    revalidate(navigationCache_);
+    // The current complete plane has first claim on this opportunity's query
+    // allowance. An optional older fallback must not consume the fourth strip
+    // proof on every settled zoom-out before visible coverage is considered.
+    if(!currentComposition||!backgroundOnly||!navigationCache_||!navigationCache_->matches(&provider,current)||!navigationCache_->valid.full(navigationCache_->worldBounds()))revalidate(navigationFallback_);
     // A rejected cross-Scene query cannot authorize new tiles under this
     // invocation either. Keep earlier prepared work private until a current
     // query binds it; a faster complete job must not bypass this admission.
@@ -879,9 +886,9 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     // An isolated executor still owns capacity in this budget. Never issue a
     // replacement manager while its permit could remain in use.
     if(!cpuGrants_.empty())return;
-    localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
+    feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();pendingNavigation_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();pendingNavigation_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 void SkiaRenderer::clearCpuLocalSelection()noexcept{localSelection_.clear();}
 bool SkiaRenderer::cpuLocalSelectionPending()const noexcept{return !localSelection_.empty();}
 SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
@@ -970,7 +977,12 @@ internal::LocalExactStatus SkiaRenderer::advanceCpuLocalExact(const CpuDecisionP
  if(!p)return internal::LocalExactStatus::kPending;
  internal::PreparationAllowance allowance;
  if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
- return p->advance(allowance);
+ const auto status=p->advance(allowance);
+ if(status==internal::LocalExactStatus::kMiss&&feedbackMisses_.size()<64&&std::find(feedbackMisses_.begin(),feedbackMisses_.end(),p)==feedbackMisses_.end()){
+  if(!feedbackMissMetadata_)feedbackMissMetadata_=const_cast<SkiaRenderer*>(this)->reserveCpuPendingMetadata(64*sizeof(CpuDecisionPin)+256);
+  if(feedbackMissMetadata_)feedbackMisses_.push_back(p);
+ }
+ return status;
 }
 std::vector<std::uint8_t> SkiaRenderer::encodeCpuLocalExact(const CpuDecisionPin& p,const std::array<std::uint64_t,8>& token)const{return p?p->encode(token):std::vector<std::uint8_t>{};}
 bool SkiaRenderer::importCpuLocalExact(const CpuDecisionPin& p,std::span<const std::uint8_t> bytes,const std::array<std::uint64_t,8>& token,bool* pending)const{return p&&p->import(bytes,token,pending);}
@@ -1147,20 +1159,29 @@ bool feedbackBodyEqual(const ReferenceTraversalEntry& a,const ReferenceTraversal
 }
 // Full bounded value proof, not mask count/semantic generation/bounds equality.
 // Unknown content allocations decline instead of scanning long stroke bodies.
-bool committedFeedbackEqual(std::span<const ReferenceTraversalEntry> before,std::span<const ReferenceTraversalEntry> after){
+bool committedFeedbackEqual(std::span<const ReferenceTraversalEntry> before,std::span<const ReferenceTraversalEntry> after,std::span<const SkiaRenderer::CpuDecisionPin> misses){
     if(before.size()!=after.size()||before.size()>64)return false;
     std::size_t remaining=8U*1048576U;
     for(std::size_t i=0;i<before.size();++i){const auto& a=before[i];const auto& b=after[i];
-        if(!feedbackBodyEqual(a,b)||b.presentationEraseActive||!b.presentationEraseMasks.empty()||
-           b.record.eraseMasks.size()!=a.record.eraseMasks.size()+a.presentationEraseMasks.size())return false;
-        for(std::size_t j=0;j<b.record.eraseMasks.size();++j){
-            const auto& x=j<a.record.eraseMasks.size()?a.record.eraseMasks[j]:a.presentationEraseMasks[j-a.record.eraseMasks.size()];const auto& y=b.record.eraseMasks[j];
-            if(j<a.record.eraseMasks.size()&&x.id!=y.id)return false;
+        if(!feedbackBodyEqual(a,b)||b.presentationEraseActive||!b.presentationEraseMasks.empty())return false;
+        const bool unchanged=b.record.eraseMasks.storage()==a.record.eraseMasks.storage();
+        if(unchanged&&!a.presentationEraseMasks.empty()){
+            for(const auto& mask:a.presentationEraseMasks)if(std::none_of(misses.begin(),misses.end(),[&](const auto& p){return p&&p->provesMiss(a.record,mask.geometry);}))return false;
+            continue;
+        }
+        if(b.record.eraseMasks.size()!=a.record.eraseMasks.size()+a.presentationEraseMasks.size())return false;
+        std::size_t oldIndex=0,newIndex=0;
+        for(const auto& y:b.record.eraseMasks){
+            const bool old=oldIndex<a.record.eraseMasks.size()&&a.record.eraseMasks[oldIndex].id==y.id;
+            if(!old&&std::any_of(a.record.eraseMasks.begin(),a.record.eraseMasks.end(),[&](const auto& x){return x.id==y.id;}))return false;
+            if(!old&&newIndex>=a.presentationEraseMasks.size())return false;
+            const auto& x=old?a.record.eraseMasks[oldIndex++]:a.presentationEraseMasks[newIndex++];
             if(x.geometry.index()!=y.geometry.index())return false;
             const auto cost=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},x.geometry);
             if(cost>remaining)return false;remaining-=cost;
             if(x.geometry!=y.geometry)return false;
         }
+        if(oldIndex!=a.record.eraseMasks.size()||newIndex!=a.presentationEraseMasks.size())return false;
     }
     return true;
 }
@@ -1174,13 +1195,22 @@ bool SkiaRenderer::presentPendingNavigation(SkiaSurfaceProvider& provider,const 
     const FrameState& current,const NavigationBackgroundQuery& backgroundOnly,const FramePlan& plan,
     const TransientDisplayIdentity& identity,bool canonical){
     const auto cache=pendingNavigation_;
-    [[maybe_unused]] const auto declined=[&]([[maybe_unused]] const char* reason){AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(canonical),(unsigned long long)current.camera.generation.value());return false;};
+    if(cache)cache->feedbackExposureRejected=false;
+    [[maybe_unused]] const auto declined=[&]([[maybe_unused]] const char* reason){
+AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(canonical),(unsigned long long)current.camera.generation.value());return false;};
     if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_||
        !cache->display||plan.background.mode!=foundation::BackgroundMode::kPlain||plan.transparentBackground||
        plan.background.color[3]!=1||plan.isolateEraseMasks!=cache->isolate)return declined("basis");
     const auto& color=plan.background.color;
     if(SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor()!=cache->background)return declined("background");
-    if(canonical){if(!committedFeedbackEqual(cache->feedbackSources,plan.referenceDrawList.entries))return declined("commit-mask");}
+    if(canonical){
+        const auto& entries=plan.referenceDrawList.entries;
+        const bool qualified=cache->committedSources&&cache->committedSources->entries.size()==entries.size()&&std::equal(entries.begin(),entries.end(),cache->committedSources->entries.begin(),[](const auto& a,const auto& b){return feedbackBodyEqual(a,b)&&a.record.eraseMasks.storage()==b.record.eraseMasks.storage()&&!a.presentationEraseActive&&a.presentationEraseMasks.empty();});
+        if(!qualified){
+            if(!committedFeedbackEqual(cache->feedbackSources,entries,feedbackMisses_))return declined("commit-mask");
+            cache->committedSources=internal::NavigationSourceSnapshot::capture(entries,renderCacheOptions_,resourceBudget_,sourceRetention_);
+        }
+    }
     else {
         if(!cache->presentation.matches(identity)||cache->proofSemantic!=current.sceneGeneration.value()||cache->proofScene!=current.sceneReadToken.value()||cache->feedbackSources.size()!=plan.referenceDrawList.entries.size())return declined("contribution");
         std::size_t remaining=8U*1048576U;
@@ -1206,8 +1236,8 @@ bool SkiaRenderer::presentPendingNavigation(SkiaSurfaceProvider& provider,const 
         const double pad=2*width/current.metrics.physicalWidth;
         return backgroundOnly({float((left-pad-camera.translationX)/camera.scale),float((top-pad-camera.translationY)/camera.scale),float((right+pad-camera.translationX)/camera.scale),float((bottom+pad-camera.translationY)/camera.scale)});
     };
-    if(r<=l||b<=t){if(!empty(0,0,width,height))return declined("exposure-all");}
-    else if(!empty(0,0,l,height)||!empty(r,0,width,height)||!empty(l,0,r,t)||!empty(l,b,r,height))return declined("exposure-strips");
+    if(r<=l||b<=t){if(!empty(0,0,width,height)){cache->feedbackExposureRejected=true;return declined("exposure-all");}}
+    else if(!empty(0,0,l,height)||!empty(r,0,width,height)||!empty(l,0,r,t)||!empty(l,b,r,height)){cache->feedbackExposureRejected=true;return declined("exposure-strips");}
     const auto acquired=provider.acquire();if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return false;
     if(acquired.frame.generation!=current.surfaceGeneration.value()||cache->context!=acquired.frame.surface->recordingContext()||
        acquired.frame.surface->width()!=int(current.metrics.physicalWidth)||acquired.frame.surface->height()!=int(current.metrics.physicalHeight)){provider.release();return false;}
@@ -1238,7 +1268,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(SkiaSurfaceProvider
         // Full latest masks are prepared in scratch, never shown at old camera.
         bool same=old->feedbackSources.size()==plan.referenceDrawList.entries.size();
         for(std::size_t i=0;same&&i<old->feedbackSources.size();++i){const auto& a=old->feedbackSources[i];const auto& b=plan.referenceDrawList.entries[i];same=feedbackBodyEqual(a,b)&&a.record.eraseMasks.storage()==b.record.eraseMasks.storage();}
-        if(same){
+        if(same&&!old->feedbackExposureRejected){
             const auto& f=plan.frame;const auto& prior=*old->frame;
             FrameState fixed{f.viewId,prior.camera,prior.worldViewport,f.metrics,f.sceneGeneration,f.sceneReadToken,f.surfaceGeneration,f.metricsGeneration,f.frameId,f.viewportClip};
             auto draw=plan.referenceDrawList;ReferenceDrawList stable{.frame=fixed,.entries={},.canonicalBytes={},.digest={}};stable.entries=std::move(draw.entries);stable.viewportClip=plan.referenceDrawList.viewportClip;stable.worldToView=old->transform;

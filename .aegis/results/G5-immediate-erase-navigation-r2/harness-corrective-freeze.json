@@ -1,0 +1,33 @@
+{
+  "classification": "PROVEN_HARNESS_FAILURE",
+  "failed_start": "IEN2-W-B1",
+  "chargedSeconds": 10,
+  "failure": "FileNotFoundError replacing shared storage-ledger.json.tmp during concurrent capture and continuous monitor. Failure occurred in before-primary snapshot, no measured navigation rows.",
+  "productionChanges": false,
+  "correctiveRemainingAfterThis": 0,
+  "oldFreeze": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/browser-freeze.json",
+    "bytes": 645918,
+    "sha256": "44bfe882655bdcce223087ae294275d761ed11e53bc06cb5083bacd363a301a4"
+  },
+  "failureGuard": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B1/guard.worker.json",
+    "bytes": 830,
+    "sha256": "c0eacee2d0103c88c2a0c523ff53358cab1ecb5ac088d886d9d5ca3b43c5df34"
+  },
+  "allowedFix": "Serialize same ledger read/modify/write via flock; tolerate vanished partial files during inventory. No source/SDK/geometry/threshold/input changes.",
+  "files": {
+    "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/task-storage.py": {
+      "bytes": 3082,
+      "sha256": "3314816d3a68f34e45c0d53bfea7008a92527937ae5da3e19284184ea150ccf4"
+    },
+    "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/run-browser.py": {
+      "bytes": 3074,
+      "sha256": "47fffb33bbc384dec4ebfff17a2a76eea9b436b6de301d52f2feeab1d5762f83"
+    },
+    "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-B1-CORRECTIVE-request.json": {
+      "bytes": 1387,
+      "sha256": "18de2ce65bb9eeba152f1bef1e57b58aace4656a4cfbef92fdb0e259a4ba08c5"
+    }
+  }
+}

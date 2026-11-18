@@ -1,0 +1,65 @@
+{
+  "status": "NATIVE_QUALIFIED_WEB_PENDING",
+  "requiredNative": {
+    "passed": 59,
+    "failed": 0,
+    "planned": 59
+  },
+  "actualGPUSentinel": [
+    {
+      "mode": "pan",
+      "result": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/gpu-sentinel-pan-r2.json",
+      "bytes": 2369,
+      "sha256": "7ae7e3af70f4486e35ded55c7f05f3fb019ef81d999919e38fabfd378b342444",
+      "guard": {
+        "command": [
+          "out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "out/G5-immediate-erase-navigation-r2/gpu-sentinel-pan-r2.json",
+          "pan"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.644148125080392,
+        "peak_process_family_rss_kib": 413776,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "latestSuffixWitnessPixels": 7488,
+      "pixelQualified": 16,
+      "settledSubmissions": 24
+    },
+    {
+      "mode": "pinch",
+      "result": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/gpu-sentinel-pinch.json",
+      "bytes": 2371,
+      "sha256": "d0ec572e33e27001fac6ba25639fa6e19a8348da2d2aadf12de6c259295d7983",
+      "guard": {
+        "command": [
+          "out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "out/G5-immediate-erase-navigation-r2/gpu-sentinel-pinch.json",
+          "pinch"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.292138166958466,
+        "peak_process_family_rss_kib": 415872,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "latestSuffixWitnessPixels": 9909,
+      "pixelQualified": 16,
+      "settledSubmissions": 24
+    }
+  ],
+  "explanation": "Original Fixed40 final suffix produced no newpixels; native fixture retains all40 and adds one canonical v4stroke at final16samples. Actual normalized confirmed trace independently creates fullmask and465prefix. Fresh fullmaskRender is separately resampled at actualcamera; strict interior exact with original primitive edgeAA<=2. Both16latestcamera submissions, delayedrealKernel oneatomiccommit, stalecompletion after newgesture rejected,cancel noOperation, matchinggrantrelease andclose. WebFixed40 unchanged.",
+  "stage": "Before normal matrix",
+  "remaining": "CWebtargetreadbacks andindependentterminalCPU"
+}
