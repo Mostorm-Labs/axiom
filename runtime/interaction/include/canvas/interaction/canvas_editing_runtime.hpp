@@ -968,6 +968,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<interaction::EditorHistory::PreparedEntry> explicitIntentHistory_;
   bool explicitIntentActive_ = false;
   render::SkiaRenderer skiaRenderer_;
+  std::uint64_t erasePresentationInputRevision_=1;
+  [[nodiscard]] render::TransientDisplayIdentity eraseDisplayIdentity()const noexcept;
   render::SkiaRenderer previewRenderer_;
   mutable std::mutex previewRenderMutex_;
   mutable std::mutex previewProviderMutex_;

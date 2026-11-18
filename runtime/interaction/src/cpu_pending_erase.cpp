@@ -119,6 +119,18 @@ void CanvasEditingRuntime::cancelCpuPendingContact(std::uint64_t session)noexcep
   const auto token=p->traceGrant,executor=p->grantExecutor;p.reset();(void)releaseCpuWorkerGrant(executor,token);return;
  }
 }
+render::TransientDisplayIdentity CanvasEditingRuntime::eraseDisplayIdentity()const noexcept{
+ render::TransientDisplayIdentity out;if(!cpuPending_)return out;
+ out.owner=cpuPending_;out.revision=cpuPending_->revision;
+ for(const auto& p:cpuPending_->slots)if(p){
+  if(p->kind!=CpuPendingEraseState::Kind::Erase)return {};
+  const auto active=eraserTraces_.find(p->session);
+  const auto samples=p->serial?p->trace.size():active!=eraserTraces_.end()?active->second.size():0;
+  if(samples)out.contributions[out.contributionCount++]={p->activeSerial,samples};
+ }
+ std::sort(out.contributions.begin(),out.contributions.begin()+out.contributionCount,[](const auto& a,const auto& b){return a.session<b.session;});
+ return out;
+}
 bool CanvasEditingRuntime::freezeCpuPendingContact(std::uint64_t session)noexcept{
  if(!cpuPending_)return false;
  for(auto& p:cpuPending_->slots)if(p&&p->session==session&&!p->serial){

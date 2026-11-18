@@ -19,9 +19,11 @@ using json=nlohmann::json;
 #include "../../interaction/src/cpu_pending_erase_state.hpp"
 namespace canvas::ink_playground {
 class InkPlaygroundHistoryTestAccess {public:
+ static void setProfile(interaction::CanvasEditingRuntime& r,const render::RenderCacheOptions& o){r.skiaRenderer_.setRenderCacheOptions(o);}
  static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
+ static auto reuse(const interaction::CanvasEditingRuntime& r){std::pair<std::uint64_t,std::uint64_t> out{};for(const auto& p:r.cpuPending_->slots)if(p){out.first+=p->presentationBuilds;out.second+=p->presentationHits;}return out;}
  static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
  static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
  static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
@@ -48,7 +50,10 @@ class PostPublicationFaultSink final:public interaction::LocalOperationSink {
  void applied(const semantic::Operation& op,const semantic::CanonicalCommitRecord& record)noexcept override{if(inner)inner->applied(op,record);}
  interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
 };
-int main(int argc,char**argv){try{
+#ifndef AXIOM_CPU_PENDING_FIXTURE_MAIN
+#define AXIOM_CPU_PENDING_FIXTURE_MAIN main
+#endif
+int AXIOM_CPU_PENDING_FIXTURE_MAIN(int argc,char**argv){try{
  require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
  auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
  if(mode.starts_with("progress")||mode.starts_with("postcommit")){
@@ -235,6 +240,13 @@ int main(int argc,char**argv){try{
    require(useful,"INTERNAL_PREPARATION_PROGRESS_FORCED_TO_NEXT_OWNER_TURN");
   }
   return 0;
+ }
+ if(mode=="ienreuse"){
+  // Real admitted/frozen Intent; repeated camera-only reference adaptation.
+  render::ReferenceDrawList list;for(const auto& object:s.objects){auto record=editor.pendingSceneRecord(object.id);auto command=render::DirectReferenceSource::presentationCommand(*record);require(bool(command),"reuse command");list.entries.push_back({*record,true,std::move(command.value())});}
+  require(ink_playground::InkPlaygroundHistoryTestAccess::feedback(editor,list),"reuse first feedback");const auto first=ink_playground::InkPlaygroundHistoryTestAccess::reuse(editor);require(first.first>0,"nonvacuous frozen build");const auto expected=list.entries;
+  for(unsigned n=0;n<8;++n){auto next=list;for(auto& entry:next.entries){entry.presentationEraseActive=false;entry.presentationEraseMasks.clear();}require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,1,0}),"reuse camera");require(ink_playground::InkPlaygroundHistoryTestAccess::feedback(editor,next),"reuse repeated feedback");require(next.entries==expected,"frozen mask value/order changed");}
+  const auto last=ink_playground::InkPlaygroundHistoryTestAccess::reuse(editor);require(last.first==first.first&&last.second>first.second,"FROZEN_TRACE_RECONVERTED_ON_CAMERA_ONLY");std::ofstream(argv[2])<<json{{"builds",last.first},{"hits",last.second},{"camera_changes",8},{"exact_values",true}}.dump(2)<<'\n';return 0;
  }
  if(mode.starts_with("camera")){
   // Hold the actual encoded kernel job, never synthesize a pending flag. The

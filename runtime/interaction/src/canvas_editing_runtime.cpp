@@ -3352,6 +3352,7 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
     (void)eraserCancel(pointerId);return false;
   }
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
+  ++erasePresentationInputRevision_;
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
   if(toolMode_==ToolMode::kObjectEraser){
     auto& candidates=objectEraseCandidates_[pointerId];const auto count=candidates.size();
@@ -5681,7 +5682,8 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
   AXIOM_FRAME_TIMING_SCOPE(transientRenderTiming,render);
   const auto rendered = renderer.renderTransientOverlay(
-      *target, plan.value(), selectionOverlay());
+      *target, plan.value(), selectionOverlay(),
+      eraseDisplayIdentity());
   AXIOM_FRAME_TIMING_END(transientRenderTiming);
   AXIOM_IF_EVENT("nc_render role=transient semantic=%llu scene=%llu camera=%llu frame=%llu code=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)frame.frameId.value(),unsigned(rendered.code),rendered.message.c_str());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;

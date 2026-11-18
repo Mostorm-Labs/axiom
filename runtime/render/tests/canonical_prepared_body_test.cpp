@@ -49,7 +49,7 @@ struct NativeMetalCompletion final:GpuCompletionService {
     void service()noexcept override{context->checkAsyncWorkCompletion();}
     std::shared_ptr<const GpuCompletionState> state()const noexcept override{return flags;}
 };
-class NativeMetalTarget final:public SkiaSurfaceProvider {
+class NativeMetalTarget:public SkiaSurfaceProvider {
     std::shared_ptr<NativeMetalCompletion> completion_;sk_sp<SkSurface> surface_;
     std::uint64_t generation_=0,presents_=0,reads_=0;
  public:

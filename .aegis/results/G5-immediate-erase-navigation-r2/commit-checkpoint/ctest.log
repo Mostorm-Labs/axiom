@@ -1,0 +1,29 @@
+Test project /Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native
+    Start 289: G5ImmediateEraseNavigation
+1/4 Test #289: G5ImmediateEraseNavigation .......Subprocess aborted***Exception:   1.24 sec
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"2","frame":"2","sequence":"1","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,121,259.5],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"3","frame":"3","sequence":"2","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,122,259],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"4","frame":"4","sequence":"3","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,123,258.5],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"5","frame":"5","sequence":"4","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,124,258],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"6","frame":"6","sequence":"5","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,125,257.5],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"7","frame":"7","sequence":"6","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,126,257],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"8","frame":"8","sequence":"7","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,127,256.5],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"9","frame":"9","sequence":"8","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,128,256],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"1","scene":"2","resource":"0","surface":"1","metrics":"1","cameraGeneration":"20","frame":"20","sequence":"9","target":"6136134512","role":"navigation-erase-handoff","affine":[0.34000000357627869,0,0,0.34000000357627869,132,254],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":70928956,"pending":0,"staging":0}
+AXIOM_ZQ_PRESENT {"view":"1","semantic":"0","scene":"1","resource":"0","surface":"1","metrics":"1","cameraGeneration":"21","frame":"21","sequence":"10","target":"6136134512","role":"pending-navigation","affine":[0.34000000357627869,0,0,0.34000000357627869,145,247.5],"dimensions":[2862,2020],"upscale":1,"low":0,"severe":0,"debt":0,"used":95521532,"pending":0,"staging":0}
+libc++abi: terminating due to uncaught exception of type std::runtime_error: OLD_PREFIX_QUALIFIED_NEW_SUFFIX
+
+    Start 339: G5CpuPendingRuntime-ienreuse
+2/4 Test #339: G5CpuPendingRuntime-ienreuse .....   Passed    0.80 sec
+    Start 391: G5ImmediateEraseGPU-pan
+3/4 Test #391: G5ImmediateEraseGPU-pan ..........   Passed    1.75 sec
+    Start 392: G5ImmediateEraseGPU-pinch
+4/4 Test #392: G5ImmediateEraseGPU-pinch ........   Passed    1.77 sec
+
+75% tests passed, 1 tests failed out of 4
+
+Total Test time (real) =   5.57 sec
+
+The following tests FAILED:
+	289 - G5ImmediateEraseNavigation (Subprocess aborted)
+Errors while running CTest

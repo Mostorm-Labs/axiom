@@ -17,6 +17,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "skia_render_cache_internal.hpp"
 #include "skia_navigation_tiles.hpp"
 #include "navigation_source_snapshot.hpp"
+#include "continuous_zoom_observation.hpp"
 #include "navigation_reference_validation.hpp"
 #include "navigation_sharing_observation.hpp"
 #include "skia_gpu_lifetime.hpp"
@@ -43,6 +44,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <type_traits>
 
 namespace canvas::render {
+namespace {bool feedbackBare(const EditingOverlay*);}
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
 namespace {
 struct PostworkerRenderObservation final {
@@ -149,6 +151,12 @@ struct SkiaRenderer::NavigationCache final {
     internal::NavigationRegions valid;
     std::uint64_t proofSemantic=0,proofScene=0,resource=0;
     bool isolate=false;
+    std::shared_ptr<internal::TransientDisplaySurface> display;
+    TransientDisplayIdentity presentation;
+    std::vector<ReferenceTraversalEntry> feedbackSources;
+    internal::SourceRetentions feedbackPayloads;
+    resources::ResourceLease feedbackMetadata;
+    GrRecordingContext* context=nullptr;
     std::optional<CanonicalViewportTransform> feedbackCamera;
     bool backgroundProofRejected=false;
     bool sameTarget(const void* target,const FrameState& current)const noexcept {
@@ -675,6 +683,14 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         SkiaSurfaceProvider& provider;bool active=true;
         ~PreparationTargetRelease(){if(active)provider.release();}
     } preparationTarget{provider};
+    if(currentComposition&&pendingNavigation_&&(!selectionOverlay||feedbackBare(selectionOverlay))){
+        provider.release();preparationTarget.active=false;
+        if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
+        navigationTiles_->work.presented=false;
+        if(presentPendingNavigation(provider,camera,current,backgroundOnly,*currentComposition,{},true))return BackendSubmissionResult::accepted();
+        const auto again=provider.acquire();if(again.code!=SkiaSurfaceAcquireCode::kAcquired||again.frame.surface!=preparedTarget.frame.surface||again.frame.generation!=preparedTarget.frame.generation){if(again.code==SkiaSurfaceAcquireCode::kAcquired)provider.release();return BackendSubmissionResult::retry("navigation retained target changed");}
+        preparationTarget.active=true;
+    }
     transientDisplay_.reset();
     serviceResourceRetirements();
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -865,7 +881,7 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     if(!cpuGrants_.empty())return;
     localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();pendingNavigation_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
 void SkiaRenderer::clearCpuLocalSelection()noexcept{localSelection_.clear();}
 bool SkiaRenderer::cpuLocalSelectionPending()const noexcept{return !localSelection_.empty();}
 SkiaRenderer::ExactQueryCohort::ExactQueryCohort(std::shared_ptr<internal::EraseMaskPathCache> owner,std::function<void()> pressure)noexcept:owner_(std::move(owner)){if(owner_)owner_->beginCohort(std::move(pressure));}
@@ -1119,9 +1135,124 @@ internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexc
 }
 #endif
 
-BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+namespace {
+bool feedbackBare(const EditingOverlay* overlay){return overlay&&!overlay->selectionOutline().visible&&!overlay->creationPreview()&&!overlay->creationHover()&&!overlay->textBox&&!overlay->textCaret&&overlay->textSelection.empty()&&overlay->readOnlyOutlines.empty()&&overlay->candidateOutlines.empty()&&overlay->acquisitionOutline.empty()&&overlay->guides().empty()&&overlay->attachmentPoints().empty();}
+bool feedbackBodyEqual(const ReferenceTraversalEntry& a,const ReferenceTraversalEntry& b){
+    const auto& x=a.record;const auto& y=b.record;
+    const auto xa=x.content.shared(),ya=y.content.shared();
+    if(xa.get()!=ya.get()||xa.owner_before(ya)||ya.owner_before(xa))return false;
+    return std::tie(x.objectId,x.kind,x.kindVersion,x.placement,x.transform,x.properties,x.derivedGeometry,x.geometryBounds,x.visualBounds,x.worldBounds,x.referenceGeometryDigest,x.directDependencies,x.geometryChunks,x.textLayout,x.hierarchyOrder)==
+        std::tie(y.objectId,y.kind,y.kindVersion,y.placement,y.transform,y.properties,y.derivedGeometry,y.geometryBounds,y.visualBounds,y.worldBounds,y.referenceGeometryDigest,y.directDependencies,y.geometryChunks,y.textLayout,y.hierarchyOrder)&&
+        a.command==b.command&&a.contributesPixels==b.contributesPixels&&a.presentationOpacity==b.presentationOpacity;
+}
+// Full bounded value proof, not mask count/semantic generation/bounds equality.
+// Unknown content allocations decline instead of scanning long stroke bodies.
+bool committedFeedbackEqual(std::span<const ReferenceTraversalEntry> before,std::span<const ReferenceTraversalEntry> after){
+    if(before.size()!=after.size()||before.size()>64)return false;
+    std::size_t remaining=8U*1048576U;
+    for(std::size_t i=0;i<before.size();++i){const auto& a=before[i];const auto& b=after[i];
+        if(!feedbackBodyEqual(a,b)||b.presentationEraseActive||!b.presentationEraseMasks.empty()||
+           b.record.eraseMasks.size()!=a.record.eraseMasks.size()+a.presentationEraseMasks.size())return false;
+        for(std::size_t j=0;j<b.record.eraseMasks.size();++j){
+            const auto& x=j<a.record.eraseMasks.size()?a.record.eraseMasks[j]:a.presentationEraseMasks[j-a.record.eraseMasks.size()];const auto& y=b.record.eraseMasks[j];
+            if(j<a.record.eraseMasks.size()&&x.id!=y.id)return false;
+            if(x.geometry.index()!=y.geometry.index())return false;
+            const auto cost=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},x.geometry);
+            if(cost>remaining)return false;remaining-=cost;
+            if(x.geometry!=y.geometry)return false;
+        }
+    }
+    return true;
+}
+}
+void SkiaRenderer::transferTransientDisplayIdentity(const TransientDisplayIdentity& before,const TransientDisplayIdentity& after)noexcept{
+    // Up moves the identical final active trace into its frozen owner; no new
+    // points, mask, pose, roster or pixels are created by this transfer.
+    if(pendingNavigation_&&pendingNavigation_->presentation.matches(before))pendingNavigation_->presentation=after;
+}
+bool SkiaRenderer::presentPendingNavigation(SkiaSurfaceProvider& provider,const CanonicalViewportTransform& camera,
+    const FrameState& current,const NavigationBackgroundQuery& backgroundOnly,const FramePlan& plan,
+    const TransientDisplayIdentity& identity,bool canonical){
+    const auto cache=pendingNavigation_;
+    [[maybe_unused]] const auto declined=[&]([[maybe_unused]] const char* reason){AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(canonical),(unsigned long long)current.camera.generation.value());return false;};
+    if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_||
+       !cache->display||plan.background.mode!=foundation::BackgroundMode::kPlain||plan.transparentBackground||
+       plan.background.color[3]!=1||plan.isolateEraseMasks!=cache->isolate)return declined("basis");
+    const auto& color=plan.background.color;
+    if(SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor()!=cache->background)return declined("background");
+    if(canonical){if(!committedFeedbackEqual(cache->feedbackSources,plan.referenceDrawList.entries))return declined("commit-mask");}
+    else {
+        if(!cache->presentation.matches(identity)||cache->proofSemantic!=current.sceneGeneration.value()||cache->proofScene!=current.sceneReadToken.value()||cache->feedbackSources.size()!=plan.referenceDrawList.entries.size())return declined("contribution");
+        std::size_t remaining=8U*1048576U;
+        for(std::size_t i=0;i<cache->feedbackSources.size();++i){const auto& a=cache->feedbackSources[i];const auto& b=plan.referenceDrawList.entries[i];
+            if(!feedbackBodyEqual(a,b)||a.presentationEraseActive!=b.presentationEraseActive||a.record.eraseMasks.storage()!=b.record.eraseMasks.storage())return declined("body-or-pose");
+            // Identity is necessary but never substitutes for complete suffix
+            // values. Bound full comparisons by the existing 8MiB allowance.
+            std::size_t bytes=0;for(const auto& m:a.presentationEraseMasks)bytes+=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},m.geometry);
+            if(bytes>remaining||a.presentationEraseMasks!=b.presentationEraseMasks)return declined("mask-values");remaining-=bytes;}
+
+    }
+    const auto& old=cache->transform;const double ratio=camera.scale/old.a;
+    if(!std::isfinite(ratio)||ratio<=0)return false;
+    const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
+    const double width=current.metrics.logicalWidth,height=current.metrics.logicalHeight;
+    const double right=x+cache->frame->metrics.logicalWidth*ratio,bottom=y+cache->frame->metrics.logicalHeight*ratio;
+    const auto l=std::clamp(x,0.,width),t=std::clamp(y,0.,height),r=std::clamp(right,0.,width),b=std::clamp(bottom,0.,height);
+    unsigned queries=0;const auto started=std::chrono::steady_clock::now();
+    const auto empty=[&](double left,double top,double right,double bottom){
+        if(right<=left||bottom<=top)return true;
+        if(!backgroundOnly||++queries>renderCacheOptions_.navigationMaxQueries||
+            std::chrono::steady_clock::now()-started>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return false;
+        const double pad=2*width/current.metrics.physicalWidth;
+        return backgroundOnly({float((left-pad-camera.translationX)/camera.scale),float((top-pad-camera.translationY)/camera.scale),float((right+pad-camera.translationX)/camera.scale),float((bottom+pad-camera.translationY)/camera.scale)});
+    };
+    if(r<=l||b<=t){if(!empty(0,0,width,height))return declined("exposure-all");}
+    else if(!empty(0,0,l,height)||!empty(r,0,width,height)||!empty(l,0,r,t)||!empty(l,b,r,height))return declined("exposure-strips");
+    const auto acquired=provider.acquire();if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return false;
+    if(acquired.frame.generation!=current.surfaceGeneration.value()||cache->context!=acquired.frame.surface->recordingContext()||
+       acquired.frame.surface->width()!=int(current.metrics.physicalWidth)||acquired.frame.surface->height()!=int(current.metrics.physicalHeight)){provider.release();return false;}
+    serviceResourceRetirements();
+    if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
+    internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,resources::kPixelResourceClasses,internal::validationPressure(validationProofs_,resourceBudget_));
+    gpu.bindFrame(current,resourceEpoch_);if(!gpu.ready()){provider.release();return false;}
+    gpu.touch();cache->display->pixels.markGpuUse();cache->display->epoch=gpu.epoch();
+    auto* canvas=acquired.frame.surface->getCanvas();G5_TARGET(acquired.frame.surface,true);
+    {SkAutoCanvasRestore restore(canvas,true);canvas->resetMatrix();canvas->clear(cache->background);
+      canvas->translate(float(x*current.metrics.physicalWidth/width),float(y*current.metrics.physicalHeight/height));canvas->scale(float(ratio),float(ratio));
+      canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));}
+    provider.release();if(!gpu.finish())return false;
+    const auto presented=provider.present();if(presented.code!=BackendSubmissionCode::kAccepted)return false;
+    if(navigationTiles_){navigationTiles_->work.presented=true;navigationTiles_->work.coverageComplete=true;navigationTiles_->work.pending=false;}
+    ++submissions_;
+    ZQ_PRESENT(&provider,current,camera,resourceEpoch_,canonical?"navigation-erase-handoff":"pending-navigation",resourceBudget_,false);
+    return true;
+}
+BackendSubmissionResult SkiaRenderer::renderTransientOverlay(SkiaSurfaceProvider& provider,const FramePlan& plan,
+    const EditingOverlay* overlay,const TransientDisplayIdentity& identity){
+    const auto old=pendingNavigation_;
+    if(identity.owner&&feedbackBare(overlay)&&old&&old->sameTarget(&provider,plan.frame)&&old->resource==resourceEpoch_&&old->frame->camera.generation!=plan.frame.camera.generation){
+        const auto& affine=plan.referenceDrawList.worldToView;
+        const NavigationBackgroundQuery empty=[&](const foundation::WorldRect& region){return std::none_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.contributesPixels&&e.record.worldBounds.intersects(region);});};
+        if(presentPendingNavigation(provider,{float(affine.a),float(affine.tx),float(affine.ty)},plan.frame,empty,plan,identity,false))return BackendSubmissionResult::accepted();
+        // Reuse a stable device grid only for unchanged complete source roster.
+        // Full latest masks are prepared in scratch, never shown at old camera.
+        bool same=old->feedbackSources.size()==plan.referenceDrawList.entries.size();
+        for(std::size_t i=0;same&&i<old->feedbackSources.size();++i){const auto& a=old->feedbackSources[i];const auto& b=plan.referenceDrawList.entries[i];same=feedbackBodyEqual(a,b)&&a.record.eraseMasks.storage()==b.record.eraseMasks.storage();}
+        if(same){
+            const auto& f=plan.frame;const auto& prior=*old->frame;
+            FrameState fixed{f.viewId,prior.camera,prior.worldViewport,f.metrics,f.sceneGeneration,f.sceneReadToken,f.surfaceGeneration,f.metricsGeneration,f.frameId,f.viewportClip};
+            auto draw=plan.referenceDrawList;ReferenceDrawList stable{.frame=fixed,.entries={},.canonicalBytes={},.digest={}};stable.entries=std::move(draw.entries);stable.viewportClip=plan.referenceDrawList.viewportClip;stable.worldToView=old->transform;
+            FramePlan prepared{fixed,std::move(stable),plan.background,plan.transparentBackground,plan.isolateEraseMasks};EditingOverlay bare{fixed};
+            const auto result=prepareTransientFrame(provider,prepared,&bare,identity,false);
+            if(result.code==BackendSubmissionCode::kAccepted&&presentPendingNavigation(provider,{float(affine.a),float(affine.tx),float(affine.ty)},plan.frame,empty,plan,identity,false))return BackendSubmissionResult::accepted();
+            return result.code==BackendSubmissionCode::kRejected?result:BackendSubmissionResult::retry("current pending feedback preparation");
+        }
+    }
+    return prepareTransientFrame(provider,plan,overlay,identity);
+}
+BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
-    const EditingOverlay* selectionOverlay) {
+    const EditingOverlay* selectionOverlay,const TransientDisplayIdentity& identity,bool publish) {
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
     PostworkerRenderObservation postworkerObservation{*this,resourceBudget_};
 #endif
@@ -1155,10 +1286,19 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     const auto validation=internal::validateReferencePlan(plan,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    if(!identity.owner&&pendingNavigation_)pendingNavigation_.reset();
     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,
         *acquired.frame.surface,&provider,resourceEpoch_,renderCacheOptions_.gpuCoverageCandidate,
         renderCacheOptions_.sharedMaxBytes,executionWork_,provider.describe().kind);
     if(execution.rejected()){provider.release();return BackendSubmissionResult::rejected("provider target kind does not match actual surface");}
+    if(publish&&identity.owner&&feedbackBare(selectionOverlay)&&pendingNavigation_&&pendingNavigation_->frame->camera.generation!=plan.frame.camera.generation){
+        const auto& affine=plan.referenceDrawList.worldToView;
+        const NavigationBackgroundQuery empty=[&](const foundation::WorldRect& region){
+            return std::none_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[&](const auto& e){return e.contributesPixels&&e.record.worldBounds.intersects(region);});};
+        provider.release();
+        if(presentPendingNavigation(provider,{float(affine.a),float(affine.tx),float(affine.ty)},plan.frame,empty,plan,identity,false))return BackendSubmissionResult::accepted();
+        const auto again=provider.acquire();if(again.code!=SkiaSurfaceAcquireCode::kAcquired||again.frame.surface!=acquired.frame.surface||again.frame.generation!=acquired.frame.generation){if(again.code==SkiaSurfaceAcquireCode::kAcquired)provider.release();return BackendSubmissionResult::retry("transient retained target changed");}
+    }
     const bool gpuLiveV4=renderCacheOptions_.gpuCoverageCandidate&&canvas->recordingContext()&&std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return e.presentationEraseActive&&c&&c->content.get().stroke.config.algorithmVersion==4;});
     if(gpuLiveV4){
         // Retire obsolete masked material before starting a GPU read epoch.
@@ -1293,7 +1433,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     const internal::CompactDeviceGrid deviceGrid{originalClip.left(),originalClip.top(),originalClip.right(),originalClip.bottom()};
     const bool staged=cache&&cache->stagedBodies();
     if(!staged){
-        const auto compatible=[&]{return transientDisplay_&&transientDisplay_->surface&&
+        const auto compatible=[&]{return transientDisplay_&&(!pendingNavigation_||pendingNavigation_->display!=transientDisplay_)&&transientDisplay_->surface&&
             transientDisplay_->surface->imageInfo()==acquired.frame.surface->imageInfo()&&
             transientDisplay_->surface->recordingContext()==acquired.frame.surface->recordingContext()&&
             (!transientDisplay_->epoch||resourceBudget_->gpuEpochRetired(transientDisplay_->epoch));};
@@ -1320,6 +1460,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
             }
         }
         (void)transientDisplay_->pixels.markGpuUse();transientDisplay_->epoch=gpu.epoch();
+        // The damage attempt must inherit a complete frame before clipping.
+        // A retained image has a different charged surface, never hidden COW.
+        if(incremental&&pendingNavigation_&&pendingNavigation_->display!=transientDisplay_){
+            auto* into=transientDisplay_->surface->getCanvas();into->resetMatrix();
+            pendingNavigation_->display->pixels.markGpuUse();pendingNavigation_->display->epoch=gpu.epoch();
+            SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);into->drawImage(pendingNavigation_->image,0,0,SkSamplingOptions{},&copy);
+        }
         canvas=transientDisplay_->surface->getCanvas();
 #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
         internal::transientDisplayAttempt=transientDisplay_;
@@ -1396,6 +1543,19 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if(visibleContents!=acquired.frame.surface->generationID()||visiblePresents!=provider.presentCount()){
         partialEraseFrame_.reset();provider.release();return BackendSubmissionResult::retry("transient display changed during preparation");
     }
+    if(!publish){
+        provider.release();if(!gpu.finish())return BackendSubmissionResult::rejected("pending feedback preparation GPU failure");
+        try{
+            std::size_t bytes=sizeof(NavigationCache)+128;for(const auto& e:plan.referenceDrawList.entries)bytes+=sizeof(ReferenceTraversalEntry)+internal::sourceMetadataBytes(e)+8*sizeof(internal::SourceRetentions::value_type);
+            if(!identity.owner||!transientDisplay_||bytes>std::min<std::size_t>(8U*1048576U,renderCacheOptions_.maxEntryBytes))return BackendSubmissionResult::retry("pending feedback witness capacity");
+            const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return BackendSubmissionResult::retry("pending feedback witness quota");
+            resources::ResourceLease metadata(resourceBudget_,*token);auto hold=std::make_shared<NavigationCache>();hold->feedbackMetadata=std::move(metadata);
+            for(const auto& e:plan.referenceDrawList.entries){auto pins=sourceRetention_->get(e,resourceBudget_,true);if(!pins)return BackendSubmissionResult::retry("pending feedback payload quota");hold->feedbackPayloads.insert(hold->feedbackPayloads.end(),pins->begin(),pins->end());}
+            hold->provider=&provider;hold->display=transientDisplay_;hold->image=completed;hold->context=acquired.frame.surface->recordingContext();hold->frame=std::make_unique<FrameState>(plan.frame);hold->transform=plan.referenceDrawList.worldToView;hold->presentation=identity;hold->resource=resourceEpoch_;hold->proofSemantic=plan.frame.sceneGeneration.value();hold->proofScene=plan.frame.sceneReadToken.value();hold->isolate=plan.isolateEraseMasks;const auto& color=plan.background.color;hold->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();hold->feedbackSources=plan.referenceDrawList.entries;pendingNavigation_=std::move(hold);
+            if(cache)cache->acknowledgeTransient();
+            return BackendSubmissionResult::accepted();
+        }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("pending feedback witness allocation");}
+    }
     // The only provider write in this function. The complete pixels are ready,
     // using the same physical grid and Src (not another opacity application).
     {SkAutoCanvasRestore publish(visibleCanvas,true);visibleCanvas->resetMatrix();
@@ -1434,6 +1594,16 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         const auto work=renderCacheWork();
         G5_OBSERVE(g5::Kind::Submit,g5::Tag::moving_erase_progress,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.camera.generation.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),resourceEpoch_,prefix,targets,work.preparedBodyBuilds,work.preparationCoverageSteps,work.gpuCoverageTiles,work.cpuCoverageTiles);
 #endif
+        if(identity.owner&&bareOverlay&&!staged&&transientDisplay_&&plan.background.mode==foundation::BackgroundMode::kPlain&&!plan.transparentBackground&&plan.background.color[3]==1&&
+           plan.referenceDrawList.viewportClip==foundation::WorldRect{0,0,plan.frame.metrics.logicalWidth,plan.frame.metrics.logicalHeight})try{
+            std::size_t bytes=sizeof(NavigationCache)+128;for(const auto& e:plan.referenceDrawList.entries)bytes+=sizeof(ReferenceTraversalEntry)+internal::sourceMetadataBytes(e)+8*sizeof(internal::SourceRetentions::value_type);
+            if(bytes<=std::min<std::size_t>(8U*1048576U,renderCacheOptions_.maxEntryBytes))if(const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true)){
+                resources::ResourceLease metadata(resourceBudget_,*token);
+                auto hold=std::make_shared<NavigationCache>();hold->feedbackMetadata=std::move(metadata);bool retained=true;
+                for(const auto& e:plan.referenceDrawList.entries){auto pins=sourceRetention_->get(e,resourceBudget_,true);if(!pins){retained=false;break;}hold->feedbackPayloads.insert(hold->feedbackPayloads.end(),pins->begin(),pins->end());}
+                if(retained){hold->provider=&provider;hold->display=transientDisplay_;hold->image=completed;hold->context=acquired.frame.surface->recordingContext();hold->frame=std::make_unique<FrameState>(plan.frame);hold->transform=plan.referenceDrawList.worldToView;hold->presentation=identity;hold->resource=resourceEpoch_;hold->proofSemantic=plan.frame.sceneGeneration.value();hold->proofScene=plan.frame.sceneReadToken.value();hold->isolate=plan.isolateEraseMasks;const auto& c=plan.background.color;hold->background=SkColor4f{c[0],c[1],c[2],c[3]}.toSkColor();hold->feedbackSources=plan.referenceDrawList.entries;pendingNavigation_=std::move(hold);}
+            }
+        }catch(const std::bad_alloc&){} // Optional feedback; dirty exact retry remains.
         if(candidate)candidate->presents=provider.presentCount();partialEraseFrame_=std::move(candidate);
     }else partialEraseFrame_.reset();
     // Pixel publication has priority. CPU-only exact preparation may consume

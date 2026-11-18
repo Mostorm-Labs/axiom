@@ -54,6 +54,11 @@ struct CpuPendingEraseState final {
   std::optional<resources::ResourceLease> candidateMetadata;
   input::PointerKey key{};double radius=0;
   std::vector<foundation::WorldPoint> trace;
+  struct PresentationMask {semantic::Transform2D pose;semantic::EraseMaskGeometry geometry;resources::ResourceLease lease;};
+  mutable std::vector<PresentationMask> presentationMasks;
+  mutable std::uint64_t presentationBuilds=0,presentationHits=0;
+  mutable std::size_t presentationBytes=0;
+
   std::vector<foundation::ObjectId> candidates;
   std::size_t next=0;
   std::vector<semantic::EraseMaskAddItem> hits;

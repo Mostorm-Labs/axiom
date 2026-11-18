@@ -1,0 +1,36 @@
+{
+  "task": "G5-immediate-erase-navigation-r2",
+  "capSeconds": 2700,
+  "chargedSeconds": 58,
+  "attempts": [
+    {
+      "id": "IEN2-D1",
+      "status": "COMPLETED",
+      "startedUnix": 1794993788.825224,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-D1-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-D1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 57.626695916987956,
+        "peak_process_family_rss_kib": 2399344,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-D1",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 58,
+      "endedUnix": 1794993846.55091
+    }
+  ]
+}
