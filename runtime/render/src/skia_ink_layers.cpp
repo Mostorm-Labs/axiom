@@ -1,3 +1,4 @@
+#include "mask_residency_policy.hpp"
 #include "transient_display_state.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
@@ -90,7 +91,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     auto& source=found->second;
     if(histories)histories_=std::move(histories);
     if(!histories_)histories_=std::make_shared<EraseMaskPathCache>();
-    histories_->setRetentionPool(pool);const auto beforeHistory=histories_->work().history;
+    histories_->setRetentionPool(pool);histories_->setDrawingResidency(maskResidencyPolicy(limits).drawing);const auto beforeHistory=histories_->work().history;
     MaskHistoryAdmission admission=MaskHistoryAdmission::kReady;
     const auto history=histories_->history(entry.record.eraseMasks,budget,
         std::min(limits.maxEntryBytes,limits.maxBytes/4),source.history,&admission);

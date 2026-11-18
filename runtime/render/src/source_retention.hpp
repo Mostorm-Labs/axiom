@@ -3,6 +3,7 @@
 #include "canvas/scene/geometry_chunk.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include <map>
+#include <list>
 #include <optional>
 #include <functional>
 #include <limits>
@@ -111,6 +112,7 @@ struct SourceRetention final {
     };
     std::shared_ptr<const void> storage;
     resources::ResourceLease lease;
+    std::list<resources::ResourceLease> accountedAllocations;
     std::shared_ptr<SourceRetentionUsage> usage;
     std::size_t bytes=0,indexBytes=0;
     // Each extra known view owns its metadata reservation. Unknown aliases
@@ -176,6 +178,26 @@ class SourceRetentionPool final {
         if(!budget||masks.empty())return {};bind(budget);
         return retain(masks.storage(),sourceTypeTag<std::vector<semantic::EraseMaskRecord>>(),
             [&]{return sourceMaskBytes(masks);},budget,critical);
+    }
+    std::shared_ptr<const SourceRetention> lookupMasks(const scene::SharedVector<semantic::EraseMaskRecord>& masks,
+        const std::shared_ptr<resources::ResourceBudgetManager>& budget){
+        if(!budget||masks.empty())return {};bind(budget);const auto storage=masks.storage();
+        auto it=index_->entries.find(storage);if(it==index_->entries.end())return {};
+        auto result=it->second.lock();if(!result||!result->views.contains({storage.get(),sourceTypeTag<std::vector<semantic::EraseMaskRecord>>() }))return {};
+        ++usage_->hits;++usage_->knownFootprintHits;return result;
+    }
+    std::shared_ptr<const SourceRetention> adoptMasks(const scene::SharedVector<semantic::EraseMaskRecord>& masks,
+        const std::shared_ptr<resources::ResourceBudgetManager>& budget,std::size_t bytes,
+        std::list<resources::ResourceLease>& allocations){
+        if(auto old=lookupMasks(masks,budget))return old;
+        const auto meta=ownerCharge+viewCharge;
+        auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,meta,true);if(!token)return {};
+        auto result=std::make_shared<SourceRetention>();result->lease=resources::ResourceLease(budget,*token);
+        result->storage=masks.storage();result->accountedAllocations=std::move(allocations);result->bytes=bytes;result->indexBytes=meta;result->usage=usage_;
+        result->views.emplace(SourceRetention::View{result->storage.get(),sourceTypeTag<std::vector<semantic::EraseMaskRecord>>()},resources::ResourceLease{});
+        usage_->bytes+=bytes;usage_->indexBytes+=meta;const auto weakIndex=std::weak_ptr<Index>(index_);const auto key=std::weak_ptr<const void>(result->storage);
+        result->retireIndex=[weakIndex,key]{if(auto index=weakIndex.lock()){auto it=index->entries.find(key);if(it!=index->entries.end()&&it->second.expired())index->entries.erase(it);}};
+        index_->entries.insert_or_assign(result->storage,result);++usage_->admissions;return result;
     }
     void bind(const std::shared_ptr<resources::ResourceBudgetManager>& budget){
         if(owner_.lock()!=budget){

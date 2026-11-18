@@ -1,3 +1,4 @@
+#include "navigation_mask_observation.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
@@ -177,7 +178,7 @@ bool validatePath(const semantic::VectorPathGeometry& geometry,
                   bool requireIntegral = true,int maskDomain=-1) noexcept {
     for (const auto& command : geometry.commands) {
         AXIOM_VALIDATION_ADD(maskPathCommands,1);
-        if(maskDomain==0)AXIOM_VALIDATION_ADD(historyPathCommands,1);
+        if(maskDomain==0){AXIOM_VALIDATION_ADD(historyPathCommands,1);NM_ADD(upperScans,1);}
         if(maskDomain==1)AXIOM_VALIDATION_ADD(activePathCommands,1);
         bool ok = true;
         std::visit([&](const auto& value) {
@@ -199,7 +200,7 @@ bool validatePath(const semantic::VectorPathGeometry& geometry,
 bool validateSweptMask(const semantic::SweptCircleMask& mask,int maskDomain=-1) noexcept {
     for (const auto& segment : mask.segments) {
         AXIOM_VALIDATION_ADD(maskSegments,1);
-        if(maskDomain==0)AXIOM_VALIDATION_ADD(historySegments,1);
+        if(maskDomain==0){AXIOM_VALIDATION_ADD(historySegments,1);NM_ADD(upperScans,1);}
         if(maskDomain==1)AXIOM_VALIDATION_ADD(activeSegments,1);
         const auto finitePoint = [](const semantic::Vec2& p) {
             return pointInScalarRange(p);
@@ -975,7 +976,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
     return validateReferencePlan(plan,nullptr,HistoryValidationPolicy::kUntrusted);
 }
-BackendSubmissionResult validateReferencePlan(const FramePlan& plan,ReferenceValidationCache* proofs,HistoryValidationPolicy historyPolicy) {
+static BackendSubmissionResult validateReferencePlanImpl(const FramePlan& plan,ReferenceValidationCache* proofs,HistoryValidationPolicy historyPolicy,bool committedHistory) {
     AXIOM_FRAME_TIMING_SCOPE(validationTiming,validation);
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
@@ -1008,7 +1009,7 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan,ReferenceVal
           if(proofs)proofs->admitBody(entry);
         }
         for(unsigned domain=0;domain<2;++domain){
-        if(domain==0&&proofs&&proofs->historyHit(entry.record.eraseMasks,historyPolicy))continue;
+        if(domain==0&&(!committedHistory||(proofs&&proofs->historyHit(entry.record.eraseMasks,historyPolicy))))continue;
         const auto masks=domain==0?std::span(entry.record.eraseMasks):std::span(entry.presentationEraseMasks);
         if(domain==0&&!masks.empty())AXIOM_VALIDATION_ADD(maskArrays,1);
         for (const auto& mask : masks) {
@@ -1028,6 +1029,15 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan,ReferenceVal
         }
     }
     return BackendSubmissionResult::accepted();
+}
+
+BackendSubmissionResult validateReferencePlan(const FramePlan& plan,ReferenceValidationCache* proofs,HistoryValidationPolicy policy){
+    return validateReferencePlanImpl(plan,proofs,policy,true);
+}
+BackendSubmissionResult validateNavigationReferencePlan(const FramePlan& plan,ReferenceValidationCache* proofs){
+    // Navigation validates committed history cooperatively in the existing
+    // mask owner before a source can authorize any retained or new pixels.
+    return validateReferencePlanImpl(plan,proofs,HistoryValidationPolicy::kPublishedImmutable,false);
 }
 
 BackendSubmissionResult drawReferencePlanToSkCanvas(

@@ -1,3 +1,4 @@
+#include "mask_residency_policy.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
@@ -16,6 +17,8 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "skia_render_cache_internal.hpp"
 #include "skia_navigation_tiles.hpp"
 #include "navigation_source_snapshot.hpp"
+#include "navigation_reference_validation.hpp"
+#include "navigation_sharing_observation.hpp"
 #include "skia_gpu_lifetime.hpp"
 #include "transient_display_state.hpp"
 #include "selection_region_geometry_internal.hpp"
@@ -426,7 +429,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         preparedGeometry_->setRetentionPool(sourceRetention_);
         (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
+        eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
         renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;renderCache_->validationProofs=validationProofs_;
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
@@ -655,6 +658,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
     const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm,
     const EditingOverlay* selectionOverlay,const NavigationBackgroundQuery& backgroundOnly,const FramePlan* currentComposition){
+    const auto navigationStarted=PC_NAV_NOW();
     G5_ROUTE(g5NavRoute,g5::Route::nav_unprepared);
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::navigation_basis,true,current.viewId.value(),current.sceneGeneration.value(),current.sceneReadToken.value(),current.surfaceGeneration.value(),current.metricsGeneration.value(),resourceEpoch_,g5::bits(camera.scale),g5::bits(camera.translationX),g5::bits(camera.translationY));
 
@@ -686,7 +690,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(currentComposition){
         const auto& p=*currentComposition;
         if(p.frame!=current||provider.generation()!=current.surfaceGeneration.value()||
-           internal::validateReferencePlan(p,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable).code!=BackendSubmissionCode::kAccepted||
+           internal::validateNavigationReferencePlan(p,validationService()).code!=BackendSubmissionCode::kAccepted||
            p.background.mode!=foundation::BackgroundMode::kPlain||p.transparentBackground||
            p.background.color[3]!=1.0F||p.referenceDrawList.viewportClip!=foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight})
             return BackendSubmissionResult::retry("current navigation composition unproven");
@@ -701,8 +705,23 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(renderCache_)renderCache_->releaseIdleWorkBuffers(current,
         {camera.scale,0,0,camera.scale,camera.translationX,camera.translationY},&provider,resourceEpoch_);
     auto options=renderCacheOptions_;
+    if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+    eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(options).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(options).exact:internal::maskResidencyPolicy(options).drawing);eraseQueries_->setRetentionPool(sourceRetention_);
+    std::size_t maskSteps=0;
+    const auto historiesReady=[&](std::span<const ReferenceTraversalEntry> entries){
+        for(const auto& e:entries)if(!e.record.eraseMasks.empty()){
+            if(maskSteps>=renderCacheOptions_.navigationMaxSteps||
+               PC_NAV_NOW()-navigationStarted>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return false;
+            const auto history=eraseQueries_->requestNavigationHistory(e.record.eraseMasks,resourceBudget_,std::min(options.maxEntryBytes,options.maxBytes/4));
+            if(!history)return false;
+            if(history->ready)continue;
+            ++maskSteps;
+            if(eraseQueries_->advanceNavigationHistory(history)!=internal::EraseMaskPathCache::NavigationMaskStatus::kReady)return false;
+        }
+        return true;
+    };
     internal::RetainedNavigationSource retained,fallback;
-    const auto proofStart=std::chrono::steady_clock::now();
+    const auto proofStart=navigationStarted;
     bool invalidQueryBinding=false;
     const auto revalidate=[&](const std::shared_ptr<NavigationCache>& cache){
         if(!cache||!cache->sameTarget(&provider,current)||cache->resource!=resourceEpoch_)return;
@@ -714,7 +733,7 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         else if(!basis||!basis->matches(&provider,current)||basis->background!=cache->background||basis->isolate!=cache->isolate)return;
         if(!cache->sources||cache->proofSemantic>current.sceneGeneration.value()||cache->proofScene>current.sceneReadToken.value()||
            !query||!options.navigationMaxQueries||
-           std::chrono::steady_clock::now()-proofStart>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return;
+           PC_NAV_NOW()-proofStart>=std::chrono::microseconds(renderCacheOptions_.navigationMicroseconds))return;
         --options.navigationMaxQueries;++navigationTiles_->work.queries;++navigationTiles_->work.regionalPlaneQueries;
         try{
         std::vector<ReferenceTraversalEntry> entries;NavigationSourceDiagnostics diagnostics;
@@ -724,8 +743,9 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         const auto reject=[&]{++navigationTiles_->work.regionalPlaneRejects;};
         if(!queried||!diagnostics.sceneStamped||diagnostics.semanticGeneration!=current.sceneGeneration.value()||diagnostics.sceneRevision!=current.sceneReadToken.value()){invalidQueryBinding=true;reject();return;}
         ReferenceDrawList validation{.frame=current,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip=current.viewportClip.isFiniteAndOrdered()?current.viewportClip:foundation::WorldRect{0,0,current.metrics.logicalWidth,current.metrics.logicalHeight};
+        if(!historiesReady(entries)){reject();return;}
         validation.entries=entries;
-        if(internal::validateReferencePlan(FramePlan{current,std::move(validation)},validationService(),internal::HistoryValidationPolicy::kPublishedImmutable).code!=BackendSubmissionCode::kAccepted){reject();return;}
+        if(internal::validateNavigationReferencePlan(FramePlan{current,std::move(validation)},validationService()).code!=BackendSubmissionCode::kAccepted){reject();return;}
         const auto difference=internal::maskPixelDifference(cache->sources->entries,entries);
         if(!difference.compatible){++navigationTiles_->work.regionalPlaneBodyRejects;reject();return;}
         auto regions=cache->valid;
@@ -748,7 +768,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     // invocation either. Keep earlier prepared work private until a current
     // query binds it; a faster complete job must not bypass this admission.
     if(invalidQueryBinding)return BackendSubmissionResult::retry("navigation query binding unavailable");
-    const auto proofUs=std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-proofStart).count();
+    const auto proofUs=std::chrono::duration_cast<std::chrono::microseconds>(PC_NAV_NOW()-proofStart).count();
+    options.navigationMaxSteps=maskSteps>=options.navigationMaxSteps?0:options.navigationMaxSteps-maskSteps;
     options.navigationMicroseconds=proofUs>=std::int64_t(options.navigationMicroseconds)?0:options.navigationMicroseconds-proofUs;
     navigationTiles_->work.retainedValidRegions=0;
     const auto bindRetained=[&](const std::shared_ptr<NavigationCache>& cache,internal::RetainedNavigationSource& retained){
@@ -828,7 +849,8 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"navigation");
         provider.release();preparationTarget.active=false;
         (void)validationService();
-        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background,validationProofs_,currentComposition&&currentComposition->background.mode==foundation::BackgroundMode::kPlain&&!currentComposition->transparentBackground&&currentComposition->background.color[3]==1.0F,renderCache_?renderCache_->navigationBodies():nullptr,backgroundOnly);
+        if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();eraseQueries_->setRetentionPool(sourceRetention_);
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,options,resourceBudget_,allowPrewarm,retained.draw?&retained:nullptr,&textResources_,images_,drawOverlay,sourceRetention_,gpuRetirements_,preparedGeometry_,background,validationProofs_,currentComposition&&currentComposition->background.mode==foundation::BackgroundMode::kPlain&&!currentComposition->transparentBackground&&currentComposition->background.color[3]==1.0F,renderCache_?renderCache_->navigationBodies():nullptr,backgroundOnly,eraseQueries_);
         if(result.code==BackendSubmissionCode::kRejected)navigationTiles_.reset();
         return result;
     }catch(const std::bad_alloc&){return BackendSubmissionResult::retry("world navigation allocation failure");}
@@ -896,7 +918,7 @@ SelectionGeometryHit SkiaRenderer::intersectEraseGeometry(const RuntimeSceneReco
         preparedGeometry_->setRetentionPool(sourceRetention_);
         (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
+        eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
         const auto capacity=std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4);
         return eraseQueries_->query(record,geometry,resourceBudget_,capacity,preparedGeometry_.get(),&renderCacheOptions_);
     }catch(const std::bad_alloc&){return canvas::render::intersectEraseGeometry(record,geometry);}
@@ -912,7 +934,7 @@ std::optional<resources::ResourceLease> SkiaRenderer::reserveCpuPendingMetadata(
 }
 void SkiaRenderer::setCpuPendingPreparation(bool value)noexcept{
  cpuPendingPreparation_=value;
- if(eraseQueries_)eraseQueries_->setResidentUpperBound(value?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);
+ if(eraseQueries_){eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(value?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);}
 }
 SkiaRenderer::CpuPathPin SkiaRenderer::lookupCpuPendingPath(const semantic::EraseMaskGeometry& g)const noexcept{
  return eraseQueries_?eraseQueries_->lookup(g):CpuPathPin{};
@@ -979,8 +1001,8 @@ SkiaRenderer::CpuPathPin SkiaRenderer::importCpuPendingPath(
   preparedGeometry_->setRetentionPool(sourceRetention_);
         (void)validationService();
   if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-  eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
-  eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);
+  eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();
+  eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);
   return eraseQueries_->publishFinished(geometry,*path,resourceBudget_,std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4));
  }catch(...){return {};}
 }
@@ -1075,6 +1097,7 @@ SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeScene
     if(!resourceBudget_||!preparedGeometry_)return canvas::render::intersectVisibleSelectionGeometry(record,points);
     try{
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
+        eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);
         return eraseQueries_->selectionQuery(record,points,resourceBudget_,
             std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),preparedGeometry_.get(),&renderCacheOptions_);
     }catch(const std::bad_alloc&){return canvas::render::intersectVisibleSelectionGeometry(record,points);}
@@ -1180,7 +1203,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         preparedGeometry_->setRetentionPool(sourceRetention_);
         (void)validationService();
         if(!eraseQueries_)eraseQueries_=std::make_shared<internal::EraseMaskPathCache>();
-        eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4):8U*1024U*1024U);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
+        eraseQueries_->setDrawingResidency(internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setResidentUpperBound(cpuPendingPreparation_?internal::maskResidencyPolicy(renderCacheOptions_).exact:internal::maskResidencyPolicy(renderCacheOptions_).drawing);eraseQueries_->setRetentionPool(sourceRetention_);(void)validationService();renderCache_->maskHistory=eraseQueries_;
         renderCache_->sourcePool=sourceRetention_;renderCache_->preparedGeometry=preparedGeometry_;renderCache_->validationProofs=validationProofs_;
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,

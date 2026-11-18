@@ -192,7 +192,7 @@ void realOneStepAndPixels(){
             require(independent.renderFrame(reference,plan).code==BackendSubmissionCode::kAccepted,"independent GPU null-cache reference");
             require(target.readbackRgba(actual).code==BackendSubmissionCode::kAccepted&&reference.readbackRgba(expected).code==BackendSubmissionCode::kAccepted,"final pixels");
             if(actual!=expected){std::size_t changed=0;unsigned maximum=0;for(std::size_t i=0;i<actual.size();++i)if(actual[i]!=expected[i]){++changed;maximum=std::max(maximum,unsigned(std::abs(int(actual[i])-int(expected[i]))));}
-                const auto prefix=std::string("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/correctness/native-pixel-")+std::to_string(dpr)+"-"+std::to_string(variant);
+                const auto prefix=std::string("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-r1/correctness/native-pixel-")+std::to_string(dpr)+"-"+std::to_string(variant);
                 std::ofstream(prefix+"-actual.rgba",std::ios::binary).write(reinterpret_cast<const char*>(actual.data()),actual.size());std::ofstream(prefix+"-reference.rgba",std::ios::binary).write(reinterpret_cast<const char*>(expected.data()),expected.size());
                 std::fprintf(stderr,"pixel mismatch dpr=%u variant=%u channels=%zu max=%u\n",dpr,variant,changed,maximum);
             }
@@ -226,7 +226,7 @@ std::vector<bool> workingSetEdges(const ReferenceTraversalEntry& e,unsigned dpr)
     for(std::size_t i=0;i+1<contour.patches.size();++i)draw(compactContourRibbon(std::span(contour.patches).subspan(i,2)));
     for(const auto& cap:contour.caps){SkPathBuilder path;path.addCircle(float(cap.x),float(cap.y),float(cap.radius));draw(path.detach());}
     std::vector<std::uint8_t> geometric(edge.size());require(surface->readPixels(SkImageInfo::MakeA8(width,height),geometric.data(),width,0,0),"independent primitive boundary");
-    if(stroke.knots.size()==7199&&dpr==4)std::ofstream("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/correctness/independent-boundary.a8",std::ios::binary).write(reinterpret_cast<const char*>(geometric.data()),geometric.size());
+    if(stroke.knots.size()==7199&&dpr==4)std::ofstream("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-r1/correctness/independent-boundary.a8",std::ios::binary).write(reinterpret_cast<const char*>(geometric.data()),geometric.size());
     for(std::size_t i=0;i<edge.size();++i)edge[i]=edge[i]||geometric[i];return edge;
 }
 FramePlan workingSetPlan(unsigned count,bool equalAllocations,unsigned dpr){
@@ -334,7 +334,7 @@ void realWorkingSets(){
             if(!equal){const auto shortEdge=workingSetEdges(plan.referenceDrawList.entries.back(),one?1:4);for(std::size_t i=0;i<edge.size();++i)edge[i]=edge[i]||shortEdge[i];}
             std::size_t bad=0;for(std::size_t i=0;i<actual.size();++i)if(!edge[i/4]&&std::abs(int(actual[i])-int(expected[i]))>2)++bad;
             if(bad){
-                const auto prefix=std::string("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/correctness/working-pixels-")+std::to_string(equal)+"-"+std::to_string(one);
+                const auto prefix=std::string("/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-r1/correctness/working-pixels-")+std::to_string(equal)+"-"+std::to_string(one);
                 std::ofstream(prefix+"-actual.rgba",std::ios::binary).write(reinterpret_cast<const char*>(actual.data()),actual.size());
                 std::ofstream(prefix+"-reference.rgba",std::ios::binary).write(reinterpret_cast<const char*>(expected.data()),expected.size());
                 std::fprintf(stderr,"working set non-AA failures=%zu equal=%u one=%u\n",bad,equal,one);

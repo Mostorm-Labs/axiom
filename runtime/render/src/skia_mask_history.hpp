@@ -23,7 +23,7 @@ struct MaskHistorySourceCharge final {
     std::shared_ptr<MaskHistoryUsage> usage;
     std::size_t bytes=0;
     ~MaskHistorySourceCharge(){if(usage){usage->bytes-=bytes;usage->sources.erase(source.get());
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[0]-=bytes;
 #endif
     }}
@@ -36,8 +36,10 @@ struct PreparedMaskPrimitive final {
     resources::ResourceLease lease;
     std::shared_ptr<MaskHistoryUsage> usage;
     std::size_t bytes=0;
+    // A reverse canonical borrow retains this original navigation charge.
+    std::shared_ptr<const void> derivedCharge;
     ~PreparedMaskPrimitive(){if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[1]-=bytes;
 #endif
     }}
@@ -60,8 +62,9 @@ struct MaskHistoryPlan final {
     std::shared_ptr<MaskHistoryUsage> usage;
     std::size_t bytes=0,prefixPrimitives=0;
     std::uint64_t identity=0,prefixIdentity=0,used=0;
-    ~MaskHistoryPlan(){if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+    std::function<void()> retireIdentity;
+    ~MaskHistoryPlan(){if(retireIdentity)retireIdentity();if(usage){usage->bytes-=bytes;
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[2]-=bytes;
 #endif
     }}

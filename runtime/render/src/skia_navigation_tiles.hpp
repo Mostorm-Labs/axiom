@@ -10,6 +10,8 @@
 #include "navigation_pixel_validity.hpp"
 #include "gpu_resource_retirement.hpp"
 #include "skia_ink_layers.hpp"
+#include "navigation_mask_plan.hpp"
+#include "selection_region_geometry_internal.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
@@ -45,11 +47,14 @@ class SkiaNavigationTiles final {
         const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
         const RetainedNavigationSource* retained=nullptr, SkiaTextResources* textResources=nullptr,
         ImageResourceResolver* images=nullptr,
-        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={},std::uint32_t background=0xffffffffU,std::shared_ptr<ReferenceValidationCache> validation={},bool opaquePlainBackground=false,std::shared_ptr<SkiaInkLayers> sharedBodies={},const NavigationBackgroundQuery& backgroundOnly={});
+        const std::function<void(SkCanvas&)>& drawOverlay={},std::shared_ptr<SourceRetentionPool> sourcePool={},std::shared_ptr<GpuResourceRetirement> retirements={},std::shared_ptr<PreparedGeometryCache> prepared={},std::uint32_t background=0xffffffffU,std::shared_ptr<ReferenceValidationCache> validation={},bool opaquePlainBackground=false,std::shared_ptr<SkiaInkLayers> sharedBodies={},const NavigationBackgroundQuery& backgroundOnly={},std::shared_ptr<EraseMaskPathCache> masks={});
  private:
     using ValidRegions=NavigationRegions;
     struct Sources {
         std::uint64_t scene=0;
+        std::vector<std::shared_ptr<NavigationMaskPlan>> masks;
+        bool ready=false;
+        std::size_t preparingMask=0;
         std::vector<ReferenceTraversalEntry> entries;
         std::vector<std::shared_ptr<const PreparedNavigationGeometry>> geometry;
         resources::ResourceLease lease;
@@ -73,6 +78,8 @@ class SkiaNavigationTiles final {
         sk_sp<SkSurface> surface,coverage;
         std::size_t source=0,knot=0,primitive=0;
         bool sourceInitialized=false;
+        bool bodyComplete=false,bodyRemembered=false;
+        NavigationMaskReplay maskReplay;
         double distance=0,totalDistance=0;
         std::optional<ink::CompactContourCompiler> contour;
         std::shared_ptr<const PreparedNavigationGeometry> geometry;
@@ -91,10 +98,11 @@ class SkiaNavigationTiles final {
     bool usefulFallback(TileKey,const Tile&,const foundation::WorldRect&,int level,std::uint64_t scene)const;
     static constexpr std::size_t tileMetadataBytes=sizeof(Tile)+sizeof(Job);
     std::map<TileKey,Tile> tiles_;
-    std::map<TileKey,std::shared_ptr<const Sources>> sources_;
+    std::map<TileKey,std::shared_ptr<Sources>> sources_;
     std::shared_ptr<PreparedGeometryCache> geometry_;
     std::shared_ptr<SkiaInkLayers> bodyLayers_=std::make_shared<SkiaInkLayers>();
     std::shared_ptr<ReferenceValidationCache> validation_;
+    std::shared_ptr<EraseMaskPathCache> masks_;
     std::unique_ptr<Job> job_;
     std::unique_ptr<Job> refinement_;
     TileGrid grid_{256};
@@ -119,7 +127,7 @@ class SkiaNavigationTiles final {
         void observe(double us){last=us;ewma=known?.75*ewma+.25*us:us;known=true;}
         double reserve()const{return known?std::max(last,ewma):0;}
     };
-    enum class Checkpoint:unsigned {Query,Setup,Compact,CompactFinish,Other,Publish,Count};
+    enum class Checkpoint:unsigned {Query,Setup,Compact,CompactFinish,Mask,Other,Publish,Count};
     std::array<CostEstimate,2> legacyCompactCosts_{};
     struct CostRefresh {std::uint64_t deferredTick=0,probeTick=0;unsigned deferrals=0;};
     std::array<CostRefresh,2> legacyRefresh_{};

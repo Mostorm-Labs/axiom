@@ -8,6 +8,10 @@
 #if CANVAS_RENDER_HAS_SKIA
 #include "skia_prepared_geometry.hpp"
 #include "skia_mask_history.hpp"
+#include "navigation_mask_plan.hpp"
+#include "navigation_mask_observation.hpp"
+#include "mask_residency_policy.hpp"
+#include "mask_primitive_observation.hpp"
 #include "skia_geometry_internal.hpp"
 #include "cpu_exact_path_kernel.hpp"
 #include "compact_contour_skia_path.hpp"
@@ -34,7 +38,7 @@ struct EraseMaskPathCache::Entry {
     std::shared_ptr<ErasePathUsage> usage;std::size_t bytes=0;std::uint64_t used=0;
     std::function<void()> retireIndex;
     ~Entry(){if(retireIndex)retireIndex();if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[5]-=bytes;
 #endif
     }}
@@ -48,7 +52,7 @@ struct ExactHistoryProof final {
     std::size_t bytes=0;
     std::uint64_t used=0,identity=0;
     ~ExactHistoryProof(){if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[3]-=bytes;
 #endif
     }}
@@ -408,6 +412,17 @@ struct EraseMaskPathCache::Impl {
     // Per-entry256-byte metadata includes this list node. Erase/clear releases
     // it immediately; an empty job owner retains no uncharged vector capacity.
     std::list<std::shared_ptr<Entry>> queryPrefixes;
+    using NavigationHistories=std::map<NavigationMaskIdentity,std::shared_ptr<NavigationMaskPlan>,NavigationMaskIdentityLess>;
+    NavigationHistories navigationHistories;
+    struct DrawIdentities {std::size_t liveRows=0;std::map<NavigationMaskIdentity,std::weak_ptr<MaskHistoryPlan>,NavigationMaskIdentityLess> plans;};
+    std::shared_ptr<DrawIdentities> drawIdentities=std::make_shared<DrawIdentities>();
+    std::size_t drawingCapacity=0;
+    void bindCapacity(const std::shared_ptr<resources::ResourceBudgetManager>& next,std::size_t wanted){
+        if(budget!=next){usage=std::make_shared<ErasePathUsage>();budget=next;capacity=std::max(drawingCapacity,wanted);}
+        else capacity=drawingCapacity?std::max({capacity,drawingCapacity,wanted}):wanted;
+    }
+    NavigationHistories::iterator navigationReaper=navigationHistories.end();
+    std::shared_ptr<NavigationMaskUsage> navigationUsage=std::make_shared<NavigationMaskUsage>();
     std::size_t nextPrefixTarget=0;
     struct QueryResult {
         std::shared_ptr<const PreparedNavigationGeometry> body;
@@ -420,7 +435,7 @@ struct EraseMaskPathCache::Impl {
         std::shared_ptr<ErasePathUsage> usage;
         std::size_t bytes=0;
         ~QueryResult(){if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
             usage->categories[4]-=bytes;
 #endif
         }}
@@ -428,7 +443,7 @@ struct EraseMaskPathCache::Impl {
             std::shared_ptr<ExactHistoryProof> h,semantic::Transform2D t,std::uint32_t v,Hit r,
             resources::ResourceLease lease,std::shared_ptr<ErasePathUsage> u,std::size_t n)
             :body(std::move(b)),query(q),history(std::move(h)),transform(t),version(v),result(r),metadata(std::move(lease)),usage(std::move(u)),bytes(n){usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
             usage->categories[4]+=bytes;
 #endif
         }
@@ -445,7 +460,7 @@ struct EraseMaskPathCache::Impl {
         std::size_t bytes=0,pathBytes=0;
         std::uint64_t used=0;
         ~Refusal(){if(usage){usage->bytes-=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
             usage->categories[6]-=bytes;
 #endif
         }}
@@ -474,7 +489,7 @@ struct EraseMaskPathCache::Impl {
         HP_OBSERVE(HistoryPathEvent::kState,nullptr,nullptr,usage->bytes,capacity,budget?budget->used():0,size(),false,this,nullptr,usage->categories);
 #endif
     }
-    std::size_t size()const noexcept{return entries.size()+histories.size()+exactHistories.size()+refusals.size()+cohortQueries.size()+
+    std::size_t size()const noexcept{return entries.size()+drawIdentities->liveRows+exactHistories.size()+refusals.size()+cohortQueries.size()+
         std::size_t(lastQuery&&std::find(cohortQueries.begin(),cohortQueries.end(),lastQuery)==cohortQueries.end())+queryPrefixes.size()+
         std::count_if(finished->entries.begin(),finished->entries.end(),[&](const auto& v){auto p=v.second.lock();return p&&p->usage==usage&&std::find(entries.begin(),entries.end(),p)==entries.end();});}
     std::size_t pathBytes()const noexcept{auto bytes=usage->bytes;for(const auto& r:refusals)bytes-=r->bytes;return bytes;}
@@ -524,7 +539,7 @@ struct EraseMaskPathCache::Impl {
         // including externally held plans surviving clear(). It owns no source.
         if(const auto it=usage->sources.find(source.get());it!=usage->sources.end())
             if(auto known=it->second.lock();known&&known->source==source)return known;
-        const auto sourceCapacity=drawPreparation?std::min<std::size_t>(capacity,8U*1024U*1024U):capacity;
+        const auto sourceCapacity=drawPreparation?(drawingCapacity?drawingCapacity:std::min<std::size_t>(capacity,8U*1024U*1024U)):capacity;
         constexpr auto metadata=sizeof(MaskHistorySourceCharge)+256;
         if(!source||source->bytes>sourceCapacity||source->indexBytes>sourceCapacity-source->bytes||
            metadata>sourceCapacity-source->bytes-source->indexBytes)return {};
@@ -537,7 +552,7 @@ struct EraseMaskPathCache::Impl {
         resources::ResourceLease reservation(budget,*token);
         auto charge=std::make_shared<MaskHistorySourceCharge>();charge->source=source;charge->metadata=std::move(reservation);
         charge->usage=usage;charge->bytes=weight;usage->bytes+=weight;usage->sources.insert_or_assign(source.get(),charge);
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         usage->categories[0]+=weight;
 #endif
         HP_OBSERVE(HistoryPathEvent::kSourceAdmit,charge.get(),nullptr,usage->bytes,weight,source->bytes,size(),false,this,source->storage.get());return charge;
@@ -547,6 +562,7 @@ EraseMaskPathCache::EraseMaskPathCache():impl_(std::make_unique<Impl>()){}
 EraseMaskPathCache::~EraseMaskPathCache()=default;
 bool EraseMaskPathCache::readyMatches(const std::shared_ptr<const Entry>& e,const semantic::EraseMaskGeometry& g)noexcept{return e&&e->geometry==g;}
 const SkPath& EraseMaskPathCache::readyPath(const std::shared_ptr<const Entry>& e)noexcept{return e->path;}
+void EraseMaskPathCache::setDrawingResidency(std::size_t value)noexcept{impl_->drawingCapacity=value;impl_->residentUpperBound=std::max(impl_->residentUpperBound,value);}
 void EraseMaskPathCache::setResidentUpperBound(std::size_t value)noexcept{
  impl_->residentUpperBound=std::max<std::size_t>(1,value);
 }
@@ -561,7 +577,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::publishFini
  const semantic::EraseMaskGeometry& geometry,const SkPath& path,
  std::shared_ptr<resources::ResourceBudgetManager> budget,std::size_t capacity){
  auto& state=*impl_;capacity=std::min(capacity,state.residentUpperBound);
- if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
+ if(state.budget!=budget||(!state.drawingCapacity&&state.capacity!=capacity))clear();state.bindCapacity(budget,capacity);
  if(auto ready=lookup(geometry))return ready;
  if(!state.budget||!path.isFinite())return {};
  const auto raw=std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.size()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.size()*sizeof(semantic::PathCommand);},geometry);
@@ -575,7 +591,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::publishFini
  if(actualRaw>raw)return {}; // Never publish an uncharged allocator capacity.
  entry->lease=std::move(admission);entry->usage=state.usage;entry->bytes=bytes;entry->used=++state.tick;
  state.usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
  state.usage->categories[5]+=bytes;
 #endif
  const auto weakIndex=std::weak_ptr<Impl::FinishedIndex>(state.finished);const auto id=entry.get();
@@ -583,7 +599,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::publishFini
  state.finished->entries.insert_or_assign(id,entry);
  state.entries.push_back(entry);++state.stats.builds;++state.stats.history.finishedImports;return entry;
 }
-void EraseMaskPathCache::clear()noexcept{impl_->queryPrefixes.clear();impl_->nextPrefixTarget=0;impl_->lastQuery.reset();impl_->cohortQueries.clear();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<ExactHistoryProof>>{}.swap(impl_->exactHistories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
+void EraseMaskPathCache::clear()noexcept{MPS_ADD(Clear);impl_->drawIdentities->plans.clear();impl_->navigationHistories.clear();impl_->navigationReaper=impl_->navigationHistories.end();impl_->queryPrefixes.clear();impl_->nextPrefixTarget=0;impl_->lastQuery.reset();impl_->cohortQueries.clear();std::vector<std::shared_ptr<Impl::Refusal>>{}.swap(impl_->refusals);std::vector<std::shared_ptr<MaskHistoryPlan>>{}.swap(impl_->histories);std::vector<std::shared_ptr<ExactHistoryProof>>{}.swap(impl_->exactHistories);std::vector<std::shared_ptr<Entry>>{}.swap(impl_->entries);}
 void EraseMaskPathCache::beginCohort(std::function<void()> pressure)noexcept{
     if(!impl_->cohortDepth){impl_->cohortPressure=std::move(pressure);impl_->cohortPressureAttempted=false;}
     ++impl_->cohortDepth;
@@ -643,7 +659,7 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
     } observation{began,completedNow,resumed,denied,maxUnion,compared,available,*impl_,allowance};
     try{
         auto& state=*impl_;capacity=std::min(capacity,impl_->residentUpperBound);
-        if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
+        if(state.budget!=budget||(!state.drawingCapacity&&state.capacity!=capacity))clear();state.bindCapacity(budget,capacity);
         const auto* input=std::get_if<semantic::SweptCircleMask>(&geometry);
         if(!input||!state.budget||!maxSegments||state.constructing||
            (allowance&&!optionalQueryTime(*allowance))||!finiteQuery(*input,&compared))return;
@@ -689,7 +705,7 @@ void EraseMaskPathCache::advanceQueryPrefix(const semantic::EraseMaskGeometry& g
         auto resident=state.budget->reserve(resources::ResourceClass::kRecorded,bytes,true);
         if(!resident){denied=1;return;}
         value->lease=resources::ResourceLease(state.budget,*resident);value->usage=state.usage;value->bytes=bytes;value->used=++state.tick;state.usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         state.usage->categories[5]+=bytes;
 #endif
         const auto found=std::find(state.queryPrefixes.begin(),state.queryPrefixes.end(),old);
@@ -818,7 +834,7 @@ std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::get(const s
     lease.reset();
     candidate->bytes=bytes;candidate->usage=state.usage;candidate->used=++state.tick;
     state.usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
     state.usage->categories[5]+=bytes;
 #endif
     state.entries.push_back(candidate);++state.stats.builds;HP_OBSERVE(HistoryPathEvent::kAdmit,candidate.get(),&geometry,state.usage->bytes,estimate,bytes,state.size(),historical);state.observeState();return candidate;
@@ -846,8 +862,9 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     const std::shared_ptr<MaskHistoryPlan>& previous,MaskHistoryAdmission* admission){
     G5_SCOPE(g5HistoryLookup,foundation::internal::g5::Tag::wa_history_lookup,foundation::internal::g5::Purpose::none);
     auto& state=*impl_;capacity=std::min(capacity,impl_->residentUpperBound);
-    if(state.budget!=budget){clear();state.usage=std::make_shared<ErasePathUsage>();state.budget=std::move(budget);state.capacity=capacity;}else if(state.capacity!=capacity){clear();state.capacity=capacity;}
-    const auto drawCapacity=std::min<std::size_t>(capacity,8U*1024U*1024U);
+    if(state.budget!=budget||(!state.drawingCapacity&&state.capacity!=capacity))clear();state.bindCapacity(budget,capacity);
+    const auto drawCapacity=state.drawingCapacity?std::min(state.drawingCapacity,capacity):std::min<std::size_t>(capacity,8U*1024U*1024U);
+    const auto singleCapacity=std::min(drawCapacity,MaskResidencyPolicy::singlePlan);
     auto status=MaskHistoryAdmission::kNotAdmitted;
     bool refusalHit=false,structural=false;
     const auto storage=records.storage();
@@ -870,10 +887,10 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     // This is not a mask/document limit: the original GPU draw remains valid.
     std::size_t count=0;for(const auto& mask:records){const auto n=std::visit([](const auto& g)->std::size_t{
         if constexpr(requires{g.segments;})return g.segments.size();else return 1;},mask.geometry);
-        if(n>drawCapacity/sizeof(std::shared_ptr<const PreparedMaskPrimitive>)-count){structural=true;return denied();}count+=n;
+        if(n>singleCapacity/sizeof(std::shared_ptr<const PreparedMaskPrimitive>)-count){structural=true;return denied();}count+=n;
     }
     std::size_t minimum=0;
-    const auto charge=[&](std::size_t n,std::size_t bytes){if(bytes&&n>(drawCapacity-minimum)/bytes)return false;minimum+=n*bytes;return true;};
+    const auto charge=[&](std::size_t n,std::size_t bytes){if(bytes&&n>(singleCapacity-minimum)/bytes)return false;minimum+=n*bytes;return true;};
     if(!charge(1,sizeof(MaskHistoryPlan)+256)||!charge(count,sizeof(std::shared_ptr<const PreparedMaskPrimitive>))||
        !charge(records.size(),sizeof(std::size_t)+sizeof(std::shared_ptr<const void>))||
        !charge(1,sourceMaskBytes(*storage))||!charge(count,sizeof(PreparedMaskPrimitive)+128)){
@@ -887,7 +904,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     };
     if(previous)compare(previous);
     else for(const auto& plan:state.histories)compare(plan);
-    const auto metadata=sizeof(MaskHistoryPlan)+256+count*sizeof(std::shared_ptr<const PreparedMaskPrimitive>)+
+    const auto metadata=sizeof(MaskHistoryPlan)+512+sizeof(NavigationMaskIdentity)+count*sizeof(std::shared_ptr<const PreparedMaskPrimitive>)+
         records.size()*(sizeof(std::size_t)+sizeof(std::shared_ptr<const void>));
     const auto quotaDenials=state.sources->statistics().quotaDenials;
     auto retention=state.sources->getMasks(records,state.budget,true);if(!retention){
@@ -896,10 +913,10 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     }
     auto sourceCharge=state.sourceCharge(retention,true);if(!sourceCharge)return denied();
     const auto accounted=metadata;
-    const auto reserve=[&](std::size_t bytes,std::size_t weight)->std::optional<std::uint64_t>{
+    const auto reserve=[&](std::size_t bytes,std::size_t weight,bool admitted=false)->std::optional<std::uint64_t>{
         if(weight>drawCapacity)return {};
         for(;;){
-            const bool room=state.size()<512&&state.usage->bytes<=drawCapacity-weight;
+            const bool room=(admitted?state.size()<=512:state.size()<512)&&state.usage->bytes<=drawCapacity-weight;
             if(room)
                 if(auto token=state.reserve(resources::ResourceClass::kRecorded,bytes,true))return token;
             if(!state.evict(true)){status=room?MaskHistoryAdmission::kResourcePending:MaskHistoryAdmission::kNotAdmitted;return {};}
@@ -908,11 +925,24 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     auto token=reserve(metadata,accounted);if(!token)return denied();resources::ResourceLease lease(state.budget,*token);
     auto result=std::make_shared<MaskHistoryPlan>();result->records=records;result->metadata=std::move(lease);
     result->source=std::move(retention);result->localSource=std::move(sourceCharge);result->usage=state.usage;result->bytes=accounted;state.usage->bytes+=accounted;
-#if defined(AXIOM_UR2D_TESTS)
+    // A clear removes discovery, not the cardinality of externally pinned
+    // plans. Metadata and its one row retire together at the final release.
+    const auto weakIndex=std::weak_ptr<Impl::DrawIdentities>(state.drawIdentities);
+    NavigationMaskIdentity identity{{storage,sourceTypeTag<std::vector<semantic::EraseMaskRecord>>(),0},state.budget};
+    ++state.drawIdentities->liveRows;
+    result->retireIdentity=[weakIndex,identity]{if(auto index=weakIndex.lock()){--index->liveRows;auto it=index->plans.find(identity);if(it!=index->plans.end()&&it->second.expired())index->plans.erase(it);}};
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
     state.usage->categories[2]+=accounted;
 #endif
     result->identity=++state.nextHistory;result->used=++state.tick;
     result->primitives.reserve(count);result->primitiveEnds.reserve(records.size());result->exactPaths.resize(records.size());
+    std::size_t planWeight=accounted+result->localSource->bytes;
+#if !defined(AXIOM_MPS_NO_SHARE)
+    std::shared_ptr<NavigationMaskPlan> navigation;
+    NavigationMaskIdentity navIdentity{{storage,sourceTypeTag<std::vector<semantic::EraseMaskRecord>>(),0},state.budget};
+    if(auto it=state.navigationHistories.find(navIdentity);it!=state.navigationHistories.end()&&it->second->ready)navigation=it->second;
+#endif
+    [[maybe_unused]]std::size_t prepareRecord=common,preparePrimitive=0;
     if(prefix){
         const auto end=prefix->primitiveEnds[common-1];result->prefixIdentity=prefix->identity;result->prefixPrimitives=end;
         result->primitives.insert(result->primitives.end(),prefix->primitives.begin(),prefix->primitives.begin()+end);
@@ -920,12 +950,23 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
         std::copy_n(prefix->exactPaths.begin(),common,result->exactPaths.begin());
         state.stats.history.prefixReuses+=common;state.stats.history.copiedBytes+=end*sizeof(result->primitives.front())+
             common*(sizeof(std::size_t)+sizeof(std::shared_ptr<const void>));
+        for(const auto& primitive:result->primitives){if(primitive->bytes>singleCapacity-std::min(planWeight,singleCapacity))return denied();planWeight+=primitive->bytes;}
     }else ++state.stats.history.resets;
     const auto prepare=[&](const auto& value)->bool{
+#if !defined(AXIOM_MPS_NO_SHARE)
+        if(navigation){auto known=navigation->paths.find({prepareRecord,preparePrimitive});if(known!=navigation->paths.end()){
+            const auto& primitive=known->second.primitive;
+            if(primitive->bytes>singleCapacity-std::min(planWeight,singleCapacity))return false;
+            result->primitives.push_back(primitive);planWeight+=primitive->bytes;
+            MPS_ADD(Eligible);MPS_ADD(Reused);++preparePrimitive;return true;
+        }}
+#endif
+        ++preparePrimitive;
         const auto units=[&]()->std::size_t{if constexpr(requires{value.path;})return value.path.commands.size();else return 4;}();
-        if(units>(drawCapacity-std::min(drawCapacity,sizeof(PreparedMaskPrimitive)+65536U))/256U)return false;
+        if(units>(singleCapacity-std::min(singleCapacity,sizeof(PreparedMaskPrimitive)+65536U))/256U)return false;
         const auto estimate=sizeof(PreparedMaskPrimitive)+65536U+units*256U;
-        auto t=reserve(estimate,estimate);if(!t)return false;resources::ResourceLease reservation(state.budget,*t);
+        if(planWeight>singleCapacity||estimate>singleCapacity-planWeight)return false;
+        auto t=reserve(estimate,estimate,true);if(!t)return false;resources::ResourceLease reservation(state.budget,*t);
         auto primitive=makePreparedMaskPrimitive();
         if constexpr(requires{value.p0;}){
             primitive->swept=true;primitive->width=float(2*std::max(value.p0.radius,value.p1.radius));
@@ -937,8 +978,8 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
         }else {primitive->path=semanticPath(value.path);primitive->bounds=primitive->path.getBounds();}
         const auto bytes=sizeof(PreparedMaskPrimitive)+128+primitive->path.approximateBytesUsed();
         if(bytes>estimate||!reservation.shrink(bytes))return false;
-        primitive->lease=std::move(reservation);primitive->usage=state.usage;primitive->bytes=bytes;state.usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+        primitive->lease=std::move(reservation);primitive->usage=state.usage;primitive->bytes=bytes;planWeight+=bytes;state.usage->bytes+=bytes;
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
         state.usage->categories[1]+=bytes;
 #endif
         result->primitives.push_back(std::move(primitive));++state.stats.history.primitiveBuilds;++state.stats.history.flattenedPrimitives;return true;
@@ -947,8 +988,11 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
         bool ok=true;std::visit([&](const auto& g){if constexpr(requires{g.segments;}){
             for(const auto& segment:g.segments)if(!prepare(segment)){ok=false;break;}
         }else ok=prepare(g);},records[i].geometry);
-        if(!ok)return denied();result->primitiveEnds.push_back(result->primitives.size());
+        if(!ok)return denied();result->primitiveEnds.push_back(result->primitives.size());++prepareRecord;preparePrimitive=0;
     }
+#if !defined(AXIOM_MPS_NO_SHARE)
+    state.drawIdentities->plans.insert_or_assign(std::move(identity),result);
+#endif
     state.histories.push_back(result);++state.stats.history.admissions;HP_OBSERVE(HistoryPathEvent::kDrawAdmit,result.get(),nullptr,state.usage->bytes,accounted,count,state.size(),false,&state,storage.get());state.observeState();return result;
     }();
     if(result||records.empty())status=MaskHistoryAdmission::kReady;
@@ -975,7 +1019,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
                 auto r=std::make_shared<Impl::Refusal>();r->owner=storage;r->pointee=storage.get();r->pathBytes=state.pathBytes();
                 r->source=std::move(retained);r->localSource=std::move(sourceCharge);r->metadata=resources::ResourceLease(state.budget,*token);r->usage=state.usage;r->bytes=weight;r->used=++state.tick;
                 state.usage->bytes+=weight;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
                 state.usage->categories[6]+=weight;
 #endif
                 state.refusals.push_back(std::move(r));
@@ -985,6 +1029,7 @@ std::shared_ptr<MaskHistoryPlan> EraseMaskPathCache::history(
     if(admission)*admission=status;
     return result;
 }
+#include "navigation_mask_plan.inc"
 std::shared_ptr<const EraseMaskPathCache::Entry> EraseMaskPathCache::historicalPath(const std::shared_ptr<MaskHistoryPlan>& plan,std::size_t index){
     if(!plan||plan->usage!=impl_->usage||index>=plan->records.size())return {};
     ++impl_->stats.history.exactPathLookups;
@@ -1020,7 +1065,7 @@ std::shared_ptr<ExactHistoryProof> EraseMaskPathCache::exactHistory(const scene:
     auto proof=std::make_shared<ExactHistoryProof>();proof->records=records;proof->paths.resize(count);
     proof->source=std::move(sourceCharge);proof->metadata=std::move(lease);proof->usage=state.usage;proof->bytes=bytes;
     proof->used=++state.tick;proof->identity=++state.nextHistory;state.usage->bytes+=bytes;
-#if defined(AXIOM_UR2D_TESTS)
+#if defined(AXIOM_UR2D_TESTS) || defined(AXIOM_MASK_PRIMITIVE_OBSERVATION)
     state.usage->categories[3]+=bytes;
 #endif
     state.exactHistories.push_back(proof);HP_OBSERVE(HistoryPathEvent::kExactAdmit,proof.get(),nullptr,state.usage->bytes,bytes,count,state.size(),true,&state,owner.get());state.observeState();return proof;
@@ -1041,7 +1086,10 @@ SelectionGeometryHit EraseMaskPathCache::query(const RuntimeSceneRecord& record,
     [[maybe_unused]]const auto historyBefore=impl_->stats.history;
     std::shared_ptr<ExactHistoryProof> historyPlan;
     try{
-        if(impl_->budget!=budget){clear();impl_->usage=std::make_shared<ErasePathUsage>();impl_->budget=std::move(budget);impl_->capacity=capacity;}else if(impl_->capacity!=capacity){clear();impl_->capacity=capacity;}
+        // Consumer allowances do not change the same-budget ownership domain.
+        // Strict confirmation uses the same binding as draw/history/import.
+        if(impl_->budget!=budget||(!impl_->drawingCapacity&&impl_->capacity!=capacity))clear();
+        impl_->bindCapacity(budget,capacity);
     }
     catch(const std::bad_alloc&){++impl_->stats.history.denied;}
     EraseGeometryWork pathOps;

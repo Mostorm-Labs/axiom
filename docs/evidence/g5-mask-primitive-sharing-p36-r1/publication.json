@@ -1,0 +1,144 @@
+{
+  "baseline": "4d015193ce68eca798b02786abc22a0aef6233b8",
+  "branch": "codex/g5-mask-primitive-sharing",
+  "source": "G5-mask-primitive-sharing-p36-r1/source-C",
+  "reviewedSourceManifestSHA256": "54151f30286ea180c8919a3f1379e5cdd9e61426ce7c6a8ad244090553b5d05f",
+  "controlVerdict": "PASS_WITH_FINDINGS scoped MPR1-MPR5",
+  "controlReviewSHA256": "d4d2eb10d7cd9c2c0911c813981242280f3a7fb4087c03b6b1414690f0dd29b3",
+  "changedSourceFiles": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "bytes": 71093,
+      "reviewed_sha256": "6d95ac045a11f91e400d3b98ccf36cae2aefba0401b8d99cade3d1e3842331bc"
+    },
+    {
+      "path": "runtime/render/src/mask_primitive_observation.hpp",
+      "bytes": 4508,
+      "reviewed_sha256": "bb108cecc3c357040048bae9d43fca560acf4f1ab3072600e3050b6013a62800"
+    },
+    {
+      "path": "runtime/render/src/mask_residency_policy.hpp",
+      "bytes": 589,
+      "reviewed_sha256": "bc2d75f3e83d352cca4c77f1b7c0c7d6b5ed242b3fdae101148cdc6db9e83331"
+    },
+    {
+      "path": "runtime/render/src/navigation_mask_observation.hpp",
+      "bytes": 2151,
+      "reviewed_sha256": "0ff2a9320de9a4af4bc58c6676d7bd8ddc92383656ce1c8b964c372435fdd71a"
+    },
+    {
+      "path": "runtime/render/src/navigation_mask_plan.hpp",
+      "bytes": 2841,
+      "reviewed_sha256": "5ef75151e98406f99309dbbac39a72833bf3e89a447dc63693381b4666427b3c"
+    },
+    {
+      "path": "runtime/render/src/navigation_mask_plan.inc",
+      "bytes": 18555,
+      "reviewed_sha256": "8ff4ce2b9d1aaac6c004973f40e451a490e221acbd1bddddba11a5ea1c0822ba"
+    },
+    {
+      "path": "runtime/render/src/navigation_pixel_validity.cpp",
+      "bytes": 10138,
+      "reviewed_sha256": "335c14efe3c84a883df73d9a476b2beb5d0b55efba5823159e6eed4913ee9cc1"
+    },
+    {
+      "path": "runtime/render/src/navigation_reference_validation.hpp",
+      "bytes": 421,
+      "reviewed_sha256": "0c16decde0086a341b5df64c13518dc0f0eec9b7607bfa6e78cd85e43f464a9f"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry.cpp",
+      "bytes": 98460,
+      "reviewed_sha256": "635a92656c6af4665b05a149775fdc05aa6dadb90d1d2e91849451b70e459f59"
+    },
+    {
+      "path": "runtime/render/src/selection_region_geometry_internal.hpp",
+      "bytes": 5546,
+      "reviewed_sha256": "8b569e34198afcabec99c891f44b1e20a4cf70f21338739c4af477c507de647a"
+    },
+    {
+      "path": "runtime/render/src/skia_headless_backend.cpp",
+      "bytes": 80286,
+      "reviewed_sha256": "24f44f6f40192442042c4c11c637c746902e78472eae7cbc34e425f6415b2820"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "bytes": 32707,
+      "reviewed_sha256": "7be4d964180c5b58a4d06d0dd5251389b5e717899c146198eded7b4f94e60699"
+    },
+    {
+      "path": "runtime/render/src/skia_mask_history.hpp",
+      "bytes": 2945,
+      "reviewed_sha256": "31169681358fbd892abcfdc09e8b2ab2d269bb3b4ede9cbd390bebcf28e08fdd"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.cpp",
+      "bytes": 101819,
+      "reviewed_sha256": "fb0eaf939d98de2b1f43a932397462038838f11f0840c77be19c0ee722e18d6c"
+    },
+    {
+      "path": "runtime/render/src/skia_navigation_tiles.hpp",
+      "bytes": 7750,
+      "reviewed_sha256": "2af306c52ba6cce19d15e15152ca4f79f1dbcf5c776d49544871467a5b9dcf29"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "bytes": 129568,
+      "reviewed_sha256": "356bbad778d6114ba10f1404484ecc5b84a54026f192f609f91e985fa8b241c2"
+    },
+    {
+      "path": "runtime/render/src/source_retention.hpp",
+      "bytes": 15929,
+      "reviewed_sha256": "3b81fd0094d2a77bc90a263c6e036ec14bb121337a5be7c8c944e5b03bd809e2"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "bytes": 43700,
+      "reviewed_sha256": "9fc0ef47fd93bbaca22cb8a2d05a19cca997e98890d20914744f5abbe3aa63c5"
+    },
+    {
+      "path": "runtime/render/tests/mask_primitive_factorial.cpp",
+      "bytes": 7774,
+      "reviewed_sha256": "ca1f8e244d6aa53ab055b7eeec2f1e5f1a125a63cc0ed5ef9e48928897bd9018"
+    },
+    {
+      "path": "runtime/render/tests/mask_primitive_sharing_test.cpp",
+      "bytes": 20140,
+      "reviewed_sha256": "4a7198640d6d89e32eb666f060b81c14868f6232de8e0977cac7da56f4d84add"
+    },
+    {
+      "path": "runtime/render/tests/navigation_display_workavoidance_test.cpp",
+      "bytes": 19872,
+      "reviewed_sha256": "fa995e97039223bc63f1c15a7a9b9c67009e6e646add14eba077806d3962efcb"
+    },
+    {
+      "path": "runtime/render/tests/navigation_mask_reuse_test.cpp",
+      "bytes": 57960,
+      "reviewed_sha256": "6dbeee721de40caf83078e169a9af4e517c7567cdd615ebf23a031c5ccd63cb7"
+    },
+    {
+      "path": "runtime/render/tests/nmr_cache_pressure_probe.cpp",
+      "bytes": 1753,
+      "reviewed_sha256": "6516e5e64a44d0ec0d95b2d8adad5c4bb927367e82a2102921e6d45cd92cec36"
+    },
+    {
+      "path": "runtime/render/tests/nmr_source_adoption_probe.cpp",
+      "bytes": 1462,
+      "reviewed_sha256": "c5857ddf56aa3bb921cf04f1225548b3520efe37a4cf33f1dccfafe042662bf0"
+    }
+  ],
+  "untouchedLineEndingOnlyFiles": [],
+  "sourceEquality": "All1218reviewedsourcepaths match afterLFnormalization; changed24 are exactreviewedbytes beforegittextfilter. ExistingnonRenderfilesretainedbyteforbyte.",
+  "parentRuntimeDependencies": "Includes reviewed navigation-mask reuse/P36 repairs required by shared primitive implementation; no activeerase-delta code.",
+  "omittedArtifacts": "BuiltSDK/WASM, rawbrowsercaptures, nativebuilds and out/ are preserved locally and referencedbyhash, notaddedtoGit.",
+  "existingDirtyPrimary": "42files +originaluntrackedstate leftuntouched; indexempty",
+  "frozenDemonstrations": "4342-4346 preserved",
+  "userAuthorization": "2026-11-18 user explicitly requested commit andpush after scopedcontrolreview",
+  "notClaimed": [
+    "FullG5",
+    "P34",
+    "release",
+    "otherplatformABI",
+    "wholeUIperformancePASS"
+  ]
+}
