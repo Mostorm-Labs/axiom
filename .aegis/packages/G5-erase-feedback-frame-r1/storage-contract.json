@@ -1,0 +1,37 @@
+{
+  "status": "FROZEN_PROSPECTIVE_NEW_TASK_STORAGE",
+  "scope": "New task only, old r2 logs preserved separately; no reset/relabel of prior spend. This filesystem cap is unrelated to Render memory.",
+  "limits": {
+    "focused_diagnostic_starts": 3,
+    "per_diagnostic_seconds": 180,
+    "ordinary_starts": 4,
+    "per_ordinary_seconds": 360,
+    "correctness_starts": 1,
+    "per_correctness_seconds": 480,
+    "harness_environment_corrective_starts": 1,
+    "per_corrective_seconds": 360,
+    "aggregate_browser_seconds": 3000,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "planned_pixels": {
+    "Web_C_frames": 20,
+    "Web_C_raw_bytes": 1156248000,
+    "C_terminal_RGBA_references": 4,
+    "C_terminal_edge_references": 4,
+    "all_new_pixel_raw_bytes": 1445310000,
+    "conservative_gzip_bound_bytes": 1445752850,
+    "nonpixel_reserve_bytes": 1610612736,
+    "serial_scratch_bytes": 201326592,
+    "peak_bound_bytes": 3257692178
+  },
+  "preflight": "Before first browser start: bind exact final driver/storage functions; prove streaming lossless writer offline with incompressible input, interrupted writes, offsets/name/size checks, decompression raw-hash check. Reuse existing tests plus corrected flock ledger with12-process concurrency test. Check>=8GiB disk and precomputed native test/output allowance within1536MiB reserve.",
+  "persistence": "Persist each RGBA immediately in bounded chunks with backpressure. At most one new fullframe/reference pair source being persisted; no window-sized raw collection. Raw/compressed bytecounts+SHA256, VALID/RESTORED readback metadata. Bound diagnostic trace arrays and preserve drop/overflow counters; overflow in required phases invalidates attribution.",
+  "accounting": "Reuse task-storage.py flock logic, adapt only task paths/profile constants. Cumulative logical highwater for each artifact, include failures and scratch; no deletion credit. Build/dependency/SDK binaries excluded but separately hash-bound. Ledger lock zero-byte runtime file harmless. Sampling start journal durable before launch and full worker family cleanup after every start.",
+  "guard": "Projected bounds before start/capture; continuously check caps; on exhaustion stop only owned processes and preserve failure, exact terminal report. New counts do not extend any r2 window."
+}

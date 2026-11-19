@@ -1076,3 +1076,13 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_I
  add_test(NAME G5ImmediateEraseNavigation COMMAND axiom_immediate_erase_navigation_tests "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap" "${CMAKE_CURRENT_BINARY_DIR}/ien.json")
  set_tests_properties(G5ImmediateEraseNavigation PROPERTIES TIMEOUT 120)
 endif()
+
+option(AXIOM_RENDER_BUILD_ERASE_FEEDBACK_FRAME_TESTS "Private erase feedback frame mechanism/pixels" OFF)
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_ERASE_FEEDBACK_FRAME_TESTS AND APPLE)
+ add_executable(axiom_erase_feedback_frame_tests tests/erase_feedback_frame_test.cpp)
+ target_compile_definitions(axiom_erase_feedback_frame_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
+ target_link_libraries(axiom_erase_feedback_frame_tests PRIVATE canvas_runtime_render)
+ target_include_directories(axiom_erase_feedback_frame_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}" "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+ add_test(NAME G5EraseFeedbackFrame COMMAND axiom_erase_feedback_frame_tests "${CMAKE_CURRENT_BINARY_DIR}/eff.json")
+ set_tests_properties(G5EraseFeedbackFrame PROPERTIES TIMEOUT 120)
+endif()

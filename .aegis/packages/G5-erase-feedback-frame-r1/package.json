@@ -1,0 +1,82 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "G5-erase-feedback-frame-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "created_at": "2026-11-18T16:26:14.102388+00:00",
+  "execution_ref": "refs/heads/codex/g5-erase-feedback-frame",
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "execution_ref": "refs/heads/codex/g5-immediate-erase-navigation-r2",
+    "completed_through": "Current4348 source and lightweight evidence saved/pushed; independent control review retains scoped correctness/gains,100ms pinch target remains unmet. New item1 diagnosis/repair not started.",
+    "source_manifest_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-C.json",
+      "bytes": 148047,
+      "sha256": "a6968c5348e1320db9dd5c14e4adf20f31608a3e518c618cf6561c617fe6c569"
+    },
+    "next_action": "Create isolated successor from bfcee; validate package/source/SDK/storage and owner preflight; measure B Render phases before production repair."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-erase-feedback-frame-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 3222,
+    "sha256": "2cafc454ca7c55723ab64b7b9bb63448cd2421b5bbe2811c38e76f4441c0e598"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 53163,
+    "sha256": "bc886e0a87eac2fc58e63d9a2e390e62c325a4ee95a3168e42972ae9e2f8aac3"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 8210,
+    "sha256": "f00fdff5f48969dd216ba4444f49672f2de4698b7e55601e69a2008e1c7a2e6c"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 4475,
+    "sha256": "25b4d098165ccc157d69072b26735339ce46b71f154f19d9a64529a14d8d126c"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 4438,
+    "sha256": "c9a13f422c404cefb05ffa94160bdc6651e325750f5defb36df88f91b57b57e4"
+  },
+  "storage_contract_ref": {
+    "path": "storage-contract.json",
+    "bytes": 2538,
+    "sha256": "5777d8dcba670eafbb759ca9dfefac83259d00b5fcd0fcbbc93e55722f8ad84e"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 2396,
+    "sha256": "97802736cded62f1dfd0e91eb43d3364318c3bf90829e47e4eca98b9b8fc4c04"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 14580,
+    "sha256": "71db55e76c68de2f7fcdf61c89e345133e79d28121689e8fec73a0cc6e966c09"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 3141,
+    "sha256": "32211d200eed6e4caad00f886f5f52c4b96f47c5c146838823953942e779d2ff"
+  }
+}

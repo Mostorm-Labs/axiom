@@ -1,0 +1,74 @@
+{
+  "fixture": "fixed-inputs fixture/request; seed324508639;1431x1010; round-head v4;40 objects; camera .34,x120,y260; diameter32world. Fresh Runtime/document per case. Only isolated Chrome; user IAB4348 untouched.",
+  "history": "Before measured primary: stable160Move erase at x=420+offset+7*sin(i*.17),y=160+170*i/160 for offset+5 then-5. Stable wait allowed here.",
+  "primary": "480 paced Move at60Hz; i0..480 x=420+80*sin(2*pi*i/160),y=160+540*i/480. Up repeats i480. Preserve all confirmed inputs.",
+  "cases": [
+    {
+      "id": "immediate-pan",
+      "start": "Pair Down planned1ms after Up return, first Move16.7ms later; no stable/worker/canonical barrier",
+      "route": "Real AutoIntent browser touch/CDP;120Move/2s; fingers (635.5,505),(795.5,505) translated(+i,-.5i)"
+    },
+    {
+      "id": "immediate-pinch",
+      "start": "same immediate policy",
+      "route": "120Move/2s; center(715.5,505),half-separation80*f;piecewise f1->1.25->.75->1 at i0/40/80/120"
+    },
+    {
+      "id": "settled-pan",
+      "start": "wait stable after primary Up, then same pan",
+      "route": "same coordinates"
+    },
+    {
+      "id": "settled-pinch",
+      "start": "wait stable after primary Up, then same pinch",
+      "route": "same coordinates"
+    }
+  ],
+  "diagnostic_windows": [
+    {
+      "id": "EFF-D-B",
+      "purpose": "Before production repair: bfcee plus phase probes only; immediate-pan/pinch, exact B matched probe manifest frozen"
+    },
+    {
+      "id": "EFF-D-C-PRE",
+      "purpose": "Optional one candidate check while implementing, same immediate cases; may omit, no extra window in its place"
+    },
+    {
+      "id": "EFF-D-C-FINAL",
+      "purpose": "Final C matched source/SDK attribution after native GREEN, before ordinary freeze; mandatory, same probe definitions/workload as B"
+    }
+  ],
+  "ordinary_windows": [
+    "EFF-W-B1",
+    "EFF-W-C1",
+    "EFF-W-C2",
+    "EFF-W-B2"
+  ],
+  "ordinary_policy": "All four case IDs in fixed order in each fresh window. Candidate source/normal SDK, probes final and same observer/driver freeze before B1. B is exact normal4348. No production change or restarted matrix after B1.",
+  "correctness_windows": [
+    "EFF-P-C"
+  ],
+  "correctness_policy": "New C contexts DPR2/4, immediate pan/pinch;20 full-frame readbacks total:before-primary,moving12,moving60,terminal,redo. No timed lane pooling. Keep original per-object CPU terminal reference and full suffix native witness; reused B is prior r2 C, declared before start. New C four terminal CPU refs offline; Undo/Redo snapshot semantics. Native live-frame tests cover optimized active damage correctness.",
+  "corrective_policy": "At most1 start for independently evidenced harness/environment failure, not performance miss or production/source correction; preserve failed raw, bind correction and one replacement role. No extra performance retries.",
+  "limits": {
+    "focused_diagnostic_starts": 3,
+    "per_diagnostic_seconds": 180,
+    "ordinary_starts": 4,
+    "per_ordinary_seconds": 360,
+    "correctness_starts": 1,
+    "per_correctness_seconds": 480,
+    "harness_environment_corrective_starts": 1,
+    "per_corrective_seconds": 360,
+    "aggregate_browser_seconds": 3000,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "freeze_rule": "Diagnostics/native debugging precede final ordinary source/SDK/driver freeze. Optional C-PRE is not a promise of early success. Source change after C-FINAL invalidates matching C attribution unless its unused allotted diagnostic slot can supply a final exact capture; never exceed3 starts. After ordinary freeze, no production mutation; finish remaining safe correctness, return UNMET if needed.",
+  "resource_discipline": "Serial nativeGPU/browser execution; no heavy build, other sampling or profiler during ordinary. Existing preview servers stay. Frozen input fixture may be symlinked read-only; dependencies accepted/prebuilt only.",
+  "preview": "After normal root SDK smoke in an already planned candidate window, serve first unused port>=4349 with matching normal SDK. Notify control URL/PID/source and SDK hashes/remaining checks immediately; continue without ordinary ACK. Preserve4342..4348, their assets and all user documents."
+}

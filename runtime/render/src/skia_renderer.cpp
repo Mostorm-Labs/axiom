@@ -1212,6 +1212,7 @@ AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(ca
         }
     }
     else {
+        AXIOM_FRAME_TIMING_SCOPE(feedbackMaskCompareTiming,feedback_mask_compare);
         if(!cache->presentation.matches(identity)||cache->proofSemantic!=current.sceneGeneration.value()||cache->proofScene!=current.sceneReadToken.value()||cache->feedbackSources.size()!=plan.referenceDrawList.entries.size())return declined("contribution");
         std::size_t remaining=8U*1048576U;
         for(std::size_t i=0;i<cache->feedbackSources.size();++i){const auto& a=cache->feedbackSources[i];const auto& b=plan.referenceDrawList.entries[i];
@@ -1259,6 +1260,7 @@ AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(ca
 }
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(SkiaSurfaceProvider& provider,const FramePlan& plan,
     const EditingOverlay* overlay,const TransientDisplayIdentity& identity){
+    AXIOM_FRAME_TIMING_SCOPE(feedbackEntryTiming,feedback_entry);
     const auto old=pendingNavigation_;
     if(identity.owner&&feedbackBare(overlay)&&old&&old->sameTarget(&provider,plan.frame)&&old->resource==resourceEpoch_&&old->frame->camera.generation!=plan.frame.camera.generation){
         const auto& affine=plan.referenceDrawList.worldToView;
@@ -1283,6 +1285,9 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(SkiaSurfaceProvider
 BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay,const TransientDisplayIdentity& identity,bool publish) {
+    AXIOM_FRAME_TIMING_SCOPE(feedbackTotalTiming,feedback_total);
+    AXIOM_FRAME_TIMING_SET(feedback_publish_requested,publish);
+    AXIOM_FRAME_TIMING_ADD(feedback_entries,plan.referenceDrawList.entries.size());
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
     PostworkerRenderObservation postworkerObservation{*this,resourceBudget_};
 #endif
@@ -1300,7 +1305,9 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     if (selectionOverlay == nullptr) {
         return clearPreview(provider, SurfaceGeneration{provider.generation()});
     }
+    AXIOM_FRAME_TIMING_SCOPE(feedbackAcquireTiming,feedback_acquire);
     const auto acquired = provider.acquire();
+    AXIOM_FRAME_TIMING_END(feedbackAcquireTiming);
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return BackendSubmissionResult::rejected(acquired.message);
     }
@@ -1314,7 +1321,9 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
        acquired.frame.surface->height()!=int(plan.frame.metrics.physicalHeight)){
         provider.release();return BackendSubmissionResult::rejected("stale transient target");
     }
+    AXIOM_FRAME_TIMING_SCOPE(feedbackValidationTiming,feedback_validation);
     const auto validation=internal::validateReferencePlan(plan,validationService(),internal::HistoryValidationPolicy::kPublishedImmutable);
+    AXIOM_FRAME_TIMING_END(feedbackValidationTiming);
     if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     if(!identity.owner&&pendingNavigation_)pendingNavigation_.reset();
     internal::RenderExecutionScope execution(internal::ExecutionPurpose::kFullTransientEdit,plan,
@@ -1344,6 +1353,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
         if(!gpuRetirements_)gpuRetirements_=std::make_shared<internal::GpuResourceRetirement>();
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("derived completion metadata unavailable");}
+    AXIOM_FRAME_TIMING_SCOPE(feedbackGpuSetupTiming,feedback_gpu_setup);
     auto* gpuContext=GrAsDirectContext(acquired.frame.surface->recordingContext());
 #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
     if(internal::temporaryRetirementFault)internal::temporaryRetirementFault(*gpuRetirements_,resourceBudget_);
@@ -1361,9 +1371,12 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS) || defined(AXIOM_G5_UR0_DIAGNOSTICS)
     internal::transientDisplayBudget=resourceBudget_;
 #endif
+    AXIOM_FRAME_TIMING_END(feedbackGpuSetupTiming);
+    AXIOM_FRAME_TIMING_SET(feedback_target_gpu,gpuContext!=nullptr);
     const bool cachedGpuSafe=!gpuContext||gpu.ready();
     internal::SkiaRenderCache* cache=nullptr;
     if(!cachedGpuSafe)clearRenderCache();
+    AXIOM_FRAME_TIMING_SCOPE(feedbackCacheBeginTiming,feedback_cache_begin);
     if(cachedGpuSafe)try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
@@ -1393,12 +1406,14 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
             };
         }
     }catch(const std::bad_alloc&){clearRenderCache();}
+    AXIOM_FRAME_TIMING_END(feedbackCacheBeginTiming);
     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
     if(!cache&&renderCacheOptions_.enabled&&renderCacheOptions_.gpuCoverageCandidate&&gpuContext&&
        std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&c->content.get().stroke.config.algorithmVersion==4;})){
         provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
     }
     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
+    AXIOM_FRAME_TIMING_SCOPE(feedbackPrepareTiming,feedback_prepare);
     if(cache){
         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
         AXIOM_IF_EVENT("nc_prepare role=transient phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
@@ -1424,7 +1439,9 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
                 BackendSubmissionResult::retry("transient material preparation pending");
         }
     }
+    AXIOM_FRAME_TIMING_END(feedbackPrepareTiming);
     if(gpu.ready())gpu.touch();
+    AXIOM_FRAME_TIMING_SCOPE(feedbackDamageTiming,feedback_damage);
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -1462,6 +1479,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
         originalClip=canvas->getDeviceClipBounds();}
     const internal::CompactDeviceGrid deviceGrid{originalClip.left(),originalClip.top(),originalClip.right(),originalClip.bottom()};
     const bool staged=cache&&cache->stagedBodies();
+    AXIOM_FRAME_TIMING_END(feedbackDamageTiming);
+    AXIOM_FRAME_TIMING_SCOPE(feedbackTargetTiming,feedback_target);
     if(!staged){
         const auto compatible=[&]{return transientDisplay_&&(!pendingNavigation_||pendingNavigation_->display!=transientDisplay_)&&transientDisplay_->surface&&
             transientDisplay_->surface->imageInfo()==acquired.frame.surface->imageInfo()&&
@@ -1469,6 +1488,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
             (!transientDisplay_->epoch||resourceBudget_->gpuEpochRetired(transientDisplay_->epoch));};
         if(!compatible())transientDisplay_.reset();
         if(!transientDisplay_){
+            AXIOM_FRAME_TIMING_ADD(feedback_surface_allocations,1);
+            AXIOM_FRAME_TIMING_ADD(feedback_allocated_bytes,std::uint64_t(acquired.frame.surface->width())*acquired.frame.surface->height()*4);
             const auto bytes=sizeof(internal::TransientDisplaySurface)+128;
             const auto token=internal::reserveWithValidationReclaim(resourceBudget_,validationProofs_.get(),resources::ResourceClass::kRecorded,bytes);
             if(!token){provider.release();return BackendSubmissionResult::retry("transient display metadata pending");}
@@ -1493,6 +1514,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
         // The damage attempt must inherit a complete frame before clipping.
         // A retained image has a different charged surface, never hidden COW.
         if(incremental&&pendingNavigation_&&pendingNavigation_->display!=transientDisplay_){
+            AXIOM_FRAME_TIMING_SCOPE(feedbackInheritTiming,feedback_inherit);
+            AXIOM_FRAME_TIMING_ADD(feedback_inherit_bytes,std::uint64_t(acquired.frame.surface->width())*acquired.frame.surface->height()*4);
             auto* into=transientDisplay_->surface->getCanvas();into->resetMatrix();
             pendingNavigation_->display->pixels.markGpuUse();pendingNavigation_->display->epoch=gpu.epoch();
             SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);into->drawImage(pendingNavigation_->image,0,0,SkSamplingOptions{},&copy);
@@ -1502,6 +1525,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
         internal::transientDisplayAttempt=transientDisplay_;
 #endif
     }
+    AXIOM_FRAME_TIMING_END(feedbackTargetTiming);
     SkAutoCanvasRestore damageRestore(canvas,false);
     if(staged)incremental=false;
     if(incremental) {
@@ -1526,6 +1550,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
             cache->work.eraseDamagePixels+=std::uint64_t(clip.width())*clip.height();}
         else ++cache->work.eraseFullFrames;
     }
+    AXIOM_FRAME_TIMING_SET(feedback_incremental,incremental);
+    AXIOM_FRAME_TIMING_SCOPE(feedbackSceneTiming,feedback_scene);
     BackendSubmissionResult scene=BackendSubmissionResult::accepted();
     const auto sceneSaveCount=canvas->getSaveCount();
     try {
@@ -1558,9 +1584,12 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     if(!staged)internal::drawTransientChrome(*canvas,plan,*selectionOverlay);
     const auto publicationClip=canvas->getDeviceClipBounds();
     damageRestore.restore();
+    AXIOM_FRAME_TIMING_END(feedbackSceneTiming);
+    AXIOM_FRAME_TIMING_SCOPE(feedbackSnapshotTiming,feedback_snapshot);
     sk_sp<SkImage> completed;
     if(staged){const auto prepared=cache->completedFrame();prepared->markGpuUse();completed=prepared->image;}
     else completed=transientDisplay_->surface->makeImageSnapshot();
+    AXIOM_FRAME_TIMING_END(feedbackSnapshotTiming);
     if(!completed){provider.release();return BackendSubmissionResult::retry("transient display snapshot pending");}
     if(internal::transientPublicationRefused()){
         provider.release();return BackendSubmissionResult::retry("transient publication refused before target write");
@@ -1574,8 +1603,10 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
         partialEraseFrame_.reset();provider.release();return BackendSubmissionResult::retry("transient display changed during preparation");
     }
     if(!publish){
-        provider.release();if(!gpu.finish())return BackendSubmissionResult::rejected("pending feedback preparation GPU failure");
+        provider.release();
+        {AXIOM_FRAME_TIMING_SCOPE(feedbackFinishTiming,feedback_finish);if(!gpu.finish())return BackendSubmissionResult::rejected("pending feedback preparation GPU failure");}
         try{
+            AXIOM_FRAME_TIMING_SCOPE(feedbackRetentionTiming,feedback_retention);
             std::size_t bytes=sizeof(NavigationCache)+128;for(const auto& e:plan.referenceDrawList.entries)bytes+=sizeof(ReferenceTraversalEntry)+internal::sourceMetadataBytes(e)+8*sizeof(internal::SourceRetentions::value_type);
             if(!identity.owner||!transientDisplay_||bytes>std::min<std::size_t>(8U*1048576U,renderCacheOptions_.maxEntryBytes))return BackendSubmissionResult::retry("pending feedback witness capacity");
             const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true);if(!token)return BackendSubmissionResult::retry("pending feedback witness quota");
@@ -1588,7 +1619,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     }
     // The only provider write in this function. The complete pixels are ready,
     // using the same physical grid and Src (not another opacity application).
-    {SkAutoCanvasRestore publish(visibleCanvas,true);visibleCanvas->resetMatrix();
+    {AXIOM_FRAME_TIMING_SCOPE(feedbackPublishTiming,feedback_publish);
+        SkAutoCanvasRestore publish(visibleCanvas,true);visibleCanvas->resetMatrix();
         if(incremental)visibleCanvas->clipIRect(publicationClip);
         SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
         visibleCanvas->drawImage(completed,0,0,SkSamplingOptions{},&paint);
@@ -1603,10 +1635,13 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
         candidate->contents=acquired.frame.surface->generationID();}
     }catch(const std::bad_alloc&){} // Optional validity; next frame fully replaces.
     provider.release();
-    if(!gpu.finish()){partialEraseFrame_.reset();return BackendSubmissionResult::rejected("transient GPU submission failed");}
+    {AXIOM_FRAME_TIMING_SCOPE(feedbackFinishTiming,feedback_finish);
+        if(!gpu.finish()){partialEraseFrame_.reset();return BackendSubmissionResult::rejected("transient GPU submission failed");}}
+    AXIOM_FRAME_TIMING_SCOPE(feedbackPresentTiming,feedback_present);
     G5_SCOPE(g5Present,g5::Tag::provider,g5::Purpose::none);
     const auto presented=provider.present();
     G5_SCOPE_END(g5Present);
+    AXIOM_FRAME_TIMING_END(feedbackPresentTiming);
     G5_OBSERVE(g5::Kind::Submit,g5::Tag::provider,true,plan.frame.viewId.value(),plan.frame.frameId.value(),plan.frame.sceneGeneration.value(),plan.frame.sceneReadToken.value(),plan.frame.surfaceGeneration.value(),plan.frame.metricsGeneration.value(),static_cast<unsigned>(presented.code));
     if(presented.code==BackendSubmissionCode::kAccepted){
         ++submissions_;++rasterizations_;
@@ -1626,6 +1661,8 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
 #endif
         if(identity.owner&&bareOverlay&&!staged&&transientDisplay_&&plan.background.mode==foundation::BackgroundMode::kPlain&&!plan.transparentBackground&&plan.background.color[3]==1&&
            plan.referenceDrawList.viewportClip==foundation::WorldRect{0,0,plan.frame.metrics.logicalWidth,plan.frame.metrics.logicalHeight})try{
+            AXIOM_FRAME_TIMING_SCOPE(feedbackRetentionTiming,feedback_retention);
+            AXIOM_FRAME_TIMING_ADD(feedback_retained_bytes,std::uint64_t(acquired.frame.surface->width())*acquired.frame.surface->height()*4);
             std::size_t bytes=sizeof(NavigationCache)+128;for(const auto& e:plan.referenceDrawList.entries)bytes+=sizeof(ReferenceTraversalEntry)+internal::sourceMetadataBytes(e)+8*sizeof(internal::SourceRetentions::value_type);
             if(bytes<=std::min<std::size_t>(8U*1048576U,renderCacheOptions_.maxEntryBytes))if(const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,bytes,true)){
                 resources::ResourceLease metadata(resourceBudget_,*token);
@@ -1639,6 +1676,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     // Pixel publication has priority. CPU-only exact preparation may consume
     // only the remainder of this same invocation's existing allowance, even
     // when no coverage step was needed. It never delays publication readiness.
+    AXIOM_FRAME_TIMING_SCOPE(feedbackQueryTiming,feedback_query);
     if(presented.code==BackendSubmissionCode::kAccepted&&eraseQueries_&&!cpuPendingPreparation_)
         eraseQueries_->prepareQueryPrefixes(plan.referenceDrawList.entries,resourceBudget_,
             std::min(renderCacheOptions_.maxEntryBytes,renderCacheOptions_.maxBytes/4),allowance);

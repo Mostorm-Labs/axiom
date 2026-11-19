@@ -1,6 +1,7 @@
 #include "reference_validation_cache.hpp"
 #include "render_execution.hpp"
 #include "transient_display_state.hpp"
+#include "erase_feedback_damage.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
@@ -1052,7 +1053,9 @@ SkiaRenderCache::InkDraw SkiaRenderCache::drawDamagedInk(SkCanvas& canvas,const 
         // Keep both mask evaluators on their full original device surface.
         drawHistoricalMasks(*isolated,source);noteDirect();
     }
-    drawPresentationEraseMasksToSkCanvas(*isolated,source);isolated->restore();
+    if(damageOnly_)drawFeedbackDamageMasks(*isolated,source.presentationEraseMasks,canvas.getDeviceClipBounds());
+    else drawPresentationEraseMasksToSkCanvas(*isolated,source);
+    isolated->restore();
     SkPaint feedback;feedback.setAlphaf(std::clamp(source.presentationOpacity,0.0F,1.0F));
     auto image=scratch_->makeImageSnapshot();
     if(!image){damageFailed_=true;return InkDraw::kRetry;} // Reject this frame; never present missing ink.

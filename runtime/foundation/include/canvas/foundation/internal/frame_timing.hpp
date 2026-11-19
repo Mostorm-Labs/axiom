@@ -16,7 +16,7 @@ enum class Stage : std::size_t {
     cache_draw, coverage_record, scratch_draw, coverage_select, contour_compile, contour_record, contour_replay, contour_draw, cpu_coverage, gpu_coverage_submit, coverage_flush, material_submit,
     raster_snapshot, scene_draw, navigation_snapshot, provider_present,
     owner_pump,pending_owner,target_prepare,scene_stamp,history_prepare,publication_prepare,
-    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,prepared_select,prepared_draw,historical_mask_draw,count
+    atomic_apply,apply_observer,scene_publish,transient_frame,navigation_frame,canonical_frame,resource_service,prepared_select,prepared_draw,historical_mask_draw,feedback_entry,feedback_total,feedback_acquire,feedback_validation,feedback_gpu_setup,feedback_cache_begin,feedback_prepare,feedback_damage,feedback_target,feedback_inherit,feedback_scene,feedback_snapshot,feedback_publish,feedback_finish,feedback_present,feedback_retention,feedback_query,feedback_mask_compare,feedback_gpu_flush,feedback_gpu_submit,feedback_provider_flush,feedback_provider_submit,count
 };
 inline constexpr const char* names[]{
     "attempt","visibility","reference_build","reference_entries","reference_encode",
@@ -25,7 +25,7 @@ inline constexpr const char* names[]{
     "cache_draw","coverage_record","scratch_draw","coverage_select","contour_compile","contour_record","contour_replay","contour_draw","cpu_coverage","gpu_coverage_submit","coverage_flush","material_submit",
     "raster_snapshot","scene_draw","navigation_snapshot","provider_present",
     "owner_pump","pending_owner","target_prepare","scene_stamp","history_prepare","publication_prepare",
-    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service","prepared_select","prepared_draw","historical_mask_draw"
+    "atomic_apply","apply_observer","scene_publish","transient_frame","navigation_frame","canonical_frame","resource_service","prepared_select","prepared_draw","historical_mask_draw","feedback_entry","feedback_total","feedback_acquire","feedback_validation","feedback_gpu_setup","feedback_cache_begin","feedback_prepare","feedback_damage","feedback_target","feedback_inherit","feedback_scene","feedback_snapshot","feedback_publish","feedback_finish","feedback_present","feedback_retention","feedback_query","feedback_mask_compare","feedback_gpu_flush","feedback_gpu_submit","feedback_provider_flush","feedback_provider_submit"
 };
 enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
     prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels,
@@ -37,7 +37,7 @@ enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entr
     stamp_primitives,stamp_bytes,stamp_calls,atomic_start_ns,atomic_end_ns,
     resource_used,resource_pending_release,resource_gpu_epochs,render_pending,render_alloc_denials,
     body_builds,body_advances,body_compile,body_replay,mask_primitive_draws,mask_tile_resets,coverage_steps,history_draw_primitives,validation_mask_primitives,prepare_resets,material_alias_hits,
-    prepared_select_candidates,prepared_draw_candidates,prepared_range_probes,count };
+    prepared_select_candidates,prepared_draw_candidates,prepared_range_probes,feedback_surface_allocations,feedback_allocated_bytes,feedback_inherit_bytes,feedback_retained_bytes,feedback_target_gpu,feedback_incremental,feedback_publish_requested,feedback_entries,count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
     "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels",
@@ -49,7 +49,7 @@ inline constexpr const char* counterNames[]{"candidates","sources","encoded_byte
     "stamp_primitives","stamp_bytes","stamp_calls","atomic_start_ns","atomic_end_ns",
     "resource_used","resource_pending_release","resource_gpu_epochs","render_pending","render_alloc_denials",
     "body_builds","body_advances","body_compile","body_replay","mask_primitive_draws","mask_tile_resets","coverage_steps","history_draw_primitives","validation_mask_primitives","prepare_resets","material_alias_hits",
-    "prepared_select_candidates","prepared_draw_candidates","prepared_range_probes"};
+    "prepared_select_candidates","prepared_draw_candidates","prepared_range_probes","feedback_surface_allocations","feedback_allocated_bytes","feedback_inherit_bytes","feedback_retained_bytes","feedback_target_gpu","feedback_incremental","feedback_publish_requested","feedback_entries"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;

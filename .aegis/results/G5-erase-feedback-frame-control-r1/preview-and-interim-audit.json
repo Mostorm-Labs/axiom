@@ -1,0 +1,51 @@
+{
+  "status": "INTERIM_PREVIEW_AUDIT_NOT_FINAL_GATE",
+  "at": "2026-11-18T17:12:46.859075+00:00",
+  "preview": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/preview-ready.json",
+    "bytes": 1126,
+    "sha256": "52fa79cbcfe61187ce5ad1a17f703ba30d77089457a09966130259852a4da561"
+  },
+  "observed_matches": {
+    "source_manifest": true,
+    "normal_SDK42_files": true,
+    "HTTP_example_wrapper_WASM": true,
+    "source1602_files": true
+  },
+  "source_scope": "Only new erase_feedback_damage.hpp selection and drawDamagedInk invocation change ordinary behavior; other delta private timing/tests. No ownership/public API change observed.",
+  "probe_delta_between_B_C": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/skia_erase_mask.hpp",
+    "runtime/render/src/skia_render_cache.cpp",
+    "new erase_feedback_damage.hpp",
+    "new erase_feedback_frame_test.cpp"
+  ],
+  "native_report": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/native-regressions.json",
+    "bytes": 42782,
+    "sha256": "cab5bbd25980fe3da46ffd0f8741a033f76788ea267a0a66e23cc75a55bb964e"
+  },
+  "ordinary_inputs": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-B1/DPR2/raw.json",
+      "bytes": 4980920,
+      "sha256": "f7bb9d48ab6d10383e126aef0960662d52d162b7676f3f97fc4f5e5d0996d1bf"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-C1/DPR2/raw.json",
+      "bytes": 4626308,
+      "sha256": "defc72b30b955eb9e4897c8cf78946f54cb966fdcb4a49dd7f33f1a54f64f148"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-C2/DPR2/raw.json",
+      "bytes": 4845323,
+      "sha256": "d1440c5d93bff3c5c12b1f4f74190ab7a658b7ede2cf28e9e41751aac6c96393"
+    }
+  ],
+  "preliminary_observations": [
+    "Immediate C active-tail RAF p95 about6.4..7.8ms vs B1 33.3..34.2ms; raw input counts preserved. Not final pooled matrix.",
+    "C1 settled-pan tail only9SDKRAF callbacks, durationp9546.5ms; navigation2750ms, convergence5125.1ms vs B1 nav2038.5ms/convergence444.3ms. Frozen comparison must retain this row; cause not established.",
+    "Conservative helper builds local expanded bounds in float before transform; numeric cancellation may contract support at large local coordinates. Mathematical counterexample center1e9/radius30/translation-1e9 gives collapsed bounds[-3,3] vs drawn nominal stroke[-30,30]; actual Skia rendering not yet qualified. No source change authorized during frozen matrix."
+  ],
+  "pending": "Finish B2/C pixels/references/terminal; independent audit of mask selection numeric correctness and frozen metrics after results. No extra browser sampling."
+}

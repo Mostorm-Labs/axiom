@@ -1,0 +1,2155 @@
+{
+  "rows": [
+    {
+      "run": "EFF-W-B1",
+      "role": "B",
+      "case": "immediate-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 87.83333333333212,
+        "upReturnToFeedbackMs": 105.5,
+        "maxContentProxyGapMs": 87.83333333333212,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.5,
+        "SDKRAFmaxMs": 18.799999952316284,
+        "SDKRAFdurationP95Ms": 9.599999904632568,
+        "dispatchP95Ms": 20.100000143051147,
+        "inputLatenessP95Ms": 96.20000004768372,
+        "convergenceMs": 482.2000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 84,
+          "median": 29.799999952316284,
+          "p95": 33.299999952316284,
+          "max": 34.10000014305115
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 33.59999990463257,
+          "p95": 33.59999990463257,
+          "max": 33.59999990463257
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.2999999523162842,
+          "p95": 0.5,
+          "max": 0.5999999046325684
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.2999999523162842,
+          "p95": 0.2999999523162842,
+          "max": 0.2999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 20.100000143051147,
+          "max": 35.10000014305115
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 86.70000004768372,
+          "p95": 96.20000004768372,
+          "max": 97.33333333333212
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 20.100000143051147,
+          "max": 35.10000014305115
+        },
+        "navRAFInterval": {
+          "n": 125,
+          "median": 16.699999809265137,
+          "p95": 18.5,
+          "max": 18.799999952316284
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 9406.899999856949,
+          "p95": 9406.899999856949,
+          "max": 9406.899999856949
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2102.7000000476837,
+          "p95": 2102.7000000476837,
+          "max": 2102.7000000476837
+        },
+        "convergence": {
+          "n": 1,
+          "median": 482.2000000476837,
+          "p95": 482.2000000476837,
+          "max": 482.2000000476837
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 497,
+        "timestamp": 18283.6,
+        "started": 18300.200000047684,
+        "source": "sdk",
+        "ended": 18333.799999952316
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 18299.700000047684,
+        "ended": 18300
+      },
+      "upReturn": 18300,
+      "operationTimes": [
+        {
+          "at": 4205.600000143051,
+          "bytes": 667892,
+          "name": "immediate-pan-op-0.bin"
+        },
+        {
+          "at": 7489.5,
+          "bytes": 667892,
+          "name": "immediate-pan-op-1.bin"
+        },
+        {
+          "at": 19125.200000047684,
+          "bytes": 1999092,
+          "name": "immediate-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B1",
+      "role": "B",
+      "case": "immediate-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 61.033333142600895,
+        "upReturnToFeedbackMs": 78.69999980926514,
+        "maxContentProxyGapMs": 61.033333142600895,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.40000009536743,
+        "SDKRAFmaxMs": 21.83333333333576,
+        "SDKRAFdurationP95Ms": 9.299999952316284,
+        "dispatchP95Ms": 18.199999809265137,
+        "inputLatenessP95Ms": 68.63333328565204,
+        "convergenceMs": 282,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 78,
+          "median": 29.850000143051147,
+          "p95": 34.19999980926514,
+          "max": 34.59999990463257
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 31.59999990463257,
+          "p95": 31.59999990463257,
+          "max": 31.59999990463257
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.2999999523162842,
+          "p95": 0.5,
+          "max": 0.7000000476837158
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.20000004768371582,
+          "p95": 0.20000004768371582,
+          "max": 0.20000004768371582
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.40000009536743,
+          "p95": 18.199999809265137,
+          "max": 35.799999952316284
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 59.66666654745859,
+          "p95": 68.63333328565204,
+          "max": 69.86666647592938
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.40000009536743,
+          "p95": 18.199999809265137,
+          "max": 35.799999952316284
+        },
+        "navRAFInterval": {
+          "n": 124,
+          "median": 16.700000047683716,
+          "p95": 18.40000009536743,
+          "max": 21.83333333333576
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 9297.900000095367,
+          "p95": 9297.900000095367,
+          "max": 9297.900000095367
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2076.2999999523163,
+          "p95": 2076.2999999523163,
+          "max": 2076.2999999523163
+        },
+        "convergence": {
+          "n": 1,
+          "median": 282,
+          "p95": 282,
+          "max": 282
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 474,
+        "timestamp": 41232.6,
+        "started": 41233.700000047684,
+        "source": "sdk",
+        "ended": 41265.299999952316
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 41225.90000009537,
+        "ended": 41226.10000014305
+      },
+      "upReturn": 41226.10000014305,
+      "operationTimes": [
+        {
+          "at": 27055.5,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-0.bin"
+        },
+        {
+          "at": 30474.799999952316,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-1.bin"
+        },
+        {
+          "at": 42039,
+          "bytes": 1999092,
+          "name": "immediate-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B1",
+      "role": "B",
+      "case": "settled-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 37.33333333332848,
+        "upReturnToFeedbackMs": 1078.7999999523163,
+        "maxContentProxyGapMs": 37.33333333332848,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.200000047683716,
+        "SDKRAFmaxMs": 18.600000143051147,
+        "SDKRAFdurationP95Ms": 3.5,
+        "dispatchP95Ms": 20,
+        "inputLatenessP95Ms": 24.0333333810122,
+        "convergenceMs": 444.30000019073486,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 80,
+          "median": 30.549999952316284,
+          "p95": 33.799999952316284,
+          "max": 35.0
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 35.60000014305115,
+          "p95": 35.60000014305115,
+          "max": 35.60000014305115
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.3000001907348633,
+          "p95": 0.5,
+          "max": 0.6000001430511475
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.09999990463256836,
+          "p95": 0.09999990463256836,
+          "max": 0.09999990463256836
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.09999990463257,
+          "p95": 20.0,
+          "max": 32.40000009536743
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 21.733333428695914,
+          "p95": 24.0333333810122,
+          "max": 24.366666714355233
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.09999990463257,
+          "p95": 20.0,
+          "max": 32.40000009536743
+        },
+        "navRAFInterval": {
+          "n": 122,
+          "median": 16.700000047683716,
+          "p95": 18.200000047683716,
+          "max": 18.600000143051147
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 9220.799999952316,
+          "p95": 9220.799999952316,
+          "max": 9220.799999952316
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2038.5,
+          "p95": 2038.5,
+          "max": 2038.5
+        },
+        "convergence": {
+          "n": 1,
+          "median": 444.30000019073486,
+          "p95": 444.30000019073486,
+          "max": 444.30000019073486
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 471,
+        "timestamp": 64531.7,
+        "started": 64532.299999952316,
+        "source": "sdk",
+        "ended": 64567.90000009537
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 64523.90000009537,
+        "ended": 64524
+      },
+      "upReturn": 64524,
+      "operationTimes": [
+        {
+          "at": 50159.799999952316,
+          "bytes": 667892,
+          "name": "settled-pan-op-0.bin"
+        },
+        {
+          "at": 53689.60000014305,
+          "bytes": 667892,
+          "name": "settled-pan-op-1.bin"
+        },
+        {
+          "at": 65411.299999952316,
+          "bytes": 1999092,
+          "name": "settled-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B1",
+      "role": "B",
+      "case": "settled-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 35.233333428695914,
+        "upReturnToFeedbackMs": 1035.1000001430511,
+        "maxContentProxyGapMs": 35.5,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.299999952316284,
+        "SDKRAFmaxMs": 18.5,
+        "SDKRAFdurationP95Ms": 3.8000001907348633,
+        "dispatchP95Ms": 19.700000047683716,
+        "inputLatenessP95Ms": 22.0333333810122,
+        "convergenceMs": 205.79999995231628,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 87,
+          "median": 29.600000143051147,
+          "p95": 33.700000047683716,
+          "max": 35.799999952316284
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 35.700000047683716,
+          "p95": 35.700000047683716,
+          "max": 35.700000047683716
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.3000001907348633,
+          "p95": 0.5,
+          "max": 0.6000001430511475
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.2999999523162842,
+          "p95": 0.2999999523162842,
+          "max": 0.2999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.5,
+          "p95": 19.700000047683716,
+          "max": 32.89999985694885
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 19.266666571304086,
+          "p95": 22.0333333810122,
+          "max": 22.5333333810122
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.5,
+          "p95": 19.700000047683716,
+          "max": 32.89999985694885
+        },
+        "navRAFInterval": {
+          "n": 121,
+          "median": 16.700000047683716,
+          "p95": 18.299999952316284,
+          "max": 18.5
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 9178.700000047684,
+          "p95": 9178.700000047684,
+          "max": 9178.700000047684
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2037.2000000476837,
+          "p95": 2037.2000000476837,
+          "max": 2037.2000000476837
+        },
+        "convergence": {
+          "n": 1,
+          "median": 205.79999995231628,
+          "p95": 205.79999995231628,
+          "max": 205.79999995231628
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 495,
+        "timestamp": 89264.1,
+        "started": 89267.40000009537,
+        "source": "sdk",
+        "ended": 89303.10000014305
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 89266.70000004768,
+        "ended": 89267
+      },
+      "upReturn": 89267,
+      "operationTimes": [
+        {
+          "at": 74767.79999995232,
+          "bytes": 667892,
+          "name": "settled-pinch-op-0.bin"
+        },
+        {
+          "at": 78386.79999995232,
+          "bytes": 667892,
+          "name": "settled-pinch-op-1.bin"
+        },
+        {
+          "at": 90093.60000014305,
+          "bytes": 1999092,
+          "name": "settled-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B2",
+      "role": "B",
+      "case": "immediate-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 89.03333338101584,
+        "upReturnToFeedbackMs": 106.70000004768372,
+        "maxContentProxyGapMs": 89.03333338101584,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.40000009536743,
+        "SDKRAFmaxMs": 21.299999952316284,
+        "SDKRAFdurationP95Ms": 9.700000047683716,
+        "dispatchP95Ms": 19.199999809265137,
+        "inputLatenessP95Ms": 98.3666667143516,
+        "convergenceMs": 482.19999980926514,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 89,
+          "median": 29.200000047683716,
+          "p95": 33.5,
+          "max": 34.299999952316284
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 33.69999980926514,
+          "p95": 33.69999980926514,
+          "max": 33.69999980926514
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.3000001907348633,
+          "p95": 0.5,
+          "max": 0.6000001430511475
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.2999999523162842,
+          "p95": 0.2999999523162842,
+          "max": 0.2999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.25,
+          "p95": 19.199999809265137,
+          "max": 35.40000009536743
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 90.03333338101584,
+          "p95": 98.3666667143516,
+          "max": 100.70000004768372
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.25,
+          "p95": 19.199999809265137,
+          "max": 35.40000009536743
+        },
+        "navRAFInterval": {
+          "n": 125,
+          "median": 16.600000143051147,
+          "p95": 18.40000009536743,
+          "max": 21.299999952316284
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 9200.700000047684,
+          "p95": 9200.700000047684,
+          "max": 9200.700000047684
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2104.7000000476837,
+          "p95": 2104.7000000476837,
+          "max": 2104.7000000476837
+        },
+        "convergence": {
+          "n": 1,
+          "median": 482.19999980926514,
+          "p95": 482.19999980926514,
+          "max": 482.19999980926514
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 497,
+        "timestamp": 18087.4,
+        "started": 18088.700000047684,
+        "source": "sdk",
+        "ended": 18122.39999985695
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 18083.700000047684,
+        "ended": 18084
+      },
+      "upReturn": 18084,
+      "operationTimes": [
+        {
+          "at": 4178.399999856949,
+          "bytes": 667892,
+          "name": "immediate-pan-op-0.bin"
+        },
+        {
+          "at": 7478,
+          "bytes": 667892,
+          "name": "immediate-pan-op-1.bin"
+        },
+        {
+          "at": 18914.799999952316,
+          "bytes": 1999092,
+          "name": "immediate-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B2",
+      "role": "B",
+      "case": "immediate-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 104.53333338101947,
+        "upReturnToFeedbackMs": 122.20000004768372,
+        "maxContentProxyGapMs": 104.53333338101947,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18,
+        "SDKRAFmaxMs": 46.23333342870319,
+        "SDKRAFdurationP95Ms": 10.5,
+        "dispatchP95Ms": 17.700000047683716,
+        "inputLatenessP95Ms": 113.63333352407062,
+        "convergenceMs": 321.80000019073486,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 57,
+          "median": 56.09999990463257,
+          "p95": 61.0,
+          "max": 61.40000009536743
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 62.200000047683716,
+          "p95": 62.200000047683716,
+          "max": 62.200000047683716
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.6000001430511475,
+          "p95": 1.0,
+          "max": 1.5
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.5,
+          "p95": 0.5,
+          "max": 0.5
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 17.700000047683716,
+          "max": 35.09999990463257
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 104.63333352407062,
+          "p95": 113.63333352407062,
+          "max": 114.73333342870319
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 17.700000047683716,
+          "max": 35.09999990463257
+        },
+        "navRAFInterval": {
+          "n": 125,
+          "median": 16.600000143051147,
+          "p95": 18.0,
+          "max": 46.23333342870319
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 13554.899999856949,
+          "p95": 13554.899999856949,
+          "max": 13554.899999856949
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2119.5,
+          "p95": 2119.5,
+          "max": 2119.5
+        },
+        "convergence": {
+          "n": 1,
+          "median": 321.80000019073486,
+          "p95": 321.80000019073486,
+          "max": 321.80000019073486
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 441,
+        "timestamp": 46136.2,
+        "started": 46137.59999990463,
+        "source": "sdk",
+        "ended": 46199.799999952316
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 46135.89999985695,
+        "ended": 46136.39999985695
+      },
+      "upReturn": 46136.39999985695,
+      "operationTimes": [
+        {
+          "at": 26822.799999952316,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-0.bin"
+        },
+        {
+          "at": 30381.099999904633,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-1.bin"
+        },
+        {
+          "at": 47398.200000047684,
+          "bytes": 1999092,
+          "name": "immediate-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B2",
+      "role": "B",
+      "case": "settled-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 47.13333328564477,
+        "upReturnToFeedbackMs": 1355.9000000953674,
+        "maxContentProxyGapMs": 47.13333328564477,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.299999952316284,
+        "SDKRAFmaxMs": 19,
+        "SDKRAFdurationP95Ms": 2.9000000953674316,
+        "dispatchP95Ms": 18.5,
+        "inputLatenessP95Ms": 32.83333333332848,
+        "convergenceMs": 459.7000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 52,
+          "median": 54.59999990463257,
+          "p95": 60.59999990463257,
+          "max": 61.69999980926514
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 53.59999990463257,
+          "p95": 53.59999990463257,
+          "max": 53.59999990463257
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.5,
+          "p95": 0.9000000953674316,
+          "max": 1.2999999523162842
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.39999985694885254,
+          "p95": 0.39999985694885254,
+          "max": 0.39999985694885254
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.300000071525574,
+          "p95": 18.5,
+          "max": 33.5
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 30.933333237968327,
+          "p95": 32.83333333332848,
+          "max": 33.766666571304086
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.300000071525574,
+          "p95": 18.5,
+          "max": 33.5
+        },
+        "navRAFInterval": {
+          "n": 122,
+          "median": 16.600000023841858,
+          "p95": 18.299999952316284,
+          "max": 19
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 14438.799999952316,
+          "p95": 14438.799999952316,
+          "max": 14438.799999952316
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2048.699999809265,
+          "p95": 2048.699999809265,
+          "max": 2048.699999809265
+        },
+        "convergence": {
+          "n": 1,
+          "median": 459.7000000476837,
+          "p95": 459.7000000476837,
+          "max": 459.7000000476837
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 480,
+        "timestamp": 79251.5,
+        "started": 79252.20000004768,
+        "source": "sdk",
+        "ended": 79305.79999995232
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 79249.70000004768,
+        "ended": 79250.09999990463
+      },
+      "upReturn": 79250.09999990463,
+      "operationTimes": [
+        {
+          "at": 56894.39999985695,
+          "bytes": 667892,
+          "name": "settled-pan-op-0.bin"
+        },
+        {
+          "at": 61729.700000047684,
+          "bytes": 667892,
+          "name": "settled-pan-op-1.bin"
+        },
+        {
+          "at": 80392.70000004768,
+          "bytes": 1999092,
+          "name": "settled-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-B2",
+      "role": "B",
+      "case": "settled-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 45.63333328564477,
+        "upReturnToFeedbackMs": 1310,
+        "maxContentProxyGapMs": 45.63333328564477,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.200000047683716,
+        "SDKRAFmaxMs": 18.5,
+        "SDKRAFdurationP95Ms": 3.4000000953674316,
+        "dispatchP95Ms": 19.200000047683716,
+        "inputLatenessP95Ms": 32.200000047683716,
+        "convergenceMs": 188.40000009536743,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 58,
+          "median": 47.5,
+          "p95": 53.59999990463257,
+          "max": 53.90000009536743
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 55.39999985694885,
+          "p95": 55.39999985694885,
+          "max": 55.39999985694885
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.5,
+          "p95": 0.7999999523162842,
+          "max": 1.2000000476837158
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.39999985694885254,
+          "p95": 0.39999985694885254,
+          "max": 0.39999985694885254
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 19.200000047683716,
+          "max": 33.5
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 30.233333428695914,
+          "p95": 32.200000047683716,
+          "max": 33.43333323796105
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 19.200000047683716,
+          "max": 33.5
+        },
+        "navRAFInterval": {
+          "n": 122,
+          "median": 16.700000047683716,
+          "p95": 18.200000047683716,
+          "max": 18.5
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 13602.099999904633,
+          "p95": 13602.099999904633,
+          "max": 13602.099999904633
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2048.5999999046326,
+          "p95": 2048.5999999046326,
+          "max": 2048.5999999046326
+        },
+        "convergence": {
+          "n": 1,
+          "median": 188.40000009536743,
+          "p95": 188.40000009536743,
+          "max": 188.40000009536743
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 484,
+        "timestamp": 112250.2,
+        "started": 112261.20000004768,
+        "source": "sdk",
+        "ended": 112316.59999990463
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 112260.20000004768,
+        "ended": 112260.59999990463
+      },
+      "upReturn": 112260.59999990463,
+      "operationTimes": [
+        {
+          "at": 91192.20000004768,
+          "bytes": 667892,
+          "name": "settled-pinch-op-0.bin"
+        },
+        {
+          "at": 95460.20000004768,
+          "bytes": 667892,
+          "name": "settled-pinch-op-1.bin"
+        },
+        {
+          "at": 113302.79999995232,
+          "bytes": 1999092,
+          "name": "settled-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C1",
+      "role": "C",
+      "case": "immediate-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 48.53333338101584,
+        "upReturnToFeedbackMs": 66.20000004768372,
+        "maxContentProxyGapMs": 48.53333338101584,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.40000009536743,
+        "SDKRAFmaxMs": 18.59999990463257,
+        "SDKRAFdurationP95Ms": 9.599999904632568,
+        "dispatchP95Ms": 19,
+        "inputLatenessP95Ms": 55.03333338101584,
+        "convergenceMs": 465.7999999523163,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 120,
+          "median": 5.650000095367432,
+          "p95": 7.599999904632568,
+          "max": 8.599999904632568
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 5.099999904632568,
+          "p95": 5.099999904632568,
+          "max": 5.099999904632568
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.3000001907348633,
+          "p95": 0.5,
+          "max": 0.6000001430511475
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.20000004768371582,
+          "p95": 0.20000004768371582,
+          "max": 0.20000004768371582
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.399999976158142,
+          "p95": 19.0,
+          "max": 37.200000047683716
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 46.050000071525574,
+          "p95": 55.03333338101584,
+          "max": 56.73333342869955
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.399999976158142,
+          "p95": 19.0,
+          "max": 37.200000047683716
+        },
+        "navRAFInterval": {
+          "n": 123,
+          "median": 16.700000047683716,
+          "p95": 18.40000009536743,
+          "max": 18.59999990463257
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8000.900000095367,
+          "p95": 8000.900000095367,
+          "max": 8000.900000095367
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2062.2999999523163,
+          "p95": 2062.2999999523163,
+          "max": 2062.2999999523163
+        },
+        "convergence": {
+          "n": 1,
+          "median": 465.7999999523163,
+          "p95": 465.7999999523163,
+          "max": 465.7999999523163
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 482,
+        "timestamp": 16912.5,
+        "started": 16914.400000095367,
+        "source": "sdk",
+        "ended": 16919.5
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 16902.700000047684,
+        "ended": 16902.900000095367
+      },
+      "upReturn": 16902.900000095367,
+      "operationTimes": [
+        {
+          "at": 4201.100000143051,
+          "bytes": 667892,
+          "name": "immediate-pan-op-0.bin"
+        },
+        {
+          "at": 7500,
+          "bytes": 667892,
+          "name": "immediate-pan-op-1.bin"
+        },
+        {
+          "at": 17702.400000095367,
+          "bytes": 1999092,
+          "name": "immediate-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C1",
+      "role": "C",
+      "case": "immediate-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 61.73333342870319,
+        "upReturnToFeedbackMs": 79.40000009536743,
+        "maxContentProxyGapMs": 61.73333342870319,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.09999990463257,
+        "SDKRAFmaxMs": 18.5,
+        "SDKRAFdurationP95Ms": 9.299999952316284,
+        "dispatchP95Ms": 18.600000143051147,
+        "inputLatenessP95Ms": 69.9333334763869,
+        "convergenceMs": 278.30000019073486,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 120,
+          "median": 5.0,
+          "p95": 6.400000095367432,
+          "max": 8.399999856948853
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 3.9000000953674316,
+          "p95": 3.9000000953674316,
+          "max": 3.9000000953674316
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.3000001907348633,
+          "p95": 0.5,
+          "max": 0.6000001430511475
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.2999999523162842,
+          "p95": 0.2999999523162842,
+          "max": 0.2999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 18.600000143051147,
+          "max": 36.90000009536743
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 60.88333340486133,
+          "p95": 69.9333334763869,
+          "max": 70.96666661898053
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 18.600000143051147,
+          "max": 36.90000009536743
+        },
+        "navRAFInterval": {
+          "n": 124,
+          "median": 16.600000023841858,
+          "p95": 18.09999990463257,
+          "max": 18.5
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8003.5,
+          "p95": 8003.5,
+          "max": 8003.5
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2077.2999999523163,
+          "p95": 2077.2999999523163,
+          "max": 2077.2999999523163
+        },
+        "convergence": {
+          "n": 1,
+          "median": 278.30000019073486,
+          "p95": 278.30000019073486,
+          "max": 278.30000019073486
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 482,
+        "timestamp": 38528.3,
+        "started": 38529.700000047684,
+        "source": "sdk",
+        "ended": 38533.60000014305
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 38519.90000009537,
+        "ended": 38520.200000047684
+      },
+      "upReturn": 38520.200000047684,
+      "operationTimes": [
+        {
+          "at": 25581.10000014305,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-0.bin"
+        },
+        {
+          "at": 29016.900000095367,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-1.bin"
+        },
+        {
+          "at": 39306.700000047684,
+          "bytes": 1999092,
+          "name": "immediate-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C1",
+      "role": "C",
+      "case": "settled-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 45.733333428695914,
+        "upReturnToFeedbackMs": 3686,
+        "maxContentProxyGapMs": 50.299999952316284,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.700000047683716,
+        "SDKRAFmaxMs": 19.90000009536743,
+        "SDKRAFdurationP95Ms": 7.700000047683716,
+        "dispatchP95Ms": 34.90000009536743,
+        "inputLatenessP95Ms": 659.6000001430511,
+        "convergenceMs": 5125.100000143051,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 9,
+          "median": 23.299999952316284,
+          "p95": 46.5,
+          "max": 46.5
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 23.699999809265137,
+          "p95": 23.699999809265137,
+          "max": 23.699999809265137
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 1.8999998569488525,
+          "p95": 3.799999952316284,
+          "max": 6.5
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 1.0,
+          "p95": 1.0,
+          "max": 1.0
+        },
+        "CDP": {
+          "n": 120,
+          "median": 22.049999952316284,
+          "p95": 34.90000009536743,
+          "max": 38.700000047683716
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 318.4666668573991,
+          "p95": 659.6000001430511,
+          "max": 716.0
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 22.049999952316284,
+          "p95": 34.90000009536743,
+          "max": 38.700000047683716
+        },
+        "navRAFInterval": {
+          "n": 164,
+          "median": 16.649999976158142,
+          "p95": 18.700000047683716,
+          "max": 19.90000009536743
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8004.799999952316,
+          "p95": 8004.799999952316,
+          "max": 8004.799999952316
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2750.0,
+          "p95": 2750.0,
+          "max": 2750.0
+        },
+        "convergence": {
+          "n": 1,
+          "median": 5125.100000143051,
+          "p95": 5125.100000143051,
+          "max": 5125.100000143051
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 165,
+        "timestamp": 62644,
+        "started": 62660.300000190735,
+        "source": "sdk",
+        "ended": 62684
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 62516.90000009537,
+        "ended": 62517.90000009537
+      },
+      "upReturn": 62517.90000009537,
+      "operationTimes": [
+        {
+          "at": 47573.40000009537,
+          "bytes": 667892,
+          "name": "settled-pan-op-0.bin"
+        },
+        {
+          "at": 51394.700000047684,
+          "bytes": 667892,
+          "name": "settled-pan-op-1.bin"
+        },
+        {
+          "at": 65359,
+          "bytes": 1999092,
+          "name": "settled-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C1",
+      "role": "C",
+      "case": "settled-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 61.13333328564477,
+        "upReturnToFeedbackMs": 1693,
+        "maxContentProxyGapMs": 61.13333328564477,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.299999952316284,
+        "SDKRAFmaxMs": 24.43333323796105,
+        "SDKRAFdurationP95Ms": 4.400000095367432,
+        "dispatchP95Ms": 19.59999990463257,
+        "inputLatenessP95Ms": 48.366666475936654,
+        "convergenceMs": 193.80000019073486,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 53,
+          "median": 11.299999952316284,
+          "p95": 14.900000095367432,
+          "max": 15.700000047683716
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 10.400000095367432,
+          "p95": 10.400000095367432,
+          "max": 10.400000095367432
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.7999999523162842,
+          "p95": 2.5999999046325684,
+          "max": 6.300000190734863
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.6000001430511475,
+          "p95": 0.6000001430511475,
+          "max": 0.6000001430511475
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.100000143051147,
+          "p95": 19.59999990463257,
+          "max": 32.799999952316284
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 45.08333321411919,
+          "p95": 48.366666475936654,
+          "max": 51.0
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.100000143051147,
+          "p95": 19.59999990463257,
+          "max": 32.799999952316284
+        },
+        "navRAFInterval": {
+          "n": 122,
+          "median": 16.700000047683716,
+          "p95": 18.299999952316284,
+          "max": 24.43333323796105
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8005.200000047684,
+          "p95": 8005.200000047684,
+          "max": 8005.200000047684
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2060.199999809265,
+          "p95": 2060.199999809265,
+          "max": 2060.199999809265
+        },
+        "convergence": {
+          "n": 1,
+          "median": 193.80000019073486,
+          "p95": 193.80000019073486,
+          "max": 193.80000019073486
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 318,
+        "timestamp": 105892.2,
+        "started": 105906.20000004768,
+        "source": "sdk",
+        "ended": 105916.60000014305
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 105871,
+        "ended": 105871.60000014305
+      },
+      "upReturn": 105871.60000014305,
+      "operationTimes": [
+        {
+          "at": 89455.30000019073,
+          "bytes": 667892,
+          "name": "settled-pinch-op-0.bin"
+        },
+        {
+          "at": 94233,
+          "bytes": 667892,
+          "name": "settled-pinch-op-1.bin"
+        },
+        {
+          "at": 107238.5,
+          "bytes": 1999092,
+          "name": "settled-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C2",
+      "role": "C",
+      "case": "immediate-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 43.83333333333212,
+        "upReturnToFeedbackMs": 61.5,
+        "maxContentProxyGapMs": 43.83333333333212,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 16.800000190734863,
+        "SDKRAFmaxMs": 18.5,
+        "SDKRAFdurationP95Ms": 9.799999952316284,
+        "dispatchP95Ms": 18.600000143051147,
+        "inputLatenessP95Ms": 60.76666680971903,
+        "convergenceMs": 485.09999990463257,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 120,
+          "median": 5.700000047683716,
+          "p95": 7.800000190734863,
+          "max": 8.900000095367432
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 7.300000190734863,
+          "p95": 7.300000190734863,
+          "max": 7.300000190734863
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.2999999523162842,
+          "p95": 0.40000009536743164,
+          "max": 0.5999999046325684
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.2999999523162842,
+          "p95": 0.2999999523162842,
+          "max": 0.2999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.40000009536743,
+          "p95": 18.600000143051147,
+          "max": 33.0
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 59.31666676203349,
+          "p95": 60.76666680971903,
+          "max": 69.23333342869955
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.40000009536743,
+          "p95": 18.600000143051147,
+          "max": 33.0
+        },
+        "navRAFInterval": {
+          "n": 124,
+          "median": 16.699999809265137,
+          "p95": 16.800000190734863,
+          "max": 18.5
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8005.599999904633,
+          "p95": 8005.599999904633,
+          "max": 8005.599999904633
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2075.9000000953674,
+          "p95": 2075.9000000953674,
+          "max": 2075.9000000953674
+        },
+        "convergence": {
+          "n": 1,
+          "median": 485.09999990463257,
+          "p95": 485.09999990463257,
+          "max": 485.09999990463257
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 482,
+        "timestamp": 16882.2,
+        "started": 16885.299999952316,
+        "source": "sdk",
+        "ended": 16892.60000014305
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 16876,
+        "ended": 16876.299999952316
+      },
+      "upReturn": 16876.299999952316,
+      "operationTimes": [
+        {
+          "at": 4188.700000047684,
+          "bytes": 667892,
+          "name": "immediate-pan-op-0.bin"
+        },
+        {
+          "at": 7472.900000095367,
+          "bytes": 667892,
+          "name": "immediate-pan-op-1.bin"
+        },
+        {
+          "at": 17678,
+          "bytes": 1999092,
+          "name": "immediate-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C2",
+      "role": "C",
+      "case": "immediate-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 59.93333323796833,
+        "upReturnToFeedbackMs": 77.59999990463257,
+        "maxContentProxyGapMs": 59.93333323796833,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.200000047683716,
+        "SDKRAFmaxMs": 19.700000047683716,
+        "SDKRAFdurationP95Ms": 9.700000047683716,
+        "dispatchP95Ms": 19.200000047683716,
+        "inputLatenessP95Ms": 68.59999990463257,
+        "convergenceMs": 281.7000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 120,
+          "median": 5.599999904632568,
+          "p95": 7.3999998569488525,
+          "max": 9.0
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 4.6000001430511475,
+          "p95": 4.6000001430511475,
+          "max": 4.6000001430511475
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.2999999523162842,
+          "p95": 0.40000009536743164,
+          "max": 3.0
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.20000004768371582,
+          "p95": 0.20000004768371582,
+          "max": 0.20000004768371582
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 19.200000047683716,
+          "max": 37.90000009536743
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 59.26666657130045,
+          "p95": 68.59999990463257,
+          "max": 69.09999990463257
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.299999952316284,
+          "p95": 19.200000047683716,
+          "max": 37.90000009536743
+        },
+        "navRAFInterval": {
+          "n": 124,
+          "median": 16.699999928474426,
+          "p95": 18.200000047683716,
+          "max": 19.700000047683716
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8002.0,
+          "p95": 8002.0,
+          "max": 8002.0
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2075.399999856949,
+          "p95": 2075.399999856949,
+          "max": 2075.399999856949
+        },
+        "convergence": {
+          "n": 1,
+          "median": 281.7000000476837,
+          "p95": 281.7000000476837,
+          "max": 281.7000000476837
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 482,
+        "timestamp": 38548.1,
+        "started": 38549.799999952316,
+        "source": "sdk",
+        "ended": 38554.40000009537
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 38542.200000047684,
+        "ended": 38542.40000009537
+      },
+      "upReturn": 38542.40000009537,
+      "operationTimes": [
+        {
+          "at": 25604,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-0.bin"
+        },
+        {
+          "at": 29022.5,
+          "bytes": 667892,
+          "name": "immediate-pinch-op-1.bin"
+        },
+        {
+          "at": 39407.60000014305,
+          "bytes": 1999092,
+          "name": "immediate-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C2",
+      "role": "C",
+      "case": "settled-pan",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 45.13333328564477,
+        "upReturnToFeedbackMs": 1909.1000001430511,
+        "maxContentProxyGapMs": 45.13333328564477,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 17.799999952316284,
+        "SDKRAFmaxMs": 18.799999952316284,
+        "SDKRAFdurationP95Ms": 3.299999952316284,
+        "dispatchP95Ms": 18.5,
+        "inputLatenessP95Ms": 31.93333323796105,
+        "convergenceMs": 528.9000000953674,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 40,
+          "median": 13.99999988079071,
+          "p95": 16.90000009536743,
+          "max": 17.299999952316284
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 11.799999952316284,
+          "p95": 11.799999952316284,
+          "max": 11.799999952316284
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.6999998092651367,
+          "p95": 1.2000000476837158,
+          "max": 1.5
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.6999998092651367,
+          "p95": 0.6999998092651367,
+          "max": 0.6999998092651367
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 18.5,
+          "max": 33.0
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 29.9833333094939,
+          "p95": 31.93333323796105,
+          "max": 33.4666666189878
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 18.5,
+          "max": 33.0
+        },
+        "navRAFInterval": {
+          "n": 122,
+          "median": 16.700000047683716,
+          "p95": 17.799999952316284,
+          "max": 18.799999952316284
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8002.799999952316,
+          "p95": 8002.799999952316,
+          "max": 8002.799999952316
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2045.6999998092651,
+          "p95": 2045.6999998092651,
+          "max": 2045.6999998092651
+        },
+        "convergence": {
+          "n": 1,
+          "median": 528.9000000953674,
+          "p95": 528.9000000953674,
+          "max": 528.9000000953674
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 326,
+        "timestamp": 64480.3,
+        "started": 64489.10000014305,
+        "source": "sdk",
+        "ended": 64500.90000009537
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 64475.10000014305,
+        "ended": 64475.799999952316
+      },
+      "upReturn": 64475.799999952316,
+      "operationTimes": [
+        {
+          "at": 48834.60000014305,
+          "bytes": 667892,
+          "name": "settled-pan-op-0.bin"
+        },
+        {
+          "at": 53063.60000014305,
+          "bytes": 667892,
+          "name": "settled-pan-op-1.bin"
+        },
+        {
+          "at": 66115.5,
+          "bytes": 1999092,
+          "name": "settled-pan-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    },
+    {
+      "run": "EFF-W-C2",
+      "role": "C",
+      "case": "settled-pinch",
+      "inputCount": 120,
+      "eraseMoveCount": 480,
+      "plannedEraseMs": 8000,
+      "plannedNavigationMs": 2000,
+      "metrics": {
+        "firstFeedbackMs": 35.733333428695914,
+        "upReturnToFeedbackMs": 1882.7999999523163,
+        "maxContentProxyGapMs": 35.733333428695914,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.40000009536743,
+        "SDKRAFmaxMs": 18.699999809265137,
+        "SDKRAFdurationP95Ms": 3.9000000953674316,
+        "dispatchP95Ms": 19.200000047683716,
+        "inputLatenessP95Ms": 22.633333524063346,
+        "convergenceMs": 210.59999990463257,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "stats": {
+        "activeTailRAF": {
+          "n": 22,
+          "median": 14.049999952316284,
+          "p95": 18.299999952316284,
+          "max": 18.399999856948853
+        },
+        "firstPostUpRAF": {
+          "n": 1,
+          "median": 10.799999952316284,
+          "p95": 10.799999952316284,
+          "max": 10.799999952316284
+        },
+        "activeMoveHandler": {
+          "n": 480,
+          "median": 0.5999999046325684,
+          "p95": 1.0,
+          "max": 2.0
+        },
+        "upHandler": {
+          "n": 1,
+          "median": 0.7999999523162842,
+          "p95": 0.7999999523162842,
+          "max": 0.7999999523162842
+        },
+        "CDP": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 19.200000047683716,
+          "max": 34.0
+        },
+        "inputLateness": {
+          "n": 120,
+          "median": 20.76666680971539,
+          "p95": 22.633333524063346,
+          "max": 23.333333333328483
+        },
+        "dispatch": {
+          "n": 120,
+          "median": 16.200000047683716,
+          "p95": 19.200000047683716,
+          "max": 34.0
+        },
+        "navRAFInterval": {
+          "n": 121,
+          "median": 16.699999809265137,
+          "p95": 18.40000009536743,
+          "max": 18.699999809265137
+        },
+        "eraseDuration": {
+          "n": 1,
+          "median": 8003.600000143051,
+          "p95": 8003.600000143051,
+          "max": 8003.600000143051
+        },
+        "navigationDuration": {
+          "n": 1,
+          "median": 2035.8000001907349,
+          "p95": 2035.8000001907349,
+          "max": 2035.8000001907349
+        },
+        "convergence": {
+          "n": 1,
+          "median": 210.59999990463257,
+          "p95": 210.59999990463257,
+          "max": 210.59999990463257
+        }
+      },
+      "firstPostUpRAF": {
+        "id": 370,
+        "timestamp": 93829.1,
+        "started": 93836.20000004768,
+        "source": "sdk",
+        "ended": 93847
+      },
+      "up": {
+        "index": 480,
+        "type": "up",
+        "at": 93733.60000014305,
+        "ended": 93734.40000009537
+      },
+      "upReturn": 93734.40000009537,
+      "operationTimes": [
+        {
+          "at": 77605.5,
+          "bytes": 667892,
+          "name": "settled-pinch-op-0.bin"
+        },
+        {
+          "at": 81988.20000004768,
+          "bytes": 667892,
+          "name": "settled-pinch-op-1.bin"
+        },
+        {
+          "at": 95312.10000014305,
+          "bytes": 1999092,
+          "name": "settled-pinch-op-2.bin"
+        }
+      ],
+      "complete": true,
+      "normalDiagnostics": 0
+    }
+  ],
+  "checks": [
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pan",
+      "metric": "firstFeedbackMs",
+      "C": 48.53333338101584,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pan",
+      "metric": "maxContentGapMs",
+      "C": 48.53333338101584,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pan",
+      "metric": "SDKRAFintervalP95Ms",
+      "C": 18.40000009536743,
+      "limit": 33,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pinch",
+      "metric": "firstFeedbackMs",
+      "C": 61.73333342870319,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pinch",
+      "metric": "maxContentGapMs",
+      "C": 61.73333342870319,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C1",
+      "case": "immediate-pinch",
+      "metric": "SDKRAFintervalP95Ms",
+      "C": 18.09999990463257,
+      "limit": 33,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pan",
+      "metric": "firstFeedbackMs",
+      "C": 43.83333333333212,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pan",
+      "metric": "maxContentGapMs",
+      "C": 43.83333333333212,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pan",
+      "metric": "SDKRAFintervalP95Ms",
+      "C": 16.800000190734863,
+      "limit": 33,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pinch",
+      "metric": "firstFeedbackMs",
+      "C": 59.93333323796833,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pinch",
+      "metric": "maxContentGapMs",
+      "C": 59.93333323796833,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "primary_navigation",
+      "run": "EFF-W-C2",
+      "case": "immediate-pinch",
+      "metric": "SDKRAFintervalP95Ms",
+      "C": 18.200000047683716,
+      "limit": 33,
+      "met": true
+    },
+    {
+      "id": "primary_input_backlog",
+      "case": "immediate-pan",
+      "metric": "inputLatenessP95",
+      "B": 97.79999995231628,
+      "C": 60.40000009536743,
+      "limit": 78.23999996185303,
+      "met": true
+    },
+    {
+      "id": "primary_input_backlog",
+      "case": "immediate-pinch",
+      "metric": "inputLatenessP95",
+      "B": 113.23333342870319,
+      "C": 69.29999995231628,
+      "limit": 90.58666674296256,
+      "met": true
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pan",
+      "metric": "dispatch",
+      "B": 19.299999952316284,
+      "C": 32.60000014305115,
+      "limit": 24.299999952316284,
+      "met": false
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pan",
+      "metric": "navRAFInterval",
+      "B": 18.299999952316284,
+      "C": 18.5,
+      "limit": 23.299999952316284,
+      "met": true
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pan",
+      "metric": "maxContentGap",
+      "B": 47.13333328564477,
+      "C": 50.299999952316284,
+      "limit": 100,
+      "met": true
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pinch",
+      "metric": "dispatch",
+      "B": 19.59999990463257,
+      "C": 19.200000047683716,
+      "limit": 24.59999990463257,
+      "met": true
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pinch",
+      "metric": "navRAFInterval",
+      "B": 18.299999952316284,
+      "C": 18.40000009536743,
+      "limit": 23.299999952316284,
+      "met": true
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pinch",
+      "metric": "maxContentGap",
+      "B": 45.63333328564477,
+      "C": 61.13333328564477,
+      "limit": 100,
+      "met": true
+    }
+  ],
+  "attributionLimit": "planned/JS dispatch/CDP await/public camera/SDK RAF distinguishable; CDP await not pure Runtime time. Matched native probes supply handler/render owner attribution without reentrant SDK reads."
+}

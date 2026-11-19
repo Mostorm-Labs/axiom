@@ -1,0 +1,17 @@
+{
+  "status": "MECHANISM_RED_THEN_GREEN",
+  "observedB": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-red/feedback.worker.json",
+  "expectedRed": "FEEDBACK_REPLAYS_OFFDAMAGE_COMPLETE_MASK_HISTORY",
+  "oldDraws": 1608,
+  "green": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-green-v2/feedback.worker.json",
+  "greenDrawsDPR1": 96,
+  "greenDrawsDPR4": 72,
+  "pixelRule": "Exact saved B pixels at all18frames plus independent legacy full oracle outside unchanged workingSetEdges policy",
+  "initialPixelTestFailure": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-green/feedback.worker.json",
+    "cause": "Test demanded exact AA equivalence to nullcache CPUbody; one channel delta3 also present with unchanged B. Fixed independent geometry AA policy from existing oracle applied, no masks/tolerance expanded. Then exact B pixel equality independently verified."
+  },
+  "baselineIndependentFull": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-baseline-observe-v2/feedback.worker.json",
+  "newMemoryOrGPUOwner": false,
+  "budgetsChanged": false
+}

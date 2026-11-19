@@ -1,0 +1,290 @@
+{
+  "schema": "axiom-scoped-implementation-result-v1",
+  "task": "G5-erase-feedback-frame-r1",
+  "at": "2026-11-18T17:22:38.506016+00:00",
+  "status": "BLOCKED",
+  "classification": "PERFORMANCE_TARGET_UNMET",
+  "returnSurface": "CONTROL_REVIEW",
+  "continue_execution": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/packages/G5-erase-feedback-frame-r1/package.json",
+    "bytes": 3320,
+    "sha256": "e402bd5c549023c9121bcf344d2a71056b863f89c6298c1accdfe87107f0dd67"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame",
+    "branch": "codex/g5-erase-feedback-frame",
+    "baseHEAD": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "currentHEAD": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "sourceDelta": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch",
+      "bytes": 38384,
+      "sha256": "b1f740de65d7bd8bd1e03d6ad6745519b05724453409009000e551d1aaade4e7"
+    },
+    "deltaManifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/delta-manifest.json",
+      "bytes": 2302,
+      "sha256": "0c6fe21e9fef552142e73ce0246d9929834c4e132b558736dbbb71a40b35022d"
+    },
+    "committedOrPushed": false
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame",
+    "path": ".aegis/results/G5-erase-feedback-frame-r1/result.json",
+    "artifact_manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/artifact-manifest.json",
+      "bytes": 1557175,
+      "sha256": "a75977378ea010557040d29275069223a7c82573d1d2ed9747964c3cd8dc6207"
+    }
+  },
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-C.json",
+    "bytes": 204464,
+    "sha256": "9cfaf5c95a3ccb29166399d8bbb4d886b6ea7978b6e4376a14ab240913a7f675"
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/C-normal-SDK.json",
+    "bytes": 4271,
+    "sha256": "6acc2ef4db3392a20a05386e20c4a557be3cb21ced2c65ef4a66b4cc20179d17"
+  },
+  "sourceSDKBinding": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-and-SDK-binding.json",
+    "bytes": 3446,
+    "sha256": "16d3800cc53081a9a292cc6bc975acf454ef8eae0768483434e399a9847070a8"
+  },
+  "identity": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/terminal-identity.json",
+    "bytes": 3483,
+    "sha256": "54a28145821f303ebccef76cbf9ca1fc6afd481f395764bac3b204b7041f0e91"
+  },
+  "preview": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/preview-ready.json",
+    "bytes": 1126,
+    "sha256": "52fa79cbcfe61187ce5ad1a17f703ba30d77089457a09966130259852a4da561"
+  },
+  "obligations": {
+    "EFF1": {
+      "status": "SATISFIED_SCOPED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/diagnostic-cause.json",
+          "bytes": 25243,
+          "sha256": "488f282fa9c8d97180730b2146daa6565b5d4e1ae8eddbea2bb3a2cdb4e0d65b"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/matched-stage-comparison.json",
+          "bytes": 255293,
+          "sha256": "d3fce499b4cb74664a0e90287ced00f5a000feb71acc59f21f9d4f2f60a8aa96"
+        }
+      ],
+      "finding": "B Render28.9–30.3ms median, scene23.8–24.1ms. Frame allocation/inherit/roster0.1–0.2ms, not dominant. Exact probes include all retry scopes, no diagnostic overflow."
+    },
+    "EFF2": {
+      "status": "SATISFIED_SCOPED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/red-green.json",
+          "bytes": 1242,
+          "sha256": "5425d7f32d8105255d87f8c62de14b48dbe3e1b9c9b11e2be1e9c3c68c04b521"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/mechanism-work-counts.json",
+          "bytes": 6846,
+          "sha256": "fc6e20595b6e362672beae589c50bc9a94ab9c7954875f3f24b1a2ac7986093b"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/resource-lifetime.json",
+          "bytes": 10015,
+          "sha256": "0f21d6eaedce3d02234a100e4ca0b439b8c1e7046b9f516a073cddae9b5364d7"
+        }
+      ],
+      "finding": "Only cull swept mask draw commands proven outside actual destination damage. Original full scratch clip/matrix/AA, sequential surviving order, full values and existing pixel/GPU ownership unchanged. 1608draw RED ->72–96 selected draws; no item2/3 transfer/commit refactor."
+    },
+    "EFF3": {
+      "status": "SATISFIED_WITHIN_FROZEN_FIXTURES",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/native-regressions.json",
+          "bytes": 42782,
+          "sha256": "cab5bbd25980fe3da46ffd0f8741a033f76788ea267a0a66e23cc75a55bb964e"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/native-terminal-manifest.json",
+          "bytes": 54698,
+          "sha256": "8390fe08e36d2aecd01f44d2da57d2e7222c09f7c8e336e0058f5be358623c35"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/focused-live-pixels.json",
+          "bytes": 5393,
+          "sha256": "a995101890585e5fc6fb690d33d6b55c260ce812af9a7bb1c91043aa3f205786"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/independent-pixels.json",
+          "bytes": 11788,
+          "sha256": "a2be9764680020d6926a7bdc51336da1c6756141f1b577fd0e83f50e2e4ad90d"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/web-correctness.json",
+          "bytes": 9194,
+          "sha256": "473711406c8134011e65a5878b4c27e863738b3ce2b104bd07d6b990dacc6a1c"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/moving-pixels.json",
+          "bytes": 27533,
+          "sha256": "3af0c9b6bcd2079f7a6ee8dd469d5196827c2000fc42a0276f186affa9eae27e"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/semantic-and-identity.json",
+          "bytes": 9135,
+          "sha256": "8a4611f6e561c09a85b8a62ffb706e8e9a9ba40f082e031bfe4cc923783aa186"
+        }
+      ],
+      "finding": "60 final native including59 frozen rows;20 actual Web buffers VALID/RESTORED;4 original CPU fullbody/sequential-mask terminal nonAA zero;4UndoRedo semantic pairs;8moving258probes/0fail;exact savedB GPU18prefix/DPRframes. Separate unconfirmed numeric finding disclosed, no actual mismatch."
+    },
+    "EFF4": {
+      "status": "FAILED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/browser-comparison.json",
+          "bytes": 67471,
+          "sha256": "cf48d02d7af0d6daf9a416e579c5715d873549d491a5281fd0345ee8ece2ca23"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/input-backlog.json",
+          "bytes": 59503,
+          "sha256": "3b2c36b9ae0a374b77417038baf885b1e87591e262ed995b3653acea985a2667"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/matched-stage-comparison.json",
+          "bytes": 255293,
+          "sha256": "d3fce499b4cb74664a0e90287ced00f5a000feb71acc59f21f9d4f2f60a8aa96"
+        }
+      ],
+      "failure": "C1 settled-pan tail9RAFs p9546.5ms, nav2750ms andconvergence5125.1ms. Pooled/worst frozen CDP/dispatch,navigation duration,convergence checks fail. All four immediate100/33targets,normal active-tail/firstUp gains andbacklog reduction pass; not enough for overall completion.",
+      "failedChecks": [
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "CDP",
+          "B": 19.299999952316284,
+          "C": 32.60000014305115,
+          "limit": 24.299999952316284,
+          "met": false
+        },
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "navigationDuration",
+          "B": 2048.699999809265,
+          "C": 2750.0,
+          "limit": 2151.1349997997286,
+          "met": false
+        },
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "convergence",
+          "B": 452.0000001192093,
+          "C": 2827.0000001192093,
+          "limit": 519.8000001370906,
+          "met": false
+        },
+        {
+          "id": "settled_nonregression",
+          "case": "settled-pan",
+          "metric": "dispatch",
+          "B": 19.299999952316284,
+          "C": 32.60000014305115,
+          "limit": 24.299999952316284,
+          "met": false
+        }
+      ]
+    },
+    "EFF5": {
+      "status": "SATISFIED_WITH_PLANNING_METADATA_ERRATUM",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/preservation.json",
+          "bytes": 5790,
+          "sha256": "07ac4728c97c31ecc5a43ad3effa6c2c39ed822e8f3ddca172c98deebecf3d3b"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/cleanup.json",
+          "bytes": 21738,
+          "sha256": "62cef808e3dce88dce47e8fdab8d0ac2abbc7a826ecca40a318e6e893d4e69c1"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/capture-buffer-audit.json",
+          "bytes": 35379,
+          "sha256": "4de13bcc583af69cd87ccbb277c902a36f140e4b670dcfc1dd50fb7d0c90512d"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/planning-metadata-version.json",
+          "bytes": 1210,
+          "sha256": "aa47f6a8f4e03bbd4ddf40fc3677828b9b0f759654abab5e5771d5ba754d0e14"
+        }
+      ],
+      "finding": "Primary42/index,r2 source1220/SDK42,old434xpreserved. Versioned diagnosticB planning JSON changed only by4 additive selected-repairfields; exact original reconstructed and hash matches. FinalC+ordinary bindings unchanged. Preview callback delivered,terminal callback follows."
+    }
+  },
+  "correctnessFindings": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/control-preview-findings.json",
+    "bytes": 1194,
+    "sha256": "b796c4cf0c12e138ae03bafbb3ffab45c91d38eea8082e4b7b6a9993a849a3ce"
+  },
+  "measurements": {
+    "ordinary": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/browser-comparison.json",
+      "bytes": 67471,
+      "sha256": "cf48d02d7af0d6daf9a416e579c5715d873549d491a5281fd0345ee8ece2ca23"
+    },
+    "diagnostic": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/matched-stage-comparison.json",
+      "bytes": 255293,
+      "sha256": "d3fce499b4cb74664a0e90287ced00f5a000feb71acc59f21f9d4f2f60a8aa96"
+    },
+    "attributionLimit": "CPU stage timing !=GPU execution;CDP roundtrip/inputlateness not exclusiveRuntimeCPU. Ordinary GL+cachedpubliccamera proxy separatelyqualified,targetnotphotons."
+  },
+  "sampling": {
+    "ledger": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/sampling-ledger.json",
+      "bytes": 7790,
+      "sha256": "3328b90e59256984cd6f50b5cbd432a8729f59e6eff7aa5bc3528e4d53f2f8b9"
+    },
+    "starts": 7,
+    "chargedSeconds": 776,
+    "capSeconds": 3000,
+    "extraRetries": 0,
+    "optionalCPREUsed": false,
+    "harnessCorrectiveUsed": false
+  },
+  "storage": {
+    "ledger": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/storage-ledger.json",
+      "bytes": 89497,
+      "sha256": "c9696d0a90dbc0a444d18cfe0950d66f176234cca346de9695b290589ca96f11"
+    },
+    "peakRetainedBytes": 668931541,
+    "logicalBytes": 2522523431,
+    "retainedCapBytes": 4294967296,
+    "logicalCapBytes": 8589934592,
+    "status": "CLEAR",
+    "note": "Build/source/SDK binaries separately bound,not filesystemartifactquota.Render budgets unchanged."
+  },
+  "cleanup": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/cleanup.json",
+    "bytes": 21738,
+    "sha256": "62cef808e3dce88dce47e8fdab8d0ac2abbc7a826ecca40a318e6e893d4e69c1"
+  },
+  "remaining": {
+    "requiredExecutableItems": [],
+    "blocking": "EFF4 settled-pan nonregression under frozen thresholds; preserve no-source-change/no-retry boundary, independent control decides followup.",
+    "preview": "4349 remains test candidate,4348 not replaced",
+    "laterProjects": "No trajectory transfer/commit refactor/UR2 scope initiated."
+  },
+  "claimBoundary": "Producer terminal BLOCKED only; no P34/Gate/overall performance PASS; no commit/push/tag/release."
+}

@@ -1,0 +1,991 @@
+{
+  "B": [
+    {
+      "case": "immediate-pan",
+      "frames": 47,
+      "dropped": 0,
+      "phases": {
+        "attempt": {
+          "n": 47,
+          "median": 31.9,
+          "p95": 36.6,
+          "max": 37.6
+        },
+        "cache_draw": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.3
+        },
+        "coverage_flush": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "damage": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_acquire": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_cache_begin": {
+          "n": 47,
+          "median": 0.4,
+          "p95": 0.5,
+          "max": 0.6
+        },
+        "feedback_damage": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "feedback_entry": {
+          "n": 47,
+          "median": 30.3,
+          "p95": 33.9,
+          "max": 35.1
+        },
+        "feedback_finish": {
+          "n": 47,
+          "median": 3.3,
+          "p95": 3.9,
+          "max": 4.5
+        },
+        "feedback_gpu_flush": {
+          "n": 47,
+          "median": 3.3,
+          "p95": 3.9,
+          "max": 4.5
+        },
+        "feedback_gpu_setup": {
+          "n": 47,
+          "median": 0.8,
+          "p95": 1.9,
+          "max": 2.5
+        },
+        "feedback_gpu_submit": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "feedback_inherit": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "feedback_prepare": {
+          "n": 47,
+          "median": 0.4,
+          "p95": 0.5,
+          "max": 0.6
+        },
+        "feedback_present": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_provider_flush": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_provider_submit": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_publish": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "feedback_query": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_retention": {
+          "n": 47,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "feedback_scene": {
+          "n": 47,
+          "median": 24.1,
+          "p95": 26.7,
+          "max": 27.0
+        },
+        "feedback_snapshot": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_target": {
+          "n": 47,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "feedback_total": {
+          "n": 47,
+          "median": 30.3,
+          "p95": 33.9,
+          "max": 35.1
+        },
+        "feedback_validation": {
+          "n": 47,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "frame_plan": {
+          "n": 47,
+          "median": 0.2,
+          "p95": 0.3,
+          "max": 0.3
+        },
+        "group_update": {
+          "n": 47,
+          "median": 0.4,
+          "p95": 0.5,
+          "max": 0.6
+        },
+        "owner_pump": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "pending_owner": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "presentation_adapt": {
+          "n": 47,
+          "median": 0.3,
+          "p95": 0.4,
+          "max": 0.4
+        },
+        "reference_build": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "reference_entries": {
+          "n": 47,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "render": {
+          "n": 47,
+          "median": 30.3,
+          "p95": 33.9,
+          "max": 35.1
+        },
+        "resource_service": {
+          "n": 47,
+          "median": 0.2,
+          "p95": 2.2,
+          "max": 2.9
+        },
+        "transient_frame": {
+          "n": 47,
+          "median": 31.0,
+          "p95": 35.1,
+          "max": 36.2
+        },
+        "validation": {
+          "n": 47,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        }
+      },
+      "firstPostUp": {
+        "marker": "AXIOM_FRAME_TIMING ",
+        "at": 19475.799999952316,
+        "stage": "immediate-pan-primary-long-erase",
+        "version": 1,
+        "role": "owner",
+        "settle": false,
+        "view": "1",
+        "frame": "6",
+        "semantic": "2",
+        "scene": "3",
+        "camera": "3",
+        "surface": "1",
+        "metrics": "1",
+        "start_ns": 19440100000,
+        "outcome": "pending",
+        "stages": {
+          "attempt": {
+            "inclusive_ns": 35500000,
+            "exclusive_ns": 500000,
+            "calls": 1
+          },
+          "reference_build": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "reference_entries": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "presentation_adapt": {
+            "inclusive_ns": 300000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "frame_plan": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "render": {
+            "inclusive_ns": 33800000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "validation": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "group_update": {
+            "inclusive_ns": 400000,
+            "exclusive_ns": 400000,
+            "calls": 1
+          },
+          "damage": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "cache_draw": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 40
+          },
+          "coverage_flush": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "owner_pump": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "pending_owner": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "transient_frame": {
+            "inclusive_ns": 34600000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "resource_service": {
+            "inclusive_ns": 300000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "feedback_entry": {
+            "inclusive_ns": 33800000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_total": {
+            "inclusive_ns": 33700000,
+            "exclusive_ns": 800000,
+            "calls": 1
+          },
+          "feedback_acquire": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_validation": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_gpu_setup": {
+            "inclusive_ns": 800000,
+            "exclusive_ns": 800000,
+            "calls": 1
+          },
+          "feedback_cache_begin": {
+            "inclusive_ns": 400000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_prepare": {
+            "inclusive_ns": 400000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "feedback_damage": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_target": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_inherit": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_scene": {
+            "inclusive_ns": 26600000,
+            "exclusive_ns": 26600000,
+            "calls": 1
+          },
+          "feedback_snapshot": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_publish": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_finish": {
+            "inclusive_ns": 4100000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_present": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_retention": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "feedback_query": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_gpu_flush": {
+            "inclusive_ns": 4100000,
+            "exclusive_ns": 4100000,
+            "calls": 1
+          },
+          "feedback_gpu_submit": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_provider_flush": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_provider_submit": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          }
+        },
+        "counts": {
+          "candidates": 40,
+          "sources": 40,
+          "encoded_bytes": 0,
+          "plan_entries": 40,
+          "prepare_knots": 0,
+          "built_groups": 0,
+          "coverage_tiles": 0,
+          "coverage_pixels": 0,
+          "gpu_interior_pixels": 0,
+          "cpu_edge_pixels": 0,
+          "prepare_direct": 0,
+          "prepare_budget": 0,
+          "exact_demand_reuse": 0,
+          "source_points": 287960,
+          "compiled_contour_knots": 0,
+          "record_candidates": 0,
+          "record_replays": 0,
+          "record_rejected": 0,
+          "record_groups": 0,
+          "record_selection_yields": 0,
+          "checkpoint_replays": 0,
+          "checkpoint_replay_knots": 0,
+          "scalar_coverage_tiles": 0,
+          "gpu_coverage_tiles": 0,
+          "cpu_coverage_tiles": 0,
+          "coverage_no_gpu_context": 0,
+          "coverage_cpu_policy": 0,
+          "coverage_target_fallback": 0,
+          "pending_serial": 3,
+          "pending_phase": 5,
+          "pending_jobs": 0,
+          "commit_ordinal": 2,
+          "after_generation": 2,
+          "after_scene": 3,
+          "stamp_primitives": 0,
+          "stamp_bytes": 0,
+          "stamp_calls": 0,
+          "atomic_start_ns": 0,
+          "atomic_end_ns": 0,
+          "resource_used": 287252382,
+          "resource_pending_release": 23124960,
+          "resource_gpu_epochs": 2,
+          "render_pending": 0,
+          "render_alloc_denials": 0,
+          "body_builds": 0,
+          "body_advances": 0,
+          "body_compile": 0,
+          "body_replay": 0,
+          "mask_primitive_draws": 0,
+          "mask_tile_resets": 0,
+          "coverage_steps": 0,
+          "history_draw_primitives": 0,
+          "validation_mask_primitives": 19200,
+          "prepare_resets": 0,
+          "material_alias_hits": 0,
+          "prepared_select_candidates": 0,
+          "prepared_draw_candidates": 0,
+          "prepared_range_probes": 0,
+          "feedback_surface_allocations": 1,
+          "feedback_allocated_bytes": 23124960,
+          "feedback_inherit_bytes": 23124960,
+          "feedback_retained_bytes": 23124960,
+          "feedback_target_gpu": 1,
+          "feedback_incremental": 1,
+          "feedback_publish_requested": 1,
+          "feedback_entries": 40
+        }
+      },
+      "normalPerformance": false,
+      "CPUTimeNotGPUExecution": true
+    },
+    {
+      "case": "immediate-pinch",
+      "frames": 52,
+      "dropped": 0,
+      "phases": {
+        "attempt": {
+          "n": 52,
+          "median": 30.55,
+          "p95": 34.3,
+          "max": 35.5
+        },
+        "cache_draw": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "coverage_flush": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "damage": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "feedback_acquire": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_cache_begin": {
+          "n": 52,
+          "median": 0.3,
+          "p95": 0.5,
+          "max": 0.5
+        },
+        "feedback_damage": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_entry": {
+          "n": 52,
+          "median": 28.95,
+          "p95": 32.7,
+          "max": 33.7
+        },
+        "feedback_finish": {
+          "n": 52,
+          "median": 3.3,
+          "p95": 3.8,
+          "max": 3.8
+        },
+        "feedback_gpu_flush": {
+          "n": 52,
+          "median": 3.3,
+          "p95": 3.8,
+          "max": 3.8
+        },
+        "feedback_gpu_setup": {
+          "n": 52,
+          "median": 0.6,
+          "p95": 1.1,
+          "max": 1.7
+        },
+        "feedback_gpu_submit": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_inherit": {
+          "n": 52,
+          "median": 0.05,
+          "p95": 0.1,
+          "max": 0.2
+        },
+        "feedback_prepare": {
+          "n": 52,
+          "median": 0.2,
+          "p95": 0.3,
+          "max": 0.4
+        },
+        "feedback_present": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_provider_flush": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_provider_submit": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_publish": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "feedback_query": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "feedback_retention": {
+          "n": 52,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "feedback_scene": {
+          "n": 52,
+          "median": 23.799999999999997,
+          "p95": 26.5,
+          "max": 27.2
+        },
+        "feedback_snapshot": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "feedback_target": {
+          "n": 52,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "feedback_total": {
+          "n": 52,
+          "median": 28.9,
+          "p95": 32.6,
+          "max": 33.7
+        },
+        "feedback_validation": {
+          "n": 52,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        },
+        "frame_plan": {
+          "n": 52,
+          "median": 0.2,
+          "p95": 0.4,
+          "max": 0.4
+        },
+        "group_update": {
+          "n": 52,
+          "median": 0.3,
+          "p95": 0.5,
+          "max": 0.5
+        },
+        "owner_pump": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "pending_owner": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.1
+        },
+        "presentation_adapt": {
+          "n": 52,
+          "median": 0.3,
+          "p95": 0.4,
+          "max": 0.5
+        },
+        "reference_build": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "reference_entries": {
+          "n": 52,
+          "median": 0.0,
+          "p95": 0.1,
+          "max": 0.1
+        },
+        "render": {
+          "n": 52,
+          "median": 29.0,
+          "p95": 32.7,
+          "max": 33.7
+        },
+        "resource_service": {
+          "n": 52,
+          "median": 0.1,
+          "p95": 2.1,
+          "max": 2.3
+        },
+        "transient_frame": {
+          "n": 52,
+          "median": 29.6,
+          "p95": 33.4,
+          "max": 34.8
+        },
+        "validation": {
+          "n": 52,
+          "median": 0.1,
+          "p95": 0.2,
+          "max": 0.2
+        }
+      },
+      "firstPostUp": {
+        "marker": "AXIOM_FRAME_TIMING ",
+        "at": 47558.09999990463,
+        "stage": "immediate-pinch-primary-long-erase",
+        "version": 1,
+        "role": "owner",
+        "settle": false,
+        "view": "1",
+        "frame": "6",
+        "semantic": "2",
+        "scene": "3",
+        "camera": "3",
+        "surface": "1",
+        "metrics": "1",
+        "start_ns": 47522500000,
+        "outcome": "pending",
+        "stages": {
+          "attempt": {
+            "inclusive_ns": 35500000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "reference_build": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "reference_entries": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "presentation_adapt": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "frame_plan": {
+            "inclusive_ns": 400000,
+            "exclusive_ns": 400000,
+            "calls": 1
+          },
+          "render": {
+            "inclusive_ns": 34100000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "validation": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "group_update": {
+            "inclusive_ns": 300000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "damage": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "cache_draw": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 40
+          },
+          "coverage_flush": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "owner_pump": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "pending_owner": {
+            "inclusive_ns": 300000,
+            "exclusive_ns": 300000,
+            "calls": 1
+          },
+          "transient_frame": {
+            "inclusive_ns": 35000000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "resource_service": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_entry": {
+            "inclusive_ns": 34100000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_total": {
+            "inclusive_ns": 34100000,
+            "exclusive_ns": 500000,
+            "calls": 1
+          },
+          "feedback_acquire": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_validation": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_gpu_setup": {
+            "inclusive_ns": 500000,
+            "exclusive_ns": 500000,
+            "calls": 1
+          },
+          "feedback_cache_begin": {
+            "inclusive_ns": 400000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_prepare": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "feedback_damage": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_target": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_inherit": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_scene": {
+            "inclusive_ns": 27700000,
+            "exclusive_ns": 27700000,
+            "calls": 1
+          },
+          "feedback_snapshot": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_publish": {
+            "inclusive_ns": 100000,
+            "exclusive_ns": 100000,
+            "calls": 1
+          },
+          "feedback_finish": {
+            "inclusive_ns": 4200000,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_present": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_retention": {
+            "inclusive_ns": 200000,
+            "exclusive_ns": 200000,
+            "calls": 1
+          },
+          "feedback_query": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_gpu_flush": {
+            "inclusive_ns": 4200000,
+            "exclusive_ns": 4200000,
+            "calls": 1
+          },
+          "feedback_gpu_submit": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_provider_flush": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          },
+          "feedback_provider_submit": {
+            "inclusive_ns": 0,
+            "exclusive_ns": 0,
+            "calls": 1
+          }
+        },
+        "counts": {
+          "candidates": 40,
+          "sources": 40,
+          "encoded_bytes": 0,
+          "plan_entries": 40,
+          "prepare_knots": 0,
+          "built_groups": 0,
+          "coverage_tiles": 0,
+          "coverage_pixels": 0,
+          "gpu_interior_pixels": 0,
+          "cpu_edge_pixels": 0,
+          "prepare_direct": 0,
+          "prepare_budget": 0,
+          "exact_demand_reuse": 0,
+          "source_points": 287960,
+          "compiled_contour_knots": 0,
+          "record_candidates": 0,
+          "record_replays": 0,
+          "record_rejected": 0,
+          "record_groups": 0,
+          "record_selection_yields": 0,
+          "checkpoint_replays": 0,
+          "checkpoint_replay_knots": 0,
+          "scalar_coverage_tiles": 0,
+          "gpu_coverage_tiles": 0,
+          "cpu_coverage_tiles": 0,
+          "coverage_no_gpu_context": 0,
+          "coverage_cpu_policy": 0,
+          "coverage_target_fallback": 0,
+          "pending_serial": 3,
+          "pending_phase": 5,
+          "pending_jobs": 0,
+          "commit_ordinal": 2,
+          "after_generation": 2,
+          "after_scene": 3,
+          "stamp_primitives": 0,
+          "stamp_bytes": 0,
+          "stamp_calls": 0,
+          "atomic_start_ns": 0,
+          "atomic_end_ns": 0,
+          "resource_used": 278176230,
+          "resource_pending_release": 23124960,
+          "resource_gpu_epochs": 2,
+          "render_pending": 0,
+          "render_alloc_denials": 0,
+          "body_builds": 0,
+          "body_advances": 0,
+          "body_compile": 0,
+          "body_replay": 0,
+          "mask_primitive_draws": 0,
+          "mask_tile_resets": 0,
+          "coverage_steps": 0,
+          "history_draw_primitives": 0,
+          "validation_mask_primitives": 19200,
+          "prepare_resets": 0,
+          "material_alias_hits": 0,
+          "prepared_select_candidates": 0,
+          "prepared_draw_candidates": 0,
+          "prepared_range_probes": 0,
+          "feedback_surface_allocations": 1,
+          "feedback_allocated_bytes": 23124960,
+          "feedback_inherit_bytes": 23124960,
+          "feedback_retained_bytes": 23124960,
+          "feedback_target_gpu": 1,
+          "feedback_incremental": 1,
+          "feedback_publish_requested": 1,
+          "feedback_entries": 40
+        }
+      },
+      "normalPerformance": false,
+      "CPUTimeNotGPUExecution": true
+    }
+  ],
+  "dominant": "feedback_scene",
+  "candidateMechanism": "Existing complete source pixel cache bypasses body work but drawDamagedInk repeats all transient mask primitives on full scratch for each object; actual damage only used for final composite. Need focused native scopes/workcounts before repair.",
+  "oldD2UsedAsNewBaseline": false
+}

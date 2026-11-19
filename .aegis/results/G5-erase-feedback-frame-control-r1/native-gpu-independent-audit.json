@@ -1,0 +1,35 @@
+{
+  "status": "ACTUAL_GPU_RAW_TARGET_CAMERA_PROOF_INSPECTED",
+  "rows": [
+    {
+      "mode": "pan",
+      "pixel_qualified_camera_changes": 16,
+      "settled_submissions": 24,
+      "largest_pixel_delta": 1,
+      "no_outside_AA_assertion": true,
+      "raw_worker_exit": 0,
+      "cleanup": true,
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-terminal/G5ImmediateEraseGPU-pan.stderr.log",
+        "bytes": 142394,
+        "sha256": "f127da1cc5fbe53bf6cb17c2a301f4ab2fb5e1976324c985be21023538803620"
+      }
+    },
+    {
+      "mode": "pinch",
+      "pixel_qualified_camera_changes": 16,
+      "settled_submissions": 24,
+      "largest_pixel_delta": 1,
+      "no_outside_AA_assertion": true,
+      "raw_worker_exit": 0,
+      "cleanup": true,
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native-terminal/G5ImmediateEraseGPU-pinch.stderr.log",
+        "bytes": 144907,
+        "sha256": "24d3bba56bf72ed75ff9c62a73a33f9b233ff11161f4f05acf8efcbd5b2babb2"
+      }
+    }
+  ],
+  "independent_coverage": "Compiled strengthened unchanged composition fixture requires nonvacuous latestsuffix witness>100, real exact kernel17requests, oneatomiccommit, pointerarbitration/commitcrossing; worker exits0 and raw16camera/24settled checks retained.",
+  "nonblocking_observation": "Original planned per-mode native JSON output parent /native did not exist, ofstream failure not checked by test. Raw stdout/stderr and all assertions/worker exits are independently covered and manifest-bound. Do not invent rerun requirement just for a named artifact."
+}

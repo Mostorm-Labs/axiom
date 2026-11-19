@@ -1,0 +1,55 @@
+{
+  "status": "FRESH_SAVE_CHECKS_PASSED_SCOPED_PERFORMANCE_STILL_BLOCKED",
+  "branch": "codex/g5-erase-feedback-frame",
+  "preCommit": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+  "nativePassed": 9,
+  "nativePlanned": 9,
+  "NodePassed": 20,
+  "boundaryContractFiles": 122,
+  "unstagedDiffCheck": 0,
+  "sourcePathsMatched": 1602,
+  "SDKFilesMatched": 42,
+  "deltaFilesMatched": 9,
+  "reviewOriginal": "BLOCKED_IMPLEMENTATION / PERFORMANCE_TARGET_UNMET",
+  "onlyBlockingObligation": "EFF4 settled-pan",
+  "noOriginalEvidenceChanges": true,
+  "sourceSDKEquals4349": true,
+  "primary42IndexAndR2Preserved": true,
+  "listener4348And4349Preserved": true,
+  "newBrowserStarts": 0,
+  "newProductionChanges": false,
+  "rawAndSDKBinariesIncluded": false,
+  "remainingUntrackedRuntimeLock": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/storage-ledger.lock",
+  "independentControlCopies": 15,
+  "rootResultFileCount": 56,
+  "rootResultCountNote": "57 top-level files exist, including excluded zero-byte storage-ledger.lock; actual lightweight root records staged=56. No extra record fabricated.",
+  "stagedWhitespaceCheck": {
+    "allCodeAndRecordsExceptFrozenPatches": "PASS",
+    "command": [
+      "git",
+      "diff",
+      "--cached",
+      "--check",
+      "--",
+      ".",
+      ":!.aegis/results/G5-erase-feedback-frame-r1/B-probes.patch",
+      ":!.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch"
+    ],
+    "exit": 0,
+    "fullCheckExit": 2,
+    "fullCheckDiagnostics": ".aegis/results/G5-erase-feedback-frame-r1/B-probes.patch:279: trailing whitespace.\n+ \n.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch:65: trailing whitespace.\n+ \n.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch:349: trailing whitespace.\n+ \n",
+    "frozenArtifacts": [
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/B-probes.patch",
+        "bytes": 24191,
+        "sha256": "38a76bcc06615d9842bfe83f0c57169d0afc231b26739ca6ad4bb0dfa37d10ce"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch",
+        "bytes": 38384,
+        "sha256": "b1f740de65d7bd8bd1e03d6ad6745519b05724453409009000e551d1aaade4e7"
+      }
+    ],
+    "reason": "Outer staged diff interprets blank context lines from immutable nested patch evidence as trailing whitespace. Preserve reviewed exact archive bytes; no production whitespace defect."
+  }
+}

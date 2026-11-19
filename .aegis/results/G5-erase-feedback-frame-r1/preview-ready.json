@@ -1,0 +1,25 @@
+{
+  "status": "NORMAL_ROOT_SDK_SMOKE_PASSED_VALIDATION_PENDING",
+  "url": "http://127.0.0.1:4349/example.html",
+  "PID": 25275,
+  "root": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/install-C-normal/js",
+  "sourceManifest": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-C.json",
+  "sourceSHA256": "9cfaf5c95a3ccb29166399d8bbb4d886b6ea7978b6e4376a14ab240913a7f675",
+  "SDKManifest": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/C-normal-SDK.json",
+  "SDKSHA256": "6acc2ef4db3392a20a05386e20c4a557be3cb21ced2c65ef4a66b4cc20179d17",
+  "WASMSHA256": "fa8b36e22c5c385277045fce0b5159ac037f05f518c7619cb382ccb2f6bd72e6",
+  "rootSmoke": {
+    "restore40": true,
+    "camera": true,
+    "rootSDKOnly": true,
+    "build": true
+  },
+  "diagnostics": false,
+  "qualification": false,
+  "budgetMiB": [
+    512,
+    1024,
+    128
+  ],
+  "remaining": "ordinary C1/C2/B2 plus C correctness/4 independent CPU terminal oracles/semantic/lifetime final audit; no acceptance or performance PASS"
+}

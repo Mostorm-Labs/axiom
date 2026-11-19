@@ -1,0 +1,280 @@
+{
+  "newPixelAllocations": false,
+  "newRetainedOwner": false,
+  "budgetsChanged": false,
+  "scope": "Swept primitive conservative work selection on existing scratch. Original GPU epochs/snapshot immutability/present/CV/leases retained.",
+  "guards": [
+    {
+      "name": "G5GpuRetirementContract",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.6059225839562714,
+        "peak_process_family_rss_kib": 32,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CLeaseAccounting",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--lease"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.10547229088842869,
+        "peak_process_family_rss_kib": 400,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2CHistoryProgressSafety",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+          "--progress-safety"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.20311208278872073,
+        "peak_process_family_rss_kib": 432,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5RenderMemoryBudget",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_render_memory_budget_tests"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.7927884999662638,
+        "peak_process_family_rss_kib": 4992,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5TransientDisplayHandoff",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+          "--handoff",
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/transient-display-handoff"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 7.3718060839455575,
+        "peak_process_family_rss_kib": 278032,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5TransientDisplayHandoffInflight",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_transient_display_retry_tests",
+          "--handoff-inflight",
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/transient-display-handoff-inflight"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 3.5976130831986666,
+        "peak_process_family_rss_kib": 285248,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "CPU_tiles": 0,
+          "cycles": 2,
+          "generation": 2,
+          "stage": "switches-complete",
+          "used": 0
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_quota",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--quota"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.1987066250294447,
+        "peak_process_family_rss_kib": 400,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5NavigationMaskReuse_lifecycle",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+          "--lifecycle"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.29935179208405316,
+        "peak_process_family_rss_kib": 33712,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseNavigation",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/axiom_immediate_erase_navigation_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/render/ien.json"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 1.5426735000219196,
+        "peak_process_family_rss_kib": 271408,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2AHandoff",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "handoff"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.10510575002990663,
+        "peak_process_family_rss_kib": 7472,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "qualified-seed",
+          "kind_version": 3,
+          "algorithm_version": 4,
+          "knots": 24,
+          "semantic": 1,
+          "qualified_receipts": 0,
+          "pending_brush": 1,
+          "preview_active": true
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5UR2ANavigationSafety",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+          "navigation-safety"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 0.20606420817784965,
+        "peak_process_family_rss_kib": 23872,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": {
+          "stage": "A-committed-pending",
+          "semantic": 2,
+          "scene": 2,
+          "masks": 1
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pan",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native/G5ImmediateEraseGPU-pan.json",
+          "pan"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 4.195445874938741,
+        "peak_process_family_rss_kib": 411312,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pinch",
+      "status": "PASS",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+          "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/native/G5ImmediateEraseGPU-pinch.json",
+          "pinch"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 3.8783185828942806,
+        "peak_process_family_rss_kib": 413824,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      }
+    }
+  ]
+}

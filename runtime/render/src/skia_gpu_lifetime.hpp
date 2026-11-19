@@ -1,5 +1,6 @@
 #pragma once
 #include "gpu_resource_retirement.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "render_execution.hpp"
 #include "include/gpu/ganesh/GrDirectContext.h"
 #include <memory>
@@ -55,8 +56,8 @@ class SkiaGpuLifetime final {
       g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket_.get()),reinterpret_cast<std::uintptr_t>(context_),ticket_->epoch);
       G5_OBSERVE(g5::Kind::Basis,g5::Tag::resource_lease,true,20,reinterpret_cast<std::uintptr_t>(ticket_.get()),ticket_->epoch,ticket_->state->lifetime);
 #endif
-      context_->flush(info);
-      success_=context_->submit(GrSyncCpu::kNo)&&!ticket_->state->abandoned.load();
+      {AXIOM_FRAME_TIMING_SCOPE(feedbackFlushTiming,feedback_gpu_flush);context_->flush(info);}
+      {AXIOM_FRAME_TIMING_SCOPE(feedbackSubmitTiming,feedback_gpu_submit);success_=context_->submit(GrSyncCpu::kNo)&&!ticket_->state->abandoned.load();}
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
       g5::gpuTicketSubmitted(reinterpret_cast<std::uintptr_t>(ticket_.get()),success_);
 #endif

@@ -1,0 +1,24 @@
+{
+  "sourceThread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "stage": "FROZEN_MATRIX_IN_PROGRESS",
+  "sourceMutationAuthorized": false,
+  "findings": [
+    {
+      "id": "EFF-C1-SETTLED-PAN",
+      "status": "MEASURED_NONREGRESSION_FAILURE",
+      "activeTailRAFCount": 9,
+      "activeTailRAFP95Ms": 46.5,
+      "navigationMs": 2750,
+      "convergenceMs": 5125.1,
+      "disposition": "Retain all raw and pooled across role check; no retry/source change."
+    },
+    {
+      "id": "EFF-BOUND-LARGE-LOCAL",
+      "status": "UNCONFIRMED_NON_BLOCKING_NUMERIC_FINDING",
+      "counterexample": "center1e9,r30,tx=-1e9: local +/- radius cast to float before map may collapse bounds; no actual Skia failure independently proven.",
+      "disposition": "Keep disclosure as unconfirmed finding, no extra task blocker or source change. Frozen settled-pan failures remain the actual blocker.",
+      "followup": "Control independently used existing CPU Raster Skia only, no browser/GPU/candidate mutation: at 1e9/r30/translation-1e9 the original Skia also drew no pixels inside selected damage; both paths zero difference. No actual culling regression reproduced.",
+      "blocking": false
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "status": "PROBE_FIRST_NO_SEMANTIC_DECISIONS",
+  "currentFlow": [
+    "DOM input -> SDK private adapter -> CanvasEditingRuntime active/sealed contribution",
+    "RuntimeComposition::serviceFrameOpportunity -> retryTransientOverlayFrame",
+    "SkiaRenderer::renderTransientOverlay -> prepareTransientFrame",
+    "cache prepared bodies -> scratch acquire -> inherit complete frame -> clipped draw -> immutable snapshot",
+    "SkiaGpuLifetime flush/submit -> provider present -> retained feedback witness -> query prefixes",
+    "Canonical OperationEngine atomic apply; CanonicalVisible matches contribution before retirement"
+  ],
+  "currentOwners": {
+    "canonical": "OperationEngine",
+    "feedback": "CanvasEditingRuntime",
+    "coordination": "RuntimeCompositionCore",
+    "derivedPixels": "SkiaRenderer/SkiaRenderCache/SourceRetentionPool/GpuResourceRetirement"
+  },
+  "publicAPIImpact": "none",
+  "probesOnlySoFar": [
+    "feedback_entry/total",
+    "acquire/validation/cache/preparation/damage",
+    "target allocation and inherit bytes",
+    "scene/snapshot/publish",
+    "GPU flush/submit and provider flush/submit",
+    "retention/query; full-mask comparison"
+  ],
+  "probePolicy": "RAII scopes include all early-return attempts; existing hierarchical exclusive CPU timing, no GPU waits/per-pixel events. Context/view/frame/camera/surface/metrics correlation retained. Counters CPU-recorded allocation/copy/retained bytes, not driver memory or GPU duration.",
+  "targetFlow": "Select measured dominant branch after B. Existing owners/atomic boundary and quotas unchanged. No predetermined pool or broad trajectory/commit redesign.",
+  "verificationMap": {
+    "EFF1": "Exact probe-only B then identical final C phase scopes and residuals",
+    "EFF2": "Measured mechanism work-count RED/GREEN plus actual GPU pixels/lifetime",
+    "EFF3": "59 strengthened native commands plus focused live pixels, C20 readbacks/4 independent CPU references, UndoRedo",
+    "EFF4": "finite B1/C1/C2/B2 source freeze and raw input/RAF metrics",
+    "EFF5": "sourceSDK/preservation/storage ledger and two callbacks"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "hypothesesFailed": 0,
+  "selectedMechanism": "Conservative live swept-mask culling for actual damage only; original full scratch clip/matrix/sequential order retained.",
+  "selectedRepairFiles": [
+    "runtime/render/src/erase_feedback_damage.hpp",
+    "runtime/render/src/skia_render_cache.cpp"
+  ],
+  "productionHypothesesFailed": 0,
+  "newOwnerOrPublicAPI": false
+}

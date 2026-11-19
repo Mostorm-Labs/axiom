@@ -1,0 +1,15 @@
+{
+  "status": "DISCLOSED_PLANNING_METADATA_VERSION_CHANGE",
+  "diagnosticBFreeze": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/freeze-EFF-D-B.json",
+  "replacedPath": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/implementation-design.json",
+  "originalBytes": 2280,
+  "originalSHA256": "9ef7476f0b5eebf98190ffab979b065d146bbd0ffb19efe886aeb2ceefbb82f7",
+  "reconstructedExactOriginal": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/implementation-design-B.json",
+    "bytes": 2280,
+    "sha256": "9ef7476f0b5eebf98190ffab979b065d146bbd0ffb19efe886aeb2ceefbb82f7"
+  },
+  "reason": "After B measured diagnosis, implementation-design.json received only four new fields describing selected repair. Final C and ordinary freezes bind the final design. B/C source, SDK, probes, driver and raw capture bytes remain unchanged.",
+  "scope": "Planning metadata only; preserve original freeze and disclose reconstruction from unchanged JSON minus four additive fields. Not a diagnostic source/SDK/path overwrite.",
+  "productionOrSamplingChange": false
+}
