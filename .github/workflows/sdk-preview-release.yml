@@ -110,6 +110,7 @@ jobs:
         with:
           python-version: '3.12'
       - uses: ilammy/msvc-dev-cmd@v1
+        if: matrix.platform == 'windows'
         with:
           arch: x64
           toolset: '14.51'
