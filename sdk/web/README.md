@@ -582,3 +582,6 @@ a terminal LOCAL_INTENT_FAILED event without advancing canonical generation.
 correctness and rendering reuse improvements. The settled-navigation diagnostic
 checkpoint remains BLOCKED / ROOT_CAUSE_NOT_ESTABLISHED; original EFF4 performance
 acceptance remains unmet. Private timing/progress observers remain off in releases.
+
+0.5.2 fixes Android NDK aggregate initialization in the shared navigation path and
+keeps the 0.5.1 runtime behavior and enabled Web Worker release profile.

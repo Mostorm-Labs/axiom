@@ -553,7 +553,7 @@ NM_INVOCATION(navigationMasks);
             // Mask validity/source quota is now established by its bounded
             // owner. Validate/retain body independently to avoid hidden scans.
             auto body=entry;body.record.eraseMasks.clear();
-            ReferenceDrawList validation{.frame=frame};validation.viewportClip={0,0,frame.metrics.logicalWidth,frame.metrics.logicalHeight};validation.entries.push_back(body);
+            ReferenceDrawList validation{.frame=frame,.entries={},.canonicalBytes={},.digest={}};validation.viewportClip={0,0,frame.metrics.logicalWidth,frame.metrics.logicalHeight};validation.entries.push_back(body);
             if(validateReferencePlan(FramePlan{frame,std::move(validation)},validation_.get(),source->stamped?HistoryValidationPolicy::kPublishedImmutable:HistoryValidationPolicy::kUntrusted).code!=BackendSubmissionCode::kAccepted)return false;
             auto retained=geometry_->retainSource(body,budget,true);if(!retained){deferred=true;return false;}source->sourceLeases.insert(source->sourceLeases.end(),retained->begin(),retained->end());
             const auto before=geometry_->statistics();source->geometry.push_back(geometry_->get(body,options,budget,!work.coverageComplete&&key.scale<level,PreparedConsumer::kNavigation));const auto after=geometry_->statistics();work.preparedGeometryBuilds+=after.builds-before.builds;work.preparedGeometryHits+=after.hits-before.hits;work.preparedGeometryDenied+=after.denied-before.denied;
