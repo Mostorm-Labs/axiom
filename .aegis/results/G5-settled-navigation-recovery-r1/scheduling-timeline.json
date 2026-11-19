@@ -1,0 +1,3446 @@
+{
+  "status": "OBSERVED_BASELINE_DIAGNOSTICS",
+  "rows": [
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 47.43333347638327,
+        "upReturnToFeedbackMs": 65.10000014305115,
+        "maxContentProxyGapMs": 47.43333347638327,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.199999809265137,
+        "SDKRAFmaxMs": 18.600000143051147,
+        "SDKRAFdurationP95Ms": 9.600000143051147,
+        "dispatchP95Ms": 18.59999990463257,
+        "inputLatenessP95Ms": 55.866666714351595,
+        "convergenceMs": 482.2999999523163,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2063.7000000476837,
+      "eraseMs": 8001.399999856949,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.350000023841858,
+        "p95": 8.100000143051147,
+        "max": 11.0
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.099999904632568,
+        "p95": 13.400000095367432,
+        "max": 14.799999952316284
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.099999904632568,
+        "p95": 13.5,
+        "max": 14.700000047683716
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 14.700000047683716,
+          "previousEnd": 15464.5,
+          "requestAt": 15464.400000095367,
+          "callbackStart": 15479.200000047684,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 14.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.399999856948853,
+          "previousEnd": 15697.900000095367,
+          "requestAt": 15697.900000095367,
+          "callbackStart": 15712.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 15498.599999904633,
+          "requestAt": 15498.599999904633,
+          "callbackStart": 15512.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 15681,
+          "requestAt": 15681,
+          "callbackStart": 15694.700000047684,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.600000143051147,
+          "previousEnd": 15598.099999904633,
+          "requestAt": 15598.099999904633,
+          "callbackStart": 15611.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.5,
+          "previousEnd": 15931.200000047684,
+          "requestAt": 15931.200000047684,
+          "callbackStart": 15944.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.400000095367432,
+          "previousEnd": 15532.099999904633,
+          "requestAt": 15532.099999904633,
+          "callbackStart": 15545.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.300000190734863,
+          "previousEnd": 16048.099999904633,
+          "requestAt": 16048.099999904633,
+          "callbackStart": 16061.400000095367,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.300000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.200000047683716,
+          "previousEnd": 16014.700000047684,
+          "requestAt": 16014.700000047684,
+          "callbackStart": 16027.900000095367,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.199999809265137,
+          "previousEnd": 15564.400000095367,
+          "requestAt": 15564.400000095367,
+          "callbackStart": 15577.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.199999809265137,
+          "previousEnd": 16814.900000095367,
+          "requestAt": 16814.900000095367,
+          "callbackStart": 16828.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.100000143051147,
+          "previousEnd": 15581.599999904633,
+          "requestAt": 15581.5,
+          "callbackStart": 15594.700000047684,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 26,
+      "recoveryCPUms": {
+        "n": 26,
+        "median": 9.600000143051147,
+        "p95": 10.100000143051147,
+        "max": 26.700000047683716
+      },
+      "recoveryCPUTotalMs": 204.29999995231628,
+      "recoveryRequestDelayMs": {
+        "n": 26,
+        "median": 7.649999976158142,
+        "p95": 17.09999990463257,
+        "max": 17.5
+      },
+      "actualDefaultContentWritesAfterInput": 32,
+      "lastContentMsAfterInput": 417.90000009536743,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "0133b5f5092a7ad3992f2a5c177fdaf8",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 60.533333381019474,
+        "upReturnToFeedbackMs": 78.20000004768372,
+        "maxContentProxyGapMs": 60.533333381019474,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 17.700000047683716,
+        "SDKRAFmaxMs": 18.40000009536743,
+        "SDKRAFdurationP95Ms": 9.5,
+        "dispatchP95Ms": 18.299999952316284,
+        "inputLatenessP95Ms": 68.9333334763869,
+        "convergenceMs": 280.10000014305115,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2076.2000000476837,
+      "eraseMs": 8000.699999809265,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.299999952316284,
+        "p95": 7.5,
+        "max": 8.799999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.5,
+        "p95": 13.700000047683716,
+        "max": 25.199999809265137
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.400000095367432,
+        "p95": 13.799999952316284,
+        "max": 25.199999809265137
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 25.199999809265137,
+          "previousEnd": 38217.90000009537,
+          "requestAt": 38217.90000009537,
+          "callbackStart": 38243.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 25.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 15.0,
+          "previousEnd": 37512.5,
+          "requestAt": 37512.5,
+          "callbackStart": 37527.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.200000047683716,
+          "previousEnd": 37479.5,
+          "requestAt": 37479.5,
+          "callbackStart": 37493.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.799999952316284,
+          "previousEnd": 37363.200000047684,
+          "requestAt": 37363.200000047684,
+          "callbackStart": 37377,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.799999952316284,
+          "previousEnd": 37397.299999952316,
+          "requestAt": 37397.299999952316,
+          "callbackStart": 37411.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.799999952316284,
+          "previousEnd": 37913.5,
+          "requestAt": 37913.5,
+          "callbackStart": 37927.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 37580,
+          "requestAt": 37580,
+          "callbackStart": 37593.700000047684,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 37713.700000047684,
+          "requestAt": 37713.700000047684,
+          "callbackStart": 37727.40000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.599999904632568,
+          "previousEnd": 37829.5,
+          "requestAt": 37829.5,
+          "callbackStart": 37843.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.5,
+          "previousEnd": 37380.59999990463,
+          "requestAt": 37380.59999990463,
+          "callbackStart": 37394.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 37864.200000047684,
+          "requestAt": 37864.200000047684,
+          "callbackStart": 37877.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.100000143051147,
+          "previousEnd": 37697.09999990463,
+          "requestAt": 37697.09999990463,
+          "callbackStart": 37710.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.100000143051147,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 14,
+      "recoveryCPUms": {
+        "n": 14,
+        "median": 2.0500000715255737,
+        "p95": 23.90000009536743,
+        "max": 23.90000009536743
+      },
+      "recoveryCPUTotalMs": 80.0,
+      "recoveryRequestDelayMs": {
+        "n": 14,
+        "median": 15.100000143051147,
+        "p95": 16.299999952316284,
+        "max": 16.299999952316284
+      },
+      "actualDefaultContentWritesAfterInput": 30,
+      "lastContentMsAfterInput": 218.29999995231628,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "67d81aa84f956987da0af83fbe2a7363",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 37.33333333333576,
+        "upReturnToFeedbackMs": 1027,
+        "maxContentProxyGapMs": 37.33333333333576,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.299999952316284,
+        "SDKRAFmaxMs": 18.699999809265137,
+        "SDKRAFdurationP95Ms": 3.5,
+        "dispatchP95Ms": 18.59999990463257,
+        "inputLatenessP95Ms": 22.40000009536743,
+        "convergenceMs": 448.09999990463257,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2038.1000001430511,
+      "eraseMs": 8001.899999856949,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.850000023841858,
+        "p95": 8.5,
+        "max": 10.0
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.850000023841858,
+        "p95": 13.599999904632568,
+        "max": 14.600000143051147
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.800000190734863,
+        "p95": 13.600000143051147,
+        "max": 14.600000143051147
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 14.600000143051147,
+          "previousEnd": 60145.299999952316,
+          "requestAt": 60145.299999952316,
+          "callbackStart": 60159.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.100000143051147,
+          "previousEnd": 59896.59999990463,
+          "requestAt": 59896.59999990463,
+          "callbackStart": 59910.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 60045.5,
+          "requestAt": 60045.5,
+          "callbackStart": 60059.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 60262.700000047684,
+          "requestAt": 60262.700000047684,
+          "callbackStart": 60276.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.600000143051147,
+          "previousEnd": 60012.59999990463,
+          "requestAt": 60012.59999990463,
+          "callbackStart": 60026.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.600000143051147,
+          "previousEnd": 60462.799999952316,
+          "requestAt": 60462.799999952316,
+          "callbackStart": 60476.40000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.599999904632568,
+          "previousEnd": 59280.40000009537,
+          "requestAt": 59280.40000009537,
+          "callbackStart": 59294,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.5,
+          "previousEnd": 60329.799999952316,
+          "requestAt": 60329.799999952316,
+          "callbackStart": 60343.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.399999856948853,
+          "previousEnd": 60229.700000047684,
+          "requestAt": 60229.700000047684,
+          "callbackStart": 60243.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 60079.799999952316,
+          "requestAt": 60079.799999952316,
+          "callbackStart": 60093.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 59914.200000047684,
+          "requestAt": 59914.200000047684,
+          "callbackStart": 59927.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 60029.5,
+          "requestAt": 60029.5,
+          "callbackStart": 60042.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 24,
+      "recoveryCPUms": {
+        "n": 24,
+        "median": 9.649999856948853,
+        "p95": 10.099999904632568,
+        "max": 24.899999856948853
+      },
+      "recoveryCPUTotalMs": 187.39999914169312,
+      "recoveryRequestDelayMs": {
+        "n": 24,
+        "median": 8.0,
+        "p95": 17.600000143051147,
+        "max": 18.0
+      },
+      "actualDefaultContentWritesAfterInput": 31,
+      "lastContentMsAfterInput": 385.39999985694885,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "c75750e1458ddf9d2cb08d79f6ecc789",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 35.93333347637963,
+        "upReturnToFeedbackMs": 1004.3000001907349,
+        "maxContentProxyGapMs": 35.93333347637963,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 16.799999952316284,
+        "SDKRAFmaxMs": 17.5,
+        "SDKRAFdurationP95Ms": 3.799999952316284,
+        "dispatchP95Ms": 18.399999856948853,
+        "inputLatenessP95Ms": 21.633333285644767,
+        "convergenceMs": 204.39999985694885,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2038.1000001430511,
+      "eraseMs": 8002.5,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 6.200000047683716,
+        "p95": 8.200000047683716,
+        "max": 10.299999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.5,
+        "p95": 12.399999856948853,
+        "max": 12.700000047683716
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.5,
+        "p95": 12.400000095367432,
+        "max": 12.700000047683716
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 12.700000047683716,
+          "previousEnd": 84329.20000004768,
+          "requestAt": 84329.20000004768,
+          "callbackStart": 84341.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.600000143051147,
+          "previousEnd": 84429.29999995232,
+          "requestAt": 84429.29999995232,
+          "callbackStart": 84441.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.600000143051147,
+          "previousEnd": 85429.29999995232,
+          "requestAt": 85429.29999995232,
+          "callbackStart": 85441.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.400000095367432,
+          "previousEnd": 84212.79999995232,
+          "requestAt": 84212.79999995232,
+          "callbackStart": 84225.20000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.400000095367432,
+          "previousEnd": 84396.29999995232,
+          "requestAt": 84396.29999995232,
+          "callbackStart": 84408.70000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.400000095367432,
+          "previousEnd": 84629.5,
+          "requestAt": 84629.5,
+          "callbackStart": 84641.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.399999856948853,
+          "previousEnd": 84529.40000009537,
+          "requestAt": 84529.40000009537,
+          "callbackStart": 84541.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.200000047683716,
+          "previousEnd": 84063,
+          "requestAt": 84063,
+          "callbackStart": 84075.20000004768,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 12.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.199999809265137,
+          "previousEnd": 84096.40000009537,
+          "requestAt": 84096.40000009537,
+          "callbackStart": 84108.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.0,
+          "previousEnd": 83629.79999995232,
+          "requestAt": 83629.79999995232,
+          "callbackStart": 83641.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.0,
+          "previousEnd": 84513.20000004768,
+          "requestAt": 84513.20000004768,
+          "callbackStart": 84525.20000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.0,
+          "previousEnd": 84663.20000004768,
+          "requestAt": 84663.20000004768,
+          "callbackStart": 84675.20000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.0,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 10,
+      "recoveryCPUms": {
+        "n": 10,
+        "median": 2.25,
+        "p95": 21.799999952316284,
+        "max": 21.799999952316284
+      },
+      "recoveryCPUTotalMs": 38.59999990463257,
+      "recoveryRequestDelayMs": {
+        "n": 10,
+        "median": 12.799999952316284,
+        "p95": 17.0,
+        "max": 17.0
+      },
+      "actualDefaultContentWritesAfterInput": 31,
+      "lastContentMsAfterInput": 149.59999990463257,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pan/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 45.133333524066984,
+        "upReturnToFeedbackMs": 62.80000019073486,
+        "maxContentProxyGapMs": 45.133333524066984,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.300000190734863,
+        "SDKRAFmaxMs": 18.59999990463257,
+        "SDKRAFdurationP95Ms": 9.799999952316284,
+        "dispatchP95Ms": 19,
+        "inputLatenessP95Ms": 53.53333338101584,
+        "convergenceMs": 514,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2062.9000000953674,
+      "eraseMs": 8007.799999952316,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.099999904632568,
+        "p95": 7.599999904632568,
+        "max": 8.799999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.299999952316284,
+        "p95": 17.200000047683716,
+        "max": 18.40000009536743
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.200000047683716,
+        "p95": 17.300000190734863,
+        "max": 18.40000009536743
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 18.40000009536743,
+          "previousEnd": 16514.299999952316,
+          "requestAt": 16514.299999952316,
+          "callbackStart": 16532.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 18.40000009536743,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 18.200000047683716,
+          "previousEnd": 15430.899999856949,
+          "requestAt": 15430.899999856949,
+          "callbackStart": 15449.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 18.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 17.90000009536743,
+          "previousEnd": 15914.899999856949,
+          "requestAt": 15914.899999856949,
+          "callbackStart": 15932.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.90000009536743,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 17.700000047683716,
+          "previousEnd": 16314.399999856949,
+          "requestAt": 16314.399999856949,
+          "callbackStart": 16332.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 17.399999856948853,
+          "previousEnd": 16864.5,
+          "requestAt": 16864.5,
+          "callbackStart": 16881.89999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 17.300000190734863,
+          "previousEnd": 16398.39999985695,
+          "requestAt": 16398.39999985695,
+          "callbackStart": 16415.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.300000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 17.200000047683716,
+          "previousEnd": 15882.299999952316,
+          "requestAt": 15882.299999952316,
+          "callbackStart": 15899.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.200000047683716,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 17.100000143051147,
+          "previousEnd": 16748.39999985695,
+          "requestAt": 16748.39999985695,
+          "callbackStart": 16765.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 17.09999990463257,
+          "previousEnd": 15165.700000047684,
+          "requestAt": 15165.700000047684,
+          "callbackStart": 15182.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.09999990463257,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 17.09999990463257,
+          "previousEnd": 16281.200000047684,
+          "requestAt": 16281.200000047684,
+          "callbackStart": 16298.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.09999990463257,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 17.0,
+          "previousEnd": 15330.899999856949,
+          "requestAt": 15330.899999856949,
+          "callbackStart": 15347.899999856949,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 17.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 16.699999809265137,
+          "previousEnd": 16248.200000047684,
+          "requestAt": 16248.200000047684,
+          "callbackStart": 16264.899999856949,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 16.699999809265137,
+          "inputEventsInside": 2
+        }
+      ],
+      "recoveryCallbacks": 28,
+      "recoveryCPUms": {
+        "n": 28,
+        "median": 9.600000023841858,
+        "p95": 10.299999952316284,
+        "max": 24.200000047683716
+      },
+      "recoveryCPUTotalMs": 204.80000042915344,
+      "recoveryRequestDelayMs": {
+        "n": 28,
+        "median": 7.450000047683716,
+        "p95": 17.09999990463257,
+        "max": 17.09999990463257
+      },
+      "actualDefaultContentWritesAfterInput": 33,
+      "lastContentMsAfterInput": 436.2000000476837,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pinch/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 45.93333347638327,
+        "upReturnToFeedbackMs": 63.60000014305115,
+        "maxContentProxyGapMs": 45.93333347638327,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.09999990463257,
+        "SDKRAFmaxMs": 18.40000009536743,
+        "SDKRAFdurationP95Ms": 9.700000047683716,
+        "dispatchP95Ms": 18.200000047683716,
+        "inputLatenessP95Ms": 54.5,
+        "convergenceMs": 316.7999999523163,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2062.9000000953674,
+      "eraseMs": 8004.700000047684,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 6.599999904632568,
+        "p95": 8.799999952316284,
+        "max": 9.5
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.199999928474426,
+        "p95": 12.699999809265137,
+        "max": 13.399999856948853
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.200000047683716,
+        "p95": 12.700000047683716,
+        "max": 13.399999856948853
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 13.399999856948853,
+          "previousEnd": 16096.200000047684,
+          "requestAt": 16096.200000047684,
+          "callbackStart": 16109.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 15896,
+          "requestAt": 15896,
+          "callbackStart": 15909.099999904633,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 13.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 16146.700000047684,
+          "requestAt": 16146.700000047684,
+          "callbackStart": 16159.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.799999952316284,
+          "previousEnd": 15862.799999952316,
+          "requestAt": 15862.799999952316,
+          "callbackStart": 15875.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.700000047683716,
+          "previousEnd": 15645.799999952316,
+          "requestAt": 15645.799999952316,
+          "callbackStart": 15658.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.700000047683716,
+          "previousEnd": 16796.599999904633,
+          "requestAt": 16796.599999904633,
+          "callbackStart": 16809.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.699999809265137,
+          "previousEnd": 16212.700000047684,
+          "requestAt": 16212.700000047684,
+          "callbackStart": 16225.399999856949,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.699999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.5,
+          "previousEnd": 15762.5,
+          "requestAt": 15762.5,
+          "callbackStart": 15775,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.5,
+          "previousEnd": 16013.200000047684,
+          "requestAt": 16013.200000047684,
+          "callbackStart": 16025.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.400000095367432,
+          "previousEnd": 15779.299999952316,
+          "requestAt": 15779.299999952316,
+          "callbackStart": 15791.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.299999952316284,
+          "previousEnd": 15563.299999952316,
+          "requestAt": 15563.299999952316,
+          "callbackStart": 15575.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.299999952316284,
+          "previousEnd": 15795.799999952316,
+          "requestAt": 15795.799999952316,
+          "callbackStart": 15808.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.299999952316284,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 16,
+      "recoveryCPUms": {
+        "n": 16,
+        "median": 3.9499999284744263,
+        "p95": 23.0,
+        "max": 23.0
+      },
+      "recoveryCPUTotalMs": 103.09999942779541,
+      "recoveryRequestDelayMs": {
+        "n": 16,
+        "median": 13.099999904632568,
+        "p95": 17.5,
+        "max": 17.5
+      },
+      "actualDefaultContentWritesAfterInput": 32,
+      "lastContentMsAfterInput": 233.20000004768372,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pan/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "ea313d8efe45db694605ae2eb66a3734",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 35.43333323796469,
+        "upReturnToFeedbackMs": 1031.7999999523163,
+        "maxContentProxyGapMs": 35.43333323796469,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.5,
+        "SDKRAFmaxMs": 18.600000143051147,
+        "SDKRAFdurationP95Ms": 3.5999999046325684,
+        "dispatchP95Ms": 19.5,
+        "inputLatenessP95Ms": 20.799999952316284,
+        "convergenceMs": 530.5999999046326,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2034.5999999046326,
+      "eraseMs": 8000.900000095367,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 6.200000047683716,
+        "p95": 8.599999904632568,
+        "max": 10.100000143051147
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.5,
+        "p95": 13.0,
+        "max": 14.200000047683716
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.5,
+        "p95": 13.099999904632568,
+        "max": 14.200000047683716
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 14.200000047683716,
+          "previousEnd": 15643.200000047684,
+          "requestAt": 15643.200000047684,
+          "callbackStart": 15657.400000095367,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 16677.299999952316,
+          "requestAt": 16677.299999952316,
+          "callbackStart": 16691,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.599999904632568,
+          "previousEnd": 15743.400000095367,
+          "requestAt": 15743.400000095367,
+          "callbackStart": 15757,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.5,
+          "previousEnd": 15844.200000047684,
+          "requestAt": 15844.100000143051,
+          "callbackStart": 15857.700000047684,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 13.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 15410.200000047684,
+          "requestAt": 15410.100000143051,
+          "callbackStart": 15423.5,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 13.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 15493.900000095367,
+          "requestAt": 15493.900000095367,
+          "callbackStart": 15507,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 15544.200000047684,
+          "requestAt": 15544.200000047684,
+          "callbackStart": 15557.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 15510.700000047684,
+          "requestAt": 15510.700000047684,
+          "callbackStart": 15523.600000143051,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.799999952316284,
+          "previousEnd": 15294.400000095367,
+          "requestAt": 15294.299999952316,
+          "callbackStart": 15307.200000047684,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.799999952316284,
+          "previousEnd": 15877.5,
+          "requestAt": 15877.5,
+          "callbackStart": 15890.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.699999809265137,
+          "previousEnd": 15393.600000143051,
+          "requestAt": 15393.5,
+          "callbackStart": 15406.299999952316,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 12.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.699999809265137,
+          "previousEnd": 16295.100000143051,
+          "requestAt": 16295.100000143051,
+          "callbackStart": 16307.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.699999809265137,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 29,
+      "recoveryCPUms": {
+        "n": 29,
+        "median": 9.5,
+        "p95": 10.400000095367432,
+        "max": 24
+      },
+      "recoveryCPUTotalMs": 229.50000023841858,
+      "recoveryRequestDelayMs": {
+        "n": 29,
+        "median": 7.099999904632568,
+        "p95": 16.5,
+        "max": 18.40000009536743
+      },
+      "actualDefaultContentWritesAfterInput": 34,
+      "lastContentMsAfterInput": 455.7000000476837,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pinch/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "ea313d8efe45db694605ae2eb66a3734",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 36.23333319028097,
+        "upReturnToFeedbackMs": 1030.2000000476837,
+        "maxContentProxyGapMs": 36.23333319028097,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.299999952316284,
+        "SDKRAFmaxMs": 18.600000143051147,
+        "SDKRAFdurationP95Ms": 3.9000000953674316,
+        "dispatchP95Ms": 19.199999809265137,
+        "inputLatenessP95Ms": 21.66666666666788,
+        "convergenceMs": 200.90000009536743,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2038.8999998569489,
+      "eraseMs": 8001.5,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.25,
+        "p95": 7.599999904632568,
+        "max": 8.400000095367432
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.099999904632568,
+        "p95": 13.799999952316284,
+        "max": 15.099999904632568
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.0,
+        "p95": 14.0,
+        "max": 15.099999904632568
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 15.099999904632568,
+          "previousEnd": 15638,
+          "requestAt": 15638,
+          "callbackStart": 15653.099999904633,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 15.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.799999952316284,
+          "previousEnd": 15438.399999856949,
+          "requestAt": 15438.399999856949,
+          "callbackStart": 15453.199999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.5,
+          "previousEnd": 16771.099999904633,
+          "requestAt": 16771.099999904633,
+          "callbackStart": 16785.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.300000190734863,
+          "previousEnd": 15555.199999809265,
+          "requestAt": 15555.199999809265,
+          "callbackStart": 15569.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.300000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.100000143051147,
+          "previousEnd": 15888.699999809265,
+          "requestAt": 15888.699999809265,
+          "callbackStart": 15902.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 16005.099999904633,
+          "requestAt": 16005.099999904633,
+          "callbackStart": 16019.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.799999952316284,
+          "previousEnd": 15672.299999952316,
+          "requestAt": 15672.299999952316,
+          "callbackStart": 15686.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 15472.099999904633,
+          "requestAt": 15472.099999904633,
+          "callbackStart": 15485.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.699999809265137,
+          "previousEnd": 15322,
+          "requestAt": 15322,
+          "callbackStart": 15335.699999809265,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 13.699999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.600000143051147,
+          "previousEnd": 15405.899999856949,
+          "requestAt": 15405.899999856949,
+          "callbackStart": 15419.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 16122.5,
+          "requestAt": 16122.5,
+          "callbackStart": 16135.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 15606.099999904633,
+          "requestAt": 15606.099999904633,
+          "callbackStart": 15619,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 10,
+      "recoveryCPUms": {
+        "n": 10,
+        "median": 2.350000023841858,
+        "p95": 21.59999990463257,
+        "max": 21.59999990463257
+      },
+      "recoveryCPUTotalMs": 37.59999942779541,
+      "recoveryRequestDelayMs": {
+        "n": 10,
+        "median": 13.149999976158142,
+        "p95": 16.40000009536743,
+        "max": 16.40000009536743
+      },
+      "actualDefaultContentWritesAfterInput": 34,
+      "lastContentMsAfterInput": 147.40000009536743,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "ea313d8efe45db694605ae2eb66a3734",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 31.33333333333212,
+        "upReturnToFeedbackMs": 1029.4000000953674,
+        "maxContentProxyGapMs": 34.299999952316284,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 16.799999952316284,
+        "SDKRAFmaxMs": 17.100000143051147,
+        "SDKRAFdurationP95Ms": 4,
+        "dispatchP95Ms": 18.600000143051147,
+        "inputLatenessP95Ms": 17.633333285648405,
+        "convergenceMs": 203.90000009536743,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2033.3999998569489,
+      "eraseMs": 8006.599999904633,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.400000095367432,
+        "p95": 7.800000190734863,
+        "max": 8.899999856948853
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.199999928474426,
+        "p95": 15.299999952316284,
+        "max": 16.90000009536743
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.200000047683716,
+        "p95": 15.5,
+        "max": 16.90000009536743
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 16.90000009536743,
+          "previousEnd": 15148.599999904633,
+          "requestAt": 15148.599999904633,
+          "callbackStart": 15165.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 16.90000009536743,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 16.199999809265137,
+          "previousEnd": 15516,
+          "requestAt": 15516,
+          "callbackStart": 15532.199999809265,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 16.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 16.100000143051147,
+          "previousEnd": 15882.699999809265,
+          "requestAt": 15882.699999809265,
+          "callbackStart": 15898.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 16.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 15.800000190734863,
+          "previousEnd": 14899.199999809265,
+          "requestAt": 14899.099999904633,
+          "callbackStart": 14915,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 15.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 15.799999952316284,
+          "previousEnd": 15416.299999952316,
+          "requestAt": 15416.299999952316,
+          "callbackStart": 15432.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 15.5,
+          "previousEnd": 16666.199999809265,
+          "requestAt": 16666.199999809265,
+          "callbackStart": 16681.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 15.299999952316284,
+          "previousEnd": 16066.299999952316,
+          "requestAt": 16066.299999952316,
+          "callbackStart": 16081.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.900000095367432,
+          "previousEnd": 16516.699999809265,
+          "requestAt": 16516.699999809265,
+          "callbackStart": 16531.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.700000047683716,
+          "previousEnd": 16450.39999985695,
+          "requestAt": 16450.39999985695,
+          "callbackStart": 16465.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 15334.299999952316,
+          "requestAt": 15334.299999952316,
+          "callbackStart": 15348.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.900000095367432,
+          "previousEnd": 16084.899999856949,
+          "requestAt": 16084.899999856949,
+          "callbackStart": 16098.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.900000095367432,
+          "previousEnd": 16217.699999809265,
+          "requestAt": 16217.699999809265,
+          "callbackStart": 16231.599999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.900000095367432,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 10,
+      "recoveryCPUms": {
+        "n": 10,
+        "median": 1.7999999523162842,
+        "p95": 21.90000009536743,
+        "max": 21.90000009536743
+      },
+      "recoveryCPUTotalMs": 38.89999985694885,
+      "recoveryRequestDelayMs": {
+        "n": 10,
+        "median": 13.150000095367432,
+        "p95": 16.40000009536743,
+        "max": 16.40000009536743
+      },
+      "actualDefaultContentWritesAfterInput": 34,
+      "lastContentMsAfterInput": 150.20000004768372,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "0033b5f5092a7ad3992f2a5c177fdaf8",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 34.43333323796833,
+        "upReturnToFeedbackMs": 980.5,
+        "maxContentProxyGapMs": 34.43333323796833,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.5,
+        "SDKRAFmaxMs": 18.799999952316284,
+        "SDKRAFdurationP95Ms": 2.299999952316284,
+        "dispatchP95Ms": 18.40000009536743,
+        "inputLatenessP95Ms": 19.799999952316284,
+        "convergenceMs": 427.7000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2034.7999999523163,
+      "eraseMs": 8002.899999856949,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.700000047683716,
+        "p95": 7.900000095367432,
+        "max": 9.299999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 11.100000023841858,
+        "p95": 13.199999809265137,
+        "max": 21.40000009536743
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 11.099999904632568,
+        "p95": 13.300000190734863,
+        "max": 21.40000009536743
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 21.40000009536743,
+          "previousEnd": 38554.59999990463,
+          "requestAt": 38554.59999990463,
+          "callbackStart": 38576,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 21.40000009536743,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.400000095367432,
+          "previousEnd": 38266.699999809265,
+          "requestAt": 38266.699999809265,
+          "callbackStart": 38281.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.0,
+          "previousEnd": 39283.39999985695,
+          "requestAt": 39283.39999985695,
+          "callbackStart": 39297.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.899999856948853,
+          "previousEnd": 38167.5,
+          "requestAt": 38167.5,
+          "callbackStart": 38181.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.5,
+          "previousEnd": 38417.199999809265,
+          "requestAt": 38417.199999809265,
+          "callbackStart": 38430.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.300000190734863,
+          "previousEnd": 37967.199999809265,
+          "requestAt": 37967.199999809265,
+          "callbackStart": 37980.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.300000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.199999809265137,
+          "previousEnd": 38300.5,
+          "requestAt": 38300.5,
+          "callbackStart": 38313.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 38200.5,
+          "requestAt": 38200.5,
+          "callbackStart": 38213.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 38067.39999985695,
+          "requestAt": 38067.39999985695,
+          "callbackStart": 38080.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 37934.199999809265,
+          "requestAt": 37934.199999809265,
+          "callbackStart": 37947.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 39200.699999809265,
+          "requestAt": 39200.699999809265,
+          "callbackStart": 39213.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.800000190734863,
+          "previousEnd": 38100.699999809265,
+          "requestAt": 38100.699999809265,
+          "callbackStart": 38113.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.800000190734863,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 23,
+      "recoveryCPUms": {
+        "n": 23,
+        "median": 9.700000047683716,
+        "p95": 10.599999904632568,
+        "max": 23.799999952316284
+      },
+      "recoveryCPUTotalMs": 173.49999976158142,
+      "recoveryRequestDelayMs": {
+        "n": 23,
+        "median": 7.199999809265137,
+        "p95": 16.700000047683716,
+        "max": 16.700000047683716
+      },
+      "actualDefaultContentWritesAfterInput": 31,
+      "lastContentMsAfterInput": 368.2999999523163,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "66d81aa84f956987da0af83fbe2a7363",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 55.033333381019474,
+        "upReturnToFeedbackMs": 72.70000004768372,
+        "maxContentProxyGapMs": 55.033333381019474,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.09999990463257,
+        "SDKRAFmaxMs": 19,
+        "SDKRAFdurationP95Ms": 10,
+        "dispatchP95Ms": 18.90000009536743,
+        "inputLatenessP95Ms": 64.46666661898053,
+        "convergenceMs": 263.40000009536743,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2072.0999999046326,
+      "eraseMs": 8002.0,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 6.200000047683716,
+        "p95": 8.700000047683716,
+        "max": 10.5
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.200000047683716,
+        "p95": 13.0,
+        "max": 13.5
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.200000047683716,
+        "p95": 13.0,
+        "max": 13.5
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 13.5,
+          "previousEnd": 61649.09999990463,
+          "requestAt": 61649.09999990463,
+          "callbackStart": 61662.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.399999856948853,
+          "previousEnd": 61449.299999952316,
+          "requestAt": 61449.299999952316,
+          "callbackStart": 61462.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 61532.5,
+          "requestAt": 61532.5,
+          "callbackStart": 61545.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.199999809265137,
+          "previousEnd": 62550.5,
+          "requestAt": 62550.5,
+          "callbackStart": 62563.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 61782.5,
+          "requestAt": 61782.5,
+          "callbackStart": 61795.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 61899.699999809265,
+          "requestAt": 61899.699999809265,
+          "callbackStart": 61912.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.0,
+          "previousEnd": 62116.59999990463,
+          "requestAt": 62116.59999990463,
+          "callbackStart": 62129.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 61549.699999809265,
+          "requestAt": 61549.699999809265,
+          "callbackStart": 61562.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 61666.59999990463,
+          "requestAt": 61666.59999990463,
+          "callbackStart": 61679.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.900000095367432,
+          "previousEnd": 62866.59999990463,
+          "requestAt": 62866.59999990463,
+          "callbackStart": 62879.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.799999952316284,
+          "previousEnd": 61800.09999990463,
+          "requestAt": 61800,
+          "callbackStart": 61812.89999985695,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 12.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.599999904632568,
+          "previousEnd": 62099.799999952316,
+          "requestAt": 62099.799999952316,
+          "callbackStart": 62112.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.599999904632568,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 13,
+      "recoveryCPUms": {
+        "n": 13,
+        "median": 2.200000047683716,
+        "p95": 26.0,
+        "max": 26.0
+      },
+      "recoveryCPUTotalMs": 80.90000009536743,
+      "recoveryRequestDelayMs": {
+        "n": 13,
+        "median": 13.700000047683716,
+        "p95": 17.0,
+        "max": 17.0
+      },
+      "actualDefaultContentWritesAfterInput": 29,
+      "lastContentMsAfterInput": 203.0,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "c65750e1458ddf9d2cb08d79f6ecc789",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 43.43333323796105,
+        "upReturnToFeedbackMs": 61.09999990463257,
+        "maxContentProxyGapMs": 43.43333323796105,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.100000143051147,
+        "SDKRAFmaxMs": 18.5,
+        "SDKRAFdurationP95Ms": 9.699999809265137,
+        "dispatchP95Ms": 18.799999952316284,
+        "inputLatenessP95Ms": 53.799999952316284,
+        "convergenceMs": 458.60000014305115,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2062.0999999046326,
+      "eraseMs": 8005.400000095367,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 5.850000023841858,
+        "p95": 8.0,
+        "max": 8.700000047683716
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 10.5,
+        "p95": 13.200000047683716,
+        "max": 13.400000095367432
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 10.5,
+        "p95": 13.200000047683716,
+        "max": 13.400000095367432
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 13.400000095367432,
+          "previousEnd": 84865.09999990463,
+          "requestAt": 84865.09999990463,
+          "callbackStart": 84878.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 84649.39999985695,
+          "requestAt": 84649.39999985695,
+          "callbackStart": 84662.69999980927,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.299999952316284,
+          "previousEnd": 86014.5,
+          "requestAt": 86014.5,
+          "callbackStart": 86027.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.200000047683716,
+          "previousEnd": 84882.19999980927,
+          "requestAt": 84882.19999980927,
+          "callbackStart": 84895.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.200000047683716,
+          "previousEnd": 85081.59999990463,
+          "requestAt": 85081.59999990463,
+          "callbackStart": 85094.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.200000047683716,
+          "previousEnd": 85098.79999995232,
+          "requestAt": 85098.79999995232,
+          "callbackStart": 85112,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.199999809265137,
+          "previousEnd": 85198.5,
+          "requestAt": 85198.39999985695,
+          "callbackStart": 85211.69999980927,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 13.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.100000143051147,
+          "previousEnd": 85215.69999980927,
+          "requestAt": 85215.69999980927,
+          "callbackStart": 85228.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.100000143051147,
+          "previousEnd": 85398.89999985695,
+          "requestAt": 85398.89999985695,
+          "callbackStart": 85412,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 13.099999904632568,
+          "previousEnd": 84764.79999995232,
+          "requestAt": 84764.69999980927,
+          "callbackStart": 84777.89999985695,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 13.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.800000190734863,
+          "previousEnd": 84748.19999980927,
+          "requestAt": 84748.19999980927,
+          "callbackStart": 84761,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.800000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 12.799999952316284,
+          "previousEnd": 85632.59999990463,
+          "requestAt": 85632.59999990463,
+          "callbackStart": 85645.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 12.799999952316284,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 25,
+      "recoveryCPUms": {
+        "n": 25,
+        "median": 9.599999904632568,
+        "p95": 10.400000095367432,
+        "max": 23.399999856948853
+      },
+      "recoveryCPUTotalMs": 192.7000002861023,
+      "recoveryRequestDelayMs": {
+        "n": 25,
+        "median": 7.599999904632568,
+        "p95": 16.40000009536743,
+        "max": 16.899999856948853
+      },
+      "actualDefaultContentWritesAfterInput": 34,
+      "lastContentMsAfterInput": 402.7999999523163,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/raw.json",
+      "closed": false,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 58.633333285648405,
+        "upReturnToFeedbackMs": 76.29999995231628,
+        "maxContentProxyGapMs": 58.633333285648405,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.399999856948853,
+        "SDKRAFmaxMs": 21,
+        "SDKRAFdurationP95Ms": 11.400000095367432,
+        "dispatchP95Ms": 18.799999952316284,
+        "inputLatenessP95Ms": 67.53333338101584,
+        "convergenceMs": 582,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2074.5999999046326,
+      "eraseMs": 8009.600000143051,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 10.5,
+        "p95": 12.299999952316284,
+        "max": 14.900000095367432
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 6.1000001430511475,
+        "p95": 8.799999952316284,
+        "max": 15.699999809265137
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 6.1000001430511475,
+        "p95": 8.900000095367432,
+        "max": 15.599999904632568
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 15.599999904632568,
+          "previousEnd": 17194.099999904633,
+          "requestAt": 17194,
+          "callbackStart": 17209.699999809265,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 15.699999809265137,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 11.899999856948853,
+          "previousEnd": 16080.5,
+          "requestAt": 16080.5,
+          "callbackStart": 16092.399999856949,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 11.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.399999856948853,
+          "previousEnd": 16766,
+          "requestAt": 16766,
+          "callbackStart": 16776.39999985695,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 10.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.900000095367432,
+          "previousEnd": 16733.199999809265,
+          "requestAt": 16733.199999809265,
+          "callbackStart": 16743.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.200000047683716,
+          "previousEnd": 16467.099999904633,
+          "requestAt": 16467.099999904633,
+          "callbackStart": 16476.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.900000095367432,
+          "previousEnd": 16634.099999904633,
+          "requestAt": 16634.099999904633,
+          "callbackStart": 16643,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.799999952316284,
+          "previousEnd": 16583.89999985695,
+          "requestAt": 16583.89999985695,
+          "callbackStart": 16592.699999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.599999904632568,
+          "previousEnd": 16983.599999904633,
+          "requestAt": 16983.599999904633,
+          "callbackStart": 16992.199999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.5,
+          "previousEnd": 16534.5,
+          "requestAt": 16534.39999985695,
+          "callbackStart": 16543,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 8.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.5,
+          "previousEnd": 16867.89999985695,
+          "requestAt": 16867.89999985695,
+          "callbackStart": 16876.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.400000095367432,
+          "previousEnd": 16433.699999809265,
+          "requestAt": 16433.699999809265,
+          "callbackStart": 16442.099999904633,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.399999856948853,
+          "previousEnd": 16517.799999952316,
+          "requestAt": 16517.699999809265,
+          "callbackStart": 16526.199999809265,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 8.5,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 32,
+      "recoveryCPUms": {
+        "n": 32,
+        "median": 12.25,
+        "p95": 13.0,
+        "max": 30.399999856948853
+      },
+      "recoveryCPUTotalMs": 337.89999866485596,
+      "recoveryRequestDelayMs": {
+        "n": 32,
+        "median": 5.200000047683716,
+        "p95": 15.5,
+        "max": 15.5
+      },
+      "actualDefaultContentWritesAfterInput": 32,
+      "lastContentMsAfterInput": 518.9000000953674,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/raw.json",
+      "closed": false,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "0133b5f5092a7ad3992f2a5c177fdaf8",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 43.33333333333576,
+        "upReturnToFeedbackMs": 61,
+        "maxContentProxyGapMs": 43.33333333333576,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.199999809265137,
+        "SDKRAFmaxMs": 20.5,
+        "SDKRAFdurationP95Ms": 10.600000143051147,
+        "dispatchP95Ms": 19,
+        "inputLatenessP95Ms": 52.83333333333576,
+        "convergenceMs": 300.10000014305115,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2059.7000000476837,
+      "eraseMs": 8001.599999904633,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 8.099999904632568,
+        "p95": 10.0,
+        "max": 10.700000047683716
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 8.700000047683716,
+        "p95": 10.699999809265137,
+        "max": 11.400000095367432
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 8.600000143051147,
+        "p95": 10.699999809265137,
+        "max": 11.299999952316284
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 11.299999952316284,
+          "previousEnd": 46647.09999990463,
+          "requestAt": 46647.09999990463,
+          "callbackStart": 46658.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 11.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.200000047683716,
+          "previousEnd": 46696.799999952316,
+          "requestAt": 46696.799999952316,
+          "callbackStart": 46708,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 11.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.200000047683716,
+          "previousEnd": 46913.09999990463,
+          "requestAt": 46913,
+          "callbackStart": 46924.299999952316,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 11.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.799999952316284,
+          "previousEnd": 47013.39999985695,
+          "requestAt": 47013.39999985695,
+          "callbackStart": 47024.199999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.799999952316284,
+          "previousEnd": 47130.299999952316,
+          "requestAt": 47130.299999952316,
+          "callbackStart": 47141.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.699999809265137,
+          "previousEnd": 47881,
+          "requestAt": 47881,
+          "callbackStart": 47891.699999809265,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 10.699999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.200000047683716,
+          "previousEnd": 46014.09999990463,
+          "requestAt": 46014.09999990463,
+          "callbackStart": 46024.299999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.200000047683716,
+          "previousEnd": 46531.59999990463,
+          "requestAt": 46531.59999990463,
+          "callbackStart": 46541.799999952316,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.099999904632568,
+          "previousEnd": 46565.09999990463,
+          "requestAt": 46565.09999990463,
+          "callbackStart": 46575.199999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.099999904632568,
+          "previousEnd": 46714.299999952316,
+          "requestAt": 46714.299999952316,
+          "callbackStart": 46724.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.099999904632568,
+          "previousEnd": 46830.59999990463,
+          "requestAt": 46830.5,
+          "callbackStart": 46840.699999809265,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 10.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.099999904632568,
+          "previousEnd": 47848.09999990463,
+          "requestAt": 47848.09999990463,
+          "callbackStart": 47858.199999809265,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.099999904632568,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 15,
+      "recoveryCPUms": {
+        "n": 15,
+        "median": 2.299999952316284,
+        "p95": 26.5,
+        "max": 26.5
+      },
+      "recoveryCPUTotalMs": 102.49999952316284,
+      "recoveryRequestDelayMs": {
+        "n": 15,
+        "median": 14.5,
+        "p95": 15.900000095367432,
+        "max": 15.900000095367432
+      },
+      "actualDefaultContentWritesAfterInput": 30,
+      "lastContentMsAfterInput": 220.79999995231628,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/raw.json",
+      "closed": false,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "67d81aa84f956987da0af83fbe2a7363",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 31.833333333328483,
+        "upReturnToFeedbackMs": 995.2999999523163,
+        "maxContentProxyGapMs": 33,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18,
+        "SDKRAFmaxMs": 18.40000009536743,
+        "SDKRAFdurationP95Ms": 5.099999904632568,
+        "dispatchP95Ms": 18.700000047683716,
+        "inputLatenessP95Ms": 19.233333428695914,
+        "convergenceMs": 521.7999999523163,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2033.9000000953674,
+      "eraseMs": 8007.799999952316,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 8.400000095367432,
+        "p95": 10.100000143051147,
+        "max": 10.400000095367432
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 8.350000023841858,
+        "p95": 10.700000047683716,
+        "max": 15.200000047683716
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 8.299999952316284,
+        "p95": 10.799999952316284,
+        "max": 15.200000047683716
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 15.200000047683716,
+          "previousEnd": 84006.59999990463,
+          "requestAt": 84006.59999990463,
+          "callbackStart": 84021.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.799999952316284,
+          "previousEnd": 85574.5,
+          "requestAt": 85574.5,
+          "callbackStart": 85589.29999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.299999952316284,
+          "previousEnd": 83791.59999990463,
+          "requestAt": 83791.59999990463,
+          "callbackStart": 83805.89999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.099999904632568,
+          "previousEnd": 84812,
+          "requestAt": 84812,
+          "callbackStart": 84823.09999990463,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 11.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.899999856948853,
+          "previousEnd": 85546.5,
+          "requestAt": 85546.5,
+          "callbackStart": 85557.39999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.899999856948853,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 10.799999952316284,
+          "previousEnd": 84279.09999990463,
+          "requestAt": 84279.09999990463,
+          "callbackStart": 84289.89999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.700000047683716,
+          "previousEnd": 84545.19999980927,
+          "requestAt": 84545.19999980927,
+          "callbackStart": 84555.89999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.700000047683716,
+          "previousEnd": 84695.19999980927,
+          "requestAt": 84695.19999980927,
+          "callbackStart": 84705.89999985695,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.700000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.699999809265137,
+          "previousEnd": 84778.5,
+          "requestAt": 84778.5,
+          "callbackStart": 84789.19999980927,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.699999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.400000095367432,
+          "previousEnd": 84496.39999985695,
+          "requestAt": 84496.39999985695,
+          "callbackStart": 84506.79999995232,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.400000095367432,
+          "previousEnd": 84678.19999980927,
+          "requestAt": 84678.19999980927,
+          "callbackStart": 84688.59999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.400000095367432,
+          "previousEnd": 84878.69999980927,
+          "requestAt": 84878.69999980927,
+          "callbackStart": 84889.09999990463,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.400000095367432,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 29,
+      "recoveryCPUms": {
+        "n": 29,
+        "median": 11.0,
+        "p95": 11.800000190734863,
+        "max": 25.899999856948853
+      },
+      "recoveryCPUTotalMs": 273.5000002384186,
+      "recoveryRequestDelayMs": {
+        "n": 29,
+        "median": 5.900000095367432,
+        "p95": 13.899999856948853,
+        "max": 17.5
+      },
+      "actualDefaultContentWritesAfterInput": 31,
+      "lastContentMsAfterInput": 465.89999985694885,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "eb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 57.53333338101584,
+        "upReturnToFeedbackMs": 75.20000004768372,
+        "maxContentProxyGapMs": 57.53333338101584,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.300000190734863,
+        "SDKRAFmaxMs": 20.299999952316284,
+        "SDKRAFdurationP95Ms": 11.899999856948853,
+        "dispatchP95Ms": 18.90000009536743,
+        "inputLatenessP95Ms": 68.29999995231628,
+        "convergenceMs": 582.5,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2075.0999999046326,
+      "eraseMs": 8009.700000047684,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 10.700000047683716,
+        "p95": 13.099999904632568,
+        "max": 15.299999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 6.100000023841858,
+        "p95": 8.5,
+        "max": 16.799999952316284
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 6.1000001430511475,
+        "p95": 8.5,
+        "max": 16.799999952316284
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 16.799999952316284,
+          "previousEnd": 16292.600000143051,
+          "requestAt": 16292.600000143051,
+          "callbackStart": 16309.400000095367,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 16.799999952316284,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 13.700000047683716,
+          "previousEnd": 16328.900000095367,
+          "requestAt": 16328.900000095367,
+          "callbackStart": 16342.600000143051,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 13.700000047683716,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 8.799999952316284,
+          "previousEnd": 16682.700000047684,
+          "requestAt": 16682.700000047684,
+          "callbackStart": 16691.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.799999952316284,
+          "previousEnd": 16800.400000095367,
+          "requestAt": 16800.400000095367,
+          "callbackStart": 16809.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.599999904632568,
+          "previousEnd": 17750.60000014305,
+          "requestAt": 17750.60000014305,
+          "callbackStart": 17759.200000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.5,
+          "previousEnd": 16499.60000014305,
+          "requestAt": 16499.60000014305,
+          "callbackStart": 16508.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.5,
+          "previousEnd": 17066.60000014305,
+          "requestAt": 17066.5,
+          "callbackStart": 17075.10000014305,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 8.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.200000047683716,
+          "previousEnd": 16700.400000095367,
+          "requestAt": 16700.400000095367,
+          "callbackStart": 16708.60000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.200000047683716,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.199999809265137,
+          "previousEnd": 16350.300000190735,
+          "requestAt": 16350.300000190735,
+          "callbackStart": 16358.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.199999809265137,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.0,
+          "previousEnd": 15933.900000095367,
+          "requestAt": 15933.900000095367,
+          "callbackStart": 15941.900000095367,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.0,
+          "previousEnd": 16616.800000190735,
+          "requestAt": 16616.800000190735,
+          "callbackStart": 16624.800000190735,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 8.0,
+          "previousEnd": 16933.800000190735,
+          "requestAt": 16933.800000190735,
+          "callbackStart": 16941.800000190735,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 8.0,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 32,
+      "recoveryCPUms": {
+        "n": 32,
+        "median": 12.399999856948853,
+        "p95": 13.300000190734863,
+        "max": 29.199999809265137
+      },
+      "recoveryCPUTotalMs": 331.8999996185303,
+      "recoveryRequestDelayMs": {
+        "n": 32,
+        "median": 4.299999952316284,
+        "p95": 15.5,
+        "max": 17.09999990463257
+      },
+      "actualDefaultContentWritesAfterInput": 32,
+      "lastContentMsAfterInput": 505.10000014305115,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "2",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "0133b5f5092a7ad3992f2a5c177fdaf8",
+        "ordinal": "2",
+        "presentedGeneration": "2",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 45.63333328565204,
+        "upReturnToFeedbackMs": 63.299999952316284,
+        "maxContentProxyGapMs": 45.63333328565204,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 18.5,
+        "SDKRAFmaxMs": 19.799999952316284,
+        "SDKRAFdurationP95Ms": 10.599999904632568,
+        "dispatchP95Ms": 18.699999809265137,
+        "inputLatenessP95Ms": 53.63333328565204,
+        "convergenceMs": 267.2000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2059.5999999046326,
+      "eraseMs": 8003.700000047684,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 9.199999928474426,
+        "p95": 11.0,
+        "max": 12.600000143051147
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 7.75,
+        "p95": 10.099999904632568,
+        "max": 15.299999952316284
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 7.700000047683716,
+        "p95": 10.400000095367432,
+        "max": 15.299999952316284
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 15.299999952316284,
+          "previousEnd": 46324.300000190735,
+          "requestAt": 46324.300000190735,
+          "callbackStart": 46339.60000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 15.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 14.799999952316284,
+          "previousEnd": 46541.90000009537,
+          "requestAt": 46541.90000009537,
+          "callbackStart": 46556.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 14.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.0,
+          "previousEnd": 47063.700000047684,
+          "requestAt": 47063.700000047684,
+          "callbackStart": 47074.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 11.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.799999952316284,
+          "previousEnd": 47629.90000009537,
+          "requestAt": 47629.800000190735,
+          "callbackStart": 47640.700000047684,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 10.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.600000143051147,
+          "previousEnd": 46303,
+          "requestAt": 46303,
+          "callbackStart": 46313.60000014305,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 10.600000143051147,
+          "inputEventsInside": 2
+        },
+        {
+          "gapMs": 10.400000095367432,
+          "previousEnd": 47380.90000009537,
+          "requestAt": 47380.90000009537,
+          "callbackStart": 47391.300000190735,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.0,
+          "previousEnd": 46780.90000009537,
+          "requestAt": 46780.800000190735,
+          "callbackStart": 46790.90000009537,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 10.099999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.900000095367432,
+          "previousEnd": 45998.200000047684,
+          "requestAt": 45998.200000047684,
+          "callbackStart": 46008.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.800000190734863,
+          "previousEnd": 45815,
+          "requestAt": 45815,
+          "callbackStart": 45824.800000190735,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 9.800000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.799999952316284,
+          "previousEnd": 46681.300000190735,
+          "requestAt": 46681.300000190735,
+          "callbackStart": 46691.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.799999952316284,
+          "previousEnd": 46812.90000009537,
+          "requestAt": 46812.90000009537,
+          "callbackStart": 46822.700000047684,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.799999952316284,
+          "previousEnd": 47248.300000190735,
+          "requestAt": 47248.300000190735,
+          "callbackStart": 47258.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.799999952316284,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 13,
+      "recoveryCPUms": {
+        "n": 13,
+        "median": 2.4000000953674316,
+        "p95": 27.5,
+        "max": 27.5
+      },
+      "recoveryCPUTotalMs": 96.10000014305115,
+      "recoveryRequestDelayMs": {
+        "n": 13,
+        "median": 12.799999952316284,
+        "p95": 17.299999952316284,
+        "max": 17.299999952316284
+      },
+      "actualDefaultContentWritesAfterInput": 29,
+      "lastContentMsAfterInput": 204.90000009536743,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "67d81aa84f956987da0af83fbe2a7363",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 32.43333347637963,
+        "upReturnToFeedbackMs": 1010.7000000476837,
+        "maxContentProxyGapMs": 32.43333347637963,
+        "qualifiedCameraChanges": 119,
+        "SDKRAFp95Ms": 18.200000047683716,
+        "SDKRAFmaxMs": 18.59999990463257,
+        "SDKRAFdurationP95Ms": 5,
+        "dispatchP95Ms": 19.299999952316284,
+        "inputLatenessP95Ms": 19.766666809722665,
+        "convergenceMs": 544.7000000476837,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2034.7999999523163,
+      "eraseMs": 8002.600000143051,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 9.5,
+        "p95": 11.5,
+        "max": 12.100000143051147
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 7.200000047683716,
+        "p95": 9.400000095367432,
+        "max": 10.399999856948853
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 7.200000047683716,
+        "p95": 9.400000095367432,
+        "max": 10.299999952316284
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 10.299999952316284,
+          "previousEnd": 83828.70000004768,
+          "requestAt": 83828.60000014305,
+          "callbackStart": 83839,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 10.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.299999952316284,
+          "previousEnd": 84412.80000019073,
+          "requestAt": 84412.80000019073,
+          "callbackStart": 84423.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.299999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.0,
+          "previousEnd": 84062.10000014305,
+          "requestAt": 84062.10000014305,
+          "callbackStart": 84072.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.599999904632568,
+          "previousEnd": 84862.60000014305,
+          "requestAt": 84862.60000014305,
+          "callbackStart": 84872.20000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.400000095367432,
+          "previousEnd": 83480.5,
+          "requestAt": 83480.5,
+          "callbackStart": 83489.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.400000095367432,
+          "previousEnd": 83929.70000004768,
+          "requestAt": 83929.70000004768,
+          "callbackStart": 83939.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.400000095367432,
+          "previousEnd": 84096.5,
+          "requestAt": 84096.5,
+          "callbackStart": 84105.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.399999856948853,
+          "previousEnd": 84896.30000019073,
+          "requestAt": 84896.30000019073,
+          "callbackStart": 84905.70000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.399999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.100000143051147,
+          "previousEnd": 84163.70000004768,
+          "requestAt": 84163.70000004768,
+          "callbackStart": 84172.80000019073,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.100000143051147,
+          "previousEnd": 84996,
+          "requestAt": 84996,
+          "callbackStart": 85005.10000014305,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 9.100000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.0,
+          "previousEnd": 83680.70000004768,
+          "requestAt": 83680.70000004768,
+          "callbackStart": 83689.70000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.0,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.0,
+          "previousEnd": 83729.40000009537,
+          "requestAt": 83729.40000009537,
+          "callbackStart": 83738.40000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.0,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 30,
+      "recoveryCPUms": {
+        "n": 30,
+        "median": 11.099999904632568,
+        "p95": 11.900000095367432,
+        "max": 25.200000047683716
+      },
+      "recoveryCPUTotalMs": 282.5000002384186,
+      "recoveryRequestDelayMs": {
+        "n": 30,
+        "median": 5.899999976158142,
+        "p95": 15.200000047683716,
+        "max": 16.899999856948853
+      },
+      "actualDefaultContentWritesAfterInput": 26,
+      "lastContentMsAfterInput": 483.10000014305115,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "closed": true,
+      "generationBeforePan": "3",
+      "commitBeforePan": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "c75750e1458ddf9d2cb08d79f6ecc789",
+        "ordinal": "3",
+        "presentedGeneration": "3",
+        "runtimeEpoch": "1"
+      },
+      "metrics": {
+        "firstFeedbackMs": 33.53333338102675,
+        "upReturnToFeedbackMs": 1077.5,
+        "maxContentProxyGapMs": 33.53333338102675,
+        "qualifiedCameraChanges": 118,
+        "SDKRAFp95Ms": 17.40000009536743,
+        "SDKRAFmaxMs": 17.799999952316284,
+        "SDKRAFdurationP95Ms": 5.299999952316284,
+        "dispatchP95Ms": 18.09999990463257,
+        "inputLatenessP95Ms": 20.90000009536743,
+        "convergenceMs": 170.59999990463257,
+        "qualification": "ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons"
+      },
+      "navigationMs": 2037.0,
+      "eraseMs": 8005.5,
+      "tailCallbacks": 120,
+      "tailCPUms": {
+        "n": 120,
+        "median": 9.200000047683716,
+        "p95": 11.100000143051147,
+        "max": 11.799999952316284
+      },
+      "tailRequestDelayMs": {
+        "n": 120,
+        "median": 7.399999976158142,
+        "p95": 10.599999904632568,
+        "max": 16.59999990463257
+      },
+      "tailNonCallbackGapsMs": {
+        "n": 119,
+        "median": 7.3999998569488525,
+        "p95": 10.599999904632568,
+        "max": 16.59999990463257
+      },
+      "largestTailGaps": [
+        {
+          "gapMs": 16.59999990463257,
+          "previousEnd": 131303.90000009537,
+          "requestAt": 131303.90000009537,
+          "callbackStart": 131320.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 16.59999990463257,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.5,
+          "previousEnd": 130259.40000009537,
+          "requestAt": 130259.40000009537,
+          "callbackStart": 130270.90000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 11.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 11.400000095367432,
+          "previousEnd": 130510,
+          "requestAt": 130510,
+          "callbackStart": 130521.40000009537,
+          "requestedAfterPreviousEndMs": 0,
+          "queueDelayMs": 11.400000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.900000095367432,
+          "previousEnd": 130043.70000004768,
+          "requestAt": 130043.70000004768,
+          "callbackStart": 130054.60000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.900000095367432,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.899999856948853,
+          "previousEnd": 130143.80000019073,
+          "requestAt": 130143.80000019073,
+          "callbackStart": 130154.70000004768,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.599999904632568,
+          "previousEnd": 129460.80000019073,
+          "requestAt": 129460.80000019073,
+          "callbackStart": 129471.40000009537,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 10.599999904632568,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 10.5,
+          "previousEnd": 130393.60000014305,
+          "requestAt": 130393.5,
+          "callbackStart": 130404.10000014305,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 10.600000143051147,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.899999856948853,
+          "previousEnd": 130111.60000014305,
+          "requestAt": 130111.60000014305,
+          "callbackStart": 130121.5,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.899999856948853,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.700000047683716,
+          "previousEnd": 129695,
+          "requestAt": 129694.90000009537,
+          "callbackStart": 129704.70000004768,
+          "requestedAfterPreviousEndMs": -0.09999990463256836,
+          "queueDelayMs": 9.799999952316284,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.700000047683716,
+          "previousEnd": 130411.60000014305,
+          "requestAt": 130411.5,
+          "callbackStart": 130421.30000019073,
+          "requestedAfterPreviousEndMs": -0.10000014305114746,
+          "queueDelayMs": 9.800000190734863,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.5,
+          "previousEnd": 129578.60000014305,
+          "requestAt": 129578.60000014305,
+          "callbackStart": 129588.10000014305,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.5,
+          "inputEventsInside": 1
+        },
+        {
+          "gapMs": 9.5,
+          "previousEnd": 131427.5,
+          "requestAt": 131427.5,
+          "callbackStart": 131437,
+          "requestedAfterPreviousEndMs": 0.0,
+          "queueDelayMs": 9.5,
+          "inputEventsInside": 1
+        }
+      ],
+      "recoveryCallbacks": 8,
+      "recoveryCPUms": {
+        "n": 8,
+        "median": 4.400000095367432,
+        "p95": 24.100000143051147,
+        "max": 24.100000143051147
+      },
+      "recoveryCPUTotalMs": 46.00000023841858,
+      "recoveryRequestDelayMs": {
+        "n": 8,
+        "median": 12.0,
+        "p95": 15.699999809265137,
+        "max": 15.699999809265137
+      },
+      "actualDefaultContentWritesAfterInput": 31,
+      "lastContentMsAfterInput": 132.40000009536743,
+      "journalDropped": 0,
+      "nativeDropped": 0,
+      "inputCounts": {
+        "primaryMoves": 480,
+        "navigationMoves": 120
+      }
+    }
+  ],
+  "ordinaryPerformance": false,
+  "limit": "Requested callback delay is not exclusively Runtime CPU. No implicit environment waiver from unreproduced old delay."
+}

@@ -1,0 +1,99 @@
+{
+  "fixed_input": "ExactFixed40 fixture/request,seed324508639,1431x1010logical,DPR2normal,roundheadv4,camera.scale.34,x120,y260,eraserdiameter32world. A freshRuntime/document eachcase; savedfixturemetadata unchanged. Only isolatedChrome, neveruserIAB.",
+  "history": "2 stable160Move erases with offset+5 then-5; x420+offset+7*sin(i*.17),y160+170*i/160. Stablewait allowed beforeprimary.",
+  "primary": "480Move60Hz,fori0..480 x420+80*sin(2*pi*i/160),y160+540*i/480. Up repeatsi480; all480confirmedMoves retained.",
+  "cases": [
+    {
+      "id": "immediate-pan",
+      "start": "TwofingerDown planned1msafterUpreturn;firstnonzeroMove16.7mslater, noquiet/commit/Workerbarrier",
+      "route": "RealAutoIntent/CDPtouch,120Moves/2sat60Hz;fingers635.5/795.5,y505;translate(+i,-.5i)"
+    },
+    {
+      "id": "immediate-pinch",
+      "start": "sameimmediatepolicy",
+      "route": "same120Moves;center715.5,505;halfsep80*f;f1->1.25->.75->1 ati0/40/80/120"
+    },
+    {
+      "id": "settled-pan",
+      "start": "originalstablebarrierafterUp then samepan",
+      "route": "sameinput"
+    },
+    {
+      "id": "settled-pinch",
+      "start": "originalstablebarrierafterUp then samepinch",
+      "route": "sameinput"
+    }
+  ],
+  "diagnostic_windows": [
+    {
+      "id": "SNR-D-B-ORDER",
+      "source": "Exactexisting4349normalSDK, addedverificationJSobserveronly",
+      "mode": "Onefreshbrowser/context/page, all4cases inoriginalorder. Baselinebind beforeproductionbehaviorchange."
+    },
+    {
+      "id": "SNR-D-B-ISOLATED",
+      "source": "Same exactnormalSDK andsameJSobserver",
+      "mode": "Onefreshbrowser, newcontext+newpage foreachcase;originalcaseorder, closeeverycontext/page. Distinguishes page-levelcarryover fromcase/formula; notclaimedphysicalGPUisolation."
+    },
+    {
+      "id": "SNR-D-B-REVERSE",
+      "source": "Same exactnormalSDK andsameJSobserver",
+      "mode": "Onefreshbrowser/context/page, all4cases reverseorder. Noextrareset/wait/tuning."
+    },
+    {
+      "id": "SNR-D-B-PROGRESS",
+      "source": "Savedc3a84c plusdefaultOFFprivateprogress/retirementprobes only",
+      "mode": "Originalsamepage4caseorder, correlatedJSrequest/lifecycle andinternalprogress; immutableversionedprobe build. Frozenbeforeproductionrepair."
+    },
+    {
+      "id": "SNR-D-C-FINAL",
+      "source": "FinalCproduction+identicalprivateprobes, matchedJSobserver",
+      "mode": "Originalsamepage4caseorder. Mandatoryifrepairfound; afterfocusednativeGREEN andbeforeordinaryfreeze. NoC-PREoradditionaldiag."
+    }
+  ],
+  "diagnostic_order": "FourB modes executed once in listedorder; causalanalysis thenonlymeasuredrepair/nativeiteration thenfinalC. Baselineprobes mustnotchange canonicalgeometry/scheduler/quotas. Existingoldraw useful,notnewwindow replacement.",
+  "required_diagnostic_events": [
+    "BoundedRAFrequest/cancel/callback timeline andpendinghandles; SDKframepending/retryschedulecause optionalprivateprobe",
+    "visibilitychange/pagehide/freeze/resume facts ifplatformprovides; browserlongtaskPerformanceObserver supportedflag andrawdurations",
+    "runtimecreate/close/admission/Workercreate/terminate/contextregister/registrydestroy facts withownerids; notephysicalGPUrelease unknown",
+    "canonicalpreparestablejob/identity,cursorbeforeafter,steps/resets/reason/usefulprogress; source/mask/bodycache + allocation/retirementpending",
+    "actualfirst/lasttargetcontent andcanonreceipt identity, normalbudget/timeallowance andbudgetwait vsGPUretirement vschangedbasis"
+  ],
+  "ordinary_windows": [
+    "SNR-W-B1",
+    "SNR-W-C1",
+    "SNR-W-C2",
+    "SNR-W-B2"
+  ],
+  "ordinary_mode": "ExactnormalSDK4349B/finalC. Samefreshbrowser/context/page andoriginal4caseorder perwindow. Samequalifiedobserverv2 andsameinputstoragecontroller; fullprivateprobes/lifecycleobserver disabled. FinalCsourceSDKdrivermetricfreeze beforeB1. No production/harnessinputchange afterfreeze.",
+  "correctness_windows": [
+    "SNR-P-C"
+  ],
+  "correctness_mode": "FinalnormalC DPR2+4 immediatepan/pinch;20RGBA(beforeprimary,moving12,moving60,terminal,redo);4fresh originalCPUterminalreferences and4UndoRedosemantictriples;8movingworldinteriorwitnesses. Reuseold4349asBcorrectness,independentreferencenotoldapproxBpixels. Correctnessincludes rootSDKrestore/state/close. Nativecoverslatestunseen41objectsuffix andcontrolledrealWorkercommitcrossing; noheldWorkerintimedlane.",
+  "native": "Rebaseall60previousfinalnativecommands to newbuild/outputdirs inclstrengthenedtrueGPUfixtures andnewlivefeedbackexactsavedB. Also addfocusedRED/GREEN proof forthe diagnosed mechanism and deterministicframepump/close/restore regression ifchanged; avoidimplementationmirror/redundanttests.",
+  "no_cause_policy": "If4Bdiagnostics fail to establishcausalmech, do notinventfix orconsumequalificationmatrix justtoreproduce hope. Return ROOT_CAUSE_NOT_ESTABLISHED andcompleteboundedreports/cleanup/preservation, noPASS. Iftraceproves test-harnessdefect, correctonlymeasuredharness underseparateversion preservingoriginalraw; newqualification stillmust satisfy samefrozenobjectives, identifyclaimscopeexplicitly.",
+  "corrective": "Atmost1 replacementstart fordemonstratedharness/environmentfailure, versionedexactreason; notperformancefailure,nonspecificload,unreproducedcause,sourcechange orbudgetretry. Noextraordinary/diagperformanceretries.",
+  "limits": {
+    "baseline_diagnostic_starts": 4,
+    "final_candidate_diagnostic_starts": 1,
+    "per_diagnostic_seconds": 300,
+    "ordinary_starts": 4,
+    "per_ordinary_seconds": 360,
+    "correctness_starts": 1,
+    "per_correctness_seconds": 480,
+    "harness_environment_corrective_starts": 1,
+    "per_corrective_seconds": 480,
+    "aggregate_browser_seconds": 4200,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "per_diagnostic_trace_MiB": 64,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "terminal_rule": "Debugroutineprefreezeimplementation/nativefailures withinbounds. FinalCdiag thenfreeze; no sourcechange afterordinaryB1. Ifperformancemiss,finishremainingsafecorrectness thenreturnUNMET. Originalfailure/allnewfailureskept. Ifcauseabsent/authority/environment/finitecap stopexplicitly.",
+  "resource_discipline": "SerialnativeGPUandbrowser;noheavybuild/profilerparallelordinary. Ownedworkerfamilies boundedandcleaned. NoacceptedSDKdependencyrebuild. UseactualpublicJSrootfacadewrappersWASMresourcesmatchingbuild.",
+  "preview": "Existing4342..4349preserved. IfnewnormalCsmoke passes inalreadyplannedCwindow,startfirstunusedport>=4350;notifycontrolURL/PID/sourceSDKhashes/statuswhilecontinuingallremainingitems. NoIABread/reload/control ornewsmokesample."
+}

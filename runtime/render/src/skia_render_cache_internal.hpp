@@ -219,7 +219,11 @@ class SkiaRenderCache final {
     std::shared_ptr<const PreparedFrameImage> preparedFrame_;
     foundation::DocumentBackground preparationBackground_{};
     bool preparationTransparent_=false,preparationIsolate_=false;
-    void resetPreparation();
+    void resetPreparation(const char* reason="unspecified");
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    std::uint64_t snrResetSequence_=0;
+    void diagnosticProgress(const char* phase,const char* reason,int outcome,const PreparationAllowance* allowance=nullptr)const noexcept;
+#endif
     bool ensureComposite(SkCanvas&,const FramePlan&);
     bool finishComposite();
     bool acquireWorkSurface(SkCanvas&,sk_sp<SkSurface>&,resources::ResourceLease&,bool mandatory,

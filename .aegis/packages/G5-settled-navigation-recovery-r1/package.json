@@ -1,0 +1,82 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "G5-settled-navigation-recovery-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "created_at": "2026-11-19T02:30:10.082558+00:00",
+  "execution_ref": "refs/heads/codex/g5-settled-navigation-recovery",
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+    "execution_ref": "refs/heads/codex/g5-erase-feedback-frame",
+    "completed_through": "4349feedbackgain+privateprobes/focusedpixelsandlightweightevidence saved/pushed; EFF4settled-panUNMET reviewed, noSNRproductionworkstarted.",
+    "source_manifest_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-C.json",
+      "bytes": 204464,
+      "sha256": "9cfaf5c95a3ccb29166399d8bbb4d886b6ea7978b6e4376a14ab240913a7f675"
+    },
+    "next_action": "Newisolatedtree;validatepackage/source1602/SDK42/storageandowner;fourbaselinecausaldiagnosticsbeforeproductionrepair."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-settled-navigation-recovery-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 4540,
+    "sha256": "3ab561997e784fb74878e1e792ee57d33529df4f30e6183eb12a7e557ecd6741"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 37144,
+    "sha256": "a08b478dd4983a8f75e4e98aecc322e1a8193cc2b41db368544287f2be801698"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 8578,
+    "sha256": "31e4a8cd5dfa9fcfe05592006afd11dad0d755573a5da68e9b3591eca01301a2"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 4644,
+    "sha256": "de43a1bc08a2abfeced70dea14370eb71565eb7cb0044bff75ebbe4d28a8e6ab"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 6783,
+    "sha256": "7d9b30f499f426177695583b53ba3896ed7dc149141f642f4575f82dd08a4f62"
+  },
+  "storage_contract_ref": {
+    "path": "storage-contract.json",
+    "bytes": 2523,
+    "sha256": "60a115aff8ba90961f24c637b5be6164c58c087e7cbb4a181e7dd2d5c3bb44c8"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 2407,
+    "sha256": "d3f4472aefc313fcdea0e97ffc1765b8bff22c647c2852ed3cffb4204badc8c6"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 14867,
+    "sha256": "827c88713292563a59cf3dc6b837db2c672c791208cfad79c0572b21cf10b454"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 3408,
+    "sha256": "09527b405db7094aa46448824187382a013ca283ecfec1e57eb658438a440a2c"
+  }
+}

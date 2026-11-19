@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 #include "session.hpp"
 
@@ -36,6 +37,9 @@ class WebPlatform final : public sdk::SessionPlatform {
             emscripten_webgl_create_context(j.at("canonical").get<std::string>().c_str(), &attr);
         preview_ =
             emscripten_webgl_create_context(j.at("preview").get<std::string>().c_str(), &attr);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        std::fprintf(stderr,"AXIOM_SNR_LIFECYCLE {\"event\":\"context-register\",\"owner\":\"%llu\",\"canonical\":%d,\"preview\":%d}\n",(unsigned long long)reinterpret_cast<std::uintptr_t>(this),canonical_,preview_);
+#endif
         if (canonical_ <= 0 || preview_ <= 0)
             return {{"ok", false}, {"code", "WEBGL_UNAVAILABLE"}};
         adapter_ = std::make_unique<platform::WebRuntimeAdapter>(
@@ -71,6 +75,9 @@ class WebPlatform final : public sdk::SessionPlatform {
         // demand. Pending fences retain bounded backpressure and never block.
         if (wasPending && result == platform::WebFrameResult::kRetry && !adapter_->frameStatus().pending)
             result = adapter_->prepareFrame(force);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        std::fprintf(stderr,"AXIOM_SNR_LIFECYCLE {\"event\":\"frame-outcome\",\"owner\":\"%llu\",\"was_pending\":%s,\"pending\":%s,\"result\":%u,\"presented\":\"%llu\"}\n",(unsigned long long)reinterpret_cast<std::uintptr_t>(this),wasPending?"true":"false",adapter_->frameStatus().pending?"true":"false",unsigned(result),(unsigned long long)adapter_->presentedCount());
+#endif
         return {{"ok", result != platform::WebFrameResult::kRejected},
                 {"code", "FRAME_REJECTED"},
                 {"pending", adapter_->frameStatus().pending},
@@ -92,6 +99,9 @@ class WebPlatform final : public sdk::SessionPlatform {
             emscripten_webgl_destroy_context(preview_);
         if (canonical_ > 0)
             emscripten_webgl_destroy_context(canonical_);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        std::fprintf(stderr,"AXIOM_SNR_LIFECYCLE {\"event\":\"context-registry-destroy\",\"owner\":\"%llu\",\"canonical\":%d,\"preview\":%d}\n",(unsigned long long)reinterpret_cast<std::uintptr_t>(this),canonical_,preview_);
+#endif
         preview_ = canonical_ = 0;
     }
     std::uint64_t nowNs() const noexcept override {

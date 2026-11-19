@@ -1,0 +1,387 @@
+{
+  "schema": "axiom-scoped-implementation-result-v1",
+  "task": "G5-settled-navigation-recovery-r1",
+  "at": "2026-11-19T03:07:19.109058+00:00",
+  "status": "BLOCKED",
+  "classification": "ROOT_CAUSE_NOT_ESTABLISHED",
+  "returnSurface": "CONTROL_REVIEW",
+  "continue_execution": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/packages/G5-settled-navigation-recovery-r1/package.json",
+    "bytes": 3238,
+    "sha256": "04096ca6b1498ce9888228f22e0ca754374083c6fac5369106024542a2fdb32b"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+    "branch": "codex/g5-settled-navigation-recovery",
+    "baseHEAD": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+    "currentHEAD": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+    "indexEmpty": true,
+    "committedOrPushed": false
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+    "path": ".aegis/results/G5-settled-navigation-recovery-r1/result.json",
+    "artifact_manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/artifact-manifest.json",
+      "bytes": 595161,
+      "sha256": "623ad645936432b960c99db06163ced56ab9105bf037ada90256223cae95a53b"
+    }
+  },
+  "sourceSDKBinding": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/source-and-SDK-binding.json",
+    "bytes": 2537,
+    "sha256": "c1f5b5e4ffcca81652dda6182105972140dbff66abd598d3c34a9b6d1bbbefdb"
+  },
+  "normalB": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/C-normal-SDK.json",
+    "bytes": 4271,
+    "sha256": "6acc2ef4db3392a20a05386e20c4a557be3cb21ced2c65ef4a66b4cc20179d17"
+  },
+  "sourceB": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-C.json",
+    "bytes": 204464,
+    "sha256": "9cfaf5c95a3ccb29166399d8bbb4d886b6ea7978b6e4376a14ab240913a7f675"
+  },
+  "probeBSource": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/source-B-progress.json",
+    "bytes": 201130,
+    "sha256": "131d8168b3344a46fa847fe9290c696ec385c2367ee57591d0198ad0b333719a"
+  },
+  "probeBSDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/B-progress-SDK.json",
+    "bytes": 4287,
+    "sha256": "6fc900cad6f0d9595d80a75e34e227872a1ec6ef94f996d0ac908af0b8ab2402"
+  },
+  "diagnosticDelta": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/diagnostic-only-delta.patch",
+    "bytes": 21081,
+    "sha256": "3e2916e22250cdaf4e8cceac3155e26b1ea1dd3b731ade26b3eac08eb06ecdcf"
+  },
+  "causalClassification": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/causal-classification.json",
+    "bytes": 8477,
+    "sha256": "52801f6a043ffd382760e09ad3c66d3e18265e72dfca555e7083db4c23f737b5"
+  },
+  "terminalIdentity": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/terminal-identity.json",
+    "bytes": 2241,
+    "sha256": "411b97123f9d3d8c67e2ed1956ffe36ae8b64c6aa1ce253e647107729696e450"
+  },
+  "obligations": {
+    "SNR1": {
+      "status": "FOUR_DIAGNOSTIC_ROLES_COMPLETED_CAUSE_UNESTABLISHED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/scheduling-timeline.json",
+          "bytes": 115441,
+          "sha256": "70e86ef299a6d3c9a06f33f781c227cb3cdb85e9cd9dd6c655105ffdbfb2d854"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/preparation-progress-qualified.json",
+          "bytes": 167446,
+          "sha256": "f92a7e3683294fe2d4f8ab09dcac8cb22e7c7fb51804e3f271aeb7136eea0914"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/lifecycle-and-resources.json",
+          "bytes": 42905,
+          "sha256": "d3ff49cd4456f1f88e77dd84705c50a88123333d0edc54f58538745ec8d0df2e"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/diagnostic-integrity.json",
+          "bytes": 13061,
+          "sha256": "15552ef29e4e18cf92690cf3fcf462930ea3fa2d395abc2fcea47846f8ee7460"
+        }
+      ],
+      "finding": "All16completedcases tail120callbacks, no drops; settledpan0.428–0.545s ratherthanold5.125s. Finalprogress stablejobadvances0..40, no samebasisrestart observed. Newhealthyobservationscannotidentifyoldmissingstate."
+    },
+    "SNR2": {
+      "status": "NOT_EXECUTED_NO_CAUSAL_REPAIR_SELECTED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/diagnostic-source-delta.json",
+          "bytes": 1156,
+          "sha256": "5443d8bf0a433e08adfaeb73d64921c4e443c4863c3bf896769651179ae8926d"
+        }
+      ],
+      "finding": "OnlydefaultOFFnativeprogress/lifecycleobservability andverificationhelpers; no productionbehaviorrepair or speculativeroster/bufferpool/schedulerrewrite."
+    },
+    "SNR3": {
+      "status": "NOT_EXECUTED_NO_C_CANDIDATE",
+      "finding": "No newproductionC ornative60/pixelqualification. Prior4349 correctness evidence preserved, not relabelled asnewPASS."
+    },
+    "SNR4": {
+      "status": "NOT_EXECUTED_NO_CAUSE_BRANCH_ORIGINAL_EFF4_UNMET",
+      "finding": "No newordinaryqualificationwindows. OldEFF-W-C1settledpanfailure unchanged; no lucky samples or environmentwaiver."
+    },
+    "SNR5": {
+      "status": "DIAGNOSTIC_TERMINAL_MATERIALIZED",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/preservation.json",
+          "bytes": 5357,
+          "sha256": "2c78ecffdf47f382bb311f508bf94ddbffcd4b78a6f5b1915e9dc1aa6dfc582f"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/cleanup.json",
+          "bytes": 5812,
+          "sha256": "f92b892d2b9062a8df7f1c0e8ae8892628592a2af549bf051f077e1552049c98"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/storage-preflight.json",
+          "bytes": 543,
+          "sha256": "392bbf791cb178d20a8eaca1d655f9e5c4faf77ae871e7452730a0594567e3e5"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/harness-correction.json",
+          "bytes": 3623,
+          "sha256": "d3143b29f590fad10249248e053f13c8ccffffe8d6c5b15b6b4c8bfaf30f239d"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/buffer-audit.json",
+          "bytes": 27560,
+          "sha256": "f6c89b13f48b187ed9f5b8895a7261bf03dd205b866de7ed2eedea3297394278"
+        }
+      ],
+      "finding": "OldsourceSDK/evidence/listeners/primary42preserved, allactualstarts/failure retained. No newnormalC, previewcallbacknotrequired; terminalcallbackfollows."
+    }
+  },
+  "observations": {
+    "settledPanDiagnosticCases": [
+      {
+        "run": "SNR-D-B-ORDER",
+        "case": "immediate-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 14.799999952316284,
+        "navigationMs": 2063.7000000476837,
+        "convergenceMs": 482.2999999523163,
+        "recoveryCallbacks": 26,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-ORDER",
+        "case": "immediate-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 25.199999809265137,
+        "navigationMs": 2076.2000000476837,
+        "convergenceMs": 280.10000014305115,
+        "recoveryCallbacks": 14,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-ORDER",
+        "case": "settled-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 14.600000143051147,
+        "navigationMs": 2038.1000001430511,
+        "convergenceMs": 448.09999990463257,
+        "recoveryCallbacks": 24,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-ORDER",
+        "case": "settled-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 12.700000047683716,
+        "navigationMs": 2038.1000001430511,
+        "convergenceMs": 204.39999985694885,
+        "recoveryCallbacks": 10,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-ISOLATED",
+        "case": "immediate-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 18.40000009536743,
+        "navigationMs": 2062.9000000953674,
+        "convergenceMs": 514,
+        "recoveryCallbacks": 28,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-ISOLATED",
+        "case": "immediate-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 13.399999856948853,
+        "navigationMs": 2062.9000000953674,
+        "convergenceMs": 316.7999999523163,
+        "recoveryCallbacks": 16,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-ISOLATED",
+        "case": "settled-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 14.200000047683716,
+        "navigationMs": 2034.5999999046326,
+        "convergenceMs": 530.5999999046326,
+        "recoveryCallbacks": 29,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-ISOLATED",
+        "case": "settled-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 15.099999904632568,
+        "navigationMs": 2038.8999998569489,
+        "convergenceMs": 200.90000009536743,
+        "recoveryCallbacks": 10,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-REVERSE",
+        "case": "settled-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 16.90000009536743,
+        "navigationMs": 2033.3999998569489,
+        "convergenceMs": 203.90000009536743,
+        "recoveryCallbacks": 10,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-REVERSE",
+        "case": "settled-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 21.40000009536743,
+        "navigationMs": 2034.7999999523163,
+        "convergenceMs": 427.7000000476837,
+        "recoveryCallbacks": 23,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-REVERSE",
+        "case": "immediate-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 13.5,
+        "navigationMs": 2072.0999999046326,
+        "convergenceMs": 263.40000009536743,
+        "recoveryCallbacks": 13,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-REVERSE",
+        "case": "immediate-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 13.400000095367432,
+        "navigationMs": 2062.0999999046326,
+        "convergenceMs": 458.60000014305115,
+        "recoveryCallbacks": 25,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+        "case": "immediate-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 16.799999952316284,
+        "navigationMs": 2075.0999999046326,
+        "convergenceMs": 582.5,
+        "recoveryCallbacks": 32,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+        "case": "immediate-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 15.299999952316284,
+        "navigationMs": 2059.5999999046326,
+        "convergenceMs": 267.2000000476837,
+        "recoveryCallbacks": 13,
+        "generationBeforeNavigation": "2"
+      },
+      {
+        "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+        "case": "settled-pan",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 10.399999856948853,
+        "navigationMs": 2034.7999999523163,
+        "convergenceMs": 544.7000000476837,
+        "recoveryCallbacks": 30,
+        "generationBeforeNavigation": "3"
+      },
+      {
+        "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+        "case": "settled-pinch",
+        "tailCallbacks": 120,
+        "maxTailQueueDelayMs": 16.59999990463257,
+        "navigationMs": 2037.0,
+        "convergenceMs": 170.59999990463257,
+        "recoveryCallbacks": 8,
+        "generationBeforeNavigation": "3"
+      }
+    ],
+    "interpretationLimits": [
+      "Diagnosticwindowsarecausalobservationsnotordinaryperformanceacceptance.",
+      "Generation3committedbefore settledpan; notprovedOperationapplyblock.",
+      "Offscreenstep/bodytile/maskprogressindependentfromdefaultwindowwrite.",
+      "NewrequestdelaydoesnotreconstructoldunobservedrequestedAt; browserdeliveryvsRuntimeCPUcauseunknown.",
+      "Registryclose/retirementfactsnotphysicalGPUreleaseorleakproof.",
+      "Native progress detailed body/mask pointee IDs not fullyexposed; observedbasis/cursor/work cannot retrospectivelycertifyoldunavailablejobstate."
+    ]
+  },
+  "sampling": {
+    "ledger": {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/sampling-ledger.json",
+      "bytes": 6246,
+      "sha256": "05c447c6f01b5d2b63194a64fb7fda723dccef5c94ba301e18ddb327425fd0d2"
+    },
+    "starts": 5,
+    "fourCompletedDiagnosticRoles": true,
+    "failedFormattingStart": 1,
+    "harnessCorrectiveStarts": 1,
+    "chargedSeconds": 590,
+    "capSeconds": 4200,
+    "extraPerformanceRetries": 0,
+    "futureQualificationStarts": 0
+  },
+  "storage": {
+    "ledger": {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/storage-ledger.json",
+      "bytes": 33793,
+      "sha256": "9eb2905d8b6ab76d6c5f9525cdc773731e6cd901464d9c1cda312122f85d5574"
+    },
+    "status": "CLEAR",
+    "peakRetainedBytes": 350295100,
+    "logicalBytes": 661952163,
+    "retainedCapBytes": 4294967296,
+    "logicalCapBytes": 8589934592,
+    "buildSourceSDKExcludedAndHashBound": true
+  },
+  "offlineVerification": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/offline-verification.json",
+    "bytes": 742,
+    "sha256": "52cbc4f05271842c37cbb4e1b41d596a31c74db2b46aca65b1ce9c29545b68b2"
+  },
+  "cleanup": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/cleanup.json",
+    "bytes": 5812,
+    "sha256": "f92b892d2b9062a8df7f1c0e8ae8892628592a2af549bf051f077e1552049c98"
+  },
+  "preservation": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/preservation.json",
+    "bytes": 5357,
+    "sha256": "2c78ecffdf47f382bb311f508bf94ddbffcd4b78a6f5b1915e9dc1aa6dfc582f"
+  },
+  "preview": {
+    "newNormalCExists": false,
+    "newURL": null,
+    "preservedExistingURL": "http://127.0.0.1:4349/example.html",
+    "4350NotCreated": "NoCnormal,plannedpreviewconditionnotreached"
+  },
+  "remaining": {
+    "diagnosticBranchRequiredExecutableItems": [],
+    "blockedReason": "Original scheduling/recovery root cause not established from finite4roleBdiagnostics; noauthorizedproductionguess.",
+    "notExecuted": [
+      "focusedproductionRED/GREEN",
+      "native60candidate",
+      "Cfinaldiagnostic",
+      "ordinaryB/C/C/B",
+      "C20pixels/4CPUrefs/UndoRedo"
+    ],
+    "nextRequiresControlScope": true
+  },
+  "claimBoundary": "Producer explicitBLOCKED only; noP34/Gate/overallperformancePASS; no commit/push/tag/release. OriginalEFF4result remainsblocked."
+}

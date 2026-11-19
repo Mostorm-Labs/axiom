@@ -1,0 +1,40 @@
+{
+  "performance_scope": "Fresh ordinary B=c3a84cnormal4349 vs finalC, DPR2, fixed40 all4cases; inherited4348 nonregression bounds remain explicit. DPR4 correctness, no platform/physicalinputclaim.",
+  "definitions": {
+    "normal_origin": "Planned firstnonzero twofingerMove afterUp or aftersettledbarrier. Keep planned/actualJSdispatch/CDPreturn/camera adoption distinct. Firstchangedcontent not inputack/oldcamera/clear/overlayonly.",
+    "normal_frame": "Same existing observerv2 GLcontent+cachedpubliccamera proxy; qualified independently by target readback/native. Entirecallback and initialplanned delay included. No SDK/readState insideGLhook.",
+    "percentile": "Nearest-rankceil(p*N). Pool rawsamples perrole/case for relativechecks; retain everyreplicate. Worstmax uses max overruns, never medianofmaxima.",
+    "active_tail": "All SDKrAF callbacks whose start in[Upactualstart-2000ms,Upactualstart); include retry/preparation. Also report fullerase and elapsedtime so skippingrenders cannotfakefastframes.",
+    "first_postUp": "First SDKrAF callback start>=Upreturn full duration, separate synchronousUphandler and firstcorrectpixels.",
+    "convergence": "Actual lasttouchMove/enddispatch to realstable barrier: noactivecontact/no pendingintent/generationpresented/SDKpendingRAF0 for3 successive16mschecks. Report exactlastcurrentcontent and canonicalreceipt alongside; no weakening stablebarrier.",
+    "scheduling_diagnosis": "requestedAt/rawrAFtimestamp/started/ended/cancel,pendinghandlecount,SDKschedulecause; browservisibility/lifecycle/longtask and worker/context lifetime facts separate. Noncallbackgap!=RuntimeCPU and registeredcontextgone!=physicalresourcesfreed.",
+    "progress_diagnosis": "For exactsamejob/source/Scene/camera/targetbasis,cursorbefore/after,usefulwork,replayedwork,resetreason,pendingreason,allocation/retirementstate. No-defaultcontentwrite doesnotmean nooffscreenwork. CPUflush time!=GPUexecution."
+  },
+  "blocking_normal_targets": {
+    "immediate_each_C_replicate": {
+      "first_changed_camera_content_ms": 100,
+      "maximum_content_proxy_gap_ms": 100,
+      "SDKrAF_interval_p95_ms": 33
+    },
+    "settled_each_C_replicate": {
+      "first_changed_camera_content_ms": 100,
+      "maximum_content_proxy_gap_ms": 100,
+      "SDKrAF_interval_p95_ms": 33,
+      "post_input_convergence_max_ms": 1000
+    },
+    "settled_pan_inherited_EFF4": {
+      "pooled_C_dispatch_CDP_p95_ms_lte": 24.299999952316284,
+      "worst_C_navigation_duration_ms_lte": 2151.1349997997286,
+      "median_C_post_input_convergence_ms_lte": 519.8000001370906,
+      "basis": "Exact frozen EFF1 raw4348 B1/B2:19.299999952316284+5ms;2048.699999809265*1.05;452.0000001192093*1.15. These inherited checks cannot be eased because newB is slow."
+    },
+    "preserve_active_feedback": "Each case pooled active-tail SDKcallbackp95 C<=max(16.7ms,1.15*B); each immediate C replicate tailp95<=16.7ms; firstpostUp callbackworst C<=max(33ms,B+5ms). Preserve same input/paintedcoverage and report fullcurve.",
+    "input_nonregression": "Allcases CMovehandlerp95/Uphandlermax/CDPp95<=max(1.15*B,B+5ms); immediateinputlatenessp95<=max(1.15*B,B+5ms,16.7ms). Settledpan tighter inheritedbound also applies.",
+    "duration_nonregression": "Allcases actualprimaryerase andnavigation durations worstC<=max(1.05*B,B+50ms), and prospective absolute settledpan bound. No droppedinput, changedpace/formula orafterUpwaiting.",
+    "recovery_nonregression": "Allcases pooledconvergencemedian C<=max(1.15*B,B+50ms); settledpan inheritedmedian and eachsettledmax1000ms also apply. Disclose fullUp->commit->visible sequence and maxima.",
+    "correctness_memory": "All SNR3 target/pixels/noresurrection/zorder/Operation/close/GPUlifetime rules pass; same B/C memory profile."
+  },
+  "causal_closure": "Need an evidenced mechanism and focused deterministic RED/GREEN, or an independently qualified harness/lifecycle finding that explains why originalmeasurement was invalid without erasing originalUNMET. A lucky fasternormalrun alone cannotclose cause. If diagnostics dont reproduce or explain, return ROOT_CAUSE_NOT_ESTABLISHED with exactfacts, no speculativeproductionfix.",
+  "diagnostic_only": "NewJSrequest/lifecycle/progress probes used onlydiagnostic lane and defaultOFF. No browserflags forcingframerate/GC,hiddenhealing timers,samplerRAF orGPUwait. Diagnostics notpooled with ordinary. Report unsupportedeventsource as unavailable,notzero.",
+  "claims": "All16ordinaryrows retained. Original5.13sfailure retained. Any frozenmiss=UNMET; no thresholdrelaxation,runsselectedorfishing. No wholeG5/Gate/release orotherplatformABIclaim."
+}

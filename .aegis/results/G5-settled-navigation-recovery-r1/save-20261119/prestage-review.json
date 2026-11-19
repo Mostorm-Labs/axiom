@@ -1,0 +1,22 @@
+{
+  "candidateFilesBeforeFinalSaveRecords": 101,
+  "candidateBytesBeforeFinalSaveRecords": 4730320,
+  "sensitivePatternFindings": [],
+  "nulByteFiles": [],
+  "filesOver2MiB": [],
+  "whitespace": [
+    {
+      "path": ".aegis/results/G5-settled-navigation-recovery-r1/diagnostic-only-delta.patch",
+      "line": 126,
+      "sha256": "3e2916e22250cdaf4e8cceac3155e26b1ea1dd3b731ade26b3eac08eb06ecdcf",
+      "category": "immutable nested patch context"
+    },
+    {
+      "path": ".aegis/results/G5-settled-navigation-recovery-r1/diagnostic-only-delta.patch",
+      "line": 223,
+      "sha256": "3e2916e22250cdaf4e8cceac3155e26b1ea1dd3b731ade26b3eac08eb06ecdcf",
+      "category": "immutable nested patch context"
+    }
+  ],
+  "frozenPatchPolicy": "Preserve frozen patch bytes; only outer added-file whitespace on blank patch context may be accepted with exact lines. No source normalization."
+}

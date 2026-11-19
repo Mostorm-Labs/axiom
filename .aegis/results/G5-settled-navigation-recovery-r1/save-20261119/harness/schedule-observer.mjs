@@ -1,0 +1,16 @@
+// Diagnostic lane only. Never schedules a frame/timer, forces GC, reads SDK in
+// GL hooks or changes callback delivery. Raw rAF timestamp is browser supplied.
+export function installSchedulingJournal(env=globalThis,{maxRows=80000}={}){
+ const now=()=>env.performance.now(),raf=[],lifecycle=[],longtasks=[],pending=new Map(),undo=[];let dropped=0,next=0,workerId=0,contextId=0,restoreLong;
+ const append=(list,row)=>{if(raf.length+lifecycle.length+longtasks.length>=maxRows){++dropped;return false;}list.push(row);return true;};
+ const mark=(kind,fields={})=>append(lifecycle,{kind,at:now(),...fields});
+ const wrap=(target,name,make)=>{const raw=target?.[name];if(typeof raw!=='function')return;const fn=make(raw);target[name]=fn;undo.push(()=>{if(target[name]===fn)target[name]=raw;});};
+ wrap(env,'requestAnimationFrame',raw=>function(fn){const row={id:++next,requestedAt:now(),pendingBefore:pending.size,cancelled:false};let handle;handle=raw.call(this,function(timestamp){pending.delete(handle);row.timestamp=timestamp;row.started=now();row.pendingAtStart=pending.size;try{return fn.call(this,timestamp);}finally{row.ended=now();}});row.handle=handle;pending.set(handle,row);append(raf,row);return handle;});
+ wrap(env,'cancelAnimationFrame',raw=>function(handle){const row=pending.get(handle);if(row){row.cancelled=true;row.cancelledAt=now();pending.delete(handle);}return raw.call(this,handle);});
+ for(const name of ['visibilitychange','pagehide','pageshow','freeze','resume']){const fn=e=>mark(name,{visibility:env.document?.visibilityState,persisted:e?.persisted??null});env.addEventListener?.(name,fn);undo.push(()=>env.removeEventListener?.(name,fn));}
+ let longTaskSupport=false;if(env.PerformanceObserver?.supportedEntryTypes?.includes('longtask')){longTaskSupport=true;const observer=new env.PerformanceObserver(list=>{for(const x of list.getEntries())append(longtasks,{at:now(),startTime:x.startTime,duration:x.duration,name:x.name});});observer.observe({type:'longtask',buffered:true});restoreLong=()=>observer.disconnect();}
+ if(env.Worker){const Raw=env.Worker;class DiagnosticWorker extends Raw{constructor(url,options){super(url,options);this.snrOwner=++workerId;mark('worker-create',{worker:this.snrOwner,url:String(url)});}terminate(){mark('worker-terminate',{worker:this.snrOwner});return super.terminate();}}env.Worker=DiagnosticWorker;undo.push(()=>{if(env.Worker===DiagnosticWorker)env.Worker=Raw;});}
+ const ids=new WeakMap();wrap(env.HTMLCanvasElement?.prototype,'getContext',raw=>function(type,...args){const value=raw.call(this,type,...args);if(value&&['webgl','webgl2','experimental-webgl'].includes(type)&&!ids.has(value)){ids.set(value,++contextId);mark('webgl-context-observed',{context:contextId,canvas:this.id,type});}return value;});
+ mark('journal-start',{visibility:env.document?.visibilityState??'unavailable'});
+ return{mark,snapshot:()=>({version:1,raf,lifecycle,longtasks,dropped,pending:[...pending.values()].map(x=>({id:x.id,handle:x.handle,requestedAt:x.requestedAt})),support:{longtask:longTaskSupport,visibility:!!env.document,freezeEvent:'onfreeze'in(env.document??{}),physicalGPURelease:'unavailable',contextRegistryDestroy:'native-probe-only'}}),restore(){restoreLong?.();for(const fn of undo.reverse())fn();}};
+}

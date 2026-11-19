@@ -48,6 +48,11 @@ class CompactStrokeRasterJob final {
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    void diagnosticCursor(std::uint64_t& primitive,std::uint64_t& knot,int& x,int& y,bool& done)const noexcept {
+        primitive=preparedPrimitive_;knot=knot_;x=x_;y=y_;done=done_;
+    }
+#endif
  private:
     std::shared_ptr<const PreparedNavigationGeometry> prepared_;
     std::size_t preparedPrimitive_=0;

@@ -1,0 +1,55 @@
+{
+  "status": "PASSED_OFFLINE_REVIEW_CHECKS_ONLY",
+  "newBrowserStarts": 0,
+  "commands": [
+    {
+      "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+      "command": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+        "--test",
+        "out/G5-settled-navigation-recovery-r1/schedule-observer.test.mjs",
+        "out/G5-settled-navigation-recovery-r1/storage.test.mjs"
+      ],
+      "exit_code": 0,
+      "observed": "6 tests passed; no failure/cancel/skip"
+    },
+    {
+      "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+      "command": [
+        "python3",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "exit_code": 0,
+      "observed": "Runtime module boundary check passed (122 contract files)"
+    },
+    {
+      "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "observed": "no output"
+    },
+    {
+      "cwd": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+      "command": [
+        "python3",
+        ".aegis/results/G5-settled-navigation-recovery-control-r1/independent-audit.py"
+      ],
+      "exit_code": 0,
+      "observed": {
+        "failures": [],
+        "uniqueHashedFiles": 8225,
+        "manifestFileCount": 2016,
+        "completedRawCases": 16,
+        "decodedSnapshotBuffers": 40
+      }
+    }
+  ],
+  "productionRepairTested": false,
+  "performanceAcceptanceRetested": false
+}

@@ -1,0 +1,217 @@
+{
+  "status": "ROOT_CAUSE_NOT_ESTABLISHED",
+  "classification": "EXPLICIT_FROZEN_NO_CAUSE_TERMINAL",
+  "originalFailure": {
+    "raw": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-C1/DPR2/raw.json",
+      "bytes": 4626308,
+      "sha256": "defc72b30b955eb9e4897c8cf78946f54cb966fdcb4a49dd7f33f1a54f64f148"
+    },
+    "analysis": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-next-analysis-r1/analysis.json",
+      "bytes": 21598,
+      "sha256": "1e1fe573d66dbfefe837357ab40d3b7dfe4c2f763fa85e0aa25862c85331778d"
+    },
+    "case": "EFF-W-C1/settled-pan",
+    "navigationMs": 2750,
+    "convergenceMs": 5125.100000143051,
+    "activeTailCallbacks": 9,
+    "retained": "Original EFF4 remains UNMET; no environment/noise waiver. Generation3alreadycommittedbeforepan; recovery is canonical presentation, not Operation apply claimed blocked."
+  },
+  "fourModes": [
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "immediate-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 14.799999952316284,
+      "navigationMs": 2063.7000000476837,
+      "convergenceMs": 482.2999999523163,
+      "recoveryCallbacks": 26,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "immediate-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 25.199999809265137,
+      "navigationMs": 2076.2000000476837,
+      "convergenceMs": 280.10000014305115,
+      "recoveryCallbacks": 14,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "settled-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 14.600000143051147,
+      "navigationMs": 2038.1000001430511,
+      "convergenceMs": 448.09999990463257,
+      "recoveryCallbacks": 24,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-ORDER",
+      "case": "settled-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 12.700000047683716,
+      "navigationMs": 2038.1000001430511,
+      "convergenceMs": 204.39999985694885,
+      "recoveryCallbacks": 10,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "immediate-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 18.40000009536743,
+      "navigationMs": 2062.9000000953674,
+      "convergenceMs": 514,
+      "recoveryCallbacks": 28,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "immediate-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 13.399999856948853,
+      "navigationMs": 2062.9000000953674,
+      "convergenceMs": 316.7999999523163,
+      "recoveryCallbacks": 16,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "settled-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 14.200000047683716,
+      "navigationMs": 2034.5999999046326,
+      "convergenceMs": 530.5999999046326,
+      "recoveryCallbacks": 29,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-ISOLATED",
+      "case": "settled-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 15.099999904632568,
+      "navigationMs": 2038.8999998569489,
+      "convergenceMs": 200.90000009536743,
+      "recoveryCallbacks": 10,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "settled-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 16.90000009536743,
+      "navigationMs": 2033.3999998569489,
+      "convergenceMs": 203.90000009536743,
+      "recoveryCallbacks": 10,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "settled-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 21.40000009536743,
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 427.7000000476837,
+      "recoveryCallbacks": 23,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "immediate-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 13.5,
+      "navigationMs": 2072.0999999046326,
+      "convergenceMs": 263.40000009536743,
+      "recoveryCallbacks": 13,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-REVERSE",
+      "case": "immediate-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 13.400000095367432,
+      "navigationMs": 2062.0999999046326,
+      "convergenceMs": 458.60000014305115,
+      "recoveryCallbacks": 25,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "immediate-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 16.799999952316284,
+      "navigationMs": 2075.0999999046326,
+      "convergenceMs": 582.5,
+      "recoveryCallbacks": 32,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "immediate-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 15.299999952316284,
+      "navigationMs": 2059.5999999046326,
+      "convergenceMs": 267.2000000476837,
+      "recoveryCallbacks": 13,
+      "generationBeforeNavigation": "2"
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "settled-pan",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 10.399999856948853,
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 544.7000000476837,
+      "recoveryCallbacks": 30,
+      "generationBeforeNavigation": "3"
+    },
+    {
+      "run": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "case": "settled-pinch",
+      "tailCallbacks": 120,
+      "maxTailQueueDelayMs": 16.59999990463257,
+      "navigationMs": 2037.0,
+      "convergenceMs": 170.59999990463257,
+      "recoveryCallbacks": 8,
+      "generationBeforeNavigation": "3"
+    }
+  ],
+  "establishedFacts": [
+    "All16completed diagnosticcases delivered480confirmedprimaryMoves and120navigationMoves; tailSDKcallbacks120 each, nojournal/nativeeventdrop.",
+    "Samepageoriginal,freshcontext/page percase andsamepagereverse didnotreproduce9tailcallbacks/5.13srecovery. This comparisondoesnotprovephysicalGPUresourceswerefreed orenvironmentcausedoldrow.",
+    "Finalprogresssettledpan uses stablejob6/camera244/semantic3/Scene4;22attemptsadvancecursor0..40orrealbody/mask/coveragework. Oneexpectedresetfromcompleteoldcamera atcursor40;nosamebasisresetloopobserved.",
+    "Finalprogress53preparepairs comprise52withobservedwork and1alreadycompletecursor40/residents40;zero unexplainedno-workattempts. No-defaultcontentwritesarecompatiblewithoffscreenprogress.",
+    "Finalprogressretirementqueue max3\u20134,unknownabandon0;Workercreateterminatebalanced,JSrAFpendingemptyatsuccessfulclose;physicalGPUreleasetimeunavailable."
+  ],
+  "notEstablished": [
+    "Cause of original noncallbackgaps andsparseRAF; oldraw lacksrequestedAtjournal. Newrunrequestdelay<=25.2msdoesnotexplainhistorical282.5msgap.",
+    "Why originalcanonicalrecoveryneeded304callbacks versusnewsettledpan23\u201330;newprogresscannotreconstructoldjob/bodymask/cache state.",
+    "No proven duplicate/orphaned SDKwork, stalealiveWorker,body/maskrebuildloop,budgetdeadlockorGPUretirementfailuretojustifyproductionrepair.",
+    "No independentqualificationofharnessinvalidityfororiginalEFF4. Compactserializationfix explains only newdiagnostictracefailure."
+  ],
+  "hypothesesDisposition": [
+    {
+      "hypothesis": "Page/Runtime lifetime carryover causes RAF sparsity",
+      "test": "original/fresh/reverse exact4349",
+      "result": "notreproduced;unproven"
+    },
+    {
+      "hypothesis": "samebasis canonical cursor reset or resourcewait loop causes long recovery",
+      "test": "progressdiagnostic latestcursor/bodytile/steps/resourcejournal",
+      "result": "newobservedworkprogresses;originalcauseunknown"
+    }
+  ],
+  "productionRepairSelected": false,
+  "productionHypothesesAttempted": 0,
+  "diagnosticCorrective": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/harness-correction.json",
+    "bytes": 3623,
+    "sha256": "d3143b29f590fad10249248e053f13c8ccffffe8d6c5b15b6b4c8bfaf30f239d"
+  },
+  "remainingBranch": "Perpackage no_cause_policy returnexactBLOCKED now; SNR2/3/4 notexecuted/satisfied; no Cfinal/normalmatrix/correctnesswindow consumed.",
+  "noNewAPIABIOrBudget": true
+}

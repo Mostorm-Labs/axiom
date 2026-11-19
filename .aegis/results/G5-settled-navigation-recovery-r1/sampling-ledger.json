@@ -1,0 +1,155 @@
+{
+  "task": "G5-settled-navigation-recovery-r1",
+  "capSeconds": 4200,
+  "chargedSeconds": 590,
+  "attempts": [
+    {
+      "id": "SNR-D-B-ORDER",
+      "status": "COMPLETED",
+      "startedUnix": 1795056322.077344,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/SNR-D-B-ORDER-request.json",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 93.93734087515622,
+        "peak_process_family_rss_kib": 2042912,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 300.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "SNR-D-B-ORDER",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 94,
+      "endedUnix": 1795056416.2759979
+    },
+    {
+      "id": "SNR-D-B-ISOLATED",
+      "status": "COMPLETED",
+      "startedUnix": 1795056444.868314,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/SNR-D-B-ISOLATED-request.json",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 90.03047712496482,
+        "peak_process_family_rss_kib": 1717440,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 300.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "SNR-D-B-ISOLATED",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 91,
+      "endedUnix": 1795056535.263965
+    },
+    {
+      "id": "SNR-D-B-REVERSE",
+      "status": "COMPLETED",
+      "startedUnix": 1795056546.698237,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/SNR-D-B-REVERSE-request.json",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 93.4503997080028,
+        "peak_process_family_rss_kib": 2075424,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 300.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "SNR-D-B-REVERSE",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 94,
+      "endedUnix": 1795056640.6028612
+    },
+    {
+      "id": "SNR-D-B-PROGRESS",
+      "status": "FAILED",
+      "startedUnix": 1795056666.936685,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/SNR-D-B-PROGRESS-request.json",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 151.26397429197095,
+        "peak_process_family_rss_kib": 4045120,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 300.0,
+        "last_stage": {
+          "stage": "settled-pinch-primary-long-erase",
+          "status": "STARTED",
+          "id": "SNR-D-B-PROGRESS",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 152,
+      "endedUnix": 1795056818.4380941
+    },
+    {
+      "id": "SNR-D-B-PROGRESS-CORRECTIVE",
+      "role": "SNR-D-B-PROGRESS",
+      "corrective": true,
+      "status": "COMPLETED",
+      "startedUnix": 1795056964.945133,
+      "correction": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/harness-correction.json",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/controller-v2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/SNR-D-B-PROGRESS-CORRECTIVE-request.json",
+          "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 158.79484529211186,
+        "peak_process_family_rss_kib": 4497648,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 480.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "SNR-D-B-PROGRESS-CORRECTIVE",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 159,
+      "endedUnix": 1795057124.220889
+    }
+  ]
+}

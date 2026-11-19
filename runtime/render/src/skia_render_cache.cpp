@@ -135,11 +135,11 @@ bool SkiaRenderCache::canRetainCompact(const SkCanvas& canvas,const ReferenceTra
 }
 void SkiaRenderCache::releaseMaterialSources(bool releaseWorkSurfaces)noexcept{
     bodyPixels_.reset();work.bodyPixelBytes=0;
-    entries_.clear();coverage_.clear();runs_.clear();tileEntries_.clear();resetPreparation();
+    entries_.clear();coverage_.clear();runs_.clear();tileEntries_.clear();resetPreparation("cache-site-138");
     if(releaseWorkSurfaces){coverageTargets_.clear();scratch_.reset();scratchLease_.reset();}
     work.retainedBytes=0;work.entries=0;work.coverageBytes=0;work.retainedRunBytes=0;
 }
-void SkiaRenderCache::clear() noexcept {bodyPixels_.reset();work.bodyPixelBytes=0;invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_->clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation();coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
+void SkiaRenderCache::clear() noexcept {bodyPixels_.reset();work.bodyPixelBytes=0;invalidateStaticScene(false);bodyDependencies_.clear();stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();inkLayers_->clear();maskHistory.reset();work.inkLayerBytes=0;entries_.clear();coverage_.clear();runs_.clear();work.retainedRunBytes=0;resetPreparation("cache-site-142");coverageTargets_.clear();scratch_.reset();scratchLease_.reset();tiles_.reset();tileEntries_.clear();groups_.clear();eraseDamage_={};pendingErase_={};hasPendingErase_=false;groupSourceLeases_.clear();groupMetadataLease_.reset();frame_.reset();work.retainedBytes=0;work.coverageBytes=0;work.entries=0;}
 bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const WorldToViewAffine& camera,
     const void* target,std::uint64_t resourceEpoch)noexcept{
     const bool matching=frame_&&target_==target&&resourceEpoch_==resourceEpoch&&
@@ -148,7 +148,7 @@ bool SkiaRenderCache::releaseIdleWorkBuffers(const FrameState& current,const Wor
         frame_->metricsGeneration==current.metricsGeneration&&frame_->surfaceGeneration==current.surfaceGeneration&&
         frame_->viewportClip==current.viewportClip&&transform_==camera;
     if(pending_&&matching)return false;
-    if(!matching&&(pending_||composite_))resetPreparation();
+    if(!matching&&(pending_||composite_))resetPreparation("cache-site-151");
     scratch_.reset();scratchLease_.reset();coverageTargets_.clear();return true;
 }
 void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& surface,std::uint64_t resourceEpoch,foundation::ObjectId activeSource,bool transient){
@@ -205,7 +205,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     if(changed){tileEntries_.clear();if(tiles_)tiles_->invalidate();entries_.clear();work.retainedBytes=0;++targetEpoch_;}
     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
-    if(stagedBodies_&&(!updates.erase.continuous||updates.erase.bounds))resetPreparation();
+    if(stagedBodies_&&(!updates.erase.continuous||updates.erase.bounds))resetPreparation("cache-site-208");
     AXIOM_IF_EVENT("nc_cache_begin semantic=%llu scene=%llu camera=%llu transient=%u changed=%u target_changed=%u contributions=%llu erase_continuous=%u erase_bounds=%u cursor=%llu pending=%u",(unsigned long long)f.sceneGeneration.value(),(unsigned long long)f.sceneReadToken.value(),(unsigned long long)f.camera.generation.value(),unsigned(transient),unsigned(changed),unsigned(targetChanged),(unsigned long long)updates.contributions.size(),unsigned(updates.erase.continuous),unsigned(updates.erase.bounds.has_value()),(unsigned long long)preparationCursor_,unsigned(bool(pending_)));
     eraseDamage_=updates.erase;
     if(transient){
@@ -237,12 +237,12 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
         return !validRun(run,plan)||(activeSource_!=activeSource&&
             std::any_of(run.stamps.begin(),run.stamps.end(),[&](const auto& stamp){return stamp.id==activeSource;}));
     });
-    if(runCount!=runs_.size())resetPreparation();
+    if(runCount!=runs_.size())resetPreparation("cache-site-240");
     activeSource_=activeSource;
     work.retainedRunBytes=0;for(const auto& run:runs_)work.retainedRunBytes+=run.bytes;
     if(changed||!updates.contributions.empty()||preparationBackground_!=plan.background||
        preparationTransparent_!=plan.transparentBackground||preparationIsolate_!=plan.isolateEraseMasks){
-        resetPreparation();
+        resetPreparation("cache-site-245");
     }
     preparationBackground_=plan.background;preparationTransparent_=plan.transparentBackground;
     preparationIsolate_=plan.isolateEraseMasks;
@@ -446,7 +446,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareTransientMaterial(SkCanvas&
         stagedBodies_=true;stagedMaterial_=true;
         stagedDemand_=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),
             [&](const auto& entry){return needsPreparedBody(entry);});
-        resetPreparation();return Preparation::kPending;
+        resetPreparation("cache-site-449");return Preparation::kPending;
     }
     return result;
 }
@@ -540,10 +540,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
     // A strictly smaller demand gets one normal-residency admission attempt.
     // Same-demand retries retain their cooperative staged progress and latch.
     if(stagedBodies_&&std::size_t(demands)<stagedDemand_){
-        stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;bodyDependencies_.clear();resetPreparation();
+        stagedBodies_=false;stagedMaterial_=false;stagedDemand_=0;bodyDependencies_.clear();resetPreparation("cache-site-543");
     }
     if(std::size_t(demands)>options.maxEntries&&!stagedBodies_&&!movingEraseBodies_){
-        stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation();
+        stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation("cache-site-546");
     }
     // An oversized unique body set remains staged. Re-admitting the full
     // prefix before every staged step discards the same job indefinitely.
@@ -554,7 +554,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
         if(result==Preparation::kResourcePending){
             // Optional whole-demand residency is not a document limit. The
             // existing ordered staging consumes/reclaims one body at a time.
-            stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation();return Preparation::kReady;
+            stagedDemand_=demands;stagedBodies_=true;bodyDependencies_.clear();resetPreparation("cache-site-557");return Preparation::kReady;
         }
         if(result!=Preparation::kReady)return result;
     }
@@ -564,7 +564,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareBodies(SkCanvas& canvas,con
         // ready and pinned under the existing quota. Use the existing ordered
         // damage renderer and independent body/history mask tiles. Obsolete
         // composite pixels cannot represent the new active prefix.
-        stagedBodies_=false;stagedDemand_=0;resetPreparation();
+        stagedBodies_=false;stagedDemand_=0;resetPreparation("cache-site-567");
     }
     return Preparation::kReady;
 }
@@ -578,7 +578,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas
         (creation&&*creation!=*stagedCreation_)||bool(route)!=bool(stagedCreationRoute_)||
         (route&&*route!=*stagedCreationRoute_);
     if(creationChanged){
-        resetPreparation();stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();
+        resetPreparation("cache-site-581");stagedCreation_.reset();stagedCreationRoute_.reset();stagedCreationLease_.reset();
         if(creation){
             // One derived creation object, charged before copying it. Reuse
             // the existing UI-owned value and drawing helper; no projection
@@ -673,6 +673,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     SkCanvas& canvas,const FramePlan& plan,const RenderPreparationBudget& slice,ImageResourceResolver* images,SkiaTextResources* text,PreparationAllowance* shared){
     G5_SCOPE(g5Prepare,g5::Tag::prepare,g5::Purpose::none);
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    diagnosticProgress("prepare-before","entry",-1,shared);
+    struct ProgressEnd {std::function<void()> run;~ProgressEnd(){run();}} snrEnd{[&]{diagnosticProgress("prepare-after","return",-1,shared);}};
+#endif
     G5_ROUTE(g5PreparedRoute,g5::Route::canonical_prepared);
 
     if(!sourceAdmission_)return Preparation::kResourcePending;
@@ -794,7 +798,11 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
     ++work.preparationSlices;
     std::size_t built=0;
     const auto exhausted=[&]{return built>=slice.maxGroups||allowance.exhausted();};
-    const auto yield=[&]{flushPreparation();++work.preparationYields;return Preparation::kPending;};
+    const auto yield=[&]{
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        diagnosticProgress("prepare-yield","allowance-or-layer",int(Preparation::kPending),&allowance);
+#endif
+        flushPreparation();++work.preparationYields;return Preparation::kPending;};
     for(;preparationCursor_<plan.referenceDrawList.entries.size();++preparationCursor_){
         const auto& entry=plan.referenceDrawList.entries[preparationCursor_];
         const auto admission=admissions_.find(entry.record.objectId);
@@ -1127,7 +1135,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
     // A transient source may include permanent masks that cooperative exact
     // preparation routes Direct. Reuse/build its bounded isolated cache here;
     // never keep an exact-frame admission that forbids that source reuse.
-    if(pending_||composite_)resetPreparation();
+    if(pending_||composite_)resetPreparation("cache-site-1130");
     const auto& entries=plan.referenceDrawList.entries;
     const auto active=std::find_if(entries.begin(),entries.end(),[&](const auto& e){return e.record.objectId==activeSource_;});
     const bool supported=active!=entries.end() && active->contributesPixels &&
@@ -1189,7 +1197,10 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
     drawValidatedReferenceRangeToSkCanvas(canvas,plan,begin,plan.referenceDrawList.entries.size(),images,text,includeInk,this,grid);
     return !damageFailed_;
 }
-void SkiaRenderCache::resetPreparation(){
+void SkiaRenderCache::resetPreparation([[maybe_unused]] const char* reason){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    diagnosticProgress("reset-before",reason,-1);++snrResetSequence_;
+#endif
     AXIOM_IF_EVENT("nc_reset semantic=%llu scene=%llu camera=%llu cursor=%llu pending=%u composite_ready=%u body_dependencies=%llu",(unsigned long long)(frame_?frame_->sceneGeneration.value():0),(unsigned long long)(frame_?frame_->sceneReadToken.value():0),(unsigned long long)(frame_?frame_->camera.generation.value():0),(unsigned long long)preparationCursor_,unsigned(bool(pending_)),unsigned(compositeReady_),(unsigned long long)bodyDependencies_.size());
     AXIOM_FRAME_TIMING_ADD(prepare_resets,1);
     pending_.reset();admissions_.clear();admissionReady_=false;preparationCursor_=0;
@@ -1249,7 +1260,7 @@ bool SkiaRenderCache::acquireWorkSurface(SkCanvas& canvas,sk_sp<SkSurface>& targ
         if(retirementMaySatisfy())return false;
     }
     if(budget&&!token){
-        if(!stagedBodies_&&bodyDependencies_.size()>1){stagedDemand_=bodyDependencies_.size();stagedBodies_=true;bodyDependencies_.clear();resetPreparation();}
+        if(!stagedBodies_&&bodyDependencies_.size()>1){stagedDemand_=bodyDependencies_.size();stagedBodies_=true;bodyDependencies_.clear();resetPreparation("cache-site-1252");}
         return false;
     }
     resources::ResourceLease lease(budget,token.value_or(0));
@@ -1304,7 +1315,7 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     if(!sourceAdmission_)return false;
     // A synchronous draw may overwrite the scratch used by suspended work.
     // Its next cooperative demand must start from a fresh offscreen target.
-    if(pending_||composite_)resetPreparation();
+    if(pending_||composite_)resetPreparation("cache-site-1307");
     if(options.enabled && options.tileCandidate && !plan.referenceDrawList.entries.empty()){
         if(tiledFrame_)return true;
         if(source.record.objectId==plan.referenceDrawList.entries.front().record.objectId&&drawTiles(canvas,plan)){tiledFrame_=true;return true;}
@@ -1427,3 +1438,17 @@ bool SkiaRenderCache::store(SkCanvas& canvas,const ReferenceTraversalEntry& sour
     return true;
 }
 }
+
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+namespace canvas::render::internal {
+void SkiaRenderCache::diagnosticProgress(const char* phase,const char* reason,int outcome,const PreparationAllowance* allowance)const noexcept {
+    std::uint64_t primitive=0,knot=0;int x=0,y=0;bool done=false;
+    if(pending_&&pending_->raster)pending_->raster->diagnosticCursor(primitive,knot,x,y,done);
+    std::size_t pendingBytes=0;if(budget)for(unsigned i=0;i<unsigned(resources::ResourceClass::kCount);++i)pendingBytes+=budget->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
+    std::fprintf(stderr,"AXIOM_SNR_PROGRESS {\"phase\":\"%s\",\"reason\":\"%s\",\"outcome\":%d,\"cache\":\"%llu\",\"job\":\"%llu\",\"frame\":\"%llu\",\"semantic\":\"%llu\",\"scene\":\"%llu\",\"camera\":\"%llu\",\"surface\":\"%llu\",\"metrics\":\"%llu\",\"provider\":\"%llu\",\"target\":\"%llu\",\"resource\":\"%llu\",\"target_epoch\":\"%llu\",\"cursor\":%zu,\"pending_raster\":\"%llu\",\"primitive\":%llu,\"knot\":%llu,\"tile_x\":%d,\"tile_y\":%d,\"raster_done\":%s,\"admissions\":%zu,\"residents\":%zu,\"staged\":%s,\"stream\":%s,\"complete\":%s,\"steps\":%llu,\"coverage_steps\":%llu,\"body_builds\":%llu,\"body_tiles\":%llu,\"mask_updates\":%llu,\"raster_groups\":%llu,\"used_bytes\":%zu,\"pending_bytes\":%zu,\"gpu_epochs\":%zu,\"source_stamp\":\"%llu\",\"transform\":[%.9g,%.9g,%.9g,%.9g,%.9g,%.9g]}\n",
+      phase,reason,outcome,(unsigned long long)reinterpret_cast<std::uintptr_t>(this),(unsigned long long)snrResetSequence_,
+      (unsigned long long)(frame_?frame_->frameId.value():0),(unsigned long long)(frame_?frame_->sceneGeneration.value():0),(unsigned long long)(frame_?frame_->sceneReadToken.value():0),(unsigned long long)(frame_?frame_->camera.generation.value():0),(unsigned long long)(frame_?frame_->surfaceGeneration.value():0),(unsigned long long)(frame_?frame_->metricsGeneration.value():0),
+      (unsigned long long)reinterpret_cast<std::uintptr_t>(target_),(unsigned long long)reinterpret_cast<std::uintptr_t>(surface_),(unsigned long long)resourceEpoch_,(unsigned long long)targetEpoch_,preparationCursor_,(unsigned long long)reinterpret_cast<std::uintptr_t>(pending_?pending_->raster.get():nullptr),(unsigned long long)primitive,(unsigned long long)knot,x,y,done?"true":"false",admissions_.size(),entries_.size(),stagedBodies_?"true":"false",streamFrame_?"true":"false",compositeReady_?"true":"false",(unsigned long long)(allowance?allowance->steps:0),(unsigned long long)work.preparationCoverageSteps,(unsigned long long)work.preparedBodyBuilds,(unsigned long long)work.bodyTileBuilds,(unsigned long long)work.maskTileUpdates,(unsigned long long)work.rasterizedGroups,budget?budget->used():0,pendingBytes,budget?budget->pendingGpuEpochCount():0,(unsigned long long)tick_,transform_.a,transform_.b,transform_.c,transform_.d,transform_.tx,transform_.ty);
+}
+}
+#endif
