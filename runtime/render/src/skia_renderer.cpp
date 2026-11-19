@@ -1620,7 +1620,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     // The only provider write in this function. The complete pixels are ready,
     // using the same physical grid and Src (not another opacity application).
     {AXIOM_FRAME_TIMING_SCOPE(feedbackPublishTiming,feedback_publish);
-        SkAutoCanvasRestore publish(visibleCanvas,true);visibleCanvas->resetMatrix();
+        SkAutoCanvasRestore restoreVisibleCanvas(visibleCanvas,true);visibleCanvas->resetMatrix();
         if(incremental)visibleCanvas->clipIRect(publicationClip);
         SkPaint paint;paint.setBlendMode(SkBlendMode::kSrc);
         visibleCanvas->drawImage(completed,0,0,SkSamplingOptions{},&paint);

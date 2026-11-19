@@ -150,8 +150,8 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     const auto& stroke=compact->content.get().stroke;
     sk_sp<SkImage> sharedWhite;SkMatrix whiteBasis;
     if(allowance&&limits.gpuCoverageCandidate&&destination.recordingContext()){
-        const auto prepared=prepareNavigationBody(entry,source.geometry,matrix,destination,limits,budget,targets,work,*allowance,sharedWhite,whiteBasis);
-        if(prepared==BodyPreparation::kPending)return pending();
+        const auto preparation=prepareNavigationBody(entry,source.geometry,matrix,destination,limits,budget,targets,work,*allowance,sharedWhite,whiteBasis);
+        if(preparation==BodyPreparation::kPending)return pending();
     }
     for(int y=grid.top;y<grid.bottom;y+=tileSize)for(int x=grid.left;x<grid.right;x+=tileSize){
         auto crop=SkIRect::MakeLTRB(x,y,std::min(x+tileSize,grid.right),std::min(y+tileSize,grid.bottom));

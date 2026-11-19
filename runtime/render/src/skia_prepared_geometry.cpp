@@ -188,8 +188,8 @@ PreparedGeometryDraw PreparedNavigationGeometry::drawContour(SkCanvas& canvas,st
             const auto offset=pass?replayRibbonCount_:0;
             const auto passEnd=pass?primitiveCount():replayRibbonCount_;
             if(first>=passEnd||last<=offset)continue;
-            const auto local=first>offset?first-offset:0;
-            const auto start=std::upper_bound(replay_.begin(),replay_.end(),local,
+            const auto rangeFirst=first>offset?first-offset:0;
+            const auto start=std::upper_bound(replay_.begin(),replay_.end(),rangeFirst,
                 [pass](std::size_t value,const ReplayBlock& block){
                     AXIOM_FRAME_TIMING_ADD(prepared_range_probes,1);
                     return value<(pass?block.capLast:block.last);
