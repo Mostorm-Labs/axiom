@@ -86,7 +86,19 @@ bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& l
             for(const auto* p:ordered){
                 if(p->kind==CpuPendingEraseState::Kind::Transform)for(const auto& item:p->transforms.items)if(item.object_id==entry.record.objectId)pose=item.transform;
                 if(p->kind!=CpuPendingEraseState::Kind::Erase||p->trace.empty()||p->serial<born)continue;
+                const auto known=std::find_if(p->presentationMasks.begin(),p->presentationMasks.end(),[&](const auto& m){return m.pose==pose;});
+                if(known!=p->presentationMasks.end()){
+                    ++p->presentationHits;entry.presentationEraseMasks.push_back({{},known->geometry});continue;
+                }
                 auto mask=partialEraseGeometry(p->trace,pose,p->radius);if(!mask)return false;
+                ++p->presentationBuilds;
+                const auto bytes=sizeof(CpuPendingEraseState::Intent::PresentationMask)+128+std::visit([](const auto& g)->std::size_t{if constexpr(requires{g.segments;})return g.segments.capacity()*sizeof(semantic::EraseCubicSegment);else return g.path.commands.capacity()*sizeof(semantic::PathCommand);},*mask);
+                // Optional immutable conversion reuse. Allocation stays in this
+                // intent and is returned only after its last owner is gone.
+                auto& renderer=const_cast<render::SkiaRenderer&>(skiaRenderer_);
+                if(p->presentationMasks.size()<64&&bytes<=8U*1048576U-p->presentationBytes)if(auto lease=renderer.reserveCpuPendingMetadata(bytes)){
+                    p->presentationMasks.push_back({pose,*mask,std::move(*lease)});p->presentationBytes+=bytes;
+                }
                 entry.presentationEraseMasks.push_back({{},std::move(*mask)});
             }
         }

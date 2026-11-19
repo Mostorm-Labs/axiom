@@ -1,0 +1,184 @@
+{
+  "schema": "axiom-scoped-implementation-result-v1",
+  "task": "G5-mask-primitive-sharing-p36-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "returnSurface": "CONTROL_REVIEW",
+  "continueExecution": false,
+  "terminalAt": "2026-11-18T14:00:59.888767+08:00",
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-mask-primitive-sharing-p36-r1/package.json",
+    "bytes": 3762,
+    "sha256": "bb4e5cd505541a714b6861fcd435076857c00c026cae87e09efbb740135d3e4d"
+  },
+  "repository": "github:Mostorm-Labs/axiom",
+  "anchor": "4d015193ce68eca798b02786abc22a0aef6233b8",
+  "declaredExecutionRef": "refs/heads/codex/g5-exposure-region-checkpoint",
+  "ambientProtectedNotBaseline": "codex/g5-cpu-worker@6df8e16c1b1e45654532d2eb4cb8513f335c7a39",
+  "reviewableBoundary": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/artifact-manifest.json",
+    "bytes": 92464,
+    "sha256": "d72142a767fe56af9cda0c592b055ced3b91de956d56e734362c3f753ae7d979"
+  },
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/source-C.json",
+    "bytes": 147777,
+    "sha256": "54151f30286ea180c8919a3f1379e5cdd9e61426ce7c6a8ad244090553b5d05f"
+  },
+  "repairPatch": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/repair-delta.patch",
+    "bytes": 11254,
+    "sha256": "f23e288518f18773c22f5dec5029e6a1d4135f27613e5e78d5126fcddb12761f"
+  },
+  "deltaManifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/source-repair-delta.json",
+    "bytes": 1047,
+    "sha256": "23ad136a9d2f023eee18957bdf05ce3cdccf7e2099d52d1304b045fbe4b05c48"
+  },
+  "SDKsDriver": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/SDK-source-input-manifest.json",
+    "bytes": 4258,
+    "sha256": "7952d75dc6331d9bea0f46149f609bafcfbd396a4ea74ee41242e83e554cc811"
+  },
+  "normalObserverPolicy": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/SDK-observer-policy.json",
+    "bytes": 591,
+    "sha256": "ffbd5c6ae1ae9057afb03c3349f510205e88d2e8f986d8fdaa61b64da589a959"
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/normal-SDK-C.json",
+    "bytes": 4285,
+    "sha256": "273ea856d0117e4db0d2835b6e25784c84bce54a810380e99f38989424195084"
+  },
+  "diagnosticSDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/diagnostic-SDK-C.json",
+    "bytes": 4289,
+    "sha256": "90cc1f6068e56e0e8cc53f0ac4b109682999da33680ac4a6a50521ab097f4b3e"
+  },
+  "driverFreeze": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/browser-freeze.json",
+    "bytes": 653097,
+    "sha256": "b79ef12043b3510ba50a9204c26cfd92274adea2fc44d66c761a29d2afd53720"
+  },
+  "completionMap": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/completion-map.json",
+    "bytes": 6207,
+    "sha256": "ddd97456791f156b7b0019a66372ee149fdc72629b2bad6f6673f93dc859289a"
+  },
+  "P35Defects": [
+    {
+      "id": "samebudget-query-capacityclear",
+      "status": "FIXED_AND_REVERIFIED",
+      "evidence": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/query-binding-fix.json",
+        "bytes": 2304,
+        "sha256": "a35193b79ad9d47246ec71ee99ac3d503aaa64f075e3c196231f7ccea25a04c8"
+      },
+      "facts": "Originalunchangedownerandrendererprobesexit2->exit0;0samebudgetclear;32reuseand0newbuild. Strictconfirmedcurrent+historypreparedpaths4transitions,independentoracle,staleproofrejection;foreignbudgetclearretained."
+    },
+    {
+      "id": "newtesttarget-admission-and-macros",
+      "status": "FIXED_AND_REVERIFIED",
+      "evidence": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/test-build-fix.json",
+        "bytes": 1632,
+        "sha256": "1c2b6d6a521883b542d82df9f33cee0e829449a6be24f2388d242753e1afdf1c"
+      },
+      "facts": "PrivateoptinOFFdefault; matchedPRIVATElibrary/test macros;MetalfixtureAPPLE. ActualnativeOFFlibrary/targetgraph andoptin-only9PASS,noforcedordinarySDKdiagnostics."
+    }
+  ],
+  "regressions": {
+    "native": 42,
+    "nativePassed": 42,
+    "privateOptinOnlyTests": 9,
+    "privateOptinOnlyPassed": 9,
+    "NodePassed": 10,
+    "PythonPassed": 4,
+    "boundaryFiles": 122,
+    "oldFourCellFreshReplays": 0,
+    "parentFourCellEvidence": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-r1/native-factorial.json",
+      "bytes": 26909,
+      "sha256": "49371e55e2ae853060c6087c5aa2f48b2acdacfdc2fe4dea1d2dcfc7abc8202e"
+    }
+  },
+  "Web": {
+    "ordinaryWindows": 4,
+    "correctnessWindows": 2,
+    "extraObservedWindows": 0,
+    "relativeChecks": "All6stage/route originaldispatch/RAF/gap/settlethresholdsmet",
+    "ordinary": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/browser-comparison.json",
+      "bytes": 154519,
+      "sha256": "df70abed597f136d57f620c8d2086a099561d8b25c0cbc31c5f7d4f469d60284"
+    },
+    "correctness": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/web-correctness.json",
+      "bytes": 11289,
+      "sha256": "3aaeae5586b9bd23d12096e76d86a29903fdbea9196bfa197a27f5b022ec9dde"
+    },
+    "pixelPairs": 8,
+    "maximumChannelDelta": 1,
+    "AApolicyUnchanged": true,
+    "sameStageSnapshotsEqual": 12,
+    "receipts": "All4correctnesscontextsgeneration8=presented8;activeContacts0/errors0;durabilitycloudaxesdistinct",
+    "UndoRedo": "IndependentSnapshotCodecobject/resource/backgroundrestore; compensationrevisions45/46/47"
+  },
+  "browserSpend": {
+    "status": "6_OF_6_WINDOWS_COMPLETED",
+    "chargedSeconds": 651,
+    "capSeconds": 2100,
+    "remainingSeconds": 1449,
+    "ordinaryStarts": 4,
+    "correctnessStarts": 2,
+    "observedStarts": 0,
+    "correctiveUsed": 0,
+    "performanceRetries": 0,
+    "allCleanupComplete": true,
+    "remainingOwnedWorkerPIDs": [],
+    "peakFamilyRSSKiB": 3363440,
+    "RSSCapKiB": 6291456,
+    "sampleArtifactBytes": 1328748645,
+    "sampleArtifactCapBytes": 1610612736,
+    "ledger": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/sampling-ledger.json",
+      "bytes": 7133,
+      "sha256": "789be77b17087321c9a46986e3e3ddbb0ad06e64113dfdda54258b84982b2c67"
+    }
+  },
+  "newNormalDemoURL": "http://127.0.0.1:4346/example.html",
+  "newNormalDemoPID": 96994,
+  "preview": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/preview-ready.json",
+    "bytes": 1112,
+    "sha256": "b1d497bd39ae30c26331e43dc1c5a39d07624b89078e947f6d21cdd406e8d690"
+  },
+  "protection": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/preservation.json",
+    "bytes": 6789,
+    "sha256": "12f5787a834d00d596df9bbf8ad3ac70fe55ecdb71946dbdc691a1937f64b68b"
+  },
+  "freezeValidation": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/freeze-validation.json",
+    "bytes": 387,
+    "sha256": "45ee9cd3c23bc6073430d3f50dad5b9ecdcc794c4b123f02f92c34957590d5de"
+  },
+  "noGitPublication": true,
+  "noOfficialGatePASS": true,
+  "blockers": [],
+  "limitations": [
+    "Physicaltrackpadnotmeasured;GLsubmissionproxy notphotonproof.",
+    "Statictestplatformguard isnotLinux/WindowsABI qualification.",
+    "Oldunrelatedlegacytestdiagnosticflagrequirements unchanged anddisclosed.",
+    "No fullG5/Stage1/release/P34 orwholeUIaccelerationclaim.",
+    "Budget/generation/identity/AA/GPUretirement/Operation/Scene/SDKcontractsunchanged."
+  ],
+  "terminalCallback": {
+    "threadId": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+    "separateReceipt": "terminal-callback.json"
+  },
+  "reviewNote": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/review.md",
+    "bytes": 1635,
+    "sha256": "d796d33373e41a0de6f0f8ced076fe25fc4b89d6840067ed9ad680d8d2bb019f"
+  }
+}

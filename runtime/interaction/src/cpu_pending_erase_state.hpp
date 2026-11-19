@@ -4,6 +4,7 @@
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/semantic/operation.hpp"
 #include <array>
+#include <tuple>
 #include "pending_scene_preparation.hpp"
 namespace canvas::interaction {
 struct CpuPendingEraseState final {
@@ -37,12 +38,27 @@ struct CpuPendingEraseState final {
   std::vector<Prefix> prefixes;
   std::size_t nextPrefix=0,activeTarget=0,jobPrefix=0;
   bool activeJob=false,activeCancelled=false;
+  // Constant-size facts from the actual owners, never a synthetic iteration
+  // counter or full payload comparison. Current stamp primitive resets are
+  // disambiguated by target/mask/header and job identity.
+  auto preparationProgress() const noexcept {
+   const auto* job=sceneStamp.target<sceneStamp.jobs.size()?sceneStamp.jobs[sceneStamp.target].get():nullptr;
+   return std::tuple{preparedErase.get(),preparedErase?preparedErase->progress():semantic::PreparedEraseOperation::Progress{},
+       sceneStamp.operation.get(),sceneStamp.target,sceneStamp.jobs.size(),job,
+       job?job->mask:0U,job?job->primitive:0U,job&&job->header,job&&job->ready,
+       sceneStamp.failed,preparedHistory.has_value(),publicationPrepared};
+  }
   Phase phase=Phase::Active;
   std::uint64_t session=0,serial=0,traceGrant=0,payloadGrant=0,grantExecutor=0,payloadExecutor=0;
   std::size_t payloadBytes=0,candidateCapacity=0;
   std::optional<resources::ResourceLease> candidateMetadata;
   input::PointerKey key{};double radius=0;
   std::vector<foundation::WorldPoint> trace;
+  struct PresentationMask {semantic::Transform2D pose;semantic::EraseMaskGeometry geometry;resources::ResourceLease lease;};
+  mutable std::vector<PresentationMask> presentationMasks;
+  mutable std::uint64_t presentationBuilds=0,presentationHits=0;
+  mutable std::size_t presentationBytes=0;
+
   std::vector<foundation::ObjectId> candidates;
   std::size_t next=0;
   std::vector<semantic::EraseMaskAddItem> hits;

@@ -21,6 +21,8 @@ void drawEditingOverlayToSkCanvas(SkCanvas&, const SurfaceMetrics&, const Editin
 struct CompactRasterWork;
 class CompactCoverageTargets;
 class PreparedNavigationGeometry;
+class ReferenceValidationCache;
+enum class HistoryValidationPolicy;
 struct CompactDeviceGrid final {int left=0,top=0,right=0,bottom=0;};
 struct CompactStrokeRange final {
     std::size_t begin = 0;
@@ -64,6 +66,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
                                        int deviceX=0,int deviceY=0);
 
 [[nodiscard]] BackendSubmissionResult validateReferencePlan(const FramePlan&);
+[[nodiscard]] BackendSubmissionResult validateReferencePlan(const FramePlan&,ReferenceValidationCache*,HistoryValidationPolicy);
 
 // Shared Skia scene contract used by both the headless reference backend and
 // SkiaRenderer/provider production path. The implementation is kept in the
@@ -87,7 +90,8 @@ void drawPresentationEraseMasksToSkCanvas(SkCanvas&,const ReferenceTraversalEntr
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
     SkiaTextResources* textResources = nullptr, bool includeInk = true,
-    SkiaRenderCache* cache = nullptr, const CompactDeviceGrid* grid = nullptr);
+    SkiaRenderCache* cache = nullptr, const CompactDeviceGrid* grid = nullptr,
+    ReferenceValidationCache* validation = nullptr);
 // Repaint the dedicated ink lane after a transient creation object. Ink is
 // intentionally topmost while a Shape/Connector is being authored.
 void drawInkEntriesToSkCanvas(

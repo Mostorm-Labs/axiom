@@ -1,0 +1,71 @@
+{
+  "RED": {
+    "cases": {
+      "cpu-pending-postcommitpan": {
+        "camera_generation": 2,
+        "committed": 1,
+        "generation": 1,
+        "mode": "postcommitpan",
+        "navigation_held_after_original_quiet": true,
+        "navigation_presented": true,
+        "real_kernel_requests": 1
+      },
+      "cpu-pending-postcommitzoom": {
+        "camera_generation": 2,
+        "committed": 1,
+        "generation": 1,
+        "mode": "postcommitzoom",
+        "navigation_held_after_original_quiet": true,
+        "navigation_presented": false,
+        "real_kernel_requests": 1
+      }
+    },
+    "message": "NO_NEW_QUIET_WINDOW_AFTER_PENDING_COMMIT",
+    "actual_source": "911c149bbehavior+defaultOFF/ONdiagnosticonly",
+    "mechanism": "existing100ms policy measuredafterlastcamera mustnotrestart100ms atfirstpostcommitrendereligibility",
+    "log": "out/G5-postcommit-navigation-feedback-r1/clock-red-tests.log"
+  },
+  "GREEN": {
+    "passed33native": true,
+    "log": "out/G5-postcommit-navigation-feedback-r1/final-native-tests.log",
+    "fullframe": {
+      "cpu-pending-postcommitpan": {
+        "camera_generation": 2,
+        "committed": 1,
+        "generation": 1,
+        "mode": "postcommitpan",
+        "native_fullframe_diff_channels": 0,
+        "native_fullframe_max_delta": 0,
+        "navigation_held_after_original_quiet": false,
+        "navigation_presented": false,
+        "nonedge_changed_channels": 0,
+        "real_kernel_requests": 1
+      },
+      "cpu-pending-postcommitzoom": {
+        "camera_generation": 2,
+        "committed": 1,
+        "generation": 1,
+        "mode": "postcommitzoom",
+        "native_fullframe_diff_channels": 3,
+        "native_fullframe_max_delta": 1,
+        "navigation_held_after_original_quiet": false,
+        "navigation_presented": false,
+        "nonedge_changed_channels": 0,
+        "real_kernel_requests": 1
+      }
+    },
+    "same100ms_99_100_guard": true,
+    "no_op_exact_zeroanchor": true,
+    "delayed_and_foreign_receipt_guard": true
+  },
+  "GREEN_clock_only": {
+    "log": "out/G5-postcommit-navigation-feedback-r1/clock-green-tests.log",
+    "passed": 3,
+    "all_oldG5Navigation_cases_preserved": true
+  },
+  "extra_pixel_guard_harness_notes": [
+    "Firstextraoraclebuild failed CanonicalWorkfieldaccess/floatnarrowing; immediatelyfollowingctest usedoldbinary invalidclaim, keptlogs; correctedbuild2/3 bothsuccessfullybuilt thenran actualpixel guards.",
+    "Fractionalzoom independentDirect had3channelmax1 atAAedge, panexact; fixedsource-onlyonepixelcontourband added forAAqualification, no arbitraryglobaltolerance.",
+    "Repeatedfloatzoom atsameanchor mayroundtranslation slightly and legitimatelyadvancecamera; no-opidentityguarduseszeroanchor exact arithmetic, controllersemanticsunchanged."
+  ]
+}

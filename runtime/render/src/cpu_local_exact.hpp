@@ -16,8 +16,12 @@ class LocalExactCache final {
         const std::shared_ptr<resources::ResourceBudgetManager>&,std::size_t capacity);
     void clear()noexcept;
     void reclaimUnused()noexcept;
+    void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
+    std::optional<std::uint64_t> reserve(const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+        resources::ResourceClass kind,std::size_t bytes,bool critical=true){return reserveWithSourcePressure(budget,pressure_,kind,bytes,critical);}
  private:
     std::vector<std::shared_ptr<LocalMaskIndex>> entries_;
+    ValidationPressure pressure_;
 };
 // The entire input/target/history are retained; an imported range can prove only
 // its exact range. Full original geometry is still used by the canonical owner.
@@ -34,6 +38,7 @@ class LocalExactJob final {
     bool advanceSelectionFallback(PreparationAllowance&);
     void cancel()noexcept;
     bool matches(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&)const noexcept;
+    bool provesMiss(const RuntimeSceneRecord& r,const semantic::EraseMaskGeometry& g)const noexcept{return status_==LocalExactStatus::kMiss&&matches(r,g);}
     const LocalExactStatistics& statistics()const noexcept{return work_;}
     const semantic::EraseMaskGeometry& fullGeometry()const noexcept;
  private:

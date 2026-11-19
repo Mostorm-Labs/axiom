@@ -1,0 +1,173 @@
+{
+  "schema": "axiom-diagnostic-checkpoint-save-verification-v1",
+  "at": "2026-11-19T03:46:18.213878+00:00",
+  "scope": "one diagnostic-only commit and normal push; stop after control callback",
+  "manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/manifest.json",
+    "bytes": 22454,
+    "sha256": "a051c43567612f517cd850464a1ca315c48dc8111d2496d0f53da62ac4aac2af"
+  },
+  "freshChecks": [
+    {
+      "command": {
+        "at": "2026-11-19T03:43:10.315540+00:00",
+        "name": "node",
+        "argv": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "--test",
+          "out/G5-settled-navigation-recovery-r1/schedule-observer.test.mjs",
+          "out/G5-settled-navigation-recovery-r1/storage.test.mjs"
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+        "exit": 0,
+        "seconds": 0.384802541,
+        "log": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/node.log"
+      },
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/node.log",
+        "bytes": 636,
+        "sha256": "c519a5bfdd513a5708e44c61e00a77fe0fb0559f477c3b70c97632b939fe4b8b"
+      }
+    },
+    {
+      "command": {
+        "at": "2026-11-19T03:43:10.083738+00:00",
+        "name": "boundary",
+        "argv": [
+          "python3",
+          "tools/check_runtime_boundaries.py",
+          "--root",
+          "."
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+        "exit": 0,
+        "seconds": 0.15274395799999999,
+        "log": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/boundary.log"
+      },
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/boundary.log",
+        "bytes": 58,
+        "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+      }
+    },
+    {
+      "command": {
+        "at": "2026-11-19T03:43:09.978677+00:00",
+        "name": "source-whitespace",
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+        "exit": 0,
+        "seconds": 0.047102416999999994,
+        "log": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/source-whitespace.log"
+      },
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/source-whitespace.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": {
+        "at": "2026-11-19T03:43:13.106480+00:00",
+        "name": "offline-audit",
+        "argv": [
+          "python3",
+          "out/G5-settled-navigation-recovery-save-20261119/audit/independent-audit.py"
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+        "exit": 0,
+        "seconds": 3.175715,
+        "log": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/offline-audit.log"
+      },
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/offline-audit.log",
+        "bytes": 1651,
+        "sha256": "1e32453c2dc696a2be74a97b60687261d0b92e0e955c6df751722b3cc9ae6cc5"
+      }
+    },
+    {
+      "command": {
+        "at": "2026-11-19T03:44:20.208508+00:00",
+        "name": "preservation",
+        "argv": [
+          "python3",
+          ".aegis/results/G5-settled-navigation-recovery-r1/save-20261119/harness/verify-save-preservation.py"
+        ],
+        "cwd": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery",
+        "exit": 0,
+        "seconds": 0.347695416,
+        "log": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/preservation.log"
+      },
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/preservation.log",
+        "bytes": 177,
+        "sha256": "de54d43eb08f6877320c6bcd66821f71134ad00349e407e45f643bd33621020e"
+      }
+    }
+  ],
+  "freshNodePassCount": 6,
+  "boundaryContractCount": 122,
+  "offlineBindings": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/offline-binding-recheck.json",
+    "bytes": 51475,
+    "sha256": "ed6c013606a5950b3978fd0df4e1d1df20e2d0b530cdac3487fe5c48e7ac5d23"
+  },
+  "preservation": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/preservation-recheck.json",
+    "bytes": 7311,
+    "sha256": "da0d1e06629590ca5b67950ab4c3d192168d436b6a2ac6fd49cde4504c4b5886"
+  },
+  "prestageReview": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/prestage-review.json",
+    "bytes": 894,
+    "sha256": "1a0fbf4cef7c8a1ec1bde27b2e4789b76c9ad8b6249372158c50c9c9b3784088"
+  },
+  "archiveMap": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/save-20261119/archive-map.json",
+    "bytes": 20927,
+    "sha256": "05a5ec2072147185ed276ed3ed92727cab91f9208ea06c57891f5130583177de"
+  },
+  "sourceDeltaMatchesFrozenPatchExactly": true,
+  "originalResult": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/result.json",
+    "bytes": 16436,
+    "sha256": "1564c55c4f8d508a2756df3c1be811c65c80e9fc01a5dc4fb1dc7004f3a46d41"
+  },
+  "originalArtifactManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/artifact-manifest.json",
+    "bytes": 595161,
+    "sha256": "623ad645936432b960c99db06163ced56ab9105bf037ada90256223cae95a53b"
+  },
+  "independentControlReview": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-control-r1/control-review.json",
+    "bytes": 9214,
+    "sha256": "2fc3f7f00e5eb6f42a07724998e06d195823e0da8d00a28f156b0e1ff69ef23c"
+  },
+  "oldBuildRecord": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/B-progress-build.json",
+    "bytes": 3529,
+    "sha256": "8ef5c36cc81f20a282eef31775060be2b9d55a3570a1ab4899856941fa669dc8"
+  },
+  "buildRerun": false,
+  "newBrowserStarts": 0,
+  "samplingLedgerUnchanged": {
+    "starts": 5,
+    "chargedSeconds": 590,
+    "record": {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/sampling-ledger.json",
+      "bytes": 6246,
+      "sha256": "05c447c6f01b5d2b63194a64fb7fda723dccef5c94ba301e18ddb327425fd0d2"
+    }
+  },
+  "productionFix": false,
+  "originalEFF4": "UNMET / original performance problem not closed",
+  "verdict": "BLOCKED / ROOT_CAUSE_NOT_ESTABLISHED",
+  "normalDemo": "http://127.0.0.1:4349/example.html",
+  "userBrowserAndDocumentsUntouched": true,
+  "expectedUntrackedRuntimeLock": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/storage-ledger.lock",
+  "stagingPolicy": "Explicit per-file whitelist. Frozen nested patch whitespace lines126/223 retained; source and all other files checked independently. No force push, merge, release, version or tag change."
+}

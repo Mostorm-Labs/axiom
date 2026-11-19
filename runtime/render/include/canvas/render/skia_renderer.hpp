@@ -23,7 +23,7 @@ class SkCanvas;
 
 namespace canvas::render {
 namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
-namespace internal {struct ObjectInteractionWork;}
+namespace internal {struct ObjectInteractionWork;class ReferenceValidationCache;}
 namespace internal {class LocalExactJob;class LocalExactCache;
 enum class LocalExactStatus {kPending,kNeedPiece,kNeedFull,kHit,kMiss,kInvalid};}
 
@@ -34,6 +34,17 @@ enum class ResourceServiceMode { kOwnerOpportunity, kBeginSurfaceTransition, kEn
 
 // The only common drawing adapter. It consumes runtime-owned render data and
 // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.
+// SDK-internal immutable presentation owner stamp, never a canonical receipt.
+struct TransientDisplayIdentity final {
+    std::shared_ptr<const void> owner;
+    std::uint64_t revision=0,inputRevision=0;
+    struct Contribution {std::uint64_t session=0,samples=0;bool operator==(const Contribution&)const=default;};
+    std::array<Contribution,8> contributions{};
+    std::size_t contributionCount=0;
+    bool matches(const TransientDisplayIdentity& b)const noexcept {
+        return owner&&owner.get()==b.owner.get()&&!owner.owner_before(b.owner)&&!b.owner.owner_before(owner)&&((contributionCount||b.contributionCount)?contributionCount==b.contributionCount&&contributions==b.contributions:revision==b.revision&&inputRevision==b.inputRevision);
+    }
+};
 class SkiaRenderer final {
   public:
     SkiaRenderer();
@@ -63,7 +74,9 @@ class SkiaRenderer final {
     void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
-        const EditingOverlay* selectionOverlay);
+        const EditingOverlay* selectionOverlay,
+        const TransientDisplayIdentity& identity = {});
+    void transferTransientDisplayIdentity(const TransientDisplayIdentity&,const TransientDisplayIdentity&)noexcept;
     [[nodiscard]] BackendSubmissionResult renderPreview(
         SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
         const PreviewStyleOverride& style = {});
@@ -151,12 +164,17 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    internal::ReferenceValidationCache* validationService() const noexcept;
+    mutable std::shared_ptr<internal::ReferenceValidationCache> validationProofs_;
     std::shared_ptr<internal::GpuResourceRetirement> gpuRetirements_;
     std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
     struct PartialEraseFrame;
     std::shared_ptr<PartialEraseFrame> partialEraseFrame_;
     std::shared_ptr<internal::TransientDisplaySurface> transientDisplay_;
+    BackendSubmissionResult prepareTransientFrame(SkiaSurfaceProvider&,const FramePlan&,const EditingOverlay*,const TransientDisplayIdentity&,bool publish=true);
     struct NavigationCache;
+    std::shared_ptr<NavigationCache> pendingNavigation_;
+    bool presentPendingNavigation(SkiaSurfaceProvider&,const CanonicalViewportTransform&,const FrameState&,const NavigationBackgroundQuery&,const FramePlan&,const TransientDisplayIdentity&,bool canonical);
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<NavigationCache> navigationFallback_;
     mutable std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
@@ -167,6 +185,8 @@ class SkiaRenderer final {
     mutable std::shared_ptr<internal::LocalExactCache> localExact_;
     struct CpuLocalSelection {std::vector<foundation::WorldPoint> points;CpuDecisionPin job;resources::ResourceLease lease;bool complete=false;};
     mutable std::map<foundation::ObjectId,CpuLocalSelection> localSelection_;
+    mutable std::vector<CpuDecisionPin> feedbackMisses_;
+    mutable std::optional<resources::ResourceLease> feedbackMissMetadata_;
     mutable std::shared_ptr<internal::SourceRetentionPool> sourceRetention_;
     mutable std::shared_ptr<internal::PreparedGeometryCache> preparedGeometry_;
     ImageResourceResolver* images_ = nullptr;

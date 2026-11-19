@@ -1,0 +1,697 @@
+{
+  "status": "VERIFIED",
+  "row": {
+    "key": "candidate-heldzoom",
+    "path": "candidate-heldzoom/metadata.json",
+    "sha256": "c4e00979b4e28ecdc82c3f4fb47d41ca6a3df07e0d163840d790e4d5f7012b67",
+    "bytes": 242070,
+    "status": "OBSERVED"
+  },
+  "buffer_count": 6,
+  "buffers": [
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/operation-0.bin.gz",
+      "bytes": 7694,
+      "sha256": "f4b033d650d489f24e50403d9ed26d0520c143ca2a439a72d351f762e9fde51d",
+      "compressed_sha256": "f9f654d63c4190d454bdcc6515c9ea51e598d6208a8fc27fee781e4da8a6b8be"
+    },
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/snapshot-before.axsnap.gz",
+      "bytes": 15214,
+      "sha256": "c86a31c86d0bb7036fda4ac073cddcb8ee9dcc9950a1e0f497c3fb9a8229c305",
+      "compressed_sha256": "0f8cc146b70e4d29cc0567d93a325906d33c714321c31b8da5c8896e6d654d54"
+    },
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/snapshot-final.axsnap.gz",
+      "bytes": 22789,
+      "sha256": "67cd0e8c730063998c715dee33ca0b19fb67b7551be4868e1fcd955e35a84177",
+      "compressed_sha256": "43dacaf3d546dabe7cbe3d9d0a7b087eca09462b489acaf5a641c53e553c2fe3"
+    },
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/pixel-0-canonical.rgba.gz",
+      "bytes": 2160000,
+      "sha256": "7ce9b80117c7fa3689950c90c084ca4d71bfff66d16c7588da9ceba988c2db69",
+      "compressed_sha256": "c50c0387b09af7832e50fff5f0e8f26eaaf767cfb1d742329d26028245f75028"
+    },
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/pixel-1-canonical.rgba.gz",
+      "bytes": 2160000,
+      "sha256": "88a84c82d2bb74c84ddc797a00c887ad9e9fce8a5223ab40235c73eba2ee09a3",
+      "compressed_sha256": "71a0b625688fdba64dc6d63d44f5933e0f1f90de0e3b10dac980869040cf3373"
+    },
+    {
+      "path": "out/G5-pending-navigation-held-worker-proof-r2/iab/PNHW2-IAB/candidate-heldzoom/pixel-2-canonical.rgba.gz",
+      "bytes": 2160000,
+      "sha256": "88a84c82d2bb74c84ddc797a00c887ad9e9fce8a5223ab40235c73eba2ee09a3",
+      "compressed_sha256": "71a0b625688fdba64dc6d63d44f5933e0f1f90de0e3b10dac980869040cf3373"
+    }
+  ],
+  "actual_pending_camera_facts": [
+    {
+      "label": "before-zoom",
+      "at": 524.5,
+      "state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 3,
+        "pending": {
+          "intents": [
+            {
+              "dependsOn": [],
+              "kind": "erase",
+              "objectIds": [],
+              "phase": "waiting",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "1"
+              }
+            }
+          ],
+          "revision": "2",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        },
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 800,
+          "width": 1200
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "pendingFacts": {
+        "admitted": "1",
+        "allUnionSteps": "24",
+        "capability": true,
+        "checkpointBytes": "0",
+        "commitNs": "0",
+        "committed": "0",
+        "enabled": true,
+        "error": "",
+        "exactCalls": "0",
+        "exactNs": "200000",
+        "failed": "0",
+        "finishedHits": "0",
+        "finishedImports": "0",
+        "geometryReuse": "0",
+        "head": "1",
+        "historyJob": false,
+        "historyPrepareNs": "0",
+        "historyUnions": "0",
+        "importNs": "0",
+        "job": "1",
+        "jobLedger": [
+          {
+            "historical": false,
+            "importNs": "0",
+            "inputBytes": 2048,
+            "issuedNs": "406500000",
+            "outputBytes": 0,
+            "returnedNs": "0",
+            "status": "IssuedPiece",
+            "token": [
+              "2",
+              "1",
+              "11068046444225730969",
+              "11068046444225730969",
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "jobs": "1",
+        "maxExactNs": "0",
+        "maxOwnerNs": "1000000",
+        "maximumCommitStageNs": "0",
+        "newQueryUnions": "0",
+        "noops": "0",
+        "ok": true,
+        "opportunities": "3",
+        "pending": 1,
+        "prepareNs": "300000",
+        "preparedBeforeUp": "0",
+        "publicationPrepareNs": "0",
+        "publishNs": "0",
+        "requestReady": true,
+        "reserved": 1,
+        "retainedPathBytes": "0",
+        "sceneStampPrepareNs": "0",
+        "state": "WaitingWorker",
+        "suffixAfterUp": "24",
+        "suspended": false,
+        "targetPrepareNs": "0",
+        "terminals": [],
+        "token": [
+          "2",
+          "1",
+          "11068046444225730969",
+          "11068046444225730969",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "workerWaitNs": "0"
+      },
+      "operations": 0
+    },
+    {
+      "label": "new-camera",
+      "at": 626.8999999761581,
+      "state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 0.699999988079071,
+          "x": 180,
+          "y": 120
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 3,
+        "pending": {
+          "intents": [
+            {
+              "dependsOn": [],
+              "kind": "erase",
+              "objectIds": [],
+              "phase": "waiting",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "1"
+              }
+            }
+          ],
+          "revision": "2",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        },
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 800,
+          "width": 1200
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "pendingFacts": {
+        "admitted": "1",
+        "allUnionSteps": "24",
+        "capability": true,
+        "checkpointBytes": "0",
+        "commitNs": "0",
+        "committed": "0",
+        "enabled": true,
+        "error": "",
+        "exactCalls": "0",
+        "exactNs": "200000",
+        "failed": "0",
+        "finishedHits": "0",
+        "finishedImports": "0",
+        "geometryReuse": "0",
+        "head": "1",
+        "historyJob": false,
+        "historyPrepareNs": "0",
+        "historyUnions": "0",
+        "importNs": "0",
+        "job": "1",
+        "jobLedger": [
+          {
+            "historical": false,
+            "importNs": "0",
+            "inputBytes": 2048,
+            "issuedNs": "406500000",
+            "outputBytes": 0,
+            "returnedNs": "0",
+            "status": "IssuedPiece",
+            "token": [
+              "2",
+              "1",
+              "11068046444225730969",
+              "11068046444225730969",
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "jobs": "1",
+        "maxExactNs": "0",
+        "maxOwnerNs": "1000000",
+        "maximumCommitStageNs": "0",
+        "newQueryUnions": "0",
+        "noops": "0",
+        "ok": true,
+        "opportunities": "3",
+        "pending": 1,
+        "prepareNs": "300000",
+        "preparedBeforeUp": "0",
+        "publicationPrepareNs": "0",
+        "publishNs": "0",
+        "requestReady": true,
+        "reserved": 1,
+        "retainedPathBytes": "0",
+        "sceneStampPrepareNs": "0",
+        "state": "WaitingWorker",
+        "suffixAfterUp": "24",
+        "suspended": false,
+        "targetPrepareNs": "0",
+        "terminals": [],
+        "token": [
+          "2",
+          "1",
+          "11068046444225730969",
+          "11068046444225730969",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "workerWaitNs": "0"
+      },
+      "operations": 0
+    },
+    {
+      "label": "same-camera-zero-pan",
+      "at": 730.5,
+      "state": {
+        "activeContacts": 0,
+        "camera": {
+          "scale": 0.699999988079071,
+          "x": 180,
+          "y": 120
+        },
+        "canRedo": false,
+        "canUndo": false,
+        "creationMode": false,
+        "data": {
+          "attached": false,
+          "byteCapacity": 33554432,
+          "capacity": 1024,
+          "closing": false,
+          "fault": false,
+          "latest": null,
+          "pending": 0,
+          "pendingBytes": 0,
+          "releasedOrdinal": "0",
+          "statusCapacity": 4096,
+          "statusRecords": 0
+        },
+        "documentId": "99999999999999999999999999999999",
+        "eraserMode": 2,
+        "generation": "0",
+        "lastCommit": {
+          "cloudSynced": 0,
+          "localDurable": 0,
+          "operationId": "00000000000000000000000000000000",
+          "ordinal": "0",
+          "presentedGeneration": "0",
+          "runtimeEpoch": "0"
+        },
+        "objects": 3,
+        "pending": {
+          "intents": [
+            {
+              "dependsOn": [],
+              "kind": "erase",
+              "objectIds": [],
+              "phase": "waiting",
+              "token": {
+                "lifetimeGeneration": "1",
+                "runtimeInstance": "2",
+                "serial": "1"
+              }
+            }
+          ],
+          "revision": "2",
+          "selection": {
+            "bounds": null,
+            "primary": null,
+            "selected": []
+          }
+        },
+        "primary": "00000000000000000000000000000000",
+        "selected": [],
+        "selectionMode": 0,
+        "selectionRevision": "1",
+        "shape": 0,
+        "surface": {
+          "available": true,
+          "height": 800,
+          "width": 1200
+        },
+        "table": {
+          "columnId": "00000000000000000000000000000000",
+          "objectId": "00000000000000000000000000000000",
+          "rowId": "00000000000000000000000000000000"
+        },
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "1"
+        },
+        "text": {
+          "composition": "0",
+          "phase": 0,
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "session": "0"
+        },
+        "tool": 2
+      },
+      "pendingFacts": {
+        "admitted": "1",
+        "allUnionSteps": "24",
+        "capability": true,
+        "checkpointBytes": "0",
+        "commitNs": "0",
+        "committed": "0",
+        "enabled": true,
+        "error": "",
+        "exactCalls": "0",
+        "exactNs": "200000",
+        "failed": "0",
+        "finishedHits": "0",
+        "finishedImports": "0",
+        "geometryReuse": "0",
+        "head": "1",
+        "historyJob": false,
+        "historyPrepareNs": "0",
+        "historyUnions": "0",
+        "importNs": "0",
+        "job": "1",
+        "jobLedger": [
+          {
+            "historical": false,
+            "importNs": "0",
+            "inputBytes": 2048,
+            "issuedNs": "406500000",
+            "outputBytes": 0,
+            "returnedNs": "0",
+            "status": "IssuedPiece",
+            "token": [
+              "2",
+              "1",
+              "11068046444225730969",
+              "11068046444225730969",
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "jobs": "1",
+        "maxExactNs": "0",
+        "maxOwnerNs": "1000000",
+        "maximumCommitStageNs": "0",
+        "newQueryUnions": "0",
+        "noops": "0",
+        "ok": true,
+        "opportunities": "3",
+        "pending": 1,
+        "prepareNs": "300000",
+        "preparedBeforeUp": "0",
+        "publicationPrepareNs": "0",
+        "publishNs": "0",
+        "requestReady": true,
+        "reserved": 1,
+        "retainedPathBytes": "0",
+        "sceneStampPrepareNs": "0",
+        "state": "WaitingWorker",
+        "suffixAfterUp": "24",
+        "suspended": false,
+        "targetPrepareNs": "0",
+        "terminals": [],
+        "token": [
+          "2",
+          "1",
+          "11068046444225730969",
+          "11068046444225730969",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "workerWaitNs": "0"
+      },
+      "operations": 0
+    }
+  ],
+  "ROI": {
+    "x": 300,
+    "y": 300,
+    "width": 900,
+    "height": 600,
+    "bytes": 2160000,
+    "old_changed_channels": 70647,
+    "same_camera_redraw_mismatched_channels": 0,
+    "old_sha256": "7ce9b80117c7fa3689950c90c084ca4d71bfff66d16c7588da9ceba988c2db69",
+    "new_sha256": "88a84c82d2bb74c84ddc797a00c887ad9e9fce8a5223ab40235c73eba2ee09a3",
+    "same_camera_sha256": "88a84c82d2bb74c84ddc797a00c887ad9e9fce8a5223ab40235c73eba2ee09a3"
+  },
+  "kernel_real_terminal_gate": [
+    {
+      "key": "2/1/11068046444225730969/11068046444225730969/1/1/1/1",
+      "status": "Ready",
+      "bytes": 268,
+      "sha256": "0d991951812ef74171384b154cf37c60ad1ebb1f5163e11fb610fc580993c559",
+      "at": 423.5,
+      "type": "held-real-terminal"
+    },
+    {
+      "type": "released-real-terminal",
+      "key": "2/1/11068046444225730969/11068046444225730969/1/1/1/1",
+      "status": "Ready",
+      "bytes": 268,
+      "sha256": "0d991951812ef74171384b154cf37c60ad1ebb1f5163e11fb610fc580993c559",
+      "at": 769.8999999761581,
+      "deliveries": 1
+    }
+  ],
+  "exact_deliveries": 1,
+  "single_actual_AddEraseMasks": {
+    "sha256": "f4b033d650d489f24e50403d9ed26d0520c143ca2a439a72d351f762e9fde51d",
+    "targets": 3,
+    "geometry_sha256": {
+      "10cd0e00000000000000000000000000": "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c",
+      "11cd0e00000000000000000000000000": "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c",
+      "12cd0e00000000000000000000000000": "6ede76b082c6d2fdcec83454cee9a07f08121f2786db52151e8580a6f997c92c"
+    },
+    "matches_prior_IO_geometry": true
+  },
+  "old_body_config_pressure_pose_preserved": true,
+  "canonical_generation": {
+    "before": "0",
+    "after": "1",
+    "presented": "1"
+  },
+  "pending_after": 0,
+  "cleanupDrained": {
+    "at": 980.8999999761581,
+    "state": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 0.699999988079071,
+        "x": 180,
+        "y": 120
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": false,
+        "byteCapacity": 33554432,
+        "capacity": 1024,
+        "closing": false,
+        "fault": false,
+        "latest": null,
+        "pending": 0,
+        "pendingBytes": 0,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "99999999999999999999999999999999",
+      "eraserMode": 2,
+      "generation": "1",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "bee4faf23f495e5a9e6d3ab28e9a1a01",
+        "ordinal": "1",
+        "presentedGeneration": "1",
+        "runtimeEpoch": "1"
+      },
+      "objects": 3,
+      "pending": {
+        "intents": [],
+        "revision": "3",
+        "selection": {
+          "bounds": null,
+          "primary": null,
+          "selected": []
+        }
+      },
+      "primary": "00000000000000000000000000000000",
+      "selected": [],
+      "selectionMode": 0,
+      "selectionRevision": "1",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 800,
+        "width": 1200
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "session": "0"
+      },
+      "tool": 2
+    },
+    "operations": 1
+  },
+  "sdk_closed": true,
+  "Worker_wrapper_restored": true,
+  "nav_restored": true,
+  "no_runtime_errors": true,
+  "active_ms": 935.5999999046326,
+  "limitations": "Test-side realterminaldelivery delayed; durations notordinaryperformance. ROI equality valid forcurrentpendingtrace; nativefullframeproof reused forwholeviewport. No newalgorithm/SDK/sourcechange."
+}

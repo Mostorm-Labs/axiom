@@ -1,0 +1,182 @@
+{
+  "status": "STRICT_NONAA_PIXEL_FAILURE_UNPAIRED_DPR4",
+  "case": "WH-OPT-C-D4/wheel-final",
+  "failedPixels": 5130,
+  "maxNonAAChannelDifference": 3,
+  "colorDeltaDistribution": {
+    "allMaximumDelta": 3
+  },
+  "rows": [
+    {
+      "deviceY": 3,
+      "worldY": 400.945568408376,
+      "count": 1783,
+      "xRange": [
+        1833,
+        3615
+      ],
+      "worldXRange": [
+        800.9464212050522,
+        998.9464002242194
+      ],
+      "actualColor": [
+        29,
+        53,
+        78,
+        255
+      ],
+      "expectedColor": [
+        26,
+        51,
+        77,
+        255
+      ],
+      "independentEdgeAtWitness": 0
+    },
+    {
+      "deviceY": 431,
+      "worldY": 448.5011189247641,
+      "count": 1815,
+      "xRange": [
+        3900,
+        5723
+      ],
+      "worldXRange": [
+        1030.6130635353657,
+        1233.1685976273645
+      ],
+      "actualColor": [
+        162,
+        165,
+        171,
+        255
+      ],
+      "expectedColor": [
+        159,
+        162,
+        168,
+        255
+      ],
+      "independentEdgeAtWitness": 0
+    },
+    {
+      "deviceY": 1785,
+      "worldY": 598.9455474275433,
+      "count": 1532,
+      "xRange": [
+        2083,
+        3614
+      ],
+      "worldXRange": [
+        828.724196039391,
+        998.835289124882
+      ],
+      "actualColor": [
+        252,
+        253,
+        127,
+        255
+      ],
+      "expectedColor": [
+        255,
+        255,
+        128,
+        255
+      ],
+      "independentEdgeAtWitness": 0
+    }
+  ],
+  "sourceObjectAABBAttribution": [
+    {
+      "index": 1,
+      "kind": 5,
+      "worldBounds": [
+        226.0,
+        336.0475769042969,
+        1023.0,
+        1023.0
+      ],
+      "deviceBounds": [
+        -3341.0183391571045,
+        -580.5819854282599,
+        3831.9824209213257,
+        5601.990477561951
+      ],
+      "failedPixelsWithinBounds": 3315
+    },
+    {
+      "index": 3,
+      "kind": 5,
+      "worldBounds": [
+        234.0,
+        374.042724609375,
+        1015.0,
+        1015.0
+      ],
+      "deviceBounds": [
+        -3269.01833152771,
+        -238.6256198475603,
+        3759.982413291931,
+        5529.990469932556
+      ],
+      "failedPixelsWithinBounds": 3315
+    },
+    {
+      "index": 5,
+      "kind": 5,
+      "worldBounds": [
+        210.0,
+        380.0475769042969,
+        1039.0,
+        1039.0
+      ],
+      "deviceBounds": [
+        -3485.0183544158936,
+        -184.58194346659002,
+        3975.9824361801147,
+        5745.99049282074
+      ],
+      "failedPixelsWithinBounds": 3391
+    },
+    {
+      "index": 46,
+      "kind": 8,
+      "worldBounds": [
+        799.0,
+        399.0,
+        1001.0,
+        601.0
+      ],
+      "deviceBounds": [
+        1815.9822072982788,
+        -14.010117530822754,
+        3633.9823999404907,
+        1803.9900751113892
+      ],
+      "failedPixelsWithinBounds": 3315
+    },
+    {
+      "index": 47,
+      "kind": 11,
+      "worldBounds": [
+        1029.5,
+        399.5,
+        1270.5,
+        496.5
+      ],
+      "deviceBounds": [
+        3890.4824271202087,
+        -9.510117053985596,
+        6059.482656955719,
+        863.4899754524231
+      ],
+      "failedPixelsWithinBounds": 1815
+    }
+  ],
+  "spatialMeaning": "3horizontalshape/materialscanlines. AABBmembershipisdiagnosticnotpixelownershipauthority. No candidate-derivedAAextensionapplied.",
+  "candidateVsCPUThreshold": 2,
+  "sourceBoundsRef": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/correctness/mixed-bounds.json",
+  "baselineD4MatchingPose": "NOT_CAPTURED; cannotclassifynewversusinherited",
+  "separateFromObserverInterference": true,
+  "frozenProductionNotChanged": true
+}

@@ -1,0 +1,21 @@
+# G5 settled navigation scheduling and exact recovery
+
+Start from saved/pushed c3a84c289d5b3dcb258fcbe7f481febf227df0c0, current4349 source/normalSDK. Stable63e9 ancestry preserved. This saves real gains, notfullperformancePASS. PriorEFF4settledpan remainsUNMET; othercurrentcorrectness/scopedmechanismsreviewed.
+
+Controlrawfinding: C1settledpan becomes slow during480Moveprimaryerase BEFOREanypan. Callback-to-nextcallback noncallbackgap max282.5ms, p95200.6ms; inputeventscontinuewithinseveralgaps. LaterC2casesalsoRAF-sparse. ExistingobserverhascallbacktimebutnorequestAt/pendinghandle/lifecyclejournal. Fixedcaseorder confoundscasesemanticswithpage/sessionage.
+
+AfterC1paninputends:304SDKrAFsover5.125s,totalcallbackCPU3.184s,median9.8ms;after100ms297callbackswithoutdefaultwindowcontentwrite,finalcontentat5.063s. C2has29callbacks/0.529s,total230ms. Generation3alreadycommittedbeforepan: notOperationmergeblocked. Offscreenworkmayprogress; missingdefaultcontent!=noGPUwork.
+
+4349feedbackfixcullsactualdrawErasePrimitivecallsoutsideprovenactualdamage, keepsoriginalfullscratchclip/matrix/AA. NativeRED1608draws->72..96,18prefix/DPRframesexactB. CurrentfeedbackRender~5ms,immediate4maxgaps44..62ms. Preserveit. Fulltrace/perposeconversion/copy/segmentCPUscanstillremainingitem2,notautomaticscope.
+
+Sourceowners:SDKprivateinstance.render/schedule(sdk/web/axiom.mjs114..132) ->WebPlatform.frame ->WebRuntimeAdapter.prepare/poll nonblockingfences ->RuntimeCompositionCore::serviceFrameOpportunity ->CanvasEditingRuntime serviceNavigation/presentCanonical ->SkiaRenderCache.prepare cursor/body/mask/cache +GPUretirement. SemanticOperationEngine remainssoleatomicwriter.
+
+Runtimealreadyretains exactDemandandcooperativeprepare;cachebegininvalidatesonactualchangedbasis;preparehassource/tile/rastercursors. Needmeasureexactbefore/after/resetreasonandresourcewaitinSNR-D-B-PROGRESS. SDK.closeterminatesWorker,closesRuntimeanddestroysEmscriptencontextregistration,thencancelsRAF/listeners/removescanvases; browserGPUresourcefreelatencyisnotmeasured. Do notassumeorphaning/leak.
+
+Fastfeedbackraiseslogicalfullframealloc/inheritrequestsfrom~1.1..1.2GB/2sto2.66..2.71GB/2swithmoreframes. CPUallocationtiny; physicaldrivertraffic/residencyunknown. Nojustificationforblindsurfacepoolorhigherbudget.
+
+Firstincompleteaction:newisolatedtree /Users/qing/.codex/worktrees/g5-settled-navigation-recovery branchcodex/g5-settled-navigation-recoveryfromc3a84c;exactpackage/sourceSDK/storage/ownerpreflights. 4Bdiagnosticsoriginal/freshcontext/reverse/progressbeforeproductionrepair, thenonlycausalrepair. Allrequiredcriteriafrozen. Ifcausenotestablishedreturnexplicitblocker,neverguessorselectluckynormalrun.
+
+NoAPI/ABI/exports/schema/version/dependencylockchange. UseacceptedprebuiltSemantic/Skiaandprivateoptinprobes,normalflagsOFF. No forcedtimerRAF/GPUwait/physicalcontextlossfakecompletion. PreserveCV/fullsuffix/zorder/immutablesnapshot/GPUlastuse.
+
+Continuousclosure: minimalfix/nativeGREEN->sameprobeCfinal->freeze->ordinaryB/C/C/Ball4originalorder->C20DPR2/4pixels+4originalCPUrefs/UndoRedo->exactreturn. Inherit24.3msdispatch/2.151snav/0.520smedianconvergencebounds,addprospectivesettledmax1s;keep100ms/33msandfeedbackgains. Nomatrixrestartafterfailure. Normalpreviewfirstunused>=4350afterplannedrootSDKsmoke;notifycontrolthencontinuewithoutACK. TerminalcallbackthenSTOP; nofreshcommit/push/tag/releaseauthorization.

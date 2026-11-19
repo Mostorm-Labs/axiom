@@ -1,0 +1,80 @@
+{
+  "schema": "axiom-pending-navigation-evidence-IO-result-v1",
+  "task_id": "G5-pending-navigation-evidence-io-repair-r1",
+  "status": "BLOCKED_EVIDENCE",
+  "terminal_class": "UNRECOVERABLE_ORACLE_OR_REAL_CORRECTNESS_FAILURE",
+  "root_classification": "VERIFICATION_OBSERVATION_WINDOW_OMISSION; not productfailure",
+  "package": {
+    "path": ".aegis/packages/G5-pending-navigation-evidence-io-repair-r1/package.json",
+    "sha256": "34fd7e8d8e7f1026c31cfa91cd5cabb9179b8762fcb5f66f1129ab64b9301ffd"
+  },
+  "parent_result": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/result.json",
+    "sha256": "d087e0c5b407a4c71f3156ebc22b94d47f0c918ed5a478249a069c73ab5dc4d5"
+  },
+  "obligations": {
+    "IO1": "SATISFIED actualoldV8/HTTPnegative+4offlinechecks+4durableACK+62binaryfilehash audit",
+    "IO2": "PARTIAL: finalfullRGBA/geometry/stateexactbaseline and actualpreviewwhilepending trajectory proved; Webcurrentcamerawhilependingcompletedframe notcaptured inoriginal3opportunities. NativeactualholdkernelComposition7camera modes completeproof remainsvalid but Webmissingbranch notinferred.",
+    "IO3": "PENDING deterministiccontrolledqualification; no4336/no overallPASS"
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/preflight.json",
+      "sha256": "6706a84609331500139679b6dc91d1a3bba90dffcc29530553df8a88f79efb32"
+    },
+    "driver-freeze.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/driver-freeze.json",
+      "sha256": "c05d773fb1a3b2b511546045fee611746ea0e70ce22140c876316dd1c19beb23"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/sampling-ledger.json",
+      "sha256": "4bc35197a14df5631ca306052ef125f2617f47059ab6c5a57ad1f48d4d995c61"
+    },
+    "cause-and-storage.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/cause-and-storage.json",
+      "sha256": "c5948a65e6debb97d00dbc14db530b3c68c86c5245bed8fbbb70b16a66865aa9"
+    },
+    "pixel-semantic-observation.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/pixel-semantic-observation.json",
+      "sha256": "77f16bd10a121321bb26c811ee292dbdb7cc3a69bedf2bf174823d0418b5d0bb"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/preservation-check.json",
+      "sha256": "2bb43b63cd2fb265ea5a4b7f6d9cbcf3947c595964c0c6c68b9ecec5b447e424"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/cleanup.json",
+      "sha256": "2493437109f4b90bbcd95584ba7657d1728f688f0059d311c9780d9111c80243"
+    },
+    "source-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/source-manifest.json",
+      "sha256": "e39960486edc7619bac9d49cdfe8b5f79dfcd40b0fbf090506b8cf503f9c76e8"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/artifact-manifest.json",
+      "sha256": "18cc39b09bc89782050239f260b91752bea9f341a1842d009abdbe850ee7c433"
+    }
+  },
+  "frozen_source": "No businesscode/SDK change, 9production/5parentdriver/84SDK/parentresult+167sledger exactpreserved",
+  "sampling": {
+    "Chrome": 0,
+    "IAB_pages": 1,
+    "charged_seconds": 118,
+    "max_seconds": 180,
+    "parent_seconds_167_unchanged": true,
+    "total_across_parent_and_IO": 285,
+    "successfuldurablepixelrows": 4,
+    "no_retries": true
+  },
+  "findings": [
+    "Fullcanonical+previewpixelreadsadd~600ms and changedobserverwindow; no timingperformanceclaimfromsupplement",
+    "Candidatezoom/pan firstpendingreadbackstilloldimage; subsequentaftercommit. NeeddeterministicrealWorkerterminaldeliveryholdtestside only, notnewRenderfix.",
+    "nextdrawdefaultvector unsupported byoldcompact-onlyCPUedgeoracle; noattempts rebuild/productionedit. Finalexactbaseline+visibleamber trajectoryused.",
+    "unknownancillaryroutepath error preserved withfourdurableACKs andconsumer0errors"
+  ],
+  "demoURL": null,
+  "commit_push": false,
+  "overall_G5_P34_performance_PASS": false,
+  "return_surface": "CONTROL_REVIEW",
+  "next": "Controlannouncednarrowdeterministicqualificationpackage; thisresultremainsimmutable, supplementonly iffurtherauthorized"
+}

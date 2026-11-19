@@ -15,6 +15,14 @@
 #include <unordered_map>
 
 namespace canvas::render::internal {
+class ReferenceValidationCache;
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+class GpuResourceRetirement;
+// Native-only fault seam for the existing renderer queue; absent from SDKs.
+inline thread_local std::function<void(GpuResourceRetirement&,
+    const std::shared_ptr<resources::ResourceBudgetManager>&)> temporaryRetirementFault;
+inline thread_local std::function<void()> temporaryRetirementReserveDenied;
+#endif
 // Private qualification counters. Updates and observation APIs are compiled
 // out of normal consumers; this value is never part of a consumer DTO.
 struct ObjectInteractionWork final {
@@ -30,9 +38,11 @@ struct PreparedFrameImage final {
     void markGpuUse()const noexcept{(void)pixels.markGpuUse();}
 };
 class SkiaRenderCache final {
+    friend struct TemporaryRetirementWaitProbe; // Private native qualification, no consumer API/state.
   public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
     std::shared_ptr<SourceRetentionPool> sourcePool;
+    std::shared_ptr<ReferenceValidationCache> validationProofs;
     std::shared_ptr<PreparedGeometryCache> preparedGeometry;
     std::shared_ptr<EraseMaskPathCache> maskHistory;
     std::function<void(std::size_t)> reclaimRecorded;
@@ -78,11 +88,12 @@ class SkiaRenderCache final {
     InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void drawHistoricalMasks(SkCanvas&,const ReferenceTraversalEntry&);
+    std::shared_ptr<SkiaInkLayers> navigationBodies()const{return inkLayers_;}
     void clear() noexcept;
     // Entering live erasure changes the useful representation. Retire old
     // complete masked sources before the next GPU epoch pins their leases.
     void releaseMaterialSources(bool releaseWorkSurfaces=true)noexcept;
-    std::size_t retireIdleHistoryPreparation() noexcept {return inkLayers_.retireIdleHistoryPreparation();}
+    std::size_t retireIdleHistoryPreparation() noexcept {return inkLayers_->retireIdleHistoryPreparation();}
     // Keep matching exact work resumable; obsolete camera/target work cannot
     // reserve the buffers needed by a renewed navigation demand.
     bool releaseIdleWorkBuffers(const FrameState&,const WorldToViewAffine&,
@@ -196,7 +207,7 @@ class SkiaRenderCache final {
     struct Coverage {RenderGroupRevisions revisions;sk_sp<SkPicture> picture;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
     std::unordered_map<foundation::ObjectId,Coverage,foundation::ObjectIdHash> coverage_;
     CompactCoverageTargets coverageTargets_;
-    SkiaInkLayers inkLayers_;
+    std::shared_ptr<SkiaInkLayers> inkLayers_=std::make_shared<SkiaInkLayers>();
     struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
     std::unique_ptr<Pending> pending_;
     enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
@@ -208,7 +219,11 @@ class SkiaRenderCache final {
     std::shared_ptr<const PreparedFrameImage> preparedFrame_;
     foundation::DocumentBackground preparationBackground_{};
     bool preparationTransparent_=false,preparationIsolate_=false;
-    void resetPreparation();
+    void resetPreparation(const char* reason="unspecified");
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    std::uint64_t snrResetSequence_=0;
+    void diagnosticProgress(const char* phase,const char* reason,int outcome,const PreparationAllowance* allowance=nullptr)const noexcept;
+#endif
     bool ensureComposite(SkCanvas&,const FramePlan&);
     bool finishComposite();
     bool acquireWorkSurface(SkCanvas&,sk_sp<SkSurface>&,resources::ResourceLease&,bool mandatory,

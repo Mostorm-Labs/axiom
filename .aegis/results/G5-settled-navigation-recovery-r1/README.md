@@ -1,0 +1,11 @@
+# 稳定后导航恢复：因果未确立
+
+本轮按冻结任务包完成四个B诊断模式：原顺序同页、每case新context/page、逆序同页、原顺序私有progress。第四模式第一次因pretty JSON文件达到64MiB限制失败，原始partial/guard/error保留；唯一允许的harness修正只改为无损紧凑JSON，在独立controller-v2目录保留全部事件字段，完成同角色的替代窗口。没有降低采样上限或删事件。
+
+最终返回 BLOCKED / ROOT_CAUSE_NOT_ESTABLISHED。旧EFF-W-C1稳定后平移5.125秒失败仍未关闭；四种B模式的稳定后平移收敛约428/448/531/545ms，均未复现旧9回调/2秒的稀疏模式。不能据此归因为环境噪声、证明旧测量无效或签性能PASS。
+
+新request/callback/lifecycle观察与native游标显示本次的准备有实际进展。最终progress的53次prepare前后配对中52次有work/cursor增长，1次已是cursor40/residents40；没有证实同basis重置循环、orphanWorker或GPU退休死锁。registry销毁和队列计数不证明物理GPU内存即时释放，default窗口无绘制也不代表没有offscreen进度。
+
+没有选择或实现生产行为修复，没有生成normalC/4350，没有执行Cfinal、普通B/C/C/B、C像素或60native候选回归。本包no-cause终态分支不要求用这些窗口碰运气。只保留defaultOFF私有progress诊断和验证辅助代码；HEAD仍为c3a84c，未提交/推送/tag/release。原4348/4349、旧证据、SDK与primary42保留。
+
+同host绝对路径证据由result.json、artifact-manifest.json及其bytes/SHA绑定，原失败和替代窗口都在账本。5次实际启动累计ceil590秒，所有owned family cleanup。40份诊断snapshot缓冲均核对gzip和解压哈希；无新pixel readback。物理触控板、浏览器GPU内部驻留和原慢样本缺失的request/native状态仍不可从新正常样本重构。

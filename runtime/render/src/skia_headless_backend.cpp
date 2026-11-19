@@ -1,7 +1,10 @@
+#include "navigation_mask_observation.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
+#include "canvas/foundation/internal/reference_validation_metrics.hpp"
 #include "skia_erase_mask.hpp"
+#include "reference_validation_cache.hpp"
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
@@ -172,8 +175,11 @@ void drawSolidRect(SkCanvas& canvas, const foundation::WorldRect& bounds,
 }
 
 bool validatePath(const semantic::VectorPathGeometry& geometry,
-                  bool requireIntegral = true) noexcept {
+                  bool requireIntegral = true,int maskDomain=-1) noexcept {
     for (const auto& command : geometry.commands) {
+        AXIOM_VALIDATION_ADD(maskPathCommands,1);
+        if(maskDomain==0){AXIOM_VALIDATION_ADD(historyPathCommands,1);NM_ADD(upperScans,1);}
+        if(maskDomain==1)AXIOM_VALIDATION_ADD(activePathCommands,1);
         bool ok = true;
         std::visit([&](const auto& value) {
             using T = std::decay_t<decltype(value)>;
@@ -191,8 +197,11 @@ bool validatePath(const semantic::VectorPathGeometry& geometry,
     return true;
 }
 
-bool validateSweptMask(const semantic::SweptCircleMask& mask) noexcept {
+bool validateSweptMask(const semantic::SweptCircleMask& mask,int maskDomain=-1) noexcept {
     for (const auto& segment : mask.segments) {
+        AXIOM_VALIDATION_ADD(maskSegments,1);
+        if(maskDomain==0){AXIOM_VALIDATION_ADD(historySegments,1);NM_ADD(upperScans,1);}
+        if(maskDomain==1)AXIOM_VALIDATION_ADD(activeSegments,1);
         const auto finitePoint = [](const semantic::Vec2& p) {
             return pointInScalarRange(p);
         };
@@ -220,6 +229,7 @@ bool pathInScalarRange(const semantic::VectorPathGeometry& geometry) noexcept {
 }
 
 HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) noexcept {
+    if(std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)||std::holds_alternative<VectorStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabStrokeReferenceCommand>(entry.command)||std::holds_alternative<BrushStrokeReferenceCommand>(entry.command)||std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command))AXIOM_VALIDATION_ADD(bodyCalls,1);
     return std::visit([&](const auto& command) -> HeadlessSubmissionIssue {
         using T = std::decay_t<decltype(command)>;
         if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
@@ -263,6 +273,7 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
                 }
             }
         } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
+            AXIOM_VALIDATION_ADD(compactRequestedKnots,command.content.get().stroke.knots.size());
             if(!semantic::validCompactStroke(command.content.get().stroke))return HeadlessSubmissionIssue::kUnsupportedGeometry;
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             if (command.content.get().stroke.vector_output.outline.empty()) {
@@ -963,6 +974,9 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 }
 
 BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
+    return validateReferencePlan(plan,nullptr,HistoryValidationPolicy::kUntrusted);
+}
+static BackendSubmissionResult validateReferencePlanImpl(const FramePlan& plan,ReferenceValidationCache* proofs,HistoryValidationPolicy historyPolicy,bool committedHistory) {
     AXIOM_FRAME_TIMING_SCOPE(validationTiming,validation);
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
@@ -988,31 +1002,48 @@ BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
         const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
                                           entry.record.transform.c, entry.record.transform.d,
                                           entry.record.transform.tx, entry.record.transform.ty};
-        if (!validAffine(transform) || validateProductionCommand(entry) != HeadlessSubmissionIssue::kNone) {
+        if (!validAffine(transform))return BackendSubmissionResult::rejected("unsupported command geometry");
+        if (!(proofs&&proofs->bodyHit(entry))) {
+          if(validateProductionCommand(entry) != HeadlessSubmissionIssue::kNone)
             return BackendSubmissionResult::rejected("unsupported command geometry");
+          if(proofs)proofs->admitBody(entry);
         }
-        for (const auto masks : {std::span(entry.record.eraseMasks), std::span(entry.presentationEraseMasks)})
+        for(unsigned domain=0;domain<2;++domain){
+        if(domain==0&&(!committedHistory||(proofs&&proofs->historyHit(entry.record.eraseMasks,historyPolicy))))continue;
+        const auto masks=domain==0?std::span(entry.record.eraseMasks):std::span(entry.presentationEraseMasks);
+        if(domain==0&&!masks.empty())AXIOM_VALIDATION_ADD(maskArrays,1);
         for (const auto& mask : masks) {
             AXIOM_FRAME_TIMING_ADD(validation_mask_primitives,std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1);
-            const bool valid = std::visit([](const auto& geometry) {
+            const bool valid = std::visit([domain](const auto& geometry) {
                 using T = std::decay_t<decltype(geometry)>;
                 // Object-local erase geometry can be fractional after inverse
                 // affine mapping, independently of headless object fixtures.
-                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false);
-                else return validateSweptMask(geometry);
+                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false,int(domain));
+                else return validateSweptMask(geometry,int(domain));
             }, mask.geometry);
             if (!valid) {
                 return BackendSubmissionResult::rejected("unsupported erase mask");
             }
         }
+        if(domain==0&&proofs)proofs->admitHistory(entry.record.eraseMasks,historyPolicy);
+        }
     }
     return BackendSubmissionResult::accepted();
 }
 
+BackendSubmissionResult validateReferencePlan(const FramePlan& plan,ReferenceValidationCache* proofs,HistoryValidationPolicy policy){
+    return validateReferencePlanImpl(plan,proofs,policy,true);
+}
+BackendSubmissionResult validateNavigationReferencePlan(const FramePlan& plan,ReferenceValidationCache* proofs){
+    // Navigation validates committed history cooperatively in the existing
+    // mask owner before a source can authorize any retained or new pixels.
+    return validateReferencePlanImpl(plan,proofs,HistoryValidationPolicy::kPublishedImmutable,false);
+}
+
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
-    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid) {
-    const auto validation=validateReferencePlan(plan);
+    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid,ReferenceValidationCache* proofs) {
+    const auto validation=validateReferencePlan(plan,proofs,HistoryValidationPolicy::kPublishedImmutable);
     if(validation.code!=BackendSubmissionCode::kAccepted)return validation;
     drawReferenceBackgroundToSkCanvas(canvas,plan);
     drawValidatedReferenceRangeToSkCanvas(canvas,plan,0,plan.referenceDrawList.entries.size(),

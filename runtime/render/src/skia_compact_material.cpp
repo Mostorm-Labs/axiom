@@ -414,7 +414,7 @@ CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& can
     }
     auto& slot=*std::min_element(slots_.begin(),slots_.end(),[](const auto& a,const auto& b){return a.used<b.used;});
     slot=Slot{};
-    auto token=budget?budget->reserve(resources::ResourceClass::kScratch,bytes,true):std::optional<std::uint64_t>{};
+    auto token=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kScratch,bytes,true);
     if(budget&&!token)return denied(ExecutionReason::kAllocationDenied,false);
     resources::ResourceLease lease(budget,token.value_or(0));
     const auto info=SkImageInfo::MakeN32Premul(w,h);
@@ -433,8 +433,8 @@ CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& can
 }
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
-    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,std::shared_ptr<const PreparedNavigationGeometry> prepared,bool directConsumer)
-    :prepared_(prepared&&config.algorithmVersion==4&&prepared->isContour()&&prepared->ready()?std::move(prepared):nullptr),directConsumer_(directConsumer),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
+    std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,std::shared_ptr<const PreparedNavigationGeometry> prepared,bool directConsumer,bool whiteOnly)
+    :prepared_(prepared&&config.algorithmVersion==4&&prepared->isContour()&&prepared->ready()?std::move(prepared):nullptr),directConsumer_(directConsumer),whiteOnly_(whiteOnly),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
     support_=prepared_?prepared_->support():SkRect::MakeEmpty();
@@ -750,7 +750,12 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
         canvas.clipIRect(shaded);canvas.setMatrix(matrix_);
         if(work)work->compositedPixels+=std::uint64_t(shaded.width())*shaded.height();
-        compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);canvas.restore();
+        if(whiteOnly_){
+            // Same qualified ordered white coverage, before per-object mask and
+            // material. This is an immutable producer, not another evaluator.
+            canvas.resetMatrix();SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);
+            canvas.drawImage(image,float(x_),float(y_),SkSamplingOptions{},&copy);
+        }else compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);canvas.restore();
     }
     tile_.reset();x_+=256;if(x_>=clip_.right()){x_=clip_.left();y_+=256;}
     done_=y_>=clip_.bottom();return done_;

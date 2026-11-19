@@ -3,6 +3,7 @@
 #include "partial_erase_geometry.hpp"
 #include "pending_scene_preparation.hpp"
 #include "canvas/foundation/internal/frame_timing.hpp"
+#include "canvas/foundation/internal/worker_status_metrics.hpp"
 #include <algorithm>
 #include <cmath>
 namespace canvas::interaction {
@@ -49,15 +50,37 @@ bool CanvasEditingRuntime::bindCpuPendingExecutor(std::array<std::uint64_t,4> ba
 bool CanvasEditingRuntime::cpuPendingBusy()const noexcept{return cpuPending_&&cpuPending_->head();}
 bool CanvasEditingRuntime::competingCanonicalAdmission()const noexcept{return canonicalWriteAdmission()&&(!cpuPendingBusy()||(cpuPending_&&cpuPending_->headApplying));}
 CpuPendingEraseFacts CanvasEditingRuntime::cpuPendingFacts()const noexcept{
+ AXIOM_WORKER_STATUS_ADD(facts,1);
  CpuPendingEraseFacts f;
 #if defined(AXIOM_CPU_PENDING_ERASE)
  f.capability=true;
 #endif
  if(!cpuPending_)return f;
+ AXIOM_WORKER_STATUS_ADD(terminalRows,cpuPending_->terminals.size());
+ AXIOM_WORKER_STATUS_ADD(jobRows,cpuPending_->jobLedger.size());
  const auto& s=*cpuPending_;f.enabled=s.enabled;f.suspended=s.executorSuspended;const auto work=skiaRenderer_.renderCacheWork().maskHistory;f.newQueryUnions=work.queryUnionOps;f.historyUnions=work.historyUnionOps;f.retainedPathBytes=work.retainedBytes;f.finishedImports=work.finishedImports;f.finishedHits=work.finishedHits;f.admitted=s.admitted;f.committed=s.committed;f.failed=s.failed;f.noops=s.noops;f.error=s.error;f.targetPrepareNs=s.targetPrepareNs;f.sceneStampPrepareNs=s.sceneStampPrepareNs;f.historyPrepareNs=s.historyPrepareNs;f.publicationPrepareNs=s.publicationPrepareNs;f.publishNs=s.publishNs;f.maximumCommitStageNs=s.maximumCommitStageNs;f.allUnionSteps=s.allUnionSteps;f.preparedBeforeUp=s.preparedBeforeUp;f.suffixAfterUp=s.suffixAfterUp;f.checkpointBytes=s.checkpointBytes;f.jobs=s.jobs;f.geometryReuse=s.geometryReuse;f.exactCalls=s.exactCalls;f.opportunities=s.opportunities;f.maxOwnerNs=s.maxOwnerNs;f.maxExactNs=s.maxExactNs;f.prepareNs=s.prepareNs;f.importNs=s.importNs;f.exactNs=s.exactNs;f.commitNs=s.commitNs;f.workerWaitNs=s.workerWaitNs;f.terminals=s.terminals;f.jobLedger=s.jobLedger;
  for(const auto& p:s.slots)if(p){++f.reserved;if(p->serial)++f.pending;}
  if(const auto* p=s.requestOwner()?s.requestOwner():s.head()){f.head=p->serial;f.historyJob=p->historyJob;f.job=p->identity[5];f.token=p->identity;f.state=phaseName(p->phase);f.requestReady=p->phase==CpuPendingEraseState::Phase::Waiting&&!p->requestTaken;}
  return f;
+}
+CpuPendingEraseStatus CanvasEditingRuntime::cpuPendingStatus()const noexcept{
+ AXIOM_WORKER_STATUS_ADD(status,1);
+ CpuPendingEraseStatus value;
+#if defined(AXIOM_CPU_PENDING_ERASE)
+ value.capability=true;
+#endif
+ if(!cpuPending_)return value;
+ const auto& s=*cpuPending_;value.enabled=s.enabled;value.suspended=s.executorSuspended;value.failed=s.failed;value.error=s.error;
+ for(const auto& slot:s.slots)if(slot){++value.reserved;if(slot->serial)++value.pending;}
+ const auto* p=s.requestOwner();if(!p)p=s.head();
+ if(p){value.head=p->serial;value.token=p->identity;value.state=phaseName(p->phase);value.requestReady=p->phase==CpuPendingEraseState::Phase::Waiting&&!p->requestTaken;}
+ return value;
+}
+std::optional<CpuPendingEraseTerminal> CanvasEditingRuntime::cpuPendingTerminal(std::uint64_t serial)const noexcept{
+ AXIOM_WORKER_STATUS_ADD(terminalQueries,1);
+ if(cpuPending_)for(const auto& terminal:cpuPending_->terminals)if(terminal.serial==serial){
+  AXIOM_WORKER_STATUS_ADD(terminalCopies,1);return terminal;}
+ return std::nullopt;
 }
 void CanvasEditingRuntime::suspendCpuPendingExecutor()noexcept{if(cpuPending_)cpuPending_->executorSuspended=true;}
 void CanvasEditingRuntime::failCpuPendingExecutor()noexcept{
@@ -95,6 +118,18 @@ void CanvasEditingRuntime::cancelCpuPendingContact(std::uint64_t session)noexcep
   if(p->activeJob){p->activeCancelled=true;return;}
   const auto token=p->traceGrant,executor=p->grantExecutor;p.reset();(void)releaseCpuWorkerGrant(executor,token);return;
  }
+}
+render::TransientDisplayIdentity CanvasEditingRuntime::eraseDisplayIdentity()const noexcept{
+ render::TransientDisplayIdentity out;if(!cpuPending_)return out;
+ out.owner=cpuPending_;out.revision=cpuPending_->revision;
+ for(const auto& p:cpuPending_->slots)if(p){
+  if(p->kind!=CpuPendingEraseState::Kind::Erase)return {};
+  const auto active=eraserTraces_.find(p->session);
+  const auto samples=p->serial?p->trace.size():active!=eraserTraces_.end()?active->second.size():0;
+  if(samples)out.contributions[out.contributionCount++]={p->activeSerial,samples};
+ }
+ std::sort(out.contributions.begin(),out.contributions.begin()+out.contributionCount,[](const auto& a,const auto& b){return a.session<b.session;});
+ return out;
 }
 bool CanvasEditingRuntime::freezeCpuPendingContact(std::uint64_t session)noexcept{
  if(!cpuPending_)return false;
@@ -196,10 +231,11 @@ void CanvasEditingRuntime::serviceCpuPendingErases()noexcept{
   AXIOM_FRAME_TIMING_SET(pending_serial,serial);
   AXIOM_FRAME_TIMING_SET(pending_phase,static_cast<unsigned>(before->phase));
   const auto phase=before->phase;const auto next=before->next,reuse=before->reuseScan;
+  const auto preparation=before->preparationProgress();
   if(servicePendingLocalHead())return;
   serviceCpuPendingEraseStep(began);
   const auto* after=cpuPending_->head();
-  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse)break;
+  if(after&&after->serial==serial&&after->identity[5]==job&&after->phase==phase&&after->next==next&&after->reuseScan==reuse&&after->preparationProgress()==preparation)break;
   if(after&&after->phase==CpuPendingEraseState::Phase::Waiting&&!after->completion)break;
  }
 }
@@ -425,7 +461,8 @@ void CanvasEditingRuntime::serviceCpuPendingEraseStep(std::chrono::steady_clock:
    struct StageCost{CpuPendingEraseState& s;unsigned stage;std::chrono::steady_clock::time_point began;~StageCost(){const auto ns=std::uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-began).count());s.maximumCommitStageNs=std::max(s.maximumCommitStageNs,ns);if(stage==4)s.sceneStampPrepareNs+=ns;else if(stage==0)s.targetPrepareNs+=ns;else if(stage==1)s.historyPrepareNs+=ns;else if(stage==2)s.publicationPrepareNs+=ns;else s.publishNs+=ns;}} stageCost{state,stage,commitAt};
    if(!p->preparedErase->ready()){
     AXIOM_FRAME_TIMING_SCOPE(targetTiming,target_prepare);
-    if(!p->preparedErase->advance(1,8000)){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
+    const auto remaining=std::chrono::duration_cast<std::chrono::microseconds>(allowance-(std::chrono::steady_clock::now()-began)).count();
+    if(remaining>0&&!p->preparedErase->advance(1,static_cast<std::uint64_t>(remaining))){state.error="PENDING_ATOMIC_TARGET_FAILED";retire(true);}return;
    }
    if(p->sceneStamp.target<std::get<semantic::AddEraseMasksOp>(p->preparedErase->operation().payload).items.size()){
     AXIOM_FRAME_TIMING_SCOPE(stampTiming,scene_stamp);

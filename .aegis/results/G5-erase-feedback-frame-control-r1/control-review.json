@@ -1,0 +1,218 @@
+{
+  "schema": "axiom-independent-scoped-control-review-v1",
+  "at": "2026-11-18T17:26:28.214993+00:00",
+  "task": "G5-erase-feedback-frame-r1",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "classification": "PERFORMANCE_TARGET_UNMET",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame",
+    "branch": "codex/g5-erase-feedback-frame",
+    "baseHEAD": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "currentHEAD": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "sourceDelta": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-delta.patch",
+      "bytes": 38384,
+      "sha256": "b1f740de65d7bd8bd1e03d6ad6745519b05724453409009000e551d1aaade4e7"
+    },
+    "deltaManifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/delta-manifest.json",
+      "bytes": 2302,
+      "sha256": "0c6fe21e9fef552142e73ce0246d9929834c4e132b558736dbbb71a40b35022d"
+    },
+    "committedOrPushed": false
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame",
+    "path": ".aegis/results/G5-erase-feedback-frame-r1/result.json",
+    "artifact_manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/artifact-manifest.json",
+      "bytes": 1557175,
+      "sha256": "a75977378ea010557040d29275069223a7c82573d1d2ed9747964c3cd8dc6207"
+    }
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-erase-feedback-frame-r1/package.json",
+    "bytes": 3320,
+    "sha256": "e402bd5c549023c9121bcf344d2a71056b863f89c6298c1accdfe87107f0dd67"
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/result.json",
+    "bytes": 14053,
+    "sha256": "d03ce53930c2a88a93fb8535cccd3b7cceb6e20e06272b5cb2a6e40f4bdd214d"
+  },
+  "frozen_requirement_audit": {
+    "satisfied": [
+      "EFF1 measured dominant branch",
+      "EFF2 scoped mechanism elimination and current pixel/lifetime correctness",
+      "EFF3 required correctness within frozen fixtures",
+      "EFF5 preservation, exact shared evidence, preview and terminal callbacks with nonblocking planning erratum"
+    ],
+    "failed": [
+      "EFF4 settled-pan four frozen nonregression checks"
+    ],
+    "scope_limits": "No fullG5/release/platform ABI qualification. EFF2 general mask-history ownership is not asserted; selection still scans segments, later item2 not done."
+  },
+  "frozen_evidence_audit": {
+    "exact_return_refs_checked": 5508,
+    "mismatches": [],
+    "ordinary_cases": 16,
+    "correctness": "Independent terminal nonAA fourcases exact;56 buffers decodedhashes;60raw nativecompleted; separate semantic4pairs reexecuted; actualGPU camera/settled raw and fixture checked. No newbrowser/GPU sample.",
+    "freeze": "B1668/1669 current +1 exactversioned planning; C1678/1678; ordinary3374/3374. Original BsourceSDK preserved."
+  },
+  "repository_reality_audit": {
+    "production_scope": "drawDamagedInk damageOnly and private swept-segment work-selection helper;timing probes compiledout ordinary,testsprivateoptin",
+    "public_API_changed": false,
+    "Operation_atomic_owner_unchanged": true,
+    "budgets_MiB": [
+      512,
+      1024,
+      128
+    ],
+    "candidate_HEAD": "bfceeab0e15b2b577f2f41cef498f817f39451e3",
+    "commit_push_tag": false,
+    "control_and_r2_tracked_clean": true,
+    "protected_demos_untouched": true
+  },
+  "outcomes": {
+    "active_Render_diagnostic_median_ms": {
+      "B": [
+        30.3,
+        29.0
+      ],
+      "C": [
+        5.5,
+        4.6
+      ]
+    },
+    "ordinary_immediate_active_callback_p95_ms": {
+      "B": [
+        33.5,
+        60.59999990463257
+      ],
+      "C": [
+        7.799999952316284,
+        7.200000047683716
+      ]
+    },
+    "ordinary_immediate_first_postUp_callback_worst_ms": {
+      "B": [
+        33.69999980926514,
+        62.200000047683716
+      ],
+      "C": [
+        7.300000190734863,
+        4.6000001430511475
+      ]
+    },
+    "immediate_four_case_max_gaps_ms": [
+      48.53333338101584,
+      61.73333342870319,
+      43.83333333333212,
+      59.93333323796833
+    ],
+    "all_immediate100_33_targets": true,
+    "whole_package_accepted": false
+  },
+  "defect_classification": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/defect-classification.json",
+    "bytes": 4892,
+    "sha256": "6812e85ec6dc193ace740509bb53206a2552f60cfe6e6def4a4c500a32c11b94"
+  },
+  "independent_evidence": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/package-preflight.json",
+      "bytes": 3463,
+      "sha256": "a0532e9aadd3f3a7eca93b6ef27b1b28e086108bb8cb7b5c4d105dbac0675bd9"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/preview-and-interim-audit.json",
+      "bytes": 2893,
+      "sha256": "dbe007a4366c52044fce996614180bb433e3183e5ef34704b67a2496f589e82a"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/ordinary-independent-audit.json",
+      "bytes": 11808,
+      "sha256": "e66badbba0147f835d488f5588cda31ff3a680ce90602dd8f8bce4332ab0295e"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/matched-probe-independent-audit.json",
+      "bytes": 1921,
+      "sha256": "dcfa0624f4fb0cc2cfb4c6f4ef37b6fb20d15b170ed373864bdad21bacc3c3a8"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/terminal-pixel-independent-audit.json",
+      "bytes": 1466,
+      "sha256": "d9b7aac3683750c2125e539bc815b870750cfa3bf484967a8dcd531a49aa307c"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/web-readback-independent-audit.json",
+      "bytes": 928,
+      "sha256": "c7c59d41b2ade82225c91616565b8219979692fb30b3ee360a7d98c0385afc0d"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/semantic-independent-audit.json",
+      "bytes": 1361,
+      "sha256": "cb33ecdc2b7d556295a061eac917671b57ffba9532348a6cac65962215161dc7"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/native-interim-audit.json",
+      "bytes": 575,
+      "sha256": "b3ef24033e129f0348419c080d7dbfe6bdaa328c96463791c777f5fbf60d8f59"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/native-gpu-independent-audit.json",
+      "bytes": 1688,
+      "sha256": "ac2faefee3eb3cf5ad80718ea32ebbc27048b310106910b6f11f3c01ea223aa4"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/numeric-cull-audit.json",
+      "bytes": 2678,
+      "sha256": "2453623563359bd6529387abfa7f19f6c4a2ecb555190fd50d9c0047a3ea9d13"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/terminal-evidence-binding-audit.json",
+      "bytes": 923,
+      "sha256": "78f61a02e2eac3c971e93e85af8d6dd497d18a93ec1e7788629538227f4ff927"
+    }
+  ],
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "EFF-N1",
+        "classification": "NON_BLOCKING_HARDENING",
+        "fact": "B probe planning design got4 additive selected-repair fields after capture; exact original restored as separate implementation-design-B.json and frozen hash independently matches. B source/SDK/raw and C/ordinary bindings unchanged.",
+        "action": "Future freeze should version planning records from outset; no new sample needed."
+      },
+      {
+        "id": "EFF-N2",
+        "classification": "NON_BLOCKING_FINDING",
+        "fact": "Two actualGPU composition JSON output paths under missing/native parent were not written; test silently ignores ofstream open failure. Existing raw16targetcamera/24settled output and boundedworker exit/assertions plus immutable fixture source independently cover same failure mode.",
+        "action": "Check test artifact parent/open result in later harness maintenance; no proof-recursion rerun required."
+      },
+      {
+        "id": "EFF-N3",
+        "classification": "NON_BLOCKING_UNCONFIRMED_NUMERIC_RISK",
+        "fact": "Control hull inflation float conversion can mathematically contract at huge local coordinates. Existing accepted Skia CPU minimal reproduction did not draw original pixels at claimed counterexample; no actual parity failure established.",
+        "action": "Do not claim known leak or require current fix; conservative rounded support hardening may be future focused work."
+      },
+      {
+        "id": "EFF-N4",
+        "classification": "NON_BLOCKING_OBSERVABILITY_PRECISION",
+        "fact": "Producer matched comparison aggregates feedback_total rather than full render in one check. Independent fullRender raw recompute B30.3/29.0 -> C5.5/4.6ms, p9533.9/32.7 ->7.1/6.5; all prescribed20%/p95 limits still pass.",
+        "action": "Use exact fullRender numbers for review claims; no new sample needed."
+      }
+    ]
+  },
+  "preview": {
+    "URL": "http://127.0.0.1:4349/example.html",
+    "status": "TEST_CANDIDATE_ONLY",
+    "previous4348_preserved": true
+  },
+  "next": "Preserve gains; isolate settled-pan scheduling/recovery tail in a separately frozen successor before item2/3. No new source/sampling dispatched by this review.",
+  "claim_boundary": "Formal verdict scoped to current package only. No physical input-to-photon claim; ordinary GL+publiccamera proxy independently qualified via separate pixels/native."
+}

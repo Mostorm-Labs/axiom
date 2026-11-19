@@ -1,0 +1,387 @@
+{
+  "formal_state": [
+    {
+      "id": "WH-W-D2-B1",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D2-C1",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D2-C2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D2-B2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D4-B1",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D4-C1",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D4-C2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-W-D4-B2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-OPT-B-D2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-OPT-C-D2",
+      "status": "COMPLETED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    },
+    {
+      "id": "WH-OPT-C-D4",
+      "status": "FAILED",
+      "inputs": [
+        360,
+        360
+      ],
+      "operations": 0,
+      "errors": 0,
+      "snapshot_byte_exact": true,
+      "closed": true,
+      "owned_cleanup": true
+    }
+  ],
+  "normal_paired_guards": [
+    {
+      "DPR": 2,
+      "route": "wheel",
+      "B_settle_median_ms": 347.9500000476837,
+      "C_settle_median_ms": 251.14999997615814,
+      "absolute_limit_ms": 386.8100001096725,
+      "relative_limit_ms": 500.14250005483626,
+      "stable_pass": true,
+      "C_max_submission_gaps_ms": [
+        28.399999856948853,
+        26.899999856948853
+      ],
+      "absolute_gap_and_direction_pass": true,
+      "proxy_p95_pass": true,
+      "proxy_p95_not_display_frame_p95": true
+    },
+    {
+      "DPR": 2,
+      "route": "touch",
+      "B_settle_median_ms": 364.4999998807907,
+      "C_settle_median_ms": 254.20000004768372,
+      "absolute_limit_ms": 398.82749989032743,
+      "relative_limit_ms": 519.1749998629093,
+      "stable_pass": true,
+      "C_max_submission_gaps_ms": [
+        48.5,
+        48.09999990463257
+      ],
+      "absolute_gap_and_direction_pass": true,
+      "proxy_p95_pass": true,
+      "proxy_p95_not_display_frame_p95": true
+    },
+    {
+      "DPR": 4,
+      "route": "wheel",
+      "B_settle_median_ms": 885.2999999523163,
+      "C_settle_median_ms": 392.85000002384186,
+      "absolute_limit_ms": 558.2174999177455,
+      "relative_limit_ms": 1118.0949999451636,
+      "stable_pass": true,
+      "C_max_submission_gaps_ms": [
+        30,
+        47.299999952316284
+      ],
+      "absolute_gap_and_direction_pass": true,
+      "proxy_p95_pass": true,
+      "proxy_p95_not_display_frame_p95": true
+    },
+    {
+      "DPR": 4,
+      "route": "touch",
+      "B_settle_median_ms": 861.2499998807907,
+      "C_settle_median_ms": 419.4500000476837,
+      "absolute_limit_ms": 573.1100001096725,
+      "relative_limit_ms": 1090.4374998629091,
+      "stable_pass": true,
+      "C_max_submission_gaps_ms": [
+        44.200000047683716,
+        48.90000009536743
+      ],
+      "absolute_gap_and_direction_pass": true,
+      "proxy_p95_pass": true,
+      "proxy_p95_not_display_frame_p95": true
+    }
+  ],
+  "DPR2_actual_camera": [
+    {
+      "route": "wheel",
+      "missed_windows": [],
+      "maximum_successful_present_gap_ms": 31.59999990463257,
+      "final_current": true
+    },
+    {
+      "route": "touch",
+      "missed_windows": [],
+      "maximum_successful_present_gap_ms": 38.40000009536743,
+      "final_current": true
+    }
+  ],
+  "DPR4_observer_deadline_overlap": [
+    {
+      "input": 20,
+      "input_ended_ms": 1617.7000000476837,
+      "deadline_ms": 1651.1000000476838,
+      "capture_ended_ms": 1685.6000001430511,
+      "readback_observed_ms": 67.90000009536743,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 40,
+      "input_ended_ms": 1950.6000001430511,
+      "deadline_ms": 1984.0000001430512,
+      "capture_ended_ms": 1996.6000001430511,
+      "readback_observed_ms": 46.0,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 60,
+      "input_ended_ms": 2283.5,
+      "deadline_ms": 2316.9,
+      "capture_ended_ms": 2338.600000143051,
+      "readback_observed_ms": 55.10000014305115,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 80,
+      "input_ended_ms": 2616.100000143051,
+      "deadline_ms": 2649.5000001430512,
+      "capture_ended_ms": 2663.2000000476837,
+      "readback_observed_ms": 47.09999990463257,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 100,
+      "input_ended_ms": 2951.100000143051,
+      "deadline_ms": 2984.5000001430512,
+      "capture_ended_ms": 3007.100000143051,
+      "readback_observed_ms": 56.0,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 120,
+      "input_ended_ms": 3283.9000000953674,
+      "deadline_ms": 3317.3000000953675,
+      "capture_ended_ms": 3351.4000000953674,
+      "readback_observed_ms": 67.5,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 140,
+      "input_ended_ms": 3616,
+      "deadline_ms": 3649.4,
+      "capture_ended_ms": 3671.5,
+      "readback_observed_ms": 55.5,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 160,
+      "input_ended_ms": 3950.5,
+      "deadline_ms": 3983.9,
+      "capture_ended_ms": 3991.9000000953674,
+      "readback_observed_ms": 41.40000009536743,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 180,
+      "input_ended_ms": 4283,
+      "deadline_ms": 4316.4,
+      "capture_ended_ms": 4330.700000047684,
+      "readback_observed_ms": 47.700000047683716,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 240,
+      "input_ended_ms": 5282.900000095367,
+      "deadline_ms": 5316.300000095367,
+      "capture_ended_ms": 5329.700000047684,
+      "readback_observed_ms": 46.799999952316284,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 300,
+      "input_ended_ms": 6283.5,
+      "deadline_ms": 6316.9,
+      "capture_ended_ms": 6328,
+      "readback_observed_ms": 44.5,
+      "observer_occupies_full_camera_deadline": true
+    },
+    {
+      "input": 360,
+      "input_ended_ms": 7284,
+      "deadline_ms": 7317.4,
+      "capture_ended_ms": 7327.900000095367,
+      "readback_observed_ms": 43.90000009536743,
+      "observer_occupies_full_camera_deadline": true
+    }
+  ],
+  "DPR4_timing_qualification": "Frozen optical guard FAIL; observer blocksJSentiredeadline. Cannot conclude product33.4msfailure, cannot subtractobserver timetoclaimPASS. Separate no-readback actualpose timing is residual proof gap.",
+  "DPR2_final_pixels": [
+    {
+      "route": "wheel",
+      "byte_exact_B_C": true,
+      "actual_sha256": "a8a1560fb09dc6682a3a8c2f2773964d012e1cea764896e9b9ba95848c2ca108"
+    },
+    {
+      "route": "touch",
+      "byte_exact_B_C": true,
+      "actual_sha256": "0c7e5a546be5aef5a8f79aa9c31018866e652f3eddb7924b08a5944d4cdc1c1b"
+    }
+  ],
+  "profile_evidence": {
+    "DPR2_paired_rows": 24,
+    "DPR2_measured_pass": 23,
+    "DPR2_mandatory_pass": true,
+    "DPR4_mandatory": "sixfiniteeachcapturedroute",
+    "DPR4_baseline": "NOT_CAPTURED",
+    "overall_qualified": false
+  },
+  "reference_execution": {
+    "new_unique": 36,
+    "new_completed": 36,
+    "exact_prior_reuse": 16,
+    "charged_seconds": 512,
+    "captures_and_finals": 78
+  },
+  "strict_DPR4_pixel_independent_recalculation": {
+    "actual_raw_bytes": 92499840,
+    "metadataSHA_matches": true,
+    "failed_nonAA_pixels": 5130,
+    "channel_max_delta_distribution": {
+      "3": 5130
+    },
+    "device_y_row_counts": {
+      "3": 1783,
+      "431": 1815,
+      "1785": 1532
+    },
+    "failed_inside_image": 0,
+    "failed_outside_image": 5130,
+    "frozen_channel_tolerance": 2,
+    "new_or_inherited": "UNRESOLVED_NO_MATCHING_D4BASELINE"
+  },
+  "ledger": {
+    "formal_starts": 11,
+    "formal_seconds": 362,
+    "remaining": [
+      "WH-OPT-B-D4"
+    ],
+    "stop": {
+      "id": "WH-OPT-C-D4",
+      "reason": "AssertionError('FROZEN_ACTUAL_CAMERA_HANDOFF_FAILURE')",
+      "no_more_performance_sampling": true
+    }
+  },
+  "review_limitations": [
+    "Representativefixture/browser only; not physicaltrackpadphoton or universalplatform qualification.",
+    "Actual synchronousowner timing includesdriver stalls, not pureGPUexecution.",
+    "Functional2DPR exercised earliernormal; finaldelta limitedlegacyestimatedcost with deterministicnative+serialsuite proof, exactlydisclosed notmisbound."
+  ]
+}

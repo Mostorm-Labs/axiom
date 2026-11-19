@@ -1,0 +1,68 @@
+{
+  "schema": "axiom-held-worker-qualification-harness-failure-v1",
+  "classification": "VERIFICATION_TEST_IMPLEMENTATION_DEFECT",
+  "original_failure": "Error: old transient never completed\n    at wait (http://127.0.0.1:51480/g5/pending_navigation_held_worker_consumer.mjs:16:140)\n    at async run (http://127.0.0.1:51480/g5/pending_navigation_held_worker_consumer.mjs:29:3)\n    at async http://127.0.0.1:51480/g5/pending_navigation_held_worker_page.mjs:9:12",
+  "product_failure_established": false,
+  "actual_content_writes_before_timeout": 1,
+  "predicate": "phase.content.some && latestFrame.retry !== true",
+  "known_source_fact": "SDK frame adds retry=true whenever pending reserved; unrelated to transient actualcontent completion. Actualfailurelatestframepending=false/retry=true proves conflation.",
+  "executor_mistake": "Executor correctly recognized this beforelaunch but a stringreplace didnot match sourceindentation and no assertion/guard verifiedreplacement. Frozensampledsource stillbadpredicate. Not missinguserauthorization or productalgorithm.",
+  "missing_guard": "Gatecustody tests passed2 but no test asserted actualcontent+retrytrue stillsatisfiesqualificationstage. A syntaxcheck cannot detect this.",
+  "actual_realWorker": {
+    "held": {
+      "key": "2/1/11068046444225730969/11068046444225730969/1/1/1/1",
+      "status": "Ready",
+      "bytes": 268,
+      "sha256": "0d991951812ef74171384b154cf37c60ad1ebb1f5163e11fb610fc580993c559",
+      "at": 448.5,
+      "type": "held-real-terminal"
+    },
+    "cleanup_release": {
+      "type": "released-real-terminal",
+      "key": "2/1/11068046444225730969/11068046444225730969/1/1/1/1",
+      "status": "Ready",
+      "bytes": 268,
+      "sha256": "0d991951812ef74171384b154cf37c60ad1ebb1f5163e11fb610fc580993c559",
+      "at": 6459.700000047684,
+      "deliveries": 1
+    },
+    "exact_deliveries": 1,
+    "samekey_status_bytes_sha": true
+  },
+  "failure_basis": {
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "semantic_generation": "0",
+    "pending": 1,
+    "phase": "WaitingWorker",
+    "committed": "0"
+  },
+  "not_proved": [
+    "rootzoomneverreached",
+    "0pixelcaptures",
+    "no samecamera control",
+    "no finalOperation/Snapshot/oncecommitproof",
+    "heldbytesrawnotpersisted aftercallback; only eventhash/identityfacts captured"
+  ],
+  "cleanup": {
+    "navRestored": true,
+    "WorkerWrapperRestored": true,
+    "sdk_close_succeeded": false,
+    "sdk_close_error": "AxiomError: BUSY",
+    "ownedpageclosed": true,
+    "ownedserverstopped": true,
+    "Worker_lifetime": "SDKcloseBUSYafterrelease; ownedpageclose terminatesitscontext. No gracefulRuntimecloseclaim."
+  },
+  "deadline": {
+    "max_seconds": 90,
+    "charged_conservative_seconds": 130,
+    "breach": true,
+    "actualqualification_timeout_ms": 6011.200000047684,
+    "reason": "Processserveronlyautoclose90sdoesnotterminatealreadyopenconnections/page; control/modelcleanupobservationdelayed. Failedboundenforcementpreserved,notdiscounted.",
+    "invalidnegative_attempt": -11
+  },
+  "terminal_policy": "Controlexplicitstop: no newpage/retry/package/sourcefix/4336. KeepvalidA/Bimplementationandearlierevidence."
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "axiom-postcommit-navigation-independent-review-plan-v1",
+  "baseline": "911c149b18dbb26632b4273ff60259d53eb18560",
+  "scope": "NC1-NC4 already frozen; this maps independent review, creates no new obligations.",
+  "owners": {
+    "canonical_commit": "OperationEngine existing unchanged",
+    "pending_display_camera": "CanvasEditingRuntime",
+    "frame_route": "RuntimeCompositionCore",
+    "derived_preparation_and_surface": "SkiaRenderer/SkiaRenderCache"
+  },
+  "read_only_findings": [
+    {
+      "source": "runtime/composition/src/runtime_composition.cpp",
+      "fact": "serviceCpuPendingErases occurs before editingTransient route selection.",
+      "status": "Hypothesis for commit-transition route, not established cause."
+    },
+    {
+      "source": "runtime/render/src/skia_renderer.cpp",
+      "fact": "Transient preparation defaultmaxGroups2, canonical callermaxGroups64; same optionalcpuPendingOpportunity start.",
+      "status": "Valid policy difference; no increaseauthorized."
+    },
+    {
+      "source": "runtime/render/src/skia_render_cache.cpp",
+      "fact": "!transientinvalidatesStaticScene, whilepreparedbody/progressreset hasseparatecontent/camera/run conditions.",
+      "status": "Avoid equating staticScene dropwithallbody recompile."
+    }
+  ],
+  "review_mapping": [
+    {
+      "obligation": "NC1",
+      "review": "Verify actual route/retry/stage records match sequenceand source; distinguish GLrole fromcorrectpixels, noold25msfalsebaseline."
+    },
+    {
+      "obligation": "NC2",
+      "review": "InspectRED actuallyexercises old productionflow; fixlocalto provenreason, preservingallidentityandoriginalbudgets; no per-attemptunboundedcopy."
+    },
+    {
+      "obligation": "NC3",
+      "review": "Auditrealpixelbinary hashes/defaulttargetstate andnativewholeframeequivalent; pending andpostcommit transition/finalcanonical separately; no terminalpreviewclearbeforequalifiedreceipt."
+    },
+    {
+      "obligation": "NC4",
+      "review": "Checkordinarymatchedinputs/SDKassets/DPR andfinitechargedfailedruns; CPUvsRAFwait vsphysicalGPUnotconflated; mechanismreduction andhonestremaininglatency."
+    }
+  ],
+  "baseline_source": {
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "c0af3e82b26d65289a504bb870cbe390f8960a8d3fd914c1596c738c217e85db",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "aa02b6de5310d5a9786875be7219015a530855fd714c72c3739d05e56365cb11",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/render/src/skia_render_cache.cpp": "c7d15bea33dfcf8a4168b92fae169871334e1680dc945fd58ae7da068827127b",
+    "runtime/render/src/skia_prepared_geometry.hpp": "fa1532dc43a07c324616e638a3abc1f4c110b023b3e183cd49dec98d10317b76"
+  }
+}

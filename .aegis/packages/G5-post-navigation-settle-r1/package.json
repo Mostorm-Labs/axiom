@@ -1,0 +1,78 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-post-navigation-settle-r1",
+  "status": "FROZEN_USER_AUTHORIZED_SUCCESSOR",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "execution_ref": "refs/heads/codex/g5-exposure-region-checkpoint",
+  "task_anchor": {
+    "revision": "230ee4c52ee36361abb26c527f29c86e9a8cebb7",
+    "relation": "ancestor",
+    "source_manifest": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-source-C.json",
+      "bytes": 146029,
+      "sha256": "2349a20e3dd72b3139f97c3ede57a69961b6fe5b8694c396968d86caa8ec7291"
+    }
+  },
+  "resume_cursor": null,
+  "execution_checkout_policy": "Primaryperformanceworktree remains codex/g5-cpu-worker atoldHEAD withuncommittedexperiments. Do notcheckoutresetit. Explicitexecution_ref checkpointcommit isarchivedtonewout/taskcopies; verifyanchoragainstthatrefandrecordambientrootHEADseparately. ManagedcheckpointW isread-onlybaseline; nogitmutations inthisrepair.",
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/packages/G5-post-navigation-settle-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 2914,
+    "sha256": "21571d23d9ac8772b2a01fb3290b1da74df553cfbdb452f59d4eacb507c19f5c"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 4872,
+    "sha256": "3808d55309cfa218aaf23f1c2df09090a2fa456db3abd2bc8ceb6d743b393827"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 5815,
+    "sha256": "aa78bfcde8974424a291fce5fc3f555fc67e2c9f2cae6fec841495431a0a8341"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 6510,
+    "sha256": "72f4e90fc4b25a5e68d775aeb4c5c43a4bd56ffb91b9a8fb512dd845d90e70bd"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 1790,
+    "sha256": "7dea0baa86fb84ceba4efa00672df721ddf5221a0cfa911d0d0a16f0b99a9d77"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 8851,
+    "sha256": "803a65a126690e75d2631671d686b5fd5313bc76f61a8df301aaa48b1c407bf3"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 5177,
+    "sha256": "4460d71547c7c7c9613e0e6172da7c8848aea8b80f8b57b09cbd76257efe06e8"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 10173,
+    "sha256": "efedb19b67c7a55c41063419811145d8cc9a632da185c0ec1580f46a691eb89b"
+  },
+  "checkpoint_publication_ref": {
+    "path": "checkpoint-publication.json",
+    "bytes": 618,
+    "sha256": "912ee5667862c6c2b8fb2018aafa9de1c80e6012afc704dfa459c49b4ddcf92c"
+  }
+}

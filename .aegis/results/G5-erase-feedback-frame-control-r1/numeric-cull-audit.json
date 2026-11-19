@@ -1,0 +1,65 @@
+{
+  "status": "READ_ONLY_HELPER_PARITY_PROBE",
+  "at": "2026-11-18T17:17:01.312894+00:00",
+  "returncode": 0,
+  "rows": [
+    {
+      "center": 10000,
+      "keep": true,
+      "originalClearedDamagePixels": 160,
+      "differingDamagePixels": 0
+    },
+    {
+      "center": 1000000.0,
+      "keep": true,
+      "originalClearedDamagePixels": 160,
+      "differingDamagePixels": 0
+    },
+    {
+      "center": 10000000.0,
+      "keep": true,
+      "originalClearedDamagePixels": 160,
+      "differingDamagePixels": 0
+    },
+    {
+      "center": 100000000.0,
+      "keep": true,
+      "originalClearedDamagePixels": 160,
+      "differingDamagePixels": 0
+    },
+    {
+      "center": 1000000000.0,
+      "keep": false,
+      "originalClearedDamagePixels": 0,
+      "differingDamagePixels": 0
+    }
+  ],
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/out/G5-erase-feedback-frame-control-r1/numeric-cull-probe.cpp",
+    "bytes": 1650,
+    "sha256": "9b1bc8c4bb470d76b959db832f4ec92ef4b62dca57743e1b3b49cef092dbd997"
+  },
+  "executable": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/out/G5-erase-feedback-frame-control-r1/numeric-cull-probe",
+    "bytes": 3752032,
+    "sha256": "7d66d85619aca7d729e6c877ae8a49c4cfc3c78ec6ab5ac89f2b3560b9b310b9"
+  },
+  "stdout": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/out/G5-erase-feedback-frame-control-r1/numeric-cull.stdout.log",
+    "bytes": 444,
+    "sha256": "76847f27ea827b8daf51dc18084aa9233b4f89f704436820023b283752da8bee"
+  },
+  "stderr": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/out/G5-erase-feedback-frame-control-r1/numeric-cull.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "subject": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/runtime/render/src/erase_feedback_damage.hpp",
+    "bytes": 2036,
+    "sha256": "4eb2287c112e81e56462a79612613e357f9b24df8cde195455677fb497e5c4c6"
+  },
+  "limits": "Existing accepted prebuilt Skia, CPU Raster only. No browser/GPU sample, no candidate source/SDK mutation. Helper support selection checked against actual original drawErasePrimitive on same matrix and clipped region; full Runtime admissibility/GPU impact must be separately classified.",
+  "classification": "NON_BLOCKING_UNCONFIRMED_NUMERIC_RISK",
+  "interpretation": "Initial mathematical envelope counterexample did not produce original pixels in actual Skia CPU render, so actual parity failure not reproduced. Do not classify as demonstrated implementation defect or block frozen closure on speculation."
+}

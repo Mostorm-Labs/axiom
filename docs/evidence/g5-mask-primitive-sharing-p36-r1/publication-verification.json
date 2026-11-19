@@ -1,0 +1,136 @@
+{
+  "status": "FRESH_BUILD_AND42_NATIVE_PASS",
+  "sourcePathsEquivalentToReviewed": 1218,
+  "nativeTests": 42,
+  "fourCellOrBrowserSamplingRepeated": false,
+  "commands": [
+    {
+      "step": "configure",
+      "argv": [
+        "cmake",
+        "-G",
+        "Ninja",
+        "-S",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish",
+        "-B",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish/out/build-mask-sharing",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_POC02=OFF",
+        "-DCANVAS_BUILD_POC03=OFF",
+        "-DCANVAS_BUILD_POC05=OFF",
+        "-DCANVAS_BUILD_RF01=ON",
+        "-DCANVAS_BUILD_RENDER=ON",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+        "-DCANVAS_RENDER_BUILD_TESTS=ON",
+        "-DCANVAS_RF01_BUILD_TESTS=OFF",
+        "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+        "-DAXIOM_BUILD_DEBUG_UI=OFF",
+        "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+        "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON",
+        "-DAXIOM_CPU_PENDING_ERASE=ON",
+        "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+        "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DCanvasSkia_DIR=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/cmake/CanvasSkia",
+        "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+        "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+        "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+        "-DAXIOM_ENABLE_FRAME_TIMING=OFF",
+        "-DCMAKE_CXX_FLAGS=-DAXIOM_NAV_MASK_DIAGNOSTICS=1 -DAXIOM_NAV_SHARING_OBSERVATION=1 -DAXIOM_CONTINUOUS_ZOOM_OBSERVATION=1",
+        "-DAXIOM_RENDER_CACHE_MIB=512",
+        "-DAXIOM_RENDER_SHARED_MIB=1024",
+        "-DAXIOM_RENDER_ENTRY_MIB=128",
+        "-DAXIOM_RENDER_BUILD_MASK_SHARING_TESTS=ON"
+      ],
+      "exit": 0,
+      "seconds": 2.823930625
+    },
+    {
+      "step": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish/out/build-mask-sharing",
+        "--target",
+        "axiom_gpu_retirement_contract_tests",
+        "axiom_navigation_display_workavoidance_tests",
+        "axiom_render_cache_tests",
+        "axiom_erase_exact_canonical_tests",
+        "axiom_ur2c_mask_history_tests",
+        "axiom_navigation_mask_reuse_tests",
+        "axiom_nmr_cache_pressure_probe",
+        "axiom_nmr_source_adoption_probe",
+        "axiom_erase_exact_canonical_runtime_tests",
+        "axiom_ur2c_mask_pipeline_tests",
+        "axiom_render_memory_budget_tests",
+        "axiom_cpu_history_cache_tests",
+        "axiom_mask_primitive_sharing_tests",
+        "axiom_mask_primitive_factorial",
+        "--parallel",
+        "4"
+      ],
+      "exit": 0,
+      "seconds": 106.117521708
+    },
+    {
+      "step": "native42",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish/out/build-mask-sharing",
+        "--output-on-failure",
+        "-R",
+        "^(G5GpuRetirementContract|G5NavigationDisplayWorkavoidance|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5ErasedMixedNavigation|G5EraseExactCanonical|G5UR2CHistoryPlanReuse|G5UR2CHistoryInvalidation|G5UR2CHistoryExactParity|G5UR2CLeaseAccounting|G5UR2CHistoryProgress|G5UR2CHistoryAdmission|G5UR2CHistoryProgressSafety|G5RenderMemoryBudget|G5CpuHistoryCache|G5NavigationMaskReuse|G5NavigationMaskReuse_upper|G5NavigationMaskReuse_progress|G5NavigationMaskReuse_quota|G5NavigationMaskReuse_filled|G5NavigationMaskReuse_brush|G5NavigationMaskReuse_safety|G5NavigationMaskReuse_streaming|G5NavigationMaskReuse_lifecycle|G5NavigationMaskReuse_interleaved|G5NavigationMaskRepair_repair-interleaved|G5NavigationMaskRepair_repair-reaper|G5NavigationMaskRepair_repair-adoption|G5NavigationMaskRepair_control_reaper|G5NavigationMaskRepair_control_adoption|G5MaskPrimitiveSharing_identity|G5MaskPrimitiveSharing_policy|G5MaskPrimitiveSharing_superseded|G5MaskPrimitiveSharing_reverse|G5MaskPrimitiveSharing_GPU|G5MaskPrimitiveSharing_cardinality|G5MaskPrimitiveSharing_renderer|G5EraseExactCanonicalRuntime|G5UR2CContinuousInput|G5MaskPrimitiveSharing_query|G5MaskPrimitiveSharing_strict-confirm)$",
+        "-j",
+        "1",
+        "--timeout",
+        "120"
+      ],
+      "exit": 0,
+      "seconds": 109.160822625
+    },
+    {
+      "step": "boundary",
+      "argv": [
+        "/opt/homebrew/bin/python3.12",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish/tools/check_runtime_boundaries.py",
+        "--root",
+        "/Users/qing/.codex/worktrees/g5-mask-primitive-sharing-publish"
+      ],
+      "exit": 0,
+      "seconds": 0.08507458299999371
+    }
+  ],
+  "logs": {
+    "native42.log": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-publication/native42.log",
+      "bytes": 5631,
+      "sha256": "6bf944046e12cf7fd6c88209d7efb8d57b00dade9472dec15dc90e417672b1d1"
+    },
+    "configure.log": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-publication/configure.log",
+      "bytes": 977,
+      "sha256": "be32c680417f2978f6ceb2e94d3154437c328877f22416e3365c3d99ad110c44"
+    },
+    "boundary.log": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-publication/boundary.log",
+      "bytes": 58,
+      "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+    },
+    "build.log": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-publication/build.log",
+      "bytes": 65626,
+      "sha256": "a4f1d1aee125a2b12dbcd48eb372f8a3dedb08e0583773c7339503e32b5dce48"
+    }
+  },
+  "localOnlyBuilds": "out/build-mask-sharing excludedfromGit",
+  "lockedDependencyPolicy": "ReusedacceptedprebuiltSemantic/SkiaSDKs; norebuild/lockschange"
+}

@@ -1,0 +1,94 @@
+{
+  "status": "MATCHED_PROBE_RAW_RECOMPUTED",
+  "rows": [
+    {
+      "run": "EFF-D-B",
+      "case": "immediate-pan",
+      "RenderMs": {
+        "n": 47,
+        "median": 30.3,
+        "p95": 33.9
+      },
+      "sceneMs": {
+        "n": 47,
+        "median": 24.1,
+        "p95": 26.7
+      },
+      "CPUflushMs": {
+        "n": 47,
+        "median": 3.3,
+        "p95": 3.9
+      },
+      "dropped": 0,
+      "allActualGPUSurface": true,
+      "allocations": 47
+    },
+    {
+      "run": "EFF-D-B",
+      "case": "immediate-pinch",
+      "RenderMs": {
+        "n": 52,
+        "median": 29.0,
+        "p95": 32.7
+      },
+      "sceneMs": {
+        "n": 52,
+        "median": 23.799999999999997,
+        "p95": 26.5
+      },
+      "CPUflushMs": {
+        "n": 52,
+        "median": 3.3,
+        "p95": 3.8
+      },
+      "dropped": 0,
+      "allActualGPUSurface": true,
+      "allocations": 52
+    },
+    {
+      "run": "EFF-D-C-FINAL",
+      "case": "immediate-pan",
+      "RenderMs": {
+        "n": 115,
+        "median": 5.5,
+        "p95": 7.1
+      },
+      "sceneMs": {
+        "n": 115,
+        "median": 2.1,
+        "p95": 2.8
+      },
+      "CPUflushMs": {
+        "n": 115,
+        "median": 0.6,
+        "p95": 1.0
+      },
+      "dropped": 0,
+      "allActualGPUSurface": true,
+      "allocations": 115
+    },
+    {
+      "run": "EFF-D-C-FINAL",
+      "case": "immediate-pinch",
+      "RenderMs": {
+        "n": 117,
+        "median": 4.6,
+        "p95": 6.5
+      },
+      "sceneMs": {
+        "n": 117,
+        "median": 2.1,
+        "p95": 2.9
+      },
+      "CPUflushMs": {
+        "n": 117,
+        "median": 0.6,
+        "p95": 0.9
+      },
+      "dropped": 0,
+      "allActualGPUSurface": true,
+      "allocations": 117
+    }
+  ],
+  "limits": "CPU call durations, not GPU execution time or ordinary performance. Same final probes verified in B/C source manifests; ordinary separately audited."
+}

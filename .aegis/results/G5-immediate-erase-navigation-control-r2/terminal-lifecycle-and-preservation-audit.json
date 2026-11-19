@@ -1,0 +1,991 @@
+{
+  "status": "MATCHED_FINAL_RAW_NATIVE_AND_SPEND",
+  "at": "2026-11-18T22:00:54.466046+08:00",
+  "protected_primary_files_checked": 42,
+  "protected_primary_mismatches": [],
+  "primary_and_candidate_indexes_empty": true,
+  "sampling": {
+    "attempts": 8,
+    "ceilSeconds": 785,
+    "remainingSeconds": 1915,
+    "further_starts_authorized": false,
+    "rows": [
+      {
+        "id": "IEN2-D1",
+        "status": "COMPLETED",
+        "ceilSeconds": 58
+      },
+      {
+        "id": "IEN2-D2",
+        "status": "COMPLETED",
+        "ceilSeconds": 58
+      },
+      {
+        "id": "IEN2-W-B1",
+        "status": "FAILED",
+        "ceilSeconds": 10
+      },
+      {
+        "id": "IEN2-W-B1-CORRECTIVE",
+        "status": "COMPLETED",
+        "ceilSeconds": 99
+      },
+      {
+        "id": "IEN2-W-C1",
+        "status": "COMPLETED",
+        "ceilSeconds": 101
+      },
+      {
+        "id": "IEN2-W-C2",
+        "status": "COMPLETED",
+        "ceilSeconds": 111
+      },
+      {
+        "id": "IEN2-W-B2",
+        "status": "COMPLETED",
+        "ceilSeconds": 112
+      },
+      {
+        "id": "IEN2-P-C",
+        "status": "COMPLETED",
+        "ceilSeconds": 236
+      }
+    ]
+  },
+  "terminal_cleanup_reports_checked": 75,
+  "native_final_raw_checked": 59,
+  "native_metadata_old_guard_records": [
+    "G5GpuRetirementContract",
+    "G5NavigationDisplayWorkavoidance",
+    "G5InkBodyMaskReuse",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5ErasedMixedNavigation",
+    "G5EraseExactCanonical",
+    "G5UR2CHistoryPlanReuse",
+    "G5UR2CHistoryInvalidation",
+    "G5UR2CHistoryExactParity",
+    "G5UR2CLeaseAccounting",
+    "G5UR2CHistoryProgress",
+    "G5UR2CHistoryAdmission",
+    "G5UR2CHistoryProgressSafety",
+    "G5RenderMemoryBudget",
+    "G5TransientDisplayHandoff",
+    "G5TransientDisplayHandoffInflight",
+    "G5CpuHistoryCache",
+    "G5NavigationMaskReuse",
+    "G5NavigationMaskReuse_upper",
+    "G5NavigationMaskReuse_progress",
+    "G5NavigationMaskReuse_quota",
+    "G5NavigationMaskReuse_filled",
+    "G5NavigationMaskReuse_brush",
+    "G5NavigationMaskReuse_safety",
+    "G5NavigationMaskReuse_streaming",
+    "G5NavigationMaskReuse_lifecycle",
+    "G5NavigationMaskReuse_interleaved",
+    "G5NavigationMaskRepair_repair-interleaved",
+    "G5NavigationMaskRepair_repair-reaper",
+    "G5NavigationMaskRepair_repair-adoption",
+    "G5NavigationMaskRepair_control_reaper",
+    "G5NavigationMaskRepair_control_adoption",
+    "G5MaskPrimitiveSharing_identity",
+    "G5MaskPrimitiveSharing_policy",
+    "G5MaskPrimitiveSharing_superseded",
+    "G5MaskPrimitiveSharing_reverse",
+    "G5MaskPrimitiveSharing_GPU",
+    "G5MaskPrimitiveSharing_cardinality",
+    "G5MaskPrimitiveSharing_renderer",
+    "G5MaskPrimitiveSharing_query",
+    "G5MaskPrimitiveSharing_strict-confirm",
+    "G5ImmediateEraseNavigation",
+    "G5UR2AReadmissionAcquire",
+    "G5UR2AReadmissionPresent",
+    "G5UR2ANavigation",
+    "G5UR2AHandoff",
+    "G5UR2ANavigationSafety",
+    "G5EraseExactCanonicalRuntime",
+    "G5UR2CContinuousInput",
+    "G5CpuPendingRuntime-ienreuse",
+    "G5CpuPendingRuntime-postcommitzoom",
+    "G5CpuPendingRuntime-postcommitpan",
+    "G5CpuPendingRuntime-camerazoomout",
+    "G5CpuPendingRuntime-camerazoomin",
+    "G5CpuPendingRuntime-camerapan",
+    "G5CpuPendingRuntime-cameratouch",
+    "G5ImmediateEraseGPU-pan",
+    "G5ImmediateEraseGPU-pinch"
+  ],
+  "native_metadata_finding": "Both native-regressions.json and -complete.json retain pre-final-link per-row guard metadata; terminal native-terminal/*.worker.json records are separate exact PASSs and present in artifact manifest/cleanup. Alternate final59 real raw runs qualify finalnative results; stale summary binding must not be described as exactterminal run metadata.",
+  "final_native_guards": [
+    {
+      "name": "G5GpuRetirementContract",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5GpuRetirementContract.worker.json",
+        "bytes": 438,
+        "sha256": "72f226e75ef65b9dead2afe3677ce506ff707f883729e7de327c6ade9c9fd2cd"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.5102134579792619,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_gpu_retirement_contract_tests"
+      ]
+    },
+    {
+      "name": "G5NavigationDisplayWorkavoidance",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationDisplayWorkavoidance.worker.json",
+        "bytes": 610,
+        "sha256": "4053e7bcc73a7763b9212aff78f316fc7905ad4da08efe7fc4e1e9c3fb76ae97"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.6899962080642581,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_display_workavoidance_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/pc-proof-correctness.json"
+      ]
+    },
+    {
+      "name": "G5InkBodyMaskReuse",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5InkBodyMaskReuse.worker.json",
+        "bytes": 452,
+        "sha256": "dd431d95cea5f91c22a9790458d26a7a94e8510f4b668301870793792fecff7f"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.19856516714207828,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+        "--body-mask-only"
+      ]
+    },
+    {
+      "name": "G5RegionalMaskValidity",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5RegionalMaskValidity.worker.json",
+        "bytes": 457,
+        "sha256": "e690cf4689253ae4e0b798ffe16295e83d0b7b8dd6ff59cacad147bc3c15e6b9"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.21015658299438655,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+        "--regional-mask-only"
+      ]
+    },
+    {
+      "name": "G5MaskedNavigationProgress",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskedNavigationProgress.worker.json",
+        "bytes": 459,
+        "sha256": "1047f32f2be90fb026e292bc61e6ee3fd63c4e1ff7dd81d86f5386e69a7fa9db"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10691300011239946,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+        "--masked-progress-only"
+      ]
+    },
+    {
+      "name": "G5ErasedMixedNavigation",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5ErasedMixedNavigation.worker.json",
+        "bytes": 458,
+        "sha256": "02e02aa92f62029dc2a2049ba31be906a2db9646a676addfec83e347bf907733"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.29771145805716515,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_cache_tests",
+        "--masked-mixed-only"
+      ]
+    },
+    {
+      "name": "G5EraseExactCanonical",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5EraseExactCanonical.worker.json",
+        "bytes": 610,
+        "sha256": "a61443c7d2a98c726d4903db01e9b89f54c24fc56c0ef98ef68cd244945b33b6"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.071725333109498,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_erase_exact_canonical_tests",
+        "--verify",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/erase-exact-canonical"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryPlanReuse",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryPlanReuse.worker.json",
+        "bytes": 450,
+        "sha256": "169620b15457b57f45193c7a930e33e5ac4c34d6f50ad3dbccfb882caa6bb8ec"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.5392967499792576,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--reuse"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryInvalidation",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryInvalidation.worker.json",
+        "bytes": 457,
+        "sha256": "008ab304154724a19cea303feec73e6ec3dc66b167bfbcd2e26d834098689796"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.9499366248492151,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--invalidation"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryExactParity",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryExactParity.worker.json",
+        "bytes": 450,
+        "sha256": "b24b07e0728b339d17f85c9cbabdc92f1b2516343a0d6c037cf6825cdc237dbb"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.6750950419809669,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--exact"
+      ]
+    },
+    {
+      "name": "G5UR2CLeaseAccounting",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CLeaseAccounting.worker.json",
+        "bytes": 449,
+        "sha256": "f040df37ebb4c14e3b770639a8fb35e97be0021068ee6c529daa67284218e5de"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10994624998420477,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--lease"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryProgress",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryProgress.worker.json",
+        "bytes": 453,
+        "sha256": "4e933e03a7dbfbdf344da5a03d7ccf711a320d88b4a9b07862cbcbe9b75d689e"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.721029832959175,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryAdmission",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryAdmission.worker.json",
+        "bytes": 453,
+        "sha256": "9ebddbb0e721dcae60e6cfe56f2ad05113cc09d074e5cbb842f5c2dbda93f58c"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10726312501356006,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--admission"
+      ]
+    },
+    {
+      "name": "G5UR2CHistoryProgressSafety",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CHistoryProgressSafety.worker.json",
+        "bytes": 459,
+        "sha256": "546839a0cc5374569c15031c53ac9287a57159b437b080db1c5dddfada3a066a"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20659433398395777,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_ur2c_mask_history_tests",
+        "--progress-safety"
+      ]
+    },
+    {
+      "name": "G5RenderMemoryBudget",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5RenderMemoryBudget.worker.json",
+        "bytes": 437,
+        "sha256": "bee9e75bed9e69b4e4f8a15f5533f98e8632521fe49e98831ded389e301ef31b"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.685264959000051,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_render_memory_budget_tests"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayHandoff",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5TransientDisplayHandoff.worker.json",
+        "bytes": 618,
+        "sha256": "d3dafba2c9c46fb3981d5438d7ef5d4a0856f378ef3d0776654cc34b6bb6a9a9"
+      },
+      "exit": 0,
+      "elapsedSeconds": 7.511644042097032,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--handoff",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/transient-display-handoff"
+      ]
+    },
+    {
+      "name": "G5TransientDisplayHandoffInflight",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5TransientDisplayHandoffInflight.worker.json",
+        "bytes": 744,
+        "sha256": "42cbd6413198a81366bd40e2b2036f80742e912bbb236a94b5604777bae4deca"
+      },
+      "exit": 0,
+      "elapsedSeconds": 3.5678977919742465,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_transient_display_retry_tests",
+        "--handoff-inflight",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/transient-display-handoff-inflight"
+      ]
+    },
+    {
+      "name": "G5CpuHistoryCache",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuHistoryCache.worker.json",
+        "bytes": 435,
+        "sha256": "c69a1e7f422632ea4c816a3dd2f3ca63abf19bf9a8b15b0299317ac6a7416d0a"
+      },
+      "exit": 0,
+      "elapsedSeconds": 38.974932125071064,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_cpu_history_cache_tests"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse.worker.json",
+        "bytes": 439,
+        "sha256": "ddd2d2e162471b12ae821017acb26b47cc6ab64db1d044672055aaf26fdf02fe"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.7995965841691941,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_upper",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_upper.worker.json",
+        "bytes": 453,
+        "sha256": "af8320556f582ce1d98d533151316ce827c8f4b4cc237efc51349b7ce2bad58b"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20326079102233052,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--upper"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_progress",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_progress.worker.json",
+        "bytes": 456,
+        "sha256": "e140809eeae8aff65cdb63e5dd57ec7bd9a0fd71df3c6a67aa9c13364acf5e9a"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20074870809912682,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--progress"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_quota",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_quota.worker.json",
+        "bytes": 453,
+        "sha256": "03fee072d4cef68703fc783a5cc383dbfeeb353b5c6287e9477af993edcc0829"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.19797762506641448,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--quota"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_filled",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_filled.worker.json",
+        "bytes": 454,
+        "sha256": "97717833a40b20ae68fb70be2c831334d097a5db555b02da75129e00bdd7da99"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.19634295906871557,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--filled"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_brush",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_brush.worker.json",
+        "bytes": 453,
+        "sha256": "0c685e02fa67d8c18275cd21bb4d273620eb400964f810bbe80e4b33001818c2"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20687745790928602,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--brush"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_safety",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_safety.worker.json",
+        "bytes": 454,
+        "sha256": "f1bf051dddfaa96bb29bb838bfa9591b90667721935ee8609b2dbc543db86fc4"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20567533397115767,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--safety"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_streaming",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_streaming.worker.json",
+        "bytes": 457,
+        "sha256": "93241efb92909036b8d6f698c74f43a6ebcd71bd64bde3519022605b0583eccc"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.19957287493161857,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--streaming"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_lifecycle",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_lifecycle.worker.json",
+        "bytes": 459,
+        "sha256": "5cd92d97a2913479a3105c25710685ada441fe09f2952308730cf742fa85f41e"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.29727175016887486,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--lifecycle"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskReuse_interleaved",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskReuse_interleaved.worker.json",
+        "bytes": 459,
+        "sha256": "972ca6b783f16a95aa1980813542b92b7a2e4bb513bef3f49e872b072c694ddb"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20061695901677012,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--interleaved"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-interleaved",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskRepair_repair-interleaved.worker.json",
+        "bytes": 466,
+        "sha256": "b35280be9cb119849b9b7c0c0e37d1eee107181047d1f1463f7d1bac2980e5f9"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20714508392848074,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--repair-interleaved"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-reaper",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskRepair_repair-reaper.worker.json",
+        "bytes": 461,
+        "sha256": "9862c27bb2557513a930ebb74498d2192a934ff87f0d7f529fce9a73c4057fd9"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.19975691684521735,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--repair-reaper"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskRepair_repair-adoption",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskRepair_repair-adoption.worker.json",
+        "bytes": 463,
+        "sha256": "e16231098070f94e5ca9068fe46a5e76dff2fd187f8f0a34b4822f125731525e"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20475512510165572,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_navigation_mask_reuse_tests",
+        "--repair-adoption"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskRepair_control_reaper",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskRepair_control_reaper.worker.json",
+        "bytes": 433,
+        "sha256": "8e4fb5fe980829f2db4ce5626f7516e7aa895c373aa12778691c89889215868e"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.5244660000316799,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_nmr_cache_pressure_probe"
+      ]
+    },
+    {
+      "name": "G5NavigationMaskRepair_control_adoption",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5NavigationMaskRepair_control_adoption.worker.json",
+        "bytes": 434,
+        "sha256": "3cf84fb7405989e8ba5af3bcb3a7d0d52ae5a51e9d64826621c381fd2b363806"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.8072556250263005,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_nmr_source_adoption_probe"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_identity",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_identity.worker.json",
+        "bytes": 453,
+        "sha256": "0b1968607698f33fc8386c339c8e2330cb0acbbb5ffdb8d3a2c22d374caab35f"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.6972447920124978,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "identity"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_policy",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_policy.worker.json",
+        "bytes": 453,
+        "sha256": "76a6541c42831b2564c53773252459fc2863da0a90b242a21335858fcd1011cf"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10661741602234542,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "policy"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_superseded",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_superseded.worker.json",
+        "bytes": 456,
+        "sha256": "f1eb79c2a8273bf5a2e09c6157ae9dda3e35cb5ba2b06e587e1cf1e80a5abc73"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.1081664168741554,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "superseded"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_reverse",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_reverse.worker.json",
+        "bytes": 454,
+        "sha256": "e2b8b5e31cb8508beed81604ba139c00f6aaa147065de06e43a66909fb590977"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10802462487481534,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "reverse"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_GPU",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_GPU.worker.json",
+        "bytes": 450,
+        "sha256": "c565b8fee24c95ec8690b3e0e539ce3e722f0835a2f4142ba5adc01ee34978c8"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.20826562494039536,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "GPU"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_cardinality",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_cardinality.worker.json",
+        "bytes": 458,
+        "sha256": "31adb6fd2151caa910c258f07cf23ff354033b500013feee18f1cf0ee6749fa2"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10963395796716213,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "cardinality"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_renderer",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_renderer.worker.json",
+        "bytes": 456,
+        "sha256": "b43abbca29b0450037453de686ddc2952d1c00b9e4e4dc791f536c6bd45d5251"
+      },
+      "exit": 0,
+      "elapsedSeconds": 47.60151912504807,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "renderer"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_query",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_query.worker.json",
+        "bytes": 451,
+        "sha256": "c6bca9c1a992a4af5ae04597b8e2ac24f631f141fa3b813c25af477b00c229a3"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.1066784169524908,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "query"
+      ]
+    },
+    {
+      "name": "G5MaskPrimitiveSharing_strict-confirm",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5MaskPrimitiveSharing_strict-confirm.worker.json",
+        "bytes": 460,
+        "sha256": "a3f3b88ba0227b8138d9f200d399e91ad3fb56137902fc6a47a9ab14a09884db"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.2076817920897156,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_mask_primitive_sharing_tests",
+        "strict-confirm"
+      ]
+    },
+    {
+      "name": "G5ImmediateEraseNavigation",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5ImmediateEraseNavigation.worker.json",
+        "bytes": 762,
+        "sha256": "d1b9bb01c0bf8f56926d241dd53a6f2510edf268bdb91433b05b879d62d38804"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.9765622089616954,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/axiom_immediate_erase_navigation_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/render/ien.json"
+      ]
+    },
+    {
+      "name": "G5UR2AReadmissionAcquire",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2AReadmissionAcquire.worker.json",
+        "bytes": 708,
+        "sha256": "07c6ec61e55af20e9bc3eca7546dcdb44172d985092a22c248a6cd96cdf82c5f"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.8872998340521008,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "acquire"
+      ]
+    },
+    {
+      "name": "G5UR2AReadmissionPresent",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2AReadmissionPresent.worker.json",
+        "bytes": 709,
+        "sha256": "ec28bacba8b38b1dd2ff40d4d731594cbb50678f4f17f94078eb580f308ff4dd"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.10935295792296529,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "present"
+      ]
+    },
+    {
+      "name": "G5UR2ANavigation",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2ANavigation.worker.json",
+        "bytes": 644,
+        "sha256": "5ac5b2662d4723b2bd98e12ced18f287088347b6e9cfbdf196ff57c230085d87"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.11313770804554224,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation"
+      ]
+    },
+    {
+      "name": "G5UR2AHandoff",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2AHandoff.worker.json",
+        "bytes": 649,
+        "sha256": "87cb6abb2e231c1d7eb8d358214dd017b5397e58df8df2ba29974cdafb4dcc8e"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.11048662499524653,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "handoff"
+      ]
+    },
+    {
+      "name": "G5UR2ANavigationSafety",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2ANavigationSafety.worker.json",
+        "bytes": 547,
+        "sha256": "877579fc3b0dbabc6d03d2479c7a686af59e2ddce0d3e4485f14f58a83f15887"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.2098147498909384,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2a_handoff_tests",
+        "navigation-safety"
+      ]
+    },
+    {
+      "name": "G5EraseExactCanonicalRuntime",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5EraseExactCanonicalRuntime.worker.json",
+        "bytes": 451,
+        "sha256": "8e893441bbbb21af6d8a3079478b70a79211a6faf5deea9c7f382f29e2997c9d"
+      },
+      "exit": 0,
+      "elapsedSeconds": 2.077328084036708,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_erase_exact_canonical_runtime_tests"
+      ]
+    },
+    {
+      "name": "G5UR2CContinuousInput",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5UR2CContinuousInput.worker.json",
+        "bytes": 438,
+        "sha256": "50e1da224f8a5ada6d9b1f625ca88ae35bbc6283215d1ab53054e5184076cb39"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.6797454170882702,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_ur2c_mask_pipeline_tests"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-ienreuse",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-ienreuse.worker.json",
+        "bytes": 797,
+        "sha256": "1b1eac35e58794b4193a3559f66eba08f9a2ae955619d6b838d84b9957fea0d8"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.9684772500768304,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-ienreuse.json",
+        "ienreuse"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-postcommitzoom",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-postcommitzoom.worker.json",
+        "bytes": 810,
+        "sha256": "25d5ad626649be9fc9de581412076bce76e30401681630fbb7cf1a1541aaa8b3"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.2060451249126345,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-postcommitzoom.json",
+        "postcommitzoom"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-postcommitpan",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-postcommitpan.worker.json",
+        "bytes": 809,
+        "sha256": "4de517e02ea7acd2fea49ce5e0ac26c50dd488caaa204aceeb0cc287b156ef2d"
+      },
+      "exit": 0,
+      "elapsedSeconds": 0.21006283280439675,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-postcommitpan.json",
+        "postcommitpan"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerazoomout",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-camerazoomout.worker.json",
+        "bytes": 807,
+        "sha256": "2a6b6b9d9850827211c71bf695e73019796dabbb03c0cbddc6475e4ff3ba638b"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.628260541940108,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerazoomout.json",
+        "camerazoomout"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerazoomin",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-camerazoomin.worker.json",
+        "bytes": 805,
+        "sha256": "554fb5e161245a1a1e7534fca408ec8a1b69f5129558cfc4b47b97dfb8d09451"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.611125583993271,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerazoomin.json",
+        "camerazoomin"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-camerapan",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-camerapan.worker.json",
+        "bytes": 800,
+        "sha256": "9fd19bf1b737bd62a1f771098091502c53a19718622a2960d491223dccce2005"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.6132572090718895,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-camerapan.json",
+        "camerapan"
+      ]
+    },
+    {
+      "name": "G5CpuPendingRuntime-cameratouch",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5CpuPendingRuntime-cameratouch.worker.json",
+        "bytes": 803,
+        "sha256": "cb477f739aca416e4172662ec16e98710b19bf8cae5bf2b56a3f96ea86e00e05"
+      },
+      "exit": 0,
+      "elapsedSeconds": 1.600503875175491,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_cpu_pending_runtime_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/cpu-pending-cameratouch.json",
+        "cameratouch"
+      ]
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pan",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5ImmediateEraseGPU-pan.worker.json",
+        "bytes": 769,
+        "sha256": "b54de7cb6543147bee82a4b49ef8c97676bbb4c921829781abaf99e16e7c024f"
+      },
+      "exit": 0,
+      "elapsedSeconds": 4.094696583924815,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native/G5ImmediateEraseGPU-pan.json",
+        "pan"
+      ]
+    },
+    {
+      "name": "G5ImmediateEraseGPU-pinch",
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native-terminal/G5ImmediateEraseGPU-pinch.worker.json",
+        "bytes": 774,
+        "sha256": "dee52f4c50a784e73aec6add3e6eeb4efd21229898bc71f96db512c8d0d84f88"
+      },
+      "exit": 0,
+      "elapsedSeconds": 4.4111471669748425,
+      "command": [
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-native/runtime/composition/axiom_immediate_erase_gpu_tests",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+        "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/native/G5ImmediateEraseGPU-pinch.json",
+        "pinch"
+      ]
+    }
+  ],
+  "normalBuildCaches": {
+    "native": {
+      "qualification": "OFF",
+      "frameTiming": "OFF",
+      "diagnostics": "OFF",
+      "cache": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-normal-native/CMakeCache.txt",
+        "bytes": 32192,
+        "sha256": "97ee8b2a951ee9c0b2baefd36f0910135d8f2cf52e8fda688ba5fbff96fc4b76"
+      }
+    },
+    "Web": {
+      "qualification": "OFF",
+      "frameTiming": "OFF",
+      "diagnostics": "OFF",
+      "cache": {
+        "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/build-normal/CMakeCache.txt",
+        "bytes": 30983,
+        "sha256": "ae5681e5b0b14baff51a0d5fb7fd2457cd4be78b24154fa0ac01646886ea901a"
+      }
+    }
+  },
+  "storage": {
+    "peakRetainedBytes": 766861211,
+    "logicalBytes": 2890536319,
+    "retainedCapBytes": 4294967296,
+    "logicalCapBytes": 8589934592,
+    "assessment": "Within predeclaredprospective limits; oldr1failure not waived."
+  },
+  "no_extra_runtime_tests_by_control": true
+}

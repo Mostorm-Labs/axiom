@@ -1,0 +1,12 @@
+{
+  "status": "B_RED_C_TARGET_GREEN",
+  "originalCheckpointB": "230ee4c5",
+  "B": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/navigation-B.log",
+  "CbeforeFix": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/navigation-trace.log",
+  "CbeforeTrace": "3271.334usCompact estimate,127calls0step/jobsource1",
+  "Cafter": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/legacy-cost-green.log",
+  "cause": "Legacyshortalgorithm1sourcecoverageandfinish shareCompactbucket despite differentphase coldcost; reservedestimate>2ms indefinitely denies nextshortsource initialization.",
+  "fix": "Separatelegacyadvance/finish estimates fromv4; sameexistingactualtime/step allowance unchanged.",
+  "test128Unchanged": true,
+  "noWebSamplingSinceFix": true
+}

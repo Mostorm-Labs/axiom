@@ -1,0 +1,81 @@
+{
+  "status": "SAVE_VERIFICATION_PASSED_WITH_KNOWN_REVIEW_BLOCKER",
+  "branch": "codex/g5-immediate-erase-navigation-r2",
+  "preCommit": "db3430600f22d4c9e9a5a2a40e416b42a3f10c83",
+  "sourceFiles": 1220,
+  "SDKFiles": 42,
+  "freezeBindings": 2548,
+  "sourceManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-C.json",
+    "bytes": 148047,
+    "sha256": "a6968c5348e1320db9dd5c14e4adf20f31608a3e518c618cf6561c617fe6c569"
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/normal-SDK.json",
+    "bytes": 4284,
+    "sha256": "5fdd8ea95340084b04a3c32fdb19e368864551e2afc7595559dd4d042acf98f5"
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/result.json",
+    "bytes": 8723,
+    "sha256": "88f635936696742820a787f3b349a201df49852ee6209297000092f499f5205b"
+  },
+  "delta": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch",
+    "bytes": 95166,
+    "sha256": "375b7a95887d4b8f97a253f25678cf090d9792d401450d3ecefbad3243572a32"
+  },
+  "review": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/control-review.json",
+    "bytes": 7764,
+    "sha256": "06b1d3cea66718edee8be601a1e9bec4c84fdae56d7696e1916adc2a44e7391b"
+  },
+  "nativeSaveChecks": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/save-20261118/native-save-checks.json",
+    "bytes": 3940,
+    "sha256": "0702fbfc1b7bd9d1b5839c762c63905cd4c5fb2e94bf683ee20d4d1c80296881"
+  },
+  "primary42Unchanged": true,
+  "primaryIndexEmpty": true,
+  "r1ImmutableInputsUnchanged": true,
+  "exactControlCopies": 19,
+  "demos": [
+    {
+      "port": 4346,
+      "PID": 96994,
+      "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4346 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-p36-r1/install-normal-C/js"
+    },
+    {
+      "port": 4347,
+      "PID": 42506,
+      "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4347 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/g5-immediate-erase-navigation/out/G5-immediate-erase-navigation-r1/install-normal/js"
+    },
+    {
+      "port": 4348,
+      "PID": 93892,
+      "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4348 --bind 127.0.0.1"
+    }
+  ],
+  "newBrowserStarts": 0,
+  "frozenMatrixRerun": false,
+  "normalBuildChecks": "All three existing native tests/normal native Render/normal Web targets: ninja no work to do.",
+  "NodeTests": {
+    "passed": 20,
+    "failed": 0
+  },
+  "boundaryContractFiles": 122,
+  "gitDiffCheckExit": 0,
+  "controlVerdict": "BLOCKED / FROZEN_REQUIREMENT_FAILURE",
+  "onlyCandidateBlocker": "IEN4:C2immediatepinch103.133333285652>100ms",
+  "remainingUntrackedRuntimeLock": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/storage-ledger.lock",
+  "rawArtifactAccessibility": "Samehost absolute paths retained; raw buffers/buildSDK not incommit; noGit-only complete evidence claim.",
+  "gitDiffCheckScope": "Initial unstaged code diff; staged explicit whitelist excluding immutable source-delta.patch artifact also passes.",
+  "stagedFullDiffCheck": {
+    "exit": 2,
+    "diagnostic": ".aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:199: trailing whitespace.\n+   std::unique_ptr<semantic::PreparedOperationIntent> explicitIntent_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:200: trailing whitespace.\n+   std::optional<interaction::EditorHistory::PreparedEntry> explicitIntentHistory_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:201: trailing whitespace.\n+   bool explicitIntentActive_ = false;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:202: trailing whitespace.\n+-  render::SkiaRenderer skiaRenderer_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:206: trailing whitespace.\n+   render::SkiaRenderer previewRenderer_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:207: trailing whitespace.\n+   mutable std::mutex previewRenderMutex_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:208: trailing whitespace.\n+   mutable std::mutex previewProviderMutex_;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:316: trailing whitespace.\n+ \n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:317: trailing whitespace.\n+ // The only common drawing adapter. It consumes runtime-owned render data and\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:318: trailing whitespace.\n+ // submits Skia draw calls to a platform-owned SkiaSurfaceProvider.\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:330: trailing whitespace.\n+ class SkiaRenderer final {\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:331: trailing whitespace.\n+   public:\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:335: trailing whitespace.\n+     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:336: trailing whitespace.\n+         SkiaSurfaceProvider& provider, const FramePlan& plan,\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:337: trailing whitespace.\n+-        const EditingOverlay* selectionOverlay);\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:341: trailing whitespace.\n+     [[nodiscard]] BackendSubmissionResult renderPreview(\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:342: trailing whitespace.\n+         SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:343: trailing whitespace.\n+         const PreviewStyleOverride& style = {});\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:363: trailing whitespace.\n+     ImageResourceResolver* images_ = nullptr;\n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:390: trailing whitespace.\n+ \n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:398: trailing whitespace.\n+ \n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:429: trailing whitespace.\n+ \n.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch:487: trailing whitespace.\n+ \n",
+    "onlyArtifact": ".aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch",
+    "reason": "This is the already reviewed exact frozen patch file. Its quoted CRLF/context lines are treated as new whitespace by an outer diff. Preserve frozen bytes/hash rather than normalizing this evidence. All staged code, tests, JSON, copied package/review and fresh save records pass without this artifact.",
+    "frozenBytes": 95166,
+    "frozenSHA256": "375b7a95887d4b8f97a253f25678cf090d9792d401450d3ecefbad3243572a32"
+  }
+}

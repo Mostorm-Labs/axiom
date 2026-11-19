@@ -1,0 +1,1511 @@
+{
+  "at": "2026-11-19T03:19:12.021925+00:00",
+  "reviewOwner": "CONTROL_REVIEW independent of producer",
+  "repository": {
+    "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom": {
+      "HEAD": "4d015193ce68eca798b02786abc22a0aef6233b8",
+      "branch": "codex/g5-exposure-region-checkpoint",
+      "origin": "git@github.com:Mostorm-Labs/axiom.git",
+      "trackedStatus": "",
+      "indexPaths": ""
+    },
+    "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery": {
+      "HEAD": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+      "branch": "codex/g5-settled-navigation-recovery",
+      "origin": "git@github.com:Mostorm-Labs/axiom.git",
+      "trackedStatus": "M runtime/render/src/compact_raster_internal.hpp\n M runtime/render/src/skia_render_cache.cpp\n M runtime/render/src/skia_render_cache_internal.hpp\n M sdk/web/bridge.cpp",
+      "indexPaths": ""
+    },
+    "/Users/qing/.codex/worktrees/g5-erase-feedback-frame": {
+      "HEAD": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+      "branch": "codex/g5-erase-feedback-frame",
+      "origin": "git@github.com:Mostorm-Labs/axiom.git",
+      "trackedStatus": "",
+      "indexPaths": ""
+    }
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-settled-navigation-recovery-r1/package.json",
+    "bytes": 3238,
+    "sha256": "04096ca6b1498ce9888228f22e0ca754374083c6fac5369106024542a2fdb32b"
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/result.json",
+    "bytes": 16436,
+    "sha256": "1564c55c4f8d508a2756df3c1be811c65c80e9fc01a5dc4fb1dc7004f3a46d41"
+  },
+  "manifestFileCount": 2016,
+  "manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/artifact-manifest.json",
+    "bytes": 595161,
+    "sha256": "623ad645936432b960c99db06163ced56ab9105bf037ada90256223cae95a53b"
+  },
+  "freezeCounts": {
+    "freeze-SNR-D-B-ISOLATED.json": 1672,
+    "freeze-SNR-D-B-ORDER.json": 1672,
+    "freeze-SNR-D-B-PROGRESS-CORRECTIVE.json": 1684,
+    "freeze-SNR-D-B-PROGRESS.json": 1674,
+    "freeze-SNR-D-B-REVERSE.json": 1672
+  },
+  "uniqueHashedFiles": 8225,
+  "rawRecomputation": [
+    {
+      "mode": "ORDER",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "navigationMs": 2063.7000000476837,
+      "convergenceMs": 482.2999999523163,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 14.799999952316284,
+        "sum": 1332.6000006198883
+      },
+      "recoveryCallbacks": 26,
+      "recoveryCallbackCpuMs": 204.29999995231628,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ORDER",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "navigationMs": 2076.2000000476837,
+      "convergenceMs": 280.10000014305115,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 25.199999809265137,
+        "sum": 1352.8000013828278
+      },
+      "recoveryCallbacks": 14,
+      "recoveryCallbackCpuMs": 80.0,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ORDER",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "navigationMs": 2038.1000001430511,
+      "convergenceMs": 448.09999990463257,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 14.600000143051147,
+        "sum": 1285.0999987125397
+      },
+      "recoveryCallbacks": 24,
+      "recoveryCallbackCpuMs": 187.39999914169312,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ORDER",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "navigationMs": 2038.1000001430511,
+      "convergenceMs": 204.39999985694885,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 12.700000047683716,
+        "sum": 1254.600001335144
+      },
+      "recoveryCallbacks": 10,
+      "recoveryCallbackCpuMs": 38.59999990463257,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ISOLATED",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pan/raw.json",
+      "navigationMs": 2062.9000000953674,
+      "convergenceMs": 514.0,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 18.40000009536743,
+        "sum": 1463.800002336502
+      },
+      "recoveryCallbacks": 28,
+      "recoveryCallbackCpuMs": 204.80000042915344,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ISOLATED",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pinch/raw.json",
+      "navigationMs": 2062.9000000953674,
+      "convergenceMs": 316.7999999523163,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 13.399999856948853,
+        "sum": 1209.9999997615814
+      },
+      "recoveryCallbacks": 16,
+      "recoveryCallbackCpuMs": 103.09999942779541,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ISOLATED",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pan/raw.json",
+      "navigationMs": 2034.5999999046326,
+      "convergenceMs": 530.5999999046326,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 14.200000047683716,
+        "sum": 1249.7999985218048
+      },
+      "recoveryCallbacks": 29,
+      "recoveryCallbackCpuMs": 229.50000023841858,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "ISOLATED",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pinch/raw.json",
+      "navigationMs": 2038.8999998569489,
+      "convergenceMs": 200.90000009536743,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 15.099999904632568,
+        "sum": 1346.9000005722046
+      },
+      "recoveryCallbacks": 10,
+      "recoveryCallbackCpuMs": 37.59999942779541,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "REVERSE",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "navigationMs": 2033.3999998569489,
+      "convergenceMs": 203.90000009536743,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 16.90000009536743,
+        "sum": 1369.5000009536743
+      },
+      "recoveryCallbacks": 10,
+      "recoveryCallbackCpuMs": 38.89999985694885,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "REVERSE",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 427.7000000476837,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 21.40000009536743,
+        "sum": 1302.2999997138977
+      },
+      "recoveryCallbacks": 23,
+      "recoveryCallbackCpuMs": 173.49999976158142,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "REVERSE",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "navigationMs": 2072.0999999046326,
+      "convergenceMs": 263.40000009536743,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 13.5,
+        "sum": 1233.199999332428
+      },
+      "recoveryCallbacks": 13,
+      "recoveryCallbackCpuMs": 80.90000009536743,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "REVERSE",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "navigationMs": 2062.0999999046326,
+      "convergenceMs": 458.60000014305115,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 13.400000095367432,
+        "sum": 1285.1000003814697
+      },
+      "recoveryCallbacks": 25,
+      "recoveryCallbackCpuMs": 192.7000002861023,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "PROGRESS-CORRECTIVE",
+      "case": "immediate-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "navigationMs": 2075.0999999046326,
+      "convergenceMs": 582.5,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 16.799999952316284,
+        "sum": 719.8000001907349
+      },
+      "recoveryCallbacks": 32,
+      "recoveryCallbackCpuMs": 331.8999996185303,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "PROGRESS-CORRECTIVE",
+      "case": "immediate-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "navigationMs": 2059.5999999046326,
+      "convergenceMs": 267.2000000476837,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 15.299999952316284,
+        "sum": 916.6999995708466
+      },
+      "recoveryCallbacks": 13,
+      "recoveryCallbackCpuMs": 96.10000014305115,
+      "generationBeforeNavigation": "2",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "PROGRESS-CORRECTIVE",
+      "case": "settled-pan",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 544.7000000476837,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 10.399999856948853,
+        "sum": 869.300000667572
+      },
+      "recoveryCallbacks": 30,
+      "recoveryCallbackCpuMs": 282.5000002384186,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    },
+    {
+      "mode": "PROGRESS-CORRECTIVE",
+      "case": "settled-pinch",
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "navigationMs": 2037.0,
+      "convergenceMs": 170.59999990463257,
+      "tailCallbacks": 120,
+      "tailQueueDelayMs": {
+        "count": 120,
+        "max": 16.59999990463257,
+        "sum": 900.00000166893
+      },
+      "recoveryCallbacks": 8,
+      "recoveryCallbackCpuMs": 46.00000023841858,
+      "generationBeforeNavigation": "3",
+      "primaryMoves": 480,
+      "navigationMoves": 120
+    }
+  ],
+  "progress": [
+    {
+      "case": "immediate-pan",
+      "pairs": [
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 0,
+          "delta": {
+            "coverage_steps": 1,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 0,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 1,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 1,
+          "cursorAfter": 1,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 1,
+          "cursorAfter": 2,
+          "delta": {
+            "coverage_steps": 272,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 2,
+          "cursorAfter": 3,
+          "delta": {
+            "coverage_steps": 152,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 3,
+          "cursorAfter": 4,
+          "delta": {
+            "coverage_steps": 185,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 4,
+          "cursorAfter": 5,
+          "delta": {
+            "coverage_steps": 238,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 5,
+          "cursorAfter": 6,
+          "delta": {
+            "coverage_steps": 243,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 6,
+          "cursorAfter": 7,
+          "delta": {
+            "coverage_steps": 268,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 7,
+          "cursorAfter": 7,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 7,
+          "cursorAfter": 8,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 7,
+            "mask_updates": 7,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 8,
+          "cursorAfter": 9,
+          "delta": {
+            "coverage_steps": 170,
+            "body_builds": 0,
+            "body_tiles": 5,
+            "mask_updates": 5,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 9,
+          "cursorAfter": 10,
+          "delta": {
+            "coverage_steps": 246,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 10,
+          "cursorAfter": 11,
+          "delta": {
+            "coverage_steps": 261,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 11,
+          "cursorAfter": 12,
+          "delta": {
+            "coverage_steps": 186,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 12,
+          "cursorAfter": 12,
+          "delta": {
+            "coverage_steps": 223,
+            "body_builds": 0,
+            "body_tiles": 5,
+            "mask_updates": 5,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 12,
+          "cursorAfter": 13,
+          "delta": {
+            "coverage_steps": 129,
+            "body_builds": 0,
+            "body_tiles": 4,
+            "mask_updates": 4,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 13,
+          "cursorAfter": 14,
+          "delta": {
+            "coverage_steps": 225,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 14,
+          "cursorAfter": 15,
+          "delta": {
+            "coverage_steps": 188,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 15,
+          "cursorAfter": 15,
+          "delta": {
+            "coverage_steps": 272,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 15,
+          "cursorAfter": 17,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 17,
+            "mask_updates": 17,
+            "raster_groups": 2
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 17,
+          "cursorAfter": 25,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 18,
+            "mask_updates": 18,
+            "raster_groups": 2
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 25,
+          "cursorAfter": 33,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 18,
+            "mask_updates": 18,
+            "raster_groups": 2
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 33,
+          "cursorAfter": 40,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 13,
+            "mask_updates": 13,
+            "raster_groups": 2
+          },
+          "useful": true,
+          "alreadyComplete": false
+        }
+      ],
+      "resets": [
+        {
+          "at": 20049.200000047684,
+          "job": "4",
+          "camera": "3",
+          "cursor": 40,
+          "reason": "cache-site-245"
+        }
+      ],
+      "attempts": 24,
+      "useful": 24,
+      "alreadyComplete": 0,
+      "gpuEpochMax": 2,
+      "limitation": "Observed basis and work only; raw does not expose every body/mask pointee identity, cannot reconstruct old failed job."
+    },
+    {
+      "case": "immediate-pinch",
+      "pairs": [
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 0,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 1,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 3,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 26,
+            "raster_groups": 3
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 3,
+          "cursorAfter": 7,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 26,
+            "raster_groups": 4
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 7,
+          "cursorAfter": 11,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 24,
+            "raster_groups": 4
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 11,
+          "cursorAfter": 14,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 28,
+            "raster_groups": 3
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 14,
+          "cursorAfter": 40,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 17,
+            "raster_groups": 3
+          },
+          "useful": true,
+          "alreadyComplete": false
+        }
+      ],
+      "resets": [
+        {
+          "at": 49963.300000190735,
+          "job": "4",
+          "camera": "3",
+          "cursor": 40,
+          "reason": "cache-site-245"
+        }
+      ],
+      "attempts": 6,
+      "useful": 6,
+      "alreadyComplete": 0,
+      "gpuEpochMax": 1,
+      "limitation": "Observed basis and work only; raw does not expose every body/mask pointee identity, cannot reconstruct old failed job."
+    },
+    {
+      "case": "settled-pan",
+      "pairs": [
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 0,
+          "delta": {
+            "coverage_steps": 1,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 0,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 0,
+          "cursorAfter": 1,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 1,
+          "cursorAfter": 1,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 2,
+            "mask_updates": 2,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 1,
+          "cursorAfter": 2,
+          "delta": {
+            "coverage_steps": 88,
+            "body_builds": 0,
+            "body_tiles": 7,
+            "mask_updates": 7,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 2,
+          "cursorAfter": 3,
+          "delta": {
+            "coverage_steps": 184,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 3,
+          "cursorAfter": 3,
+          "delta": {
+            "coverage_steps": 272,
+            "body_builds": 0,
+            "body_tiles": 6,
+            "mask_updates": 6,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 3,
+          "cursorAfter": 4,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 4,
+          "cursorAfter": 5,
+          "delta": {
+            "coverage_steps": 271,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 5,
+          "cursorAfter": 6,
+          "delta": {
+            "coverage_steps": 272,
+            "body_builds": 0,
+            "body_tiles": 5,
+            "mask_updates": 5,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 6,
+          "cursorAfter": 7,
+          "delta": {
+            "coverage_steps": 87,
+            "body_builds": 0,
+            "body_tiles": 7,
+            "mask_updates": 7,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 7,
+          "cursorAfter": 7,
+          "delta": {
+            "coverage_steps": 184,
+            "body_builds": 0,
+            "body_tiles": 5,
+            "mask_updates": 5,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 7,
+          "cursorAfter": 8,
+          "delta": {
+            "coverage_steps": 163,
+            "body_builds": 0,
+            "body_tiles": 4,
+            "mask_updates": 4,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 8,
+          "cursorAfter": 9,
+          "delta": {
+            "coverage_steps": 166,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 9,
+          "cursorAfter": 10,
+          "delta": {
+            "coverage_steps": 255,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 10,
+          "cursorAfter": 11,
+          "delta": {
+            "coverage_steps": 238,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 11,
+          "cursorAfter": 11,
+          "delta": {
+            "coverage_steps": 263,
+            "body_builds": 0,
+            "body_tiles": 5,
+            "mask_updates": 5,
+            "raster_groups": 0
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 11,
+          "cursorAfter": 12,
+          "delta": {
+            "coverage_steps": 204,
+            "body_builds": 0,
+            "body_tiles": 4,
+            "mask_updates": 4,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 12,
+          "cursorAfter": 13,
+          "delta": {
+            "coverage_steps": 196,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 13,
+          "cursorAfter": 14,
+          "delta": {
+            "coverage_steps": 246,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 14,
+          "cursorAfter": 15,
+          "delta": {
+            "coverage_steps": 264,
+            "body_builds": 0,
+            "body_tiles": 9,
+            "mask_updates": 9,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 15,
+          "cursorAfter": 17,
+          "delta": {
+            "coverage_steps": 176,
+            "body_builds": 0,
+            "body_tiles": 15,
+            "mask_updates": 15,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        },
+        {
+          "job": "6",
+          "camera": "244",
+          "cursorBefore": 17,
+          "cursorAfter": 40,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 3,
+            "mask_updates": 3,
+            "raster_groups": 1
+          },
+          "useful": true,
+          "alreadyComplete": false
+        }
+      ],
+      "resets": [
+        {
+          "at": 88160.20000004768,
+          "job": "5",
+          "camera": "3",
+          "cursor": 40,
+          "reason": "cache-site-245"
+        }
+      ],
+      "attempts": 22,
+      "useful": 22,
+      "alreadyComplete": 0,
+      "gpuEpochMax": 2,
+      "limitation": "Observed basis and work only; raw does not expose every body/mask pointee identity, cannot reconstruct old failed job."
+    },
+    {
+      "case": "settled-pinch",
+      "pairs": [
+        {
+          "job": "5",
+          "camera": "244",
+          "cursorBefore": 40,
+          "cursorAfter": 40,
+          "delta": {
+            "coverage_steps": 0,
+            "body_builds": 0,
+            "body_tiles": 0,
+            "mask_updates": 0,
+            "raster_groups": 0
+          },
+          "useful": false,
+          "alreadyComplete": true
+        }
+      ],
+      "resets": [],
+      "attempts": 1,
+      "useful": 0,
+      "alreadyComplete": 1,
+      "gpuEpochMax": 1,
+      "limitation": "Observed basis and work only; raw does not expose every body/mask pointee identity, cannot reconstruct old failed job."
+    }
+  ],
+  "lifecycle": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/raw.json",
+      "workersCreated": 4,
+      "workersTerminated": 4,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pan/raw.json",
+      "workersCreated": 1,
+      "workersTerminated": 1,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pinch/raw.json",
+      "workersCreated": 1,
+      "workersTerminated": 1,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pan/raw.json",
+      "workersCreated": 1,
+      "workersTerminated": 1,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pinch/raw.json",
+      "workersCreated": 1,
+      "workersTerminated": 1,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/raw.json",
+      "workersCreated": 4,
+      "workersTerminated": 4,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/raw.json",
+      "workersCreated": 4,
+      "workersTerminated": 4,
+      "callbacksAfterClose": 0,
+      "pendingAtEnd": [],
+      "physicalGpuRelease": "unobservable"
+    }
+  ],
+  "harnessCorrection": {
+    "changedFiles": [
+      "web.mjs"
+    ],
+    "onlyLosslessIndentationRemoval": true,
+    "failedPartialRetained": true,
+    "correctiveBytes": 45066136,
+    "failedStartReturncode": 1
+  },
+  "sampling": {
+    "starts": 5,
+    "chargedSeconds": 590,
+    "performanceRetries": 0,
+    "newControlSampling": 0
+  },
+  "storage": {
+    "peakRetainedBytes": 350295100,
+    "logicalBytes": 661952163,
+    "actualRetainedBytes": 350295100,
+    "retainedCapBytes": 4294967296,
+    "logicalCapBytes": 8589934592
+  },
+  "storagePathMismatches": [],
+  "oldFailure": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-C1/DPR2/raw.json",
+    "bytes": 4626308,
+    "sha256": "defc72b30b955eb9e4897c8cf78946f54cb966fdcb4a49dd7f33f1a54f64f148",
+    "navigationMs": 2750.0,
+    "convergenceMs": 5125.100000143051,
+    "recoveryCallbacks": 304,
+    "tailCallbacks": 9,
+    "generationBeforeNavigation": "3",
+    "status": "ORIGINAL_UNMET_UNCHANGED"
+  },
+  "failures": [],
+  "productionFixExists": false,
+  "originalPerformanceClosed": false,
+  "storageAccounting": {
+    "classification": {
+      "existingFileWithinHistoricalHighwater": 121,
+      "historicalPartialHighwaterRetained": 40,
+      "gzipChargedDecodedLength": 40
+    },
+    "semantics": "Historical decoded-byte highwater is not a current retained-file inventory; .partial highwater conservatively persists after rename, gzip uses decoded length. No undercharge or cap breach found.",
+    "bufferChecks": [
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pan/immediate-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pan/immediate-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pinch/immediate-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/immediate-pinch/immediate-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pan/settled-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pan/settled-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pinch/settled-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ISOLATED/DPR2/settled-pinch/settled-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/immediate-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/immediate-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/immediate-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "6c75a9dbba41fa8b195ba7ff34ae04b1fadac6eff24236d4cfcf96aa008566b5"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/immediate-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/settled-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "f1fe15a010e4d5bd144f5b5dc4022b0ce1a506e9109709b39b204c2e25b25e10"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/settled-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "499d3622b6eb54713662d65316891c4f7d56450f372befdaa87dd74ce176c368"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/settled-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "cddfa8dc752378a3f9a7da4ef1084ef887ef4684f53bbc03fb78493bec94a20d"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-ORDER/DPR2/settled-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "2081c8c1a5c4db7269459625bbd5507afe1daae54c36b86fa20cd66419a92513"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/immediate-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/immediate-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/immediate-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "6c75a9dbba41fa8b195ba7ff34ae04b1fadac6eff24236d4cfcf96aa008566b5"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/immediate-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/settled-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "f1fe15a010e4d5bd144f5b5dc4022b0ce1a506e9109709b39b204c2e25b25e10"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/settled-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "499d3622b6eb54713662d65316891c4f7d56450f372befdaa87dd74ce176c368"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/settled-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "cddfa8dc752378a3f9a7da4ef1084ef887ef4684f53bbc03fb78493bec94a20d"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS/DPR2/settled-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "2081c8c1a5c4db7269459625bbd5507afe1daae54c36b86fa20cd66419a92513"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/immediate-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/immediate-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/immediate-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "6c75a9dbba41fa8b195ba7ff34ae04b1fadac6eff24236d4cfcf96aa008566b5"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/immediate-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/settled-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "f1fe15a010e4d5bd144f5b5dc4022b0ce1a506e9109709b39b204c2e25b25e10"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/settled-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "499d3622b6eb54713662d65316891c4f7d56450f372befdaa87dd74ce176c368"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/settled-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "cddfa8dc752378a3f9a7da4ef1084ef887ef4684f53bbc03fb78493bec94a20d"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-PROGRESS-CORRECTIVE/DPR2/settled-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "2081c8c1a5c4db7269459625bbd5507afe1daae54c36b86fa20cd66419a92513"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/settled-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "62007e429d648386eed320e096eacf50e5c13daccac563aef5fbfb1357537a39"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/settled-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "af872fd6ba63379503efc10fb24ecf051f074b5e327e2bb89b9fd64bddbeff73"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/settled-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "6c75a9dbba41fa8b195ba7ff34ae04b1fadac6eff24236d4cfcf96aa008566b5"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/settled-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "5609caaf0b918054f8e4aefde22bb29fbe64b9c53df37d03050c7ac2c8f3f42b"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/immediate-pinch-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "f1fe15a010e4d5bd144f5b5dc4022b0ce1a506e9109709b39b204c2e25b25e10"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/immediate-pinch-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "499d3622b6eb54713662d65316891c4f7d56450f372befdaa87dd74ce176c368"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/immediate-pan-before-primary.axsnap.gz",
+        "decodedBytes": 6802431,
+        "decodedSHA256": "cddfa8dc752378a3f9a7da4ef1084ef887ef4684f53bbc03fb78493bec94a20d"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/out/G5-settled-navigation-recovery-r1/web/SNR-D-B-REVERSE/DPR2/immediate-pan-after-navigation.axsnap.gz",
+        "decodedBytes": 8800511,
+        "decodedSHA256": "2081c8c1a5c4db7269459625bbd5507afe1daae54c36b86fa20cd66419a92513"
+      }
+    ]
+  }
+}

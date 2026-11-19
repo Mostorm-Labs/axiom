@@ -1,0 +1,92 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "G5-immediate-erase-navigation-r2",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "created_at": "2026-11-18T17:00:16.811019+08:00",
+  "supersedes_execution_only": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-immediate-erase-navigation-r1/package.json",
+    "bytes": 2830,
+    "sha256": "f63835e7afcb969f3a405610136fb98f469ff9910e2e0b3a7be50aa85dc77ffe"
+  },
+  "execution_ref": "refs/heads/codex/g5-immediate-erase-navigation-r2",
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "0ca177178aff2fb28f55a71802e74517e886a627",
+    "execution_ref": "refs/heads/codex/g5-immediate-erase-navigation",
+    "completed_through": "r1 exactsource reconciled;57native localmechanism passes retained; realWeb performance failed, candidate independentpixels missing. Not accepted.",
+    "source_manifest_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation/.aegis/results/G5-immediate-erase-navigation-r1/source-C.json",
+      "bytes": 147777,
+      "sha256": "c918b550224f39792cfcc1e8bfe0543e93cd069437ac373052ed01055f45404f"
+    },
+    "delta_manifest_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation/.aegis/results/G5-immediate-erase-navigation-r1/delta-manifest.json",
+      "bytes": 3144,
+      "sha256": "488984a3a7222500bc233cd4f85547928feb9b34f8e1c11414818ebf464b6ac2"
+    },
+    "next_action": "Create r2isolated source fromcursor+11exactfiles; package/storagepreflight; actualGPUComposition twofinger RED, then scopedrepair andfullfrozenclosure"
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-immediate-erase-navigation-r2"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 3281,
+    "sha256": "fbcc3378515e820513344a246600aa3f1fcbac0b082ea204bf2b923384772547"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 10218,
+    "sha256": "f13c6305edcc0c9f1a3d083b4c7bfd72fcd2b89768c36c796008906f34b277f4"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 9885,
+    "sha256": "0a84b46fcf82389276b23753627fe39887d3582d3f20f4cbea124d87234f2c93"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 3364,
+    "sha256": "d3959b11d34e29ab1b9e925e1a936f3133e6241d4d227094586f66ab88cb6e77"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 5034,
+    "sha256": "35ece2f44d680ee60ad7206765f6ea6caaaa1b5c301fa27e57139a24686501d7"
+  },
+  "storage_contract_ref": {
+    "path": "storage-contract.json",
+    "bytes": 3302,
+    "sha256": "839cac3e679107e757e15eaf79751b2bf9950d91b9486879af88457e1fbb25eb"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 2003,
+    "sha256": "4790a5dec0c7a92dc717c9c4356a1bec04f5f17183efb0f94b9a554b91f93e5d"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 14076,
+    "sha256": "073250f45f82fc04b333bacce93d8d09174b758494de434c5c51cbb0978ea863"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 3469,
+    "sha256": "ed33545c9e20ededba899e451b2d95c4a009b2d53e42d49b1bcc89ae79e2591a"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "status": "FROZEN_BEFORE_PRODUCTION_EDIT",
+  "viewport_logical": [1431,1010],
+  "DPRs": [2,4],
+  "fixture_snapshot_SHA256": "17f0f5ceaa10b0de2f808dd5deed40e44295a4179a43a388d14dd731cb949fbe",
+  "camera_curve": "Exact package workload geometric60sample segments1->2->0.5->1.5, two multiplicative cycles,360 fixed wallclock deadlines at1000/60ms. Focus715.5,505; route startscale1,translation-200,-120. Wheel and actual CDP two-touch each use curve; no segment settles.",
+  "checkpoints": [20,40,60,80,100,120,140,160,180,240,300,360],
+  "ROI": "Full native-pixel viewport retained as compressed PNG plus preview. Independent geometryedge profile centers cover each visible nonimage geometry reference; image interiors, shadows, crossings and unresolved subpixel edges are excluded by reference-only tests. ROI never crops to where candidate looks good.",
+  "reference": "Independent full-reference draw of exact frozen snapshot at the ACTUAL captured successful-present transform/dimensions. Use strict/nullcache reference, never navigation tiles or candidate policy. Sources/font/image assets bound; no candidate-derived edge band or content-registration.",
+  "edge_locations": "Reference-fixed geometric centers: samples at every8logical units along shape/table/sticky straight edges, and every32original compact contour boundary segments by arclength/index; eligible centers are transformed from source/object/world coordinates, use the exact same source edge IDs in paired B/C. Retain geometric ID/normal/position and raw reference/actual profiles. Eligibility determined only from independent reference and object class.",
+  "eligible_profile": "At each projected geometric location, reference gradient normal from central luminance derivative. Bilinear luminance sample -10..10devicepixels step0.25. Reference endplateaucontrast>=0.25; unique monotonic10/90crossing within profile; no competing reference-gradient peak outside centraledge above50%mainpeak; reference10-90spread>=0.75devicepixel; exclude unresolved narrowdoubleedges, intersections, texturedimage/shadow. Alpha/width/ringing checks independent of blur number. If insufficient eligible edges per requiredcheckpoint return unavailable, never zero blur.",
+  "numeric": "For each shared eligible geometric ID:spreadExcess=max(0,(spreadActual-spreadReference)/max(spreadReference,1devicepixel)); checkpointmedian, contrast absoluteerror and edgecounts. Improvement lower excess by>=0.10 OR both<=0.10 with contrast error worsening<=0.05. Per route/DPR at least6/12 checkpoints qualify; median<=0.70baseline when baseline>=0.20, else candidate<=baseline+0.05 and<=0.20.",
+  "provenance": "Only successful actual providerpresent record supplies displayedcamera+Scene/resource/surface/metrics/view/fullaffine/pixeldimensions/presentsequence. Requested SDKreadState remains separate; stale displayedpose incurs lag and cannot masquerade as crisp. Diagnostic B/C isolatedsourcepatch identical and frozen before optical starts, ordinary SDK uninstrumented. Native same-camera proof plus optical evidence required.",
+  "ordinary": "No readback in ordinary inputtiming windows. GL writes are a contentsubmission proxy, notphysicalphoton or currentcamera evidence. Record all deadlines/actualdispatch/inputcounts and final canonicalreceipt/snapshot separately.",
+  "gates_ref": ".aegis/packages/G5-continuous-zoom-quality-r1/metrics-contract.json",
+  "changes_after_candidate_results": false
+}

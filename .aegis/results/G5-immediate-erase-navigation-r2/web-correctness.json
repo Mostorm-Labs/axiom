@@ -1,0 +1,309 @@
+{
+  "status": "OBSERVED",
+  "contexts": [
+    {
+      "role": "B",
+      "DPR": 2,
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "cases": [
+        {
+          "id": "immediate-pan",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        },
+        {
+          "id": "immediate-pinch",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        }
+      ]
+    },
+    {
+      "role": "B",
+      "DPR": 4,
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "cases": [
+        {
+          "id": "immediate-pan",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        },
+        {
+          "id": "immediate-pinch",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        }
+      ]
+    },
+    {
+      "role": "C",
+      "DPR": 2,
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "cases": [
+        {
+          "id": "immediate-pan",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        },
+        {
+          "id": "immediate-pinch",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        }
+      ]
+    },
+    {
+      "role": "C",
+      "DPR": 4,
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "cases": [
+        {
+          "id": "immediate-pan",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        },
+        {
+          "id": "immediate-pinch",
+          "generation": "5",
+          "presented": "5",
+          "operations": 5,
+          "contacts": 0,
+          "validRestored": true
+        }
+      ]
+    }
+  ],
+  "semantic": [
+    {
+      "role": "B",
+      "DPR": 2,
+      "case": "immediate-pan",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "B",
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "B",
+      "DPR": 4,
+      "case": "immediate-pan",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "B",
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "C",
+      "DPR": 2,
+      "case": "immediate-pan",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "C",
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "C",
+      "DPR": 4,
+      "case": "immediate-pan",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    },
+    {
+      "role": "C",
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "exit": 0,
+      "stdout": "{\"redoCanonicalObjectResourceBackgroundEqual\":true,\"undoChangedObjects\":true,\"revisions\":[45,46,47]}\n",
+      "stderr": ""
+    }
+  ],
+  "samePosePixelPairs": [
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "label": "before-primary",
+      "bytes": 23124960,
+      "changedChannels": 0,
+      "maxDelta": 0,
+      "Bsha": "ec8fa9fc72278bb03b793145386d0a7e325e9eb14e9e08f4b140a22e6f300182",
+      "Csha": "ec8fa9fc72278bb03b793145386d0a7e325e9eb14e9e08f4b140a22e6f300182",
+      "byteEqual": true
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "label": "terminal",
+      "bytes": 23124960,
+      "changedChannels": 330,
+      "maxDelta": 45,
+      "Bsha": "173f49a8f55094ca00fd34d4ba9888c3e0c69e6de5abf4750681c5fdc43a62b8",
+      "Csha": "f98dc1d041b60cdb27f3a359ce52ebb2949bd926ee606156a794903aeedd41e1",
+      "byteEqual": false
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pan",
+      "label": "redo",
+      "bytes": 23124960,
+      "changedChannels": 328,
+      "maxDelta": 45,
+      "Bsha": "f14abcba8f8f508b2acdc102f9752cee6caae56e80eed36748716796fb0a6a66",
+      "Csha": "1ac94499fd1401b7129af7c71b354c3084490929fa382f49c342ca40f020ef5e",
+      "byteEqual": false
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "label": "before-primary",
+      "bytes": 23124960,
+      "changedChannels": 4,
+      "maxDelta": 1,
+      "Bsha": "14e9150aa8c47e72eca39d0268875c7e3ea5d492da9aa79eb640d4709028b2cf",
+      "Csha": "a3591a28227dc7b25421c422215832ba466e0b8d41f525325cbafdd694513fc3",
+      "byteEqual": false
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "label": "terminal",
+      "bytes": 23124960,
+      "changedChannels": 10,
+      "maxDelta": 6,
+      "Bsha": "ae5826b28e177f038cc23672f61ef1dc805063c5b41b856bec6b065467d41e67",
+      "Csha": "f3d707c6a3a4876e370e0d6def48610bc7148ffc40eb5bc50ba1d4b832844e5f",
+      "byteEqual": false
+    },
+    {
+      "DPR": 2,
+      "case": "immediate-pinch",
+      "label": "redo",
+      "bytes": 23124960,
+      "changedChannels": 7,
+      "maxDelta": 1,
+      "Bsha": "b36ab64194804608a19fdc8ee26eebbdd7f4e1400ecf7a8a6e2b068b84649e8b",
+      "Csha": "807d3685a9dc753d56bceed105578d8c322e7d74f37897da047def45575856c3",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "label": "before-primary",
+      "bytes": 92499840,
+      "changedChannels": 1,
+      "maxDelta": 1,
+      "Bsha": "e77e807a3476652229569b682829ecf79950d698995b023bfd2422e7c84ac632",
+      "Csha": "ed86fe40d64a73de1d836dcbedb8686d56cacf28fe464dd34107f48a52a245a6",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "label": "terminal",
+      "bytes": 92499840,
+      "changedChannels": 10887,
+      "maxDelta": 242,
+      "Bsha": "7eb37441e991153717544ff35e779b11b308166921ee276cfbe509126585df41",
+      "Csha": "f71993732d43279f5ee01ff8ebbf49a2993d596b3390401058b65e1bfb1e63bb",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pan",
+      "label": "redo",
+      "bytes": 92499840,
+      "changedChannels": 10884,
+      "maxDelta": 242,
+      "Bsha": "3127f43097dce8592822eb531220889ed61882b03a02b796b091bdd3cd50a8e2",
+      "Csha": "f71993732d43279f5ee01ff8ebbf49a2993d596b3390401058b65e1bfb1e63bb",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "label": "before-primary",
+      "bytes": 92499840,
+      "changedChannels": 1,
+      "maxDelta": 1,
+      "Bsha": "1213a46fcba841c4f1d18e7c95d147502f9dec680ab40994d7435b00d0750f87",
+      "Csha": "98d8895117a479c640dcc97eda481272cd5f90bd9849576795c3dc1e6f24395a",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "label": "terminal",
+      "bytes": 92499840,
+      "changedChannels": 1,
+      "maxDelta": 1,
+      "Bsha": "48951d563729056105f8a7434238cd00350a3cac001d29e303e7fa6e96392d70",
+      "Csha": "ebd718408d0aa500d1496a3a43c7e9fea72bc46f1c2f6a5dab296919f729c1e2",
+      "byteEqual": false
+    },
+    {
+      "DPR": 4,
+      "case": "immediate-pinch",
+      "label": "redo",
+      "bytes": 92499840,
+      "changedChannels": 1,
+      "maxDelta": 1,
+      "Bsha": "48951d563729056105f8a7434238cd00350a3cac001d29e303e7fa6e96392d70",
+      "Csha": "ebd718408d0aa500d1496a3a43c7e9fea72bc46f1c2f6a5dab296919f729c1e2",
+      "byteEqual": false
+    }
+  ],
+  "semanticMet": true,
+  "readbacksMet": true,
+  "independentOracle": "separate independent-pixels.json, originalnullcache/nullprepared CPU reference",
+  "movingQualification": "Moving targetreadbacks VALID/RESTORED are stored at actualcapturedcamera. Ordinary GLcachedpubliccamera remains proxy; native actualGPU fullsuffix targetcamera proof required. No photon claim."
+}

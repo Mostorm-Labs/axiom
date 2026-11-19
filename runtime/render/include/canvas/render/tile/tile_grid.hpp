@@ -6,7 +6,7 @@
 #include <map>
 #include <vector>
 namespace canvas::render {
-struct TileKey final {std::int64_t x=0,y=0;std::int32_t scale=0;auto operator<=>(const TileKey&)const=default;};
+struct TileKey final {std::int64_t x=0,y=0;std::int32_t scale=0;std::uint8_t region=0;auto operator<=>(const TileKey&)const=default;};
 struct TileRasterRequest final {TileKey key;std::uint64_t generation=0;};
 // Candidate configuration is private engineering policy, not a public ladder.
 class TileGrid final {
@@ -25,7 +25,18 @@ class TileGrid final {
   for(auto y=std::int64_t(y0);y<=std::int64_t(y1);++y)for(auto x=std::int64_t(x0);x<=std::int64_t(x1);++x)out.push_back({x,y,scale});
   return out;
  }
- foundation::WorldRect bounds(TileKey key)const{const double unit=std::ldexp(size_,-key.scale);return {float(key.x*unit),float(key.y*unit),float((key.x+1)*unit),float((key.y+1)*unit)};}
+ // Finite row-major request window. Desired density is never rejected
+ // because its complete grid is larger than current resident capacity.
+ std::vector<TileKey> coverageWindow(const foundation::WorldRect& rect,std::int32_t scale,std::size_t limit,std::uint64_t cursor)const{
+  std::vector<TileKey> out;if(!limit||!rect.isFiniteAndOrdered()||rect.right<=rect.left||rect.bottom<=rect.top||scale<-30||scale>30||!std::isfinite(size_)||size_<=0)return out;
+  const double unit=std::ldexp(size_,-scale),lx=std::floor(rect.left/unit),rx=std::ceil(rect.right/unit)-1,ty=std::floor(rect.top/unit),by=std::ceil(rect.bottom/unit)-1;
+  if(std::max({std::abs(lx),std::abs(rx),std::abs(ty),std::abs(by)})>double(INT64_MAX/2))return out;
+  const auto columns=std::uint64_t(rx-lx+1),rows=std::uint64_t(by-ty+1);
+  if(!columns||!rows||rows>UINT64_MAX/columns)return out;
+  const auto total=columns*rows,count=std::min<std::uint64_t>(limit,total),first=cursor%total;
+  out.reserve(count);for(std::uint64_t i=0;i<count;++i){const auto index=i>=total-first?i-(total-first):first+i;out.push_back({std::int64_t(lx)+std::int64_t(index%columns),std::int64_t(ty)+std::int64_t(index/columns),scale});}return out;
+ }
+ foundation::WorldRect bounds(TileKey key)const{const double unit=std::ldexp(size_,-key.scale);if(key.region){const auto index=unsigned(key.region-1);const auto sub=unit/4;return{float(key.x*unit+(index%4)*sub),float(key.y*unit+(index/4)*sub),float(key.x*unit+(index%4+1)*sub),float(key.y*unit+(index/4+1)*sub)};}return {float(key.x*unit),float(key.y*unit),float((key.x+1)*unit),float((key.y+1)*unit)};}
  void markDirty(const foundation::WorldRect& rect){for(auto& [key,row]:rows_)if(intersects(bounds(key),rect)){if(nextGeneration_==UINT64_MAX){rows_.clear();return;}row.generation=++nextGeneration_;row.clean=false;}}
  void invalidate(){for(auto& [key,row]:rows_){(void)key;if(nextGeneration_==UINT64_MAX){rows_.clear();return;}row.generation=++nextGeneration_;row.clean=false;}}
  std::vector<TileRasterRequest> requests(const foundation::WorldRect& visible,std::int32_t scale,std::size_t max){

@@ -1,0 +1,37 @@
+{
+  "status": "FROZEN_DETERMINISTIC_PENDING_CAMERA_WEB_PROOF",
+  "obligations": [
+    {
+      "id": "HW1",
+      "requirement": "ActualWorkercomputeandexactterminal retained, nofakeownerstate, transfercustodyrestoreonce",
+      "oracle": "Testgate actualmessageidentity/status/key/bytehashbefore/after release; trueSDKpendingfacts/committedgeneration andterminalledger",
+      "acceptance": "Whilehold pending1/WaitingWorker/no commit; afterreleaseonecanonicaleraseOperationandfinalsinglecommit, noforeign/doublecallback orbufferalter. Failurecleanupstillreleases/terminatesonlyownedruntime.",
+      "evidence_required": [
+        "gateevents/bytehash/actualSDKfacts",
+        "beforeafterops/snapshots"
+      ]
+    },
+    {
+      "id": "HW2",
+      "requirement": "Candidate rootzoom producesnewcamera actualpixels whileerasepending andbeforecommitting",
+      "oracle": "Before/after pixelmovement andsamecamera zeroPan independentredraw equality fromexactsamependingtrace; source/targetidentity/metadata verified, nativefullframeproofreused",
+      "acceptance": "Pixelimagechangedold->new afteractualzoom; zoompixels==samecamerazeroPancontrol atidenticalcurrentcamera/pending/generation. Invalid/noopnativeguardsremaininparent. Noheldtimingordinaryclaim.",
+      "evidence_required": [
+        "actualpixelbinary+metadatacamera/pending",
+        "samecamerareferencepixelmatch",
+        "sourceSDKfreeze"
+      ]
+    },
+    {
+      "id": "HW3",
+      "requirement": "CombinealreadyvalidA/Bnative/ordinary/final/previewandcontrolledPN4branchproof forscopedreview",
+      "oracle": "Parent+IO+HW references nohistoricalrewrite, allownedcleanup; no source/SDKmutations",
+      "acceptance": "Ifalljointproofcomplete prepareexistingcandidate4336andexactREADY_FOR_CONTROL_REVIEW_WITH_FINDINGS; ordinarynavproxytradeoffexplicit. No G5/globaltail/physicalPASS. Otherwisepreciserealblocker withoutnewround.",
+      "evidence_required": [
+        "combinedcompletion/result",
+        "cleanup/manifests",
+        "4336ifqualified"
+      ]
+    }
+  ]
+}

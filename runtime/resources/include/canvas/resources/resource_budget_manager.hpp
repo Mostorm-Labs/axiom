@@ -84,6 +84,19 @@ class ResourceBudgetManager final {
     return index<classes_.size()?classes_[index]:ResourceBudgetUsage{};
   }
   std::size_t used(ResourceClass kind)const noexcept {return snapshot(kind).used;}
+  // Read-only admission planning after a real reserve denial. Pending bytes
+  // remain charged; only a later successful reserve can grant an allocation.
+  // Inspect the actual cap and reserve preconditions atomically so a closed
+  // owner, exhausted token space or live (unreleased) epoch is not a wait proof.
+  enum class ReserveAvailability { kUnavailable, kAvailable, kAfterPendingRelease };
+  ReserveAvailability reserveAvailability(ResourceClass kind,std::size_t bytes,bool critical)const noexcept {
+    std::lock_guard lock(mutex_);
+    const auto index=static_cast<std::size_t>(kind),cap=critical?limits_.hard:std::min(limits_.soft,limits_.hard);
+    if(closed_||index>=classes_.size()||next_==UINT64_MAX||bytes>cap)return ReserveAvailability::kUnavailable;
+    if(used_<=cap-bytes)return ReserveAvailability::kAvailable;
+    std::size_t pending=0;for(const auto& usage:classes_)pending+=usage.pendingRelease;
+    return pending>0&&used_-pending<=cap-bytes?ReserveAvailability::kAfterPendingRelease:ReserveAvailability::kUnavailable;
+  }
   // The owner must pre-admit completion metadata, end this non-reentrant scope
   // before flushing, and call complete only on actual GPU finish (or a scope
   // that recorded no GPU work). CPU Recorded metadata is deliberately excluded.

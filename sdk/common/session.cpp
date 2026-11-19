@@ -1,6 +1,7 @@
 #include "canvas/runtime/internal/runtime_platform_access.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 #include "canvas/foundation/internal/frame_timing.hpp"
+#include "canvas/foundation/internal/worker_status_metrics.hpp"
 namespace g5 = canvas::foundation::internal::g5;
 #include "session.hpp"
 
@@ -658,7 +659,7 @@ class Session::Impl {
             return error("UNSUPPORTED");
         }
         if (command == "close") {
-            if(runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending)return error("BUSY");
+            if(runtime::RuntimePlatformAccess::cpuPendingStatus(*owner).pending)return error("BUSY");
             if ((!contacts.empty() || adapter->activeContacts() != 0) ||
                 facade().readTextEditor().phase != runtime::TextPhase::kClosed)
                 return error("BUSY");
@@ -683,7 +684,7 @@ class Session::Impl {
                 j.value("action",std::string{})=="basis" || j.value("action",std::string{})=="release")) &&
             !(command=="text" && j.value("action",std::string{})!="intent"))
             return error("DOCUMENT_CLOSING");
-        if(runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).pending){
+        if(runtime::RuntimePlatformAccess::cpuPendingStatus(*owner).pending){
             const bool readCommand=command=="state"||command=="frame"||command=="selection"||command=="presets"||command=="hover"||command=="cpuPending"||command=="cpuWorkerGrant"||(command=="table"&&j.value("action",std::string{})=="create")||(command=="sticky"&&j.value("action",std::string{})=="create")||(command=="image"&&j.value("action",std::string{})=="import")||command=="pendingReceipt"||command=="resize"||command=="lose";
             const auto action=j.value("action",std::string{});
             const bool readOnlyAction=action=="read"||action=="snapshot"||action=="fonts"||action=="fontStatus"||action=="status";
@@ -722,7 +723,7 @@ class Session::Impl {
             if (lost)
                 return {{"ok", true}, {"pending", false}, {"lost", true}};
             auto result=adapter->frame(j.value("force", false));
-            if(facade().transientInkActive()||runtime::RuntimePlatformAccess::cpuPendingFacts(*owner).reserved)result["retry"]=true;
+            if(facade().transientInkActive()||runtime::RuntimePlatformAccess::cpuPendingStatus(*owner).reserved)result["retry"]=true;
             return result;
         }
         if (command == "state")
@@ -1580,11 +1581,11 @@ class Session::Impl {
                     {"cropToken", std::to_string(result.cropToken)}};
         }
         if(command=="pendingReceipt"){
-            const auto serial=decimal(j.at("serial"));const auto facts=runtime::RuntimePlatformAccess::cpuPendingFacts(*owner);
+            const auto serial=decimal(j.at("serial"));
             const auto value=runtime::RuntimePlatformAccess::pendingLocalValue(*owner);
             if(decimal(j.at("runtimeInstance"))!=value.owner[0] || decimal(j.at("lifetimeGeneration"))!=value.owner[1])return error("STALE_PENDING_RECEIPT");
             if(j.contains("control")){const auto& key=j.at("control");const auto receipt=facade().canvasControlReceipt({decimal(key.at("clientId")),decimal(key.at("requestId"))});if(!receipt)return error("CONTROL_RECEIPT_EXPIRED");if(receipt->pendingSerial!=serial&&receipt->state==runtime::CanvasControlReceiptState::kQueued)return error("FOREIGN_CONTROL_RECEIPT");if(receipt->state==runtime::CanvasControlReceiptState::kQueued)return {{"ok",true},{"done",false}};return {{"ok",receipt->state==runtime::CanvasControlReceiptState::kApplied},{"done",true},{"code","CONTROL_FAILED"},{"state",receipt->state},{"revision",std::to_string(receipt->appliedRevision)}};}
-            for(const auto& terminal:facts.terminals)if(terminal.serial==serial){const bool applied=terminal.status=="Committed"||terminal.status=="NoOp";return {{"ok",applied},{"done",true},{"code",terminal.status},{"generation",std::to_string(terminal.generation)}};}
+            if(const auto terminal=runtime::RuntimePlatformAccess::cpuPendingTerminal(*owner,serial)){const bool applied=terminal->status=="Committed"||terminal->status=="NoOp";return {{"ok",applied},{"done",true},{"code",terminal->status},{"generation",std::to_string(terminal->generation)}};}
             for(const auto& intent:value.intents)if(intent.token[2]==serial)return {{"ok",true},{"done",false}};
             return error("PENDING_RECEIPT_EXPIRED");
         }
@@ -1603,16 +1604,22 @@ class Session::Impl {
                 std::array<std::uint64_t,8> token{};for(unsigned i=0;i<8;++i)token[i]=decimal(j.at("token")[i]);
                 return {{"ok",runtime::RuntimePlatformAccess::queueCpuPendingCompletion(*owner,token,bytes,j.value("success",false))},{"code","CPU_PENDING_STALE_COMPLETION"}};
             }
+            if(action=="status"||action=="closePreflight"){
+                const auto value=runtime::RuntimePlatformAccess::cpuPendingStatus(*owner);
+                if(action=="closePreflight")return {{"ok",value.reserved==0&&!value.suspended&&contacts.empty()&&adapter->activeContacts()==0},{"code","BUSY"}};
+                J token=J::array();for(auto word:value.token)token.push_back(std::to_string(word));
+                return {{"ok",true},{"capability",value.capability},{"enabled",value.enabled},{"suspended",value.suspended},{"requestReady",value.requestReady},{"pending",value.pending},{"reserved",value.reserved},{"head",std::to_string(value.head)},{"failed",std::to_string(value.failed)},{"state",value.state},{"error",value.error},{"token",std::move(token)}};
+            }
             const auto f=runtime::RuntimePlatformAccess::cpuPendingFacts(*owner);
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
             if(action=="clock")return {{"ok",true},{"nowNs",std::to_string(canvas::foundation::internal::frame_timing::now())}};
 #endif
             J terminals=J::array();for(const auto& t:f.terminals){
+                AXIOM_WORKER_STATUS_ADD(jsonTerminalRows,1);
                 J token=J::array();for(const auto w:t.token)token.push_back(std::to_string(w));
                 terminals.push_back({{"serial",std::to_string(t.serial)},{"session",std::to_string(t.session)},{"jobs",std::to_string(t.jobs)},{"operationOrdinal",std::to_string(t.operationOrdinal)},{"token",token},{"status",t.status}});
             }
-            J jobs=J::array();for(const auto& job:f.jobLedger){J token=J::array();for(const auto w:job.token)token.push_back(std::to_string(w));jobs.push_back({{"token",token},{"historical",job.historical},{"inputBytes",job.inputBytes},{"outputBytes",job.outputBytes},{"issuedNs",std::to_string(job.issuedNs)},{"returnedNs",std::to_string(job.returnedNs)},{"importNs",std::to_string(job.importNs)},{"status",job.status}});}
-            if(action=="closePreflight")return {{"ok",f.reserved==0&&!f.suspended&&contacts.empty()&&adapter->activeContacts()==0},{"code","BUSY"}};
+            J jobs=J::array();for(const auto& job:f.jobLedger){AXIOM_WORKER_STATUS_ADD(jsonJobRows,1);J token=J::array();for(const auto w:job.token)token.push_back(std::to_string(w));jobs.push_back({{"token",token},{"historical",job.historical},{"inputBytes",job.inputBytes},{"outputBytes",job.outputBytes},{"issuedNs",std::to_string(job.issuedNs)},{"returnedNs",std::to_string(job.returnedNs)},{"importNs",std::to_string(job.importNs)},{"status",job.status}});}
             return {{"ok",true},{"capability",f.capability},{"enabled",f.enabled},{"requestReady",f.requestReady},{"suspended",f.suspended},{"historyJob",f.historyJob},{"newQueryUnions",std::to_string(f.newQueryUnions)},{"historyUnions",std::to_string(f.historyUnions)},{"retainedPathBytes",std::to_string(f.retainedPathBytes)},{"finishedImports",std::to_string(f.finishedImports)},{"finishedHits",std::to_string(f.finishedHits)},
                 {"token",J::array({std::to_string(f.token[0]),std::to_string(f.token[1]),std::to_string(f.token[2]),std::to_string(f.token[3]),std::to_string(f.token[4]),std::to_string(f.token[5]),std::to_string(f.token[6]),std::to_string(f.token[7])})},
                 {"targetPrepareNs",std::to_string(f.targetPrepareNs)},{"sceneStampPrepareNs",std::to_string(f.sceneStampPrepareNs)},{"historyPrepareNs",std::to_string(f.historyPrepareNs)},{"publicationPrepareNs",std::to_string(f.publicationPrepareNs)},{"publishNs",std::to_string(f.publishNs)},{"maximumCommitStageNs",std::to_string(f.maximumCommitStageNs)},{"allUnionSteps",std::to_string(f.allUnionSteps)},{"preparedBeforeUp",std::to_string(f.preparedBeforeUp)},{"suffixAfterUp",std::to_string(f.suffixAfterUp)},{"checkpointBytes",std::to_string(f.checkpointBytes)},{"pending",f.pending},{"reserved",f.reserved},{"head",std::to_string(f.head)},{"job",std::to_string(f.job)},

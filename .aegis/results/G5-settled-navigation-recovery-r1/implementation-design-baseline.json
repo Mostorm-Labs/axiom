@@ -1,0 +1,36 @@
+{
+  "status": "BASELINE_DIAGNOSTIC_ONLY",
+  "currentOwners": {
+    "framePump": "root SDK instance render/schedule andclose",
+    "platform": "WebPlatform frame +WebRuntimeAdapter prepare/poll",
+    "coordination": "RuntimeComposition serviceFrameOpportunity",
+    "editing": "CanvasEditingRuntime navigation/exactDemand",
+    "pixels": "SkiaRenderer/SkiaRenderCache cooperativecursor/preparedbodymask/GPUretirement",
+    "canonical": "OperationEngine soleatomicwriter"
+  },
+  "currentFlow": [
+    "input/admission -> rootSDKschedule -> browserrAF -> WebPlatform.frame",
+    "adapter pollFence orprepare -> RuntimeComposition safe opportunity",
+    "navigation feedback -> quiet100ms -> exactDemand preserved -> SkiaRenderer cache->prepare steps",
+    "cooperativejob offscreen -> fullcurrenttarget publish -> actualCanonicalVisible retiresmatchingcontribution",
+    "close Worker/Runtime/GPUcontexts registry andcallbacks; physicalGPUrelease unknown"
+  ],
+  "targetFlow": "Firstdiagnose4B modes; no productionrepair selected. Ifexistingowner defectproven usefocusedRED/GREEN beforebehaviorchange. Ifnotestablished return explicit blocker.",
+  "diagnosticPlan": {
+    "JS": "bounded requestAt/callback timestamp/start/end/cancel pending +Worker/context/page lifecycle/longtask; never addsframes or SDKcallsinGLhook",
+    "native": "defaultOFF stablepreparejob/resetsequence beforeaftercursor, pendingrasterprogress, source/mask/targetbasis, step/buildwork/bytes/epochwait; bridge registrylifetime andframeoutcome"
+  },
+  "publicAPIImpact": "none",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "verificationMap": {
+    "SNR1": "fourbaseline exactversions +causalclassification",
+    "SNR2": "only ifcauseproven focusedRED/GREEN andsameprobeC",
+    "SNR3": "60native+focused/C20pixels+independentCPU/UndoRedo ifrepair",
+    "SNR4": "frozenordinaryB/C/C/B ifrepair",
+    "SNR5": "preservation/storage/immutableversions/callbackterminal"
+  },
+  "productionHypothesesAttempted": 0
+}

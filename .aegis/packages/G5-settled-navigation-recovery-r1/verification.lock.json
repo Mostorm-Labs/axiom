@@ -1,0 +1,108 @@
+{
+  "status": "FROZEN_SCOPED_IMPLEMENTATION_ACCEPTANCE",
+  "scope": "HighestpriorityonlySNR1..5; diagnosesarefirstexecutablephasesnotoptionalnewfinishline. NooverallG5/releaseclaim.",
+  "trusted_basis": {
+    "saved_revision": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+    "source": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/source-C.json",
+      "bytes": 204464,
+      "sha256": "9cfaf5c95a3ccb29166399d8bbb4d886b6ea7978b6e4376a14ab240913a7f675"
+    },
+    "normalSDK": {
+      "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/C-normal-SDK.json",
+      "bytes": 4271,
+      "sha256": "6acc2ef4db3392a20a05386e20c4a557be3cb21ced2c65ef4a66b4cc20179d17"
+    },
+    "prior_review": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-erase-feedback-frame-control-r1/control-review.json",
+      "bytes": 10342,
+      "sha256": "730a2cf22849d8f8746d9ead7b0d605b60bb5731f19ece943a53ad380bcfaeb4"
+    },
+    "prior_failed_metrics": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-erase-feedback-frame-r1/metrics-contract.json",
+      "bytes": 4475,
+      "sha256": "25b4d098165ccc157d69072b26735339ce46b71f154f19d9a64529a14d8d126c"
+    }
+  },
+  "obligations": [
+    {
+      "id": "SNR1",
+      "requirement": "Explain both operation-time RAF sparsity and post-input exact recovery tail with causally discriminating evidence.",
+      "oracle": "FourfrozenBdiagnostics plusoldraw/controlanalysis, exactBnormal/probeonlysource, JSrequestcallbacktimeline andnativeprogress/resourcefacts. Samepage/freshcontext/reverse comparisons separatecasefromage/lifetime confound.",
+      "acceptance": "Map requestedAt->callbacktimestamp->started->ended andno-request/queuedcancel state; separateactualhandlerCPU,noncallbackinterval,offscreenpreparationandactualtargetwrite. SNR-D-B-PROGRESS gives stablejob/cursorbeforeafter/reset/pendingreason acrosscanonicalretries, exactsource/mask/Scene/camera/provider/resourcebasis, quotas/retirement plus usefulvsreplayedwork. Correlatelifecyclewithout claimingregistryclose provesphysicalGPUrelease. Everyrequiredeventtracebounded/nodrops,unavailableoptionalbrowserobservabilityexplicit. A missingreproductionisnotproofenvironmentnoise; ifcausenotestablishedreturnexplicitwithoutproductionfix.",
+      "evidence_required": [
+        "preflight.json",
+        "implementation-design.json",
+        "scheduling-timeline.json",
+        "preparation-progress.json",
+        "lifecycle-and-resources.json",
+        "causal-classification.json"
+      ]
+    },
+    {
+      "id": "SNR2",
+      "requirement": "Repair only the measured current-owner scheduling/lifecycle/preparation defect and preserve4349gains.",
+      "oracle": "FocusedcausalregressionREDonc3a84c andGREENonC; samejobworkcounts/scheduling/lifetimeinvariants; matchedfinalCdiagnostic. Deterministicregressionobservesactualmissingprogress/stalealivework rather than exactimplementationstruct.",
+      "acceptance": "ExistingSDK/bridge/adapter/Runtime/Renderownersonly. Removeprovenorphanedwork/duplicaterequest orpreservecorrectboundedprogress,resolveresourcewaitoravoidactualrepeatedpreparation. Donotmovesynchronousworkoutsidecapturedscope,skipacceptedinput,addunmeasuredtimerloops,forceframecadence orweakenCV/completepixels/GPUlifetime. Narrowbuffer/trace dependencyallowedonlyifSNR1provescausal andsamebudget/semanticrules. Nospeculativepool/wholeitem2/commitrefactor. AllsourceCmatchedbuilds/normalSDKflagsfrozen.",
+      "evidence_required": [
+        "red-green.json",
+        "source-delta.patch",
+        "delta-manifest.json",
+        "source-C.json",
+        "mechanism-work-counts.json",
+        "matched-causal-comparison.json"
+      ]
+    },
+    {
+      "id": "SNR3",
+      "requirement": "Retain true latest-suffix display, canonical semantics and resource/close safety across consecutive gestures and Runtime lifetimes.",
+      "oracle": "60frozenfinalnativecommandsplusfocusedmechanismandclose/scheduleifchanged; actualAutoIntentGPUCompositionrealexactkernel delayedcommitcrossing; newC20WebreadbacksDPR2/4 plus4independentfullbody/sequentialmaskCPUrefs and4UndoRedopairs,8movingwitnesses.",
+      "acceptance": "Noresurrectedink/blankmissingareas/wrongzorder/opacity; fullnewestsuffix41objectnonvacuouswitness andactualcurrentcamera16/16,settled24/24 maintained. Maskorder/value/bodypose/context/surface/metrics/provider/resourceguards,stalecompletion/cancel/noop,oneatomicOperationandCVretirementallunchanged. TerminalnonAApixelsbyteequaltooriginalCPUreferenceunderexistinggeometricallydefinedAApolicy; noedgeenlargement/tolerancechange. Focused18DPR1/2/4activeprefix/replacement/opacityframesretainexactBpixelproof. Ifscheduler/closechanged: noownerRAF/input/listener/Worker workafterclose,delayedoldcallbackcannotuse/reviveclosedownerorretirecurrent; correctcontextlost/rebindandpendingGPUretirement,bufferchargesuntiltruecompletion. PhysicalGPUmemorynotrequiredzeroinstantly. PublicAPI/ABI/packageexportsnochange,normalWeb/nativeconsumerdiagnostic+qualificationOFF;realrootSDKwrapper/WASM/resourcesmatch.",
+      "evidence_required": [
+        "native-regressions.json",
+        "native-terminal-manifest.json",
+        "web-correctness.json",
+        "independent-pixels.json",
+        "semantic-and-identity.json",
+        "lifecycle-regression.json",
+        "source-and-SDK-binding.json"
+      ]
+    },
+    {
+      "id": "SNR4",
+      "requirement": "Close original settled-pan nonregression and preserve fast active/immediate interaction without sampling bias.",
+      "oracle": "FournormalB/C/C/Bwindows,all4casesoriginalorderperwindow,DPR2,identicalfrozenobserver/input/config;SNRmetrics with4349Brelativepreservationandold4348inheritedfailedbounds. No heldWorker/readback/fullprobesintheordinarylane.",
+      "acceptance": "Everymetrics-contractblockingnormaltargetpass:allCimmediate100msfirst/maxgapand33msSDKrAFp95;settled100/33+eachconvergencemax1000ms;settledpanpooleddispatchp95<=24.299999952316284,worstnav<=2151.1349997997286,medianconvergence<=519.8000001370906ms. Activegain/input/durationothernonregressionpreserved. Allrawsamples/slowrowsreported; plannedvsactualtimeandsameinputconfirmed. QualificationisGLpubliccameraproxyplusseparatepixels,notphotons. AnyfrozenmissUNMETafterremainingsafecorrectness,noextraordinaryretryorboundrelaxation.",
+      "evidence_required": [
+        "browser-comparison.json",
+        "input-and-paint-latency.json",
+        "sampling-ledger.json",
+        "cleanup.json"
+      ]
+    },
+    {
+      "id": "SNR5",
+      "requirement": "Preservecurrentpublishedcheckpoint/demos/unrelatedworkanddeliver independentlyresolvable result/callbacks.",
+      "oracle": "Newisolatedworktreefromexactc3a84c;beforeafterprotectedsourceSDK/listener/indexfacts;versionedimmutabletasksource/build/SDK/driver/probe/oracle/rawmanifests,sharedcontrolledsamehostdurableboundary.",
+      "acceptance": "4348/4349andalloldsourceSDKraw/resultfrozenfilesunaltered;primary42dirtyfiles/indexandcontrolproductionuntouched. Fullsourceincnewhelper+rootbuildinputsmanifested,acceptedprebuiltdependencies. EverynativeJSONparentexistsandwritechecked,allworkerlogs/failuresretained;noredundantproofofproofwork. Preview>=4350afterplannednormalrootSDKsmoke notifycontrolthencontinuewithoutACK; terminalcallback exactresultpathbytesSHA thenSTOP. No commit/push/tag/release orautonextitem. Noavailablecausalmechanism->diagnosticterminalexplicit,noluckyPASS.",
+      "evidence_required": [
+        "preservation.json",
+        "storage-preflight.json",
+        "storage-ledger.json",
+        "artifact-manifest.json",
+        "preview-ready.json whenCexists",
+        "result.json",
+        "terminal-callback.json"
+      ]
+    }
+  ],
+  "no_cause_branch": "All4Bdiagnostics+runnablepreflights+preservation/cleanup/exactresult required; SNR2..4 notassertedsatisfied. ExplicitROOT_CAUSE_NOT_ESTABLISHEDisacceptedterminalblocker,nocompletionclaim.",
+  "required_hosted": [],
+  "optional_hosted": [
+    "Physicaltrackpad/input-to-photon",
+    "WholeG5/release",
+    "Windows/otherplatformABI",
+    "OSdriverprofiler"
+  ],
+  "native_policy": "Exact60rowselectionfrompriornative reference, rebaseonlybuild/outputpaths. Resolveactualcompiledsource andcheckoutputparents/writes beforelaunch; preserveoldmissingJSONrecord, nooverwrite. AddfocusedrequiredmechanismtestsnotunrelatedfullCTest; each120s/6GiB,serialGPU. NormalconsumerbuildalsoverifyflagsOFF."
+}

@@ -1,0 +1,196 @@
+{
+  "fixture": {
+    "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/local-web/CPUW4-D4-CORRECTIVE/fixture.json",
+    "bytes": 2775,
+    "sha256": "abb4de34d609467b3a8046559ea3e10b5ed05df082a58ee626d089b938b4a02b"
+  },
+  "snapshot": {
+    "path": ".aegis/results/G5-CPUW4-edit-navigation-r1/local-web/CPUW4-D4-CORRECTIVE/author/fixture.axsnap",
+    "bytes": 5479106,
+    "sha256": "17f0f5ceaa10b0de2f808dd5deed40e44295a4179a43a388d14dd731cb949fbe"
+  },
+  "image": {
+    "path": ".aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+    "bytes": 2324853,
+    "sha256": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660"
+  },
+  "reference_oracle": {
+    "path": ".aegis/results/G5-CPUW3-complete-interaction-r2/reference-manifest.json",
+    "bytes": 1088,
+    "sha256": "38d7af8eed2f686c43fb4ffd1693ba074723f79c08c331e07000bf9bbb4ed0ba"
+  },
+  "reference_edge_centers": {
+    "path": "out/G5-quality-candidate-continuation-r1/reference-edge-centers.json",
+    "bytes": 2813100,
+    "sha256": "2833c11d616e89f3ad9987fcf563704619c23cce76e0bf013256161d244a0612"
+  },
+  "optical_method": {
+    "path": ".aegis/results/G5-quality-candidate-continuation-r1/optical-oracle.json",
+    "bytes": 3455,
+    "sha256": "9d936d5d93e917fa8f4daef43286ecbe5a44522d0dfc137c74fb4051846de093"
+  },
+  "existing_curve_contract": {
+    "path": "verification/runners/g5/continuous_zoom_quality_contract.mjs",
+    "bytes": 2046,
+    "sha256": "fe12d46261cf3c18bfd0003e3418e7b4e42b6faf30d2881a916df1ac52ca6b08"
+  },
+  "existing_navigation_observer": {
+    "path": "verification/runners/g5/navigation_observer.mjs",
+    "bytes": 3826,
+    "sha256": "0968ca9a696e42735f43edd5426641604aeece8b58c31bf2116e13b7ef4bd00e"
+  },
+  "existing_readback": {
+    "path": "verification/runners/g5/webgl_target_readback.mjs",
+    "bytes": 8398,
+    "sha256": "1086e57c6bab1b0d5a6e9f311e07868b694137308245a7b180da6f1b16909642"
+  },
+  "functional_smoke": {
+    "path": "out/G5-quality-candidate-continuation-r1/smoke.mjs",
+    "bytes": 9309,
+    "sha256": "3f8c7699d9a705e7d537fe9550ac9411ae9278af79e9f4fa0b7783cc40f156ef"
+  },
+  "locks": [
+    {
+      "path": "semantic-sdk.lock.json",
+      "bytes": 349,
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "bytes": 39842,
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "public_contracts": [
+    {
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "bytes": 7622,
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "bytes": 4050,
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "bytes": 4598,
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "primary_preservation": {
+    "path": "out/G5-navigation-progressive-clarity-r1/primary-before.json",
+    "bytes": 133845,
+    "sha256": "fc40d99087abc2621bda714321312670603be3395bb40392beeed20a1bf06f96"
+  },
+  "SDK_preservation": [
+    {
+      "path": ".aegis/results/G5-temporary-retirement-wait-r1/candidate-SDK-manifest.json",
+      "bytes": 5309,
+      "sha256": "b80b2130aa1c3fe3fc5aaaee85b9711fc4d35bd6ce9acc8b3bfaa34a4c34e552"
+    },
+    {
+      "path": ".aegis/results/G5-progressive-preview-segment5-r1/SDK-manifest.json",
+      "bytes": 5536,
+      "sha256": "9a27277fe1f980794ad81a0475ec79b83f81a4b3a55e4a9dd373d6a8d2ae2421"
+    },
+    {
+      "path": ".aegis/results/G5-quality-candidate-continuation-r1/normal-SDK-C.json",
+      "bytes": 4444,
+      "sha256": "0f8c7581702279a62f93bfd6e1bbbc2860ee911eadca0e4b6bd71a71adaabc26"
+    }
+  ],
+  "checkpoint": {
+    "revision": "230ee4c52ee36361abb26c527f29c86e9a8cebb7",
+    "branch": "codex/g5-exposure-region-checkpoint",
+    "tag": "g5-exposure-region-reuse-20261117",
+    "tagObject": "83b7ad947f832f34d220907a48a453f37e7dcda6",
+    "repository": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom"
+  },
+  "baseline_source": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-source-C.json",
+    "bytes": 146029,
+    "sha256": "2349a20e3dd72b3139f97c3ede57a69961b6fe5b8694c396968d86caa8ec7291"
+  },
+  "baseline_SDK": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/normal-SDK-C.json",
+    "bytes": 4280,
+    "sha256": "ea476abada7f4a91b35a3d6033f1c27d3029a97cd5bab193ff21175cdd78782a"
+  },
+  "baseline_source_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/source-normal-C",
+  "baseline_SDK_root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/install-normal-C/js",
+  "previous_result": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/result.json",
+    "bytes": 5800,
+    "sha256": "7acbe10e3daed820b3dc57e57f54b7d4bda4e508bbc6d9aabef64c264a75f9b5"
+  },
+  "control_review": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-control-r1/control-review.json",
+    "bytes": 5399,
+    "sha256": "3416f507dbf36eb4f6ff3943cc2963a98604c2b9048de9e5bd1f5669e146e850"
+  },
+  "previous_metrics": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/browser-comparison.json",
+    "bytes": 12200,
+    "sha256": "f3eec1e5507c89bbb4754c02c60d6c272914591edee499e5188a57223fb90c4c"
+  },
+  "previous_camera_failure": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/terminal-finding.json",
+    "bytes": 3799,
+    "sha256": "627bcb6dd6c0cfff904f9112b005632023902596bed64d378844dd2b24707bbb"
+  },
+  "previous_freeze": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-exposure-region-reuse-r1/browser-freeze.json",
+    "bytes": 13338,
+    "sha256": "14eeba0bd52f41b1bfcef0608a6970d83cdc5f10a39f6c6c9cd9f96d62dce8d1"
+  },
+  "old_4339_guard_basis": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-quality-candidate-continuation-r1/normal-SDK-C.json",
+    "bytes": 4444,
+    "sha256": "0f8c7581702279a62f93bfd6e1bbbc2860ee911eadca0e4b6bd71a71adaabc26"
+  },
+  "pinned_optical_profile_method": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-quality-candidate-continuation-r1/optical-profile.py",
+    "bytes": 6745,
+    "sha256": "9a98a1d69ce8fdfcf1965f23e0f5d22265b5a6c4d915448a06f579e84df0464b"
+  },
+  "pinned_CPU_reference_source": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_complete_v2_reference.cpp",
+    "bytes": 16960,
+    "sha256": "67755dfb5848fc65e02a9e727c1b67aecc85bbb3b34c704c75df970a44a0563a"
+  },
+  "pinned_CPU_reference_boundary": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/cpu_reference_boundary.hpp",
+    "bytes": 1868,
+    "sha256": "1a534df14fed1602b31ea9381ab5462f4b9d0cf80d100d44cfc5b277ed517b54"
+  },
+  "pinned_CPU_reference_binary": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-CPUW3-complete-interaction-r2/cpu-reference",
+    "bytes": 29809904,
+    "sha256": "c48035bb2c522c3a854c8552e30d147113c75065f8f2fde6315b0e2cda181603"
+  },
+  "exact_baseline_smoke": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/smoke.mjs",
+    "bytes": 9300,
+    "sha256": "7bd4f569a1f2ef76934de13fdbc74652c5cd73638455213df0067574c60342a6"
+  },
+  "canonical_old_trace": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-exposure-region-reuse-r1/web/WH-W-D4-C1/raw.json",
+    "bytes": 4194948,
+    "sha256": "59588c81ea43c77e1edab09e043c83b0c0505e8c98f1bf07252ad9b8020892b7"
+  },
+  "baseline_trial": {
+    "url": "http://127.0.0.1:4340/example.html",
+    "PID": 44610,
+    "preserve": true
+  },
+  "all_preserved_ports": [
+    4336,
+    4337,
+    4338,
+    4339,
+    4340
+  ],
+  "baseline_tree_rule": "Read source from published commit. Verify all1204 baseline source paths against manifest; add only already frozen native-only source dependency render_range_traversal_test included in checkpoint. ParentprimaryHEAD6df is not required equal newanchor; implementation copies inherit newcheckpoint commit. Existingprimarydirty state stays unchanged."
+}

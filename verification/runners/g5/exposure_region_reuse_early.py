@@ -1,0 +1,13 @@
+from pathlib import Path
+import json,hashlib,importlib.util,time,math,sys,gzip
+R=Path('/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom');O=R/'out/G5-exposure-region-reuse-r1';E=R/'.aegis/results/G5-exposure-region-reuse-r1';dpr=int(sys.argv[1]);h=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+p=E/'early-ledger.json';l=json.loads(p.read_text())if p.exists()else{'attempts':[],'charged_seconds':0,'cap_seconds':480,'max_starts':4};assert len(l['attempts'])<4 and l['charged_seconds']<480
+sid=f'ER-EARLY-D{dpr}-{len(l["attempts"])+1}';dest=O/'early'/sid;assert not dest.exists();dest.mkdir(parents=True)
+fixture=json.loads((R/'.aegis/results/G5-CPUW4-edit-navigation-r1/local-web/CPUW4-D4-CORRECTIVE/fixture.json').read_text());q={'id':sid,'DPR':dpr,'mode':'diagnostic','sdk':str(O/'install-optical-C/js'),'fixture':{'path':fixture['path'],'metadata':fixture['metadata'],'documentId':fixture['documentId']},'image':str(R/'.aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png')};qp=dest/'request.json';qp.write_text(json.dumps(q,indent=2)+'\n');m=E/'optical-SDK-C.json';entry={'id':sid,'status':'STARTED','at':time.time(),'requestSHA':h(qp),'SDKManifestSHA':h(m),'driverSHA':h(R/'verification/runners/g5/exposure_region_reuse_consumer.mjs')};l['attempts'].append(entry);p.write_text(json.dumps(l,indent=2)+'\n')
+sp=importlib.util.spec_from_file_location('erguard',R/'verification/runners/g5/bounded_worker.py');g=importlib.util.module_from_spec(sp);sp.loader.exec_module(g);guard=g.run(['node',str(R/'verification/runners/g5/exposure_region_reuse_web.mjs'),str(qp),str(dest)],dest/'process',min(120,480-l['charged_seconds']),6144*1024);entry['guard']=guard;entry['charged_seconds']=math.ceil(guard['elapsed_s']);l['charged_seconds']+=entry['charged_seconds'];entry['status']='COMPLETED'if guard['returncode']==0 and guard['cleanup_complete']else'FAILED'
+if(dest/'raw.json').exists():
+ raw=json.loads((dest/'raw.json').read_text());entry['actual_camera']=[]
+ for route in raw.get('routes',[]):
+  stamps=[x for x in route.get('presents',[])if route['started']<=x['at']<=route['inputEnded']];times=[route['started']]+[x['at']for x in stamps]+[route['inputEnded']];gaps=[b-a for a,b in zip(times,times[1:])];entry['actual_camera'].append({'route':route['route'],'successful_presents':len(stamps),'max_gap_ms':max(gaps),'inputs':len(route['inputs']),'lost_inputs':360-len(route['inputs']),'zero_navigation_ops':not raw['operations']})
+ entry['finalSnapshotByteExact']=gzip.decompress((dest/'final.axsnap.gz').read_bytes())==Path(fixture['path']).read_bytes() if(dest/'final.axsnap.gz').exists()else False
+p.write_text(json.dumps(l,indent=2)+'\n');print(json.dumps(entry));sys.exit(0 if entry['status']=='COMPLETED'else 1)

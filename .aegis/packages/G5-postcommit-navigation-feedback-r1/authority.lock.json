@@ -1,0 +1,53 @@
+{
+  "status": "CURRENT_HUMAN_AUTHORIZED_NARROW_POSTCOMMIT_NAVIGATION_INVESTIGATION_AND_REPAIR",
+  "human_request": "先聚焦第一项做吧；仅处理提交后的临时画面、导航、canonical衔接和重复准备/等待。本控制会话设计独审，配对coding会话实现，完成后通知上游。",
+  "sources": [
+    {
+      "path": "docs/notion/manifest.yaml",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    }
+  ],
+  "latest_human_repository_instructions": "User supplied AGENTS instructions on 2026-11-13 take precedence over older on-disk versioning text; no version changes in this task.",
+  "scope_authority": [
+    "Existing shared Runtime owners and architecture remain; no new semantic rules or public capabilities.",
+    "OperationEngine exclusively commits whole ordered atomic Operations; History and Scene keep existing dependency direction.",
+    "Composition selects frame routes, CanvasEditingRuntime owns camera/display roster/pending intent lifecycle, Render owns derived preparation/cache/surface pixels.",
+    "Pointer Up or canonical commit alone never qualifies CanonicalVisible or retires preview; matching presentation proof remains required.",
+    "Geometry/mask/alpha/zorder and exact canonical values remain correct; previously permitted AA edge differences only.",
+    "No Worker count/budget/heap/dependency changes."
+  ],
+  "trusted_current_control_review": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-control-r1/control-review.json",
+    "sha256": "96ad65a10f05c2c87ffc0c57edbe4a9d0a69af428f49a9b6454b8ca84a3d6519"
+  },
+  "offline_preflight": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-control-r1/offline-preflight.json",
+    "sha256": "4fbfea2e748420d1bcbd4db630dcd8b88bb38683685da60262d36f045cdee24c"
+  },
+  "starting_source": {
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee",
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp": "8d276b193bcacf8d5d2381e5f35d335bd3b8cc9be356b5b7a6814f4c92459e2b",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "c0af3e82b26d65289a504bb870cbe390f8960a8d3fd914c1596c738c217e85db",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "2701e0757a9eb1a8950368d776f7723f783753c4af46974574c7a0cae11adcab",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "aa02b6de5310d5a9786875be7219015a530855fd714c72c3739d05e56365cb11",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "0af3dac83bbbbb147df488a525e4c88e49a6bb73e4841731459903494471c041",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/render/src/skia_render_cache.cpp": "c7d15bea33dfcf8a4168b92fae169871334e1680dc945fd58ae7da068827127b",
+    "runtime/render/src/skia_render_cache_internal.hpp": "06544bbbad4e5557eb38495931f30bd86b0ae7986804377a8694b470d3fff9b4",
+    "runtime/render/src/transient_display_state.hpp": "f389b7fa8983e2fd7e529415cee04032a651c9f4bf1f31caf8faa395944e31b8",
+    "runtime/render/src/skia_navigation_tiles.cpp": "ca6269c5d9d53ee000608638ce3740c3aa6250117c312262d19585f0ca850e1d",
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": "35ffe5e3aa49cab3544edfbefb4e887bf76525a5ed5eba63578e36b03dcee292",
+    "sdk/web/axiom.mjs": "2970c87ceef5599b37764a90c069348dc1552125e9b929b70d1cd8db40d5c643",
+    "sdk/web/axiom.d.mts": "1464878062616e2cde98d09a77e275325cc3fe1cdef9f2b80327e7fc796f0c76",
+    "semantic-sdk.lock.json": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "r1-full-skia-sdk.lock.json": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+  }
+}

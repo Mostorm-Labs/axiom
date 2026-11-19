@@ -277,8 +277,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
   }
 
   void completePendingControls(CanvasControlService& service){
-    const auto facts=runtime_.cpuPendingFacts();
-    for(auto& slot:pendingControls_)if(slot.second)for(const auto& terminal:facts.terminals)if(terminal.serial==slot.second){service.completeDeferred(slot.first,slot.second,terminal.status=="Committed"||terminal.status=="NoOp",revision_);slot={};break;}
+    for(auto& slot:pendingControls_)if(slot.second)if(const auto terminal=runtime_.cpuPendingTerminal(slot.second)){
+      service.completeDeferred(slot.first,slot.second,terminal->status=="Committed"||terminal->status=="NoOp",revision_);slot={};}
   }
   void setTarget(CanvasTargetKey target) noexcept { target_ = target; }
   const CanvasTargetKey& target() const noexcept { return target_; }

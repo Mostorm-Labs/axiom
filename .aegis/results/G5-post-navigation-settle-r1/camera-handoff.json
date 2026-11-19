@@ -1,0 +1,569 @@
+{
+  "status": "D2_CANDIDATE33_4WINDOWS_PASS_D4_INTRUSIVE_OBSERVER_BLOCKED",
+  "rows": [
+    {
+      "id": "WH-OPT-B-D2",
+      "metrics": [
+        {
+          "route": "wheel",
+          "proxy": {
+            "gaps": {
+              "count": 5404,
+              "median": 0,
+              "p95": 16.5,
+              "maximum": 49.799999952316284
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.699999809265137
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.799999952316284
+              },
+              {
+                "index": 180,
+                "gap_ms": 17.700000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.5
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.200000047683716
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 0.46666661898279926,
+              "p95": 1.3999998569488525,
+              "maximum": 4.599999904632568
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 0.2999999523162842,
+              "p95": 0.5,
+              "maximum": 0.8999998569488525
+            },
+            "settle_ms": 334.10000014305115,
+            "content_submissions": 5403,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 357,
+            "max_gap_ms": 49.700000047683716,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.799999952316284
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.90000009536743
+              },
+              {
+                "index": 180,
+                "gap_ms": 17.700000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.59999990463257
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.299999952316284
+              }
+            ],
+            "missed33_4msWindows": [
+              {
+                "index": 100,
+                "deadline": 2681.4
+              }
+            ],
+            "finalCurrent": true,
+            "pass": false
+          }
+        },
+        {
+          "route": "touch",
+          "proxy": {
+            "gaps": {
+              "count": 6231,
+              "median": 0,
+              "p95": 16.09999990463257,
+              "maximum": 40.299999952316284
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.299999952316284
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 180,
+                "gap_ms": 15.899999856948853
+              },
+              {
+                "index": 240,
+                "gap_ms": 17
+              },
+              {
+                "index": 300,
+                "gap_ms": 16.59999990463257
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 8.216666738191634,
+              "p95": 25,
+              "maximum": 36.03333338101584
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 16.40000009536743,
+              "p95": 17.700000047683716,
+              "maximum": 23.899999856948853
+            },
+            "settle_ms": 353,
+            "content_submissions": 6230,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 359,
+            "max_gap_ms": 40.5,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.299999952316284
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 180,
+                "gap_ms": 16
+              },
+              {
+                "index": 240,
+                "gap_ms": 17.09999990463257
+              },
+              {
+                "index": 300,
+                "gap_ms": 16.699999809265137
+              }
+            ],
+            "missed33_4msWindows": [],
+            "finalCurrent": true,
+            "pass": true
+          }
+        }
+      ],
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-B-D2/raw.json",
+        "bytes": 3815352,
+        "sha256": "f659046ac581a418b69ea95bebe49df7629f520fb319f09239a73c86233c17f3"
+      }
+    },
+    {
+      "id": "WH-OPT-C-D2",
+      "metrics": [
+        {
+          "route": "wheel",
+          "proxy": {
+            "gaps": {
+              "count": 5334,
+              "median": 0,
+              "p95": 16.299999952316284,
+              "maximum": 31.5
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 24
+              },
+              {
+                "index": 120,
+                "gap_ms": 26.200000047683716
+              },
+              {
+                "index": 180,
+                "gap_ms": 24.5
+              },
+              {
+                "index": 240,
+                "gap_ms": 23.299999952316284
+              },
+              {
+                "index": 300,
+                "gap_ms": 22.90000009536743
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 0.8333333333339397,
+              "p95": 1.7333334287004618,
+              "maximum": 3.799999952316284
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 0.39999985694885254,
+              "p95": 0.5,
+              "maximum": 0.8999998569488525
+            },
+            "settle_ms": 229.10000014305115,
+            "content_submissions": 5333,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 358,
+            "max_gap_ms": 31.59999990463257,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 24.100000143051147
+              },
+              {
+                "index": 120,
+                "gap_ms": 26.299999952316284
+              },
+              {
+                "index": 180,
+                "gap_ms": 24.5
+              },
+              {
+                "index": 240,
+                "gap_ms": 23.300000190734863
+              },
+              {
+                "index": 300,
+                "gap_ms": 22.799999952316284
+              }
+            ],
+            "missed33_4msWindows": [],
+            "finalCurrent": true,
+            "pass": true
+          }
+        },
+        {
+          "route": "touch",
+          "proxy": {
+            "gaps": {
+              "count": 6011,
+              "median": 0,
+              "p95": 16.200000047683716,
+              "maximum": 38.200000047683716
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.09999990463257
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.59999990463257
+              },
+              {
+                "index": 180,
+                "gap_ms": 16.299999952316284
+              },
+              {
+                "index": 240,
+                "gap_ms": 16.59999990463257
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.09999990463257
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 55.51666669050792,
+              "p95": 89.20000004768372,
+              "maximum": 90.29999995231628
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 16.5,
+              "p95": 17.800000190734863,
+              "maximum": 21.600000143051147
+            },
+            "settle_ms": 303.2000000476837,
+            "content_submissions": 6010,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 359,
+            "max_gap_ms": 38.40000009536743,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.100000143051147
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.600000143051147
+              },
+              {
+                "index": 180,
+                "gap_ms": 16.399999856948853
+              },
+              {
+                "index": 240,
+                "gap_ms": 16.699999809265137
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.199999809265137
+              }
+            ],
+            "missed33_4msWindows": [],
+            "finalCurrent": true,
+            "pass": true
+          }
+        }
+      ],
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-C-D2/raw.json",
+        "bytes": 3763498,
+        "sha256": "289b6511362cc2488b6bfc2d993480f6387d44e9999ab34165fb2c17c7e94cb3"
+      }
+    },
+    {
+      "id": "WH-OPT-C-D4",
+      "metrics": [
+        {
+          "route": "wheel",
+          "proxy": {
+            "gaps": {
+              "count": 9170,
+              "median": 0,
+              "p95": 0,
+              "maximum": 76
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 66.19999980926514
+              },
+              {
+                "index": 120,
+                "gap_ms": 74.20000004768372
+              },
+              {
+                "index": 180,
+                "gap_ms": 61.09999990463257
+              },
+              {
+                "index": 240,
+                "gap_ms": 52
+              },
+              {
+                "index": 300,
+                "gap_ms": 50.299999952316284
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 0.40000009536743164,
+              "p95": 15.4666666189828,
+              "maximum": 52.90000009536743
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 0.40000009536743164,
+              "p95": 0.6999998092651367,
+              "maximum": 9.600000143051147
+            },
+            "settle_ms": 352,
+            "content_submissions": 9169,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 333,
+            "max_gap_ms": 76,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 66.29999995231628
+              },
+              {
+                "index": 120,
+                "gap_ms": 74.20000004768372
+              },
+              {
+                "index": 180,
+                "gap_ms": 61.200000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 52.09999990463257
+              },
+              {
+                "index": 300,
+                "gap_ms": 50.299999952316284
+              }
+            ],
+            "missed33_4msWindows": [
+              {
+                "index": 20,
+                "deadline": 1651.1000000476838
+              },
+              {
+                "index": 40,
+                "deadline": 1984.0000001430512
+              },
+              {
+                "index": 60,
+                "deadline": 2316.9
+              },
+              {
+                "index": 80,
+                "deadline": 2649.5000001430512
+              },
+              {
+                "index": 100,
+                "deadline": 2984.5000001430512
+              },
+              {
+                "index": 120,
+                "deadline": 3317.3000000953675
+              },
+              {
+                "index": 140,
+                "deadline": 3649.4
+              },
+              {
+                "index": 160,
+                "deadline": 3983.9
+              },
+              {
+                "index": 180,
+                "deadline": 4316.4
+              },
+              {
+                "index": 240,
+                "deadline": 5316.300000095367
+              },
+              {
+                "index": 300,
+                "deadline": 6316.9
+              },
+              {
+                "index": 360,
+                "deadline": 7317.4
+              }
+            ],
+            "finalCurrent": true,
+            "pass": false
+          }
+        },
+        {
+          "route": "touch",
+          "proxy": {
+            "gaps": {
+              "count": 6896,
+              "median": 0,
+              "p95": 15.900000095367432,
+              "maximum": 117
+            },
+            "direction_boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.59999990463257
+              },
+              {
+                "index": 180,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.299999952316284
+              }
+            ],
+            "deadline_lateness": {
+              "count": 360,
+              "median": 293.91666666666424,
+              "p95": 541.5666667620317,
+              "maximum": 553.9333334763869
+            },
+            "dispatch": {
+              "count": 360,
+              "median": 16.399999856948853,
+              "p95": 18,
+              "maximum": 159.09999990463257
+            },
+            "settle_ms": 405,
+            "content_submissions": 6895,
+            "input_count": 360
+          },
+          "camera": {
+            "successfulPresents": 359,
+            "max_gap_ms": 116.90000009536743,
+            "boundaries": [
+              {
+                "index": 60,
+                "gap_ms": 16.800000190734863
+              },
+              {
+                "index": 120,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 180,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 240,
+                "gap_ms": 16.700000047683716
+              },
+              {
+                "index": 300,
+                "gap_ms": 17.40000009536743
+              }
+            ],
+            "missed33_4msWindows": [],
+            "finalCurrent": true,
+            "pass": false
+          }
+        }
+      ],
+      "raw": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/web/WH-OPT-C-D4/raw.json",
+        "bytes": 4794381,
+        "sha256": "d8f877fe3801e1851d89f2646b47e8776171369fea36d16be5cfa7a98dd0ade4"
+      }
+    }
+  ],
+  "old360OfflineCorrected": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/old-camera-corrected.json",
+    "bytes": 1947,
+    "sha256": "a5b3f331cb94e0d46a290a2b2544f1de6fb282a4b3bb308fb58512a187100db4"
+  },
+  "diagnostic4": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/camera-diagnosis-green.json",
+    "bytes": 3972,
+    "sha256": "794fe62ec1416108f57c2e19757bfb6aa741f3a8208292bdc259cb394664c1b6"
+  },
+  "DPR4observer": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-post-navigation-settle-r1/observer-interference.json",
+    "bytes": 10857,
+    "sha256": "cbf5f53faa1aee5a9bf8815d88a4db76104451105968a60c01cedc5b1a41823c"
+  },
+  "guardStillFailed": true,
+  "noSubtractReadbackOrFutureframePASS": true,
+  "notDPR4OrdinaryRegressionClaim": true
+}

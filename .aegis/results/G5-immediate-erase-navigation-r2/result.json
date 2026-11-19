@@ -1,0 +1,178 @@
+{
+  "schema": "axiom-scoped-execution-result-v1",
+  "task": "G5-immediate-erase-navigation-r2",
+  "status": "BLOCKED",
+  "classification": "PERFORMANCE_TARGET_UNMET",
+  "additional_blockers": [
+    {
+      "class": "FROZEN_VERIFICATION_FAILURE",
+      "scope": "B-DPR4-immediate-pan originalCPUreference",
+      "nonedgeChannelsOver2": 8292,
+      "nonedgeMaxDelta": 242,
+      "candidateC": "all4terminalmet; baselinefailure unwaived"
+    }
+  ],
+  "finalizedAt": "2026-11-18T21:49:50.746737+08:00",
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-immediate-erase-navigation-r2/package.json",
+    "bytes": 3851,
+    "sha256": "52d3d32c346c541b5dcb742db3e12f7401e1b6d96c601c25ef7f452c7a4b91df"
+  },
+  "repository": "github:Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2",
+  "branch": "codex/g5-immediate-erase-navigation-r2",
+  "checkpoint": "db3430600f22d4c9e9a5a2a40e416b42a3f10c83",
+  "actualHEAD": "db3430600f22d4c9e9a5a2a40e416b42a3f10c83",
+  "productionFrozen": true,
+  "uncommittedChangesPreserved": true,
+  "newCommitPushTagAfterResume": false,
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-C.json",
+    "bytes": 148047,
+    "sha256": "a6968c5348e1320db9dd5c14e4adf20f31608a3e518c618cf6561c617fe6c569"
+  },
+  "delta": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-delta.patch",
+    "bytes": 95166,
+    "sha256": "375b7a95887d4b8f97a253f25678cf090d9792d401450d3ecefbad3243572a32"
+  },
+  "deltaManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/delta-manifest.json",
+    "bytes": 3594,
+    "sha256": "ffa83b213385c1fef6a312467bb01fee1f6333b9d6cee1d73c5511fdee29bf30"
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/normal-SDK.json",
+    "bytes": 4284,
+    "sha256": "5fdd8ea95340084b04a3c32fdb19e368864551e2afc7595559dd4d042acf98f5"
+  },
+  "sourceSDKbinding": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/source-and-SDK-binding.json",
+    "bytes": 2411,
+    "sha256": "6184ccbd295ae2a6c13b4bcb484fbb732fa0013ecd66e445d09bcdaf68cf234f"
+  },
+  "driverFreeze": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/browser-freeze.json",
+    "bytes": 645918,
+    "sha256": "44bfe882655bdcce223087ae294275d761ed11e53bc06cb5083bacd363a301a4"
+  },
+  "harnessCorrectiveFreeze": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/harness-corrective-freeze.json",
+    "bytes": 1816,
+    "sha256": "b2e511aa706baf564dfdbb2fdffa7e0debb1f0f7b216f669a1c88b737976f5bd"
+  },
+  "manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/artifact-manifest.json",
+    "bytes": 235605,
+    "sha256": "6647aa304059274f8d7d041df9bc2c8f84ad8095b9aa5eb8935bc1b8b605bffe"
+  },
+  "performance": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/browser-comparison.json",
+    "bytes": 11379,
+    "sha256": "94673eb9737a65c0cdc74a73a78f285779dbb0807436b7dbb356961f8862054e"
+  },
+  "correctness": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/web-correctness.json",
+    "bytes": 8796,
+    "sha256": "c5106ae882f26450e1ac9f92b411feea615f7a52211e6c986c78e250e50c3a7c"
+  },
+  "independentPixels": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/independent-pixels.json",
+    "bytes": 18604,
+    "sha256": "1a985cab927789322b139f4c33025596b89240def2572e9c269b578f8c805c45"
+  },
+  "pixelSemantic": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/pixel-semantic-complete.json",
+    "bytes": 38848,
+    "sha256": "195ccc0967a787bcae3caae4a2448416f44184cc3dc6ed96f4f2a2990f88850c"
+  },
+  "native": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/native-regressions.json",
+    "bytes": 42992,
+    "sha256": "5a491d4308f9d9cffbeabc13269c09b56bff4764ea1a654ec34fedc46e1d01dd"
+  },
+  "identityLifecycle": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/identity-lifecycle.json",
+    "bytes": 2922,
+    "sha256": "491e29acdf2bfd972247683cae4a103beedb345302cc03335adc0df167b6e333"
+  },
+  "reuse": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/reuse-work-counts.json",
+    "bytes": 5989,
+    "sha256": "f5036d3b7a15a90344878bc22afcfcb55eb2351970801a2e966e811cc6f5eff7"
+  },
+  "cause": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/cause-and-timeline.json",
+    "bytes": 3988,
+    "sha256": "e6977970c1e64410e5aa5032813217eb1680bcc537762f9dad3264c081966a1d"
+  },
+  "preview": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/preview-ready.json",
+    "bytes": 1120,
+    "sha256": "9945af7616d6d71ce7b07bb3410be6e9ca6e09f5d4610755adf01a231aac8877"
+  },
+  "previewCallback": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/preview-callback.json",
+    "bytes": 425,
+    "sha256": "01dc831be54eaa729464b7a3149c607373ed47ef53e8484b8f884e336be76dbd"
+  },
+  "preservation": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/preservation.json",
+    "bytes": 4531,
+    "sha256": "589e51270fe70b4d551775f6cbb4e83f7ac775e838fb5cee2c1088fdd009ceff"
+  },
+  "cleanup": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/cleanup.json",
+    "bytes": 21069,
+    "sha256": "31ef255db9b153f52109162584189549da95a12218d4efb2299e78b42a476206"
+  },
+  "ledger": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/sampling-ledger.json",
+    "bytes": 9293,
+    "sha256": "1422a2e3452c748fad94f306d260fa09ea49605ef71516669946dd1d02f50f00"
+  },
+  "storage": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/storage-ledger.json",
+    "bytes": 356695,
+    "sha256": "ece8a618d7cd7597d19c5484521b3b64bc469d80a506e3e2011a5f9fb4d6839c"
+  },
+  "stagingErratum": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/diagnostic-staging-erratum.json",
+    "bytes": 1027,
+    "sha256": "9882ef7ea79a9dffb12d7c1ed4a7c3325f1f9ec2993bb66ae2980c39aeac5ff9"
+  },
+  "completion": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/completion-map.json",
+    "bytes": 1157,
+    "sha256": "d7edf2b4fe61975ce66797b9a3d995bf374dac4c567a25768f3d3d3931c526bb"
+  },
+  "reviewText": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/readiness.md",
+    "bytes": 2490,
+    "sha256": "4c3c5bd744e6ef38c1bf9386154e150a8f03a9b49a160843b9cf5b2d41b2e8c4"
+  },
+  "samplingSummary": {
+    "newStarts": 8,
+    "ceilSeconds": 785,
+    "remainingTimeSeconds": 1915,
+    "diagnosticStarts": 2,
+    "ordinarySuccessful": 4,
+    "failedHarnessStarts": 1,
+    "correctiveStarts": 1,
+    "correctnessStarts": 1,
+    "allCleanup": true,
+    "furtherStartsAuthorized": false
+  },
+  "remaining": [
+    "Controlindependentreview of preserved candidate andmeasuredperformanceunmet.",
+    "ClassifyB-DPR4 reference mismatch andD1staging evidence finding beforeanyacceptance."
+  ],
+  "continue_execution": false,
+  "claims": {
+    "P34": false,
+    "overallGate": false,
+    "performancePASS": false,
+    "readyForControlReview": false
+  },
+  "returnPolicy": "Terminal explicitblocked callback thenSTOP; all safe frozen verification executed. Noautomaticnextpackage."
+}

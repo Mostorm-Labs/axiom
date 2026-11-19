@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Node",
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+      "--test",
+      "verification/tests/g5_webgl_target_readback.test.mjs",
+      "verification/tests/g5_canonical_latency_guard.test.mjs",
+      "out/G5-erase-feedback-frame-r1/storage.test.mjs"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "Boundary",
+    "command": [
+      "python3",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "exit": 0
+  },
+  {
+    "name": "Whitespace",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0
+  }
+]

@@ -1,0 +1,351 @@
+diff --git a/runtime/composition/CMakeLists.txt b/runtime/composition/CMakeLists.txt
+index 11f3236d..dcc5f0dc 100644
+--- a/runtime/composition/CMakeLists.txt
++++ b/runtime/composition/CMakeLists.txt
+@@ -361,7 +361,7 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_CPU_PENDING_ER
+  target_include_directories(axiom_cpu_pending_runtime_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}" "${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host" "${AXIOM_HOST_FONT_INCLUDE}")
+  target_compile_definitions(axiom_cpu_pending_runtime_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 AXIOM_UR2D_TESTS=1 AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  set(_cpu_pending_fixture "${PROJECT_SOURCE_DIR}/.aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap")
+- foreach(mode progresswait progressunavailable progresstarget progressstamp progresshistory progresspublication progressbudget camerazoomout camerazoomin camerafit camerapan camerapantool cameratouch cameraselectiontouch noop twocommit long failure context fatal frame radius overflow guards sourcecancel mixedcommit mixedframe mixedsticky mixedtable mixedimage mixedbrush historybarrier activecancel activepaced activebasis failedcreate failuremixed quota8 timeline stampabort stampfilled hierarchy dependencychain rejectcleanup focus focuschanged metadatapressure postpublishfault)
++ foreach(mode postcommitzoom postcommitpan progresswait progressunavailable progresstarget progressstamp progresshistory progresspublication progressbudget camerazoomout camerazoomin camerafit camerapan camerapantool cameratouch cameraselectiontouch noop twocommit long failure context fatal frame radius overflow guards sourcecancel mixedcommit mixedframe mixedsticky mixedtable mixedimage mixedbrush historybarrier activecancel activepaced activebasis failedcreate failuremixed quota8 timeline stampabort stampfilled hierarchy dependencychain rejectcleanup focus focuschanged metadatapressure postpublishfault)
+   add_test(NAME G5CpuPendingRuntime-${mode} COMMAND axiom_cpu_pending_runtime_tests "${_cpu_pending_fixture}" "${CMAKE_CURRENT_BINARY_DIR}/cpu-pending-${mode}.json" "${mode}")
+   set_tests_properties(G5CpuPendingRuntime-${mode} PROPERTIES TIMEOUT 120)
+  endforeach()
+diff --git a/runtime/composition/src/runtime_composition.cpp b/runtime/composition/src/runtime_composition.cpp
+index c52ebbaa..d384b871 100644
+--- a/runtime/composition/src/runtime_composition.cpp
++++ b/runtime/composition/src/runtime_composition.cpp
+@@ -521,6 +521,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
+   // Consume controls and resource notifications first. Their application may
+   // create a new canonical demand during this same frame opportunity.
+   {AXIOM_FRAME_TIMING_SCOPE(ownerPumpTiming,owner_pump);if (!ownerPump()) return false;}
++  AXIOM_IF_EVENT("nc_route point=before_pending semantic=%llu scene=%llu camera=%llu partial=%u transient_dirty=%u canonical_dirty=%u",(unsigned long long)runtime_->semanticGeneration().value(),(unsigned long long)runtime_->sceneRevision(),(unsigned long long)runtime_->cameraGeneration(),unsigned(runtime_->partialEraseFeedbackActive()),unsigned(runtime_->transientOverlayDirty()),unsigned(runtime_->canonicalPresentationDirty()));
+   {AXIOM_FRAME_TIMING_SCOPE(pendingTiming,pending_owner);runtime_->serviceCpuPendingErases();}
+   try{if(auto image=runtime_->pendingHeadImage()){
+     bool applied=false;try{applied=controlFacade_->importImage(image->second).state==ImageCommandState::kApplied;}catch(...){}
+@@ -533,6 +534,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
+   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
+   const bool editingTransient=!forceCanonical && ((runtime_->platformPresentationDeferred() && (runtime_->creationActive() ||
+       runtime_->selectionTransformActive() || runtime_->regionSelectionActive())) || runtime_->objectEraseFeedbackActive() || runtime_->partialEraseFeedbackActive());
++  AXIOM_IF_EVENT("nc_route point=after_pending semantic=%llu scene=%llu camera=%llu transient=%u transient_dirty=%u canonical_dirty=%u",(unsigned long long)runtime_->semanticGeneration().value(),(unsigned long long)runtime_->sceneRevision(),(unsigned long long)runtime_->cameraGeneration(),unsigned(editingTransient),unsigned(runtime_->transientOverlayDirty()),unsigned(shouldCanonical));
+   bool transientRendered=false;
+   {AXIOM_FRAME_TIMING_SCOPE(transientTiming,transient_frame);transientRendered=editingTransient && runtime_->transientOverlayDirty() && runtime_->retryTransientOverlayFrame();}
+   if(pendingPreviewCapture_&&pendingPreviewCapture_->displayRevision!=runtime_->previewDisplayRevision()){
+@@ -600,6 +602,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
+   out.needsPaint = runtime_->cpuPendingFacts().reserved!=0 || out.canonicalRequested || out.navigationPresented || out.previewDirty || transientRendered ||
+       (editingTransient && runtime_->transientOverlayDirty()) ||
+       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value() || runtime_->canonicalPresentationDirty();
++  AXIOM_IF_EVENT("nc_route point=outcome semantic=%llu scene=%llu camera=%llu transient=%u transient_rendered=%u transient_dirty=%u nav_pending=%u nav_presented=%u canonical_requested=%u canonical_retry=%u canonical_work=%u needs_paint=%u",(unsigned long long)runtime_->semanticGeneration().value(),(unsigned long long)runtime_->sceneRevision(),(unsigned long long)runtime_->cameraGeneration(),unsigned(editingTransient),unsigned(transientRendered),unsigned(runtime_->transientOverlayDirty()),unsigned(out.navigationPending),unsigned(out.navigationPresented),unsigned(out.canonicalRequested),unsigned(runtime_->canonicalPresentationRetryable()),unsigned(out.canonicalWork.has_value()),unsigned(out.needsPaint));
+   AXIOM_FRAME_TIMING_SET(commit_ordinal,runtime_->canonicalCommitFence().ordinal.value());
+   AXIOM_FRAME_TIMING_SET(after_generation,runtime_->semanticGeneration().value());
+   AXIOM_FRAME_TIMING_SET(after_scene,runtime_->sceneRevision());
+diff --git a/runtime/composition/tests/cpu_pending_runtime_test.cpp b/runtime/composition/tests/cpu_pending_runtime_test.cpp
+index 4b5958ed..490780f3 100644
+--- a/runtime/composition/tests/cpu_pending_runtime_test.cpp
++++ b/runtime/composition/tests/cpu_pending_runtime_test.cpp
+@@ -22,6 +22,7 @@ class InkPlaygroundHistoryTestAccess {public:
+  static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
+  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
+  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
++ static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
+  static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
+  static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
+  static void step(interaction::CanvasEditingRuntime& r,std::chrono::steady_clock::time_point began=std::chrono::steady_clock::now()){r.serviceCpuPendingEraseStep(began);}
+@@ -48,9 +49,9 @@ class PostPublicationFaultSink final:public interaction::LocalOperationSink {
+  interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
+ };
+ int main(int argc,char**argv){try{
+- require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
++ require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+  auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
+- if(mode.starts_with("progress")){
++ if(mode.starts_with("progress")||mode.starts_with("postcommit")){
+   const auto first=std::find_if(s.objects.begin(),s.objects.end(),[](const auto& o){return std::holds_alternative<semantic::CompactStrokeContent>(o.content);});require(first!=s.objects.end(),"progress actualstroke");auto base=*first;s.objects.clear();
+   for(unsigned n=0;n<3;++n){auto o=base;o.id=foundation::ObjectId::fromUint64(970000+n);o.transform={1,0,0,1,0,0};o.erase_masks.clear();auto& c=std::get<semantic::CompactStrokeContent>(o.content);c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({350.+i*.6,240.+n*3+20*std::sin(i*.05),32768});s.objects.push_back(std::move(o));}
+   require(semantic::SnapshotCodec::populateRequirements(s)&&semantic::SnapshotCodec::bindDigests(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1),"progress realfixturebind");
+@@ -119,7 +120,7 @@ int main(int argc,char**argv){try{
+   require(!core.submit({{over}}),"oversize silentlyaccepted");require(!core.platformKey(71,1)&&core.cpuPendingFacts().pending==0,"oversizepointerorintentleak");
+   pointer(input::PointerPhase::kDown,420,160);pointer(input::PointerPhase::kCancel,420,160);require(editor.semanticGeneration().value()==0,"overflowprefixcommitted");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"overflowlease");require(core.close(),"overflowclose");return 0;
+  }
+- if(mode.starts_with("camera")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
++ if(mode.starts_with("camera")||mode.starts_with("postcommit")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
+  pointer(input::PointerPhase::kDown,420,160);for(unsigned i=1;i<=length;++i)pointer(input::PointerPhase::kMove,float(420+7*std::sin(i*.17)),float(160+170.*i/length));
+  if(mode=="activepaced"){
+   // Active input no longer eagerly unions sixteen whole masks. Cancellation
+@@ -140,6 +141,63 @@ int main(int argc,char**argv){try{
+  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1&&!core.platformKey(71,1),"Up pending/contact independently retired");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps==before.maskHistory.queryUnionOps,"new query union inUp");
+  require(!core.close()&&!editor.canUndo(),"pending close/Undo must Busy");
++ if(mode.starts_with("postcommit")){
++  // Same production input/real C++ Worker kernel and OperationEngine. Only the
++  // existing navigation opportunity clock is advanced deterministically.
++  const auto changedAt=std::chrono::steady_clock::now();
++  require(mode=="postcommitpan"?editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,70,-30}):editor.setViewportZoomAt(.7F,600,400),"postcommit camera input");
++  const auto camera=editor.viewportGesture();const auto cameraGeneration=editor.cameraGeneration();unsigned requests=0;
++  for(unsigned i=0;core.cpuPendingFacts().pending&&i<512;++i){
++   editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();if(request.empty())continue;++requests;
++   const auto value=render::internal::cpuDecodeRequest(request);require(bool(value),"postcommit actualrequest");render::internal::CpuExactPathJob kernel(value->geometry,value->prefixCount,value->prefixPath);while(!kernel.ready())require(kernel.advance(8,2000),"postcommit kernel");const auto n=kernel.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+n);std::copy_n(request.begin(),128,result.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,n);word(100,value->piece?3:2);if(!value->piece)for(unsigned k=104;k<128;++k)result[k]=0;kernel.path().writeToMemory(result.data()+128);require(core.queueCpuPendingCompletion(value->identity.words,result,true),"postcommit realcompletion");
++  }
++  require(requests>0&&!core.cpuPendingFacts().pending&&core.cpuPendingFacts().committed==1&&editor.semanticGeneration().value()==generation+1,"postcommit actualatomiccommit");
++  require(editor.cameraGeneration()==cameraGeneration,"commit changed camera");
++  bool presented=false;const bool navigationHeld=editor.serviceNavigationPresentation(changedAt+std::chrono::milliseconds(101),presented);
++  json result{{"mode",mode},{"real_kernel_requests",requests},{"committed",1},{"camera_generation",cameraGeneration},{"generation",editor.semanticGeneration().value()},{"navigation_held_after_original_quiet",navigationHeld},{"navigation_presented",presented}};
++  std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
++  require(!navigationHeld&&!presented,"NO_NEW_QUIET_WINDOW_AFTER_PENDING_COMMIT");
++  const auto snapshot=editor.snapshotObjects();
++  const auto decodePixels=[&]{std::vector<std::uint8_t> pixels(1431U*1010U*4U);require(editor.activeSurfaceProvider()->readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"postcommit pixels");return pixels;};
++  const auto priorPixels=decodePixels();const auto beforePresents=editor.activeSurfaceProvider()->presentCount();
++  runtime::RuntimeFrameOpportunity submitted;
++  for(unsigned i=0;i<128;++i){require(core.serviceFrameOpportunity(false,submitted),"postcommit canonicalopportunity");if(submitted.canonicalWork)break;require(decodePixels()==priorPixels,"retrychangedlastsuccessfuldisplay");require(i<127,"postcommit canonicalnotcomplete");}
++  require(submitted.canonicalWork&&editor.activeSurfaceProvider()->presentCount()>beforePresents,"postcommit completedproviderframe");
++  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)>0,"commit prematurelyretireddisplay");
++  auto wrong=*submitted.canonicalWork;wrong.frame.surfaceGeneration=render::SurfaceGeneration{wrong.frame.surfaceGeneration.value()+1};
++  require(!core.receivePlatformPresented({wrong,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"foreignsurfacequalifieddisplay");
++  const auto actual=decodePixels();
++  const auto projected=projectRuntimeScene(snapshot,editor.semanticGeneration());
++  render::FrameState f{render::ViewId{1},render::CameraState{{(715.5F-camera.translationX)/camera.scale,(505.F-camera.translationY)/camera.scale},camera.scale,0,render::CameraGeneration{cameraGeneration}},
++      {-camera.translationX/camera.scale,-camera.translationY/camera.scale,(1431-camera.translationX)/camera.scale,(1010-camera.translationY)/camera.scale},
++      {1431,1010,1431,1010,1,1},editor.semanticGeneration(),SceneRevision{editor.sceneRevision()},render::SurfaceGeneration{editor.surface().generation},render::MetricsGeneration{editor.surface().metricsGeneration},render::FrameId{1},{0,0,1431,1010}};
++  render::ReferenceDrawList draw{f};draw.viewportClip={0,0,1431,1010};draw.worldToView={camera.scale,0,0,camera.scale,camera.translationX,camera.translationY};
++  for(const auto& record:projected.records){auto command=render::DirectReferenceSource::presentationCommand(record);require(bool(command),"independentreferencecommand");draw.entries.push_back({record,true,std::move(command.value())});}
++  render::FramePlan plan{f,std::move(draw),s.background,false,true};
++  auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(1431,1010));require(render::internal::drawReferencePlanToSkCanvas(*oracle->getCanvas(),plan).code==render::BackendSubmissionCode::kAccepted,"independentfullreference");std::vector<std::uint8_t> expected(actual.size());require(oracle->readPixels(SkImageInfo::Make(1431,1010,kRGBA_8888_SkColorType,kPremul_SkAlphaType),expected.data(),1431*4,0,0),"oracle readback");
++  std::size_t diff=0;unsigned maxDelta=0;for(std::size_t i=0;i<actual.size();++i){diff+=actual[i]!=expected[i];maxDelta=std::max(maxDelta,unsigned(std::abs(int(actual[i])-int(expected[i]))));}result["native_fullframe_diff_channels"]=diff;result["native_fullframe_max_delta"]=maxDelta;
++  std::cerr<<"fullframe compare channels="<<diff<<" max="<<maxDelta<<std::endl;
++  // Fractional device transforms may quantize only AA edge channels. Derive
++  // the fixed one-device-pixel contour band from source geometry alone.
++  auto edge=SkSurfaces::Raster(SkImageInfo::MakeA8(1431,1010));edge->getCanvas()->clear(SK_ColorTRANSPARENT);SkPaint boundary;boundary.setColor(SK_ColorWHITE);boundary.setAntiAlias(true);boundary.setStyle(SkPaint::kStroke_Style);boundary.setStrokeWidth(2);
++  for(const auto& record:projected.records){const auto& c=std::get<semantic::CompactStrokeContent>(record.content.get()).stroke;const auto contour=ink::compileCompactContour(c.config,c.knots);const auto& t=record.transform;const float z=camera.scale;SkMatrix matrix;matrix.setAll(z*t.a,z*t.c,z*t.tx+camera.translationX,z*t.b,z*t.d,z*t.ty+camera.translationY,0,0,1);
++   for(std::size_t i=0;i+1<contour.patches.size();++i)edge->getCanvas()->drawPath(render::internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)).makeTransform(matrix),boundary);
++   for(const auto cap:contour.caps){SkPathBuilder circle;circle.addCircle(cap.x,cap.y,cap.radius);edge->getCanvas()->drawPath(circle.detach().makeTransform(matrix),boundary);}
++  }
++  std::vector<std::uint8_t> edges(1431U*1010U);require(edge->readPixels(edge->imageInfo(),edges.data(),1431,0,0),"independentedge readback");
++  std::size_t outside=0;for(std::size_t i=0;i<actual.size();++i)outside+=actual[i]!=expected[i]&&!edges[i/4];result["nonedge_changed_channels"]=outside;
++  require(!outside,"postcommit finalpixels differ independentDirect outside source contour AA");
++  require(core.receivePlatformPresented({*submitted.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"qualifiedcurrentcanonicalfeedback");
++  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)==0,"matchingvisible didnotretiredisplay");
++  require(editor.snapshotObjects()==snapshot,"presentationchangedcanonical");
++  // New input must restart the existing100ms quiet period; same-camera
++  // no-op zoom must not reset it and foreign/inactive work cannot qualify.
++  require(editor.setViewportZoomAt(.8F,600,400),"postcommit freshaction");const auto fresh=ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor);
++  require(editor.setViewportZoomAt(.8F,0,0)&&ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor)==fresh,"no-op reset quiet time");
++  require(editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(99),presented),"freshcamera releasedbeforeoriginalquiet");
++  require(!editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(100),presented),"freshcamera stayedpastquiet");
++  require(editor.cameraGeneration()!=cameraGeneration,"freshcamera generation");std::ofstream(argv[2])<<result.dump(2)<<'\n';return 0;
++ }
+  if(mode.starts_with("progress")){
+   using P=interaction::CpuPendingEraseState::Phase;auto head=[&]{return ink_playground::InkPlaygroundHistoryTestAccess::head(editor);};
+   unsigned stages=0,requests=0;bool reached=false;
+diff --git a/runtime/composition/tests/navigation_presentation_test.cpp b/runtime/composition/tests/navigation_presentation_test.cpp
+index 1c97bfed..56d0db96 100644
+--- a/runtime/composition/tests/navigation_presentation_test.cpp
++++ b/runtime/composition/tests/navigation_presentation_test.cpp
+@@ -6,6 +6,7 @@ using namespace canvas;
+ void require(bool ok,const char* msg){if(!ok)throw std::runtime_error(msg);}
+ class DemandRuntime final : public interaction::CanvasEditingRuntime {
+ public:
++ auto cameraChangedAt() const {return navigationChangedAt_;}
+  void bounded(){navigationExactPreparation_=true;}
+  void ordinary(){navigationExactPreparation_=false;}
+  bool attempt(std::uint64_t id){return presentCanonicalFrame(id,0,false);}
+@@ -103,7 +104,7 @@ void deferredShapeDrag(){
+  require(c.loseSurface(),"transient target loss");
+ }
+ void drawAfterZoom(bool settling, bool cancel){
+- interaction::CanvasEditingRuntime r;
++ DemandRuntime r;
+  require(r.bindSurface(256,128)&&r.registerInputSource(7,"draw-after-zoom"),"draw setup");
+  require(r.selectBrushProfile("round-handdrawn",4),"draw brush");
+  r.setPlatformPresentationDeferred(true);
+@@ -121,7 +122,7 @@ void drawAfterZoom(bool settling, bool cancel){
+  require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,exact.metricsGeneration,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"draw initial feedback");
+  const auto generation=r.semanticGeneration();const auto scene=r.sceneRevision();
+  require(r.setViewportZoomAt(2,128,64),"draw zoom");
+- const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
++ const auto start=r.cameraChangedAt();
+  bool presented=false;require(r.serviceNavigationPresentation(start,presented),"draw navigation");
+  if(settling){
+   unsigned tries=0;while(r.serviceNavigationPresentation(start+std::chrono::seconds(1),presented))require(++tries<128,"draw settle setup");
+@@ -149,7 +150,7 @@ void drawAfterZoom(bool settling, bool cancel){
+  require(!r.serviceNavigationPresentation(start+std::chrono::seconds(3),presented),"draw lost target reused");
+ }
+ void handPanUsesNavigationFeedback(){
+- interaction::CanvasEditingRuntime r;
++ DemandRuntime r;
+  require(r.bindSurface(256,128)&&r.registerInputSource(7,"hand-pan"),"hand pan setup");
+  require(r.selectBrushProfile("round-handdrawn",4),"hand pan brush");
+  r.setPlatformPresentationDeferred(true);
+@@ -176,7 +177,7 @@ void handPanUsesNavigationFeedback(){
+          toolFrame.metricsGeneration,render::PresentOutcome::kPresented,
+          render::PresentEvidenceKind::kPlatformQualified,{}}),"hand pan tool feedback");
+  require(r.setViewportZoomAt(2.0F,128,64),"hand pan zoom");
+- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
++ bool presented=false;const auto now=r.cameraChangedAt();
+  unsigned steps=0;
+  while(!presented){
+   require(r.serviceNavigationPresentation(now,presented),"hand pan navigation feedback rejected");
+@@ -185,7 +186,7 @@ void handPanUsesNavigationFeedback(){
+  require(!r.lastSubmittedCanonicalFrame(),"hand pan emitted exact canonical receipt during navigation");
+ }
+ void selectPinchUsesNavigationFeedback(){
+- interaction::CanvasEditingRuntime r;
++ DemandRuntime r;
+  require(r.bindSurface(256,128)&&r.registerInputSource(7,"select-pinch"),"select pinch setup");
+  r.setPlatformPresentationDeferred(true);
+  unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+@@ -210,7 +211,7 @@ void selectPinchUsesNavigationFeedback(){
+  coalesced.samples={first,second};
+  require(r.acceptPlatformBatch(coalesced,second.timestampNs),"coalesced pinch sample");
+  require(r.cameraGeneration()==beforeCoalesced+1,"coalesced pinch advanced camera more than once");
+- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
++ bool presented=false;const auto now=r.cameraChangedAt();
+  unsigned steps=0;
+  while(!presented){
+   require(r.serviceNavigationPresentation(now,presented),"select pinch navigation feedback rejected");
+@@ -221,7 +222,7 @@ void selectPinchUsesNavigationFeedback(){
+  batch(2,input::PointerPhase::kUp,160,55);
+ }
+ void selectedWheelNavigationUsesFeedback(){
+- interaction::CanvasEditingRuntime r;
++ DemandRuntime r;
+  require(r.bindSurface(256,128)&&r.registerInputSource(7,"selected-wheel"),"selected wheel setup");
+  r.setPlatformPresentationDeferred(true);
+  semantic::ObjectRecord image;
+@@ -250,7 +251,7 @@ void selectedWheelNavigationUsesFeedback(){
+  const auto before=r.cameraGeneration();
+  require(r.setViewportZoomAt(1.35F,128,64),"selected wheel zoom");
+  require(r.cameraGeneration()==before+1,"selected wheel camera");
+- bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
++ bool presented=false;const auto now=r.cameraChangedAt();
+  unsigned steps=0;
+  while(!presented){
+   require(r.serviceNavigationPresentation(now,presented),"selected wheel navigation rejected");
+@@ -265,7 +266,7 @@ void selectedWheelNavigationUsesFeedback(){
+  for(unsigned i=0;i<24;++i){
+   if(i%3==0)require(r.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,3,-2}),"selected wheel pan");
+   else require(r.setViewportZoomAt(i%3==1?1.5F:1.15F,128,64),"selected wheel alternating zoom");
+-  require(r.serviceNavigationPresentation(now+std::chrono::milliseconds(i*16),presented),"selected wheel lost feedback on repeated input");
++  require(r.serviceNavigationPresentation(r.cameraChangedAt()+std::chrono::milliseconds(16),presented),"selected wheel lost feedback on repeated input");
+   require(!r.lastSubmittedCanonicalFrame(),"selected wheel rebuilt exact frame during navigation");
+   require(r.selectionOverlay()&&r.selectionOverlay()->viewGeneration()==r.cameraGeneration(),"selected wheel chrome lags repeated camera");
+  }
+@@ -326,7 +327,7 @@ int main(){
+  require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,exact.metricsGeneration,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"exact feedback");
+  const auto generation=r.semanticGeneration();const auto scene=r.sceneRevision();
+  require(r.setViewportZoomAt(1.1F,100,60),"zoom");
+- const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
++ const auto start=r.cameraChangedAt();
+  bool presented=false;
+  // Incomplete disposable feedback must not gate canonical settlement after
+  // the existing quiet interval. Sustained input still owns navigation first.
+@@ -339,10 +340,11 @@ int main(){
+  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty()&&
+          r.semanticGeneration()==generation&&r.sceneRevision()==scene,"settle fallback fabricated canonical receipt");
+  r.normalCoverage();require(r.setViewportZoomAt(1.2F,100,60),"fresh navigation camera");
+- require(r.serviceNavigationPresentation(start,presented),"navigation work missing");
++ const auto freshCamera=r.cameraChangedAt();
++ require(r.serviceNavigationPresentation(freshCamera,presented),"navigation work missing");
+  unsigned coldSteps=0;
+  while(!presented){
+-  require(r.serviceNavigationPresentation(start,presented),"cold navigation abandoned");
++  require(r.serviceNavigationPresentation(freshCamera,presented),"cold navigation abandoned");
+   require(++coldSteps<128,"complete navigation coverage never presented");
+  }
+  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty(),"navigation created canonical coverage");
+diff --git a/runtime/interaction/src/canvas_editing_runtime.cpp b/runtime/interaction/src/canvas_editing_runtime.cpp
+index 8f63ae9d..7da3c6b0 100644
+--- a/runtime/interaction/src/canvas_editing_runtime.cpp
++++ b/runtime/interaction/src/canvas_editing_runtime.cpp
+@@ -3907,6 +3907,12 @@ bool CanvasEditingRuntime::invalidateViewportChange(std::uint64_t previousGenera
+     submittedDisplayRoster_.bound = false;
+   }
+   navigationRequested_ = true;
++  // Quiet time belongs to the camera change, including opportunities spent
++  // drawing pending editing feedback. First postcommit eligibility must not
++  // start another complete quiet interval for this unchanged camera.
++  navigationCameraGeneration_ = cameraGeneration();
++  navigationChangedAt_ = std::chrono::steady_clock::now();
++  navigationActive_ = true;
+   if (partialEraseFeedbackActive()) transientOverlayDirty_ = true;
+   G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+   return true;
+@@ -4723,6 +4729,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
+   };
+   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
+       {camera.scale,camera.translationX,camera.translationY},compositionFrame,query,idlePrewarm,selectionOverlay(),backgroundOnly,&composition.value());
++  AXIOM_IF_EVENT("nc_render role=navigation semantic=%llu scene=%llu camera=%llu code=%u presented=%u pending=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),unsigned(result.code),unsigned(skiaRenderer_.navigationWork().presented),unsigned(skiaRenderer_.navigationWork().pending),result.message.c_str());
+   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
+   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
+   G5_OBSERVE(g5::Kind::Terminal,g5::Tag::navigation,true,generation,presented,skiaRenderer_.navigationWork().pending);
+@@ -5212,6 +5219,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
+   preparation.maxGroups=64;
+   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), *plan,
+       selectionOverlay(), platformPresentationDeferred_ ? &preparation : nullptr);
++  AXIOM_IF_EVENT("nc_render role=canonical semantic=%llu scene=%llu camera=%llu frame=%llu code=%u max_groups=%llu reason=%s",(unsigned long long)semanticGeneration.value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)plan->frame.frameId.value(),unsigned(rendered.code),(unsigned long long)preparation.maxGroups,rendered.message.c_str());
+   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
+     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
+     AXIOM_FRAME_TIMING_OUTCOME(canonicalPresentationRetryable_?"retry":"rejected");
+@@ -5673,6 +5681,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
+   const auto rendered = renderer.renderTransientOverlay(
+       *target, plan.value(), selectionOverlay());
+   AXIOM_FRAME_TIMING_END(transientRenderTiming);
++  AXIOM_IF_EVENT("nc_render role=transient semantic=%llu scene=%llu camera=%llu frame=%llu code=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)frame.frameId.value(),unsigned(rendered.code),rendered.message.c_str());
+   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
+   coverBrushDisplays(plan.value());
+   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index a36babbb..78dce671 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -199,6 +199,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+     AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
+     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
+     if(stagedBodies_&&(!updates.erase.continuous||updates.erase.bounds))resetPreparation();
++    AXIOM_IF_EVENT("nc_cache_begin semantic=%llu scene=%llu camera=%llu transient=%u changed=%u target_changed=%u contributions=%llu erase_continuous=%u erase_bounds=%u cursor=%llu pending=%u",(unsigned long long)f.sceneGeneration.value(),(unsigned long long)f.sceneReadToken.value(),(unsigned long long)f.camera.generation.value(),unsigned(transient),unsigned(changed),unsigned(targetChanged),(unsigned long long)updates.contributions.size(),unsigned(updates.erase.continuous),unsigned(updates.erase.bounds.has_value()),(unsigned long long)preparationCursor_,unsigned(bool(pending_)));
+     eraseDamage_=updates.erase;
+     if(transient){
+         if(changed||!hasPendingErase_)pendingErase_=updates.erase;
+@@ -1162,6 +1163,7 @@ bool SkiaRenderCache::drawTransientScene(SkCanvas& canvas,const FramePlan& plan,
+     return !damageFailed_;
+ }
+ void SkiaRenderCache::resetPreparation(){
++    AXIOM_IF_EVENT("nc_reset semantic=%llu scene=%llu camera=%llu cursor=%llu pending=%u composite_ready=%u body_dependencies=%llu",(unsigned long long)(frame_?frame_->sceneGeneration.value():0),(unsigned long long)(frame_?frame_->sceneReadToken.value():0),(unsigned long long)(frame_?frame_->camera.generation.value():0),(unsigned long long)preparationCursor_,unsigned(bool(pending_)),unsigned(compositeReady_),(unsigned long long)bodyDependencies_.size());
+     AXIOM_FRAME_TIMING_ADD(prepare_resets,1);
+     pending_.reset();admissions_.clear();admissionReady_=false;preparationCursor_=0;
+     composite_.reset();compositeLease_.reset();preparedFrame_.reset();streamFrame_=false;compositeReady_=false;
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 1eaf5377..7df4dd61 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -422,6 +422,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+     if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
+     if(cache){
+         const auto bodies=cache->prepareBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
++        AXIOM_IF_EVENT("nc_prepare role=canonical phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("canonical body cannot fit preparation capacity"):BackendSubmissionResult::retry("canonical body preparation pending");
+         }
+@@ -465,6 +466,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+                     renderCacheOptions_.sharedMaxBytes,bytes,frame,providerIdentity,resourceEpoch_,true);
+             };
+             AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_,&allowance);
++            AXIOM_IF_EVENT("nc_prepare role=canonical phase=material code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(prepared),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         }
+         catch(const std::bad_alloc&){cache->clear();prepared=internal::SkiaRenderCache::Preparation::kResourcePending;}
+         target->restore();
+@@ -1173,6 +1175,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
+     if(cache){
+         const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
++        AXIOM_IF_EVENT("nc_prepare role=transient phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient body cannot fit preparation capacity"):BackendSubmissionResult::retry("transient body preparation pending");
+         }
+@@ -1188,6 +1191,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
+     }
+     if(gpuLiveV4&&renderCacheOptions_.enabled&&cache&&!cache->stagedBodies()){
+         const auto material=cache->prepareTransientMaterial(*canvas,plan,allowance,images_,&textResources_);
++        AXIOM_IF_EVENT("nc_prepare role=transient phase=material code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(material),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         if(material!=internal::SkiaRenderCache::Preparation::kReady){
+             provider.release();return material==internal::SkiaRenderCache::Preparation::kRejected?
+                 BackendSubmissionResult::rejected("transient material capacity rejected"):

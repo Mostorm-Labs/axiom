@@ -1,0 +1,99 @@
+{
+  "status": "FROZEN_POSTNAVIGATION_REPAIR_AND_REMAINING_PIXEL_CLOSURE",
+  "obligations": [
+    {
+      "id": "PS1",
+      "requirement": "ExplainactualDPR4stop-tail before businesschange",
+      "oracle": "Originalcheckpointraw+boundedactualRuntime→Render→GPU/SDKRAFstop timeline",
+      "acceptance": "Separatetime incompute/canonicalprep, GPUsubmission/retirement, quietpolicy andscheduling; identify repeatedwork/progressloss/cause and actualtarget route. ExistingoldtailRED canbereused butnewtrace boundtosamecheckpoint. No claimmemoryorCPUcausewithoutmeasure.",
+      "evidence_required": [
+        "preflight.json",
+        "stop-attribution.json",
+        "implementation-design.json",
+        "old-red.json"
+      ]
+    },
+    {
+      "id": "PS2",
+      "requirement": "Repair owningtail whilepreservingcompleteviewport and preparedbody/mask reuse",
+      "oracle": "CausalnativeREDGREEN actualMixed49 withboundedjobs/counters, original48calls>=42+nosemanticmutation/losttarget, required21regressions; source/mask/resource invalidation andgutter/mixedprojection tests",
+      "acceptance": "Correctprepare/resume/present/abort/latecompletion flow, nofakequiescence, nofullCPUfallbackorbudgetincrease. Fullrequiredfocusedregressions pass and newtargeted REDGREENdetectcause.",
+      "evidence_required": [
+        "implementation-delta.json",
+        "native-regressions.json",
+        "coverage-lifetimes.json",
+        "handoff-green.json"
+      ]
+    },
+    {
+      "id": "PS3",
+      "requirement": "Actualnormalstop latencywithinoriginalguards; preservecontinuousinteractionbenefit",
+      "oracle": "8normalwindows2DPR B,C,C,B withbothroutes unchanged360inputs andstate, separateactualpresent diagnostic",
+      "acceptance": "Eachcandidateordinarymax/boundary<=100ms/p95guard, postinputmedians<=allfourabsolute limits ANDcheckpointrelativeguard. Actualcamera33.4windows pass, includinglastinput boundary correctly; nointentionalinputdilation/drop.",
+      "evidence_required": [
+        "browser-comparison.json",
+        "camera-handoff.json",
+        "stop-comparison.json",
+        "sampling-ledger.json",
+        "raw-refs.json"
+      ]
+    },
+    {
+      "id": "PS4",
+      "requirement": "Closepreviousincompletepixel/seam/mixedprojectionevidencewithouttradingqualityforlatency",
+      "oracle": "4fixedinstantoptical withpinnedCPUreference atactualpose +targetedGPU64gutter/phase/mask/transparentmixed-order/nativefinalsamepose",
+      "acceptance": "Allmandatory6checkpoints independentfiniteprofiles orfrozenfullmatchedpixeloracle; profileerrornonregression toB by0.05; finalreference pixels originalAA policy, noimageinteriorwaiver/newROI. DPR4actualphotos allrequiredcaptured, no UNAVAILABLE masquerade. Stale pose reported separately.",
+      "evidence_required": [
+        "optical-oracle.json",
+        "optical-comparison.json",
+        "seam-and-mixed-pixels.json",
+        "reference-manifest.json",
+        "final-pixels-state.json"
+      ]
+    },
+    {
+      "id": "PS5",
+      "requirement": "ReviewablecandidateSDK/isolatedtrial andsavedcheckpointunchanged",
+      "oracle": "Exactnewsource/compileinput/normalOFFSDK/hash-boundresultwithprevioussource/SDKs/primarypreservation; publicfunctional2",
+      "acceptance": "AllPS1..4requiredclosureorpreciseexplicitblocker; resultsharedsamehost/hashresolvable. Proactivepreview/finalcallbackSTOP. Checkpointcommit/tag unchanged,no oldresultrewrite orcommitpush/release.",
+      "evidence_required": [
+        "SDK-source-input-manifest.json",
+        "web-smoke.json",
+        "preview-ready.json",
+        "preservation.json",
+        "cleanup.json",
+        "artifact-manifest.json",
+        "result.json"
+      ]
+    }
+  ],
+  "required_focused_regressions": [
+    "G5TileWork",
+    "G5RegionalMaskValidity",
+    "G5MaskedNavigationProgress",
+    "G5ErasedMixedNavigation",
+    "G5RetainedZoomReentry",
+    "G5MixedNavigationReentry",
+    "G5GpuRetirementContract",
+    "G5TemporaryRetirementWait",
+    "G5TemporaryRetirementSafety",
+    "G5TemporaryRetirementCompletion",
+    "G5RenderMemoryBudget",
+    "G5NavigationDisplayWorkavoidance",
+    "G5ProgressiveRuntimeProof",
+    "G5Navigation",
+    "G5Navigation",
+    "G5InkBodyMaskReuse"
+  ],
+  "pending_camera_regressions": [
+    "camerazoomout",
+    "camerazoomin",
+    "camerafit",
+    "camerapan",
+    "camerapantool",
+    "cameratouch"
+  ],
+  "additional": "Finalsource sparsecoldfrontier/refinement/samepresent/density andexactMixed49original48calls; no broad1000test/redundantoldmatrix. Newdriverunit verifiesequalpose,lastinputpostenddeadline,pairedstablegate before nextstart andtraceaccounting.",
+  "hosted_required": [],
+  "known_inherited": "OldDirectDPR4image836channels/max240discrepancy stays reported separately, not blanketwaiver. OldP1/1C/G5/QC/WH failures remainhistorical. NativealonecannotqualifyWeb/Windows."
+}

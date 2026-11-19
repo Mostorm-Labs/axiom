@@ -76,6 +76,8 @@ bool RuntimePlatformAccess::queueCpuPendingCompletion(RuntimeComposition& o,std:
 std::array<std::uint64_t,4> RuntimePlatformAccess::cpuWorkerBasis(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerBasis();}
 interaction::PendingLocalValue RuntimePlatformAccess::pendingLocalValue(RuntimeComposition& o){return o.impl_->core.pendingLocalValue();}
 interaction::CpuPendingEraseFacts RuntimePlatformAccess::cpuPendingFacts(RuntimeComposition& o)noexcept{return o.impl_->core.cpuPendingFacts();}
+interaction::CpuPendingEraseStatus RuntimePlatformAccess::cpuPendingStatus(RuntimeComposition& o)noexcept{return o.impl_->core.cpuPendingStatus();}
+std::optional<interaction::CpuPendingEraseTerminal> RuntimePlatformAccess::cpuPendingTerminal(RuntimeComposition& o,std::uint64_t serial)noexcept{return o.impl_->core.cpuPendingTerminal(serial);}
 std::uint64_t RuntimePlatformAccess::reserveCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::size_t b)noexcept{return o.impl_->core.reserveCpuWorkerGrant(e,b);}
 bool RuntimePlatformAccess::releaseCpuWorkerGrant(RuntimeComposition& o,std::uint64_t e,std::uint64_t t)noexcept{return o.impl_->core.releaseCpuWorkerGrant(e,t);}
 std::size_t RuntimePlatformAccess::cpuWorkerGrantBytes(RuntimeComposition& o)noexcept{return o.impl_->core.cpuWorkerGrantBytes();}

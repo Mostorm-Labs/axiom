@@ -11,6 +11,7 @@
 #include "render_execution.hpp"
 #include <array>
 #include <functional>
+#include "source_retention.hpp"
 
 namespace canvas::render::internal {
 // Render-owner temporary resources only. Eight slots cover GPU/CPU full/edge
@@ -19,6 +20,7 @@ namespace canvas::render::internal {
 class CompactCoverageTargets final {
  public:
     std::shared_ptr<resources::ResourceBudgetManager> budget;
+    void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
     sk_sp<SkSurface> acquire(SkCanvas&,int width,int height,bool compatible,CompactRasterWork*,bool scalar=false);
     struct Allocation final {
         sk_sp<SkSurface> surface;
@@ -30,6 +32,7 @@ class CompactCoverageTargets final {
  private:
     struct Slot {sk_sp<SkSurface> surface;resources::ResourceLease lease;bool scalar=false;const void* context=nullptr;ExecutionBasis basis{};std::uint64_t used=0;};
     std::array<Slot,8> slots_{};
+    ValidationPressure pressure_;
     std::uint64_t tick_=0;
 };
 // One device tile at a time, max-combined before material is applied once.
@@ -41,14 +44,19 @@ class CompactStrokeRasterJob final {
         std::span<const foundation::InkKnot>,const CompactDeviceGrid* = nullptr,bool compatible=false,
         std::shared_ptr<resources::ResourceBudgetManager> budget=nullptr,
         std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
-        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false,std::shared_ptr<const PreparedNavigationGeometry> prepared=nullptr,bool directConsumer=false);
+        std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false,std::shared_ptr<const PreparedNavigationGeometry> prepared=nullptr,bool directConsumer=false,bool whiteOnly=false);
     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
         std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    void diagnosticCursor(std::uint64_t& primitive,std::uint64_t& knot,int& x,int& y,bool& done)const noexcept {
+        primitive=preparedPrimitive_;knot=knot_;x=x_;y=y_;done=done_;
+    }
+#endif
  private:
     std::shared_ptr<const PreparedNavigationGeometry> prepared_;
     std::size_t preparedPrimitive_=0;
-    bool directConsumer_=false;
+    bool directConsumer_=false,whiteOnly_=false;
     SkMatrix matrix_{};
     SkIRect clip_{},deviceClip_{};
     SkRect support_{};

@@ -20,7 +20,7 @@ std::size_t PreparedBodyJob::minimumBytes(std::size_t count)noexcept{
         std::numeric_limits<std::size_t>::max():baseBytes+blocks*replayUnit;
 }
 std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const ReferenceCommand& source,SourceRetentions sources,
-    std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage){
+    std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage,const ValidationPressure& pressure){
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source).content.get().stroke;
     const auto count=stroke.knots.size();
     if(baseBytes>cap)return {};
@@ -35,12 +35,12 @@ std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const Refere
     const auto replayBytes=minimumBytes(count);
     if(!full&&replayBytes>cap)return {};
     auto estimate=full?fullBytes:replayBytes;
-    auto token=budget->reserve(resources::ResourceClass::kRecorded,estimate,!full);
+    auto token=reserveWithSourcePressure(budget,pressure,resources::ResourceClass::kRecorded,estimate,!full);
     // Checkpoint geometry remains the existing quota fallback. Reserve both
     // compilation and replay scratch before allocating either vector.
     bool replay=!full;
     if(!token&&full){estimate=replayBytes;if(estimate>cap)return {};
-        token=budget->reserve(resources::ResourceClass::kRecorded,estimate,true);replay=true;}
+        token=reserveWithSourcePressure(budget,pressure,resources::ResourceClass::kRecorded,estimate,true);replay=true;}
     if(!token)return {};
     resources::ResourceLease reservation(budget,*token);
     auto result=std::make_shared<PreparedNavigationGeometry>();

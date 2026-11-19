@@ -4,11 +4,14 @@
 #include "canvas/render/render_cache.hpp"
 #include "canvas/render/reference_draw_list.hpp"
 #include <functional>
-class SkPath;
+#include "source_retention.hpp"
+class SkPath;class SkCanvas;
 namespace canvas::render::internal {
 class PreparedGeometryCache;
 class SourceRetentionPool;
 struct MaskHistoryPlan;
+struct NavigationMaskPlan;
+struct NavigationMaskReplay;
 struct ExactHistoryProof;
 class PreparedNavigationGeometry;
 struct PreparationAllowance;
@@ -30,6 +33,9 @@ class EraseMaskPathCache final {
     static bool readyMatches(const std::shared_ptr<const Entry>&,const semantic::EraseMaskGeometry&)noexcept;
     static const SkPath& readyPath(const std::shared_ptr<const Entry>&)noexcept;
     void setResidentUpperBound(std::size_t)noexcept;
+    // Drawing aggregate and exact entitlement share this owner's ledger.
+    // This private configuration never allocates the requested capacity.
+    void setDrawingResidency(std::size_t)noexcept;
     std::shared_ptr<const Entry> lookup(const semantic::EraseMaskGeometry&)noexcept;
     std::shared_ptr<const Entry> publishFinished(const semantic::EraseMaskGeometry&,const SkPath&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t);
@@ -43,9 +49,14 @@ class EraseMaskPathCache final {
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         PreparedGeometryCache*,const RenderCacheOptions*)noexcept;
     void setRetentionPool(std::shared_ptr<SourceRetentionPool>);
+    void setValidationPressure(ValidationPressure);
     std::shared_ptr<MaskHistoryPlan> history(const scene::SharedVector<semantic::EraseMaskRecord>&,
         std::shared_ptr<resources::ResourceBudgetManager>,std::size_t capacity,
         const std::shared_ptr<MaskHistoryPlan>& previous={},MaskHistoryAdmission* admission=nullptr);
+    std::shared_ptr<NavigationMaskPlan> requestNavigationHistory(const scene::SharedVector<semantic::EraseMaskRecord>&,std::shared_ptr<resources::ResourceBudgetManager>,std::size_t);
+    enum class NavigationMaskStatus {kReady,kPending,kInvalid};
+    NavigationMaskStatus advanceNavigationHistory(const std::shared_ptr<NavigationMaskPlan>&);
+    NavigationMaskStatus replayNavigationHistory(const std::shared_ptr<NavigationMaskPlan>&,SkCanvas&,NavigationMaskReplay&,std::size_t drawLimit=64);
     std::shared_ptr<const Entry> historicalPath(const std::shared_ptr<MaskHistoryPlan>&,std::size_t index);
     std::shared_ptr<const Entry> exactHistoricalPath(const std::shared_ptr<ExactHistoryProof>&,std::size_t index);
     // Private owner-thread scope: bounded current query, no document ownership.

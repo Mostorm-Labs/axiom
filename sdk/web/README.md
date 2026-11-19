@@ -577,3 +577,8 @@ executor. All assets must come from the same installed package.
 An ordered local intent that fails after admission rejects its promise and reports
 CPU_PENDING_FAILED via onError. For example, publication capacity denial returns
 a terminal LOCAL_INTENT_FAILED event without advancing canonical generation.
+
+0.5.1 retains the enabled Web Worker release profile and integrates erase/navigation
+correctness and rendering reuse improvements. The settled-navigation diagnostic
+checkpoint remains BLOCKED / ROOT_CAUSE_NOT_ESTABLISHED; original EFF4 performance
+acceptance remains unmet. Private timing/progress observers remain off in releases.

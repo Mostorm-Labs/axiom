@@ -1,5 +1,6 @@
 #pragma once
 #include "gpu_resource_retirement.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "render_execution.hpp"
 #include "include/gpu/ganesh/GrDirectContext.h"
 #include <memory>
@@ -11,8 +12,9 @@ class SkiaGpuLifetime final {
   SkiaGpuLifetime(GpuResourceRetirement& queue,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
       SkiaSurfaceProvider& provider,GrDirectContext* context,
       resources::ResourceClassMask classes=resources::kPixelResourceClasses,
-      resources::ResourceClassMask existing=resources::kPixelResourceClasses)noexcept
-      :context_(context),queue_(queue),budget_(budget),provider_(provider),classes_(classes),existing_(existing){
+      resources::ResourceClassMask existing=resources::kPixelResourceClasses,
+      ValidationPressure pressure={})noexcept
+      :context_(context),queue_(queue),budget_(budget),provider_(provider),classes_(classes),existing_(existing),pressure_(std::move(pressure)){
     admit();
   }
   bool restart()noexcept {
@@ -24,7 +26,7 @@ class SkiaGpuLifetime final {
     if(!context_){ready_=true;return;}
     try{
       auto payload=std::make_unique<std::shared_ptr<GpuResourceRetirement::Ticket>>();
-      ticket_=queue_.begin(budget_,provider_.gpuCompletionService(),classes_,existing_);
+      ticket_=queue_.begin(budget_,provider_.gpuCompletionService(),classes_,existing_,pressure_);
       if(!ticket_)return;
       ticket_->expectSubmission();
       *payload=ticket_;payload_=std::move(payload);ready_=true;
@@ -54,8 +56,8 @@ class SkiaGpuLifetime final {
       g5::gpuTicketPrepared(reinterpret_cast<std::uintptr_t>(ticket_.get()),reinterpret_cast<std::uintptr_t>(context_),ticket_->epoch);
       G5_OBSERVE(g5::Kind::Basis,g5::Tag::resource_lease,true,20,reinterpret_cast<std::uintptr_t>(ticket_.get()),ticket_->epoch,ticket_->state->lifetime);
 #endif
-      context_->flush(info);
-      success_=context_->submit(GrSyncCpu::kNo)&&!ticket_->state->abandoned.load();
+      {AXIOM_FRAME_TIMING_SCOPE(feedbackFlushTiming,feedback_gpu_flush);context_->flush(info);}
+      {AXIOM_FRAME_TIMING_SCOPE(feedbackSubmitTiming,feedback_gpu_submit);success_=context_->submit(GrSyncCpu::kNo)&&!ticket_->state->abandoned.load();}
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
       g5::gpuTicketSubmitted(reinterpret_cast<std::uintptr_t>(ticket_.get()),success_);
 #endif
@@ -71,6 +73,7 @@ class SkiaGpuLifetime final {
   const std::shared_ptr<resources::ResourceBudgetManager> budget_;
   SkiaSurfaceProvider& provider_;
   resources::ResourceClassMask classes_,existing_;
+  ValidationPressure pressure_;
   RenderExecutionScope* execution_=RenderExecutionScope::current();
   std::shared_ptr<GpuResourceRetirement::Ticket> ticket_;
   std::unique_ptr<std::shared_ptr<GpuResourceRetirement::Ticket>> payload_;

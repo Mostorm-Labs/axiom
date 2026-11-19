@@ -1,0 +1,30 @@
+{
+  "scope": "Fixed40 root Web SDK, normal diagnostic/qualification OFF B4348 versus C, DPR2 primary; DPR4 correctness plus descriptive timings. Final matching-source probe builds provide attribution in a separate lane.",
+  "definitions": {
+    "active_tail": "Each case primary erase: [actual Up dispatch start -2000ms, actual Up dispatch start). Include every SDK rAF callback in the interval, including preparation/retry callbacks. Report number, durations, intervals, actual erase duration and no-display intervals; do not select only fast painted frames.",
+    "active_owner_Render": "In matched probe lane, identify owner attempts/Render calls and actual content submissions in the same tail, retain all attempts including retry/refused. Exclusive and inclusive durations separate; nested scopes are not added twice. Report paired medians/p95 and counts.",
+    "postUp_first_owner": "First owner/Render attempt servicing feedback with final sealed suffix after Up return, including deferred metadata/query work. Report Up handler separately. First accepted content and contribution identity reported separately from attempted render.",
+    "postUp_first_RAF": "First SDK rAF callback after Up return including its full duration, not just draw/GL call.",
+    "first_feedback": "From planned first nonzero twofinger Move to first actual content submission on the intended target at changed camera, carrying current erase suffix or committed equivalent. GL+cached public camera proxy is qualified separately by native/readback, not photons.",
+    "max_gap": "Origin->first valid changed-camera content, successive distinct current-camera valid contents, final content->input end; include initial dispatch delay, never count stale-camera repeats.",
+    "percentile": "Nearest rank ceil(p*N), retain per-replicate samples. Relative checks pool raw samples per role/case then percentile; maxima use worst maximum, not median-of-maxima.",
+    "input": "Record planned time, actual JS dispatch start/end, touch CDP roundtrip separately, public camera adoption, SDK rAF full callback; where existing private probes permit, record C++ handler and owner/frame correlation. No reentrant Runtime/SDK read inside GL hooks."
+  },
+  "blocking_targets": {
+    "normal_active_tail_RAF_duration_p95": "For each of four case IDs, pooled C p95 <= max(16.7ms, 0.80 * pooled B p95). 20% material improvement above one-frame floor.",
+    "normal_first_postUp_RAF_duration": "For each case ID, worst C first-post-Up SDK rAF duration <= max(33ms, 0.80 * worst B). Record synchronous Up duration too.",
+    "matched_probe_active_Render": "Each immediate pan/pinch case: C active-tail Render median <=0.80*B median and p95 <=max(33ms,0.90*B p95). Complete phase sums/residuals and all attempted/painted counts disclosed.",
+    "primary_navigation": "Each C ordinary replicate immediate pan/pinch: first feedback <=100ms; maximum content gap <=100ms; SDK rAF interval p95 <=33ms including initial planned input delay.",
+    "primary_input_backlog": "Each immediate case pooled C navigation inputlateness p95 <=max(16.7ms,0.80*B p95). This is a scheduling/backlog proxy, not pure Runtime CPU or physical input latency.",
+    "settled_nonregression": "C dispatch/SDK rAF interval p95 <=max(B*1.15,B+5ms); maxcontentgap <=max(100ms,B+16.7ms).",
+    "other_nonregression": "For every case, active Move handler p95, Up handler, CDP roundtrip p95 <=max(B*1.15,B+5ms); actual primary erase/navigation duration <=max(B*1.05,B+50ms); convergence median <=max(B*1.15,B+50ms). Disclose max and Up->commit->visible.",
+    "correctness_and_memory": "All EFF3 rules and charged GPU/snapshot lifetime checks pass under same B/C memory profile. No improvements obtained through missing inputs, unaccounted surfaces or incomplete feedback."
+  },
+  "ordinary_observer": "Exact observer v2 as reference. May add explicit primary and post-Up boundaries and raw analysis. No new state reads in GL hooks, no global sampler rAF, no GPU waits/readbacks/profiler/held Worker in ordinary. B and C share exact final driver/observer/config.",
+  "claim_limits": [
+    "No guaranteed success from expected source mechanism; unmet frozen target is UNMET.",
+    "Diagnostic CPU submit time is not GPU execution duration. A zero coverage counter does not prove zero GPU work.",
+    "Do not round old 103.13ms down to100ms, discard slow runs or rerun to select a pass.",
+    "No whole G5, release or other-platform ABI pass."
+  ]
+}

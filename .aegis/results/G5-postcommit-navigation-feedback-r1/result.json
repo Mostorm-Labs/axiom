@@ -1,0 +1,179 @@
+{
+  "schema": "axiom-postcommit-navigation-feedback-result-v1",
+  "task_id": "G5-postcommit-navigation-feedback-r1",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_FINDINGS",
+  "scope_result": "SCOPED_REPAIRED",
+  "package": {
+    "path": ".aegis/packages/G5-postcommit-navigation-feedback-r1/package.json",
+    "sha256": "3a0da0e8268a36218e89362d3c744e9eb12683901522ffc7e118d8e23b9e1fe6"
+  },
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+  "branch": "codex/g5-cpu-worker",
+  "HEAD": "911c149b18dbb26632b4273ff60259d53eb18560",
+  "evidence": {
+    "preflight.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/preflight.json",
+      "sha256": "b9e0d8fa4a190623278577e8512a18ccf7ecbd5f746e45328d438a441584f745"
+    },
+    "implementation-design.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/implementation-design.json",
+      "sha256": "29c533b2cbc4fbea7da85479dbd870191a3c7533259651ea201e27a40a1ae835"
+    },
+    "cause-and-timeline.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/cause-and-timeline.json",
+      "sha256": "0114e0893cf4fe2a2b7d95840b462e90b89fc5e904cfe2cf9edc08d8c14f5061"
+    },
+    "red-green.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/red-green.json",
+      "sha256": "26932d034efef242396d8ff886fe8ef53462456eef74497eebaa9080d036d002"
+    },
+    "tests.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/tests.json",
+      "sha256": "4e33961d36a25532dbabc1e27a61ce625ef35bc99ca32fdb7e3dd74fa4d928c5"
+    },
+    "pixel-semantic.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/pixel-semantic.json",
+      "sha256": "532a7294e1e91256f1b56e1b289bbb270ac11a64205fd4c338b7f2bf3eb9eb8c"
+    },
+    "paired-observation.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/paired-observation.json",
+      "sha256": "4a45bcaa44aa08ce379e2f298fcc0f597b06d699ef22a27ff90f837aedf2cc85"
+    },
+    "source-SDK-manifest.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/source-SDK-manifest.json",
+      "sha256": "27d8057a2a6146c238f6fa71a04c54014c16a95ea90fc787fa0db2f0e804f973"
+    },
+    "sampling-ledger.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/sampling-ledger.json",
+      "sha256": "d29a196eb7d74e69ae2609476885fd32b811a247c20b914038c320c340e7f104"
+    },
+    "preservation-check.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/preservation-check.json",
+      "sha256": "9cd360840cf14ce94f5bea2da91591d9ad32a132b941b2d3662e9dca870edd7e"
+    },
+    "cleanup.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/cleanup.json",
+      "sha256": "6d27729edfe581142c6566e7dc40dcf47b0326b38756e1033bca3837403b2574"
+    },
+    "completion-matrix.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/completion-matrix.json",
+      "sha256": "6d8cef81d7d3fe3886113a9bcd141195af7dfacbec3b2ae287c13b31e9e70e29"
+    },
+    "demo-manifest.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/demo-manifest.json",
+      "sha256": "dedc497a7e30ca47b3136d3181f13cc69f965c75803b4574f6291d6ad233e58a"
+    },
+    "artifact-manifest.json": {
+      "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/artifact-manifest.json",
+      "sha256": "07eabb2dcd779f4cbdc763d8fe76dae3f1ce1bac879b3bcdfde38420f70f7f42"
+    }
+  },
+  "cause": "Actualcameraquiettime lostwhilependingediting made navigationineligible; firstpostcommiteligiblecall started another100ms window. IndependentactualRED+diagnosticroute prove. Old25->55msfirstGLcompared differentroles, notequivalentcorrectframe.",
+  "repair": "Threeassignments toexistingnavigationgeneration/time/active incommonRuntimecamerainvalidation; same100ms threshold, samebudgets andallpreparedidentity/presentationgates. No rendererbehavior/SDK/Semanticchanges.",
+  "NC1": "SATISFIED route+prepare timing confirmscamera/materialpending/sharedallowance, requiredmaskbasisinvalidate, no bodycompile/replay; quietoriginlogicaldefect proven",
+  "NC2": "SATISFIED2actualC++kernel/OperationEngineRED->GREEN no newquietafter101msoriginalcamera, existing99/100/freshinput/noopguards retained.",
+  "NC3": "SCOPED_QUALIFIED_WITH_LIMITS: nativeindependentfullframe/receipt/retrypreservation; WebROIactualcontent/eraseinterior/oldcamera/nonblank+exactfinalbaseline/CPU nonedge; allinterimpixelsnotclaimed",
+  "NC4": "SATISFIED equivalentordinarypaired8rows: fewerowneropportunities andqualifiedcanonicalcallback earlier; mixedfirstGLreported, nooverallperformancePASS",
+  "ordinary_paired_medians": [
+    {
+      "case": "zoom",
+      "lanes": {
+        "baseline": {
+          "first_GL_proxy_ms": 58.30000001192093,
+          "up_to_Operation_callback_ms": 42.80000001192093,
+          "up_to_qualified_onFrame_callback_ms": 172.5,
+          "post_up_owner_opportunities": 11.0,
+          "max_owner_call_ms": 8.5,
+          "max_RAF_callback_ms": 9.150000035762787
+        },
+        "candidate": {
+          "first_GL_proxy_ms": 63.90000003576279,
+          "up_to_Operation_callback_ms": 48.749999940395355,
+          "up_to_qualified_onFrame_callback_ms": 128.0,
+          "post_up_owner_opportunities": 8.0,
+          "max_owner_call_ms": 8.600000023841858,
+          "max_RAF_callback_ms": 9.25
+        }
+      },
+      "qualification_callback_reduction_ms": 44.5
+    },
+    {
+      "case": "pan",
+      "lanes": {
+        "baseline": {
+          "first_GL_proxy_ms": 38.80000001192093,
+          "up_to_Operation_callback_ms": 39.5,
+          "up_to_qualified_onFrame_callback_ms": 162.50000005960464,
+          "post_up_owner_opportunities": 10.5,
+          "max_owner_call_ms": 11.550000011920929,
+          "max_RAF_callback_ms": 12.149999976158142
+        },
+        "candidate": {
+          "first_GL_proxy_ms": 36.949999928474426,
+          "up_to_Operation_callback_ms": 37.69999998807907,
+          "up_to_qualified_onFrame_callback_ms": 123.30000001192093,
+          "post_up_owner_opportunities": 8.0,
+          "max_owner_call_ms": 14.5,
+          "max_RAF_callback_ms": 15.25
+        }
+      },
+      "qualification_callback_reduction_ms": 39.200000047683716
+    }
+  ],
+  "correctness": {
+    "fresh_native_pass": 33,
+    "Node_pass": 14,
+    "boundary_contracts": 120,
+    "native_pan_fullRGBA_exact": true,
+    "native_zoom_differences": {
+      "channels": 3,
+      "maximum_delta": 1,
+      "allwithin_fixedsourceonly1pixel_AA": true
+    },
+    "Web_final_ROI_exact_baseline_bothcases": true,
+    "original_objects_bodyconfigpressurepose_preserved": true,
+    "new_masks_geometry_equal": true,
+    "intermediate_coarse": {
+      "zoom_changedpixels_vs_final": 2415,
+      "pan_changedpixels_vs_final": 2780,
+      "maximum_deltas": [
+        199,
+        208
+      ],
+      "baselinecandidatecoarsehashsame": true,
+      "absoluteallinterimcorrectclaim": false
+    }
+  },
+  "sampling": {
+    "diagnostic_Chrome_starts": 2,
+    "ordinary_Chrome_starts": 2,
+    "pixel_Chrome_starts": 1,
+    "IAB": 0,
+    "charged_seconds": 28,
+    "cap_seconds": 600,
+    "allfrozenrequestscompleted": true,
+    "allbeforeafterdrift": 0,
+    "no_extra_smoke": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4337/example.html",
+    "pid": 84776,
+    "ordinarySDKmatching42HTTPassets": true,
+    "old4336untouched": true
+  },
+  "limitations": [
+    "FirstGLproxyzoom58.3->63.9msmedian worse; pan38.8->36.9ms mixedindividualsamples; do notclaimfirstcorrectfeedback orphysicalphoton improved fromGL.",
+    "QualifiedonFramecallback bound validforrootSDKpresentedcounter, notsemanticgeneration orGPUphysicalelapsed.",
+    "Finite3WebROIactualcontentreadbackspercase; coarsepixels differ fromexactfinal. Fixedmaskinteriorchecked, notallboundary/allviewportcontinuouscorrectness.",
+    "Twooppositelanorderrounds limitedsmallscene; no7200/idle/otherplatform/budget/Workeroptimization",
+    "DefaultOFFdiagnosticrows notpooledwithordinary; compile/stalebinarytestharnessfailures retainedandexcludedfromproof."
+  ],
+  "source_SDK_baseline_preservation": "Allreadonlyauthorityfiles/publicSDK/locks/navtiles+baseline42assets+oldraw3 verifiedunchanged. CandidateSDK42matches sourcehash; qualified/normalvariantsseparate.",
+  "git_index_empty": true,
+  "commit_push": false,
+  "overall_G5_P34_performance_PASS": false,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "stop": "Frozenclosurecompleted; notifycontrolwithexactSHA thenstopimplementationandsampling."
+}

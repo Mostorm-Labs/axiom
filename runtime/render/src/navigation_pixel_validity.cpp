@@ -107,7 +107,16 @@ MaskPixelDifference maskPixelDifference(std::span<const ReferenceTraversalEntry>
     for(std::size_t i=0;i<before.size();++i){const auto& a=before[i];const auto& b=after[i];
         if(!bodyEqual(a,b))return {};
         const auto& x=a.record.eraseMasks;const auto& y=b.record.eraseMasks;
-        if(x.size()>64||y.size()>64)return {};
+        const auto xs=x.storage(),ys=y.storage();
+        if(xs.get()==ys.get()&&!xs.owner_before(ys)&&!ys.owner_before(xs))continue;
+        if(x.size()+y.size()>32)return {};
+        // A new immutable owner is never compared by an unbounded historical
+        // equality loop. Larger differences conservatively invalidate pixels;
+        // the mask service rebuilds them through its bounded replay cursor.
+        std::size_t compared=0;
+        for(const auto* masks:{&x,&y})for(const auto& m:*masks){
+            const auto n=commands(m);if(n>64-compared)return {};compared+=n;
+        }
         for(const auto* masks:{&x,&y})for(std::size_t j=0;j<masks->size();++j){
             const auto& mask=(*masks)[j];if(mask.id.isZero())return {};
             for(std::size_t k=0;k<j;++k)if((*masks)[k].id==mask.id)return {};

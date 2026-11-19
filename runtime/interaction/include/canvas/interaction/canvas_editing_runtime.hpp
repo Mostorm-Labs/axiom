@@ -171,6 +171,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::vector<std::uint8_t> takeCpuPendingRequest() noexcept;
   bool queueCpuPendingCompletion(std::array<std::uint64_t,8>,std::span<const std::uint8_t>,bool success) noexcept;
   CpuPendingEraseFacts cpuPendingFacts()const noexcept;
+  CpuPendingEraseStatus cpuPendingStatus()const noexcept;
+  std::optional<CpuPendingEraseTerminal> cpuPendingTerminal(std::uint64_t serial)const noexcept;
   bool cpuPendingBusy()const noexcept;
   void serviceCpuPendingErases()noexcept;
   void serviceCpuActivePrefixes(std::chrono::steady_clock::time_point)noexcept;
@@ -201,6 +203,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void suspendCpuPendingExecutor()noexcept;
 
  private:
+  [[nodiscard]] bool invalidateViewportChange(std::uint64_t previousGeneration) noexcept;
   friend class canvas::runtime::CanvasRuntimeFacade;
   friend class canvas::runtime::MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -965,6 +968,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<interaction::EditorHistory::PreparedEntry> explicitIntentHistory_;
   bool explicitIntentActive_ = false;
   render::SkiaRenderer skiaRenderer_;
+  std::uint64_t erasePresentationInputRevision_=1;
+  [[nodiscard]] render::TransientDisplayIdentity eraseDisplayIdentity()const noexcept;
   render::SkiaRenderer previewRenderer_;
   mutable std::mutex previewRenderMutex_;
   mutable std::mutex previewProviderMutex_;

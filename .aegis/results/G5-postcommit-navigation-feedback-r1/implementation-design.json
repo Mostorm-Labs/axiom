@@ -1,0 +1,48 @@
+{
+  "stage": "NC1 beforeconditionalproductionrepair",
+  "owners": {
+    "Composition": "ExistingserviceFrameOpportunity pumpspending then chooses transient/navigation/canonical",
+    "Runtime": "CanvasEditingRuntime camera/displayroster/exactDemand identity andcanonicalreceipt",
+    "Render": "ExistingSkiaRenderCache preparedbodies/pixels andderivedcachelifecycle"
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "finding": "Whenlastheadcommits inserviceCpuPendingErases, editingTransient switches off before route selection. Firstproxy changes from drawArrays transientpublication to navigation/canonicaldrawElements. This might explaindifferentroles without actual regression.",
+      "files": [
+        "runtime/composition/src/runtime_composition.cpp:524",
+        "runtime/interaction/src/canvas_editing_runtime.cpp:4644"
+      ]
+    },
+    {
+      "id": "H2",
+      "finding": "Transient preparing work may be cancelled/restarted onroletransition. Existingbody/coverage/prepareresets/exactDemandreuse andpendingreasons will distinguishmatchingretainedprogress fromactual reset/replay.",
+      "files": [
+        "runtime/render/src/skia_renderer.cpp:361",
+        "runtime/render/src/skia_render_cache.cpp:152",
+        "runtime/interaction/src/canvas_editing_runtime.cpp:4806"
+      ]
+    }
+  ],
+  "preNC2change": "Diagnostic-only under existingAXIOM_ENABLE_FRAME_TIMING OFFbydefault, fixed-size route/preparation result numericrecords. No runtimebranchbehavior/interfaces/quotas change.",
+  "instrumentation": [
+    "Composition beforeafterpendinggeneration +route flags/transientdirty/rendered/navigationpending/presented/canonicalrequest/retry",
+    "Renderer invocationcachepreparebodies/workingSet/pending outcomes +existingbody/coverage/reset counters",
+    "Runtime actual renderreturnreason andexactDemandreuse, unchangedfullidentityguards"
+  ],
+  "planned_diagnostic": "OnebaselineheadedChrome2cases zoom/pan, same3x256snapshot andoriginalUp->action, no readbacks/heldWorker; existingpassiveJSobservercapturescompiledlogs+privatefacts; nativeactualfixturecaninspectmechanismwithoutwebbudget",
+  "conditionalrepair": "OnlyaftercausalNC1andactualnativeRED; no speculative handoffdelay orforcedtransientframe. Ifnotdemonstrated returnDIAGNOSIS_ONLY.",
+  "verification_ifrepair": [
+    "NewactualRuntimeCompositionhandoffregression beforeproductionedit",
+    "Freshfrozen31CTestlist onceafterfinalsource",
+    "Workertransport/orderedpromises/relevantIO/predicate checks",
+    "120boundaries",
+    "2ordinaryChrome+1pixelChromeonmatchingnormalSDK within600saggregate"
+  ],
+  "render_specific_test_list": "No renderbehaviorchangeauthorizedyet. IfNC1identifiesexactrenderfunctiondefect, freeze only directlyrelevantretained/retryidentity/pixeltests beforemutation.",
+  "public_API_impact": "None; no SDK/consumerAPI/export/schema change.",
+  "NC1_refined_cause": "Diagnostic proves0bodycompile/replay, mandatedcamera/semanticmaskreset notarbitraryrolefullrebuild. Newlycausalcandidate: navigationquietoriginassignedatfirsteligiblepostcommitservice; ignoresoldquietduringeditingTransient. Nativeclockargumentcanprovelogicalextranew100ms withactualOperationEnginecommit.",
+  "proposed_NC2": "Stamp existingnavigationChangedAt_/generation whenactualcamera changes inprivatecommonhelper, not ateligiblepresentation; retain fallbackserviceinitialization forunchangedlegacyunboundgeneration. Keep100ms threshold/GPU/CPU/budgets/proofgates exactly. No Render behavior changes.",
+  "direct_render_test_list": "NoRenderbehaviorchangeproposed, onlydefaultOFFdiagnostics. ExistingG5Navigation+newactualCPUWorkerheadcommitclockguard andindependentwholeframecheck; frozen31listallfresh oncefinal.",
+  "RED_test": "Actualrestored3x256nativeComposition, Up->realpendingzoom/pan, realWorkerrequest/kernel/result, orderedatomiccommit, passinactualcameraChange+101ms to existingserviceNavigationPresentation. Without camera input duringpending, no newnavquiet100ms maystart. Oldmustfail NO_NEW_QUIET_WINDOW_AFTER_PENDING_COMMIT. Alsofreshcamera new input remainsnaveligible."
+}

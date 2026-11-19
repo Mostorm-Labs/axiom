@@ -1,0 +1,38 @@
+{
+  "IAB": [
+    {
+      "id": "PNHW-IAB",
+      "status": "FAILED",
+      "tab_id": "6",
+      "server_session": 10793,
+      "url": "http://127.0.0.1:51480/",
+      "unix": 1794591708.9652228,
+      "qualification_controlled_real_terminal_delay": true,
+      "server_started_unix": 1794591666.227,
+      "last_ACK_unix": 1794591697.667,
+      "ended_unix": 1794591795.5936651,
+      "page_closed": true,
+      "viewport_reset": true,
+      "server_stopped": true,
+      "failure": "Error: old transient never completed\n    at wait (http://127.0.0.1:51480/g5/pending_navigation_held_worker_consumer.mjs:16:140)\n    at async run (http://127.0.0.1:51480/g5/pending_navigation_held_worker_consumer.mjs:29:3)\n    at async http://127.0.0.1:51480/g5/pending_navigation_held_worker_page.mjs:9:12",
+      "charged_seconds": 130,
+      "charged_server_lifetime_seconds": 130,
+      "charge_basis": "Conservative serverstart through observed postclose/stop,130seconds. Post-open ledger timestamp was recorded after ACK so subtraction yielded invalidnegative; retain that error explicitly, do not use it to discount time.",
+      "page_bound_overrun": true,
+      "invalid_attempted_page_charge_seconds": -11,
+      "exceeded_90s_cap": true,
+      "actual_test_to_timeout_ms": 6011.200000047684
+    }
+  ],
+  "maxIAB": 1,
+  "max_seconds": 90,
+  "Chrome": 0,
+  "ordinarytiming": false,
+  "charged_seconds": 130,
+  "parent_seconds167": 167,
+  "IO_seconds118": 118,
+  "priorledgerrefs": {
+    ".aegis/results/G5-pending-navigation-owner-progress-r1/sampling-ledger.json": "e849074335b746a7fe0cb01693bfff47bbd90d34fdc70585ddec43db8a7a9677",
+    ".aegis/results/G5-pending-navigation-evidence-io-repair-r1/sampling-ledger.json": "4bc35197a14df5631ca306052ef125f2617f47059ab6c5a57ad1f48d4d995c61"
+  }
+}

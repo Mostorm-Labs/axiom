@@ -1,0 +1,53 @@
+{
+  "status": "FROZEN_TWO_SLICE_WORKLOAD",
+  "slice_A": {
+    "reproduction": "Actual Runtime partial erase with active or pending feedback; first consume dirty at previous camera, then zoomAt or fit changescamera before Worker result/commit. Composition continues transientbranch but oldcode dirtyfalse prevents re-render. Native hold actualkernel request/completion when necessary to prove WaitingWorker precondition; browser usesrealWorker and same-task Up->zoom, recordsactualpending branch ratherthan assumes.",
+    "camera_cases": [
+      "pan existing behavior control",
+      "zoom-out and zoom-in using anchor",
+      "fit content/requestedbounds through same owner",
+      "invalid/noop camerarequest retains correctcontact/dirty identities"
+    ],
+    "visual_oracle": "Native actualComposition frame/surface pixels match independent currentcamera equivalentpan path with same trace/state; realRootSDK separateWebpixel capture verifies changedink/mask alignment beforecommit. Reusing marker/shape mixedguard is sufficient; noforcefullmultiobjectmatrix.",
+    "preconditions": "No waiting for canonicalsettle betweenUp andzoom. Preserve pointer source/key/generation, view/metrics/surface/camera/pendingserial andgeneration. Workerwaiting is not ownercommitbusy."
+  },
+  "slice_B": {
+    "reproduction": "Use actualPreparedEraseOperation multiple targetcursor/finalPhase advances andSceneStamp internalprimitive/hashcursors. Oldservice observesonlyserial/job/phase/next/reuseScan, yields between usefulcheap stages. Freeze same canonical/trace/basis before AB; currentdiagnostic12opportunities~180.7ms vs9.2CPU is historicalcorroboration notnewmeasuredclaim.",
+    "cases": [
+      "small3v4stroke256knots shorterasetrace24moves atx430y150->534, or nearestexistingdiagnosticeligibletrace actualhits",
+      "native Fixed40 fixture16differentposes equivalentexistingpending tests (reuse existing5.47MBinitial.axsnap)",
+      "realWaitingWorker/no completion, noresources, failed/cancelled/stalecompletion/basis change",
+      "multiplependingerase plus create/transform/UndoRedo suffix remainsordered"
+    ],
+    "acceptance_work": "Native deterministic usefulprogress proof must show multiple internal work units canadvance within one realownerturn when allowance remains, no forcedone-target-perframe. Stopactualunchanged/wait/terminal/elapsedbudget. Do notrequirefragilewallclockexactnumberofopportunities onallmachines."
+  },
+  "browser": {
+    "scope": "CombinedA+B finalWebSDK compared frozen376f2630baseline; same rootSDK factory/declarations/WASM/resources/privateWorkerON, ordinarytimingOFF/UR0OFF. BaselineSDK exact matching4335assets saved beforecandidatebuild. IndependentRootSDK documents only; neverattach/read/reloaduser4331-4335.",
+    "runs": "Two headedChrome starts baseline/candidate lanes in oppositeorders over smallsameinput3strokeerase->immediatezoom/pan/nextdraw. One isolatedIABpage baseline/candidate if available. Ordinarytiming separate fromsameSnapshotpixel run; firstGLproxy vsfirstcorrectcamera vscommit distinct.",
+    "limits": {
+      "Chrome_starts": 2,
+      "IAB_pages": 1,
+      "wall_seconds": 480,
+      "corrective_policy": "Concreteharnesscorrectioncountswithin caps; do nothide failed/noop/nonpendingcases orstartunboundednewmatrix."
+    },
+    "metrics": [
+      "actualpending atzoom/nextDown",
+      "misseddisplayopportunities/newcamera feedback",
+      "CommitPreparing ownCPU/opportunities/gaps",
+      "Up->nextcorrectfeedback and Up->atomiccommit andfinalcanonical separately",
+      "maxRAF/inputlateness; Workercompute notmixedwithownerwaiting"
+    ],
+    "performance_claim": "Fixmechanism andfunctional correctness required; report finiteordinarylatencyimprovements orunchanged honestly, no mandatoryglobal3s5sSLO. If noactualpendingbranchbrowserseparate from deterministicnativeproof."
+  },
+  "fixture_refs": [
+    {
+      "path": ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "sha256": "977b6c6b6b605dba4cb52d712ceb0772397b862a81e909da8c92e723c2c8f26c"
+    }
+  ],
+  "not_required": [
+    "No7200longerase/repeated20minidle/millionobjectmatrix",
+    "No allplatformABI orSDKrelease",
+    "No newmixedbrushWorker support"
+  ]
+}

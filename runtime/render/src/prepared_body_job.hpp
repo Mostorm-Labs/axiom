@@ -9,7 +9,7 @@ class PreparedBodyJob final {
     static std::size_t minimumBytes(std::size_t)noexcept;
     static std::shared_ptr<PreparedNavigationGeometry> create(const ReferenceCommand&,SourceRetentions,
         std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>&,
-        const std::shared_ptr<PreparedGeometryUsage>&);
+        const std::shared_ptr<PreparedGeometryUsage>&,const ValidationPressure& pressure={});
     explicit PreparedBodyJob(const foundation::InkBrushConfig& c):compiler_(c){}
     bool advance(PreparedNavigationGeometry&,PreparedGeometryStatistics&);
  private:

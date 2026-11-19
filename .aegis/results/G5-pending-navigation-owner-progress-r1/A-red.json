@@ -1,0 +1,69 @@
+{
+  "actual_production": "376f2630 affectedsourceexact",
+  "proper_failure": "PENDING_CAMERA_FRAME_STALE_UNTIL_ZERO_PAN",
+  "cases": {
+    "cpu-pending-camerafit": {
+      "camera": 3,
+      "canonical_generation": 0,
+      "changed_channels": 381148,
+      "dirty_at_camera": false,
+      "held_actual_request_bytes": 2688,
+      "mismatched_channels": 381148,
+      "mode": "camerafit",
+      "pending": 1,
+      "state": "WaitingWorker"
+    },
+    "cpu-pending-camerapan": {
+      "camera": 3,
+      "canonical_generation": 0,
+      "changed_channels": 318846,
+      "dirty_at_camera": true,
+      "held_actual_request_bytes": 2688,
+      "mismatched_channels": 0,
+      "mode": "camerapan",
+      "pending": 1,
+      "state": "WaitingWorker"
+    },
+    "cpu-pending-camerazoomout": {
+      "camera": 3,
+      "canonical_generation": 0,
+      "changed_channels": 392742,
+      "dirty_at_camera": false,
+      "held_actual_request_bytes": 2688,
+      "mismatched_channels": 392742,
+      "mode": "camerazoomout",
+      "pending": 1,
+      "state": "WaitingWorker"
+    },
+    "cpu-pending-cameratouch": {
+      "camera": 4,
+      "canonical_generation": 0,
+      "changed_channels": 656444,
+      "dirty_at_camera": false,
+      "held_actual_request_bytes": 2688,
+      "mismatched_channels": 656444,
+      "mode": "cameratouch",
+      "pending": 1,
+      "state": "WaitingWorker"
+    },
+    "cpu-pending-camerazoomin": {
+      "camera": 3,
+      "canonical_generation": 0,
+      "changed_channels": 484050,
+      "dirty_at_camera": false,
+      "held_actual_request_bytes": 2688,
+      "mismatched_channels": 484050,
+      "mode": "camerazoomin",
+      "pending": 1,
+      "state": "WaitingWorker"
+    }
+  },
+  "passed_control": "camerapan",
+  "failed": [
+    "camerazoomout",
+    "camerazoomin",
+    "camerafit",
+    "cameratouch"
+  ],
+  "compile_failure_not_RED": "A-red-build.log invalidtestaccess correctedbeforeactualRED; immutablelogs retained"
+}

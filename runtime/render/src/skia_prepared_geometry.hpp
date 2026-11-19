@@ -120,6 +120,7 @@ class PreparedGeometryCache final {
         s.aliases=aliases_.size();s.bodies=entries_.size();s.sourceFootprintEvaluations=source.footprintEvaluations;
         s.sourceKnownFootprintHits=source.knownFootprintHits;return s;}
     void setRetentionPool(std::shared_ptr<SourceRetentionPool> pool){if(pool&&retention_!=pool){clear();retention_=std::move(pool);}}
+    void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
     std::size_t preparedBytes()const noexcept{return usage_->bytes;}
     const SourceRetentionUsage& sourceStatistics()const noexcept{return retention_->statistics();}
     std::optional<SourceRetentions> retainSource(const ReferenceTraversalEntry& e,
@@ -139,6 +140,7 @@ class PreparedGeometryCache final {
     std::shared_ptr<SourceRetentionPool> retention_=std::make_shared<SourceRetentionPool>();
     PreparedGeometryStatistics work_;
     bool lastRequestRejected_=false;
+    ValidationPressure pressure_;
     std::uint64_t tick_=0,serial_=0;
     std::shared_ptr<IndexLease> reserveIndex(std::size_t,const std::shared_ptr<resources::ResourceBudgetManager>&,bool);
     bool remember(const ImmutableSourceIdentity&,std::shared_ptr<const PreparedNavigationGeometry>,std::uint64_t,

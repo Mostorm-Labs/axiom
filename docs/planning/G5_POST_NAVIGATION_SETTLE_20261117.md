@@ -1,0 +1,13 @@
+# G5 post navigation settle r1
+
+基线为已发布checkpoint230ee4c5，tag保持。修改仅在out/G5-post-navigation-settle-r1/source-C。
+
+首DPR4诊断定位到完整本体在scale9重复构建约1414万像素，实际需求约122万像素；coverage14784→888步，保留原完整体，后续exactdensity按需裁剪与显式有效范围。pendingcrop在完整体淘汰后按已准入range恢复。原budget/quiet/Brush算法不改。空白父区域用rawScene真实proof复用，非空不展开父49payload。legacy短算法冷估计加入分阶段及有限重采样，真实2msdeadline测试保留。
+
+正式ordinary8均过绝对/p95/配对恢复。DPR2稳定wheel251ms/touch254ms；DPR4wheel393ms/touch419ms，B为885/861ms。D2光学camera0miss。D4同步readback占据12个33.4deadline，验证设计observer干扰，按冻结guard停止最后B-D4采样，不剪时间签PASS。
+
+参考78captures/finals完成，36newunique/512s+16exactreuse。D2final B/Cbyteexact，wheelCPU非AA0，touch346像素均image域。D4finalwheel5130像素在便签/表格水平行，差值均3>容差2；D4B未采，不能判新增/继承，不扩AA边界。D4touch1984在image域，无waive。绝对CPUoracle与D4配对quality未资格化。
+
+最终BLOCKED：主分类VERIFICATION_DESIGN_OR_TASK_PACKAGE_DEFECT/OBSERVER_INTERFERENCE，另列FROZEN_ABSOLUTE_CPU_PIXEL_FAILURE_UNPAIRED_D4。产品ordinary性能目标已过；整体PS4未过。
+
+4341实验预览保留，PID70446，普通版diagnosticsOFF。finalsource/SDK/functionalpre-final仅legacydelta见精确结果。未commit/push，4340与主生产dirty保持。

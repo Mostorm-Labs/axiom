@@ -1,0 +1,239 @@
+{
+  "task": "G5-immediate-erase-navigation-r2",
+  "capSeconds": 2700,
+  "chargedSeconds": 785,
+  "attempts": [
+    {
+      "id": "IEN2-D1",
+      "status": "COMPLETED",
+      "startedUnix": 1794993788.825224,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-D1-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-D1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 57.626695916987956,
+        "peak_process_family_rss_kib": 2399344,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-D1",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 58,
+      "endedUnix": 1794993846.55091
+    },
+    {
+      "id": "IEN2-D2",
+      "status": "COMPLETED",
+      "startedUnix": 1795007208.338272,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-D2-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-D2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 57.883547000121325,
+        "peak_process_family_rss_kib": 2148944,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 180.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-D2",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 58,
+      "endedUnix": 1795007266.3829298
+    },
+    {
+      "id": "IEN2-W-B1",
+      "status": "FAILED",
+      "startedUnix": 1795008065.603869,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-B1-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B1"
+        ],
+        "reason": "nonzero_exit",
+        "returncode": 1,
+        "elapsed_s": 9.964277624851093,
+        "peak_process_family_rss_kib": 1345776,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "FAILED",
+          "id": "IEN2-W-B1",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 10,
+      "endedUnix": 1795008075.9174411
+    },
+    {
+      "id": "IEN2-W-B1-CORRECTIVE",
+      "status": "COMPLETED",
+      "startedUnix": 1795008149.99338,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-B1-CORRECTIVE-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B1-CORRECTIVE"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 98.56248408416286,
+        "peak_process_family_rss_kib": 1705136,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-W-B1-CORRECTIVE",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 99,
+      "endedUnix": 1795008249.029978
+    },
+    {
+      "id": "IEN2-W-C1",
+      "status": "COMPLETED",
+      "startedUnix": 1795008270.764713,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-C1-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-C1"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 100.61242616712116,
+        "peak_process_family_rss_kib": 1839280,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-W-C1",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 101,
+      "endedUnix": 1795008371.4579241
+    },
+    {
+      "id": "IEN2-W-C2",
+      "status": "COMPLETED",
+      "startedUnix": 1795008418.1470132,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-C2-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-C2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 110.60851962515153,
+        "peak_process_family_rss_kib": 1756928,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-W-C2",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 111,
+      "endedUnix": 1795008528.927319
+    },
+    {
+      "id": "IEN2-W-B2",
+      "status": "COMPLETED",
+      "startedUnix": 1795008578.076261,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-W-B2-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-B2"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 111.65194708295166,
+        "peak_process_family_rss_kib": 1721744,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-W-B2",
+          "DPR": 2
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 112,
+      "endedUnix": 1795008689.970127
+    },
+    {
+      "id": "IEN2-P-C",
+      "status": "COMPLETED",
+      "startedUnix": 1795008713.956927,
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web.mjs",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/IEN2-P-C-request.json",
+          "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-P-C"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 235.2884867079556,
+        "peak_process_family_rss_kib": 2328160,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 360.0,
+        "last_stage": {
+          "stage": "closed",
+          "status": "OBSERVED",
+          "id": "IEN2-P-C",
+          "DPR": 4
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedSeconds": 236,
+      "endedUnix": 1795008949.822876
+    }
+  ]
+}

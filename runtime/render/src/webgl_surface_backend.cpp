@@ -1,5 +1,6 @@
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "webgl_context_liveness.hpp"
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "ur3_webgl_extensions.hpp"
 
 #include "include/core/SkColorSpace.h"
@@ -129,8 +130,9 @@ BackendSubmissionResult WebGlSurfaceProvider::present() noexcept {
   if (emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
     return BackendSubmissionResult::rejected("WebGL context activation failed");
   }
-  impl_->context->flush(impl_->surface.get());
-  if (!impl_->context->submit(GrSyncCpu::kNo)) return BackendSubmissionResult::rejected("WebGL GPU submit failed");
+  {AXIOM_FRAME_TIMING_SCOPE(feedbackProviderFlushTiming,feedback_provider_flush);impl_->context->flush(impl_->surface.get());}
+  {AXIOM_FRAME_TIMING_SCOPE(feedbackProviderSubmitTiming,feedback_provider_submit);
+  if (!impl_->context->submit(GrSyncCpu::kNo)) return BackendSubmissionResult::rejected("WebGL GPU submit failed");}
   ++impl_->presents;
   return BackendSubmissionResult::accepted();
 }

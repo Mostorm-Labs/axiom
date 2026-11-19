@@ -1,0 +1,11 @@
+export const caseIds=Object.freeze(['immediate-pan','immediate-pinch','settled-pan','settled-pinch']);
+export function erasePoint(i,offset){if(i<0||i>160||!Number.isInteger(i))throw Error('history index');return[420+offset+7*Math.sin(i*.17),160+170*i/160];}
+export function longErasePoint(i){if(i<0||i>480||!Number.isInteger(i))throw Error('primary index');return[420+80*Math.sin(2*Math.PI*i/160),160+540*i/480];}
+export function touchPoints(id,i){if(i<0||i>120||!Number.isInteger(i))throw Error('navigation index');if(id.endsWith('pan'))return[{x:635.5+i,y:505-i*.5,id:1},{x:795.5+i,y:505-i*.5,id:2}];const f=i<=40?1+.25*i/40:i<=80?1.25-.5*(i-40)/40:.75+.25*(i-80)/40;return[{x:715.5-80*f,y:505,id:1},{x:715.5+80*f,y:505,id:2}];}
+export const nearest=(v,p=.95)=>v.length?[...v].sort((a,b)=>a-b)[Math.ceil(p*v.length)-1]:null;
+export function metrics(p){const same=(a,b)=>Math.abs(a.scale-b.scale)<1e-10&&Math.abs(a.x-b.x)<1e-5&&Math.abs(a.y-b.y)<1e-5;
+ const ops=p.observation.colorOps.filter(x=>x.kind==='content'&&x.started>=p.origin&&x.started<=p.inputEnded&&x.state&&x.state.objects>0&&!same(x.state.camera,p.startState.camera));
+ const unique=[];for(const x of ops)if(!unique.length||!same(unique.at(-1).state.camera,x.state.camera))unique.push(x);
+ const times=unique.map(x=>x.ended);const gaps=times.length?[times[0]-p.origin,...times.slice(1).map((x,i)=>x-times[i]),p.inputEnded-times.at(-1)]:[p.inputEnded-p.origin];
+ const rafs=p.observation.rafCallbacks.filter(x=>x.source==='sdk'&&x.started>=p.origin&&x.started<=p.inputEnded);const intervals=rafs.length?[rafs[0].started-p.origin,...rafs.slice(1).map((r,i)=>r.started-rafs[i].started)]:[];
+ return{firstFeedbackMs:times.length?times[0]-p.origin:null,upReturnToFeedbackMs:times.length?times[0]-p.upReturn:null,maxContentProxyGapMs:Math.max(...gaps),qualifiedCameraChanges:times.length,SDKRAFp95Ms:nearest(intervals),SDKRAFmaxMs:intervals.length?Math.max(...intervals):null,SDKRAFdurationP95Ms:nearest(rafs.map(x=>x.ended-x.started)),dispatchP95Ms:nearest(p.inputs.map(x=>x.ended-x.actual)),inputLatenessP95Ms:nearest(p.inputs.map(x=>x.actual-x.planned)),convergenceMs:p.stableAt-p.inputEnded,qualification:'ordinary GL content+current public camera proxy, separately validated by native/correctness route/content; not photons'};}

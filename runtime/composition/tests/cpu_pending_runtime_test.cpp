@@ -5,13 +5,14 @@
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/snapshot.hpp"
 #include "canvas/render/direct_reference_source.hpp"
+#include "canvas/render/visibility_resolver.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <new>
-namespace {bool cpuFailNextAllocation=false;}
-void* operator new(std::size_t n){if(cpuFailNextAllocation){cpuFailNextAllocation=false;throw std::bad_alloc();}if(auto p=std::malloc(n?n:1))return p;throw std::bad_alloc();}
+namespace {bool cpuFailNextAllocation=false;canvas::interaction::CanvasEditingRuntime* cpuFaultRuntime=nullptr;std::uint64_t cpuFaultGeneration=UINT64_MAX;}
+void* operator new(std::size_t n){if(cpuFailNextAllocation){cpuFailNextAllocation=false;if(cpuFaultRuntime)cpuFaultGeneration=cpuFaultRuntime->semanticGeneration().value();throw std::bad_alloc();}if(auto p=std::malloc(n?n:1))return p;throw std::bad_alloc();}
 void operator delete(void* p)noexcept{std::free(p);}
 void operator delete(void* p,std::size_t)noexcept{std::free(p);}
 #include "host_font_resources.hpp"
@@ -19,9 +20,17 @@ using json=nlohmann::json;
 #include "../../interaction/src/cpu_pending_erase_state.hpp"
 namespace canvas::ink_playground {
 class InkPlaygroundHistoryTestAccess {public:
+ static void setProfile(interaction::CanvasEditingRuntime& r,const render::RenderCacheOptions& o){r.skiaRenderer_.setRenderCacheOptions(o);}
  static void profile(interaction::CanvasEditingRuntime& r){render::RenderCacheOptions o;o.maxBytes=256U*1024U*1024U;o.sharedMaxBytes=512U*1024U*1024U;o.maxEntryBytes=64U*1024U*1024U;r.skiaRenderer_.setRenderCacheOptions(o);}
  static std::size_t displays(const interaction::CanvasEditingRuntime& r){return std::count_if(r.displayRecords_.begin(),r.displayRecords_.end(),[](const auto& d){return d.serial!=0;});}
  static void dependency(interaction::CanvasEditingRuntime& r,std::uint64_t child,std::uint64_t parent){for(auto& p:r.cpuPending_->slots)if(p&&p->serial==child)p->dependencies.push_back(parent);}
+ static auto reuse(const interaction::CanvasEditingRuntime& r){std::pair<std::uint64_t,std::uint64_t> out{};for(const auto& p:r.cpuPending_->slots)if(p){out.first+=p->presentationBuilds;out.second+=p->presentationHits;}return out;}
+ static auto renderSources(const interaction::CanvasEditingRuntime& r,const render::FrameState& frame){auto v=render::VisibilityResolver::resolve(frame,*r.runtimeSceneHost_,r.sceneCoordinator_->runtimeScene());require(bool(v),"test actual visibility");auto source=render::DirectReferenceSource::buildTransient(frame,v.value(),r.sceneCoordinator_->runtimeScene());require(bool(source),"test actual sources");return source.value();}
+ static auto frozenTrace(const interaction::CanvasEditingRuntime& r){require(r.cpuPending_&&r.cpuPending_->head(),"test actual frozen trace");return r.cpuPending_->head()->trace;}
+ static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
+ static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
+ static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
+ static void step(interaction::CanvasEditingRuntime& r,std::chrono::steady_clock::time_point began=std::chrono::steady_clock::now()){r.serviceCpuPendingEraseStep(began);}
  static bool publishReady(interaction::CanvasEditingRuntime& r){const auto* p=r.cpuPending_->head();return p&&p->phase==interaction::CpuPendingEraseState::Phase::CommitPreparing&&p->publicationPrepared;}
  static auto& compiler(interaction::CanvasEditingRuntime& r){return *r.sceneCompiler_;}
  static auto full(interaction::CanvasEditingRuntime& r){return r.sceneCompiler_->compileFull(semantic::SemanticReadView(r.semanticObjects_,r.semanticGeneration_.current()));}
@@ -34,11 +43,35 @@ class InkPlaygroundHistoryTestAccess {public:
 #include "../../render/src/cpu_worker_protocol.hpp"
 #include "../../interaction/src/partial_erase_geometry.hpp"
 #include "../../render/src/cpu_exact_path_kernel.hpp"
-int main(int argc,char**argv){try{
- require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
- auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");const auto& s=*decoded.snapshot;
+class PostPublicationFaultSink final:public interaction::LocalOperationSink {
+ public:
+ interaction::LocalOperationSink* inner;bool armed=false;
+ explicit PostPublicationFaultSink(interaction::LocalOperationSink* sink):inner(sink){}
+ bool preparePublication(std::span<const semantic::Operation> ops) noexcept override{return !inner||inner->preparePublication(ops);}
+ bool prepareEncodedPublication(const semantic::Operation& op,std::span<const std::uint8_t> bytes)noexcept override{const bool ok=!inner||inner->prepareEncodedPublication(op,bytes);if(ok&&!armed){armed=true;cpuFailNextAllocation=true;}return ok;}
+ void abortPreparedPublication()noexcept override{if(inner)inner->abortPreparedPublication();}
+ void applied(const semantic::Operation& op,const semantic::CanonicalCommitRecord& record)noexcept override{if(inner)inner->applied(op,record);}
+ interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
+};
+#ifndef AXIOM_CPU_PENDING_FIXTURE_MAIN
+#define AXIOM_CPU_PENDING_FIXTURE_MAIN main
+#endif
+int AXIOM_CPU_PENDING_FIXTURE_MAIN(int argc,char**argv){try{
+ require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+ auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
+ if(mode.starts_with("progress")||mode.starts_with("postcommit")){
+  const auto first=std::find_if(s.objects.begin(),s.objects.end(),[](const auto& o){return std::holds_alternative<semantic::CompactStrokeContent>(o.content);});require(first!=s.objects.end(),"progress actualstroke");auto base=*first;s.objects.clear();
+  for(unsigned n=0;n<3;++n){auto o=base;o.id=foundation::ObjectId::fromUint64(970000+n);o.transform={1,0,0,1,0,0};o.erase_masks.clear();auto& c=std::get<semantic::CompactStrokeContent>(o.content);c.stroke.knots.clear();for(unsigned i=0;i<256;++i)c.stroke.knots.push_back({350.+i*.6,240.+n*3+20*std::sin(i*.05),32768});s.objects.push_back(std::move(o));}
+  require(semantic::SnapshotCodec::populateRequirements(s)&&semantic::SnapshotCodec::bindDigests(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1),"progress realfixturebind");
+  if(mode=="progressfixture"){
+   auto encoded=semantic::SnapshotCodec::encode(s,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(encoded.ok(),"fixture encode");std::ofstream stream(std::string(argv[2])+".axsnap",std::ios::binary);stream.write(reinterpret_cast<const char*>(encoded.bytes.data()),encoded.bytes.size());std::ofstream(argv[2])<<json{{"documentId",s.document_id.value().bytes},{"metadata",{{"documentRevision",std::to_string(s.document_revision)},{"recoveryFrontier",s.recovery_frontier},{"checkpointDigest",s.checkpoint_digest},{"resourceBinding","1"}}},{"objects",s.objects.size()},{"knots",256},{"fixture_source","Fixed40 bound config,3strokes same nativeB work"}}.dump(2)<<'\n';return 0;
+  }
+
+ }
+
  runtime::RuntimeCompositionCore core;require(core.openDocument(s.document_id),"open");require(core.restoreSnapshotBeforeSurface(s,{s.document_id,s.document_revision,s.recovery_frontier,s.checkpoint_digest},1)==runtime::DocumentRestoreStatus::kRestored,"restore");
  auto& editor=core.qualificationRuntime();ink_playground::InkPlaygroundHistoryTestAccess::profile(editor);
+ PostPublicationFaultSink faultSink(ink_playground::InkPlaygroundHistoryTestAccess::sink(editor));if(mode=="postpublishfault"){cpuFaultRuntime=&editor;editor.setLocalOperationSink(&faultSink);}
  require(core.bindSurface(1431,1010)&&core.registerSource(71)&&core.setPlatformPresentationDeferred(true),"bind");
  const auto frame=[&]{runtime::RuntimeFrameOpportunity work;require(core.serviceFrameOpportunity(false,work),"actualframeopportunity");if(work.previewWork)require(core.finishFrameOpportunity({work.previewWork,true}),"previewack");if(work.canonicalWork)require(core.receivePlatformPresented({*work.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"canonicalack");};
  if(mode=="stampabort"||mode=="stampfilled"){
@@ -95,6 +128,7 @@ int main(int argc,char**argv){try{
   require(!core.submit({{over}}),"oversize silentlyaccepted");require(!core.platformKey(71,1)&&core.cpuPendingFacts().pending==0,"oversizepointerorintentleak");
   pointer(input::PointerPhase::kDown,420,160);pointer(input::PointerPhase::kCancel,420,160);require(editor.semanticGeneration().value()==0,"overflowprefixcommitted");require(editor.releaseCpuWorkerGrant(1,workerFloor)&&editor.cpuWorkerGrantBytes()==0,"overflowlease");require(core.close(),"overflowclose");return 0;
  }
+ if(mode.starts_with("camera")||mode.starts_with("postcommit")){for(unsigned i=0;i<512;++i){frame();if(!core.canonicalPresentationDirty())break;require(i<511,"camera initialcanonical");}}
  pointer(input::PointerPhase::kDown,420,160);for(unsigned i=1;i<=length;++i)pointer(input::PointerPhase::kMove,float(420+7*std::sin(i*.17)),float(160+170.*i/length));
  if(mode=="activepaced"){
   // Active input no longer eagerly unions sixteen whole masks. Cancellation
@@ -115,6 +149,142 @@ int main(int argc,char**argv){try{
  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1&&!core.platformKey(71,1),"Up pending/contact independently retired");
  require(ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps==before.maskHistory.queryUnionOps,"new query union inUp");
  require(!core.close()&&!editor.canUndo(),"pending close/Undo must Busy");
+ if(mode.starts_with("postcommit")){
+  // Same production input/real C++ Worker kernel and OperationEngine. Only the
+  // existing navigation opportunity clock is advanced deterministically.
+  const auto changedAt=std::chrono::steady_clock::now();
+  require(mode=="postcommitpan"?editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,70,-30}):editor.setViewportZoomAt(.7F,600,400),"postcommit camera input");
+  const auto camera=editor.viewportGesture();const auto cameraGeneration=editor.cameraGeneration();unsigned requests=0;
+  for(unsigned i=0;core.cpuPendingFacts().pending&&i<512;++i){
+   editor.serviceCpuPendingErases();auto request=core.takeCpuPendingRequest();if(request.empty())continue;++requests;
+   const auto value=render::internal::cpuDecodeRequest(request);require(bool(value),"postcommit actualrequest");render::internal::CpuExactPathJob kernel(value->geometry,value->prefixCount,value->prefixPath);while(!kernel.ready())require(kernel.advance(8,2000),"postcommit kernel");const auto n=kernel.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+n);std::copy_n(request.begin(),128,result.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,n);word(100,value->piece?3:2);if(!value->piece)for(unsigned k=104;k<128;++k)result[k]=0;kernel.path().writeToMemory(result.data()+128);require(core.queueCpuPendingCompletion(value->identity.words,result,true),"postcommit realcompletion");
+  }
+  require(requests>0&&!core.cpuPendingFacts().pending&&core.cpuPendingFacts().committed==1&&editor.semanticGeneration().value()==generation+1,"postcommit actualatomiccommit");
+  require(editor.cameraGeneration()==cameraGeneration,"commit changed camera");
+  bool presented=false;const bool navigationHeld=editor.serviceNavigationPresentation(changedAt+std::chrono::milliseconds(101),presented);
+  json result{{"mode",mode},{"real_kernel_requests",requests},{"committed",1},{"camera_generation",cameraGeneration},{"generation",editor.semanticGeneration().value()},{"navigation_held_after_original_quiet",navigationHeld},{"navigation_presented",presented}};
+  std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
+  require(!navigationHeld&&!presented,"NO_NEW_QUIET_WINDOW_AFTER_PENDING_COMMIT");
+  const auto snapshot=editor.snapshotObjects();
+  const auto decodePixels=[&]{std::vector<std::uint8_t> pixels(1431U*1010U*4U);require(editor.activeSurfaceProvider()->readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"postcommit pixels");return pixels;};
+  const auto priorPixels=decodePixels();const auto beforePresents=editor.activeSurfaceProvider()->presentCount();
+  runtime::RuntimeFrameOpportunity submitted;
+  for(unsigned i=0;i<128;++i){require(core.serviceFrameOpportunity(false,submitted),"postcommit canonicalopportunity");if(submitted.canonicalWork)break;require(decodePixels()==priorPixels,"retrychangedlastsuccessfuldisplay");require(i<127,"postcommit canonicalnotcomplete");}
+  require(submitted.canonicalWork&&editor.activeSurfaceProvider()->presentCount()>beforePresents,"postcommit completedproviderframe");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)>0,"commit prematurelyretireddisplay");
+  auto wrong=*submitted.canonicalWork;wrong.frame.surfaceGeneration=render::SurfaceGeneration{wrong.frame.surfaceGeneration.value()+1};
+  require(!core.receivePlatformPresented({wrong,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"foreignsurfacequalifieddisplay");
+  const auto actual=decodePixels();
+  const auto projected=projectRuntimeScene(snapshot,editor.semanticGeneration());
+  render::FrameState f{render::ViewId{1},render::CameraState{{(715.5F-camera.translationX)/camera.scale,(505.F-camera.translationY)/camera.scale},camera.scale,0,render::CameraGeneration{cameraGeneration}},
+      {-camera.translationX/camera.scale,-camera.translationY/camera.scale,(1431-camera.translationX)/camera.scale,(1010-camera.translationY)/camera.scale},
+      {1431,1010,1431,1010,1,1},editor.semanticGeneration(),SceneRevision{editor.sceneRevision()},render::SurfaceGeneration{editor.surface().generation},render::MetricsGeneration{editor.surface().metricsGeneration},render::FrameId{1},{0,0,1431,1010}};
+  render::ReferenceDrawList draw{f};draw.viewportClip={0,0,1431,1010};draw.worldToView={camera.scale,0,0,camera.scale,camera.translationX,camera.translationY};
+  for(const auto& record:projected.records){auto command=render::DirectReferenceSource::presentationCommand(record);require(bool(command),"independentreferencecommand");draw.entries.push_back({record,true,std::move(command.value())});}
+  render::FramePlan plan{f,std::move(draw),s.background,false,true};
+  auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(1431,1010));require(render::internal::drawReferencePlanToSkCanvas(*oracle->getCanvas(),plan).code==render::BackendSubmissionCode::kAccepted,"independentfullreference");std::vector<std::uint8_t> expected(actual.size());require(oracle->readPixels(SkImageInfo::Make(1431,1010,kRGBA_8888_SkColorType,kPremul_SkAlphaType),expected.data(),1431*4,0,0),"oracle readback");
+  std::size_t diff=0;unsigned maxDelta=0;for(std::size_t i=0;i<actual.size();++i){diff+=actual[i]!=expected[i];maxDelta=std::max(maxDelta,unsigned(std::abs(int(actual[i])-int(expected[i]))));}result["native_fullframe_diff_channels"]=diff;result["native_fullframe_max_delta"]=maxDelta;
+  std::cerr<<"fullframe compare channels="<<diff<<" max="<<maxDelta<<std::endl;
+  // Fractional device transforms may quantize only AA edge channels. Derive
+  // the fixed one-device-pixel contour band from source geometry alone.
+  auto edge=SkSurfaces::Raster(SkImageInfo::MakeA8(1431,1010));edge->getCanvas()->clear(SK_ColorTRANSPARENT);SkPaint boundary;boundary.setColor(SK_ColorWHITE);boundary.setAntiAlias(true);boundary.setStyle(SkPaint::kStroke_Style);boundary.setStrokeWidth(2);
+  for(const auto& record:projected.records){const auto& c=std::get<semantic::CompactStrokeContent>(record.content.get()).stroke;const auto contour=ink::compileCompactContour(c.config,c.knots);const auto& t=record.transform;const float z=camera.scale;SkMatrix matrix;matrix.setAll(z*t.a,z*t.c,z*t.tx+camera.translationX,z*t.b,z*t.d,z*t.ty+camera.translationY,0,0,1);
+   for(std::size_t i=0;i+1<contour.patches.size();++i)edge->getCanvas()->drawPath(render::internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)).makeTransform(matrix),boundary);
+   for(const auto cap:contour.caps){SkPathBuilder circle;circle.addCircle(cap.x,cap.y,cap.radius);edge->getCanvas()->drawPath(circle.detach().makeTransform(matrix),boundary);}
+  }
+  std::vector<std::uint8_t> edges(1431U*1010U);require(edge->readPixels(edge->imageInfo(),edges.data(),1431,0,0),"independentedge readback");
+  std::size_t outside=0;for(std::size_t i=0;i<actual.size();++i)outside+=actual[i]!=expected[i]&&!edges[i/4];result["nonedge_changed_channels"]=outside;
+  require(!outside,"postcommit finalpixels differ independentDirect outside source contour AA");
+  require(core.receivePlatformPresented({*submitted.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"qualifiedcurrentcanonicalfeedback");
+  require(ink_playground::InkPlaygroundHistoryTestAccess::displays(editor)==0,"matchingvisible didnotretiredisplay");
+  require(editor.snapshotObjects()==snapshot,"presentationchangedcanonical");
+  // New input must restart the existing100ms quiet period; same-camera
+  // no-op zoom must not reset it and foreign/inactive work cannot qualify.
+  require(editor.setViewportZoomAt(.8F,600,400),"postcommit freshaction");const auto fresh=ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor);
+  require(editor.setViewportZoomAt(.8F,0,0)&&ink_playground::InkPlaygroundHistoryTestAccess::cameraChangedAt(editor)==fresh,"no-op reset quiet time");
+  require(editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(99),presented),"freshcamera releasedbeforeoriginalquiet");
+  require(!editor.serviceNavigationPresentation(fresh+std::chrono::milliseconds(100),presented),"freshcamera stayedpastquiet");
+  require(editor.cameraGeneration()!=cameraGeneration,"freshcamera generation");std::ofstream(argv[2])<<result.dump(2)<<'\n';return 0;
+ }
+ if(mode.starts_with("progress")){
+  using P=interaction::CpuPendingEraseState::Phase;auto head=[&]{return ink_playground::InkPlaygroundHistoryTestAccess::head(editor);};
+  unsigned stages=0,requests=0;bool reached=false;
+  for(;stages<4096;++stages){
+   auto* h=head();if(h&&h->phase==P::CommitPreparing){reached=true;break;}
+   ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
+   auto request=core.takeCpuPendingRequest();if(request.empty())continue;
+   if(mode=="progresswait"){
+    const auto before=core.cpuPendingFacts();for(unsigned i=0;i<4;++i){const auto old=head()->preparationProgress();const auto count=core.cpuPendingFacts().opportunities;editor.serviceCpuPendingErases();require(core.cpuPendingFacts().opportunities==count+1&&head()->preparationProgress()==old&&head()->phase==P::Waiting&&!head()->completion,"Worker wait busyloop or fake progress");}
+    require(core.cpuPendingFacts().jobs==before.jobs&&editor.semanticGeneration().value()==generation,"Worker wait changed jobs/canonical");std::ofstream(argv[2])<<json{{"mode",mode},{"actual_request",request.size()},{"turns",4},{"steps_per_turn",1},{"canonical_unchanged",true}}.dump(2)<<'\n';return 0;
+   }
+   if(mode=="progressunavailable"){
+    require(core.loseSurface(),"progress surface loss");const auto old=head()->preparationProgress();const auto count=core.cpuPendingFacts().opportunities;editor.serviceCpuPendingErases();require(head()->preparationProgress()==old&&core.cpuPendingFacts().opportunities==count&&editor.semanticGeneration().value()==generation,"unavailable owner spinned/published");std::ofstream(argv[2])<<json{{"mode",mode},{"no_preparation_steps",true},{"canonical_unchanged",true}}.dump(2)<<'\n';return 0;
+   }
+   ++requests;const auto decoded=render::internal::cpuDecodeRequest(request);require(bool(decoded),"progress actualrequest");render::internal::CpuExactPathJob kernel(decoded->geometry,decoded->prefixCount,decoded->prefixPath);while(!kernel.ready())require(kernel.advance(8,2000),"progress actualkernel");const auto size=kernel.path().writeToMemory(nullptr);std::vector<std::uint8_t> result(128+size);std::copy_n(request.begin(),128,result.begin());const auto word=[&](unsigned p,std::uint32_t v){for(unsigned i=0;i<4;++i)result[p+i]=v>>(i*8);};word(0,0x31525043);word(4,1);word(96,size);word(100,decoded->piece?3:2);if(!decoded->piece)for(unsigned k=104;k<128;++k)result[k]=0;kernel.path().writeToMemory(result.data()+128);require(core.queueCpuPendingCompletion(decoded->identity.words,result,true),"progress completion");
+  }
+  std::cerr<<"progressreached="<<reached<<" requests="<<requests<<" proofs="<<(head()?head()->proofs.size():0)<<" phase="<<(head()?int(head()->phase):-1)<<" stages="<<stages<<" error="<<core.cpuPendingFacts().error<<std::endl;
+  require(reached&&requests>0&&head()->proofs.size()==3,"progress actual3targetcommitprecondition");
+  if(mode=="progressstamp"||mode=="progresshistory"||mode=="progresspublication")while(!head()->preparedErase->ready())ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
+  if(mode=="progressstamp"){
+   // A real partially consumed stamp cursor must continue without a new frame.
+   while(head()->sceneStamp.target==0)ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
+   require(head()->sceneStamp.target<3,"stamp precondition");
+  }
+  if(mode=="progresshistory"||mode=="progresspublication")while(head()->sceneStamp.target<3)ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
+  if(mode=="progresspublication")ink_playground::InkPlaygroundHistoryTestAccess::step(editor);
+  const auto beforeTargets=head()->sceneStamp.target;const auto beforeReady=head()->preparedErase->ready();const auto committed=core.cpuPendingFacts().committed;
+  if(mode=="progressbudget"){
+   const auto prior=head()->preparationProgress();ink_playground::InkPlaygroundHistoryTestAccess::step(editor,std::chrono::steady_clock::now()-std::chrono::microseconds(8000));require(head()->preparationProgress()==prior&&!head()->preparedErase->ready()&&editor.semanticGeneration().value()==generation,"expired turn published");
+  }else{
+   const auto at=std::chrono::steady_clock::now();editor.serviceCpuPendingErases();const auto ns=std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-at).count();
+   auto* after=head();const bool complete=core.cpuPendingFacts().committed==committed+1;
+   const bool useful=complete||(after&&(after->preparedErase->ready()!=beforeReady||after->sceneStamp.target>beforeTargets+1));
+   json r{{"mode",mode},{"actual_requests",requests},{"prior_stages",stages},{"owner_ns",ns},{"ready_before",beforeReady},{"stamp_before",beforeTargets},{"complete",complete},{"useful_multiple_internal_stages",useful},{"pending",core.cpuPendingFacts().pending}};std::ofstream(argv[2])<<r.dump(2)<<'\n';std::cout<<r.dump()<<std::endl;
+   require(useful,"INTERNAL_PREPARATION_PROGRESS_FORCED_TO_NEXT_OWNER_TURN");
+  }
+  return 0;
+ }
+ if(mode=="ienreuse"){
+  // Real admitted/frozen Intent; repeated camera-only reference adaptation.
+  render::ReferenceDrawList list;for(const auto& object:s.objects){auto record=editor.pendingSceneRecord(object.id);auto command=render::DirectReferenceSource::presentationCommand(*record);require(bool(command),"reuse command");list.entries.push_back({*record,true,std::move(command.value())});}
+  require(ink_playground::InkPlaygroundHistoryTestAccess::feedback(editor,list),"reuse first feedback");const auto first=ink_playground::InkPlaygroundHistoryTestAccess::reuse(editor);require(first.first>0,"nonvacuous frozen build");const auto expected=list.entries;
+  for(unsigned n=0;n<8;++n){auto next=list;for(auto& entry:next.entries){entry.presentationEraseActive=false;entry.presentationEraseMasks.clear();}require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,1,0}),"reuse camera");require(ink_playground::InkPlaygroundHistoryTestAccess::feedback(editor,next),"reuse repeated feedback");require(next.entries==expected,"frozen mask value/order changed");}
+  const auto last=ink_playground::InkPlaygroundHistoryTestAccess::reuse(editor);require(last.first==first.first&&last.second>first.second,"FROZEN_TRACE_RECONVERTED_ON_CAMERA_ONLY");std::ofstream(argv[2])<<json{{"builds",last.first},{"hits",last.second},{"camera_changes",8},{"exact_values",true}}.dump(2)<<'\n';return 0;
+ }
+ if(mode.starts_with("camera")){
+  // Hold the actual encoded kernel job, never synthesize a pending flag. The
+  // existing Composition must keep rendering transient feedback while waiting.
+  std::vector<std::uint8_t> held;
+  for(unsigned i=0;i<512;++i){frame();if(held.empty())held=core.takeCpuPendingRequest();if(!held.empty()&&!editor.transientOverlayDirty())break;require(i<511,"camera waitingclean");}
+  require(!held.empty()&&core.cpuPendingFacts().state=="WaitingWorker"&&core.cpuPendingFacts().pending==1,"camera actual Worker wait");
+  const auto read=[&]{std::vector<std::uint8_t> result(1431U*1010U*4U);require(editor.activeSurfaceProvider()->readbackRgba(result).code==render::BackendSubmissionCode::kAccepted,"camera readback");return result;};
+  const auto old=read();const auto oldCamera=editor.viewportGesture();const auto oldCameraGeneration=editor.cameraGeneration();
+  const auto previewRevision=editor.previewDisplayRevision();
+  require(editor.setViewportZoomAt(oldCamera.scale,400,300)&&editor.cameraGeneration()==oldCameraGeneration&&!editor.transientOverlayDirty()&&editor.previewDisplayRevision()==previewRevision,"camera no-op invalidateddisplay");
+  require(!editor.setViewportZoomAt(NAN,400,300)&&!editor.fitViewportToContent(foundation::WorldRect{0,0,NAN,5})&&editor.cameraGeneration()==oldCameraGeneration&&!editor.transientOverlayDirty(),"invalid camera damaged state");
+  if(mode=="camerapantool"){
+   require(editor.setPanTool(true),"camera pantool select");pointer(input::PointerPhase::kDown,700,500);const auto rev=editor.previewDisplayRevision();pointer(input::PointerPhase::kMove,770,530);require(editor.previewDisplayRevision()==rev+1,"one paninput invalidated samecamera twice");pointer(input::PointerPhase::kUp,770,530);
+  }else if(mode=="camerafit")require(editor.fitViewportToContent(foundation::WorldRect{0,0,2800,1600}),"camera fit");
+  else if(mode=="camerapan")require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,70,-30}),"camera pan");
+  else if(mode=="cameratouch"||mode=="cameraselectiontouch"){
+   if(mode=="cameraselectiontouch")require(editor.setSelectionMode(true),"camera selectwhilepending");
+   const auto touch=[&](unsigned id,input::PointerPhase phase,float x,float y){input::PlatformPointerSample p{};p.source=71;p.pointer=id;p.sequence=++sequence;p.timestampNs=90000000000+sequence*8000000;p.x=x;p.y=y;p.pressure=.5;p.phase=phase;p.capabilities.tool=input::PointerTool::kFinger;require(core.submit({{p}}),"camera touchinput");};
+   touch(2,input::PointerPhase::kDown,500,400);touch(3,input::PointerPhase::kDown,700,400);
+   for(unsigned i=0;i<64&&editor.transientOverlayDirty();++i)frame();
+   touch(3,input::PointerPhase::kMove,850,450);
+  }else require(editor.setViewportZoomAt(mode=="camerazoomin"?1.5F:.7F,700,500),"camera zoom");
+  require(editor.cameraGeneration()!=oldCameraGeneration,"camera unchanged fixture");
+  const bool dirtyAtChange=editor.transientOverlayDirty();
+  for(unsigned i=0;i<256;++i){frame();if(!editor.transientOverlayDirty())break;require(i<255,"camera transientconverge");}
+  const auto actual=read();
+  // Existing pan admission increments its generation even for zero delta.
+  // This is an independent redraw control at the exact same transform.
+  require(editor.applyViewportNavigation({interaction::ViewportNavigationKind::kWheelPan,0,0}),"camera panoracle");
+  for(unsigned i=0;i<256;++i){frame();if(!editor.transientOverlayDirty())break;require(i<255,"camera oracleconverge");}
+  const auto expected=read();std::size_t changed=0,mismatch=0;for(std::size_t i=0;i<actual.size();++i){changed+=expected[i]!=old[i];mismatch+=actual[i]!=expected[i];}
+  json result{{"mode",mode},{"pending",core.cpuPendingFacts().pending},{"state",core.cpuPendingFacts().state},{"dirty_at_camera",dirtyAtChange},{"camera",editor.cameraGeneration()},{"canonical_generation",editor.semanticGeneration().value()},{"changed_channels",changed},{"mismatched_channels",mismatch},{"held_actual_request_bytes",held.size()}};std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
+  require(editor.semanticGeneration().value()==generation&&core.cpuPendingFacts().pending==1,"camera prematurelycommitted");require(changed>0,"camera oracle unchanged");require(actual==expected,"PENDING_CAMERA_FRAME_STALE_UNTIL_ZERO_PAN");require(dirtyAtChange,"camera forgot transientinvalidation");return 0;
+ }
  const auto unchanged=editor.semanticGeneration().value();
  semantic::Operation forbidden{semantic::OperationId{foundation::ObjectId::fromUint64(880001)},s.document_id,1,1,semantic::SetDocumentBackgroundOp{foundation::DocumentBackground{}}};
  require(editor.applyExternalOperation(forbidden,semantic::ApplySource::kRemoteSync).disposition!=semantic::ApplyDisposition::kApplied&&editor.semanticGeneration().value()==unchanged,"remote overtookpending");
@@ -185,7 +355,7 @@ int main(int argc,char**argv){try{
  if(mode=="metadatapressure"){const auto desired=511U*1024U*1024U;while(editor.cpuWorkerGrantBytes()<desired){const auto bytes=std::min<std::size_t>(80U*1024U*1024U,desired-editor.cpuWorkerGrantBytes());const auto grant=editor.reserveCpuWorkerGrant(9,bytes);require(grant,"native deterministic quota pressure");pressure.push_back(grant);}}
  json jobs=json::array();unsigned opportunities=0;bool postFault=false;bool faulted=false,contextTested=false,rebound=false;
  while(core.cpuPendingFacts().pending&&opportunities++<1024){
-  if(mode=="postpublishfault"&&!postFault&&ink_playground::InkPlaygroundHistoryTestAccess::publishReady(editor)){cpuFailNextAllocation=true;postFault=true;}
+  if(mode=="postpublishfault")postFault=faultSink.armed;
   if(mode=="frame"||mode=="edgeframe"||mode=="mixedframe"||mode=="mixedimage")frame();else editor.serviceCpuPendingErases();
   if(mode=="fatal"&&faulted&&!rebound&&core.cpuPendingFacts().state!="WaitingWorker"){
    editor.suspendCpuPendingExecutor();const auto issued=core.cpuPendingFacts().jobs;for(unsigned i=0;i<4;++i)editor.serviceCpuPendingErases();require(core.cpuPendingFacts().jobs==issued,"suspendedissuedoldexecutorjob");
@@ -207,6 +377,7 @@ render::internal::CpuExactPathJob job(value->geometry,value->prefixCount,value->
  if(mode=="activebasis"){
   require(editor.selectionTransformActive(),"A mask commit cancelled active transform");pointer(input::PointerPhase::kMove,930,590);pointer(input::PointerPhase::kUp,930,590);editor.serviceCpuPendingErases();require(core.cpuPendingFacts().pending==0&&editor.pendingObject(mixedId)->transform.tx==880,"active transform did not rebase after generation");return 0;
  }
+ if(mode=="postpublishfault"){require(faultSink.armed&&cpuFaultGeneration>generation&&cpuFaultGeneration!=UINT64_MAX,"postpublish fault not exercised after atomic mutation");require(ink_playground::InkPlaygroundHistoryTestAccess::full(editor).hasValue(),"postpublish recovery failed");cpuFaultRuntime=nullptr;editor.setLocalOperationSink(faultSink.inner);}
  const auto facts=core.cpuPendingFacts();json result{{"Up_ms",upMs},{"pending",facts.pending},{"committed",facts.committed},{"failed",facts.failed},{"noops",facts.noops},{"error",facts.error},{"jobs",jobs},{"opportunities",opportunities},{"generation",editor.semanticGeneration().value()},{"geometry_reuses",facts.geometryReuse},{"max_owner_ns",facts.maxOwnerNs},{"max_exact_ns",facts.maxExactNs},{"newquery_unions_main",ink_playground::InkPlaygroundHistoryTestAccess::work(editor).maskHistory.queryUnionOps-before.maskHistory.queryUnionOps}};
  std::ofstream(argv[2])<<result.dump(2)<<'\n';std::cout<<result.dump()<<std::endl;
  if(mode=="failuremixed"){require(!facts.pending&&facts.failed==1&&facts.committed==2&&editor.pendingObject(mixedId)&&editor.pendingObject(mixedId)->transform.tx==870,"failed A lost unrelated create/drag");return 0;}

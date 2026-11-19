@@ -1,0 +1,70 @@
+[
+  {
+    "name": "node5",
+    "argv": [
+      "node",
+      "--test",
+      "verification/tests/g5_post_navigation_settle.test.mjs"
+    ],
+    "exit": 0,
+    "seconds": 0.115202457876876,
+    "log": "/private/tmp/g5-post-navigation-checkpoint-save/verification/node5.log",
+    "sha256": "cde503d04176330c5f24feb15c56317a84e71096042986d5e555dee2ebf8a159"
+  },
+  {
+    "name": "boundary122",
+    "argv": [
+      "python3",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom"
+    ],
+    "exit": 0,
+    "seconds": 0.07484862487763166,
+    "log": "/private/tmp/g5-post-navigation-checkpoint-save/verification/boundary122.log",
+    "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+  },
+  {
+    "name": "sourceIdentity",
+    "candidatePaths": 1207,
+    "mismatch": [],
+    "nativeBusinessSourceMatches": true
+  },
+  {
+    "name": "native21",
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/build-C",
+      "--output-on-failure",
+      "-R",
+      "^(G5GpuRetirementContract|G5NavigationDisplayWorkavoidance|G5TemporaryRetirementWait|G5TemporaryRetirementSafety|G5TemporaryRetirementCompletion|G5InkBodyMaskReuse|G5RegionalMaskValidity|G5MaskedNavigationProgress|G5ErasedMixedNavigation|G5RetainedZoomReentry|G5MixedNavigationReentry|G5TileWork|G5RenderMemoryBudget|G5Navigation|G5ProgressiveRuntimeProof|G5CpuPendingRuntime-camera(zoomout|zoomin|fit|pan|pantool|touch))$"
+    ],
+    "exit": 0,
+    "seconds": 20.47956983279437,
+    "log": "/private/tmp/g5-post-navigation-checkpoint-save/verification/native21.log",
+    "sha256": "65d3fcd3c2258886389c60895509179f5871c38cdee7524ab13e532a685cc70b"
+  },
+  {
+    "name": "cold-estimator-hard-deadline",
+    "argv": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/build-C/runtime/render/axiom_progressive_clarity_tests",
+      "--legacy-refresh"
+    ],
+    "exit": 0,
+    "seconds": 0.09069520910270512,
+    "log": "/private/tmp/g5-post-navigation-checkpoint-save/verification/cold-estimator-hard-deadline.log",
+    "sha256": "38fd605447b0130b4e2e36afba5cc5e90a0bc2b17703b68975fbbd391c25bc06"
+  },
+  {
+    "name": "production-region-pixels",
+    "argv": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-post-navigation-settle-r1/build-C/runtime/composition/axiom_post_navigation_pixels_tests",
+      "/private/tmp/g5-post-navigation-checkpoint-save/verification/production-region-pixels.json"
+    ],
+    "exit": 0,
+    "seconds": 0.8644956250209361,
+    "log": "/private/tmp/g5-post-navigation-checkpoint-save/verification/production-region-pixels.log",
+    "sha256": "0511e8774809f3f8579ff7c246434c0a6b4c202c074e8ef142ef9fbd86ef0f0e"
+  }
+]

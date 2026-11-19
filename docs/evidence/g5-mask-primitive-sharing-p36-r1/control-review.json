@@ -1,0 +1,358 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "task": "G5-mask-primitive-sharing-p36-r1",
+  "verdict": "PASS_WITH_FINDINGS",
+  "reviewed_at": "2026-11-18T14:11:36.312687+08:00",
+  "scope": "MPR1..MPR5 only; two prior implementation defects closed. Preserve parent valid scoped MPS work. No fullG5/performance/release/otherABI pass.",
+  "reviewerSurface": "CONTROL_REVIEW",
+  "implementationProducerIsReviewer": false,
+  "repository": {
+    "origin": "git@github.com:Mostorm-Labs/axiom.git",
+    "declared_ref": "refs/heads/codex/g5-exposure-region-checkpoint",
+    "anchor": "4d015193ce68eca798b02786abc22a0aef6233b8"
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-mask-primitive-sharing-p36-r1/package.json",
+    "bytes": 3762,
+    "sha256": "bb4e5cd505541a714b6861fcd435076857c00c026cae87e09efbb740135d3e4d"
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/result.json",
+    "bytes": 8839,
+    "sha256": "a0d74a40c3704a6d63e318f48e469597bbed2dceed0eb9ea3e9ebfaf2ddb1e5d"
+  },
+  "artifact_manifest": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/artifact-manifest.json",
+    "bytes": 92464,
+    "sha256": "d72142a767fe56af9cda0c592b055ced3b91de956d56e734362c3f753ae7d979"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom",
+    "path": ".aegis/results/G5-mask-primitive-sharing-p36-r1/result.json"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      {
+        "id": "MPR1",
+        "conclusion": "Same-budget query/strict confirmation binding fixed; original failure probes and real prepared-path transitions pass.",
+        "evidence": [
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/query-binding-fix.json",
+            "bytes": 2304,
+            "sha256": "a35193b79ad9d47246ec71ee99ac3d503aaa64f075e3c196231f7ccea25a04c8"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/query-regressions.json",
+            "bytes": 1455,
+            "sha256": "c97795ad441caae07c46d1ac2f67aac523463ca17e679e0b0d0c6ca52c55128f"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/identity-and-budget.json",
+            "bytes": 1287,
+            "sha256": "3fdd8b674399c355e3e2ab384884f723d1890b0cd717560c5552241349c1f248"
+          }
+        ]
+      },
+      {
+        "id": "MPR2",
+        "conclusion": "Only introduced native test configuration repaired; ordinary OFF and private ON actual build inputs verified.",
+        "evidence": [
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/test-build-fix.json",
+            "bytes": 1632,
+            "sha256": "1c2b6d6a521883b542d82df9f33cee0e829449a6be24f2388d242753e1afdf1c"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/normal-build-policy.json",
+            "bytes": 2927,
+            "sha256": "dfdd460948ef995e8ba80348f3ca4f4ee6761a8ddaa649bbc8b961e7d94185c6"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/build-input-manifest.json",
+            "bytes": 7949,
+            "sha256": "d6b1c3585b4b21117f489123aedcc3f8c1704802f1015155d8e7ad5e7ef6b4d0"
+          }
+        ]
+      },
+      {
+        "id": "MPR3",
+        "conclusion": "Parent sharing/capacity/pixel/resource/bounded-work semantics retained; 42required+9optin test logs checked.",
+        "evidence": [
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/native-regressions.json",
+            "bytes": 2971,
+            "sha256": "e20767a0e30a72d01686c1a4a5ea376ce76f851e970fe56855a5078dbe0ea93d"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/source-repair-delta.json",
+            "bytes": 1047,
+            "sha256": "23ad136a9d2f023eee18957bdf05ce3cdccf7e2099d52d1304b045fbe4b05c48"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/identity-and-budget.json",
+            "bytes": 1287,
+            "sha256": "3fdd8b674399c355e3e2ab384884f723d1890b0cd717560c5552241349c1f248"
+          }
+        ]
+      },
+      {
+        "id": "MPR4",
+        "conclusion": "24ordinary relative checks and8pixels/12snapshots/receipts pass, subject to explicit capture-association finding.",
+        "evidence": [
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/browser-comparison.json",
+            "bytes": 154519,
+            "sha256": "df70abed597f136d57f620c8d2086a099561d8b25c0cbc31c5f7d4f469d60284"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/web-correctness.json",
+            "bytes": 11289,
+            "sha256": "3aaeae5586b9bd23d12096e76d86a29903fdbea9196bfa197a27f5b022ec9dde"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/sampling-ledger.json",
+            "bytes": 7133,
+            "sha256": "789be77b17087321c9a46986e3e3ddbb0ad06e64113dfdda54258b84982b2c67"
+          }
+        ]
+      },
+      {
+        "id": "MPR5",
+        "conclusion": "Repository/package/result/current raw and sourceSDK identities match; protectedwork/preview/callback verified.",
+        "evidence": [
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/preflight.json",
+            "bytes": 20988,
+            "sha256": "74fd2758ceefa1a105929fae7724cc7b1a361f8089b7cf6b5f4793d7fcb4b523"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/SDK-source-input-manifest.json",
+            "bytes": 4258,
+            "sha256": "7952d75dc6331d9bea0f46149f609bafcfbd396a4ea74ee41242e83e554cc811"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/preservation.json",
+            "bytes": 6789,
+            "sha256": "12f5787a834d00d596df9bbf8ad3ac70fe55ecdb71946dbdc691a1937f64b68b"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/artifact-manifest.json",
+            "bytes": 92464,
+            "sha256": "d72142a767fe56af9cda0c592b055ced3b91de956d56e734362c3f753ae7d979"
+          },
+          {
+            "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/result.json",
+            "bytes": 8839,
+            "sha256": "a0d74a40c3704a6d63e318f48e469597bbed2dceed0eb9ea3e9ebfaf2ddb1e5d"
+          }
+        ]
+      }
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "raw_recalculation": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/raw-audit.json",
+      "bytes": 31327,
+      "sha256": "70734430d67ea5465b053d60ec580f0a910358a5c55e103162873c187fd10078"
+    },
+    "independent_query_green_reruns": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/independent-query-rerun.json",
+      "bytes": 2061,
+      "sha256": "0be9d2037f6cf1ec63103e6a3d8248a2e14587ee837aa02ad402ce5d42780949"
+    },
+    "repo_final_audit": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/repo-final-audit.json",
+      "bytes": 3249,
+      "sha256": "24e03c8e74dd5f24664962c7b068e084ea7d9e51979ad9a8bea56b831b218da8"
+    },
+    "findings_and_errata": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/findings-and-errata.json",
+      "bytes": 7060,
+      "sha256": "dc5a1380b16f29454d4a3a56d8dead3d6ab88ed2d621b611d58fb4e6353af420"
+    },
+    "ordinary_checks": 24,
+    "pixel_pairs": 8,
+    "maximum_channel_delta": 1,
+    "original_channel_tolerance": 2,
+    "same_stage_snapshot_pairs": 12,
+    "required_native_log_tests": 42,
+    "private_optin_only_log_tests": 9,
+    "control_fresh_queries": 4,
+    "control_new_browser_sampling": 0
+  },
+  "repository_reality_audit": {
+    "status": "MATCH",
+    "at": "2026-11-18T14:10:02.403262+08:00",
+    "repository": {
+      "origin": "git@github.com:Mostorm-Labs/axiom.git",
+      "declared_ref": "refs/heads/codex/g5-exposure-region-checkpoint",
+      "anchor": "4d015193ce68eca798b02786abc22a0aef6233b8"
+    },
+    "producer_result": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/result.json",
+      "bytes": 8839,
+      "sha256": "a0d74a40c3704a6d63e318f48e469597bbed2dceed0eb9ea3e9ebfaf2ddb1e5d"
+    },
+    "producer_manifest": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/artifact-manifest.json",
+      "bytes": 92464,
+      "sha256": "d72142a767fe56af9cda0c592b055ced3b91de956d56e734362c3f753ae7d979"
+    },
+    "parent_direct_refs_verified": 332,
+    "current_build_inputs_verified": 28,
+    "primary42_unchanged": true,
+    "index_empty": true,
+    "control_production_unchanged": true,
+    "servers": [
+      {
+        "pid": 88714,
+        "port": 4342,
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4342 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-active-erase-delta-r1/install-normal-C/js"
+      },
+      {
+        "pid": 18696,
+        "port": 4343,
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4343 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-navigation-mask-reuse-r1/install-normal-C/js"
+      },
+      {
+        "pid": 37063,
+        "port": 4344,
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4344 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-navigation-mask-reuse-p36-r1/install-normal-C/js"
+      },
+      {
+        "pid": 80675,
+        "port": 4345,
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4345 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-r1/install-normal-C/js"
+      },
+      {
+        "pid": 96994,
+        "port": 4346,
+        "command": "/opt/homebrew/Cellar/python@3.12/3.12.14/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python -m http.server 4346 --bind 127.0.0.1 --directory /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-p36-r1/install-normal-C/js"
+      }
+    ],
+    "preview_http_status": 200,
+    "preview_html_bytes": 50814,
+    "served_matching_assets": {
+      "axiom.mjs": {
+        "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-mask-primitive-sharing-p36-r1/install-normal-C/js/axiom.mjs",
+        "bytes": 38758,
+        "sha256": "3157ecb4cb2902fc3688b50d9a7d7e9bac4dc2adca87e4b9067ba2a1e9c5ec50"
+      }
+    },
+    "no_user_page_interaction": true,
+    "no_commit_push_tag": true
+  },
+  "blocking_defects": [],
+  "closed_prior_defects": [
+    "MPS2-QUERY-CAPACITY-RESET",
+    "MPS-NEW-TEST-BUILD-CONFIG"
+  ],
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "MPR-F1",
+        "classification": "NON_BLOCKING_FINDING",
+        "topic": "capture_identity_association",
+        "finding": "Four after-erases readbacks attach the previous navigation semantic0 stamp while current state/receipt generation is3. The stored marker is not the current canonical frame identity.",
+        "failure_mode_considered": "A stale navigation marker could be misreported as complete current-canonical identity.",
+        "existing_independent_coverage": [
+          "Frozen driver waits for generation==presentedGeneration and no pending/contacts; actual canonical framebuffer readback VALID/RESTORED.",
+          "All4 post-erase onFrame callbacks occur after Up and before readback; receipt generation3 and3 Operations recorded.",
+          "Readback differs from same-camera pre-erase by7740channels atDPR2 and30331 atDPR4 in bothB/C.",
+          "Actualquery/strictconfirmation decisions use unchanged exact oracle and real imported geometry; independent native CPU/Metal legacy mask pixel oracles retained.",
+          "After-final-route matching semantic3 navigation stamps andB/C pixel parity;12same-stage snapshots equal."
+        ],
+        "residual_limit": "No one-to-one complete canonical stamp identity for after-erases; no photon proof.",
+        "unique_detection_value": "Would strengthen capture association, not expose an otherwise uncovered high-impact P36 failure for this unchanged frame/present code.",
+        "blocking": false,
+        "disposition": "Retain raw artifacts and explicitly limit claims; do not relabel old navigation stamp or add post-hoc sampling."
+      },
+      {
+        "id": "MPR-F2",
+        "classification": "NON_BLOCKING_FINDING",
+        "topic": "informational_reference_erratum",
+        "finding": "web-correctness.nativeIndependentLegacy points to nonexistent p36/native-factorial.json. Correct source is exact parent native-factorial.json.",
+        "failure_mode_considered": "A reader following the informal string cannot find the reused independent kernel oracle.",
+        "existing_independent_coverage": [
+          "Structured result.regressions.parentFourCellEvidence and native-regressions.parentFourCellsReused both bind exact existing parent file26909bytes/SHA49371e55e2ae853060c6087c5aa2f48b2acdacfdc2fe4dea1d2dcfc7abc8202e.",
+          "Frozen package requires parent fourcellreuse, not a new P36 factorial."
+        ],
+        "residual_limit": "Informational string is erroneous; no independent evidence missing.",
+        "correct_reference": {
+          "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-r1/native-factorial.json",
+          "bytes": 26909,
+          "sha256": "49371e55e2ae853060c6087c5aa2f48b2acdacfdc2fe4dea1d2dcfc7abc8202e"
+        },
+        "blocking": false,
+        "disposition": "Control-owned erratum; leave frozen producer artifacts intact."
+      },
+      {
+        "id": "MPR-F3",
+        "classification": "NON_BLOCKING_FINDING",
+        "topic": "recursive_historical_reference_drift",
+        "finding": "A beyond-boundary traversal of16039 historical references found4old metadata refs with changed bytes. None is a current direct P36 artifact or parent332direct-artifact mismatch.",
+        "failure_mode_considered": "Blindly claiming every historical transitive metadata pointer is immutable would be false.",
+        "existing_independent_coverage": [
+          "All235current directartifacts,1410frozenfiles,1218current/parent source paths, all4SDK assets,28current build inputs,332parent directartifacts match declaredbytes/SHA.",
+          "Current package fixed-inputs/result/manifest exact and current raw producer inputs independently recomputed."
+        ],
+        "residual_limit": "Do not certify the entire historical transitive graph.",
+        "evidence": {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/reference-graph-audit.json",
+          "bytes": 1755,
+          "sha256": "67f389d39da1be54a8a69f231e928dacdc504942cd43dfcdb75f282892e108b1"
+        },
+        "blocking": false,
+        "disposition": "Report historical metadata drift; no old-file rewrite or proof-recursion."
+      },
+      {
+        "id": "MPR-F4",
+        "classification": "NON_BLOCKING_FINDING",
+        "topic": "performance_claim_limit",
+        "finding": "Ordinary browser24relative checks pass; no clear wholeUI acceleration established. Existing hot-route content-submission proxy gaps remain about1sec. Dense nonuniform/shear FilledPath stage1triangulation is unresolved.",
+        "blocking": false,
+        "disposition": "Separate successor optimization; no claim that cache sharing solves all navigation or longerase latency."
+      }
+    ]
+  },
+  "accepted_memory_policy": {
+    "drawing_aggregate": "min(32MiB,maxEntryBytes,maxBytes/4)",
+    "allocation": "on demand",
+    "single_plan_sync_construction": "8MiB unchanged",
+    "exact_entitlement": "min(maxEntryBytes,maxBytes/4), not clamped32",
+    "global_profile_MiB": [
+      512,
+      1024,
+      128
+    ],
+    "single_existing_owner": true
+  },
+  "terminal": {
+    "producer": "READY_FOR_CONTROL_REVIEW",
+    "control": "PASS_WITH_FINDINGS scoped",
+    "implementation_next_action": "STOP; preserve current source/SDK/evidence/demo. Do not start unrelated implementation or sample.",
+    "no_commit_push_tag": true
+  },
+  "preview": {
+    "URL": "http://127.0.0.1:4346/example.html",
+    "PID": 96994,
+    "diagnostics": false
+  },
+  "producer_terminal_callback": {
+    "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-mask-primitive-sharing-p36-r1/terminal-callback.json",
+    "bytes": 618,
+    "sha256": "0e36b315b0c3d0260345b7647cf4a555d6104ccfbfdb70ff7a4057c59d05edfe"
+  },
+  "readable_review": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-mask-primitive-sharing-p36-control-r1/review.md",
+    "bytes": 3446,
+    "sha256": "8f390aac14b2e36eb515206f12df6a8a578a42802ee51aba9597106b5494c7da"
+  },
+  "finalPerformancePass": false,
+  "releasePass": false,
+  "fullG5Pass": false
+}

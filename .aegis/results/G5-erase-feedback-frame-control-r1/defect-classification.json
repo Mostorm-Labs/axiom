@@ -1,0 +1,95 @@
+{
+  "status": "CLASSIFIED_FOR_CONTROL_REVIEW",
+  "at": "2026-11-18T17:26:28.213833+00:00",
+  "subject_result": {
+    "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/.aegis/results/G5-erase-feedback-frame-r1/result.json",
+    "bytes": 14053,
+    "sha256": "d03ce53930c2a88a93fb8535cccd3b7cceb6e20e06272b5cb2a6e40f4bdd214d"
+  },
+  "blocking": [
+    {
+      "id": "EFF4-SETTLED-PAN",
+      "classification": "FROZEN_REQUIREMENT_FAILURE",
+      "root_layer": "PERFORMANCE_TARGET_UNMET_CAUSE_UNCLASSIFIED",
+      "requirement": "metrics-contract blocking settled_nonregression and other_nonregression",
+      "failed_checks": [
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "CDP",
+          "B": 19.299999952316284,
+          "C": 32.60000014305115,
+          "limit": 24.299999952316284,
+          "met": false
+        },
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "navigationDuration",
+          "B": 2048.699999809265,
+          "C": 2750.0,
+          "limit": 2151.1349997997286,
+          "met": false
+        },
+        {
+          "id": "other_nonregression",
+          "case": "settled-pan",
+          "metric": "convergence",
+          "B": 452.0000001192093,
+          "C": 2827.0000001192093,
+          "limit": 519.8000001370906,
+          "met": false
+        },
+        {
+          "id": "settled_nonregression",
+          "case": "settled-pan",
+          "metric": "dispatch",
+          "B": 19.299999952316284,
+          "C": 32.60000014305115,
+          "limit": 24.299999952316284,
+          "met": false
+        }
+      ],
+      "raw_case": "EFF-W-C1 / settled-pan",
+      "observed": {
+        "actual_navigation_ms": 2750,
+        "post_navigation_convergence_ms": 5125.100000143051,
+        "active_tail_callbacks": 9,
+        "active_tail_callback_p95_ms": 46.5,
+        "pooled_convergence_median_ms": 2827.0000001192093
+      },
+      "impact": "Candidate shows a multi-second settled pan recovery tail and slower delivery; immediate-nav improvement alone cannot satisfy package closure.",
+      "cause_status": "Not proven to be source regression or environmental scheduling. Raw shows long SDK RAF spacing already during primary erase; no timeout quota exhaustion or dropped input. Do not waive as noise.",
+      "next_reverification": "Preserve exact candidate and its gains. Next authorized successor should isolate C1 settled-pan frame opportunity/scheduling and recovery timeline before code changes; same-source normal controlled comparison, fixed limits/thresholds. Do not redo item2/3 or memory/LOD tuning as assumed cause.",
+      "no_retroactive_finishline": "Original frozen requirements, no new blocking obligation."
+    }
+  ],
+  "nonblocking": [
+    {
+      "id": "EFF-N1",
+      "classification": "NON_BLOCKING_HARDENING",
+      "fact": "B probe planning design got4 additive selected-repair fields after capture; exact original restored as separate implementation-design-B.json and frozen hash independently matches. B source/SDK/raw and C/ordinary bindings unchanged.",
+      "action": "Future freeze should version planning records from outset; no new sample needed."
+    },
+    {
+      "id": "EFF-N2",
+      "classification": "NON_BLOCKING_FINDING",
+      "fact": "Two actualGPU composition JSON output paths under missing/native parent were not written; test silently ignores ofstream open failure. Existing raw16targetcamera/24settled output and boundedworker exit/assertions plus immutable fixture source independently cover same failure mode.",
+      "action": "Check test artifact parent/open result in later harness maintenance; no proof-recursion rerun required."
+    },
+    {
+      "id": "EFF-N3",
+      "classification": "NON_BLOCKING_UNCONFIRMED_NUMERIC_RISK",
+      "fact": "Control hull inflation float conversion can mathematically contract at huge local coordinates. Existing accepted Skia CPU minimal reproduction did not draw original pixels at claimed counterexample; no actual parity failure established.",
+      "action": "Do not claim known leak or require current fix; conservative rounded support hardening may be future focused work."
+    },
+    {
+      "id": "EFF-N4",
+      "classification": "NON_BLOCKING_OBSERVABILITY_PRECISION",
+      "fact": "Producer matched comparison aggregates feedback_total rather than full render in one check. Independent fullRender raw recompute B30.3/29.0 -> C5.5/4.6ms, p9533.9/32.7 ->7.1/6.5; all prescribed20%/p95 limits still pass.",
+      "action": "Use exact fullRender numbers for review claims; no new sample needed."
+    }
+  ],
+  "authorized_repair_now": false,
+  "reason": "P32 reached explicit finite frozen target miss and STOP. This review does not silently restart sampling or change source; next task requires distinct prospective execution package."
+}

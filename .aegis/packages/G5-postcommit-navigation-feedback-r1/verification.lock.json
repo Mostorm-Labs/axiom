@@ -1,0 +1,51 @@
+{
+  "status": "FROZEN_NARROW_HANDOFF_ATTRIBUTION_AND_CONDITIONAL_REPAIR",
+  "obligations": [
+    {
+      "id": "NC1",
+      "requirement": "Explain the current small-scene post-Up navigation first-feedback path and gaps using actual owning stages.",
+      "oracle": "Hash-bound existing 12 ordinary navigation rows plus at most one baseline diagnostic session over same 3-stroke fixture; actual frame route, pending/head/Scene/camera generations, preparation outcome/retry reason, retained work progress and publication/present records.",
+      "acceptance": "Keep GL proxy, first correct current-camera frame and canonical-qualified presentation distinct. Show which old/new first draw belongs to which role; account for owner CPU versus RAF/wait gaps. Identify an actual avoidable reset/replay or omitted display opportunity before production changes. Explicitly state when the 25→55ms comparison was not equivalent; do not invent a regression.",
+      "evidence_required": [
+        "compact cause-and-timeline.json",
+        "exact raw/diagnostic source/SDK refs",
+        "test-only or compile-time diagnostic provenance"
+      ]
+    },
+    {
+      "id": "NC2",
+      "requirement": "Repair only a demonstrated postcommit display/preparation inefficiency without weakening semantic or presentation guards.",
+      "oracle": "Before production mutation, actual RuntimeComposition/Render regression using real staged erase result/OperationEngine; expose the proven route/progress defect with a deterministic logical invariant, not an exact wall-clock count.",
+      "acceptance": "Observed actual RED tied to NC1 root cause, then one minimal fix GREEN. Keep valid prepared work only under matching scene/body/mask/camera/surface/context identities; an invalid/stale/foreign basis must reject/reprepare. No synthetic progress, reordering, early preview clear or fake canonical receipts. Owner cooperative allowance remains original8000us/4096 and no extra work-budget purchase.",
+      "evidence_required": [
+        "red-green.json",
+        "implementation-design.json",
+        "minimal source delta and hash manifest"
+      ]
+    },
+    {
+      "id": "NC3",
+      "requirement": "Maintain visible continuity and exact terminal state across pending→committed→presented navigation.",
+      "oracle": "Native actual whole-frame comparison against independently rebuilt same-state same-camera reference; separate finite Web pixel qualification with real C++/WASM Worker, root SDK input, canonical generation/pending/receipt stamps and target state restored.",
+      "acceptance": "Both immediate zoom-out0.7 and pan show correct current camera/erasure alignment, no blank/old-camera restoration/resurrected ink during successful transition. Retry keeps last successful pixels until a valid complete replacement, and valid pending work makes progress. Qualified final frame and Operation/mask/snapshot semantics equal baseline or independent reference ignoring legitimately random allocated IDs. Native guard cases include stale scene/camera, provider retry, delayed presentation and source cancel; reuse existing exact negative/failure tests where applicable.",
+      "evidence_required": [
+        "pixel-semantic.json with native full-frame and Web ROI/full-frame limitations explicit",
+        "affected native regression logs",
+        "ordinary versus qualification separation"
+      ]
+    },
+    {
+      "id": "NC4",
+      "requirement": "Verify the narrow optimization on equivalent correct feedback and report a terminal result.",
+      "oracle": "Two finite ordinary headedChrome sessions, reversed baseline/candidate order on same fixture/DPR2 and immediate Up→zoom orpan, same input timing. No pixel reads/held Worker or diagnostic timing in ordinary rows; compare execution identity and exact correctness separately.",
+      "acceptance": "Compare frame opportunity/route/progress counts and first correct feedback bounds from separate qualification alongside ordinary first GL/pending/Operation metrics. Demonstrated work/reset/opportunity reduction must target NC1 cause, with ordinary outcomes reported including regressions; do not require old invalid25ms or claim physical latency/global3s5s. If useful reduction cannot be proved or correctness regresses, return UNMET with exact facts rather than expanding work. Source/build/SDK parity frozen, matching candidate4337 prepared only after closure; preserve4336.",
+      "evidence_required": [
+        "paired-observation.json",
+        "source+SDK manifest",
+        "sampling-ledger.json",
+        "cleanup.json",
+        "result.json with SHA and callback"
+      ]
+    }
+  ]
+}

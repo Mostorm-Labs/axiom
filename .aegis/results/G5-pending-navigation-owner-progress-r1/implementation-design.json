@@ -1,0 +1,21 @@
+{
+  "owner": "CanvasEditingRuntime viewport controller, transient/previewdisplay/roster invalidation; cpuPending Intent owns preparation; Semantic PreparedEraseOperation owns target/finalization progress; existing Composition routes unchanged",
+  "A": "Private helper afterSuccessfulViewportChange(previousGeneration) updates existing previewtransform/displayrevision/roster/navigation/transient onlyaftergenerationchange; callpan/zoom/fit plus actualacceptPlatformBatch changedpose path. Preservecontrollerzero-pan increments and route/recovery boundaries. ActualComposition waitingWorker clean oldpixels -> camera -> nativecurrentcamera pixels vs equivalentpan oracle.",
+  "B": "Private constant-size owning progress snapshots: PreparedErase cursor/finalphase/complete/failed; currentSceneStamp target/job mask/primitive/header/ready; actualhistory/publication state. Compare actualbefore/after without copyingpayload/fakecounter. Existingserial/job/phase/next/reuse remain. Originalbegan/8000 and4096 bound unchanged; pass remainingus toadvance, actualwait yields. Singleatomic/target stage may exceedcooperativeturn; reportactual not harddeadline claim.",
+  "test_sequence": [
+    "AoldactualREDbeforeproductionedit",
+    "Aminimumfix GREEN camera+guards",
+    "BoldactualREDbeforeBproductionedit",
+    "Bminimumfix GREEN usefulprogress/wait/budget/atomic",
+    "combinedrequestedregressions+sameSDKfinitebrowser/pixels",
+    "4336onlycombinedqualified then exactcallback"
+  ],
+  "API": "Private helper and internal semantic preparation witness only. No SDK/DLL exports/install/DTO/schema/APIchanges.",
+  "budget_unchanged": true,
+  "production_readonly": [
+    "runtime/render",
+    "runtime/composition",
+    "sdk"
+  ],
+  "sampling_started": false
+}

@@ -1,0 +1,68 @@
+{
+  "fixture": "ExactFixed40 initial.axsnap in fixed-inputs. Reuse exact prior documentId/restore metadata, seed324508639, viewport1431x1010, camera scale.34,x120,y260 and round-handdrawn v4. No userpage reads.",
+  "long_erase": {
+    "moves": 480,
+    "pace_Hz": 60,
+    "radius_world": 16,
+    "trace_formula": "i=0..480; x=420+80*sin(2*pi*i/160); y=160+540*i/480. Per-object existing partialEraseGeometry unchanged.",
+    "history": "Before each measured case, perform2 stable160Move erases with prior erasePoint(i,+5),erasePoint(i,-5). Stable wait only before measured longerase, never between primaryUp and firsttouch.",
+    "final_move": "Up repeats i480; record actualinput/Operation/receipt identity."
+  },
+  "cases": [
+    {
+      "id": "immediate-pan",
+      "successor": "twofingerpan",
+      "start": "firsttouchDown planned1ms afterUpreturn, pair secondDown in same dispatch task, firstnonzeroMove planned next16.7ms without awaitstable",
+      "navigation": "120Move samples/2s at60Hz; both fingers translate dx=120*i/120,dy=-60*i/120 from(635.5,505),(795.5,505)"
+    },
+    {
+      "id": "immediate-pinch",
+      "successor": "twofingerpinch",
+      "start": "same immediate dispatch policy",
+      "navigation": "120Move/2s; center715.5,505; halfseparation80*f(i), f piecewise linear 1->1.25->.75->1 at i0/40/80/120"
+    },
+    {
+      "id": "settled-pan",
+      "successor": "samepan",
+      "start": "await stable afterUp, then exact same inputroute"
+    },
+    {
+      "id": "settled-pinch",
+      "successor": "samepinch",
+      "start": "await stable afterUp, then exact same inputroute"
+    }
+  ],
+  "freshness": "Fresh Runtime/document restore for each case; ordinary caseorder immediatepan,immediatepinch,settledpan,settledpinch. No selectedobjectdrag. Complete pending and close each Runtime.",
+  "diagnosis": "No replay of original baseline attribution. Use exact r1 evidence, real GPU RED and up to2 focused diagnostic starts to inspect candidate rejection guards and settled pinch causal transition; diagnostics separate from ordinary and may not be pooled.",
+  "ordinary_windows": [
+    "IEN2-W-B1",
+    "IEN2-W-C1",
+    "IEN2-W-C2",
+    "IEN2-W-B2"
+  ],
+  "correctness_windows": [
+    "IEN2-P-C"
+  ],
+  "correctness": "Fresh C contexts atDPR2 and4, immediate-pan/pinch. Same five full-frame readbacks per case as r1: before-primary,moving12,moving60,terminal,redo =20. Root SDK smoke, snapshot/operations/UndoRedo. Preserved B20 buffers reused; independent terminal CPU references run offline for B and C. Native actual GPU controlled completion establishes commit crossing and newest suffix with real kernel; no heldWorker in ordinary.",
+  "native": "Focused actual RuntimeComposition/Render tests; deterministic baseline RED thenGREEN. Retain previous42required tests plus current relevant pendingcamera/postcommit/strictdisplay/nonatomicprogress tests; no unrelatedwholeCTest or dense7200Filled triangulation stress.",
+  "limits": {
+    "focused_diagnostic_starts": 2,
+    "per_diagnostic_seconds": 180,
+    "ordinary_starts": 4,
+    "correctness_starts": 1,
+    "harness_environment_corrective_starts": 1,
+    "per_ordinary_correctness_corrective_seconds": 360,
+    "aggregate_browser_seconds": 2700,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "freeze_rule": "Focused diagnostics and native debugging before final source/SDK/driver freeze; no intermediate stop for ACK. Freeze candidate before ordinary B1. No production changes after freeze, no silent restarted matrix. One corrective start only for proven harness/environment error; performance failures return UNMET with all rows. Can run remaining planned correctness even if performance fails, provided resource limits allow, to preserve useful partial work.",
+  "resource_discipline": "Serial GPU/native/browser rows; no heavy build/profiler during browser timing. B exact4346 normalSDK; C matching fresh normalSDK using same memory caps. Buildoutputs excluded from rawartifact cap but source/binary/SDK hashes bound.",
+  "preview": "New unused port>=4348, normal SDK diagnostics OFF after matching real root SDK smoke within already planned candidate diagnostic/ordinary/correctness window. Send control URL/PID/source+SDK hashes and current qualification immediately; continue without ACK. Preserve4342..4347 and do not read/reload/control user IAB/document.",
+  "storage": "Before first browser start validate package storage-contract plus exact driver/oracle inputs and prove bounded persistence offline. Losslessly compress one buffer at a time while receiving chunks, record raw+compressed length/hash and verify decompression. No accumulating uncompressed full frames for a window. Oracle outputs also serial/compressed; preserve every failure and snapshot. New limits prospective only, do not erase r1 guard."
+}

@@ -1,0 +1,161 @@
+{
+  "status": "CHECKPOINT_NOT_ACCEPTED",
+  "created_at": "2026-11-18T09:33:15.384578+00:00",
+  "authorization": "User requested commit and push of current changes; earlier package prohibition on commit/push is superseded only for this checkpoint.",
+  "branch": "codex/g5-immediate-erase-navigation-r2",
+  "parent_revision": "0ca177178aff2fb28f55a71802e74517e886a627",
+  "sources": [
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "bytes": 30040,
+      "sha256": "f5ace3c35ab6dd8fcc58f009b4d048d3df58f84d9dc57ee43b2433012962d00d"
+    },
+    {
+      "path": "runtime/composition/tests/cpu_pending_runtime_test.cpp",
+      "bytes": 57616,
+      "sha256": "64c28be99d802982321dff9f41b3dd2bce03c3c43dbcadc0356adcd777e78820"
+    },
+    {
+      "path": "runtime/composition/tests/immediate_erase_gpu_composition_test.cpp",
+      "bytes": 9835,
+      "sha256": "1bee13a337f54488cb775cd6361f2b59c3d6bd170589143db1c5174852ed513d"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "bytes": 67059,
+      "sha256": "068621ef52e8955a2848a09654249e02d7279bb4af962dcce4210cb1615818d3"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "bytes": 330782,
+      "sha256": "fb08a8f8a34e9263df1a171bbbb72a03dfa28857843ee9d7ea2a52fe3fcaf93a"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_partial_erase.cpp",
+      "bytes": 8045,
+      "sha256": "cb5aaf8ae588102dc35f05237e26adac3446630bf4926571b20db4c23bb4d3b4"
+    },
+    {
+      "path": "runtime/interaction/src/cpu_pending_erase.cpp",
+      "bytes": 41755,
+      "sha256": "dd38706b33c074ab04e0b52db7864c9d22bc7bfecdb6d54ad45f1e4582414e61"
+    },
+    {
+      "path": "runtime/interaction/src/cpu_pending_erase_state.hpp",
+      "bytes": 5227,
+      "sha256": "a76ad16df53d4b0359ce0cb3db40e3d27103f3c562f0fea7a09be1383bc98012"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "bytes": 72020,
+      "sha256": "943355d0f0f063352f22e8f69d7c83e829f448d0f76f871dd14d8f337b0f4eec"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "bytes": 12751,
+      "sha256": "381f25b9a046bf445938d0fb6c92a0c658c0a199bb1f117c807557212030e3f4"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "bytes": 148440,
+      "sha256": "fa6fcef1f481630b6c5b1a40fdd5642afcd1351607232b6c00bc59a716d8913e"
+    },
+    {
+      "path": "runtime/render/tests/canonical_prepared_body_test.cpp",
+      "bytes": 43694,
+      "sha256": "833a493baf4e0b62799befd3f2fd6d27cd40a9bfcecae89fabf6fd9a8b97abd7"
+    },
+    {
+      "path": "runtime/render/tests/immediate_erase_navigation_test.cpp",
+      "bytes": 7829,
+      "sha256": "3c95bced31f6da9888192e5f0f3e9a83fb9251cf70716fc1baf13226aa046e4f"
+    }
+  ],
+  "verification": {
+    "build": {
+      "exit_code": 0,
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-immediate-erase-navigation-r2/build-native",
+        "--target",
+        "axiom_immediate_erase_gpu_tests",
+        "axiom_immediate_erase_navigation_tests",
+        "axiom_cpu_pending_runtime_tests",
+        "--parallel",
+        "4"
+      ]
+    },
+    "boundaries": {
+      "exit_code": 0,
+      "contract_files": 122,
+      "command": [
+        "python3",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ]
+    },
+    "diff_check": {
+      "exit_code": 0,
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ]
+    },
+    "ctest": {
+      "exit_code": 8,
+      "passed": 3,
+      "failed": 1,
+      "passed_tests": [
+        "G5CpuPendingRuntime-ienreuse",
+        "G5ImmediateEraseGPU-pan",
+        "G5ImmediateEraseGPU-pinch"
+      ],
+      "failed_tests": [
+        {
+          "name": "G5ImmediateEraseNavigation",
+          "assertion": "OLD_PREFIX_QUALIFIED_NEW_SUFFIX",
+          "disposition": "Unresolved: assertion failed after stable-grid final-suffix preparation was introduced. This checkpoint does not assert a correctness pass or a confirmed root cause."
+        }
+      ],
+      "command": [
+        "ctest",
+        "--test-dir",
+        "out/G5-immediate-erase-navigation-r2/build-native",
+        "--output-on-failure",
+        "--parallel",
+        "1",
+        "--timeout",
+        "120",
+        "-R",
+        "G5(ImmediateErase|CpuPendingRuntime-ienreuse)"
+      ],
+      "log": {
+        "path": ".aegis/results/G5-immediate-erase-navigation-r2/commit-checkpoint/ctest.log",
+        "bytes": 4598,
+        "sha256": "65ff74c9f154dd29f4264fae0c586c79b5e1fd56b7609ab8cd84fa97db11da81"
+      }
+    }
+  },
+  "browser_sampling": {
+    "new_starts_for_checkpoint": 0,
+    "prior_diagnostic_starts": 1,
+    "prior_charged_seconds": 58,
+    "ledger": {
+      "path": ".aegis/results/G5-immediate-erase-navigation-r2/sampling-ledger.json",
+      "bytes": 1250,
+      "sha256": "bf2dc7a9de497515dd6d01175cf3bccb41beba2d0e325da18bda03feae9a6d24"
+    }
+  },
+  "remaining": [
+    "Resolve the failing new-suffix assertion and strengthen latest-suffix/current-camera pixel proof.",
+    "Prove effective committed masks for exact no-hit objects without weakening identity checks.",
+    "Fix nonempty exposure forward progress and diagnose settled-pinch submission gaps.",
+    "Complete storage guards and required native/browser/oracle verification under frozen limits.",
+    "Build and smoke a matching normal SDK before publishing a new candidate demo."
+  ],
+  "preservation": "No changes to old demos, user documents, r1 results, frozen evidence, dependency locks or Render budget. Generated builds and browser raw outputs remain local under ignored out/.",
+  "acceptance": "No READY_FOR_CONTROL_REVIEW, Gate, P34 or performance PASS is issued by this checkpoint."
+}

@@ -1,0 +1,45 @@
+{
+  "status": "FROZEN_ONLY_FOUR_MISSING_PIXEL_ROWS",
+  "original_driver": {
+    "verification/runners/g5/pending_navigation_progress_observer.mjs": "7f998902aa8d4d23e34a891abefa4b70eba253fc3d19b3dac0f81c5c9d5ab68d",
+    "verification/runners/g5/pending_navigation_progress_web.mjs": "dfd974866e0eaa1b09ee4ce97e2a6d9f8db6f7c81ef130327794d47934941405",
+    "verification/runners/g5/pending_navigation_progress_consumer.mjs": "9ee42cfdd869f79368239a88b76490721fcdb1fc672a58581b289a0963065c66",
+    "verification/runners/g5/pending_navigation_progress_iab.mjs": "68ccd3de15dd0ea024d7e37ed43005750a5574ce568c29477e05f41e2f1452d9",
+    "verification/runners/g5/pending_navigation_progress_iab_server.mjs": "dc951ed43e86c36ab72c34c68e11bd75e53014e91e68a11b7b093738aa6a0557"
+  },
+  "samefixture": {
+    "path": "out/G5-pending-navigation-owner-progress-r1/small-fixture.json.axsnap",
+    "sha256": "95d10c7efd1ff64cae8ace863e96d134ea9cbc67ffd1156ca33118cf90d1d60b"
+  },
+  "sameinputs": "Originalparentconsumer unchangedinputs/Runtimefactory/Up+action/24erasemoves/whileDown8and16. Newpageonlyrunpixel=true rows; noordinarytimingmeasurementsorclaims.",
+  "rows": [
+    {
+      "lane": "baseline",
+      "action": "nextdraw"
+    },
+    {
+      "lane": "candidate",
+      "action": "zoom"
+    },
+    {
+      "lane": "candidate",
+      "action": "pan"
+    },
+    {
+      "lane": "candidate",
+      "action": "nextdraw"
+    }
+  ],
+  "reuse": "Baselinezoom/panpixel alreadydurableinparent8rows; no re-run. ParentChrome2+IABordinaryvalid; no re-run.",
+  "sameSDK": "Useexactparentinstalledbaseline/candidate42assets each, productionread-only; no build or contextpolicychange.",
+  "limits": {
+    "IAB_new_isolated_pages": 1,
+    "Chrome_new_starts": 0,
+    "wall_seconds": 180,
+    "retries": "Failedlaunch/rowcounts; noextraordinary/scale/longtail/idlecases. Parentledger167s retained, newchargeseparateandlinked."
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": []
+  }
+}

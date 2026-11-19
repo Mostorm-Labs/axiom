@@ -1,0 +1,127 @@
+{
+  "schema": "axiom-scoped-defect-classification-v1",
+  "task": "G5-immediate-erase-navigation-r2",
+  "at": "2026-11-18T22:04:58.077556+08:00",
+  "producer_result": {
+    "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/result.json",
+    "bytes": 8723,
+    "sha256": "88f635936696742820a787f3b349a201df49852ee6209297000092f499f5205b"
+  },
+  "overall": "BLOCKED_FROZEN_REQUIREMENT_FAILURE",
+  "blocking": [
+    {
+      "id": "IEN2-P1-INITIAL-PINCH-FEEDBACK",
+      "classification": "IMPLEMENTATION_PERFORMANCE_DEFECT",
+      "closureClassification": "FROZEN_REQUIREMENT_FAILURE",
+      "blocking": true,
+      "obligation": "IEN4",
+      "failure_mode": "Second ordinary C immediate-pinch first qualified content and maximum gap103.133333285652ms exceed100ms each-C-primary-repeat requirement.",
+      "impact": "Real workflow feedback improved greatly, but declared worst-case responsiveness is not yet reliably met; no rounding, median-of-max or environment waiver.",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/terminal-ordinary-audit.json",
+          "bytes": 15703,
+          "sha256": "0d5075e3156b750ca12bd0b4c6ae322eb7f7c86aff1cc64e9a06df6f02756bff"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/out/G5-immediate-erase-navigation-r2/web/IEN2-W-C2/DPR2/raw.json",
+          "bytes": 4665160,
+          "sha256": "bb31719a9821c1e32e8d418193d68a43da2ec4ef3236e54bd66b27a6dec3ecb8"
+        }
+      ],
+      "localization": {
+        "firstMoveDispatchLatenessMs": 67.13333328565204,
+        "firstContentAfterFirstMoveDispatchMs": 36.0,
+        "originAdjacentSdkRAFDurationMs": 40.40000009536743,
+        "ordinary_attribution_limit": "Observation establishes timeline, not exact CPUfunction owner or exclusive cause. CDP delivery/IPC/scheduling is included."
+      },
+      "related_observation": {
+        "actual480MoveDurationMs": 10805.799999952316,
+        "intended480MoveDurationMs": 8000,
+        "actualNavigationDurationFromPlannedDownMs": 2869.2000000476837,
+        "intendedNavigationDurationMs": 2000,
+        "inputLatenessP95Ms": 852.9666666189805,
+        "CDPTouchDispatchAwaitP95Ms": 56.69999980926514,
+        "scope": "A CDP roundtrip includes delivery/handler/scheduling/IPC; neither CPU-only time nor physical touch latency. Unknown share requires later bounded attribution; do not dismiss as randomnoise or mask threshold."
+      },
+      "repair_owner": "Existing Composition/Interaction frame and pending-feedback work; actual C2 delivery/backlog attribution before choosing minimal repair. No new worker/renderer/canonical owner.",
+      "next_step": "Use retained raw and fixed finalcandidate as startingpoint; identify work on first owner opportunity and accumulated inputlateness. Reduce measured synchronous/non-yielding or repeatpreparation costs while preserving latestsuffix, pixels and fullcoverage. Freeze bounded followup before any new source change/browser sampling; do not rerun until lucky or lower100ms."
+    }
+  ],
+  "other_findings": [
+    {
+      "id": "IEN2-F1-B-DPR4-REFERENCE",
+      "classification": "BASELINE_CORRECTNESS_FINDING",
+      "closureClassification": "NON_BLOCKING_FINDING_FOR_CANDIDATE_QUALIFICATION",
+      "blocking_candidate": false,
+      "failure_mode": "Retained old B DPR4pan terminal readback contains2764 nonedge pixels/8292 channels darker than originalCPUreference, maxdelta242, bbox1078,956..1107,1197.",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/terminal-pixel-audit.json",
+          "bytes": 21923,
+          "sha256": "f4de0f0376b03809c9a6b4d6a4b5673b593c9f766a707d7fa070047cd7b42a3e"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/terminal-moving-and-basis-audit.json",
+          "bytes": 3669,
+          "sha256": "a16d95c3d05f6fcccd706fde130d96d90e02b2ea661c463529d3b46f4b45f4a7"
+        }
+      ],
+      "not_waived": true,
+      "candidate_comparison": "B and C terminal Snapshot bytes and camera equal; C4 same CPUreference exact outsideAA, remaining B3 pass. Ordinary performance isDPR2. This is an actual retained baseline/oracle discrepancy, not evidence of a new C regression.",
+      "unique_scope": "Track old target/cache/readback qualification separately. Current evidence cannot identify why B produced residual darkpixels. Do not demand C reproduce erroneous Bpixels or treat directB/C mismatch as canonical damage.",
+      "severity_disposition": "Not an additional candidate correctness blocker because independent uncached canonicalreference and actual C readbacks close the candidate proof. The old sample remains a failed baseline validation and accepted4346 is not upgraded by this package."
+    },
+    {
+      "id": "IEN2-F2-D1-STAGING",
+      "classification": "EVIDENCE_RETENTION_DEFECT",
+      "closureClassification": "NON_BLOCKING_FINDING",
+      "blocking": false,
+      "failure_mode": "Three D1 paths reused forlater diagnostic/driver; D1old exactbyte staging cannotallbe resolved.",
+      "impact": "Limits reproducibility of initial attribution; cannot certify D1exactSDK reexecution.",
+      "existing_independent_coverage": "Actual GPUComposition controlledRED/GREEN, fullsuffix/commit/nohit/exposure/settled native, finalsourceSDK2548exactfreeze and ordinary/Ccorrectness retained. These qualify actualcandidate without usingD1as performancePASS.",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-immediate-erase-navigation-r2/.aegis/results/G5-immediate-erase-navigation-r2/diagnostic-staging-erratum.json",
+          "bytes": 1027,
+          "sha256": "9882ef7ea79a9dffb12d7c1ed4a7c3325f1f9ec2993bb66ae2980c39aeac5ff9"
+        },
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/terminal-identity-audit.json",
+          "bytes": 171314,
+          "sha256": "c6e32c3d8bf4efe9f08af19553b8b2f3a3141215bfaf493d1045ad4b4bf3f9f4"
+        }
+      ],
+      "disposition": "Preserveerratum and oldraw; task-local immutable diagnostic directories in laterpackages; no rebuilding to overwrite D1."
+    },
+    {
+      "id": "IEN2-F3-NATIVE-SUMMARY-GUARDS",
+      "classification": "EVIDENCE_METADATA_DEFECT",
+      "closureClassification": "NON_BLOCKING_FINDING",
+      "blocking": false,
+      "failure_mode": "native-regressions.json/-complete retain prefinal per-row guard metadata even though final59 were separately rerun.",
+      "existing_independent_coverage": "59 exact final native-terminal/*.worker.json reports, all exit0 and cleanup, in finalartifactmanifest; control resolved each. Final executable/source hashes and rawlogs also bound.",
+      "evidence": [
+        {
+          "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-immediate-erase-navigation-control-r2/terminal-lifecycle-and-preservation-audit.json",
+          "bytes": 46970,
+          "sha256": "53f4f5543eaeecba8881f948f2d6a1764c891ba00f8bb7fb52e5e088aaa9328b"
+        }
+      ],
+      "disposition": "Use controlfinalraw map; retain stale producer summaries unchanged, do not claim their perrow timing is the finalrun."
+    }
+  ],
+  "valid_partial_work": [
+    "Actual GPU/real twofinger contribution identity survives tentativecancel; local fullsuffix target pixels qualified.",
+    "Frozenlocalmask conversion reuse, charged retainedplane and bounded scratch, real exact no-hit equivalence, nonemptyexposure progress retained.",
+    "Settledpinch queryallowance starvation repaired without increasingbudgets; both ordinary settledrelative checks pass.",
+    "Candidate4terminal CPUcanonical references,20Creadbacks,8movinginterior rows,8UndoRedo semantic pairs and59finalnative qualify scopedcandidate safety.",
+    "Cprimary validchangedcamera submissions118–119 duringgesture, firstgap87–103ms compared withBzero during~2.1s input."
+  ],
+  "routing": {
+    "current_executor": "STOP, preserve finalsourceSDK/4348/allresults and failedr1/4346/4347; no furtherwindowsunderR2",
+    "P36_candidate": "OriginalIEN4 responsiveness continuation after narrowrepackage; investigate initial/burst input scheduling and synchronous work.",
+    "baseline": "Separate retainedB4 correctness/qualification investigation, no automaticCregression assignment.",
+    "no_new_automatic_work": "Review creates no extra samples, tests, commits, pushes, tags or deployment permission."
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "fresh_native": {
+    "count": 33,
+    "pass": 33,
+    "fail": 0,
+    "log": {
+      "path": "out/G5-postcommit-navigation-feedback-r1/final-native-tests.log",
+      "sha256": "05b72dc12e162333a1154c23b85a4dd62e42a49cf8737765673956cfe5e54f29"
+    },
+    "selection": "Exactfrozenpublication31names+2actualpostcommitclock/fullframeguards",
+    "no_fullsuite": true
+  },
+  "actual_RED": {
+    "path": "out/G5-postcommit-navigation-feedback-r1/clock-red-tests.log",
+    "sha256": "28d7a4482b22ccb81fd57a9e06f5caa33e34e388747487b27a14eb93891c8e0c"
+  },
+  "GREEN": {
+    "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/red-green.json",
+    "sha256": "26932d034efef242396d8ff886fe8ef53462456eef74497eebaa9080d036d002"
+  },
+  "native_pixel_guard": {
+    "log": {
+      "path": "out/G5-postcommit-navigation-feedback-r1/pixel-guard-tests4.log",
+      "sha256": "1c71ee9b35418ca070ffd866b517f21945b6cebbd924d8fcee6e0f25acaa82b7"
+    },
+    "fullframe": [
+      "zoom3channelmax1insidefixedsource-only1pxAA",
+      "panexact"
+    ],
+    "guardcases": [
+      "actualatomiccommit",
+      "retrykeepslastsuccessfulpixels",
+      "delayeddisplayrosterretaineduntilqualified",
+      "wrongsurfacefeedbackreject",
+      "matchingreceiptretire",
+      "canonicalobjectstoreunchanged",
+      "freshinput99/100",
+      "exactno-opclockunchanged"
+    ],
+    "note": "Existing31includescontext/sourcecancel/Scene/pending/History/faultguardcases; no weakenedchecks."
+  },
+  "Node": {
+    "passed": 14,
+    "failed": 0,
+    "log": {
+      "path": "out/G5-postcommit-navigation-feedback-r1/final-Node-tests.log",
+      "sha256": "d26263073f09a20b3445847f71855e082d0d14729481d43e5c5654f6605aa2e8"
+    }
+  },
+  "storage_predicate_offline_before_sampling": {
+    "passed": 7,
+    "log": {
+      "path": "out/G5-postcommit-navigation-feedback-r1/driver-preflight-tests.log",
+      "sha256": "c9f25e65e76708f31022e99e75d3300a3fd2c8af78e3154db9e486f55b390861"
+    }
+  },
+  "boundaries": {
+    "passed": 120,
+    "log": {
+      "path": "out/G5-postcommit-navigation-feedback-r1/final-boundaries.log",
+      "sha256": "5834ece4b06ac59757700963f0db9d8f1a1680f0f8987f4df7e57a40dc4d242d"
+    }
+  },
+  "retained_harness_failures": [
+    "diagnostic-baseline-build.log localSemanticGenerationvariable shadowsmethod; compilefailureonly, corrected beforeactualsample.",
+    "pixel-guard-build.log wrongCanonicalWorkfieldandfloatnarrowing; subsequentpixel-guard-tests.log usedstaleexecutable andisNOTproof; correctedbuild2/3/4pairedactualtests.",
+    "pixel-guard-tests2/3 independentDirectzoom3channelsmax1; source-onlyAAedgequalified in4; sameanchorfloatno-opnotexactcontrollercamera maychange byrounding so exactzeroanchorused."
+  ],
+  "proof_policy": "No failedorinvalidharnesslog presentedasmechanismRED. CorrectactualRED is realatomiccommit followedexistinginjectednavigationclock+101ms logicalinvariant."
+}

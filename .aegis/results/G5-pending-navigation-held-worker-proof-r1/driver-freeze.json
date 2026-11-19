@@ -1,0 +1,22 @@
+{
+  "request": {
+    "path": "out/G5-pending-navigation-held-worker-proof-r1/requests/PNHW-IAB.json",
+    "sha256": "990656633a78b495f59a14f278f8feadbfbef97c09c07b3912ff0d086362bbdd"
+  },
+  "tools": {
+    "verification/runners/g5/pending_navigation_held_worker_consumer.mjs": "a84107b21ca2a52e4802932ba9e40e510a65d3cf437a5804f6b1a6c02888854c",
+    "verification/runners/g5/pending_navigation_held_worker_gate.mjs": "b34e4e83b6b9e41aed78b3df0e0968ea33b1c50a13340623de283f6c18125f65",
+    "verification/runners/g5/pending_navigation_held_worker_page.mjs": "4dbd5c440f286a1aa44c37a062973aad592767f6a6df1f74624092667ce2825b",
+    "verification/runners/g5/pending_navigation_held_worker_server.mjs": "598da87f1195bb5905119962d813d418364a93a50b24002b16a0081b119b32ae"
+  },
+  "test": {
+    "path": "verification/tests/g5_pending_navigation_held_worker.test.mjs",
+    "sha256": "cd0bf9d54b20e3bd6fc9823760e04c5a2e6198b3aa7c3c8e55f9b25c4882c112"
+  },
+  "reusedIOstore": {
+    "path": "verification/runners/g5/pending_navigation_evidence_io_store.mjs",
+    "sha256": "7fb0e6d46ec6478089fd604eb9886ff1d2afc9a39fc73b7251599f7412518059"
+  },
+  "gate_tests": "2pass",
+  "retryflag_note": "SDKsetsretrytrueforanypendingintent, cannotinfertransientcompletedfromretryflag. Observeactualdefaulttargetcontentwrites+quiet underheldWorker; noextra frame/privatebusinesscall."
+}

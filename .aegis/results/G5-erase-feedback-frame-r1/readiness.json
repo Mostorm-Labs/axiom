@@ -1,0 +1,48 @@
+{
+  "status": "BLOCKED",
+  "classification": "PERFORMANCE_TARGET_UNMET",
+  "blockerObligation": "EFF4",
+  "remainingRequiredExecutableItems": [],
+  "frozenChecksFailed": [
+    {
+      "id": "other_nonregression",
+      "case": "settled-pan",
+      "metric": "CDP",
+      "B": 19.299999952316284,
+      "C": 32.60000014305115,
+      "limit": 24.299999952316284,
+      "met": false
+    },
+    {
+      "id": "other_nonregression",
+      "case": "settled-pan",
+      "metric": "navigationDuration",
+      "B": 2048.699999809265,
+      "C": 2750.0,
+      "limit": 2151.1349997997286,
+      "met": false
+    },
+    {
+      "id": "other_nonregression",
+      "case": "settled-pan",
+      "metric": "convergence",
+      "B": 452.0000001192093,
+      "C": 2827.0000001192093,
+      "limit": 519.8000001370906,
+      "met": false
+    },
+    {
+      "id": "settled_nonregression",
+      "case": "settled-pan",
+      "metric": "dispatch",
+      "B": 19.299999952316284,
+      "C": 32.60000014305115,
+      "limit": 24.299999952316284,
+      "met": false
+    }
+  ],
+  "correctnessWithinFrozenFixture": "EFF3 native60,Web20 target readbacks,4 original CPU references nonAAzero,4UndoRedo pairs and8movingrows qualified. Unconfirmed numeric risk disclosed separately, not a new blocker.",
+  "noResampling": true,
+  "noSourceChangeAfterOrdinaryFreeze": true,
+  "noGateOrP34Pass": true
+}

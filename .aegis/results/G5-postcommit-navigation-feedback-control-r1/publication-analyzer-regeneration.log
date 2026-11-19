@@ -1,0 +1,55 @@
+Source: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/postcommit_navigation_analyze.py
+Redirected RES: /Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/out/G5-postcommit-navigation-publication-20261114/regenerated
+{
+  "ordinary": 8,
+  "pixels": 4,
+  "medians": [
+    {
+      "case": "zoom",
+      "lanes": {
+        "baseline": {
+          "first_GL_proxy_ms": 58.30000001192093,
+          "up_to_Operation_callback_ms": 42.80000001192093,
+          "up_to_qualified_onFrame_callback_ms": 172.5,
+          "post_up_owner_opportunities": 11.0,
+          "max_owner_call_ms": 8.5,
+          "max_RAF_callback_ms": 9.150000035762787
+        },
+        "candidate": {
+          "first_GL_proxy_ms": 63.90000003576279,
+          "up_to_Operation_callback_ms": 48.749999940395355,
+          "up_to_qualified_onFrame_callback_ms": 128.0,
+          "post_up_owner_opportunities": 8.0,
+          "max_owner_call_ms": 8.600000023841858,
+          "max_RAF_callback_ms": 9.25
+        }
+      },
+      "qualification_callback_reduction_ms": 44.5
+    },
+    {
+      "case": "pan",
+      "lanes": {
+        "baseline": {
+          "first_GL_proxy_ms": 38.80000001192093,
+          "up_to_Operation_callback_ms": 39.5,
+          "up_to_qualified_onFrame_callback_ms": 162.50000005960464,
+          "post_up_owner_opportunities": 10.5,
+          "max_owner_call_ms": 11.550000011920929,
+          "max_RAF_callback_ms": 12.149999976158142
+        },
+        "candidate": {
+          "first_GL_proxy_ms": 36.949999928474426,
+          "up_to_Operation_callback_ms": 37.69999998807907,
+          "up_to_qualified_onFrame_callback_ms": 123.30000001192093,
+          "post_up_owner_opportunities": 8.0,
+          "max_owner_call_ms": 14.5,
+          "max_RAF_callback_ms": 15.25
+        }
+      },
+      "qualification_callback_reduction_ms": 39.200000047683716
+    }
+  ],
+  "final_exact": true,
+  "sampled_erase_interior_failures": 0
+}
+main completed; seconds: 2.9300525

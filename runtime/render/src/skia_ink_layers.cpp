@@ -1,3 +1,4 @@
+#include "mask_residency_policy.hpp"
 #include "transient_display_state.hpp"
 #include "canvas/foundation/internal/g5_observation.hpp"
 namespace g5 = canvas::foundation::internal::g5;
@@ -7,9 +8,16 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "skia_geometry_internal.hpp"
 #include "skia_erase_mask.hpp"
 #include <algorithm>
+#include <bit>
+#include "include/core/SkColorSpace.h"
 
 namespace canvas::render::internal {
-void SkiaInkLayers::clear()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
+void SkiaInkLayers::bindSurfaceBasis(const void*owner,std::uint64_t resource,std::uint64_t surface,std::uint64_t view,std::uint64_t metrics){
+ const std::array<std::uint64_t,4> basis{resource,surface,view,metrics};
+ if(surfaceOwner_!=owner||surfaceBasis_!=basis){clear();surfaceOwner_=owner;surfaceBasis_=basis;}
+}
+void SkiaInkLayers::clearDeviceLayers()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
+void SkiaInkLayers::clear()noexcept{fullBodies_.clear();navigationBodies_.clear();navigationBudget_.reset();navigationWork_={};clearDeviceLayers();}
 std::size_t SkiaInkLayers::retireIdleHistoryPreparation()noexcept{
     if(drawDepth_)return 0;
     std::size_t retired=0;
@@ -33,12 +41,14 @@ bool SkiaInkLayers::reserve(std::size_t bytes,const Key& key,const RenderCacheOp
     if(bytes>limits.maxBytes||bytes>limits.maxEntryBytes)return false;
     for(;;){
         const bool newKey=!tiles_.contains(key);
-        const bool room=bytes_<=limits.maxBytes-bytes&&(!newKey||tiles_.size()<limits.maxEntries);
-        auto token=room?budget->reserve(resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
+        const auto count=std::min(std::size_t(1024),limits.maxEntries);
+        const bool room=navigationWork_.bytes<=limits.maxBytes-bytes&&bytes_<=limits.maxBytes-bytes-navigationWork_.bytes&&
+            (!newKey||tiles_.size()+navigationWork_.entries<count);
+        auto token=room?reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
         if(token){lease=resources::ResourceLease(budget,*token);return true;}
         auto victim=tiles_.end();for(auto it=tiles_.begin();it!=tiles_.end();++it)
             if((it->first<key||key<it->first)&&(victim==tiles_.end()||it->second.used<victim->second.used))victim=it;
-        if(victim==tiles_.end())return false;
+        if(victim==tiles_.end()){if(evictNavigationBody())continue;return false;}
         bytes_-=victim->second.bytes;tiles_.erase(victim);
     }
 }
@@ -81,7 +91,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     auto& source=found->second;
     if(histories)histories_=std::move(histories);
     if(!histories_)histories_=std::make_shared<EraseMaskPathCache>();
-    histories_->setRetentionPool(pool);const auto beforeHistory=histories_->work().history;
+    histories_->setRetentionPool(pool);histories_->setDrawingResidency(maskResidencyPolicy(limits).drawing);const auto beforeHistory=histories_->work().history;
     MaskHistoryAdmission admission=MaskHistoryAdmission::kReady;
     const auto history=histories_->history(entry.record.eraseMasks,budget,
         std::min(limits.maxEntryBytes,limits.maxBytes/4),source.history,&admission);
@@ -103,7 +113,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         count+=std::holds_alternative<semantic::SweptCircleMask>(m.geometry)?std::get<semantic::SweptCircleMask>(m.geometry).segments.size():1;
     const auto metadataBytes=sizeof(Source)+256+count*sizeof(MaskPrimitive)+sourceMetadataBytes(entry);
     if(metadataBytes>limits.maxEntryBytes)return false;
-    auto metadata=budget->reserve(resources::ResourceClass::kRecorded,metadataBytes,true);if(!metadata)return pending();
+    auto metadata=reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRecorded,metadataBytes,true);if(!metadata)return pending();
     resources::ResourceLease metadataLease(budget,*metadata);
     std::vector<MaskPrimitive> masks;masks.reserve(count);
     for(const auto& m:entry.presentationEraseMasks){
@@ -138,6 +148,11 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
     auto demand=destination.getDeviceClipBounds();if(!demand.intersect(viewport))return true;
     const CompactDeviceGrid grid=originalGrid?*originalGrid:CompactDeviceGrid{viewport.left(),viewport.top(),viewport.right(),viewport.bottom()};
     const auto& stroke=compact->content.get().stroke;
+    sk_sp<SkImage> sharedWhite;SkMatrix whiteBasis;
+    if(allowance&&limits.gpuCoverageCandidate&&destination.recordingContext()){
+        const auto prepared=prepareNavigationBody(entry,source.geometry,matrix,destination,limits,budget,targets,work,*allowance,sharedWhite,whiteBasis);
+        if(prepared==BodyPreparation::kPending)return pending();
+    }
     for(int y=grid.top;y<grid.bottom;y+=tileSize)for(int x=grid.left;x<grid.right;x+=tileSize){
         auto crop=SkIRect::MakeLTRB(x,y,std::min(x+tileSize,grid.right),std::min(y+tileSize,grid.bottom));
         if(!SkIRect::Intersects(crop,demand))continue;
@@ -155,7 +170,11 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
             // image retaining a full-frame scratch allocation.
             const CompactDeviceGrid localGrid{grid.left-x,grid.top-y,grid.right-x,grid.bottom-y};
             CompactRasterWork raster;
-            if(allowance){
+            if(sharedWhite){
+                compositeCompactCoverageToSkCanvas(*canvas,*sharedWhite,stroke.config,stroke.seed,
+                    int(std::round(matrix.getTranslateX()-whiteBasis.getTranslateX()))-x,
+                    int(std::round(matrix.getTranslateY()-whiteBasis.getTranslateY()))-y);
+            }else if(allowance){
                 // Canonical preparation consumes the same ready body through
                 // the existing cooperative raster leaf; its prepared-use and
                 // 32-primitive progress remain visible to the owner contract.
@@ -165,7 +184,7 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
                 candidate.bytes=bytes+metadataBytes;candidate.used=++tick_;
                 tile=tiles_.emplace(key,std::move(candidate)).first;bytes_+=bytes+metadataBytes;
             }else drawCompactStrokeToSkCanvas(*canvas,stroke.config,stroke.knots,stroke.seed,&raster,nullptr,&localGrid,limits.gpuCoverageCandidate,&targets,nullptr,source.geometry.get(),true);
-            if(!allowance){
+            if(!allowance||sharedWhite){
                 if(raster.resourcePending)return pending();
                 work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;work.coverageTargetAllocations+=raster.allocatedTiles;work.coverageTargetReuses+=raster.targetReuses;
                 Image body{target->makeImageSnapshot(),std::move(lease)};if(!body.pixels)return pending();
@@ -237,5 +256,167 @@ bool SkiaInkLayers::draw(SkCanvas& destination,SkSurface& scratch,const Referenc
         if(transientTileRefused())return pending();
     }
     work.inkLayerBytes=bytes_;return true;
+}
+}
+
+namespace canvas::render::internal {
+SkiaInkLayers::NavigationBodyKey SkiaInkLayers::navigationKey(const PreparedNavigationGeometry&body,const SkImageInfo&info,const void*context,const SkMatrix&matrix,SkIRect clip){
+ NavigationBodyKey key;key.body=body.identity();key.context=context;SkScalar values[9];matrix.get9(values);
+ for(unsigned i=0;i<9;++i)key.matrix[i]=std::bit_cast<std::uint32_t>(values[i]==0?0.F:values[i]);
+ key.crop={info.width(),info.height(),clip.left(),clip.top(),clip.right(),clip.bottom()};key.colorType=int(info.colorType());key.alphaType=int(info.alphaType());key.colorSpace=info.colorSpace()?info.colorSpace()->hash():0;return key;
+}
+SkiaInkLayers::NavigationBodyKey SkiaInkLayers::navigationKey(const PreparedNavigationGeometry&body,SkCanvas&canvas){
+ return navigationKey(body,canvas.imageInfo(),canvas.recordingContext(),canvas.getTotalMatrix(),canvas.getDeviceClipBounds());
+}
+void SkiaInkLayers::bindNavigationBudget(const std::shared_ptr<resources::ResourceBudgetManager>&budget){
+ if(navigationBudget_.lock()==budget)return;navigationBodies_.clear();fullBodies_.clear();navigationWork_={};navigationBudget_=budget;
+}
+bool SkiaInkLayers::evictNavigationBody(){
+ auto a=navigationBodies_.end();for(auto it=navigationBodies_.begin();it!=navigationBodies_.end();++it)if(a==navigationBodies_.end()||it->second.used<a->second.used)a=it;
+ auto b=fullBodies_.end();for(auto it=fullBodies_.begin();it!=fullBodies_.end();++it)if(it->second.pixels&&(b==fullBodies_.end()||it->second.used<b->second.used))b=it;
+ if(a==navigationBodies_.end()&&b==fullBodies_.end())return false;
+ if(b==fullBodies_.end()||(a!=navigationBodies_.end()&&a->second.used<b->second.used)){navigationWork_.bytes-=a->second.bytes;navigationBodies_.erase(a);}
+ else {navigationWork_.bytes-=b->second.bytes;fullBodies_.erase(b);}
+ ++navigationWork_.evictions;navigationWork_.entries=navigationBodies_.size()+fullBodies_.size();return true;
+}
+sk_sp<SkImage> SkiaInkLayers::navigationBody(const std::shared_ptr<const PreparedNavigationGeometry>&body,SkCanvas&canvas,
+ const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&budget){
+ if(!body||!body->ready()||!body->isContour()||!budget)return {};
+ bindNavigationBudget(budget);
+ const auto key=navigationKey(*body,canvas);auto it=navigationBodies_.find(key);
+ if(it==navigationBodies_.end()){++navigationWork_.misses;return {};}
+ ++navigationWork_.hits;it->second.used=++tick_;(void)it->second.lease.markGpuUse();return it->second.pixels;
+}
+void SkiaInkLayers::rememberNavigationBody(const std::shared_ptr<const PreparedNavigationGeometry>&body,SkCanvas&canvas,sk_sp<SkImage>pixels,
+ const RenderCacheOptions&options,const std::shared_ptr<resources::ResourceBudgetManager>&budget){
+ if(!body||!pixels||!budget)return;const auto key=navigationKey(*body,canvas);
+ bindNavigationBudget(budget);
+ if(navigationBodies_.contains(key))return;const auto count=std::min(std::size_t(1024),options.maxEntries);if(!count)return;
+ const auto bytes=std::size_t(pixels->width())*pixels->height()*4+sizeof(NavigationBodyKey)+sizeof(NavigationBody)+256;
+ if(bytes>options.maxEntryBytes||bytes>options.maxBytes)return;
+ std::optional<std::uint64_t> token;
+ while(!token){
+  if(navigationBodies_.size()+fullBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-bytes)token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
+  if(token)break;if(!evictNavigationBody())return;
+ }
+ resources::ResourceLease lease(budget,*token);(void)lease.markGpuUse();navigationBodies_.emplace(key,NavigationBody{body,std::move(pixels),std::move(lease),++tick_,bytes});navigationWork_.bytes+=bytes;++navigationWork_.builds;navigationWork_.entries=navigationBodies_.size()+fullBodies_.size();
+}
+}
+
+namespace canvas::render::internal {
+SkiaInkLayers::BodyPreparation SkiaInkLayers::prepareNavigationBody(const ReferenceTraversalEntry&entry,
+ const std::shared_ptr<const PreparedNavigationGeometry>&body,const SkMatrix&matrix,SkCanvas&canvas,
+ const RenderCacheOptions&options,const std::shared_ptr<resources::ResourceBudgetManager>&budget,
+ CompactCoverageTargets&targets,RenderCacheWork&work,PreparationAllowance&allowance,sk_sp<SkImage>&out,SkMatrix&basis){
+ const auto*compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+ if(!compact||compact->content.get().stroke.config.algorithmVersion!=4||!body||!body->ready()||!body->isContour()||!budget||!canvas.recordingContext()||matrix.hasPerspective())return BodyPreparation::kUnavailable;
+ auto bounds=matrix.mapRect(body->support());bounds.outset(4,4);
+ if(!bounds.isFinite()||bounds.width()>16384||bounds.height()>16384||std::max({std::abs(bounds.left()),std::abs(bounds.top()),std::abs(bounds.right()),std::abs(bounds.bottom())})>1048576)return BodyPreparation::kUnavailable;
+ SkIRect crop;bounds.roundOut(&crop);if(crop.isEmpty())return BodyPreparation::kUnavailable;
+ bindNavigationBudget(budget);
+ // Keep the first full-support world representation for future cold exposure.
+ // A second exact-density raster does not need to reproduce already cached
+ // offscreen support. Its sampling witness explicitly retains only demanded
+ // pixels plus guard; it may never authorize pixels outside that range.
+ // Resume a crop that was actually admitted even if its optional full-body
+ // precursor was evicted during that admission. Match the full object->pixel
+ // matrix after restoring its integer origin, and require currentdemand+guard
+ // still inside the same charged crop. No new job or replacement key.
+ bool resumeCrop=false;
+ for(auto&[pendingKey,item]:fullBodies_)if(item.geometry==body&&item.raster&&!item.completeSupport&&pendingKey.context==canvas.recordingContext()){
+  const float dx=matrix.getTranslateX()-item.matrix.getTranslateX(),dy=matrix.getTranslateY()-item.matrix.getTranslateY();
+  auto restored=item.matrix;restored.postTranslate(dx,dy);
+  if(restored!=matrix||dx!=std::floor(dx)||dy!=std::floor(dy))continue;
+  auto demand=canvas.getDeviceClipBounds();demand.outset(4,4);if(!demand.intersect(crop))continue;
+  const auto range=SkIRect::MakeXYWH(int(dx),int(dy),pendingKey.crop[0],pendingKey.crop[1]);
+  if(!range.contains(demand))continue;
+  crop=range;resumeCrop=true;break;
+ }
+ const bool hasComplete=std::any_of(fullBodies_.begin(),fullBodies_.end(),[&](const auto&row){return row.second.geometry==body&&row.second.pixels&&row.second.completeSupport;});
+ // An already complete exact basis wins before considering a smaller crop.
+ // Otherwise the second equal copy would build a redundant cropped image.
+ SkMatrix fullMatrix;fullMatrix.setConcat(SkMatrix::Translate(float(-crop.left()),float(-crop.top())),matrix);
+ const auto fullInfo=SkImageInfo::MakeN32Premul(crop.width(),crop.height());
+ const auto fullKey=navigationKey(*body,fullInfo,canvas.recordingContext(),fullMatrix,SkIRect::MakeWH(crop.width(),crop.height()));
+ if(const auto exact=fullBodies_.find(fullKey);exact!=fullBodies_.end()&&exact->second.pixels){
+  exact->second.used=++tick_;(void)exact->second.lease.markGpuUse();out=exact->second.pixels;basis=exact->second.matrix;++navigationWork_.hits;return BodyPreparation::kReady;
+ }
+ bool completeSupport=!resumeCrop;
+ if(hasComplete&&!resumeCrop){
+  auto demand=canvas.getDeviceClipBounds();demand.outset(4,4);
+  auto selected=crop;if(!selected.intersect(demand))return BodyPreparation::kUnavailable;
+  completeSupport=selected==crop;crop=selected;
+ }
+ const auto bytes=std::size_t(crop.width())*crop.height()*4;
+ const auto metadata=sizeof(FullBody)+sizeof(NavigationBodyKey)+sizeof(CompactStrokeRasterJob)+512;
+ if(bytes*2+metadata>options.maxEntryBytes||bytes*2+metadata>options.maxBytes)return BodyPreparation::kUnavailable;
+ SkMatrix normalized;normalized.setConcat(SkMatrix::Translate(float(-crop.left()),float(-crop.top())),matrix);
+ // V4 white coverage is a scalar encoded in N32 channels, independent of
+ // the final target's color space. Match canonical CompactCoverageTargets
+ // and navigation scratch instead of inheriting Web provider sRGB metadata.
+ const auto info=SkImageInfo::MakeN32Premul(crop.width(),crop.height());
+ const auto key=navigationKey(*body,info,canvas.recordingContext(),normalized,SkIRect::MakeWH(crop.width(),crop.height()));
+ auto found=fullBodies_.find(key);
+ if(found==fullBodies_.end()){
+  const auto count=std::min(std::size_t(1024),options.maxEntries);if(!count)return BodyPreparation::kUnavailable;
+  const auto charge=bytes*2+metadata;std::optional<std::uint64_t>token;
+  while(!token){
+   if(fullBodies_.size()+navigationBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-charge)token=budget->reserve(resources::ResourceClass::kRaster,bytes+metadata,true);
+   if(token)break;if(!evictNavigationBody())return BodyPreparation::kPending;
+  }
+  resources::ResourceLease resident(budget,*token);
+  const auto temporary=budget->reserve(resources::ResourceClass::kScratch,bytes,true,0);if(!temporary)return BodyPreparation::kPending;
+  FullBody item;item.geometry=body;item.completeSupport=completeSupport;item.matrix=normalized;item.lease=std::move(resident);item.staging=resources::ResourceLease(budget,*temporary);item.bytes=charge;item.used=++tick_;
+  item.building=canvas.makeSurface(info);if(!item.building)return BodyPreparation::kPending;
+  auto*draw=item.building->getCanvas();draw->clear(SK_ColorBLACK);draw->setMatrix(normalized);
+  const auto&stroke=compact->content.get().stroke;
+  item.raster=std::make_unique<CompactStrokeRasterJob>(*draw,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,options.maxEntryBytes,std::function<void(std::size_t)>{},true,body,false,true);
+  found=fullBodies_.emplace(key,std::move(item)).first;navigationWork_.bytes+=charge;navigationWork_.entries=fullBodies_.size()+navigationBodies_.size();
+ }
+ auto&item=found->second;item.used=++tick_;(void)item.lease.markGpuUse();
+ while(item.raster){
+  if(allowance.exhausted())return BodyPreparation::kPending;
+  CompactRasterWork raster;const auto&stroke=compact->content.get().stroke;
+  const bool done=item.raster->step(*item.building->getCanvas(),stroke.config,stroke.knots,stroke.seed,targets,options.gpuCoverageCandidate,&raster);
+  ++allowance.steps;++work.preparationCoverageSteps;work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;
+  if(item.raster->resourcePending())return BodyPreparation::kPending;
+  if(!done)continue;
+  item.pixels=item.building->makeImageSnapshot();if(!item.pixels)return BodyPreparation::kPending;
+  item.raster.reset();item.building.reset();
+  // Temporary snapshot/COW allowance is released into its real active GPU
+  // epoch, not counted as resident pixels and not freed before completion.
+  item.staging.reset();item.bytes-=bytes;navigationWork_.bytes-=bytes;++navigationWork_.builds;
+ }
+ out=item.pixels;basis=item.matrix;++navigationWork_.hits;return BodyPreparation::kReady;
+}
+bool SkiaInkLayers::projectNavigationBody(const std::shared_ptr<const PreparedNavigationGeometry>&body,SkCanvas&canvas,
+ const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&budget){
+ if(!body||!budget)return false;bindNavigationBudget(budget);
+ const auto info=canvas.imageInfo();const auto cs=info.colorSpace()?info.colorSpace()->hash():0;
+ bool hasBody=false;
+ for(auto&[key,item]:fullBodies_)if(item.geometry==body&&item.pixels){
+  hasBody=true;
+  if(key.context!=canvas.recordingContext()){++navigationWork_.projectionContextMiss;continue;}
+  if(key.colorType!=int(info.colorType())||key.alphaType!=int(info.alphaType())||key.colorSpace!=cs){++navigationWork_.projectionFormatMiss;continue;}
+  SkMatrix inverse;if(!item.matrix.invert(&inverse))continue;
+  SkMatrix imageToDestination;imageToDestination.setConcat(canvas.getTotalMatrix(),inverse);
+  // Projection may downsample a complete known-density source. Upsampling
+  // cannot satisfy a sharper target; retain the existing exact raster path.
+  if(imageToDestination.hasPerspective()||imageToDestination.getMaxScale()>1.000001F){++navigationWork_.projectionDensityMiss;continue;}
+  if(!item.completeSupport){
+   SkMatrix destinationInverse;if(!canvas.getTotalMatrix().invert(&destinationInverse))continue;
+   // Demand is the actual destination sampling region, never an object
+   // support intersection masquerading as pixel validity. Unknown source
+   // pixels outside the retained crop must force a different representation.
+   auto demand=SkRect::Make(canvas.getDeviceClipBounds());demand.outset(2,2);
+   SkMatrix targetToImage;targetToImage.setConcat(item.matrix,destinationInverse);
+   const auto needed=targetToImage.mapRect(demand);
+   const auto valid=SkRect::MakeLTRB(2,2,float(item.pixels->width()-2),float(item.pixels->height()-2));
+   if(!needed.isFinite()||!valid.contains(needed))continue;
+  }
+  (void)item.lease.markGpuUse();item.used=++tick_;canvas.save();canvas.resetMatrix();canvas.concat(imageToDestination);
+  canvas.drawImage(item.pixels,0,0,SkSamplingOptions(SkFilterMode::kLinear));canvas.restore();++navigationWork_.hits;return true;
+ }
+ if(!hasBody)++navigationWork_.projectionBodyMiss;++navigationWork_.misses;return false;
 }
 }

@@ -19,6 +19,13 @@ struct CpuPendingJobFact final {
  std::uint64_t issuedNs=0,returnedNs=0,importNs=0;
  std::string status;
 };
+struct CpuPendingEraseStatus final {
+ bool capability=false,enabled=false,suspended=false,requestReady=false;
+ std::size_t pending=0,reserved=0;
+ std::uint64_t head=0,failed=0;
+ std::array<std::uint64_t,8> token{};
+ std::string state,error;
+};
 struct PendingLocalIntentValue final {
  std::array<std::uint64_t,3> token{};std::string kind,phase;
  std::vector<canvas::foundation::ObjectId> objects;std::vector<std::uint64_t> dependencies;

@@ -1016,9 +1016,11 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
         (void)observeTextTap(sample);
     }
     if (viewportContactsChanged) {
+      const auto previousGeneration = cameraGeneration();
       const auto contacts = coordinator_->viewportSamples();
       if (contacts.size() >= 2U && !viewportController_->updateGesture(contacts[0], contacts[1]))
         return false;
+      if (!invalidateViewportChange(previousGeneration)) return false;
       canonicalPresentationDirty_ = true;
     }
     if (routed.terminalCancel) cancelAllPointers();
@@ -1045,6 +1047,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     inkBatch.clear();
     return accepted;
   };
+  auto cameraBefore = cameraGeneration();
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routedSamples) {
     if (!sample.key.valid()) continue;
@@ -1059,6 +1062,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
           if ((dx != 0.0F || dy != 0.0F) && !applyViewportNavigation(
                   {interaction::ViewportNavigationKind::kWheelPan, -dx, -dy,
                    sample.x, sample.y, 1.0F})) return false;
+          cameraBefore = cameraGeneration();
           it->second = {sample.x, sample.y};
         }
       } else if (sample.phase == input::PointerPhase::kUp ||
@@ -1139,14 +1143,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   const bool viewportChanged = viewportBefore.scale != viewportAfter.scale ||
       viewportBefore.translationX != viewportAfter.translationX ||
       viewportBefore.translationY != viewportAfter.translationY;
-  if (viewportChanged && previewController_ != nullptr && previewController_->active()) {
-    if (!previewController_->updateViewport(viewportAfter.scale,
-                                             viewportAfter.translationX,
-                                             viewportAfter.translationY)) {
-      return false;
-    }
-  }
-  if(viewportChanged){navigationRequested_=true;++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
+  if (viewportChanged && cameraBefore != cameraGeneration() &&
+      !invalidateViewportChange(cameraBefore)) return false;
   if (viewportChanged && activeSurfaceProvider() != nullptr && surface_.available) {
     // A viewport-only frame redraws the canonical document but is not the
     // canonical-visible receipt for the active brush commit.  Retained amber
@@ -3354,6 +3352,7 @@ bool CanvasEditingRuntime::eraserSample(std::uint64_t pointerId, double x, doubl
     (void)eraserCancel(pointerId);return false;
   }
   it->second.push_back({static_cast<float>(x), static_cast<float>(y)});
+  ++erasePresentationInputRevision_;
   G5_OBSERVE(g5::Kind::Stage,g5::Tag::eraser_revision,true,pointerId,it->second.size(),cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration);
   if(toolMode_==ToolMode::kObjectEraser){
     auto& candidates=objectEraseCandidates_[pointerId];const auto count=candidates.size();
@@ -3896,6 +3895,30 @@ interaction::ContactDisposition CanvasEditingRuntime::pointerDisposition(
   return coordinator_->disposition(key);
 }
 
+bool CanvasEditingRuntime::invalidateViewportChange(std::uint64_t previousGeneration) noexcept {
+  const auto viewport = viewportController_->state();
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->updateViewport(viewport.scale, viewport.translationX,
+                                          viewport.translationY)) return false;
+  if (previousGeneration == cameraGeneration()) return true;
+  ++previewDisplayRevision_;
+  previewDisplayDirty_ = previewActive();
+  if (submittedDisplayRoster_.bound && submittedDisplayRoster_.camera != cameraGeneration()) {
+    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
+    submittedDisplayRoster_.bound = false;
+  }
+  navigationRequested_ = true;
+  // Quiet time belongs to the camera change, including opportunities spent
+  // drawing pending editing feedback. First postcommit eligibility must not
+  // start another complete quiet interval for this unchanged camera.
+  navigationCameraGeneration_ = cameraGeneration();
+  navigationChangedAt_ = std::chrono::steady_clock::now();
+  navigationActive_ = true;
+  if (partialEraseFeedbackActive()) transientOverlayDirty_ = true;
+  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  return true;
+}
+
 bool CanvasEditingRuntime::applyViewportNavigation(
     const interaction::ViewportNavigationSample& sample) noexcept {
   std::lock_guard lock(previewStateMutex_);
@@ -3905,30 +3928,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
     return false;
   }
 
-  const auto viewport = viewportController_->state();
-  // Navigation is also a preview-surface transform invalidation.  Without
-  // this update an already-retained amber outline keeps its pre-gesture
-  // matrix until the next brush sample arrives, which makes the pinch appear
-  // to be applied one input event late.
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale,
-                                           viewport.translationX,
-                                           viewport.translationY)) {
-    return false;
-  }
-
-  // Navigation changes the canonical camera even when no new semantic or
-  // brush input arrives.  Treat it as an independent canonical-surface
-  // invalidation so the Web/Android/Windows display cannot remain at the old
-  // transform until the next pointer sample happens to trigger a frame.
-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
-    submittedDisplayRoster_.bound=false;
-  }
-  navigationRequested_=true;
-  if(partialEraseFeedbackActive())transientOverlayDirty_=true;
-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;
@@ -3953,19 +3953,7 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
   const float translationX = anchorX - ratio * (anchorX - current.translationX);
   const float translationY = anchorY - ratio * (anchorY - current.translationY);
   if (!viewportController_->setCamera(zoom, translationX, translationY)) return false;
-  const auto viewport = viewportController_->state();
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
-                                           viewport.translationY)) {
-    return false;
-  }
-  if(previousCameraGeneration!=cameraGeneration()){++previewDisplayRevision_;previewDisplayDirty_=previewActive();}
-  if(submittedDisplayRoster_.bound&&submittedDisplayRoster_.camera!=cameraGeneration()){
-    G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_roster,true,submittedDisplayRoster_.frame.frameId.value(),3,cameraGeneration());
-    submittedDisplayRoster_.bound=false;
-  }
-  navigationRequested_=true;
-  G5_OBSERVE(g5::Kind::Stage,g5::Tag::navigation_basis,true,cameraGeneration(),semanticGeneration_.current().value(),sceneRevision(),surface_.generation,surface_.metricsGeneration,g5::bits(viewport.scale),g5::bits(viewport.translationX),g5::bits(viewport.translationY));
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;
@@ -3978,6 +3966,8 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
 
 bool CanvasEditingRuntime::fitViewportToContent(
     const std::optional<foundation::WorldRect>& requestedTarget) noexcept {
+  std::lock_guard lock(previewStateMutex_);
+  const auto previousCameraGeneration = cameraGeneration();
   if (viewportController_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
     return false;
   }
@@ -4000,12 +3990,7 @@ bool CanvasEditingRuntime::fitViewportToContent(
   const float translationX = surface_.logicalWidth * 0.5F - fit.zoom * fit.centerX;
   const float translationY = surface_.logicalHeight * 0.5F - fit.zoom * fit.centerY;
   if (!viewportController_->setCamera(fit.zoom, translationX, translationY)) return false;
-  const auto viewport = viewportController_->state();
-  if (previewController_ != nullptr && previewController_->active() &&
-      !previewController_->updateViewport(viewport.scale, viewport.translationX,
-                                          viewport.translationY)) {
-    return false;
-  }
+  if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
       canonicalPresentationDirty_ = true;
@@ -4721,6 +4706,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
           chunkFrame, *runtimeSceneHost_, sceneCoordinator_->runtimeScene());
       if (!resolved) return false;
       auto visibility = resolved.value();
+      const bool rawSceneEmpty=visibility.backToFront.empty();
       // The Scene query already owns ordering and candidate accounting. The
       // resolver adds the renderer-owned GeometryChunk selections without
       // mutating canonical Scene state.
@@ -4728,10 +4714,11 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       if(!sources)return false;
       const auto& work=sources.value().diagnostics;
       diagnostics={work.chunkCandidatesExamined,work.chunkIndexNodesVisited,work.chunkIndexFallbacks,
-          work.payloadCopyBytes,work.payloadAliases,true};
+          work.payloadCopyBytes,work.payloadAliases,true,{},false,0,0};
       diagnostics.sceneStamped=true;
       diagnostics.semanticGeneration=chunkFrame.sceneGeneration.value();
       diagnostics.sceneRevision=chunkFrame.sceneReadToken.value();
+      if(rawSceneEmpty)diagnostics.sceneEmptyProof=render::NavigationSceneEmptyProof{region,chunkFrame.sceneGeneration.value(),chunkFrame.sceneReadToken.value(),chunkFrame.viewId.value(),chunkFrame.surfaceGeneration.value(),chunkFrame.metricsGeneration.value()};
       entries=std::move(sources.value().entries);return true;
   };
   // Prove exposed strips using the authoritative Scene object query, not
@@ -4745,6 +4732,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
   };
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
       {camera.scale,camera.translationX,camera.translationY},compositionFrame,query,idlePrewarm,selectionOverlay(),backgroundOnly,&composition.value());
+  AXIOM_IF_EVENT("nc_render role=navigation semantic=%llu scene=%llu camera=%llu code=%u presented=%u pending=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),unsigned(result.code),unsigned(skiaRenderer_.navigationWork().presented),unsigned(skiaRenderer_.navigationWork().pending),result.message.c_str());
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
   G5_OBSERVE(g5::Kind::Terminal,g5::Tag::navigation,true,generation,presented,skiaRenderer_.navigationWork().pending);
@@ -5234,6 +5222,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   preparation.maxGroups=64;
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), *plan,
       selectionOverlay(), platformPresentationDeferred_ ? &preparation : nullptr);
+  AXIOM_IF_EVENT("nc_render role=canonical semantic=%llu scene=%llu camera=%llu frame=%llu code=%u max_groups=%llu reason=%s",(unsigned long long)semanticGeneration.value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)plan->frame.frameId.value(),unsigned(rendered.code),(unsigned long long)preparation.maxGroups,rendered.message.c_str());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
     AXIOM_FRAME_TIMING_OUTCOME(canonicalPresentationRetryable_?"retry":"rejected");
@@ -5693,8 +5682,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
   AXIOM_FRAME_TIMING_SCOPE(transientRenderTiming,render);
   const auto rendered = renderer.renderTransientOverlay(
-      *target, plan.value(), selectionOverlay());
+      *target, plan.value(), selectionOverlay(),
+      eraseDisplayIdentity());
   AXIOM_FRAME_TIMING_END(transientRenderTiming);
+  AXIOM_IF_EVENT("nc_render role=transient semantic=%llu scene=%llu camera=%llu frame=%llu code=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)frame.frameId.value(),unsigned(rendered.code),rendered.message.c_str());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
   coverBrushDisplays(plan.value());
   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=

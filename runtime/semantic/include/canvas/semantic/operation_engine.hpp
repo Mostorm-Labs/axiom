@@ -28,6 +28,14 @@ class PreparedEraseOperation final {
  public:
   ~PreparedEraseOperation();
   bool advance(std::size_t maxTargets,std::uint64_t maxMicroseconds);
+  // Private Runtime preparation contract; never a consumer SDK capability.
+  struct Progress final {
+    std::size_t target = 0;
+    unsigned finalPhase = 0;
+    bool complete = false, failed = false;
+    bool operator==(const Progress&) const = default;
+  };
+  [[nodiscard]] Progress progress() const noexcept;
   bool ready()const noexcept;
   const Operation& operation()const noexcept;
   std::span<const std::uint8_t> encoded()const noexcept;

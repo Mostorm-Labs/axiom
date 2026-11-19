@@ -53,6 +53,7 @@ export async function createCpuWorker(runtime,{url}={}){
   cancel(key){const job=pending.get(key);if(!job)return false;if(job===active){try{worker.postMessage({type:'cancel',key});}catch(error){stop('POST_MESSAGE_FAILED:'+String(error));}}else{queue.splice(queue.indexOf(job),1);terminal(job,'Cancelled');}return true;},
   release(key){const job=results.get(key);if(!job)return false;try{if(job.resultBuffer.byteLength)job.resultBuffer.transfer(0);}finally{job.resultBuffer=null;results.delete(key);transport-=job.charge;ungrant(job.grant);}return true;},
   async close(){retire('Cancelled','CLOSED_DURING_STARTUP');if(cleanupErrors.length)throw Error('CPU_WORKER_CLEANUP:'+cleanupErrors.join(';'));},
+  status(){return{executor,closed};},
   observation(){return{executor,basis:expectedBasis.split('/'),pending:pending.size,active:active?{key:active.key,sent:active.sent,startedReceivedAt:active.startedReceivedAt??null,workerStartedAt:active.workerStartedAt??null}:null,admitted,terminals,transportBytes:transport,ledger:[...ledger],cleanupErrors:[...cleanupErrors],closed,heapBytes:limits.heapBytes,build:kernelId};}
  };
  owner.attach(api);

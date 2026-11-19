@@ -1,0 +1,40 @@
+{
+  "status": "FROZEN_PROSPECTIVE_SNR_STORAGE",
+  "scope": "Newtaskindependentquota;oldEFFraw/result/freeze/storageledgers preserved. VerificationdiskcapdistinctfromRendercache/residency.",
+  "limits": {
+    "baseline_diagnostic_starts": 4,
+    "final_candidate_diagnostic_starts": 1,
+    "per_diagnostic_seconds": 300,
+    "ordinary_starts": 4,
+    "per_ordinary_seconds": 360,
+    "correctness_starts": 1,
+    "per_correctness_seconds": 480,
+    "harness_environment_corrective_starts": 1,
+    "per_corrective_seconds": 480,
+    "aggregate_browser_seconds": 4200,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_pixel_buffer_MiB": 192,
+    "per_diagnostic_trace_MiB": 64,
+    "minimum_free_disk_before_start_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0
+  },
+  "planned_pixels": {
+    "C_Web_frames": 20,
+    "C_Web_raw_bytes": 1156248000,
+    "C_CPU_RGBA_refs": 4,
+    "C_CPU_edge_refs": 4,
+    "allnewpixelrawbytes": 1445310000,
+    "conservative_gzip_bound": 1445752850,
+    "nonpixelreserve": 1610612736,
+    "serialscratch": 201326592,
+    "peakbound": 3257692178
+  },
+  "diagnostic_limits": "5starts x64MiB raweventtrace max <=320MiB inside1536MiBnonpixelreserve. Recordaggregate counters/scopes perframe/job,notperpoint. Overflow/droppedrequiredeventinvalidatescausalproof; donotcontinueaszero. Noordinarytraces/profiler.",
+  "preflight": "Beforefirstbrowser:reuseexistingstreamwriter+flockguardundernewtaskpaths,offlinetestincompressible/interruptedchunks/pathoffsetsize/rawhash+decompression;12processledgerconcurrency. Precomputeallnewpixels+64MiBperdiag+native/logreserve anddisk>=8GiB. No browser neededforstoragepreflight.",
+  "persistence": "OneRGBA/reference outputbeingpersisted atatime, boundedchunk/backpressureimmediategzip. Raw+gzipbytesSHA andactualVALID/RESTOREDtarget/camera recorded. No fullwindowrawcollection. Offlineanalysisstreamsoronepairatatime.",
+  "accounting": "Retainedactualnewbytes+scratch,logicalcumulativeuniqueartifacthighwaterincludingfailures. Lockprotectedatomicledger,noreset/deletioncredit. Build/dependency/versionedSDKbinariesseparatebindingexcludedfromevidencecap. Source/headercopieshashbound. Beforeeverystart/captureprojectedbounds, continuouslyenforcerealactualcaps.",
+  "guard": "Journalstartdurablybeforelaunch;timeout/RSSwholeownedfamily. Oncapstoponlyownedprocesses,preservepartial/failureandreportnamedterminal. UnusedEFFallowancesdontauthorizeSNRsamples."
+}

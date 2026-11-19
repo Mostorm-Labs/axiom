@@ -1,0 +1,122 @@
+{
+  "schema": "axiom-publication-analyzer-indentation-repair-v1",
+  "status": "VERIFIED_WHITESPACE_ONLY_REPAIR",
+  "scope": "Only analyzer lines106-112 remove one leading space; no algorithm, production, frozen JSON, docs, SDK or raw data changes. No sampling/build/native retest/commit/push.",
+  "preimage": {
+    "path": "out/G5-postcommit-navigation-publication-20261114/analyzer-preimage.py",
+    "sha256": "c28f102693ac23ad619306643ae2429d6d33553e9e0413a67c5524d2b4598d80"
+  },
+  "old_error": {
+    "type": "IndentationError",
+    "message": "unexpected indent (postcommit_navigation_analyze.py, line 106)",
+    "line": 106
+  },
+  "repaired_script": {
+    "path": "verification/runners/g5/postcommit_navigation_analyze.py",
+    "sha256": "e6e6b5b08fe70de49252764eb4ec6e1a524de4a8f491d595ffec9763a4a989fc"
+  },
+  "changed_lines": [
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112
+  ],
+  "compile_import_main": {
+    "success": true,
+    "RES_redirected_to": "out/G5-postcommit-navigation-publication-20261114/regenerated",
+    "log": {
+      "path": "out/G5-postcommit-navigation-publication-20261114/analyzer-regeneration.log",
+      "sha256": "8085e638a4fbd577d0017b9344065aedf5ab255d7988f556b383085228d0156a"
+    },
+    "py_compile_output": "out/G5-postcommit-navigation-publication-20261114/analyzer-checked.pyc"
+  },
+  "regenerated": {
+    "cause-and-timeline.json": {
+      "frozen": {
+        "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/cause-and-timeline.json",
+        "sha256": "0114e0893cf4fe2a2b7d95840b462e90b89fc5e904cfe2cf9edc08d8c14f5061"
+      },
+      "regenerated": {
+        "path": "out/G5-postcommit-navigation-publication-20261114/regenerated/cause-and-timeline.json",
+        "sha256": "0114e0893cf4fe2a2b7d95840b462e90b89fc5e904cfe2cf9edc08d8c14f5061"
+      }
+    },
+    "paired-observation.json": {
+      "frozen": {
+        "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/paired-observation.json",
+        "sha256": "4a45bcaa44aa08ce379e2f298fcc0f597b06d699ef22a27ff90f837aedf2cc85"
+      },
+      "regenerated": {
+        "path": "out/G5-postcommit-navigation-publication-20261114/regenerated/paired-observation.json",
+        "sha256": "4a45bcaa44aa08ce379e2f298fcc0f597b06d699ef22a27ff90f837aedf2cc85"
+      }
+    },
+    "pixel-semantic.json": {
+      "frozen": {
+        "path": ".aegis/results/G5-postcommit-navigation-feedback-r1/pixel-semantic.json",
+        "sha256": "532a7294e1e91256f1b56e1b289bbb270ac11a64205fd4c338b7f2bf3eb9eb8c"
+      },
+      "regenerated": {
+        "path": "out/G5-postcommit-navigation-publication-20261114/regenerated/pixel-semantic.json",
+        "sha256": "d1785d8affad842292c573976e37ef856ff39117e2d51d219e115cd4215bf1ab"
+      }
+    }
+  },
+  "comparison": {
+    "diagnostic_rows": 4,
+    "ordinary_rows": 8,
+    "pixel_rows": 4,
+    "diagnostic_report_exact": true,
+    "ordinary_report_exact": true,
+    "medians_exact_old_result": true,
+    "all4pixel_rows_masks_operations_samples_final_RGBA_CPU_nonedge_exact": true,
+    "coarse_statistics": [
+      {
+        "lane": "baseline",
+        "case": "zoom",
+        "changed_pixels": 2415,
+        "changed_channels": 6821,
+        "maximum_delta": 199,
+        "coarse_sha256": "7df03a0c3df70c770708905380fb7c5c052e9cfa216c06766daa23aad3839aaa"
+      },
+      {
+        "lane": "baseline",
+        "case": "pan",
+        "changed_pixels": 2780,
+        "changed_channels": 8313,
+        "maximum_delta": 208,
+        "coarse_sha256": "ea4cd7dfad2c1bbded599740907289e4df2fee6e05fd8ccfd682c1921612204b"
+      },
+      {
+        "lane": "candidate",
+        "case": "zoom",
+        "changed_pixels": 2415,
+        "changed_channels": 6821,
+        "maximum_delta": 199,
+        "coarse_sha256": "7df03a0c3df70c770708905380fb7c5c052e9cfa216c06766daa23aad3839aaa"
+      },
+      {
+        "lane": "candidate",
+        "case": "pan",
+        "changed_pixels": 2780,
+        "changed_channels": 8313,
+        "maximum_delta": 208,
+        "coarse_sha256": "ea4cd7dfad2c1bbded599740907289e4df2fee6e05fd8ccfd682c1921612204b"
+      }
+    ],
+    "layout_only_difference": "Regenerated Web_rows contain per-row coarse_vs_final blocks and intermediate_coarse_basis text; frozen report stores identical coarse statistics in intermediate_coarse_qualification.observed plus longer explanatory text and an extra final limitation string. No values, mask geometry, operation hashes, final/interim pixel hashes, sampled checks or performance measurements differ.",
+    "known_handwritten_doc_table": "Existing zoom opportunity table discrepancy remains untouched; raw/paired candidate median8.0 is unchanged."
+  },
+  "preservation": {
+    "frozen_result_files_checked": 29,
+    "changed_frozen_result_files": [],
+    "changed_existing_production_test_sources": [],
+    "preimage_sha_matches_original": true,
+    "git_diff_check_exit": 0
+  },
+  "git_publication_owner": "Control thread 01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "stop": true
+}

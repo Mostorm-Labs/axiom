@@ -1,0 +1,41 @@
+{
+  "task": "G5-exposure-region-reuse-r1",
+  "primary_target": "Original Mixed49 current-camera exposure closes with valid new pictures, entire max gap <=100ms; preserve clarity/mask/order and canonical state.",
+  "ordinary": {
+    "inputs": "Originalfixed360 samples/two multiplicativecycles6s,1431x1010,DPR2/4,wheelandtwo-touch. Exactplanned deadlines, actualdispatch andpostinputcamerarecorded; nobetween-segmentsettle orgesture slowdown.",
+    "p95_ms": 33.4,
+    "max_content_submission_gap_ms": 100,
+    "direction_boundary_max_ms": 100,
+    "gate": "EachcandidateDPR/routeineachordinaryrepeatmusthavep95<=max(33.4,Bpairmedianp95*1.15+2ms), entiremaxandall5directionboundarygaps<=100ms. Inputcount360, lostinputs0; dispatchlatenessreportedandcannotbeimprovedbysuppressing/delayingintentionally. Initial0..firstinput/lastinput..settlehandledseparately.",
+    "proxy": "Default-framebuffercontentGLwrite iscontent-submissionproxy,notphysicalphotonorcurrentcamera. Diagnosticsactualsuccessfulpresenttraceindependentlyrequiredforfullcameraqualification."
+  },
+  "actual_camera": {
+    "gate": "On fixedoriginalroute, maximumintervalwithmissingcurrentcamera/presentationprogresswhilecamera-changinginputscontinue <=100ms, no accumulatedlagthatonlydisappearswhenscalerecrossesoldexactviewport. Successfulpresentsequence/fullviewScene/resource/surface/metricsandcameraaffine bindcoverage; atlastinput+settle finaltargetmatchesfinalcamera. Diagnostic rows separatelyqualified, no pretendordinarycamera guarantee.",
+    "same_input_frame": "Aftertwofurtherinputopportunitiesor33.4ms,latestpresentcameramustreflectatleastoneinputfromthatwindowunlessrecordedrealresource/contextunavailability; baselineandcandidateflagsstayreported. Correctnessrequiresvalidsourcecoverageatthatpose,notfabricatedcamera stamps."
+  },
+  "quality": {
+    "nonregression": "Do nottradegapforcoarserfeedbackinpreviouslysharpregions. Native/unit bestvaliddensity ruleunchanged; actualCmatchedposeedge/alpha/material/mask/order comparedwithindependentreferenceusingpre-existingAApolicy.",
+    "optical_checkpoints": "Twelvefixedinstantscapturethecurrentlydisplayedframeincludingstale. Use reference-fixededgeIDs/gradientmethod with independentreferenceattheactualcapturedpose. Do not register awaydisplaylag orcountcoalescedfutureframesascurrent.",
+    "mandatory_reference_ROI_checkpoints": [
+      80,
+      100,
+      120,
+      140,
+      240,
+      300
+    ],
+    "gate": "For eachDPR/route, all6mandatorycheckpoints havefiniteeligibleindependentreferenceprofilesorfullmatchedpixelproofcoveringintendedcontent. OthercheckpointswithnoeligibleedgesstayUNAVAILABLEanddonotbecomezeroblur. Numericspread/contrastreported; onsharedeligibleedgepairs Cmedianexcess<=B+0.05,contrasterror<=B+0.05,exceptreferencealreadydifferentposemustbereportedseparatelyandfinalsameposecorrectnessclosed. Noopticalgainclaimwithoutactualgain; gaprepaircanpasswithoutold>=6/12improve-countbecause thisisnewabsolutehandoffscope,notoldQC4closure.",
+    "stale": "Crispoldpose incurslag; cannotqualifycorrectnewposeorcountasvisualimprovement. If mandatorytimelycamera gatefails, packagefailsregardlessofprofile."
+  },
+  "state_and_memory": {
+    "profile_MiB": [
+      512,
+      1024,
+      128
+    ],
+    "same_limits": "2msnavigation allowance,query4minusouterconsumed,setupmax(1,remainingquery),steps64,fine128/coarse1024,tickets/publicationsunchanged. Leaseschargeduntilactualcompletion.",
+    "final": "AllvalidrunfinalSnapshotbytesexactfrozeninput,zeroOperationfromnavigation, generation/lastCommit/contacts/pending statecoherent,finalcorrectmatchingcameraandresource. PostinputstableCmedian<=Bpairmedian*1.15+100ms.",
+    "resource_exceptions": "Realcontextloss/structuralpressuretestsarecorrectnesscases,neverretroactiveexcusesforordinaryfailedruns."
+  },
+  "comparison": "B exact4339 normalSDK; C query-boundary fix plus regional completion and representation reuse. Old WH/QC/PC failed results immutable. Scope is this fixed closed loop, not universal all-document performance."
+}

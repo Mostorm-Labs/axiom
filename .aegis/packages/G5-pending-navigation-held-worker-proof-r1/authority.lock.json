@@ -1,0 +1,35 @@
+{
+  "status": "CONTROL_AUTHORIZED_DETERMINISTIC_QUALIFICATION_ONLY",
+  "parent_package": {
+    "path": ".aegis/packages/G5-pending-navigation-owner-progress-r1/package.json",
+    "sha256": "04f70758820c580d813324adf9d188eec665da1ae2ae45f49a34e9dcafa8e3e7"
+  },
+  "IOSupplement": {
+    "path": ".aegis/packages/G5-pending-navigation-evidence-io-repair-r1/package.json",
+    "sha256": "34fd7e8d8e7f1026c31cfa91cd5cabb9179b8762fcb5f66f1129ab64b9301ffd"
+  },
+  "human_goal": "Finish actual userauthorizedsteps1/2 withtruthfulreview; no newoptimization or productionrepair",
+  "classification": "P20_OBSERVATION_WINDOW_DEFECT: fasterownercommit makesuncontrolledWebpendingtransientwindowtoosmall; dualfullreadbackperturbs~600ms, capturesoldbeforeandfinalafter notdesiredpendingstate. Nativeactualhold fullframe alreadypasses; missingWebbranchproof needsdeterministicinputcondition, notmoreperformancecohorts.",
+  "same_semantics": "Test host maytemporarilyhold real Worker terminaldelivery toowner; actualsharedC++/WASMkernel stillrunsandexactresultretained. Deliverunchangedterminalonceafterpixelcheck; do notfakegeometry/pendingflags ordisableownerchecks. Test-delayedtimesarenotperformancefacts.",
+  "production_read_only": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "c0af3e82b26d65289a504bb870cbe390f8960a8d3fd914c1596c738c217e85db",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "2701e0757a9eb1a8950368d776f7723f783753c4af46974574c7a0cae11adcab",
+    "runtime/interaction/src/cpu_pending_erase.cpp": "aa02b6de5310d5a9786875be7219015a530855fd714c72c3739d05e56365cb11",
+    "runtime/interaction/src/cpu_pending_erase_state.hpp": "0af3dac83bbbbb147df488a525e4c88e49a6bb73e4841731459903494471c041",
+    "runtime/semantic/src/operation_engine.cpp": "a7ec30a8cd4606089eb8d8485650f9503b98c08d53a35087855cd207416470de",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp": "2ffb9fbb3905953a3b1caedcbbcfd5af3b15efbf79d7262d3444586cccbe6fa3",
+    "runtime/render/src/skia_navigation_tiles.cpp": "ca6269c5d9d53ee000608638ce3740c3aa6250117c312262d19585f0ca850e1d",
+    "runtime/render/src/skia_renderer.cpp": "2b0f84e8fa46fbca357be912ba7d9262e5bcde07056c6f4ff626bb42d542fc6b",
+    "runtime/composition/src/runtime_composition.cpp": "2cee0de495321c5d7677149e53e74722190cdfcc0065eb469868d9fc4e3572ee"
+  },
+  "candidateSDK": {
+    "path": ".aegis/results/G5-pending-navigation-owner-progress-r1/candidate-SDK-manifest.json",
+    "sha256": "29b97bf7f6ea23b8299a228df7870a547e12fb0e09afc85936a7c8ba9df4655e"
+  },
+  "preserve": [
+    "Parentraw/status/167sunchanged",
+    "IOsupplement4rows and118snewledger unchanged",
+    "No rewritingfailedcaptureaspassed oroversellingfirstGL",
+    "ExistingfullfinalRGBA/previewproofreused; no nextdrawrepeat"
+  ]
+}

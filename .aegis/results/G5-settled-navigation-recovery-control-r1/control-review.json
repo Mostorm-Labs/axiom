@@ -1,0 +1,190 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "at": "2026-11-19T03:21:16.870449+00:00",
+  "task": "G5-settled-navigation-recovery-r1",
+  "reviewer": "CONTROL_REVIEW; independent of implementation producer",
+  "verdict": "BLOCKED",
+  "classification": "ROOT_CAUSE_NOT_ESTABLISHED",
+  "diagnosticReturnDisposition": "ACCEPTED_FROZEN_NO_CAUSE_TERMINAL",
+  "overallPerformancePass": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-settled-navigation-recovery-r1/package.json",
+    "bytes": 3238,
+    "sha256": "04096ca6b1498ce9888228f22e0ca754374083c6fac5369106024542a2fdb32b"
+  },
+  "producerResult": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/result.json",
+    "bytes": 16436,
+    "sha256": "1564c55c4f8d508a2756df3c1be811c65c80e9fc01a5dc4fb1dc7004f3a46d41"
+  },
+  "artifactManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-settled-navigation-recovery/.aegis/results/G5-settled-navigation-recovery-r1/artifact-manifest.json",
+    "bytes": 595161,
+    "sha256": "623ad645936432b960c99db06163ced56ab9105bf037ada90256223cae95a53b"
+  },
+  "independentAudit": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-settled-navigation-recovery-control-r1/independent-audit.json",
+    "bytes": 51475,
+    "sha256": "456665a8cc63fe9a00a1b34bbe08a6b14c0cc1ed8394ded702628b932deb3869"
+  },
+  "reviewScript": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-settled-navigation-recovery-control-r1/independent-audit.py",
+    "bytes": 16185,
+    "sha256": "750c9ac41e2d0ae2ba77c3ec8f946fc7d52cc2983f9c66bc3b503ad3c1fb1143"
+  },
+  "offlineVerification": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-settled-navigation-recovery-control-r1/offline-verification.json",
+    "bytes": 1608,
+    "sha256": "22f6c11a67f36a0636201b9a2fd3cbcc33d39bc2d8744499663f5f284d2a4075"
+  },
+  "frozenRequirementAudit": {
+    "satisfiedDiagnosticBranch": [
+      "Repository/package/source/SDK bindings independently resolved.",
+      "Four diagnostic roles completed; failed progress start retained; the single corrective only removes JSON pretty indentation.",
+      "No causal mechanism established: returned explicit BLOCKED without speculative production repair, no C/ordinary retries.",
+      "Full confirmed inputs, bounded journals and controlled cleanup preserved; user IAB untouched.",
+      "Existing 4349 source/SDK/results and primary 42 dirty source files preserved."
+    ],
+    "notSatisfied": [
+      "SNR1 causal explanation of original sparse callbacks and 5.1251-second recovery.",
+      "SNR2 measured production repair and causal RED/GREEN.",
+      "SNR3 new-C correctness/resource qualification.",
+      "SNR4 original ordinary performance nonregression closure."
+    ],
+    "conditionalNotExecuted": [
+      "No repair selected, so final C diagnostic/native60/new pixel correctness/ordinary B-C-C-B and >=4350 preview are not required on this explicit no-cause branch."
+    ],
+    "SNR5": "Diagnostic terminal preserved and independently materialized; no overall goal closure."
+  },
+  "frozenEvidenceAudit": {
+    "status": "DIAGNOSTIC_EVIDENCE_RESOLVES_WITHOUT_MATERIAL_GAP",
+    "manifestFileRefs": 2016,
+    "exactFrozenBindingCounts": {
+      "freeze-SNR-D-B-ISOLATED.json": 1672,
+      "freeze-SNR-D-B-ORDER.json": 1672,
+      "freeze-SNR-D-B-PROGRESS-CORRECTIVE.json": 1684,
+      "freeze-SNR-D-B-PROGRESS.json": 1674,
+      "freeze-SNR-D-B-REVERSE.json": 1672
+    },
+    "independentlyHashedFiles": 8225,
+    "all16CompletedCasesFullInputs": true,
+    "journalAndNativeDrops": 0,
+    "rawDurationsAndCountsMatchProducer": true,
+    "streamDecodedSnapshotBuffers": 40,
+    "sameJobProgressPairs": 53,
+    "usefulPairs": 52,
+    "alreadyCompletePairs": 1,
+    "unexplainedZeroProgressPairs": 0,
+    "stablePanProgress": {
+      "attempts": 22,
+      "job": "6",
+      "camera": "244",
+      "semantic": "3",
+      "scene": "4",
+      "cursorStart": 0,
+      "cursorEnd": 40,
+      "resets": "One transition from the old completed camera; no same-basis reset loop observed."
+    },
+    "limit": "Observed good diagnostic states cannot reconstruct the unavailable old failed job; individual body/mask pointee identities and physical GPU release are not fully observable."
+  },
+  "repositoryRealityAudit": {
+    "HEAD": "c3a84c289d5b3dcb258fcbe7f481febf227df0c0",
+    "branch": "codex/g5-settled-navigation-recovery",
+    "indexEmpty": true,
+    "sourceDelta": [
+      "runtime/render/src/compact_raster_internal.hpp",
+      "runtime/render/src/skia_render_cache.cpp",
+      "runtime/render/src/skia_render_cache_internal.hpp",
+      "sdk/web/bridge.cpp"
+    ],
+    "deltaReviewed": "Private progress/lifecycle probes under default-OFF AXIOM_ENABLE_FRAME_TIMING; reset reason strings only outside flag, no scheduling/semantic/render behavior repair. Saved patch hash exactly matches current git diff.",
+    "normalSDKUnchanged": true,
+    "newProductionC": false,
+    "newDemo": false,
+    "4348and4349ListenersAlive": true,
+    "4350ListenerAbsent": true
+  },
+  "findings": {
+    "blocking": [
+      {
+        "kind": "FROZEN_REQUIREMENT_FAILURE",
+        "classification": "ROOT_CAUSE_NOT_ESTABLISHED",
+        "failureMode": "Original ordinary EFF-W-C1 settled-pan scheduling and canonical recovery remain unexplained and unclosed.",
+        "oldEvidence": {
+          "path": "/Users/qing/.codex/worktrees/g5-erase-feedback-frame/out/G5-erase-feedback-frame-r1/web/EFF-W-C1/DPR2/raw.json",
+          "bytes": 4626308,
+          "sha256": "defc72b30b955eb9e4897c8cf78946f54cb966fdcb4a49dd7f33f1a54f64f148",
+          "navigationMs": 2750.0,
+          "convergenceMs": 5125.100000143051,
+          "recoveryCallbacks": 304,
+          "tailCallbacks": 9,
+          "generationBeforeNavigation": "3",
+          "status": "ORIGINAL_UNMET_UNCHANGED"
+        },
+        "routing": "Control scope for a separate prospective failure-capture task; no unauthorized repeat sampling or speculative production change."
+      }
+    ],
+    "nonBlocking": [
+      {
+        "kind": "STORAGE_SNAPSHOT_LAG",
+        "failureMode": "Quota snapshot was sealed before result.json and terminal-callback.json were emitted; final retained bytes exceed recorded current retained by 16,894 bytes.",
+        "recordedRetainedBytes": 350295100,
+        "actualRetainedIncludingTerminalBytes": 350311994,
+        "retainedCapBytes": 4294967296,
+        "impact": "No limit breach, lost evidence, or performance conclusion change. A future terminal writer should reserve/charge final metadata; do not reopen this no-cause return for it."
+      }
+    ],
+    "resolvedReviewQuestion": "80 apparent path/size differences reflect historical .partial highwater and gzip decoded lengths. No undercharge found; decoded buffers independently match. No ledger rewrite required."
+  },
+  "diagnosticStablePan": [
+    {
+      "mode": "ORDER",
+      "navigationMs": 2038.1000001430511,
+      "convergenceMs": 448.09999990463257,
+      "recoveryCallbacks": 24
+    },
+    {
+      "mode": "ISOLATED",
+      "navigationMs": 2034.5999999046326,
+      "convergenceMs": 530.5999999046326,
+      "recoveryCallbacks": 29
+    },
+    {
+      "mode": "REVERSE",
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 427.7000000476837,
+      "recoveryCallbacks": 23
+    },
+    {
+      "mode": "PROGRESS-CORRECTIVE",
+      "navigationMs": 2034.7999999523163,
+      "convergenceMs": 544.7000000476837,
+      "recoveryCallbacks": 30
+    }
+  ],
+  "interpretation": [
+    "Four diagnostics are not ordinary qualification and cannot erase original failed sample.",
+    "Stable-pan generation3 was already committed; do not describe this as Operation application or change-set merge failure.",
+    "Offscreen coverage/body/mask progress continues even before a default-target write.",
+    "Callbacks stop at observed close boundary and Workers balance; browser physical GPU lifetime is not proven."
+  ],
+  "sampling": {
+    "starts": 5,
+    "chargedSeconds": 590,
+    "performanceRetries": 0,
+    "newControlSampling": 0
+  },
+  "nextScopeRecommendation": {
+    "target": "Capture the failing scheduling/preparation state on a real recurrence, beginning with the pre-navigation erase interval where the old sample already lost rAF cadence.",
+    "discriminator": "When sparse: whether a request is absent or queued, callback CPU versus noncallback wait. During recovery: same qualified job progress, reset reason and pending resource/retirement cause.",
+    "instrumentationConstraint": "Bounded non-forcing history, preserve the actual failed window and existing normal SDK identity; freeze any new workload and sampling allowance prospectively.",
+    "notAuthorizedByThisReview": [
+      "New browser sampling",
+      "item2 immutable trace migration",
+      "item3 Surface pool",
+      "production scheduler rewrite",
+      "commit/push/tag/release"
+    ]
+  },
+  "codingDisposition": "STOP; preserve exact evidence and source. No ordinary ACK required and no autonomous successor package."
+}
