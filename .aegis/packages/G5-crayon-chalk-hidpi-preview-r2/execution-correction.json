@@ -1,0 +1,84 @@
+{
+  "schema": "axiom-scoped-execution-correction-v1",
+  "at": "2026-11-19T10:12:35.342378+00:00",
+  "task": "G5-crayon-chalk-hidpi-preview-r2",
+  "supersedes_execution_only": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r1/package.json",
+    "bytes": 2909,
+    "sha256": "2f1dbcaa4f67e8fa28c6a0369bc766b90ab86b9bcfb728a539f59ea6d218cdc9"
+  },
+  "prior_result": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/result.json",
+    "bytes": 8175,
+    "sha256": "b5bd47eccb7d687573c1b621d00b821b4f6b3cd15fd7f238125649f9cf4817bb"
+  },
+  "classification": "TASK_PACKAGE_OPERATIONAL_DEFECT",
+  "unchanged": [
+    "Current Authority/module ownership/public boundaries",
+    "HD1..HD5 requirements and acceptance thresholds",
+    "exact input960/480/240 and720moves/12sec",
+    "actualGPU1602source/normal42BSDK binding",
+    "normal SDK flags OFF",
+    "pixel and material semantics",
+    "4ordinary/2diagnostic/2correctness/1corrective browser starts,4800s aggregate",
+    "candidate native120s process guard",
+    "4GiB retained/8GiB logical/6GiB RSS limits",
+    "no publication or mixed erase"
+  ],
+  "native_recipe": {
+    "owner": "new task-only native test adapter, not production provider or existing fixture rewrite",
+    "present": "Use async flushAndSubmit(kNo) and actual checkAsyncWorkCompletion/service, following ZoomTarget and production Web. No per-input CPU-GPU wait in growth acquisition. Preserve all samples and real production renderer draw calls.",
+    "drain": "Bound pending GPU resources via real completion service; at end outside workcount collection, explicitly drain real GPU once before success. Keep context alive through last use. No skipped render or fake completion. Synchronous waits for correctness readback/held-completion tests remain separate.",
+    "baseline_process_seconds": 300,
+    "candidate_process_seconds": 120,
+    "why": "Known complete B480 ~32.5s and quadratic oldwork plausibly make B960 exceed120. The cap is execution resource allowance, not product acceptance. Async overhead effect not assumed.",
+    "qualification": "Freeze corrected fixture/build/source/trace hashes before further RED. Run one waxDPR2 N240 baseline qualification under new adapter and require exact32220 generatedKnots equal prior complete run; discrepancy => harness defect, no production repair. Reuse prior exact completed actualGPU workcounts as independent validated history rather than rerun them all.",
+    "remaining_baseline": [
+      {
+        "profile": "crayon-wax-v1",
+        "dpr": 4,
+        "N": [
+          960
+        ]
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "dpr": 2,
+        "N": [
+          240,
+          480,
+          960
+        ]
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "dpr": 4,
+        "N": [
+          240,
+          480,
+          960
+        ]
+      }
+    ],
+    "required_complete_red": "All4 native960/480 ratios remain required. r1timeout does not count as a ratio or success. At most1 correction qualification+7 remaining B processes, each<=300s; no sampling fishing. If mismatch/newtimeout, retain and return exact blocker.",
+    "candidate": "Same corrected fixture actualGPU4cases x N240/480/960; <=120s each. Same generated-work ratio<=2.5, no warm fullhistory work and resource/correctness obligations. Never claim native elapsed as browser callback/feedback latency."
+  },
+  "source_materialization": {
+    "baseline": "Create fresh versioned source-B-probe-r2 from exact git archive5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c or complete explicit tracked tree at that revision, never ambient legacy dirty files. Include root CMakeLists,cmake,tools,locks,assets and package metadata needed by build. Existing failed r1archive unchanged.",
+    "overlay": "Overlay only reviewed task-owned defaultOFF probe/test/harness files and optin wiring. Before baseline, no preview behavior change. Verify all1602 expected production files and separately fixed root build inputs; record exact full source manifest. .deps may link accepted shared artifacts and semantic target facts only.",
+    "candidate": "Fresh complete same-recipe C source snapshot plus exact authorized delta. No build-install declarations/resources/WASM from mixed versions.",
+    "build_failure_handling": "Normal configure/compiler/harness implementation errors with known local causes are repaired within scope; preserve logs, do not relabel as frozen oracle/SDK failure. Missing trusted artifact or actual unsatisfied required proof returns blocker."
+  },
+  "resume": {
+    "classification": "EXACT_CURSOR plus accepted task-owned uncommitted tests/private probe",
+    "worktree": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "branch": "codex/g5-crayon-chalk-hidpi-preview",
+    "new_results": ".aegis/results/G5-crayon-chalk-hidpi-preview-r2",
+    "new_outputs": "out/G5-crayon-chalk-hidpi-preview-r2",
+    "prior_outputs_immutable": true,
+    "no_completed_work_replay": true,
+    "continuous": "Fix acquisition/source recipe, finish remaining native baseline and HD-D-B; then budgeted preview implementation, GREEN/resources/regressions, Cdiagnostic/normalSDK/rootSmoke/Demo, ordinary4starts and quality2starts, exact result+terminalcallback. No wait for control ACK at ordinary checkpoints."
+  },
+  "accounting": "Continue r1/r2 combined artifact highwater and browser totals, preserve6 prior native attempts/ceil282s. Original allowance not reset. Build/source dirs excluded exactly as before. At most8 additional Bnative acquisitions;Cgrowth12 plus existing mandated regression/qualification cases stay guarded120s.",
+  "callbacks": "Same control thread01a1c4c7-7796-7380-9f3e-bd0095fc9372 preview and terminal callbacks remain explicitly user-authorized; preview callback thenCONTINUE, terminal callback thenSTOP."
+}

@@ -20,6 +20,7 @@
 #include <map>
 
 class SkCanvas;
+namespace canvas::interaction { class CanvasEditingRuntime; }
 
 namespace canvas::render {
 namespace internal {struct TransientDisplaySurface;class SkiaRenderCache;class SkiaNavigationTiles;class SourceRetentionPool;class PreparedGeometryCache;class GpuResourceRetirement;class EraseMaskPathCache;}
@@ -102,7 +103,7 @@ class SkiaRenderer final {
     [[nodiscard]] std::uint64_t rasterizationCount() const noexcept { return rasterizations_; }
     struct CompactWork final {std::uint64_t generatedKnots=0,retainedBytes=0,temporaryBytes=0;};
     [[nodiscard]] CompactWork compactWork()const noexcept{return compactWork_;}
-    void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;}
+    void clearCompactCache() noexcept;
     void setRenderCacheOptions(RenderCacheOptions options);
     void clearRenderCache() noexcept;
     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
@@ -196,6 +197,16 @@ class SkiaRenderer final {
     RenderCacheWork executionWork_;
     struct CompactCache;
     std::shared_ptr<CompactCache> compactCache_;
+    std::shared_ptr<CompactCache> legacyCompactCache_;
+    friend class PreviewSurfaceController;
+    friend class canvas::interaction::CanvasEditingRuntime;
+    friend struct HidpiPreviewQualification;
+    void invalidateCompactSession(std::uint64_t) noexcept;
+    void applyCompactInvalidations(const SkiaSurfaceProvider*, const void* context) noexcept;
+    void serviceCompactRetirements() noexcept;
+    [[nodiscard]] bool releaseRetiredCompactResources(SkiaSurfaceProvider&) noexcept;
+    [[nodiscard]] bool compactReleasePending() const noexcept;
+    void closeCompactResources(bool acquireProvider = true) noexcept;
     CompactWork compactWork_{};
     std::shared_ptr<internal::SkiaRenderCache> renderCache_;
     RenderCacheOptions renderCacheOptions_{};

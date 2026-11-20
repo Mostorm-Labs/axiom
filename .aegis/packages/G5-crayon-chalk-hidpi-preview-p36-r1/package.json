@@ -1,0 +1,165 @@
+{
+  "schema": "axiom-scoped-p36-repair-package-v1",
+  "task_id": "G5-crayon-chalk-hidpi-preview-p36-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION_REPAIR",
+  "stage_owner": "aegis-gate-review P36",
+  "created_at": "2026-11-19T14:12:05.506039+00:00",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/g5-crayon-chalk-hidpi-preview",
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-crayon-chalk-hidpi-preview-p36-r1"
+  },
+  "parent_package_ref": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r2/package.json",
+    "bytes": 3467,
+    "sha256": "3240c396b6b16586a570bfcb910b0d09ce2cfdd69e919ac8456033ca33ccd788"
+  },
+  "control_review_ref": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-crayon-chalk-hidpi-preview-control-r1/control-review-r2.json",
+    "bytes": 8274,
+    "sha256": "bab9969d1a33dcc73d255c82520b57a59d3ccf5d178d40ec319f7eac19cb8547"
+  },
+  "trusted_frozen_requirements": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r2/authority.lock.json",
+      "bytes": 4246,
+      "sha256": "4c898578cd89c0b6abf7fbd22f3c450b445143e238b8a430653afeba5bb032c3"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r2/verification.lock.json",
+      "bytes": 6503,
+      "sha256": "db4623427aaf75c736a6682116da9f4b032f3b248f92a968afa5e3e9417532fe"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r2/metrics-contract.json",
+      "bytes": 3223,
+      "sha256": "0f57b60f54843a6b22d66eacce3ed131fc726d4524a6ea3f8ffedccbf2cab32d"
+    }
+  ],
+  "candidate_before_repair": {
+    "result_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/result.json",
+      "bytes": 12851,
+      "sha256": "77198cb7616e20d0357530c181b87dd7b152304f5106da94db8016952206925c"
+    },
+    "source_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-local-final.json",
+      "bytes": 207055,
+      "sha256": "3144977b13a83f36847450e8f0c2630bd6193eddc5d6738b6f57049ff3b7e724"
+    },
+    "delta_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-delta.patch",
+      "bytes": 26547,
+      "sha256": "9f870baf0ac48b0520567a9173bf4ce68d650071f8854fc323b2db74792d233c"
+    },
+    "normal_sdk_ref": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/C-normal-SDK.json",
+      "bytes": 4283,
+      "sha256": "767904fa4f9d84a9c631369a8979938296d56e6b2f37ac140d6bcbca40929876"
+    }
+  },
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "execution_ref": "refs/heads/codex/g5-crayon-chalk-hidpi-preview",
+    "completed_through": "r2 authorized local candidate exact 1610 sources, full original execution terminal BLOCKED; independent review HD-L1/HD-L2 confirmed",
+    "next_action": "Preserve r1/r2 frozen results/source/SDK; establish actual Runtime deferred lifecycle RED then minimal owner integration and release-demand/transition fix."
+  },
+  "scope": {
+    "required": [
+      "Fix HD-L1: actual deferred/synchronous preview draw and invalidation/retirement share the correct existing preview renderer owner, canonical renderer remains separate. Cover per-session begin/cancel/retire and full clear.",
+      "Fix HD-L2: pending logical invalidation must cause owner release on matching live provider/context; after unavailable acquire retain a serviced demand until recovery without new stroke. Surface replacement/resize/loss/close respect old owner lifetime. Do not fake completion or release charged last-use leases early.",
+      "Keep invalidation work/accounting truthful while owners still resident. Check setRenderCacheOptions path so budget replacement cannot orphan charged surfaces.",
+      "Preserve incremental stable prefix/tail algorithm, exact texture/phase/material/opacity and confirmed inputs."
+    ],
+    "allowed_paths": [
+      "Existing r2 Render paths for compact lifecycle only",
+      "runtime/render/include/canvas/render/preview_surface.hpp private/source controller lifecycle integration if needed",
+      "runtime/interaction/src/canvas_editing_runtime.cpp and its existing private header: ONLY preview renderer binding, per-session lifecycle, release-demand servicing and surface-transition/close coordination necessary for HD-L1/HD-L2",
+      "runtime/render/tests and opt-in CMake wiring; if actual composition test needs it runtime/composition/tests and CMakeLists private test wiring only",
+      "verification/runners/g5/hidpi_preview task-local correctness smoke only",
+      "new p36 .aegis/packages/results and out namespace"
+    ],
+    "allowed_path_exception": "This P36 explicitly permits narrow actual Runtime lifecycle integration absent from r2 allowlist; repairs existing frozen HD2/HD3 obligation only. No new authority, consumer API or acceptance threshold.",
+    "forbidden": [
+      "All parent semantic/Operation/Ink shader/resource/SDK consumer API/ABI/version/locks changes remain forbidden.",
+      "No general thread/navigation/eraser/GPU epoch or provider architecture redesign, new canonical owner or global cache purge on every frame.",
+      "No more ordinary/diagnostic performance runs, no reinterpreting 33.6ms or co-load as PASS, no full B/C rerun or changed original sampling credits.",
+      "No edits to r1/r2 frozen source/binary/evidence/archive or existing4350 assets; use new p36 result/build/source/install root and new demo first-free>=4351.",
+      "No user IAB access/reload; no commit/push/tag/release/merge or automatic next package."
+    ]
+  },
+  "execution_closure_contract": {
+    "continue_until_terminal_state": true,
+    "preflight": "Resolve same repository/shared package/ancestry and exact candidate hashes first; index empty. Preserve r2 source/SDK archives. Read AGENTS and current authority. Record intended owner/lock/context path; no approval needed for routine implementation choices within this scoped repair.",
+    "red": "Add meaningful private real-GPU test through actual RuntimeComposition -> serviceFrameOpportunity -> renderPreviewPresentation with production split renderer ownership. It must fail on r2 candidate at actual inactive preview cache/lease after qualified Up or Cancel, not a source-string assertion or controller-only fixture. Preserve RED source/binary/log and declared test recipe before production mutation.",
+    "green": [
+      "Run same actual Runtime test after repair: wax/chalk, DPR2/4. Qualified Up with both legal receipt orderings; Cancel; two contacts retire only matched contact and preserve survivor prefix. Check last inactive actual cache/prefix owner released without new input and stable/scratch leases zero only after real GPU completion service.",
+      "Inject final retirement acquire-unavailable then recovery while no input: pending demand exposed/serviced and eventually drained, no stale preview resurrection.",
+      "Test actual surface resize/provider replacement/physical loss/close as relevant to changed paths using distinct real provider/context identities; no old-context destructor under a foreign live context. Keep unknown-abandon charges separate from physical-loss completion. Do not claim Metal test proves backend GL deletion behavior.",
+      "Re-run existing r2 native lifecycle/pixel/regression targets affected by changes. Use original 20 named related CTests as sufficient existing regression set, not whole historical suite; only broaden for new failure or changed dependency.",
+      "Boundary checker, diff check, affected helper tests. Matching normal native + Web SDK build with all private flags OFF using existing locked prebuilt deps. No SDK exports/types changes."
+    ],
+    "web": "One prospective correctness-only root SDK smoke process, isolated Chrome, normal rebuilt candidate with matching wrapper/WASM/resources; wax/chalk DPR2/4, actual pointer draw/Up->settled, Cancel, resize active preview/late completion then close, preserving semantic object/commit counts and no errors. Freeze small smoke recipe before start. This is correctness/build integration, no timing/performance acceptance or retry. No snapshots/readback in timed lane because no timed lane exists here. Existing quality artifacts remain evidence for r2 source only; new candidate assertions must bind new source.",
+    "terminal_success": "READY_FOR_CONTROL_REVIEW_SCOPED_LIFECYCLE_REPAIR when HD-L1/HD-L2 fixed and required directed verification complete. Overall original package remains BLOCKED/PERFORMANCE_TARGET_UNMET; no P34/HD4/relative-performance PASS.",
+    "terminal_blockers": [
+      "BLOCKED_REPOSITORY_IDENTITY or EXECUTION_DIVERGENCE",
+      "Existing authority/semantic conflict -> return owning layer; do not invent API",
+      "Concrete unresolved implementation/test/environment/resource-limit failure with preserved exact evidence",
+      "Need for new architecture/provider contract or scope beyond allowed repair -> report boundary with valid work retained"
+    ],
+    "return_policy": "Continue from first incomplete step through scoped repair and normal preview delivery, do not stop at intermediate ACK. Return exact result/source/SDK/raw manifests and residual failures. Preview ready -> notify Control and continue. Terminal -> notify Control with exact paths/bytesSHA and STOP."
+  },
+  "finite_limits": {
+    "browser_starts": 1,
+    "browser_kind": "correctness-only root SDK smoke",
+    "browser_seconds": 240,
+    "extra_performance_retries": 0,
+    "native_each_seconds": 120,
+    "native_repair_total_seconds": 1800,
+    "RSS_family_MiB": 6144,
+    "new_retained_artifacts_MiB": 512,
+    "new_logical_artifacts_MiB": 1024,
+    "minimum_free_disk_MiB": 8192,
+    "accounting": "Separate P36 allowance prospective for concrete regression only, parent all9starts/566sec + failures preserved; never reset/relabel original ledger. Normal build times not native sampled process time."
+  },
+  "evidence_boundary": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1",
+    "required": [
+      "preflight.json",
+      "repair-design.json",
+      "red-green.json",
+      "directed-lifecycle.json",
+      "native-regressions.json",
+      "normal-builds.json",
+      "root-sdk-smoke.json",
+      "source-and-SDK-binding.json",
+      "sampling-ledger.json",
+      "cleanup.json",
+      "artifact-manifest.json",
+      "result.json",
+      "terminal-callback.json"
+    ],
+    "rule": "Exact files/raw/source deltas/build/sdk refs with bytesSHA, no requirement for evidence-only commit or hosted run; live demo log captured prefix or excluded from immutable manifest."
+  },
+  "notifications": {
+    "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+    "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+    "authorized": "User explicitly authorized existing chats to coordinate and coding notify control after execution.",
+    "preview": "Normal new SDK first-free>=4351 smoke-complete -> send URL/PID/sourceSDK then continue. Keep4350original.",
+    "terminal": "send_message_to_thread to Control with exact result/manifest/ref/status/remaining and STOP."
+  },
+  "no_publication": true
+}

@@ -145,6 +145,12 @@ class GpuResourceRetirement final {
 #endif
     }
   }
+  // Owner shutdown only. Abandoning a retained preview context must not turn
+  // its callbacks into successful completion, even when quota is discarded.
+  void abandonOwner()noexcept {
+    invalidateDisplays();
+    for(auto& e:entries_)e.ticket->submitted(false);
+  }
   std::size_t preparationCount()const noexcept {
     return std::count_if(entries_.begin(),entries_.end(),[](const auto& e){return e.ticket->preparation&&!e.ticket->done.load(std::memory_order_acquire);});
   }

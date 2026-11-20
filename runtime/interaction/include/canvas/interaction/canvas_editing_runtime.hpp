@@ -615,7 +615,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return canonicalPresentationDirty_ || connectorRoutingPending_ || connectorPreviewRoutingPending();
   }
   // Shared owner frame opportunity; true holds exact work until navigation settles.
-  void serviceResourceRetirements(render::ResourceServiceMode mode=render::ResourceServiceMode::kOwnerOpportunity)noexcept {skiaRenderer_.serviceResourceRetirements(mode);previewRenderer_.serviceResourceRetirements(mode);}
+  void serviceResourceRetirements(render::ResourceServiceMode mode=render::ResourceServiceMode::kOwnerOpportunity)noexcept;
   [[nodiscard]] bool resourceRetirementPending()const noexcept {return skiaRenderer_.resourceRetirementPending()||previewRenderer_.resourceRetirementPending();}
   bool serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept;
   bool serviceConnectorRouting() noexcept;

@@ -620,6 +620,14 @@ bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
   return !closed_ && appBinding_ != nullptr && appBinding_->registerInputSource({source, std::string(platform)});
 }
 
+void CanvasEditingRuntime::serviceResourceRetirements(render::ResourceServiceMode mode) noexcept {
+  std::lock_guard lock(previewProviderMutex_);
+  skiaRenderer_.serviceResourceRetirements(mode);
+  previewRenderer_.serviceResourceRetirements(mode);
+  skiaRenderer_.serviceCompactRetirements();
+  previewRenderer_.serviceCompactRetirements();
+}
+
 void CanvasEditingRuntime::close() noexcept {
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
@@ -643,6 +651,9 @@ void CanvasEditingRuntime::close() noexcept {
   cancelAllPointers();
   cpuPending_.reset();
   if (previewController_ != nullptr) (void)previewController_->cancel();
+  if (previewProvider_) previewProvider_->setOverlayVisible(false);
+  previewRenderer_.closeCompactResources();
+  skiaRenderer_.closeCompactResources();
   exactDemand_.reset();
   frameCoordinator_.close();
   surface_.available = false;
@@ -4426,6 +4437,22 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
   skiaRenderer_.clearCompactCache();
   previewRenderer_.clearRenderCache();
   previewRenderer_.clearCompactCache();
+  skiaRenderer_.serviceResourceRetirements();
+  previewRenderer_.serviceResourceRetirements();
+  skiaRenderer_.serviceCompactRetirements();
+  previewRenderer_.serviceCompactRetirements();
+  if (restoring && previewRenderer_.compactReleasePending() && previewProvider_ &&
+      !appBinding_->previewSurfaces()->lifecycle().available()) {
+    // A logical lose may withhold acquire while its context is still live.
+    // Revive only its resource generation before resizing/replacing anything;
+    // the registry's restoring transaction adopts this actual generation.
+    if (previewProvider_->advanceGeneration().code == render::BackendSubmissionCode::kAccepted)
+      previewRenderer_.serviceCompactRetirements();
+  }
+  if (skiaRenderer_.compactReleasePending() || previewRenderer_.compactReleasePending()) {
+    surfaceTransitionActive_ = false;
+    return false;
+  }
   const auto result = appBinding_->updateSurfacePair(metrics,
       pendingCanonicalProvider_, pendingPreviewProvider_, restoring, surface_.generation == 0U,
       [this] { return !closed_ && !surfaceAbortRequested_; });
@@ -4450,7 +4477,7 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
   auto* nextPreview = appBinding_->previewSurfaces()->activeProvider();
   if (previewProvider_ != nextPreview || !previewController_) {
     previewProvider_ = nextPreview;
-    previewController_ = std::make_unique<render::PreviewSurfaceController>(skiaRenderer_, *previewProvider_);
+    previewController_ = std::make_unique<render::PreviewSurfaceController>(previewRenderer_, *previewProvider_);
     previewController_->setPresentationDeferred(platformPresentationDeferred_);
     previewController_->setPresentationStyle(previewStyle);
     if (retainedPreview) previewController_->retainGeometry(*retainedPreview);
@@ -4505,6 +4532,10 @@ bool CanvasEditingRuntime::loseSurface() noexcept {
   skiaRenderer_.clearCompactCache();
   previewRenderer_.clearRenderCache();
   previewRenderer_.clearCompactCache();
+  skiaRenderer_.serviceResourceRetirements();
+  previewRenderer_.serviceResourceRetirements();
+  skiaRenderer_.serviceCompactRetirements();
+  previewRenderer_.serviceCompactRetirements();
   appBinding_->invalidateSurfacePair();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();

@@ -1,0 +1,49 @@
+{
+  "status": "PASS_FROZEN_20_RELATED_TESTS",
+  "names": [
+    "G45BrushSession",
+    "G45BrushPreviewHandoff",
+    "G45BrushComplexity",
+    "G5GpuRetirementContract",
+    "InkV2Work",
+    "InkV2RetinaPreview",
+    "InkV2Material-parity",
+    "InkV2Material-sampling",
+    "InkV2Material-cache",
+    "InkV2Material-wax",
+    "InkV2Material-wax-mask",
+    "InkV2Material-drywet",
+    "InkV2Material-drywet-parity",
+    "InkV2Material-drywet-mask",
+    "InkV2Material-chunk-range",
+    "G3PreviewSurface",
+    "G5RenderMemoryBudget",
+    "G5TransientDisplayHandoff",
+    "G5TransientDisplayHandoffInflight",
+    "G5EraseFeedbackFrame"
+  ],
+  "guard": {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/build-green",
+      "-R",
+      "^(G45BrushSession|G45BrushPreviewHandoff|G45BrushComplexity|G5GpuRetirementContract|InkV2Work|InkV2RetinaPreview|InkV2Material\\-parity|InkV2Material\\-sampling|InkV2Material\\-cache|InkV2Material\\-wax|InkV2Material\\-wax\\-mask|InkV2Material\\-drywet|InkV2Material\\-drywet\\-parity|InkV2Material\\-drywet\\-mask|InkV2Material\\-chunk\\-range|G3PreviewSurface|G5RenderMemoryBudget|G5TransientDisplayHandoff|G5TransientDisplayHandoffInflight|G5EraseFeedbackFrame)$",
+      "--output-on-failure",
+      "--timeout",
+      "120",
+      "-j",
+      "1"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 109.54458087499734,
+    "peak_process_family_rss_kib": 290016,
+    "rss_limit_kib": 6291456,
+    "timeout_s": 900,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "fullCTest": false
+}

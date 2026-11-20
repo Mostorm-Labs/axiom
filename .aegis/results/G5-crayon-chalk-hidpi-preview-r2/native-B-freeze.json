@@ -1,0 +1,76 @@
+{
+  "task": "G5-crayon-chalk-hidpi-preview-r2",
+  "fixture": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/runtime/render/tests/hidpi_material_preview_test.cpp",
+    "bytes": 5176,
+    "sha256": "506f7d525e7eda0bd46b6971e43d0a69a4545ebe0bb7e63e5d9331c60e8fe703"
+  },
+  "binary": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/native-baseline-async",
+    "bytes": 25638848,
+    "sha256": "6f046ed9d31ea936b71756e6ecd969b8dbfa5bcca8bbb65b7df6579e3205f2db"
+  },
+  "trace": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/trace.json",
+    "bytes": 60099,
+    "sha256": "c1aea82071c37d0565f68858e5d922011c933b1a4f88b16d066ebe7311f7c554"
+  },
+  "productionRenderer": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/runtime/render/src/skia_renderer.cpp",
+    "bytes": 155326,
+    "sha256": "e35e5d9ed882621da16c0d15ecf30e731fb1d04837aecfc48a2557f0dc0ad154"
+  },
+  "guard": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/bounded_worker.py",
+    "bytes": 3741,
+    "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1"
+  },
+  "qualification": {
+    "profile": "crayon-wax-v1",
+    "dpr": 2,
+    "N": 240,
+    "exactGeneratedKnots": 32220
+  },
+  "remaining": [
+    {
+      "profile": "crayon-wax-v1",
+      "dpr": 4,
+      "N": 960
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 2,
+      "N": 240
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 2,
+      "N": 480
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 2,
+      "N": 960
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 4,
+      "N": 240
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 4,
+      "N": 480
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 4,
+      "N": 960
+    }
+  ],
+  "maxStarts": 8,
+  "processCapSeconds": 300,
+  "asyncSubmit": true,
+  "finalExplicitDrain": true,
+  "r1CompleteRowsReused": true
+}

@@ -1,0 +1,17 @@
+{
+  "at": "2026-11-19T10:26:12.013281+00:00",
+  "owner": "SkiaRenderer::CompactCache; PreviewSurfaceController invalidates on begin/cancel/retire/CanonicalVisible",
+  "prepare": "Existing resourceBudget admits each full stable and scratch pixel allocation with perEntry ceiling before targetclear; map/cpu metadata lease; all active contours preflight. Noquota partialframe accepted. Compatible stable prefix reused even when optionalcapacity initiallydenied.",
+  "geometry": "Unchanged BrushSession immutable chain and original coverage helpers with exactstartDistance,totalDistance,seed; new stablechunks once, replaceabletail each revision. Old full chain concatenation gone for admittedmaterialviews.",
+  "publish": "Only after allrequiredsurface admissions succeed clear target and replay ordered contours; transient perstroke materialcomposite once; dirty remains on retry.",
+  "snapshots": "Use SkSurface::makeTemporaryImage immediate-scoped read. SDK docs guarantee no internalpixelcopy; all SkImage/shader/paint owners destroyed before next write. gpu.finish flush/submits everyprevioussample in sameGrDirectContext; subsequent writes use sameorderedqueue. No makeImageSnapshot COW needed forpreviewstable/scratch. Underlying backinglease markedGPUread/write and retained through existingGpuResourceRetirement epochs. Metadata alsocharged.",
+  "basis": "provideraddress,surfaceaddress,context,documentepoch,generation,physicalsize,logicalscales,viewport; entryseed/config and chunksharedowner ancestry. Controllerbegin clears old lifetime reuse; cancel/retire prunes sessions.",
+  "quota": "No broadenedglobalbudgets. ExistingperEntry/maxEntries honored. Retry afterpendingrelease; no fakepresent/receipt orCPUescape. Resourcefailure preserveslasttargetandsemanticgeometry.",
+  "lifetime": "Invalidate releasesderivedsurfaces andleases; ResourceBudget pendingrelease stayscharged throughactualcallback. No heldGPUwait onordinarypath. Sessionclose/cancel clearonlyownedderivedresources.",
+  "scope": "Renderpreview only; no publicAPI/Brush/shader/Ink/input/Scene/canonicalcommit change",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "RED": "All4native960over480 approx4, >2.5; first4caseBdiagnostic done."
+}

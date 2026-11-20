@@ -1,0 +1,82 @@
+[
+  {
+    "name": "configure",
+    "argv": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/source-C-normal-r2",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/build-C-normal",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_TOOLCHAIN_FILE=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "-DCanvasSkia_DIR=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release/lib/cmake/CanvasSkia",
+      "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_POC02=OFF",
+      "-DCANVAS_BUILD_POC03=OFF",
+      "-DCANVAS_BUILD_POC05=OFF",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DAXIOM_BUILD_JS_SDK=ON",
+      "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_CPU_PENDING_ERASE=ON",
+      "-DAXIOM_ENABLE_FRAME_TIMING=OFF",
+      "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+      "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+      "-DAXIOM_RENDER_CACHE_MIB=512",
+      "-DAXIOM_RENDER_SHARED_MIB=1024",
+      "-DAXIOM_RENDER_ENTRY_MIB=128",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_CXX_FLAGS=",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS=OFF",
+      "-DAXIOM_RENDER_BUILD_ERASE_FEEDBACK_FRAME_TESTS=OFF"
+    ],
+    "exit": 0,
+    "seconds": 3.330366165999294
+  },
+  {
+    "name": "build",
+    "argv": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/build-C-normal",
+      "--target",
+      "axiom_js_runtime",
+      "axiom_cpu_worker_kernel",
+      "--parallel",
+      "4"
+    ],
+    "exit": 0,
+    "seconds": 186.6591822090013
+  },
+  {
+    "name": "install",
+    "argv": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/build-C-normal",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/install-C-normal"
+    ],
+    "exit": 0,
+    "seconds": 0.023011000001133652
+  }
+]

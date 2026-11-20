@@ -1,0 +1,28 @@
+{
+  "scope": "HighDPRwax/chalkpreview only; not generalG5/physicaltouch/otherplatforms or oldEFF4closure.",
+  "percentile": "Nearest-rank ceil(.95*N)-1; independent percase rows, pool only matching case across B1/B2 and C1/C2; no mixing diagnostics.",
+  "metrics": {
+    "callback_cpu": "SDKrAF callback ended-started, inclusive scope; not frameinterval/GPUcompletion. Recorddispatch CPU separately.",
+    "feedback_interval": "Actual preview default-target nonclear/nonmasked content-write timestamps. Notphotons. Include down->first and final confirmedmove->eligible feedback windows; nevercountoffscreenwrites or clear-only asink.",
+    "steady_phase": "Last4000ms before primaryUp; report earlyfirst4000ms andlate4000ms callbackCPU, interval/gap, dispatchedtiming andallconfirmedcounts.",
+    "Up": "DirectUp dispatch duration; separatelyUp->realcanonicalvisible, firstpostUpcallback and resourcewait. Not all render recovery is OperationcommitCPU."
+  },
+  "blocking_mechanism": [
+    "ActualoldbaselineRED above16MiB and fixedbasis causes repeated oldprefix work; candidate960/480generated-renderwork ratio<=2.5 for sameprofile/workload afterstartup, vs oldexpected~quadratic.",
+    "At adequate admittedcapacity, no warmfixedbasis fullhistoryconcatenation or stableprefixredraw perframe. Newchunk+boundedtail work only; nochange revision submits0. Cold/rebind/reclaim rebuilds countedseparately, neverhidden.",
+    "All stable/scratch/snapshot/COW bytes under realsharedResourceBudget and lastuse; no new unaccountedcap or ordinaryCPUfallbackjustbecauseold16MiBcrossed."
+  ],
+  "ordinary_targets": [
+    "For each4Ccase, late SDKcallbackCPU p95<=33ms, visiblepreviewcontent-write gap p95<=33ms and maximum includingfirst/last<=100ms.",
+    "For each4case, pooled late callbackCPU p95 C<=min(33ms,max(0.8*B, B-2ms)); if Bp95<5ms use C<=B+1ms nonregression instead of demanding sub-ms gain.",
+    "Per-Ccase confirmed720 moves retained, planned12sactualduration<=15s; no inputdrop; inputdispatchp95 and terminalconvergence pooled C<=max(1.10*B,B+5ms) fordispatch and<=max(1.10*B,B+50ms)forconvergence.",
+    "DPR1/smallview need native functional/regression only, no extra browserperf lane."
+  ],
+  "failurePolicy": "A frozen miss remainsUNMET, complete safeplannedcorrectnessthenreturn. Noextraordinaryretry,thresholdrelaxation,samplediscard; no confusing workcount reduction with browserpass.",
+  "correctness": [
+    "ExistingRastermaterial tests exactunchanged; canonicalterminal sameSDKinput B/C decoded pixels byteexact (render codeonlypreview).",
+    "SameGPUpreview B/C and originalfull-coverage reference maximumperchannelerror<=2/255, textureinteriorincluded; no blanketAAexclude,no SSIM-only,no broadened tolerance. Reportcountofdiffs,max/meanandROIwitnesses.",
+    "Native targeted material-reference comparisons: exactsameRaster/seed/coords path expectedbyteexact; GPUreadbackmax2 where backendroundingapplies. Tailandtilejunctions,opacityonce,texturephase/capswitnessesnonempty.",
+    "Semantic objectcontent/config/knots/seed andOperation bytes for deterministic fixture equivalent afterdecoding; ignoreonlyclearlydeclared generatedidentity if entropytranscriptdiffers, never geometry/mask/order."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "current_flow": "public pointer collector -> BrushSession confirmed immutable chunk chain plus replaceable tail -> PreviewSurfaceController dirty state -> SkiaRenderer::CompactCache -> paired preview GPU provider; canonical remains OperationEngine and matched CanonicalVisible",
+  "current_ownership": {
+    "prepare": "CompactCache keyed on generation/viewport/physical dimensions, entries by session only",
+    "record": "stable coverage prefix plus scratch tail below old fixed cap; full chain concatenation and draw above16MiB",
+    "publish": "renderPreview clears provider then draws/presents; controller advances submitted revision only accepted",
+    "retry": "controller retains dirty on nonaccepted result",
+    "GPUlastuse": "existing SkiaGpuLifetime but old CompactCache surfaces/snapshot allocation lack leases",
+    "invalidation": "cache reset viewport/generation; missing document/seed/context basis and entry prune"
+  },
+  "minimal_target": {
+    "owner": "SkiaRenderer::CompactCache with narrow controller cache prune/invalidate lifecycle only",
+    "prepare": "validate full owner/device/pose/document/config/seed and chunk ancestry; admit stable/scratch and copy/snapshot capacity via existing ResourceBudget before provider writes",
+    "record": "new stable chunks only plus replaceable tail, existing full coverage/material helpers and exact coordinate phase",
+    "publish": "complete all admission before clearing provider; no partial accepted frame; original order/opacity preserved",
+    "lifetime": "stable/scratch and any immutable snapshot or COW allocation charged before use, held through actual GPU completion; no finish/readback in timed consumer",
+    "retry": "retain coherent prefix, no frame-task reset; explicit pending quota; old visible feedback preserved",
+    "invalidation": "document/session lifetime,seed/config,provider/context/surface,generation,DPR/pose change; cancel/visible prune by existing controller"
+  },
+  "API_impact": "private Render/opt-in native test only, no SDK exports/ABI/schema/Brush/Operation change",
+  "HD_mapping": {
+    "HD1": "actual Metal production append/growth fixture 240/480/960 and baseline browserdiagnostic",
+    "HD2": "same GREEN plus held completion/quota recovery",
+    "HD3": "independent full coverage/material pixel oracle plus regressions and Web quality",
+    "HD4": "frozen four ordinary runs with no forcedframes",
+    "HD5": "exact source/SDK/evidence and own normal rootSDK smoke+callback"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "productionChanged": false,
+  "at": "2026-11-19T09:45:53.133003+00:00",
+  "frozenNativeInputs": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/runtime/render/tests/hidpi_material_preview_test.cpp",
+      "bytes": 4190,
+      "sha256": "05f4a2dfdccfeff5a9c468ec2f318d9636c228db65f62712d4cff27332b01bfb"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+      "bytes": 60099,
+      "sha256": "c1aea82071c37d0565f68858e5d922011c933b1a4f88b16d066ebe7311f7c554"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+      "bytes": 25636592,
+      "sha256": "dd8727987c71451804ab7a6cc242d36509aa4293ea7bae1f9af9168273dae5f0"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/bounded_worker.py",
+      "bytes": 3741,
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1"
+    }
+  ],
+  "expectedRED": "Actual generated-renderwork960/480 >2.5, with fixed full view each >16MiB; not source string oracle"
+}

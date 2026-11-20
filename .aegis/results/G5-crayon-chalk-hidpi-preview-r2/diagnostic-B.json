@@ -1,0 +1,65 @@
+{
+  "status": "OBSERVED",
+  "rows": [
+    {
+      "case": "chalk-2",
+      "moves": 720,
+      "diagnostics": 308,
+      "generatedKnots": 48002,
+      "dropped": 0,
+      "objects": 1,
+      "duration": 12001.699999999255
+    },
+    {
+      "case": "chalk-4",
+      "moves": 720,
+      "diagnostics": 232,
+      "generatedKnots": 31598,
+      "dropped": 0,
+      "objects": 1,
+      "duration": 12001.800000000745
+    },
+    {
+      "case": "wax-2",
+      "moves": 720,
+      "diagnostics": 211,
+      "generatedKnots": 54732,
+      "dropped": 0,
+      "objects": 1,
+      "duration": 12001.700000001118
+    },
+    {
+      "case": "wax-4",
+      "moves": 720,
+      "diagnostics": 165,
+      "generatedKnots": 37210,
+      "dropped": 0,
+      "objects": 1,
+      "duration": 12001.0
+    }
+  ],
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/web.mjs",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/HD-D-B-request.json",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/web/HD-D-B"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 53.8732883749999,
+    "peak_process_family_rss_kib": 1617888,
+    "rss_limit_kib": 6291456,
+    "timeout_s": 360,
+    "last_stage": {
+      "stage": "closed",
+      "id": "HD-D-B",
+      "case": "chalk-4",
+      "status": "OBSERVED"
+    },
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "bindingFinding": "diagnostic-B-binding.json late envelope; exact served identities retained; no input edits during run",
+  "productionRepairStarted": false
+}

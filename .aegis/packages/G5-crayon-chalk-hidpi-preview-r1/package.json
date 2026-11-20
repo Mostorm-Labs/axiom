@@ -1,0 +1,77 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "G5-crayon-chalk-hidpi-preview-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "created_at": "2026-11-19T09:32:10.981123+00:00",
+  "execution_ref": "refs/heads/codex/g5-crayon-chalk-hidpi-preview",
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "execution_ref": "refs/heads/codex/g5-settled-navigation-recovery",
+    "completed_through": "4349erasegain + diagnosticcheckpoint5c26saved/pushed; SNRno-cause reviewed; noHDproductionworkstarted",
+    "next_action": "Createisolatedtasktree; validatepackage/sourceSDK/owners thenHD1RED beforeproductionchange."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-crayon-chalk-hidpi-preview-r1"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 4246,
+    "sha256": "4c898578cd89c0b6abf7fbd22f3c450b445143e238b8a430653afeba5bb032c3"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 8362,
+    "sha256": "1908d306f2fa35ad2e1d79ecae1ad8e8f089a27ebce124f54862b5160cd4169d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 6247,
+    "sha256": "08d620b9784618b92d8978c6d1caac7156c0b00414ee85a4c5573be298100be1"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 3223,
+    "sha256": "0f57b60f54843a6b22d66eacce3ed131fc726d4524a6ea3f8ffedccbf2cab32d"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 4967,
+    "sha256": "7a722a2df76dd0d6dc9dd147f879a65c90ab3ce9a466e23746977ef87cdc40ce"
+  },
+  "storage_contract_ref": {
+    "path": "storage-contract.json",
+    "bytes": 2186,
+    "sha256": "b2f36e5795b15660b0b7465c352ddf8c4a67536994393c1319615b935d56749c"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 1799,
+    "sha256": "7e5d4d1f8e0656ddebb3c5fa19fe8ac168c32371da98e70e69e7a2f14b7a985a"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 12661,
+    "sha256": "e9c9dbbec5f0930748739b190cd0a4c634842971dcf390ace826654c5de3c00a"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 2580,
+    "sha256": "46c82a72279323f06ba007e4dcb8480404f904f61a51ff6d6bb0fc54be35e49f"
+  }
+}

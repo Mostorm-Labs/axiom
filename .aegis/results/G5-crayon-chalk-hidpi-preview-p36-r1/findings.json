@@ -1,0 +1,31 @@
+{
+  "scope": "P36 preview lifecycle repair; not performance work",
+  "implementation": [
+    "Controller uses actual previewRenderer_ in synchronous and deferred Runtime path",
+    "Both compact caches record original provider/context lifetime and their own session invalidations",
+    "Unreleased owner stays counted; owner opportunities retry compact release without input",
+    "Actual context acquisition applies only matching cache invalidation; acquired draw paths never service another target",
+    "Resize/replacement preflight releases old preview owners before provider mutation; lost live provider revives its generation before rebind release",
+    "Final close drops owners with original context or abandons retained GL context after discard-only owner shutdown; no successful GPU completion synthesized",
+    "setRenderCacheOptions keeps original budget while release cannot progress"
+  ],
+  "findingsRetained": [
+    "Original HD4 33.6ms >33ms UNMET",
+    "Original ordinary/native co-load prevents relative performance PASS",
+    "r2 late B envelope, r1 ignored cache intermediates, preserved early quality failure and authorized correction unchanged"
+  ],
+  "verificationCorrections": [
+    "Initial test-only immutable SurfaceMetrics assignment compile failure corrected before valid RED",
+    "Initial native RED failure delivered as abort(-6) with exact real lease failure; raw retained",
+    "Two early directed recipe assertions incorrectly assumed pre-Up receipt stays current/dirty preview cannot retire when already canonical-covered; corrected to existing receipt contract, production receipt logic unchanged",
+    "Git whitespace check exposed CR on new lines in historical mixed-ending files; changed lines normalized and matching normal artifacts rebuilt"
+  ],
+  "limits": [
+    "No whole historical CTest matrix; required20 plus directed/pixel/resource tests only",
+    "No new Web per-pixel qualification; native54 actual GPU pixel scenarios exact and normal Web fourcase correctness smoke",
+    "No physical VRAM or Metal-proves-GL-deletion claim",
+    "GL close unavailable fallback is source contract/Skia abandon semantic, not a dedicated real Web unavailable-acquire injection",
+    "Original EFF4 5125.1ms/304 callbacks remains independent UNMET / ROOT_CAUSE_NOT_ESTABLISHED"
+  ],
+  "noPublication": true
+}

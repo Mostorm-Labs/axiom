@@ -1,0 +1,151 @@
+{
+  "status": "PASS_SCOPED_DIRECTED",
+  "actualRuntimeComposition": true,
+  "distinctGPUContexts": true,
+  "rows": [
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 2,
+      "noNewInputAfterCancel": true,
+      "profile": "crayon-wax-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 2,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 2,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 4,
+      "noNewInputAfterCancel": true,
+      "profile": "crayon-wax-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 4,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 4,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 2,
+      "noNewInputAfterCancel": true,
+      "profile": "chalk-compact-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 2,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 2,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 4,
+      "noNewInputAfterCancel": true,
+      "profile": "chalk-compact-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 4,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 4,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "acquire-unavailable-idle-recovery",
+      "released": true
+    },
+    {
+      "case": "two-contacts-retire-only-owned-prefix",
+      "prefixReleased": true,
+      "survivorReused": true
+    },
+    {
+      "case": "active-resize-old-context-release",
+      "releasedBeforeResize": true
+    },
+    {
+      "case": "provider-replacement-independent-contexts",
+      "oldOwnerReleased": true
+    },
+    {
+      "case": "physical-loss",
+      "released": true
+    },
+    {
+      "case": "logical-loss-unavailable-rebind-same-context",
+      "recoveredWithoutNewInput": true
+    },
+    {
+      "case": "set-options-with-unavailable-target",
+      "noOrphanedBudget": true
+    },
+    {
+      "acquireUnavailable": false,
+      "case": "close",
+      "ownerReleased": true
+    },
+    {
+      "acquireUnavailable": true,
+      "case": "close",
+      "ownerReleased": true
+    }
+  ],
+  "guard": {
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/build-green/runtime/render/axiom_hidpi_preview_lifecycle_tests",
+      "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-exact.json"
+    ],
+    "reason": "completed",
+    "returncode": 0,
+    "elapsed_s": 2.8752830420016835,
+    "peak_process_family_rss_kib": 55280,
+    "rss_limit_kib": 6291456,
+    "timeout_s": 120,
+    "last_stage": null,
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  },
+  "binarySHA256": "e172e256947f001a46d7bcb0d2a7e58ff7332d00268e699aa30d15a437ebf22f",
+  "source": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-local-final.json",
+  "limits": [
+    "Metal does not prove backend GL deletion behavior; normal Web root correctness smoke independently passed four combinations",
+    "No physical VRAM release claim; lease accounting is logical owner/epoch charge"
+  ]
+}

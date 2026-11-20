@@ -1,0 +1,83 @@
+{
+  "at": "2026-11-19T10:24:11.030622+00:00",
+  "status": "LATE_ENVELOPE_INPUT_IDENTITIES_PRESERVED",
+  "finding": "Pre-start verification wrongly allowed only renderer.cpp delta, omitting authorized CMake optin wiring. Assertion prevented formal freeze envelope, but the following separate exec wrongly proceeded to HD-D-B. Do not describe this envelope as pre-start. No input edits occurred during this B run. Source/SDK manifests were saved beforestart; actual served hashes and driver refs to be reconciled.",
+  "preexistingSourceManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-B-probe.json",
+    "bytes": 6459449,
+    "sha256": "76773e5338b2e6ba6d199f6ac4ff479b4e33477e2f4406b192093dd2c8569528"
+  },
+  "preexistingSDKManifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/B-probe-SDK.json",
+    "bytes": 4282,
+    "sha256": "89c017895520c63027f4125d9c3f45177aebfded71a94cad7393dba502927e75"
+  },
+  "authorizedBaselineDeltas": [
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/src/skia_renderer.cpp"
+  ],
+  "driverFiles": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/consumer.mjs",
+      "bytes": 6542,
+      "sha256": "6ae8379da1ac0457976931646c8e63c83aa1c68964775c4fef0743337bc6837f"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/observer.mjs",
+      "bytes": 2626,
+      "sha256": "9bacb54b6845c16b6165e1760312683c8bbc82a9f0f6efbb9f5c2e941ac44c23"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/observer.test.mjs",
+      "bytes": 2204,
+      "sha256": "ec4022f4aeaf2be299abca8563f71169018caf629a07820eaadce76b7868d98d"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/storage.mjs",
+      "bytes": 3674,
+      "sha256": "c03c10c1571485addd2e5473beac84fc00c55b02929656ea92911843ba43b803"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/storage.test.mjs",
+      "bytes": 2296,
+      "sha256": "970857c0c3bc3f2a64c55f51fa6dc12b2f27be4071193e9e5a99a22bd5b1aed6"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/task-storage.py",
+      "bytes": 3536,
+      "sha256": "3e6aebacd465afb06213a4adf9010446517017df0986fb7d2c8c7d8dfa3095d7"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/web.mjs",
+      "bytes": 4087,
+      "sha256": "67494292c829ee30bcd20a43e5406bb0f774bfa4ce1b681a17ba65b38e61c29c"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/run-browser.py",
+      "bytes": 1863,
+      "sha256": "dc522836ff83f054da1ee2132bfc535dbff41f10c1c70074a3fedaa0e75c2561"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/bounded_worker.py",
+      "bytes": 3741,
+      "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/webgl_target_readback.mjs",
+      "bytes": 8398,
+      "sha256": "1086e57c6bab1b0d5a6e9f311e07868b694137308245a7b180da6f1b16909642"
+    }
+  ],
+  "offlineQualification": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/helper-tests.log",
+    "bytes": 534,
+    "sha256": "695d23eb06e62b65768cbf3a5b47286ac42758c83fbe8064cc3196671579dfd0"
+  },
+  "nativeRED": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/baseline-work.json",
+    "bytes": 5885,
+    "sha256": "65a38771bac5bb76aeea5b88efdbd352465ef35b5512ed5512dbf04cf23642da"
+  },
+  "noSpecThresholdOrWorkloadChange": true,
+  "publication": "No false claim of pre-start hash envelope."
+}

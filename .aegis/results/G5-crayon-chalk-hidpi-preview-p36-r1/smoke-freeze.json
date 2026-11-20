@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-19T14:50:15.781794+00:00",
+  "kind": "one prospective root SDK correctness process; no performance",
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-normal.json",
+    "bytes": 6460336,
+    "sha256": "e3adbb9c5f33c9d4f363263d087ae04c845b037ea7a2e4c5c653cc9c2ceebe2a"
+  },
+  "SDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/normal-SDK.json",
+    "bytes": 4289,
+    "sha256": "d91944d15726aa06d25f965a80df2e1988afd2518c7de7a90d62ec1dbfb72601"
+  },
+  "driver": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/p36-smoke.mjs",
+    "bytes": 6689,
+    "sha256": "ba6394679cfdf6c0f38cae24738d096edd6de3cafb25938a515e7ff6ce908033"
+  },
+  "guard": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/bounded_worker.py",
+    "bytes": 3741,
+    "sha256": "91022344f15d3a40d34dd2df02c6321b9da6f314590150f256be85ecc7b5cda1"
+  },
+  "cases": [
+    "waxDPR2",
+    "chalkDPR2",
+    "waxDPR4",
+    "chalkDPR4"
+  ],
+  "coverage": [
+    "ordinary root pointer draw Up qualified settled",
+    "Cancel semantic count invariant",
+    "resize during active contact defers until Up and late callbacks settle",
+    "WebGL context loss/restored canonical state invariant",
+    "Cancel then close"
+  ],
+  "limits": {
+    "browserStarts": 1,
+    "seconds": 240,
+    "rssMiB": 6144
+  },
+  "noRetry": true,
+  "r2": "9starts/566seconds;33.6ms>33ms/co-load remain unchanged"
+}

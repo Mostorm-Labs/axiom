@@ -1,0 +1,19 @@
+{
+  "status": "MECHANISM_RED_GREEN_MET",
+  "baseline": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/baseline-work.json",
+    "bytes": 5885,
+    "sha256": "65a38771bac5bb76aeea5b88efdbd352465ef35b5512ed5512dbf04cf23642da"
+  },
+  "candidate": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/mechanism-work-final.json",
+    "bytes": 6047,
+    "sha256": "928fe29049f34fe6f1081d1c0f8e4184c4d6b29a7cf3ac66be2ddd6e463816a1"
+  },
+  "acceptance": "All4 ratios960/480 <=2.5 atfixedphysicalview withallinputs; old4.00..4.05 andnew2.0756..2.1382. Nativeelapsednotbrowserlatency.",
+  "source": "actualBrushSession/controller/SkiaRendererrealMetal",
+  "r1TimeoutRetained": true,
+  "nativeCorrectionQualificationExactGenerated32220": true,
+  "oldSmallGPUAndLargeGPUBranches": "small54nativebyteexact; large4Webpreview<=2withonequalifiedcorrective; rawoverlapendpointstampnewonlyold>16MiB",
+  "ordinary": "PERFORMANCE_TARGET_UNMET; mechanismcountnotperformancePASS"
+}

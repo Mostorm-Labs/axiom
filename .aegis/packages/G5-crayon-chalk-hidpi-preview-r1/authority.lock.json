@@ -1,0 +1,54 @@
+{
+  "status": "CURRENT_SCOPED_USER_AUTHORIZATION",
+  "user_scope": "用户已确认当前Demo蜡笔/粉笔并要求开始下一包及继续任务；本包先高DPR预览，混合文档擦除为后继。用户允许合理增加内存。既有控制/实现聊天分工及预览/终态回报授权持续有效。",
+  "sources": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/AGENTS.md",
+      "bytes": 11364,
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/docs/notion/manifest.yaml",
+      "bytes": 11224,
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "bytes": 4508,
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/docs/planning/sdk/js-v1-contract.md",
+      "bytes": 7622,
+      "sha256": "a4e058cb625dab2187f898c8157166580c2b10eb45c12b9587237400d7a676c4"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/docs/planning/sdk/windows-consumer-v1.md",
+      "bytes": 4050,
+      "sha256": "0439dbb9d935b493b05926fc2f61e5f37f9fbac33bde0a910d4b8770e83c3428"
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/docs/planning/sdk/shell-axis-preview-contract.md",
+      "bytes": 4598,
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093"
+    }
+  ],
+  "owners": {
+    "input": "Existing public SDK pointer collector -> CanvasEditingRuntime -> BrushSession/CompactBrushSession immutable confirmed prefix and replaceable tail.",
+    "preview": "SkiaRenderer::CompactCache and PreviewSurfaceController, shared derived-resource budget and GpuResourceRetirement/SkiaGpuLifetime.",
+    "canonical": "BrushCommitAdapter -> sole OperationEngine atomic apply; canonical paint/handoff remains current owner.",
+    "host": "Shell mount and paired surface bindings, real GPU completion service. No geometry in JS."
+  },
+  "API_impact": "No public API/ABI/exports/DTO/version/material or semantic/wire change. Private Render changes and opt-in qualification seam only.",
+  "decisions": [
+    "Primary profiles crayon-wax-v1 revision3 / algorithm5 and chalk-compact-v1 revision3 / algorithm6. Watercolor algorithm6 is regression coverage, not another feature.",
+    "Replace fixed16MiB-per-surface/32MiB-preview aggregate gate for supported GPU preview with actual existing Render budget admission. Reuse full compatible surfaces when affordable; local/tiled scratch only if exact existing material coordinates and overlap semantics are preserved.",
+    "Reference desktop runs keep current512MiB optional /1024MiB shared /128MiB entry ceilings. Increasing accounted preview residence inside these ceilings is authorized; no new unaccounted pool or blanket global quota/time/LOD changes.",
+    "Coverage max-combines within each stroke; whole-stroke opacity once; different strokes retain original ordered SrcOver. Preserve captured seed, cumulative arc-length, pressure/taper/caps, texture phase and tint.",
+    "Resource insufficiency is explicit bounded retry/recovery or qualified current fallback, never silent missing/stale/partially built success or unlimited full-history rebuild each ordinary frame under an affordable working set.",
+    "Unchanged v4 and prior material shaders/data bytes. No mixed-brush async erase eligibility changes or new thread architecture.",
+    "Original EFF4 scheduling/recovery failure remains open; this package cannot claim its closure."
+  ],
+  "retirement": "Stable/scratch/retained snapshots and any Skia COW allocation charged before actual use, retained through GPU last use. Unknown abandon is not successful completion; no forced glFinish/readback in timed path.",
+  "platform_claim": "Shared C++ ownership with native GPU mechanism/correctness and actual Web/WASM consumer qualification. No Windows ABI/GPU certification inferred."
+}

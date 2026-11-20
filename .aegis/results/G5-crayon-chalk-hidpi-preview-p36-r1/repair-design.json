@@ -1,0 +1,14 @@
+{
+  "owner": "Existing previewRenderer_ for both synchronous controller and deferred actual draw; canonical skiaRenderer_ remains separate",
+  "invalidation": "Logical per-session invalidation preserves actual resident counts; matched provider acquisition applies releases",
+  "idleRelease": "Existing Runtime resource service includes compact release demand; unavailable acquisition leaves demand pending independent of active/dirty/input",
+  "transition": "Under existing owner/provider/state exclusion, clear compact cache and release on old context before transactional provider update; hold old GPU completion ownership/charge through last-use; real physical loss only permits abandon-safe release, unknown loss never successful completion",
+  "locks": "Use existing owner thread and provider->state exclusion; avoid new cross-thread renderer protocol. Render draw serialized by provider lock. Non-render begin/cancel enqueue logical invalidation only. Release retry serviced at owner opportunity.",
+  "quotaReset": "No budget replacement while compact resources cannot be released; do not orphan old leases",
+  "close": "Drop compact owners under matching retained context even when provider acquire is unavailable; preserve completion owner until asynchronous last use, no fake successful receipt",
+  "RED": "Actual RuntimeComposition pointer input/cancel, split renderer and independent real Metal provider contexts; after completion drain and idle owner opportunities actual preview kRaster/kScratch must be0. r2 is expected to retain them.",
+  "GREEN": "Both legal qualified receipt orderings, cancel, multicontact, stale feedback, acquire withholding/recovery, resize/provider replacement/loss/close, exact pixels/20 related regressions, normal native/Web, one correctness smoke",
+  "unresolved_semantic_decisions": [],
+  "scopeConflict": false,
+  "performance": "Original33.6ms UNMET and coload unchanged; no performance sampling"
+}

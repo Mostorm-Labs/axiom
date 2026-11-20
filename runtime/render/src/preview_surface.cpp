@@ -42,6 +42,7 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
                            return contour.session == session;
                        }),
         geometry_.contours.end());
+    renderer_.invalidateCompactSession(session);
     PreviewGeometry::Contour initial;initial.session=session;
     geometry_.contours.push_back(std::move(initial));
     defaultSession_ = session;
@@ -132,6 +133,7 @@ bool PreviewSurfaceController::cancelSession(std::uint64_t session) noexcept {
                                      return value.session == session;
                                  });
     if (it == geometry_.contours.end()) return false;
+    renderer_.invalidateCompactSession(session);
     it->outline.clear();
     it->dabs.clear();
     it->roundStroke.reset();
@@ -158,6 +160,7 @@ bool PreviewSurfaceController::retireSession(
                        }),
         geometry_.contours.end());
     if (geometry_.contours.size() == before) return false;
+    renderer_.invalidateCompactSession(session);
     ++geometry_.revision;
     state_.contentRevision = geometry_.revision;
 
@@ -167,6 +170,7 @@ bool PreviewSurfaceController::retireSession(
     // vsync, which makes the preview appear to linger after pen-up.
     if (geometry_.contours.empty()) {
         provider_.setOverlayVisible(false);
+        (void)renderer_.releaseRetiredCompactResources(provider_);
         active_ = false;
         state_.dirty = false;
         state_.submittedRevision = state_.contentRevision;
@@ -176,7 +180,7 @@ bool PreviewSurfaceController::retireSession(
 
     state_.dirty = true;
     if (presentationDeferred_) return true;
-    if (!renderIfDirty()) return false;
+    if (!renderIfDirty(presentationStyle_)) return false;
     return true;
 }
 
@@ -252,6 +256,7 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     std::uint64_t surfaceGeneration) noexcept {
     if (!active_ || surfaceGeneration != geometry_.surfaceGeneration.value() ||
         provider_.generation() != surfaceGeneration) return false;
+    renderer_.clearCompactCache();
     geometry_.contours.clear();
     geometry_.outline.clear();
     geometry_.dabs.clear();
@@ -261,6 +266,7 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     // before doing any further provider work so a platform present path with
     // vsync or composition latency cannot leave the old preview on screen.
     provider_.setOverlayVisible(false);
+    (void)renderer_.releaseRetiredCompactResources(provider_);
     active_ = false;
     state_.dirty = false;
     state_.submittedRevision = state_.contentRevision;

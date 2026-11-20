@@ -1,0 +1,31 @@
+{
+  "status": "BUILD_SUCCEEDED",
+  "configureArguments": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/C-normal-native-configure.json",
+    "bytes": 2213,
+    "sha256": "fe81df50153eb9ed7f3ad72a2424948fb80c2934de175e6725879e1d297b2f22"
+  },
+  "configureLog": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/C-normal-native-configure.log",
+    "bytes": 1009,
+    "sha256": "09a8a334355b3fff93f6d04817be73b94a2c65e889cce579fc2f185da3bcc97b"
+  },
+  "buildCommand": [
+    "cmake",
+    "--build",
+    "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/build-C-normal-native",
+    "--target",
+    "canvas_runtime_render",
+    "--parallel",
+    "4"
+  ],
+  "buildExit": 0,
+  "buildLog": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/C-normal-native-build.log",
+    "bytes": 20072,
+    "sha256": "72419704b835d92ef568e633f1f2e72c0ff31e91cfc2905ff6e0f4fcef4ff3a8"
+  },
+  "normalFlags": "FRAME_TIMING/G5/runtimequalification/privatehidi/erasefeedbacktestsOFF",
+  "prebuiltSemanticSkiaOnly": true,
+  "noThirdPartyRebuild": true
+}

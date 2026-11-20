@@ -1,0 +1,101 @@
+{
+  "status": "PERFORMANCE_TARGET_UNMET",
+  "comparison": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/browser-comparison.json",
+    "bytes": 56610,
+    "sha256": "b7053a0b72f04f52ec5b5f5c529a23e83245907d922f4b7ae5370ece35a2d96b"
+  },
+  "everyOrdinaryCase720Moves": true,
+  "allActualInputDurationsMs": [
+    {
+      "run": "B1",
+      "case": "chalk-2",
+      "ms": 12001.0
+    },
+    {
+      "run": "B1",
+      "case": "chalk-4",
+      "ms": 12000.39999999851
+    },
+    {
+      "run": "B1",
+      "case": "wax-2",
+      "ms": 12001.10000000149
+    },
+    {
+      "run": "B1",
+      "case": "wax-4",
+      "ms": 12001.0
+    },
+    {
+      "run": "C1",
+      "case": "chalk-2",
+      "ms": 12000.60000000149
+    },
+    {
+      "run": "C1",
+      "case": "chalk-4",
+      "ms": 12000.0
+    },
+    {
+      "run": "C1",
+      "case": "wax-2",
+      "ms": 12001.0
+    },
+    {
+      "run": "C1",
+      "case": "wax-4",
+      "ms": 12000.300000000745
+    },
+    {
+      "run": "C2",
+      "case": "chalk-2",
+      "ms": 12001.70000000298
+    },
+    {
+      "run": "C2",
+      "case": "chalk-4",
+      "ms": 12001.699999999255
+    },
+    {
+      "run": "C2",
+      "case": "wax-2",
+      "ms": 12000.89999999851
+    },
+    {
+      "run": "C2",
+      "case": "wax-4",
+      "ms": 12001.900000002235
+    },
+    {
+      "run": "B2",
+      "case": "chalk-2",
+      "ms": 12002.60000000149
+    },
+    {
+      "run": "B2",
+      "case": "chalk-4",
+      "ms": 12001.39999999851
+    },
+    {
+      "run": "B2",
+      "case": "wax-2",
+      "ms": 12001.300000000745
+    },
+    {
+      "run": "B2",
+      "case": "wax-4",
+      "ms": 12002.800000000745
+    }
+  ],
+  "frozenMiss": {
+    "run": "C1",
+    "case": "wax-4",
+    "latePreviewFeedbackGapP95Ms": 33.600000001490116,
+    "limitMs": 33,
+    "maximumGapMs": 53.80000000074506
+  },
+  "allCallbackCPUTargets": true,
+  "allDispatchAndTerminalConvergenceNonregressionsObserved": true,
+  "limits": "Observeddefaulttargetnonclear/unmaskedwrites are notphotons orGPUcompletion; CPUcallbackduration notGPUcost. Nativebackgroundverificationoverlap recorded asconfounder; no relativeperformancePASS."
+}

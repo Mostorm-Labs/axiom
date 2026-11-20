@@ -29,6 +29,14 @@ if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
     target_sources(canvas_runtime_render PRIVATE src/webgl_surface_backend.cpp)
 endif()
 
+option(AXIOM_RENDER_BUILD_HIDPI_LIFECYCLE_TESTS "Private actual Runtime high-DPR preview lifecycle qualification" OFF)
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_HIDPI_LIFECYCLE_TESTS AND APPLE AND NOT EMSCRIPTEN)
+ add_executable(axiom_hidpi_preview_lifecycle_tests tests/hidpi_preview_runtime_lifecycle_test.cpp)
+ target_compile_definitions(axiom_hidpi_preview_lifecycle_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+ target_link_libraries(axiom_hidpi_preview_lifecycle_tests PRIVATE canvas_runtime_composition CanvasSkia::Skia "-framework Metal" "-framework Foundation" objc)
+ target_include_directories(axiom_hidpi_preview_lifecycle_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+endif()
+
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_CPU_PENDING_ERASE)
  foreach(kind numeric protocol compatibility)
   add_executable(axiom_cpu_local_exact_${kind}_tests tests/cpu_local_exact_${kind}_test.cpp)
@@ -1085,4 +1093,12 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_E
  target_include_directories(axiom_erase_feedback_frame_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}" "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
  add_test(NAME G5EraseFeedbackFrame COMMAND axiom_erase_feedback_frame_tests "${CMAKE_CURRENT_BINARY_DIR}/eff.json")
  set_tests_properties(G5EraseFeedbackFrame PROPERTIES TIMEOUT 120)
+endif()
+
+option(AXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS "Private high-DPR material preview qualification" OFF)
+if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS AND APPLE AND NOT EMSCRIPTEN)
+ add_executable(axiom_hidpi_material_preview_tests tests/hidpi_material_preview_test.cpp)
+ target_link_libraries(axiom_hidpi_material_preview_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+ target_include_directories(axiom_hidpi_material_preview_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+ target_link_libraries(axiom_hidpi_material_preview_tests PRIVATE "-framework Metal" "-framework Foundation" objc)
 endif()

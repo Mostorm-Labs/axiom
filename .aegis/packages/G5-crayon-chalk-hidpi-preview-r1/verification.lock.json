@@ -1,0 +1,120 @@
+{
+  "status": "FROZEN_SCOPED_IMPLEMENTATION_ACCEPTANCE",
+  "scope": "HD1..HD5only; no deferredmixed-brusherase,oldEFF4,overallG5/release claims",
+  "obligations": [
+    {
+      "id": "HD1",
+      "requirement": "Establish the affordable highDPR preview full-prefix replay regression using actual current owners.",
+      "oracle": "Beforeproductionmutation, native actualGPU fixedbasis960/480 growth and workcounters, sameinputs2profilesDPR2/4; firstHD-D-B rootSDKdiagnostic. SmallcorrectnessROIoutofmeasurement.",
+      "acceptance": "OldRED specifically fails incrementalworkcriterion above16MiB; source/normalSDKbindingvalid. No RED basedon source-string/testhelperonly. If oldalready passes while claimedfailure stillpresent returnVERIFICATION_DESIGN_DEFECT.",
+      "evidence_required": [
+        "preflight.json",
+        "implementation-design-B.json",
+        "red-green.json",
+        "baseline-work.json",
+        "diagnostic-B.json"
+      ]
+    },
+    {
+      "id": "HD2",
+      "requirement": "Keep wax/chalk highDPR preview incremental with shared budgeted resource ownership.",
+      "oracle": "Same nativeacceptanceGREEN with realSkiaRenderer/PreviewSurfaceController/BrushSession plusmatchedCdiagnostic; forcedbudget/heldrealcompletion qualification.",
+      "acceptance": "Existingowner budgetadmission removesfixed16MiBtriggeratfit; stableprefixtail reuse, nochange0work; seed/lifetime/pose invalidationandallactualallocationsinclCOWcharged. Pendingretry retainscoherentprogress and correctvisiblefeedback; noeveryframeallprefixrebuild underresidentcapacity.",
+      "evidence_required": [
+        "implementation-design.json",
+        "source-delta.patch",
+        "mechanism-work.json",
+        "resource-lifecycle.json",
+        "matched-diagnostics.json"
+      ]
+    },
+    {
+      "id": "HD3",
+      "requirement": "Preserve texture/opacity/geometry and preview-to-canonical handoff across lifecycle.",
+      "oracle": "Nativefullcoverage helper reference bypassingnewcache; savedBsameGPU preview captures; exactcanonicalcontent/Operation/readback; existingmaterial/preview/handoff/memory/gpuregressions.",
+      "acceptance": "Metricscontractpixels/semantics allmet; no leftoverghost/suffixloss/opaquejoin/paperphasechange. PreviewretiresonlymatchedCanonicalVisible, latecallbacksnevertouchnewowner; resizecancelcloseandquota recovery safe. Existingv4 andwatercolorsharedpath regressionpasses.",
+      "evidence_required": [
+        "native-regressions.json",
+        "independent-pixels.json",
+        "web-correctness.json",
+        "semantic-and-handoff.json",
+        "resource-lifecycle.json"
+      ]
+    },
+    {
+      "id": "HD4",
+      "requirement": "Demonstrate real highDPR browser performance improvement without losing confirmed inputs.",
+      "oracle": "FinalfrozenordinaryB1/C1/C2/B2 withsame4cases/publicSDK/Chromehardwareidentity/timestamps; matchednonforcingobserver; separatequalitylane.",
+      "acceptance": "All frozenordinarytargets andnonregressions pass; everyattemptretained; first/latefeedbackmeasuredactualpreviewtarget notoffscreen/clear/readback. GPUasynccostnotcalledCPU; callbackdurationnotcalledinput-to-photon.",
+      "evidence_required": [
+        "ordinary-freeze.json",
+        "browser-comparison.json",
+        "input-and-feedback.json",
+        "sampling-ledger.json",
+        "cleanup.json"
+      ]
+    },
+    {
+      "id": "HD5",
+      "requirement": "Return independently resolvable bounded package/candidate/demo while preserving prior accepted work.",
+      "oracle": "Exact source/SDK/build/driver/oracle/raw manifests andsamehostresultboundary; privateoptintestsnormalOFF; rootSDKfunctionalpreviewsmoke andcallback.",
+      "acceptance": "No canonical/API/ABI/materialversion/lockschange; oldworktrees/files/results/index preserved; userIABuntouched; normalCSDKbuiltwithmatchedwrappersresourcesnormaldiagnosticsOFF. Preview>=4350afterCrootsmoke andnotify; terminalreadyorclassifiedblockercallbackthenSTOP.",
+      "evidence_required": [
+        "source-and-SDK-binding.json",
+        "preservation.json",
+        "preview-ready.json whennormalCexists",
+        "storage-ledger.json",
+        "artifact-manifest.json",
+        "result.json",
+        "terminal-callback.json"
+      ]
+    }
+  ],
+  "oracle_precondition": {
+    "red_required": true,
+    "expected_failure": "Actualrendered/copiedstableprefixgrowthabove16MiB violatesHD1/HD2 incrementality for affordableGPUworking set.",
+    "observation_seam": "ExistingproductionSkiaRenderer::renderPreview/CompactWork anddefaultOFFprivatecounters; realGPUprovider. No fakeGPUCanvas orsourceassertion."
+  },
+  "existing_native_regressions": [
+    "InkV2RetinaPreview",
+    "InkV2Work",
+    "InkV2Material-wax",
+    "InkV2Material-drywet",
+    "InkV2Material-drywet-parity",
+    "InkV2Material-parity",
+    "InkV2Material-cache",
+    "InkV2Material-sampling",
+    "InkV2Material-wax-mask",
+    "InkV2Material-drywet-mask",
+    "InkV2Material-chunk-range",
+    "G3PreviewSurface",
+    "G45BrushSession",
+    "G45BrushComplexity",
+    "G45BrushPreviewHandoff",
+    "G5GpuRetirementContract",
+    "G5RenderMemoryBudget",
+    "G5TransientDisplayHandoff",
+    "G5TransientDisplayHandoffInflight",
+    "G5EraseFeedbackFrame"
+  ],
+  "test_policy": "Use ctest -N tobindactualtarget/names; requiredbaselinefailures mustbe reproducedexactB andrecorded, never blanket22-historicalwaiver. Newscopedfailureblocks. Oldcoredependencybuildprohibited. NewtestsoptinifprivateGPU/observationseam; normalnative/WebconsumerbuildstestqualificationOFF.",
+  "web_oracle": "Root exportedSDK only forconsumer; test-onlyreadback/observerloadedinownedharness. NewproductioninternalC++testseamnotpublicJS/DLLexports.",
+  "frozen_metrics_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 3223,
+    "sha256": "0f57b60f54843a6b22d66eacce3ed131fc726d4524a6ea3f8ffedccbf2cab32d"
+  },
+  "frozen_workload_ref": {
+    "path": "workload.json",
+    "bytes": 4967,
+    "sha256": "7a722a2df76dd0d6dc9dd147f879a65c90ab3ce9a466e23746977ef87cdc40ce"
+  },
+  "optional": [
+    "Physicalstylus/trackpad/input-to-photon",
+    "Windows/AndroidGPUqualification",
+    "WholeG5/release",
+    "ExternalOSGPUprofiler",
+    "OldEFF4closure",
+    "Mixedbrushasyncerase"
+  ]
+}

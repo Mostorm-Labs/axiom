@@ -1,0 +1,87 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "G5-crayon-chalk-hidpi-preview-r2",
+  "status": "FROZEN_AUTHORIZED_OPERATIONAL_RESUME",
+  "created_at": "2026-11-19T10:12:35.342378+00:00",
+  "execution_ref": "refs/heads/codex/g5-crayon-chalk-hidpi-preview",
+  "task_anchor": {
+    "revision": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "execution_ref": "refs/heads/codex/g5-crayon-chalk-hidpi-preview",
+    "completed_through": "r1 exact source preflights, actualGPU waxDPR2 RED and waxDPR4N240/480, test/probe/storage drafts retained; no production behavior repair. Prior result BLOCKED.",
+    "next_action": "Read execution-correction, preserve r1 and verify delta; complete corrected acquisition and missingRED/HD-D-B beforeproductionrepair."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom",
+    "path": ".aegis/packages/G5-crayon-chalk-hidpi-preview-r2"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 4246,
+    "sha256": "4c898578cd89c0b6abf7fbd22f3c450b445143e238b8a430653afeba5bb032c3"
+  },
+  "fixed_inputs_ref": {
+    "path": "fixed-inputs.json",
+    "bytes": 11797,
+    "sha256": "7f6ed3e84312a1e1f713a0dde1ff45eb4773c2aed20a4004ac76e84130723e3b"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 6503,
+    "sha256": "db4623427aaf75c736a6682116da9f4b032f3b248f92a968afa5e3e9417532fe"
+  },
+  "metrics_contract_ref": {
+    "path": "metrics-contract.json",
+    "bytes": 3223,
+    "sha256": "0f57b60f54843a6b22d66eacce3ed131fc726d4524a6ea3f8ffedccbf2cab32d"
+  },
+  "workload_ref": {
+    "path": "workload.json",
+    "bytes": 5273,
+    "sha256": "ce63f355d8f024c281a6111c9fbfc7981b3e7c3c3c3b6eb7afd06165309026e4"
+  },
+  "storage_contract_ref": {
+    "path": "storage-contract.json",
+    "bytes": 2733,
+    "sha256": "179d8693df1194033ae36ce0a9310fbc8a4a6341fee484e625fc8d1010a10fc9"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 2038,
+    "sha256": "8decd7b9b1ba50bcc72c79e476902b671d363c85ffd6ad1245f87259d749aa7e"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 13587,
+    "sha256": "b5d9370aea69b42879e6053adab83481ef6e15f84986d82c37fc8241b07471d0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 3537,
+    "sha256": "9e27eeab14bf7fa46b961222725e5790fb99ee6c7112b34b871c8873df23c502"
+  },
+  "supersedes_execution_package": {
+    "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/packages/G5-crayon-chalk-hidpi-preview-r1/package.json",
+    "bytes": 2909,
+    "sha256": "2f1dbcaa4f67e8fa28c6a0369bc766b90ab86b9bcfb728a539f59ea6d218cdc9"
+  },
+  "execution_correction_ref": {
+    "path": "execution-correction.json",
+    "bytes": 5965,
+    "sha256": "b75468fe9b9dd61789630f30895dbf11103df851a23f809ee6d02137cc4ce473"
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "schema": "axiom-scoped-p36-repair-result-v1",
+  "task": "G5-crayon-chalk-hidpi-preview-p36-r1",
+  "at": "2026-11-19T14:59:10.632863+00:00",
+  "status": "READY_FOR_CONTROL_REVIEW_SCOPED_LIFECYCLE_REPAIR",
+  "continue_execution": false,
+  "overallParentStatus": "BLOCKED / PERFORMANCE_TARGET_UNMET",
+  "stage": "P36 implementation producer; independent control review required",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "HEAD": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "branch": "codex/g5-crayon-chalk-hidpi-preview",
+    "indexEmpty": true,
+    "publication": false
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/packages/G5-crayon-chalk-hidpi-preview-p36-r1/package.json",
+    "bytes": 12106,
+    "sha256": "62a38104f0b72b03834ec318a7029c1d680c667fc356b404adf961d6cbddcf0f"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1",
+    "artifactManifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/artifact-manifest.json",
+      "bytes": 444023,
+      "sha256": "bbd54a77525cbc1ed716c0ea502e643aee41ca09ff79ba0009068de33463b974"
+    }
+  },
+  "repair": {
+    "HD-L1": {
+      "status": "SCOPED_IMPLEMENTATION_AND_DIRECTED_CHECKS_MET",
+      "path": "actual RuntimeComposition serviceFrameOpportunity deferred preview and controller now use previewRenderer_, canonical skiaRenderer_ remains separate",
+      "RED": "Cancel after real idle GPU drain retained kRaster=1024000/kScratch=1024000",
+      "GREEN": "both actual owner/leases0, no subsequent input; per-session retire preserves survivor prefix"
+    },
+    "HD-L2": {
+      "status": "SCOPED_IMPLEMENTATION_AND_DIRECTED_CHECKS_MET",
+      "path": "per-cache matching provider/context invalidation; pending owner release demand serviced at Runtime opportunity; old-resource release before resize/replacement; logical-loss rebind revives old generation; context-safe close and guarded budget replacement",
+      "accounting": "resident counters do not become0 on enqueue; released lease charged through actual GPU completion; unknown abandon never reports success",
+      "limits": "Metal validates actual independent contexts and leases, not backend GL deletion; normal Web smoke validates ordinary loss/restore/resize/close, not injected unavailable GL target"
+    }
+  },
+  "verification": {
+    "directedRows": 21,
+    "actualRuntimeComposition": true,
+    "nativeGPU": "Metal independent canonical/preview contexts",
+    "receiptCases": "both legal canonical/preview receipt orderings and stale rejection; canonical may retire an already covered display before late preview ack",
+    "nativeRelatedTests": 20,
+    "nativePixels": 54,
+    "maximumReferencePixelDelta": 0,
+    "maximumOldGPUPixelDelta": 0,
+    "resourceFixture": "real held completion/quota/recovery/final retire/permanent deny",
+    "boundaryContracts": 122,
+    "helperTests": 5,
+    "normalNativeBuild": "canvas_runtime_composition consumer with private flags OFF",
+    "normalWebBuild": "matching root wrapper/WASM/resources,42 exact files, private flags OFF",
+    "WebCorrectnessCases": 4,
+    "WebContextRecovery": "RESTORED for wax/chalk DPR2/4",
+    "WebErrors": [],
+    "fullHistoricalCTest": false,
+    "extraPerformanceSampling": false
+  },
+  "sampling": {
+    "P36BrowserStarts": 1,
+    "P36BrowserCeilSeconds": 14,
+    "P36BrowserCapSeconds": 240,
+    "P36NativeChargedCeilSeconds": 137,
+    "P36NativeCapSeconds": 1800,
+    "allGuardsClean": true,
+    "r2BrowserStartsUnchanged": 9,
+    "r2BrowserCeilSecondsUnchanged": 566,
+    "performanceRetries": 0
+  },
+  "preview": {
+    "at": "2026-11-19T14:51:21.397539+00:00",
+    "URL": "http://127.0.0.1:4351/example.html",
+    "PID": 4245,
+    "SDK": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/normal-SDK.json",
+      "bytes": 4289,
+      "sha256": "d91944d15726aa06d25f965a80df2e1988afd2518c7de7a90d62ec1dbfb72601"
+    },
+    "source": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-normal.json",
+      "bytes": 6460336,
+      "sha256": "e3adbb9c5f33c9d4f363263d087ae04c845b037ea7a2e4c5c653cc9c2ceebe2a"
+    },
+    "smoke": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/web-smoke/smoke.json",
+      "bytes": 14752,
+      "sha256": "553f19e5789dca557342132a203cd86c320c48601cbd4d516e7c0df9b5625dfd"
+    },
+    "smokeGuard": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/web-smoke-guard.worker.json",
+      "bytes": 742,
+      "sha256": "f9eacc2e8ada1f9f7913df5bf3a9edd5ee8118521007a1ce43ec48625f8f7ffa"
+    },
+    "flags": "FRAME_TIMING/G5/runtimequalification/private preview and lifecycle tests OFF",
+    "parentDemo": "4350/PID77911 preserved",
+    "publication": false
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/preflight.json",
+      "bytes": 5285,
+      "sha256": "3fd873ee90a4bf30d0cc4dd2b0620952285f2e3489d7d3599df5e75ebd7af321"
+    },
+    "repair-design.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/repair-design.json",
+      "bytes": 1945,
+      "sha256": "f955c08d9ff9dadb897b135b9e6efcd59efca4c222b8859ccd570e444d8dbe6e"
+    },
+    "red-green.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/red-green.json",
+      "bytes": 5487,
+      "sha256": "6598984271005852295aa87e3decf70c5bf12833c3a7e20617625e625e0fd41f"
+    },
+    "directed-lifecycle.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/directed-lifecycle.json",
+      "bytes": 4028,
+      "sha256": "4d3a306d689200748c23198999a596e92fea655f5b5a86a04f07431bdee3a0fa"
+    },
+    "native-regressions.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/native-regressions.json",
+      "bytes": 1695,
+      "sha256": "5f9a77ae63db1a277faf40f0b2ace14b6853ffbe2a16e8660e8bf11a0e160463"
+    },
+    "pixel-and-resource.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/pixel-and-resource.json",
+      "bytes": 1459,
+      "sha256": "4dfcce6dd28d4ca8a7d9e4f77836d5b94ed6b2bc49fdf3ece0ca9495c2aeec1d"
+    },
+    "normal-builds.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/normal-builds.json",
+      "bytes": 9632,
+      "sha256": "829073eaead98d4eabad32d481f1bab2dfe5ab020749d312f802d764017ca8b9"
+    },
+    "root-sdk-smoke.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/root-sdk-smoke.json",
+      "bytes": 1403,
+      "sha256": "020ded348cde19a9645821524340e52c38b146af90fa12e5d80960cd037af584"
+    },
+    "source-and-SDK-binding.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-and-SDK-binding.json",
+      "bytes": 2810,
+      "sha256": "b1a59aa85dad00176e19b143dc126cb1ec5bab46a9c9043c73c035f50dc50ce0"
+    },
+    "source-local-final.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-local-final.json",
+      "bytes": 205765,
+      "sha256": "fb55e172034eec987a6bd67954acdc946a6af47ccdef02aa2c64b3f479c2b918"
+    },
+    "source-delta-from-r2.patch": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-delta-from-r2.patch",
+      "bytes": 27669,
+      "sha256": "b76e6af0b85e1dabef26913827a3cf6124d282f722fa2895cea832931d001856"
+    },
+    "source-delta-from-HEAD.patch": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-delta-from-HEAD.patch",
+      "bytes": 40245,
+      "sha256": "609f3f8d7405d11fbc7a1efc85d45db6e012649a47ce517bc75129f2b783347c"
+    },
+    "normal-SDK.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/normal-SDK.json",
+      "bytes": 4289,
+      "sha256": "d91944d15726aa06d25f965a80df2e1988afd2518c7de7a90d62ec1dbfb72601"
+    },
+    "source-normal.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-normal.json",
+      "bytes": 6460336,
+      "sha256": "e3adbb9c5f33c9d4f363263d087ae04c845b037ea7a2e4c5c653cc9c2ceebe2a"
+    },
+    "smoke-freeze.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/smoke-freeze.json",
+      "bytes": 1652,
+      "sha256": "0066985a28d8e84ccf52cdad5a7b90d53dcd0a32d47ecc95b4fbe5815d26ddd9"
+    },
+    "sampling-ledger.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/sampling-ledger.json",
+      "bytes": 6355,
+      "sha256": "0a8393534b805a64844b71c86402b959bd04f0ac3743f89f230022c727edd97d"
+    },
+    "cleanup.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/cleanup.json",
+      "bytes": 4555,
+      "sha256": "6ee11adea861fbdbb9fd87c1b053f7c3212ab7294f0c5e21dee912110f454b7f"
+    },
+    "preservation.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/preservation.json",
+      "bytes": 1290,
+      "sha256": "0c9f896fcf85b22831e2ff8ac44fd381353b1278ba109cd8e78b690c6072307a"
+    },
+    "offline-checks.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/offline-checks.json",
+      "bytes": 1919,
+      "sha256": "55c7670c4e4901905a177cd0178196d68809888e34b0ee3d8e2e28cb3cc03567"
+    },
+    "findings.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/findings.json",
+      "bytes": 2343,
+      "sha256": "c868168fbd299e13aa9a3d1ecb9240bbab1169785fa3ffbbba05389f6878bdcf"
+    },
+    "binary-and-builds.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/binary-and-builds.json",
+      "bytes": 2688,
+      "sha256": "ed5a0e9769c33b3199fd52a1cd629e78e1d0b189c1c1de4fbb87e7de6bca6c95"
+    }
+  },
+  "originalFindingsUnchanged": [
+    "HD4 C1 wax DPR4 content-write gap p95 33.60000000149ms >33ms UNMET",
+    "Ordinary/native co-load; no relative performance PASS",
+    "Late diagnostic envelope; prior ignored build cache intermediate exception; preserved early quality capture and one correction",
+    "Original EFF4 5125.1ms/304 callbacks remains independent UNMET / ROOT_CAUSE_NOT_ESTABLISHED"
+  ],
+  "remaining": [
+    "Independent control review of exact P36 candidate",
+    "Original performance target and clean relative performance qualification require separate prospective scope; no new runs authorized here"
+  ],
+  "claimLimits": [
+    "No self-issued P34/Gate/G5/relative-performance PASS",
+    "No physical VRAM release claim",
+    "No new Web per-pixel qualification; actualGPU native54 oracle plus root Web correctness binding",
+    "Native failure/recipe corrections preserved in findings"
+  ],
+  "preservation": "r1/r2 artifact refs exact, existing r2 live log has exact frozen500byte prefix;4350 original files/PID preserved; user IAB untouched",
+  "noCommitPushMergeTagRelease": true,
+  "terminalCallback": "REQUIRED_AFTER_MATERIALIZATION",
+  "stopAfterTerminalCallback": true
+}

@@ -1,0 +1,52 @@
+{
+  "status": "FROZEN_PROSPECTIVE",
+  "limits": {
+    "ordinary_starts": 4,
+    "diagnostic_starts": 2,
+    "correctness_starts": 2,
+    "harness_environment_corrective_starts": 1,
+    "per_ordinary_seconds": 360,
+    "per_diagnostic_seconds": 360,
+    "per_correctness_seconds": 540,
+    "per_corrective_seconds": 540,
+    "aggregate_browser_seconds": 4800,
+    "RSS_family_MiB": 6144,
+    "native_process_seconds": 120,
+    "new_retained_artifact_MiB": 4096,
+    "new_logical_uncompressed_artifact_MiB": 8192,
+    "single_buffer_MiB": 192,
+    "per_trace_MiB": 64,
+    "minimum_free_disk_MiB": 8192,
+    "extra_performance_retries": 0,
+    "IAB_sampling": 0,
+    "native_RED_process_seconds": 300,
+    "native_RED_additional_starts_max": 8
+  },
+  "scope": "Fresh taskaccounting, independent of Render512/1024/128MiB. No inherited samplingallowance.",
+  "projection": {
+    "correctnessRGBA_raw_max": 1479997440,
+    "native_reference_ROI_reserve": 15728640,
+    "nonpixel_reserve": 1610612736,
+    "serial_scratch_bytes": 201326592,
+    "retained_upper_bound_comment": "16maxDPR4buffers1.48GB +1.61GBnonpixel +0.20GBscratch +smallROIs fits4GiB even incompressible. Original4200/no-cause caps do not transfer."
+  },
+  "rules": [
+    "Beforefirstbrowser offline verify streamedgzip+backpressure/length/hash/path/offset/quota and processguard; reuseexisting auditedhelper undernewtask namespace, no duplicateproofchain.",
+    "OneRGBA/referencebuffer persistedatonce; raw andcompressedhashes, decodedsize roundtrip; highDPRsinglebuffer92.5MB<192MiB. No collectingallframesuncompressed.",
+    "Durable samplingledger row before actualstart, chargeceilseconds inclfailed/corrective, allrawfailuresretained. Ownedprocessfamilytimeout/RSS/cleanup.",
+    "Count actual retainedfiles and cumulative logicalunique-artifacthighwater includingfailures, metadata terminalreserve. Build/install/versionedsourceexcludedbutexacthashbound. No ledgerreset/deletioncredit.",
+    "No performance retries. Single corrective only provenharness/environmentfault withexactlosslesscorrection and preservedfailedattempt; unavailable requiredinput returnsblocker.",
+    "Atterminal preserve raw/source/SDK/records; no automatic extra sampling, host publication or cleanupolduserassets."
+  ],
+  "carried_accounting": {
+    "from": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/sampling-ledger.json",
+      "bytes": 2284,
+      "sha256": "d5f04961a3757df94ec6331a7d5ab7fc41ecec5d222e8484dfcaacb170ec229a"
+    },
+    "nativeStarts": 6,
+    "nativeCeilSeconds": 282,
+    "browserStarts": 0,
+    "rule": "r1+r2combined artifact limits and start ledger; no discard/reset credits"
+  }
+}

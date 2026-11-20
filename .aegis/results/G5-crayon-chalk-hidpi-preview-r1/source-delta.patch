@@ -1,0 +1,46 @@
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index 9c096cc8..53c9b09c 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -1086,3 +1086,11 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_E
+  add_test(NAME G5EraseFeedbackFrame COMMAND axiom_erase_feedback_frame_tests "${CMAKE_CURRENT_BINARY_DIR}/eff.json")
+  set_tests_properties(G5EraseFeedbackFrame PROPERTIES TIMEOUT 120)
+ endif()
++
++option(AXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS "Private high-DPR material preview qualification" OFF)
++if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND AXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS AND APPLE AND NOT EMSCRIPTEN)
++ add_executable(axiom_hidpi_material_preview_tests tests/hidpi_material_preview_test.cpp)
++ target_link_libraries(axiom_hidpi_material_preview_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
++ target_include_directories(axiom_hidpi_material_preview_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++ target_link_libraries(axiom_hidpi_material_preview_tests PRIVATE "-framework Metal" "-framework Foundation" objc)
++endif()
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index d7c10681..8da27340 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -1686,6 +1686,25 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
+ BackendSubmissionResult SkiaRenderer::renderPreview(
+     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
+     const PreviewStyleOverride& style) {
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    const auto previewWorkBefore=compactWork_;
++    struct PreviewObservation final {
++        std::function<void()> emit;
++        ~PreviewObservation(){emit();}
++    } previewObservation{[&]{
++        std::size_t pending=0;
++        if(resourceBudget_)for(unsigned i=0;i<unsigned(resources::ResourceClass::kCount);++i)
++            pending+=resourceBudget_->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
++        std::fprintf(stderr,"AXIOM_HD_PREVIEW {\"document\":\"%llu\",\"session\":\"%llu\",\"sessionGeneration\":\"%llu\",\"revision\":\"%llu\",\"generation\":\"%llu\",\"generatedKnots\":%llu,\"retainedBytes\":%llu,\"temporaryBytes\":%llu,\"budgetUsed\":%zu,\"pendingRelease\":%zu,\"gpuEpochs\":%zu,\"submissions\":%llu}\n",
++            (unsigned long long)geometry.documentEpoch,(unsigned long long)geometry.session,
++            (unsigned long long)geometry.sessionGeneration,(unsigned long long)geometry.revision,
++            (unsigned long long)geometry.surfaceGeneration.value(),
++            (unsigned long long)(compactWork_.generatedKnots-previewWorkBefore.generatedKnots),
++            (unsigned long long)compactWork_.retainedBytes,(unsigned long long)compactWork_.temporaryBytes,
++            resourceBudget_?resourceBudget_->used():0,pending,resourceBudget_?resourceBudget_->pendingGpuEpochCount():0,
++            (unsigned long long)submissions_);
++    }};
++#endif
+     G5_SCOPE(g5Preview,g5::Tag::preview,g5::Purpose::none);
+     G5_ROUTE(g5Route,g5::Route::preview_tail);
+ 

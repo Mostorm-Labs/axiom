@@ -1,0 +1,161 @@
+{
+  "schema": "axiom-p36-sampling-ledger-v1",
+  "parentBrowserStarts": 9,
+  "parentChargedSeconds": 566,
+  "browserCapStarts": 1,
+  "browserCapSeconds": 240,
+  "browser": [
+    {
+      "id": "P36-root-correctness",
+      "status": "COMPLETE",
+      "driver": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/p36-smoke.mjs",
+        "bytes": 6689,
+        "sha256": "ba6394679cfdf6c0f38cae24738d096edd6de3cafb25938a515e7ff6ce908033"
+      },
+      "source": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/source-normal.json",
+        "bytes": 6460336,
+        "sha256": "e3adbb9c5f33c9d4f363263d087ae04c845b037ea7a2e4c5c653cc9c2ceebe2a"
+      },
+      "SDK": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-p36-r1/normal-SDK.json",
+        "bytes": 4289,
+        "sha256": "d91944d15726aa06d25f965a80df2e1988afd2518c7de7a90d62ec1dbfb72601"
+      },
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/p36-smoke.mjs",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/install-normal-web/js",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/web-smoke"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 13.78362337499857,
+        "peak_process_family_rss_kib": 1416672,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 240,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "chargedCeilSeconds": 14
+    }
+  ],
+  "native": [
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-1.worker.json",
+        "bytes": 566,
+        "sha256": "0fcdaaddb8c59b1978a109c0b80801ebebe36ac95d5724a13e001d384d1d870a"
+      },
+      "seconds": 0.9808990829988034,
+      "chargedCeilSeconds": 1,
+      "status": "nonzero_exit"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-2.worker.json",
+        "bytes": 566,
+        "sha256": "53f77f5294ffb728d2425a24744a9dbcf7168fc496c21a66edd639926502acc4"
+      },
+      "seconds": 1.0742858749981679,
+      "chargedCeilSeconds": 2,
+      "status": "nonzero_exit"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-3.worker.json",
+        "bytes": 562,
+        "sha256": "56719b54dcd420066bc6b86c5b4307f53b413acf9831bf1fb6864860f1d455ed"
+      },
+      "seconds": 1.6396418330004963,
+      "chargedCeilSeconds": 2,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-4.worker.json",
+        "bytes": 562,
+        "sha256": "a84f552b1d3ee371b01d87a3e95e7cd67d15914276b0daa5d3d41c9cb1dd792e"
+      },
+      "seconds": 1.9609527079992404,
+      "chargedCeilSeconds": 2,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-exact.worker.json",
+        "bytes": 566,
+        "sha256": "40ec407a11f2471e1fba995aab6f73b170be721eb33ae5f3919029c1cb4b2b01"
+      },
+      "seconds": 2.8752830420016835,
+      "chargedCeilSeconds": 3,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/directed-final.worker.json",
+        "bytes": 565,
+        "sha256": "8e4083cd482aab4ee86b44e8a7340fa398b2d87988e188d05c3ff5b405e7d010"
+      },
+      "seconds": 2.343116459000157,
+      "chargedCeilSeconds": 3,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/green-initial.worker.json",
+        "bytes": 565,
+        "sha256": "ce6161de2b97726dd52e3518b2747e7d2bad64c3deb56653157339d4fb41031e"
+      },
+      "seconds": 2.6771639170001436,
+      "chargedCeilSeconds": 3,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/native-lifecycle.worker.json",
+        "bytes": 586,
+        "sha256": "b9de25a19716adf1102d85cf157cc604f840443e0c6eae8a4480fa43200f73f4"
+      },
+      "seconds": 0.6993189170025289,
+      "chargedCeilSeconds": 1,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/native-pixels.worker.json",
+        "bytes": 713,
+        "sha256": "6a7e5cb01fdcd71340a831b4e6a7d9d25c89da9126adba1f8ea53ac205cfad5a"
+      },
+      "seconds": 7.572102666999854,
+      "chargedCeilSeconds": 8,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/native-regressions.worker.json",
+        "bytes": 977,
+        "sha256": "2db2c253a7517485b732ec359f7072df92b6180e6aad25dfbce98911dc3d65f9"
+      },
+      "seconds": 109.54458087499734,
+      "chargedCeilSeconds": 110,
+      "status": "completed"
+    },
+    {
+      "guard": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/red-runtime-lifecycle.worker.json",
+        "bytes": 557,
+        "sha256": "64819d55b65dbd416ee8d45c303778cc5488aabb9af07bd9a35ba408936e5c3d"
+      },
+      "seconds": 1.1088445830027922,
+      "chargedCeilSeconds": 2,
+      "status": "nonzero_exit"
+    }
+  ],
+  "nativeChargedCeilSeconds": 137,
+  "nativeCapSeconds": 1800,
+  "extraPerformanceRetries": 0
+}

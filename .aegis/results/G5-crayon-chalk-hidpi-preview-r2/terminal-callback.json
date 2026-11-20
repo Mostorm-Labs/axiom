@@ -1,0 +1,48 @@
+{
+  "schema": "axiom-execution-terminal-callback-v1",
+  "at": "2026-11-19T13:53:53.838170+00:00",
+  "task": "G5-crayon-chalk-hidpi-preview-r2",
+  "status": "DELIVERED",
+  "controlThread": "01a1c4c7-7796-7380-9f3e-bd0095fc9372",
+  "tool": "mcp__codex_app__send_message_to_thread",
+  "transportResult": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"threadId\":\"01a1c4c7-7796-7380-9f3e-bd0095fc9372\"}"
+      }
+    ],
+    "isError": false
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/result.json",
+    "bytes": 12851,
+    "sha256": "77198cb7616e20d0357530c181b87dd7b152304f5106da94db8016952206925c"
+  },
+  "manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/artifact-manifest.json",
+    "bytes": 169480,
+    "sha256": "8b182468ce9cefd9e16b9318623cd30a8050befba05ba780f26c0d5fe063b4b5"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/results/G5-crayon-chalk-hidpi-preview-r2"
+  },
+  "reportedClassification": "BLOCKED / PERFORMANCE_TARGET_UNMET",
+  "reportedLimits": [
+    "C1 wax DPR4 late content-write gap p95 33.6ms > 33ms",
+    "Ordinary/native coload; observational performance only",
+    "Late diagnostic envelope, r1 ignored build cache correction, original early quality capture retained",
+    "Web private CanonicalVisible token/visibility not exposed",
+    "Full repository CTest not run; frozen related tests only",
+    "Original EFF4 remains UNMET / ROOT_CAUSE_NOT_ESTABLISHED"
+  ],
+  "demoKept": {
+    "URL": "http://127.0.0.1:4350/example.html",
+    "PID": 77911
+  },
+  "noCommitPushMergeTagRelease": true,
+  "stopAfterCallback": true
+}

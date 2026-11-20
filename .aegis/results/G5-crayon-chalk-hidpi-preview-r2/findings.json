@@ -1,0 +1,47 @@
+{
+  "blocking": [
+    {
+      "classification": "PERFORMANCE_TARGET_UNMET",
+      "fact": "C1waxDPR4latefeedbackp95=33.600000001490116ms exceeds33ms; no thresholdchange/retry."
+    }
+  ],
+  "procedural": [
+    {
+      "kind": "LATE_DIAGNOSTIC_B_ENVELOPE",
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/diagnostic-B-binding.json",
+        "bytes": 4289,
+        "sha256": "9312e1872337a17d7321f8633ca54d2a051f943b9dc62e030ec18327e2809f45"
+      },
+      "effect": "SourcemanifestsSDKservedhashesexact,nodriverchange; latenessenvelopeexplicit,nofalseprestartclaim; noresampling."
+    },
+    {
+      "kind": "R1_BUILD_CACHE_REUSED_ONCE",
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/build-cache-reuse-correction.json",
+        "bytes": 2065,
+        "sha256": "529ba23723e8791a1623e698de01d2f40c3bbbfb8f2be549cf4b9ec38bc52f4e"
+      },
+      "effect": "Fourignoredintermediatefileschanged;frozenbinaryrestoredandallr1package/result/raw/sourcearchiveexact. Notclaimedwholeoldbuilddirectoryimmutable."
+    },
+    {
+      "kind": "BROWSER_NATIVE_COLOAD",
+      "effect": "FinalnativegrowthandnativeCTest overlappedpartofordinaryB/Crunwalltime. NativeCPU/GPUcompetitionmayconfoundhostlatency; no relativeperformancePASSissued,no ordinaryretry."
+    },
+    {
+      "kind": "QUALITY_CAPTURE_EARLY_BWAX4",
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/quality-correction.json",
+        "bytes": 1619,
+        "sha256": "436481183e7821a05bddf0904e17559d51fd161b1b81e5afff24ec53307a0aeb"
+      },
+      "effect": "Originalheldreadbackbeforelast720write; failurepreserved. Singlepairedcorrectiveusesactualwrite+servicedquietphase;max1,canonicalexact."
+    }
+  ],
+  "unverifiedLimits": [
+    "NooverallG5/P34/release/physicalphoton/WindowsABIorGPUcertification.",
+    "GeneralGPUcontexttransition/unknownabandon ownership beyondtestedproviderpathremainsboundedbyexistingcontract; do notinferphysicalVRAMreleasefromlogicallease0.",
+    "Mixedv4/algorithm5/6cacheisolationimplemented; existingv4regressionspass, no new exhaustivemixed-eightcontactmatrixclaimed.",
+    "OriginalEFF4settled5.1251s/304callbacksremainsUNMETandROOT_CAUSE_NOT_ESTABLISHED."
+  ]
+}

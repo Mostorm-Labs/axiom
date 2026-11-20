@@ -1,0 +1,60 @@
+[
+  {
+    "name": "boundary-final",
+    "argv": [
+      "/opt/homebrew/bin/python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "exit": 0,
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/boundary-final.log",
+      "bytes": 58,
+      "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+    }
+  },
+  {
+    "name": "helpers-final",
+    "argv": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+      "--test",
+      "verification/runners/g5/hidpi_preview/observer.test.mjs",
+      "verification/runners/g5/hidpi_preview/storage.test.mjs"
+    ],
+    "exit": 0,
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/helpers-final.log",
+      "bytes": 534,
+      "sha256": "9d34809972b73dd97494ad94cf0a2e04486dfa2b6ab9eadced30e393b8003541"
+    }
+  },
+  {
+    "name": "diff-final",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/diff-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "name": "smoke-syntax-final",
+    "argv": [
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+      "--check",
+      "verification/runners/g5/hidpi_preview/p36-smoke.mjs"
+    ],
+    "exit": 0,
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-p36-r1/smoke-syntax-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+]

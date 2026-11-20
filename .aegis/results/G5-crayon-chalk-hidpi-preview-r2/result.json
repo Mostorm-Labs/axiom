@@ -1,0 +1,307 @@
+{
+  "schema": "axiom-scoped-implementation-result-v1",
+  "task": "G5-crayon-chalk-hidpi-preview-r2",
+  "at": "2026-11-19T11:29:21.974903+00:00",
+  "status": "BLOCKED",
+  "classification": "PERFORMANCE_TARGET_UNMET",
+  "continue_execution": false,
+  "producerDisposition": "ExecutionfinishedthroughfrozenverificationandconcreteUNMET;CONTROL_REVIEWrequired.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "branch": "codex/g5-crayon-chalk-hidpi-preview",
+    "HEAD": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "taskAnchor": "63e9ec33ed2ff2579d69e1bf7121517f7d29c784",
+    "resumeCursor": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "classification": "EXACT_CURSOR_PLUS_AUTHORIZED_LOCAL_DIRTY_CANDIDATE",
+    "indexEmpty": true,
+    "publication": false
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/packages/G5-crayon-chalk-hidpi-preview-r2/package.json",
+    "bytes": 3467,
+    "sha256": "3240c396b6b16586a570bfcb910b0d09ce2cfdd69e919ac8456033ca33ccd788"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/results/G5-crayon-chalk-hidpi-preview-r2",
+    "artifactManifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/artifact-manifest.json",
+      "bytes": 169480,
+      "sha256": "8b182468ce9cefd9e16b9318623cd30a8050befba05ba780f26c0d5fe063b4b5"
+    }
+  },
+  "acceptance": {
+    "HD1": {
+      "status": "MECHANISM_RED_AND_DIAGNOSTIC_COMPLETE_WITH_PROCEDURAL_FINDING",
+      "evidence": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/baseline-work.json",
+        "bytes": 5885,
+        "sha256": "65a38771bac5bb76aeea5b88efdbd352465ef35b5512ed5512dbf04cf23642da"
+      },
+      "diagnostic": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/diagnostic-B.json",
+        "bytes": 1828,
+        "sha256": "126c8bf12b8b7fababc154034bd67f287109f2e8d564522fe3be83e0b1d6a83c"
+      },
+      "finding": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/diagnostic-B-binding.json",
+        "bytes": 4289,
+        "sha256": "9312e1872337a17d7321f8633ca54d2a051f943b9dc62e030ec18327e2809f45"
+      }
+    },
+    "HD2": {
+      "status": "IMPLEMENTED_SCOPED_MECHANISM_AND_RESOURCE_CHECKS_MET",
+      "ratios": [
+        {
+          "profile": "crayon-wax-v1",
+          "dpr": 2,
+          "ratio": 2.075572472220517,
+          "PASS": true
+        },
+        {
+          "profile": "crayon-wax-v1",
+          "dpr": 4,
+          "ratio": 2.075572472220517,
+          "PASS": true
+        },
+        {
+          "profile": "chalk-compact-v1",
+          "dpr": 2,
+          "ratio": 2.1382332155477033,
+          "PASS": true
+        },
+        {
+          "profile": "chalk-compact-v1",
+          "dpr": 4,
+          "ratio": 2.1382332155477033,
+          "PASS": true
+        }
+      ],
+      "evidence": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/resource-lifecycle.json",
+        "bytes": 1956,
+        "sha256": "658aeed7a9c55a56b3525cac778f91e71bd3d3eb31eaaf5d25a31c577626d1f6"
+      }
+    },
+    "HD3": {
+      "status": "SCOPED_CORRECTNESS_CHECKS_MET_WITH_ONE_QUALITY_CORRECTION",
+      "nativeRows": 54,
+      "nativeMaximum": 0,
+      "WebPreviewMaximums": [
+        {
+          "case": "wax-2",
+          "max": 1
+        },
+        {
+          "case": "chalk-2",
+          "max": 2
+        },
+        {
+          "case": "wax-4",
+          "max": 1
+        },
+        {
+          "case": "chalk-4",
+          "max": 2
+        }
+      ],
+      "allCanonicalByteExact": true,
+      "snapshotAndOperationBytesEqual": true,
+      "nativeRelatedTests": 20,
+      "evidence": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/web-correctness-qualified.json",
+        "bytes": 19254,
+        "sha256": "f5c13744ff0d86309328a051d32a1e77b5e5283e209893c235a5ba414d69da65"
+      },
+      "receiptLimit": "WebrawdoesnotexposefullprivateCanonicalVisibleidentity/overlayvisibility. Existinghandofftestspass;nostrongerrealWebreceiptclaim."
+    },
+    "HD4": {
+      "status": "UNMET",
+      "reason": "C1waxDPR4latepreviewcontent-gap p95=33.600000001490116ms exceeds33ms frozenlimit.",
+      "allCandidateCallbackP95Le33": true,
+      "allPooledCPUDispatchConvergenceComparisonsObservedWithinLimits": true,
+      "otherCandidateGapRowsPass": true,
+      "ordinaryRetries": 0,
+      "hostLoadConfounder": "Finalnativeverificationoverlappedpartofordinaryruns;no relativeperformancePASS."
+    },
+    "HD5": {
+      "status": "LOCAL_MATERIALIZATION_AND_NORMAL_PREVIEW_DELIVERED",
+      "preview": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/preview-ready.json",
+        "bytes": 1623,
+        "sha256": "623154dbd89cb846e3e1d30d123bff64528f469b1fb25afdca910e031ededb12"
+      },
+      "callback": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/preview-callback.json",
+        "bytes": 407,
+        "sha256": "27ad946069f8b4e96235eb5b1467aee838cb948dee621f31902f53b6db535c13"
+      },
+      "sourceSDK": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-and-SDK-binding.json",
+        "bytes": 5134,
+        "sha256": "d609abbad75cde194a212a20206ea6a8c445ddabbfb32647f54eef86c83fda16"
+      },
+      "protectedEvidence": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/preservation.json",
+        "bytes": 4017,
+        "sha256": "d53f09f160f472239653191f86b7f0f692dbcfbb0e6b1b16245cd17e3b823c1a"
+      },
+      "terminalCallback": "REQUIRED_AFTER_EXACTRESULT_MATERIALIZATION"
+    }
+  },
+  "concreteDelta": {
+    "files": [
+      "runtime/render/src/skia_renderer.cpp",
+      "runtime/render/include/canvas/render/skia_renderer.hpp",
+      "runtime/render/src/preview_surface.cpp",
+      "runtime/render/CMakeLists.txt",
+      "runtime/render/tests/hidpi_material_preview_test.cpp",
+      "verification/runners/g5/hidpi_preview/*"
+    ],
+    "behavior": "ActualResourceBudgetadmissionforstableprefix+scratch inalgorithm5/6GPUpreview; samecontextshortimageborrowing/nohiddenCOW; ownsessioninvalidationandfinalretirelease;budgetRetry/Rejectionbeforeproviderwrites.",
+    "unchanged": [
+      "Brushalgorithm/material/shaderassets",
+      "canonicalOperation/semanticcodec/Scene",
+      "SDKAPI/ABI/exports/types/version",
+      "budget512/1024/128MiBdefaults",
+      "SDKlocks",
+      "navigation/asyncerasearchitecture"
+    ]
+  },
+  "observations": {
+    "oldRatios": "4.0040..4.0539",
+    "newRatios": "2.0756..2.1382",
+    "pooledCPUP95": [
+      {
+        "case": "wax-2",
+        "Bms": 9.099999997764826,
+        "Cms": 0.5,
+        "BconvergenceMs": 464.80000000074506,
+        "CconvergenceMs": 233.30000000074506
+      },
+      {
+        "case": "chalk-2",
+        "Bms": 5.400000002235174,
+        "Cms": 0.4000000022351742,
+        "BconvergenceMs": 266.9000000022352,
+        "CconvergenceMs": 168.19999999925494
+      },
+      {
+        "case": "wax-4",
+        "Bms": 18.400000002235174,
+        "Cms": 0.5999999977648258,
+        "BconvergenceMs": 809.5,
+        "CconvergenceMs": 324
+      },
+      {
+        "case": "chalk-4",
+        "Bms": 12.0,
+        "Cms": 0.5,
+        "BconvergenceMs": 414.29999999701977,
+        "CconvergenceMs": 246.19999999925494
+      }
+    ],
+    "DPR4EachPixelSurfaceBytes": 92499840,
+    "CdiagnosticMaxBudgetUsedDPR4": 185266320,
+    "normalDemoURL": "http://127.0.0.1:4350/example.html",
+    "normalDemoPID": 77911
+  },
+  "sampling": {
+    "browserStarts": 9,
+    "chargedCeilSeconds": 566,
+    "capSeconds": 4800,
+    "roles": {
+      "ordinary": 4,
+      "diagnostic": 2,
+      "correctness": 2,
+      "corrective": 1
+    },
+    "extraPerformanceRetries": 0,
+    "r1NativeStarts": 6,
+    "r1NativeCeilSeconds": 282,
+    "r2BaselineStarts": 8,
+    "allGuardsClean": true,
+    "bufferFiles": 70,
+    "decodedBufferBytes": 1295421148,
+    "storageLastSnapshot": {
+      "actualRetainedBytes": 382693045,
+      "logicalBytes": 1677611141,
+      "terminalReserveBytes": 1048576,
+      "finalLedgerPath": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/storage-ledger.json"
+    }
+  },
+  "evidence": {
+    "summary": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/verification-summary.json",
+      "bytes": 4481,
+      "sha256": "c5b14df5d4b9df24550667f4d484a4dfc702ef82bc2d3de012f5ed603bc5d1ad"
+    },
+    "readiness": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/readiness.json",
+      "bytes": 1324,
+      "sha256": "2d795efd255933892adbb1f91cc0a0e0a61dc7c781ea7e1ea3ac18e6c2b164b9"
+    },
+    "manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/artifact-manifest.json",
+      "bytes": 169480,
+      "sha256": "8b182468ce9cefd9e16b9318623cd30a8050befba05ba780f26c0d5fe063b4b5"
+    },
+    "source": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-local-final.json",
+      "bytes": 207055,
+      "sha256": "3144977b13a83f36847450e8f0c2630bd6193eddc5d6738b6f57049ff3b7e724"
+    },
+    "sourceDelta": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-delta.patch",
+      "bytes": 26547,
+      "sha256": "9f870baf0ac48b0520567a9173bf4ce68d650071f8854fc323b2db74792d233c"
+    },
+    "sourceSDK": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/source-and-SDK-binding.json",
+      "bytes": 5134,
+      "sha256": "d609abbad75cde194a212a20206ea6a8c445ddabbfb32647f54eef86c83fda16"
+    },
+    "findings": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/findings.json",
+      "bytes": 2431,
+      "sha256": "f6e7984a3a709ea3530cdd43c6039d8ce84fcb2301300e0cfc168a83252c1858"
+    },
+    "cleanup": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/cleanup.json",
+      "bytes": 1437870,
+      "sha256": "c5128738c12a9ff566deaa620c570d87feae1ae392405113190a66c11eddd8bc"
+    },
+    "samplingLedger": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/sampling-ledger.json",
+      "bytes": 12121,
+      "sha256": "c7cb58d9370e4a459aa70061fea588f7b69fb39a7af5068edd082c05fc71e929"
+    },
+    "buffers": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/buffer-audit.json",
+      "bytes": 32869,
+      "sha256": "d3f43ebcc935307adb49e01d65582263be73292d2b307b5b6a5f51b3c12b1bdf"
+    },
+    "preservation": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/preservation.json",
+      "bytes": 4017,
+      "sha256": "d53f09f160f472239653191f86b7f0f692dbcfbb0e6b1b16245cd17e3b823c1a"
+    }
+  },
+  "remaining": [
+    "Control review of the exact local candidate and procedural findings.",
+    "Separate prospective scope for remaining waxDPR4feedbackgap and any further clean performance qualification.",
+    "OriginalEFF4 remains independentopen issue; mixed-documenterase scope notstarted."
+  ],
+  "limitations": [
+    "Not READY_FOR_CONTROL_REVIEW success;noofficialGate/P34/relativeperformancePASS.",
+    "Proceduralfindingsretained: lateBdiagnosticenvelope,r1ignoredbuildcachefourintermediates,ordinarynativecoload,earlywax4capturecorrectedonce.",
+    "FullCTestnotrun;20frozenrelatedtestsplusprivatecheckscompleted.",
+    "OldEFF4 5125.1ms/304callbacks staysUNMET/ROOT_CAUSE_NOT_ESTABLISHED.",
+    "Mixed-documenterase,nextpackagesandpublicationnotstarted."
+  ],
+  "stopAfterTerminalCallback": true
+}

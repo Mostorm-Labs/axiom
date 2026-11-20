@@ -98,6 +98,7 @@ internal::ReferenceValidationCache* SkiaRenderer::validationService()const noexc
 }
 
 SkiaRenderer::~SkiaRenderer(){
+    closeCompactResources(false);
     feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();
     // Seal quota before old contexts can abandon their completion callbacks.
     if(resourceBudget_)resourceBudget_->close();
@@ -109,7 +110,7 @@ void SkiaRenderer::serviceResourceRetirements(ResourceServiceMode mode)noexcept 
     if(mode==ResourceServiceMode::kEndSurfaceTransition)preserveWorldPreparation_=false;
     if(gpuRetirements_)gpuRetirements_->service();
 }
-bool SkiaRenderer::resourceRetirementPending()const noexcept {return gpuRetirements_&&gpuRetirements_->pending();}
+bool SkiaRenderer::resourceRetirementPending()const noexcept {return compactReleasePending()||(gpuRetirements_&&gpuRetirements_->pending());}
 
 // Constant-size validity only. Pixels remain owned by the qualified target;
 // canonical source records and mask-prefix validation stay in RenderGroupManager.
@@ -181,11 +182,103 @@ struct SkiaRenderer::NavigationCache final {
     }
 };
 struct SkiaRenderer::CompactCache final {
-    struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
+    std::shared_ptr<GpuCompletionService> contextOwner;
+    sk_sp<GrDirectContext> retainedContext;
+    std::array<std::uint64_t,8> invalidSessions{};
+    std::size_t invalidCount=0;
+    bool invalidAll=false;
+    bool invalid()const noexcept{return invalidAll||invalidCount;}
+    struct Entry {
+        resources::ResourceLease pixels;
+        sk_sp<SkSurface> surface;
+        std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;
+        foundation::InkBrushConfig config;
+        std::uint64_t seed=0;
+    };
+    resources::ResourceLease metadata,scratchPixels;
     std::unordered_map<std::uint64_t,Entry> entries;
     sk_sp<SkSurface> scratch;
+    SkiaSurfaceProvider* provider=nullptr;const void* target=nullptr;const void* context=nullptr;
+    std::uint64_t document=0;
     std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
 };
+void SkiaRenderer::clearCompactCache() noexcept {
+    // Lifecycle calls need not have the provider context current. Defer GPU
+    // object release until that provider is acquired for its next opportunity.
+    for(auto* cache:{compactCache_.get(),legacyCompactCache_.get()})if(cache){cache->invalidAll=true;cache->invalidCount=0;}
+}
+void SkiaRenderer::invalidateCompactSession(std::uint64_t session) noexcept {
+    for(auto* cache:{compactCache_.get(),legacyCompactCache_.get()})if(cache&&!cache->invalidAll){
+        if(std::find(cache->invalidSessions.begin(),cache->invalidSessions.begin()+cache->invalidCount,session)!=cache->invalidSessions.begin()+cache->invalidCount)continue;
+        if(cache->invalidCount==cache->invalidSessions.size()){cache->invalidAll=true;cache->invalidCount=0;}
+        else cache->invalidSessions[cache->invalidCount++]=session;
+    }
+}
+void SkiaRenderer::applyCompactInvalidations(const SkiaSurfaceProvider* provider,const void* context) noexcept {
+    for(auto* owner:{&compactCache_,&legacyCompactCache_})if(*owner){
+        auto& cache=**owner;
+        if(!(cache.retainedContext&&cache.retainedContext->abandoned())&&
+            (cache.provider!=provider||cache.context!=context))continue;
+        if(cache.invalidAll){owner->reset();continue;}
+        for(std::size_t i=0;i<cache.invalidCount;++i)cache.entries.erase(cache.invalidSessions[i]);
+        cache.invalidCount=0;
+        if(cache.entries.empty())owner->reset();
+    }
+    compactWork_.retainedBytes=0;compactWork_.temporaryBytes=0;
+    for(const auto* cache:{compactCache_.get(),legacyCompactCache_.get()})if(cache){
+        for(const auto& [id,entry]:cache->entries){(void)id;if(entry.surface)compactWork_.retainedBytes+=std::uint64_t(cache->width)*cache->height*4;}
+        if(cache->scratch)compactWork_.temporaryBytes+=std::uint64_t(cache->width)*cache->height*4;
+    }
+}
+bool SkiaRenderer::compactReleasePending() const noexcept {
+    return (compactCache_&&compactCache_->invalid())||(legacyCompactCache_&&legacyCompactCache_->invalid());
+}
+void SkiaRenderer::serviceCompactRetirements() noexcept {
+    // Only unacquired owner opportunities call this. Render paths apply on
+    // their already acquired target and must not switch a foreign GL context.
+    for(auto* owner:{&compactCache_,&legacyCompactCache_}){
+        if(*owner&&(*owner)->invalid()&&(*owner)->provider){
+            auto* provider=(*owner)->provider;(void)releaseRetiredCompactResources(*provider);
+        }
+    }
+}
+bool SkiaRenderer::releaseRetiredCompactResources(SkiaSurfaceProvider& provider) noexcept {
+    if(!compactReleasePending())return true;
+    // Abandoned Skia resources cannot issue backend deletes. Unknown abandon
+    // still cannot qualify a GPU completion or discard pending last-use quota.
+    applyCompactInvalidations(nullptr,nullptr);
+    bool needed=false;for(const auto* cache:{compactCache_.get(),legacyCompactCache_.get()})needed|=cache&&cache->invalid()&&cache->provider==&provider;
+    if(!needed)return true;
+    const auto acquired=provider.acquire();
+    if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired||!acquired.frame.surface)return false;
+    // acquire selects this provider's GPU context. Invalidated cache pixels
+    // stay charged through their real last-use epoch after owner release.
+    applyCompactInvalidations(&provider,acquired.frame.surface->recordingContext());
+    if(gpuRetirements_)gpuRetirements_->service();
+    provider.release();
+    for(const auto* cache:{compactCache_.get(),legacyCompactCache_.get()})if(cache&&cache->invalid()&&cache->provider==&provider)return false;
+    return true;
+}
+void SkiaRenderer::closeCompactResources(bool acquireProvider) noexcept {
+    clearCompactCache();
+    if(acquireProvider)serviceCompactRetirements();
+    for(auto* owner:{&compactCache_,&legacyCompactCache_})if(*owner){
+        // Metal/Vulkan/D3D have no thread-current GL context to restore. Drop
+        // these owners without abandoning a context shared by other renderers.
+        auto* cache=owner->get();
+        if(!cache->retainedContext||cache->retainedContext->backend()!=GrBackendApi::kOpenGL)
+            applyCompactInvalidations(cache->provider,cache->context);
+    }
+    if(!compactReleasePending())return;
+    // Shutdown cannot await a drawable. Discard this owner's quota (never
+    // reuse it) and abandon the retained context without backend deletes.
+    // Neither action reports successful GPU completion or physical loss.
+    if(gpuRetirements_)gpuRetirements_->abandonOwner();
+    if(resourceBudget_)resourceBudget_->close();
+    if(compactCache_&&compactCache_->retainedContext)compactCache_->retainedContext->abandonContext();
+    if(legacyCompactCache_&&legacyCompactCache_->retainedContext)legacyCompactCache_->retainedContext->abandonContext();
+    applyCompactInvalidations(nullptr,nullptr);
+}
 namespace {
 // One connected mesh, including its edge fringe and end caps. Adjacent samples
 // share coverage: per-segment round caps would accumulate alpha into dark dots.
@@ -886,6 +979,9 @@ void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     // An isolated executor still owns capacity in this budget. Never issue a
     // replacement manager while its permit could remain in use.
     if(!cpuGrants_.empty())return;
+    clearCompactCache();
+    serviceCompactRetirements();
+    if(compactReleasePending())return;
     feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();localExact_.reset();cpuPathHandoffs_.clear();eraseQueries_.reset();clearRenderCache();if(resourceBudget_)resourceBudget_->close();gpuRetirements_.reset();resourceBudget_.reset();sourceRetention_.reset();preparedGeometry_.reset();renderCacheOptions_=options;
 }
 void SkiaRenderer::clearRenderCache() noexcept {if(validationProofs_)validationProofs_->clear();feedbackMisses_.clear();feedbackMissMetadata_.reset();localSelection_.clear();if(!cpuPendingPreparation_)localExact_.reset();if(gpuRetirements_)gpuRetirements_->invalidateDisplays();if(!preserveWorldPreparation_&&!cpuPendingPreparation_)eraseQueries_.reset();partialEraseFrame_.reset();transientDisplay_.reset();pendingNavigation_.reset();navigationTiles_.reset();navigationCache_.reset();navigationFallback_.reset();if(renderCache_)renderCache_->clear();if(preparedGeometry_&&!preserveWorldPreparation_)preparedGeometry_->clear();}
@@ -1686,6 +1782,25 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
 BackendSubmissionResult SkiaRenderer::renderPreview(
     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
     const PreviewStyleOverride& style) {
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    const auto previewWorkBefore=compactWork_;
+    struct PreviewObservation final {
+        std::function<void()> emit;
+        ~PreviewObservation(){emit();}
+    } previewObservation{[&]{
+        std::size_t pending=0;
+        if(resourceBudget_)for(unsigned i=0;i<unsigned(resources::ResourceClass::kCount);++i)
+            pending+=resourceBudget_->snapshot(static_cast<resources::ResourceClass>(i)).pendingRelease;
+        std::fprintf(stderr,"AXIOM_HD_PREVIEW {\"document\":\"%llu\",\"session\":\"%llu\",\"sessionGeneration\":\"%llu\",\"revision\":\"%llu\",\"generation\":\"%llu\",\"generatedKnots\":%llu,\"retainedBytes\":%llu,\"temporaryBytes\":%llu,\"budgetUsed\":%zu,\"pendingRelease\":%zu,\"gpuEpochs\":%zu,\"submissions\":%llu}\n",
+            (unsigned long long)geometry.documentEpoch,(unsigned long long)geometry.session,
+            (unsigned long long)geometry.sessionGeneration,(unsigned long long)geometry.revision,
+            (unsigned long long)geometry.surfaceGeneration.value(),
+            (unsigned long long)(compactWork_.generatedKnots-previewWorkBefore.generatedKnots),
+            (unsigned long long)compactWork_.retainedBytes,(unsigned long long)compactWork_.temporaryBytes,
+            resourceBudget_?resourceBudget_->used():0,pending,resourceBudget_?resourceBudget_->pendingGpuEpochCount():0,
+            (unsigned long long)submissions_);
+    }};
+#endif
     G5_SCOPE(g5Preview,g5::Tag::preview,g5::Purpose::none);
     G5_ROUTE(g5Route,g5::Route::preview_tail);
 
@@ -1698,6 +1813,10 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         provider.generation() != geometry.surfaceGeneration.value()) {
         return BackendSubmissionResult::rejected("invalid preview geometry or surface generation");
     }
+    for(auto* cache:{compactCache_.get(),legacyCompactCache_.get()})
+        if(cache&&cache->provider!=&provider){cache->invalidAll=true;cache->invalidCount=0;}
+    serviceCompactRetirements();
+    if(compactReleasePending())return BackendSubmissionResult::retry("preview resource retirement pending");
     const auto acquired = provider.acquire();
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
@@ -1708,6 +1827,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         provider.release();
         return BackendSubmissionResult::rejected("stale preview surface generation");
     }
+    applyCompactInvalidations(&provider,acquired.frame.surface->recordingContext());
     serviceResourceRetirements();
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});
@@ -1715,6 +1835,82 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview completion metadata unavailable");}
     internal::SkiaGpuLifetime gpu(*gpuRetirements_,resourceBudget_,provider,GrAsDirectContext(acquired.frame.surface->recordingContext()),resources::kPixelResourceClasses,resources::kPixelResourceClasses,internal::validationPressure(validationProofs_,resourceBudget_));
     if(!gpu.ready()){provider.release();return BackendSubmissionResult::rejected("preview GPU completion unavailable");}
+    const auto info=acquired.frame.surface->imageInfo();
+    const auto pixelBytes=std::uint64_t(info.width())*info.height()*4;
+    const auto context=acquired.frame.surface->recordingContext();
+    const auto capturedConfig=[&](const PreviewGeometry::Contour& contour){
+        auto config=*contour.compactConfig;
+        if(!style.preferCapturedPaint){
+            if(style.overrideColor)config.color={style.red,style.green,style.blue,1.};
+            if(style.overrideOpacity){config.color[3]=1.;config.opacity=std::clamp(style.opacityMultiplier,0.F,1.F);}
+        }
+        return config;
+    };
+    const auto budgetedContour=[&](const PreviewGeometry::Contour& c){return context&&c.compactConfig&&c.compactChunks&&
+        (c.compactConfig->algorithmVersion==5||c.compactConfig->algorithmVersion==6);};
+    // All admission precedes the first write to the provider. A denied frame
+    // retains its last displayed pixels and the controller's dirty revision.
+    try{
+        const auto count=std::count_if(geometry.contours.begin(),geometry.contours.end(),budgetedContour);
+        if(count){
+            const auto ceiling=std::min(renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes);
+            if(pixelBytes>renderCacheOptions_.maxEntryBytes||std::size_t(count)>renderCacheOptions_.maxEntries||
+                pixelBytes>ceiling/(std::size_t(count)+1)){
+                provider.release();return BackendSubmissionResult::rejected("preview working set cannot fit configured budget");
+            }
+            if(!compactCache_||compactCache_->provider!=&provider||compactCache_->target!=acquired.frame.surface||
+                compactCache_->context!=context||compactCache_->document!=geometry.documentEpoch||
+                compactCache_->generation!=geometry.surfaceGeneration.value()||compactCache_->scale!=geometry.viewport.scale||
+                compactCache_->x!=geometry.viewport.translationX||compactCache_->y!=geometry.viewport.translationY||
+                compactCache_->px!=geometry.logicalToPhysicalX||compactCache_->py!=geometry.logicalToPhysicalY||
+                compactCache_->width!=info.width()||compactCache_->height!=info.height()){
+                compactCache_.reset();
+                const auto token=resourceBudget_->reserve(resources::ResourceClass::kRecorded,4096+renderCacheOptions_.maxEntries*512,false);
+                if(!token){provider.release();return BackendSubmissionResult::retry("preview metadata admission pending");}
+                auto cache=std::make_shared<CompactCache>();cache->metadata=resources::ResourceLease(resourceBudget_,*token);
+                cache->provider=&provider;cache->target=acquired.frame.surface;cache->context=context;
+                cache->retainedContext=sk_ref_sp(GrAsDirectContext(context));cache->contextOwner=provider.gpuCompletionService();
+                cache->document=geometry.documentEpoch;cache->generation=geometry.surfaceGeneration.value();
+                cache->scale=geometry.viewport.scale;cache->x=geometry.viewport.translationX;cache->y=geometry.viewport.translationY;
+                cache->px=geometry.logicalToPhysicalX;cache->py=geometry.logicalToPhysicalY;
+                cache->width=info.width();cache->height=info.height();compactCache_=std::move(cache);
+            }
+            auto& cache=*compactCache_;
+            std::erase_if(cache.entries,[&](const auto& value){return std::none_of(geometry.contours.begin(),geometry.contours.end(),
+                [&](const auto& c){return c.session==value.first&&budgetedContour(c);});});
+            bool allocationCanProgress=true;
+            const auto allocate=[&](sk_sp<SkSurface>& surface,resources::ResourceLease& lease,resources::ResourceClass kind){
+                const auto token=resourceBudget_->reserve(kind,pixelBytes,false);if(!token)return false;
+                resources::ResourceLease admitted(resourceBudget_,*token);
+                auto candidate=acquired.frame.surface->makeSurface(info);if(!candidate)return false;
+                surface=std::move(candidate);lease=std::move(admitted);return true;
+            };
+            if(!cache.scratch&&!allocate(cache.scratch,cache.scratchPixels,resources::ResourceClass::kScratch)){
+                allocationCanProgress=resourceBudget_->reserveAvailability(resources::ResourceClass::kScratch,pixelBytes,false)!=resources::ResourceBudgetManager::ReserveAvailability::kUnavailable;
+                provider.release();return allocationCanProgress?BackendSubmissionResult::retry("preview scratch admission pending"):
+                    BackendSubmissionResult::rejected("preview scratch quota unavailable");
+            }
+            for(const auto& c:geometry.contours)if(budgetedContour(c)){
+                auto& entry=cache.entries[c.session];const auto config=capturedConfig(c);
+                auto prefix=c.compactChunks->previous;
+                while(prefix&&prefix!=entry.prefix)prefix=prefix->previous;
+                if(entry.surface&&(entry.seed!=c.compactSeed||entry.config!=config||prefix!=entry.prefix)){
+                    entry.surface.reset();entry.pixels.reset();entry.prefix.reset();
+                }
+                if(!entry.surface){
+                    if(!allocate(entry.surface,entry.pixels,resources::ResourceClass::kRaster)){
+                        allocationCanProgress=resourceBudget_->reserveAvailability(resources::ResourceClass::kRaster,pixelBytes,false)!=resources::ResourceBudgetManager::ReserveAvailability::kUnavailable;
+                        provider.release();return allocationCanProgress?BackendSubmissionResult::retry("preview stable admission pending"):
+                            BackendSubmissionResult::rejected("preview stable quota unavailable");
+                    }
+                    entry.config=config;entry.seed=c.compactSeed;
+                    // First clear is offscreen and covered by the active epoch.
+                    gpu.touch();entry.pixels.markGpuUse();entry.surface->getCanvas()->clear(SK_ColorBLACK);
+                }
+            }
+            compactWork_.retainedBytes=pixelBytes*cache.entries.size();compactWork_.temporaryBytes=pixelBytes;
+        }
+    }catch(const std::bad_alloc&){provider.release();return BackendSubmissionResult::retry("preview allocation unavailable");}
     G5_OBSERVE(g5::Kind::Basis,g5::Tag::preview,true,geometry.documentEpoch,geometry.session,geometry.sessionGeneration,geometry.revision,geometry.surfaceGeneration.value(),resourceEpoch_,g5::bits(geometry.viewport.scale),g5::bits(geometry.viewport.translationX),g5::bits(geometry.viewport.translationY),static_cast<std::uint64_t>(acquired.frame.surface->width()),static_cast<std::uint64_t>(acquired.frame.surface->height()),g5::bits(geometry.logicalToPhysicalX),g5::bits(geometry.logicalToPhysicalY));
     gpu.touch();
     G5_TARGET(acquired.frame.surface,true);
@@ -1781,13 +1977,60 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             }
             const auto info=acquired.frame.surface->imageInfo();
             const auto bytes=std::uint64_t(info.width())*info.height()*4;
-            if(!compactCache_||compactCache_->generation!=geometry.surfaceGeneration.value()||compactCache_->scale!=geometry.viewport.scale||
-               compactCache_->x!=geometry.viewport.translationX||compactCache_->y!=geometry.viewport.translationY||compactCache_->px!=geometry.logicalToPhysicalX||compactCache_->py!=geometry.logicalToPhysicalY||compactCache_->width!=info.width()||compactCache_->height!=info.height()){
-                compactCache_=std::make_shared<CompactCache>();compactCache_->generation=geometry.surfaceGeneration.value();
-                compactCache_->scale=geometry.viewport.scale;compactCache_->x=geometry.viewport.translationX;compactCache_->y=geometry.viewport.translationY;
-                compactCache_->px=geometry.logicalToPhysicalX;compactCache_->py=geometry.logicalToPhysicalY;compactCache_->width=info.width();compactCache_->height=info.height();
+            if(budgetedContour(contour)){
+                auto& cache=*compactCache_;auto& entry=cache.entries.at(contour.session);
+                const auto prefix=contour.compactChunks->previous;
+                std::vector<const ink::BrushPreviewDelta::Chunk*> added;
+                for(auto c=prefix;c&&c!=entry.prefix;c=c->previous)added.push_back(c.get());
+                entry.pixels.markGpuUse();cache.scratchPixels.markGpuUse();
+                auto* stable=entry.surface->getCanvas();stable->save();
+                stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+                stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);
+                stable->scale(geometry.viewport.scale,geometry.viewport.scale);
+                for(auto i=added.rbegin();i!=added.rend();++i){
+                    compactWork_.generatedKnots+=(*i)->knots.size();
+                    // The large-view reference concatenates overlapping chunk
+                    // endpoints verbatim. Preserve its zero-length join stamp
+                    // (and its material phase), once when that chunk stabilizes.
+                    if(pixelBytes>16U*1024U*1024U&&(*i)->previous&&!(*i)->knots.empty()){
+                        ++compactWork_.generatedKnots;
+                        internal::drawCompactCoverageToSkCanvas(*stable,config,std::span((*i)->knots).first(1),
+                            (*i)->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);
+                    }
+                    internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,
+                        contour.compactChunks->totalDistance,contour.compactSeed);
+                }
+                stable->restore();entry.prefix=prefix;
+                auto* temporary=cache.scratch->getCanvas();temporary->resetMatrix();temporary->clear(SK_ColorBLACK);
+                // Temporary images never copy surface pixels. Both immediate
+                // image/shader owners die before another write; all prior GPU
+                // commands are flushed into this same context's ordered queue.
+                // The backing leases cover reads through the finished epoch.
+                {auto image=entry.surface->makeTemporaryImage();temporary->drawImage(image,0,0);}
+                temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+                temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);
+                temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
+                const auto& tail=*contour.compactChunks;compactWork_.generatedKnots+=tail.knots.size();
+                if(pixelBytes>16U*1024U*1024U&&tail.previous&&!tail.knots.empty()){
+                    ++compactWork_.generatedKnots;
+                    internal::drawCompactCoverageToSkCanvas(*temporary,config,std::span(tail.knots).first(1),
+                        tail.startDistance,tail.totalDistance,contour.compactSeed);
+                }
+                internal::drawCompactCoverageToSkCanvas(*temporary,config,tail.knots,tail.startDistance,tail.totalDistance,contour.compactSeed);
+                {auto image=cache.scratch->makeTemporaryImage();
+                    internal::compositeCompactCoverageToSkCanvas(*canvas,*image,config,contour.compactSeed);}
+                return;
             }
-            auto& cache=*compactCache_;
+            if(!legacyCompactCache_||legacyCompactCache_->generation!=geometry.surfaceGeneration.value()||legacyCompactCache_->scale!=geometry.viewport.scale||
+               legacyCompactCache_->x!=geometry.viewport.translationX||legacyCompactCache_->y!=geometry.viewport.translationY||legacyCompactCache_->px!=geometry.logicalToPhysicalX||legacyCompactCache_->py!=geometry.logicalToPhysicalY||legacyCompactCache_->width!=info.width()||legacyCompactCache_->height!=info.height()){
+                legacyCompactCache_=std::make_shared<CompactCache>();legacyCompactCache_->generation=geometry.surfaceGeneration.value();
+                legacyCompactCache_->provider=&provider;legacyCompactCache_->context=acquired.frame.surface->recordingContext();
+                legacyCompactCache_->retainedContext=sk_ref_sp(GrAsDirectContext(acquired.frame.surface->recordingContext()));
+                legacyCompactCache_->contextOwner=provider.gpuCompletionService();
+                legacyCompactCache_->scale=geometry.viewport.scale;legacyCompactCache_->x=geometry.viewport.translationX;legacyCompactCache_->y=geometry.viewport.translationY;
+                legacyCompactCache_->px=geometry.logicalToPhysicalX;legacyCompactCache_->py=geometry.logicalToPhysicalY;legacyCompactCache_->width=info.width();legacyCompactCache_->height=info.height();
+            }
+            auto& cache=*legacyCompactCache_;
             // Persistent coverage is view-bounded and disposable. Large hosts
             // fall back to clipped reconstruction rather than exceed budget.
             const bool gpuMaterial=config.algorithmVersion==5||config.algorithmVersion==6;
@@ -1876,6 +2119,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         else drawDabs(geometry.dabs, paint);
     }
     canvas->restore();
+    applyCompactInvalidations(&provider,acquired.frame.surface->recordingContext());
     provider.release();
     if(!gpu.finish())return BackendSubmissionResult::rejected("preview GPU submission failed");
     ++submissions_;
@@ -1896,6 +2140,7 @@ BackendSubmissionResult SkiaRenderer::clearPreview(
         provider.release();
         return BackendSubmissionResult::rejected("stale preview clear surface generation");
     }
+    applyCompactInvalidations(&provider,acquired.frame.surface->recordingContext());
     serviceResourceRetirements();
     try{
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.sharedMaxBytes});

@@ -1,0 +1,94 @@
+{
+  "status": "INCOMPLETE_NOT_QUALIFIED",
+  "nativeFixture": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/runtime/render/tests/hidpi_material_preview_test.cpp",
+    "bytes": 4190,
+    "sha256": "05f4a2dfdccfeff5a9c468ec2f318d9636c228db65f62712d4cff27332b01bfb"
+  },
+  "generatedTrace": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+    "bytes": 60099,
+    "sha256": "c1aea82071c37d0565f68858e5d922011c933b1a4f88b16d066ebe7311f7c554"
+  },
+  "baselineExecutable": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+    "bytes": 25636592,
+    "sha256": "dd8727987c71451804ab7a6cc242d36509aa4293ea7bae1f9af9168273dae5f0"
+  },
+  "initialNativeCompileFailure": {
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/build-native-B.log",
+      "bytes": 23654,
+      "sha256": "19c5106d78f021036ad3543c4a09f204bfedae8b2643a18889bb5c5cd57aedab"
+    },
+    "reason": "Narrowing conversion in testmetrics initializer; corrected before frozen RED."
+  },
+  "nativeCompileCorrected": {
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/build-native-B-corrected.log",
+      "bytes": 2842,
+      "sha256": "fe4ea1eb2cd30177bfe22d243e17f6159cba6e4f6cd20046b1c510ddea8a19c4"
+    },
+    "exit": 0
+  },
+  "WebProbeBuild": {
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/build-web-B.log",
+      "bytes": 2330,
+      "sha256": "b0b2f72f2c1754c6bfda10c5bb90dd383aeafbfeceb6d7883112fd5f3edff684"
+    },
+    "configure": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/B-probe-configure.log",
+      "bytes": 259,
+      "sha256": "e42452299083528703e0aa6e53cc1bd499be63ba3eac95a642c12ac80840dc64"
+    },
+    "exit": 1,
+    "reason": "New source archive copied frozen1602 code set but omitted root CMakeLists.txt; no sourcecanconfigure. This is an incomplete harness setup, not acceptedSDK/environmentfailure. No browserstart."
+  },
+  "privateProbe": {
+    "source": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/runtime/render/src/skia_renderer.cpp",
+      "bytes": 155326,
+      "sha256": "e35e5d9ed882621da16c0d15ecf30e731fb1d04837aecfc48a2557f0dc0ad154"
+    },
+    "defaultOff": "AXIOM_ENABLE_FRAME_TIMING",
+    "compiledNewWeb": false,
+    "runtimeValidated": false
+  },
+  "observerDriver": {
+    "files": [
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/consumer.mjs",
+        "bytes": 6538,
+        "sha256": "00a3fc04d4a2c12651bc4a1d19f0789ae82f34c0d656bd2a181762a68225702e"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/observer.mjs",
+        "bytes": 2626,
+        "sha256": "9bacb54b6845c16b6165e1760312683c8bbc82a9f0f6efbb9f5c2e941ac44c23"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/storage.mjs",
+        "bytes": 3674,
+        "sha256": "c03c10c1571485addd2e5473beac84fc00c55b02929656ea92911843ba43b803"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/storage.test.mjs",
+        "bytes": 2296,
+        "sha256": "970857c0c3bc3f2a64c55f51fa6dc12b2f27be4071193e9e5a99a22bd5b1aed6"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/task-storage.py",
+        "bytes": 3462,
+        "sha256": "d2b80ec5d8a679b85a31b052e3a31c289e62d0e4a7a59d96f0129637b85408e0"
+      },
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/verification/runners/g5/hidpi_preview/web.mjs",
+        "bytes": 4087,
+        "sha256": "67494292c829ee30bcd20a43e5406bb0f774bfa4ce1b681a17ba65b38e61c29c"
+      }
+    ],
+    "status": "PREPARED_ONLY_NOT_RUN_IN_BROWSER",
+    "knownLimits": "No rootSDK functional smoke; no Webdiagnostics/ordinary/pixel claim. No speculative fix or newnormalSDK."
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "status": "BLOCKED",
+  "classification": "FROZEN_VERIFICATION_FAILURE",
+  "blockingReason": "Native realGPU wax/DPR4/960 exceeded frozen120second process cap; no completion row and no extra retry. Required remainingbaseline/diagnostic beforeproductionrepair notsatisfied.",
+  "rows": [
+    {
+      "id": "wax-2-240",
+      "guard": {
+        "command": [
+          "out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "2",
+          "240",
+          "out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-2-240.json",
+          "growth"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 7.585026165999807,
+        "peak_process_family_rss_kib": 101728,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120.0,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": {
+        "dpr": 2,
+        "engineCopiedKnots": 7700,
+        "engineSamples": 241,
+        "generatedKnots": 32220,
+        "gpu": true,
+        "height": 2020,
+        "moves": 240,
+        "profile": "crayon-wax-v1",
+        "retainedBytes": 0,
+        "revision": 3,
+        "seconds": 6.923906583,
+        "submissions": 241,
+        "temporaryBytes": 0,
+        "width": 2862
+      }
+    },
+    {
+      "id": "wax-2-480",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "2",
+          "480",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-2-480.json",
+          "growth"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 23.519699041000422,
+        "peak_process_family_rss_kib": 233744,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": {
+        "dpr": 2,
+        "engineCopiedKnots": 15240,
+        "engineSamples": 481,
+        "generatedKnots": 132334,
+        "gpu": true,
+        "height": 2020,
+        "moves": 480,
+        "profile": "crayon-wax-v1",
+        "retainedBytes": 0,
+        "revision": 3,
+        "seconds": 23.256492458,
+        "submissions": 481,
+        "temporaryBytes": 0,
+        "width": 2862
+      }
+    },
+    {
+      "id": "wax-2-960",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "2",
+          "960",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-2-960.json",
+          "growth"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 86.85440220800047,
+        "peak_process_family_rss_kib": 660592,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": {
+        "dpr": 2,
+        "engineCopiedKnots": 31623,
+        "engineSamples": 961,
+        "generatedKnots": 536472,
+        "gpu": true,
+        "height": 2020,
+        "moves": 960,
+        "profile": "crayon-wax-v1",
+        "retainedBytes": 0,
+        "revision": 3,
+        "seconds": 86.540714959,
+        "submissions": 961,
+        "temporaryBytes": 0,
+        "width": 2862
+      }
+    },
+    {
+      "id": "wax-4-240",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "4",
+          "240",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-4-240.json",
+          "growth"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 8.605090291001034,
+        "peak_process_family_rss_kib": 136320,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": {
+        "dpr": 4,
+        "engineCopiedKnots": 7700,
+        "engineSamples": 241,
+        "generatedKnots": 32220,
+        "gpu": true,
+        "height": 4040,
+        "moves": 240,
+        "profile": "crayon-wax-v1",
+        "retainedBytes": 0,
+        "revision": 3,
+        "seconds": 8.414101708,
+        "submissions": 241,
+        "temporaryBytes": 0,
+        "width": 5724
+      }
+    },
+    {
+      "id": "wax-4-480",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "4",
+          "480",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-4-480.json",
+          "growth"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 32.796746541000175,
+        "peak_process_family_rss_kib": 350224,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": {
+        "dpr": 4,
+        "engineCopiedKnots": 15240,
+        "engineSamples": 481,
+        "generatedKnots": 132334,
+        "gpu": true,
+        "height": 4040,
+        "moves": 480,
+        "profile": "crayon-wax-v1",
+        "retainedBytes": 0,
+        "revision": 3,
+        "seconds": 32.527569042,
+        "submissions": 481,
+        "temporaryBytes": 0,
+        "width": 5724
+      }
+    },
+    {
+      "id": "wax-4-960",
+      "guard": {
+        "command": [
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-baseline",
+          "crayon-wax-v1",
+          "4",
+          "960",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/trace.json",
+          "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-4-960.json",
+          "growth"
+        ],
+        "reason": "timeout",
+        "returncode": -15,
+        "elapsed_s": 120.28254724999897,
+        "peak_process_family_rss_kib": 882800,
+        "rss_limit_kib": 6291456,
+        "timeout_s": 120,
+        "last_stage": null,
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "observation": null
+    }
+  ],
+  "ratios": [
+    {
+      "profile": "crayon-wax-v1",
+      "dpr": 2,
+      "status": "OBSERVED_RED",
+      "generatedWork960over480": 4.053924161591126,
+      "criterion": 2.5
+    },
+    {
+      "profile": "crayon-wax-v1",
+      "dpr": 4,
+      "status": "BLOCKED_OR_NOT_EXECUTED",
+      "generatedWork960over480": null,
+      "criterion": 2.5
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 2,
+      "status": "BLOCKED_OR_NOT_EXECUTED",
+      "generatedWork960over480": null,
+      "criterion": 2.5
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "dpr": 4,
+      "status": "BLOCKED_OR_NOT_EXECUTED",
+      "generatedWork960over480": null,
+      "criterion": 2.5
+    }
+  ],
+  "nativeStarts": 6,
+  "browserStarts": 0,
+  "productionRepair": false,
+  "doNotInfer": "DPR2 count evidence does not substitute for missingDPR4 or chalk baseline; no HD1..HD5closure."
+}

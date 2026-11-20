@@ -1,0 +1,181 @@
+{
+  "schema": "axiom-scoped-implementation-result-v1",
+  "task": "G5-crayon-chalk-hidpi-preview-r1",
+  "at": "2026-11-19T10:02:58.613945+00:00",
+  "status": "BLOCKED",
+  "classification": "FROZEN_VERIFICATION_FAILURE",
+  "continue_execution": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "branch": "codex/g5-crayon-chalk-hidpi-preview",
+    "HEAD": "5c26fdee053c7ee7eee901a885ac9ccd4a3c3f1c",
+    "resumeCursorClassification": "EXACT_CURSOR",
+    "indexEmpty": true
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/packages/G5-crayon-chalk-hidpi-preview-r1/package.json",
+    "bytes": 2909,
+    "sha256": "2f1dbcaa4f67e8fa28c6a0369bc766b90ab86b9bcfb728a539f59ea6d218cdc9"
+  },
+  "materialized_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/results/G5-crayon-chalk-hidpi-preview-r1",
+    "artifact_manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/artifact-manifest.json",
+      "bytes": 17323,
+      "sha256": "8ba7c33bfe65eb41ef84a7671976596acc6907dbe17cbfcc2fe3a0efdb640307"
+    }
+  },
+  "blockingFact": {
+    "case": "wax/DPR4/960",
+    "guard": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r1/native-B/wax-4-960.worker.json",
+      "bytes": 685,
+      "sha256": "d1d7b420b6c214204f26be6228c7ed7cc0590d8c9a1e48d9a9e8d8a120eb3a1c"
+    },
+    "reason": "timeout",
+    "timeout_s": 120,
+    "elapsed_s": 120.28254724999897,
+    "returncode": -15,
+    "remaining_owned_pids": [],
+    "interpretation": "Required actual nativeRED matrix incomplete at frozen process limit. No prospective bound change or performance retry."
+  },
+  "acceptance": {
+    "HD1": {
+      "status": "INCOMPLETE_BLOCKED",
+      "waxDPR2WorkRatio": 4.053924161591126,
+      "criterionMax": 2.5,
+      "waxDPR4": "960 timeout; no complete ratio",
+      "chalk": "NOT_EXECUTED",
+      "firstBrowserDiagnostic": "NOT_EXECUTED"
+    },
+    "HD2": {
+      "status": "NOT_EXECUTED",
+      "productionRepair": false
+    },
+    "HD3": {
+      "status": "NOT_EXECUTED",
+      "independentPixels": "NOT_EXECUTED",
+      "semanticHandoff": "NOT_EXECUTED",
+      "requiredNativeRegressions": "NOT_EXECUTED; no productionrepair"
+    },
+    "HD4": {
+      "status": "NOT_EXECUTED",
+      "ordinaryBrowserStarts": 0,
+      "targets": "NO_CANDIDATE_NO_PERFORMANCE_PASS"
+    },
+    "HD5": {
+      "status": "PARTIAL_BLOCKED",
+      "preservation": "EXACT",
+      "sourceSDKBinding": "SAVED",
+      "normalCSDK": null,
+      "normalDemoURL": null,
+      "previewCallback": "NOT_APPLICABLE_NO_NORMAL_C",
+      "terminalCallback": "REQUIRED_AFTER_MATERIALIZATION"
+    }
+  },
+  "actualWork": {
+    "completedNativeCases": 5,
+    "nativeAttempts": 6,
+    "generatedWorkWaxDPR2": {
+      "240": 32220,
+      "480": 132334,
+      "960": 536472
+    },
+    "browserStarts": 0,
+    "ordinaryStarts": 0,
+    "diagnosticStarts": 0,
+    "correctnessStarts": 0,
+    "correctiveStarts": 0,
+    "chargedBrowserSeconds": 0,
+    "nativeChargedCeilSeconds": 282,
+    "productionBehaviorChanges": false,
+    "privateProbe": "DefaultOFF aggregate instrumentation only; no Webruntime validation",
+    "normalSDKBuild": false,
+    "gitPublication": false
+  },
+  "evidence": {
+    "preflight.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/preflight.json",
+      "bytes": 11691,
+      "sha256": "ec0fdb5826a454eb12467914228e6fbc3a08954adde7ae067a04b4e367b5832e"
+    },
+    "implementation-design-B.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/implementation-design-B.json",
+      "bytes": 3830,
+      "sha256": "aabeceab00318ebead2438bf5810cee41df8c2a0bc918579a4a7448c01c7e6b7"
+    },
+    "baseline-work.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/baseline-work.json",
+      "bytes": 8214,
+      "sha256": "ece813b4e97504cefb5d458f2cf5b4459f0940e479640ac71d84717e242b688b"
+    },
+    "red-green.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/red-green.json",
+      "bytes": 778,
+      "sha256": "fc862adc95f2084fcbb3021f4a17733f253b3500e3826c5fa3391eca4bf0c4d3"
+    },
+    "harness-status.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/harness-status.json",
+      "bytes": 4402,
+      "sha256": "b9deb232cab3f0bb7f0b771295927b329d6e26f61fd9e4eb246584181044947d"
+    },
+    "offline-verification.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/offline-verification.json",
+      "bytes": 1606,
+      "sha256": "0ce27d5f66711ae5c970df1389ad4bdf418512077938b0d01c3af303b57c077e"
+    },
+    "sampling-ledger.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/sampling-ledger.json",
+      "bytes": 2284,
+      "sha256": "d5f04961a3757df94ec6331a7d5ab7fc41ecec5d222e8484dfcaacb170ec229a"
+    },
+    "cleanup.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/cleanup.json",
+      "bytes": 1864,
+      "sha256": "21df266d876416447ce04c27d45afdc8ff46994f27b090d350eb60008b0e61f8"
+    },
+    "preservation.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/preservation.json",
+      "bytes": 456,
+      "sha256": "cd96b148ed738aa3892768e4cbb5adf3ea9304b5b490c89dd1379d3dadd87a49"
+    },
+    "source-and-SDK-binding.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/source-and-SDK-binding.json",
+      "bytes": 4393,
+      "sha256": "caa02df2468c05677f6c2d4df41821a85c29eaab560e9dc294c0834defe08d8d"
+    },
+    "source-local-terminal.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/source-local-terminal.json",
+      "bytes": 207427,
+      "sha256": "48a88bd5a52ae6b511db0667677c718934c8ad407d1df61104c106fef4f4c3be"
+    },
+    "source-delta.patch": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/source-delta.patch",
+      "bytes": 3182,
+      "sha256": "7c7f6d4067ae11c8d2d5366b12b2d597319a0fd59c549767a6abfbdac466bcf7"
+    }
+  },
+  "remaining": [
+    "Review native acquisition strategy because inherited synchronous testpresent + oldreplay hits120s; keep exact960points/physicalview/workcriterion. No authorized retry executed.",
+    "Finish chalk/DPR2/4 and wax/DPR4 complete nativebaseline; first matched rootSDKdiagnosticB.",
+    "Fix Websource archiving toinclude root CMake/setup facts, then qualify driver/storage/processguard before any browserstart.",
+    "Implement budgetedstable/scratch/COWpreview in existingowner, nativeGREEN/pixels/lifecycle/regressions.",
+    "MatchedCdiagnostic/normalCSDK/root smoke/Demo callback, frozenordinaryB1/C1/C2/B2 and independentquality, terminalreview."
+  ],
+  "preservation": {
+    "userIABUntouched": true,
+    "historicalRecords": 31987,
+    "primaryDirtyFiles": 42,
+    "primaryIndexPreserved": true,
+    "oldSource1602": true,
+    "normalBSDK42": true,
+    "old4348and4349Listeners": "Absent at entry; assets preserved.",
+    "originalEFF4": "UNMET / ROOT_CAUSE_NOT_ESTABLISHED; unchanged"
+  },
+  "claimLimits": "Not READY_FOR_CONTROL_REVIEW success, no Gate/P34/performancePASS; independent control classification pending. No successor started."
+}

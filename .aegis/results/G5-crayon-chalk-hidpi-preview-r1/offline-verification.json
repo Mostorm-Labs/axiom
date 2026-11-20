@@ -1,0 +1,52 @@
+{
+  "at": "2026-11-19T09:59:26.911785+00:00",
+  "checks": [
+    {
+      "name": "Node-storage",
+      "argv": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+        "--test",
+        "verification/runners/g5/hidpi_preview/storage.test.mjs"
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/Node-storage.log",
+        "bytes": 362,
+        "sha256": "b4048d9d65fc8af90988525be16178135e76927726212b3fdefff715b7eb6f16"
+      }
+    },
+    {
+      "name": "boundaries",
+      "argv": [
+        "/opt/homebrew/bin/python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/boundaries.log",
+        "bytes": 58,
+        "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+      }
+    },
+    {
+      "name": "whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r1/whitespace.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "NodePassCount": 3,
+  "boundaryContracts": 122,
+  "driverSyntaxOnly": true,
+  "noBrowserOrPixelQualification": true
+}

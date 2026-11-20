@@ -1,0 +1,35 @@
+{
+  "status": "PASS_NATIVE_PREVIEW_LIFECYCLE",
+  "raw": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/native-lifecycle.json",
+    "bytes": 248,
+    "sha256": "4f0640a04e3f088f654dbe232305b00faf7a22335802a82a9bb8c2487f2b66ff"
+  },
+  "guard": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/native-lifecycle.worker.json",
+    "bytes": 462,
+    "sha256": "c5e9074bbdb263f78b8861004da516fe04fb719d2e32d8755760812406b159a4"
+  },
+  "checked": [
+    "stable/scratchactualsharedbudgetleases",
+    "actualreadGPUepochhelduntilphysicalcallback+ack",
+    "cancelkeepspendingReleasecharged",
+    "quotaRetrypreservesrealpixels/presentcount",
+    "release+completionrecover",
+    "wrongretiredoesnotinvalidateother",
+    "finalinactivepixelbytes0withoutnextstroke",
+    "permanentlyimpossibleentryrejectedbeforewrite"
+  ],
+  "temporaryImage": "ShortborrowedSkImage/shaderownersdestroyedbeforesamecontextnextwrite, nointernalCOW; read/writebackingleasesmarkedGPUuse.",
+  "regressions": {
+    "record": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/native-regressions.json",
+      "bytes": 1355,
+      "sha256": "7e044668c561a21f394956f0fea8f23508c1e49c0a92244d53c23382e80ef94c"
+    },
+    "passed": 20,
+    "failed": 0
+  },
+  "heldCompletionLimit": "The test-only epoch delays budget acknowledgement after a real provider-image read and qualified physical Metal completion. Existing epoch-class pinning also retains stable/scratch leases; no fake successful completion is injected. This is not proof of driverphysicalallocationrelease or everyconcurrentbackendconfiguration.",
+  "finalOwnerRelease": "Controlleracquiresmatchingprovider,appliesonlyretiredsessions;lastinactiveentryreleasesbothsurfaces;no nextstroke necessary. Actualbudgetpixelclasses0verified."
+}

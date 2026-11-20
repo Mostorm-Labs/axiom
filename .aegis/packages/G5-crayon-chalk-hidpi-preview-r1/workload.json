@@ -1,0 +1,127 @@
+{
+  "status": "FROZEN_BEFORE_BASELINE",
+  "profiles": [
+    {
+      "id": "wax",
+      "profile": "crayon-wax-v1",
+      "revision": 3,
+      "size": 32
+    },
+    {
+      "id": "chalk",
+      "profile": "chalk-compact-v1",
+      "revision": 3,
+      "size": 32
+    }
+  ],
+  "config": {
+    "color": [
+      0.12,
+      0.27,
+      0.61,
+      1
+    ],
+    "opacity": 0.65,
+    "pressureSource": 1,
+    "startTaper": 0,
+    "endTaper": 0,
+    "startCap": true,
+    "endCap": true,
+    "other_values": "Keep captured revision3 defaults; do not substitute brush or simplify/sparsify input."
+  },
+  "view": {
+    "logical": [
+      1431,
+      1010
+    ],
+    "DPR": [
+      2,
+      4
+    ],
+    "physical": [
+      [
+        2862,
+        2020
+      ],
+      [
+        5724,
+        4040
+      ]
+    ],
+    "RGBA_bytes": [
+      23124960,
+      92499840
+    ],
+    "why": "Both exceed old16MiB; exact dimensions of mount/drawing buffer must be measured. Reference normal budget512/1024/128MiB."
+  },
+  "trace": {
+    "confirmedMoves": 720,
+    "plannedDurationMs": 12000,
+    "plannedHz": 60,
+    "down": [
+      100,
+      505
+    ],
+    "move_formula": "for i=1..720, x=100+1.65*i; y=505+170*sin(i*0.043)+38*sin(i*0.137); point0 uses same formula. Quantize coordinates through actual existing pointer collector, no replacement input geometry.",
+    "up": "Same final point, ordinary terminal event; preserve all720move facts and event order.",
+    "native_growth_N": [
+      240,
+      480,
+      960
+    ],
+    "native_formula": "Same per-index path, native can extend offscreen after720 to preserve constant spatial step; freeze generated input file beforeRED, confirmed count unchanged.",
+    "seed": "Owned qualificationpage deterministic xorshift32-byte-v1 seed0x13579bdf; capture entropy transcript and loaded SDK; no user-page global modifications."
+  },
+  "cases": [
+    "wax/DPR2",
+    "chalk/DPR2",
+    "wax/DPR4",
+    "chalk/DPR4"
+  ],
+  "ordinary": {
+    "order": [
+      "B1",
+      "C1",
+      "C2",
+      "B2"
+    ],
+    "caseOrder": [
+      "wax/DPR2",
+      "chalk/DPR2",
+      "wax/DPR4",
+      "chalk/DPR4"
+    ],
+    "each_case": "Fresh root-SDK Runtime and blank owned document/context; 720 confirmed moves at original planned timestamps, thenUp and stable. Timers only feed fixedinput; SDK owns rAF. No twoRAFwait perinput. No capture/profiler/readState in GL hooks, heldWorker, forcedGC/rAF or GPUwait. Read coarse state at phase boundaries.",
+    "sourceFreeze": "Freeze finalCproduction/source/rootSDK/driver/observer before ordinaryB1; retain every attempt/error/slowcase. Driver same forB/C; no tuning/retry after ordinary starts.",
+    "previewSmoke": "BeforefirstC1timedcase outside timer, serve sameCnormalSDK on firstfree>=4350, rootselect/draw/commit/cancel smoke in ownedpage, callbackURL/identities then proceed withoutACK. Never rebinduserIAB."
+  },
+  "diagnostic": {
+    "runs": [
+      "HD-D-B",
+      "HD-D-C"
+    ],
+    "cases": "Same four cases and input on matched private opt-in metrics build; B before production mutation, C before final ordinary freeze. NativeRED sufficient for deterministic mechanism; diagnostics separate from ordinary measurements.",
+    "requiredFacts": [
+      "confirmedpoints,prefix/tail/rebuild work and actualsurfaceGPU/CPU",
+      "actual allocation/resident/COW/pendingRelease bytes, eviction/reset reasons",
+      "preview submit and present plus firstpostUp/canonical visibility identity"
+    ],
+    "limit": "Bound perframe/summary notperpixel/point; required drop/overflow invalidates that diagnostic."
+  },
+  "correctness": {
+    "runs": [
+      "HD-P-B",
+      "HD-P-C"
+    ],
+    "primary_captures": "Each4cases captures lateheld at point720 beforeUp and terminalcanonical =>8captures perversion,16total. Readback is outsideordinarytiming using actualcanonical/preview default READ framebuffer with VALID/RESTOREDmetadata, no draw-target change.",
+    "preview_target": "Locate owned previewcanvas via created SDK mount, not publicprivateengine exposure; record exactcanvas/context/generation/metrics/seed and timestamps.",
+    "semantic": "Publicsnapshot/operation capture, brushconfig, objectcount, genuine Up/commit receipt, canonical-visible retirement; ensure no acceptedinput lost, canceladdsnoOperation, UndoRedo compensation gives identical finalrender/snapshot content.",
+    "extra_native_scenarios": [
+      "tap/downfirstmove,chunkjunction,curvature/selfoverlap,replaceablepredictiontail,pressure/radius/opacity variations",
+      "warm nochange retry,tailreplacement/retraction,cacheclear/rebuild,pan/zoom and resize/DPR/generation rebind",
+      "twosessions ordered opacity,sessionidreuse with newepoch/seed/config,lateoldcompletion mustnotretire newer",
+      "quota denial/pendingGPUretirement thenrecovery; safeclose/contextabandon; Raster/smallviewfallback",
+      "watercolor3 sharedalgorithm6 regression; v4preview and originalerasefeedback regression"
+    ]
+  }
+}

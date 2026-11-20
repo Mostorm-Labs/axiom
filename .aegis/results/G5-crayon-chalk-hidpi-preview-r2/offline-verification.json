@@ -1,0 +1,78 @@
+{
+  "freshChecks": [
+    {
+      "name": "helpers-final",
+      "argv": [
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/node/24.19.0_64bit/bin/node",
+        "--test",
+        "verification/runners/g5/hidpi_preview/observer.test.mjs",
+        "verification/runners/g5/hidpi_preview/storage.test.mjs"
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/helpers-final.log",
+        "bytes": 534,
+        "sha256": "2a2e63b59125198b97b791dc042b8bd70fd7ddfd54914093f0afb1a118a779e8"
+      }
+    },
+    {
+      "name": "boundary-final",
+      "argv": [
+        "/opt/homebrew/bin/python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/boundary-final.log",
+        "bytes": 58,
+        "sha256": "90416739921786ea02e0879de43cc16cebc83cb2bd378433f9ec57e682b9a43c"
+      }
+    },
+    {
+      "name": "whitespace-final",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "log": {
+        "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/whitespace-final.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "helpersPass": 5,
+  "boundaryContracts": 122,
+  "sdkErrorContract": {
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/sdk-api-test.log",
+      "bytes": 34,
+      "sha256": "957b63e231242c022835c0fb1b61cbc3e4020b1f71b98315eb14e532fecb1c2f"
+    },
+    "exit": 0
+  },
+  "sdkTypeContract": {
+    "log": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/sdk-types-test-corrected.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": 0,
+    "initialMissingTscPathRetained": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/results/G5-crayon-chalk-hidpi-preview-r2/sdk-types-test.log",
+      "bytes": 820,
+      "sha256": "4cfa43b7f1cd8e6e2cfa64339b8890e82c0bc8864accd285383df02fbbaa4399"
+    }
+  },
+  "sourcePackageExportsUnchanged": true,
+  "realConsumerSmoke": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/out/G5-crayon-chalk-hidpi-preview-r2/web/HD-D-C/normal-smoke.json",
+    "bytes": 871,
+    "sha256": "45e16ea82c068304e7fcf170717a7d92de83e232d93c1f6ca04fea1f984df96e"
+  },
+  "newBrowserSamplingInThisOfflineAudit": 0
+}
