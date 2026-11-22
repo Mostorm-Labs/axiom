@@ -1,0 +1,59 @@
+{
+  "readBindings": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/prepared_body_job.cpp",
+      "sha256": "85396b318508ab974fb3f9b75aec79ed2229601b05db650b15122fa31851d3fb",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_prepared_geometry.cpp",
+      "sha256": "f5d8c52e0464f223258222c9b5809f7e1274a1493670bb3465e19116678d8caa",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_prepared_geometry.hpp",
+      "sha256": "b8f9401b992194dd24b4a29033e0806e1191798a9664c512228affcbecfd2be6",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_compact_material.cpp",
+      "sha256": "cb2ee28bfd9476e8a66d6f4be6eff9070baf84197859d26a52834ef285919535",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_render_cache.cpp",
+      "sha256": "6040cf6d0f951dda367319f86ba6e49010622255b5d06930ff4c563c81132a62",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_ink_layers.cpp",
+      "sha256": "1a04b62c1a8cf2d4d5fd7a73e286dd3269a995f484b674f2826f2303ab526e7d",
+      "matchesFrozenR3": true
+    },
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/runtime/render/src/skia_renderer.cpp",
+      "sha256": "ad902d167030f3692d661d5ecf27d82596bbbcef9310eceaee011da56c03a30e",
+      "matchesFrozenR3": true
+    }
+  ],
+  "adoptedSelectively": [
+    "32-knot pressure distance/support metrics; existing PreparedBodyJob/PreparedGeometryCache owner",
+    "Pressure range bounds culling and actual command allowance",
+    "Pressure coverage producer concept in existing SkiaInkLayers, redesigned grouping to one body/sampling basis per entry and exclusive paused tile lease",
+    "NavigationMaskPlan mask producer/replay in canonical Pending; existing evaluator and original target"
+  ],
+  "notImported": [
+    "resumable alias-proof API and proof cache",
+    "navigation exposure/LOD/projection policy changes",
+    "Interaction/Composition/SDK/preview changes",
+    "GPU budget/profile changes",
+    "r3 performance claims"
+  ],
+  "differencesFromR3": [
+    "No wholesale overlay; current 7d3ea0aa plus accepted Scene overlay retained",
+    "Capture tile owns lease before yield, not retained pool slot",
+    "Oversized optional set falls through existing cooperative ordered staging",
+    "Per-body pressure cache identity groups exact device tiles; same maxEntries/perEntry/global budgets",
+    "Aggregate mask draws bounded separately, bodyComplete and maskReplay progress retained"
+  ]
+}

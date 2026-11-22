@@ -1,0 +1,18 @@
+{
+  "source": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+  "target": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+  "sourceExists": true,
+  "reason": "Existing native test expects retained PNG at source-root-relative historical fixture path.",
+  "sha256": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+  "command": [
+    "ctest",
+    "--test-dir",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-native",
+    "--output-on-failure",
+    "-R",
+    "^G5CpuPendingRuntime-mixedimage$"
+  ],
+  "exitCode": 0,
+  "seconds": 2.5340219999925466,
+  "temporaryLinkRemoved": true
+}

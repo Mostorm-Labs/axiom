@@ -34,6 +34,7 @@ struct RetainedNavigationSource final {
     std::function<bool()> extend;
     std::function<void(SkCanvas&,const foundation::WorldRect&)> draw;
     const RetainedNavigationSource* fallback=nullptr;
+    std::function<void(std::uint64_t)> gpuUse;
 };
 class SkiaNavigationTiles final {
     friend struct ContinuousZoomProbe;

@@ -1,0 +1,369 @@
+{
+  "classification": "OBSERVED_WITH_PERFORMANCE_FINDINGS",
+  "observations": {
+    "matched-B": {
+      "status": "OBSERVED",
+      "closed": true,
+      "browser": "157.0.8103.79",
+      "gpu": [
+        {
+          "vendorId": 4203,
+          "deviceId": 0,
+          "vendorString": "Google Inc. (Apple)",
+          "deviceString": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Version 27.2.1 (Build 26B131))",
+          "driverVendor": "Apple",
+          "driverVersion": "27.2.1"
+        }
+      ],
+      "rows": [
+        {
+          "callbacks": 101,
+          "maximum": 7854.4000000059605,
+          "p95": 617.3000000119209,
+          "firstEraseActivity": 7818.0999999940395,
+          "preMotionActivity": 8531.299999982119,
+          "firstMotion": 87629.60000002384,
+          "firstPanActivity": 8512.299999982119,
+          "activeGestureWriteGap": 184.09999999403954,
+          "upToGenerationFrame": 8836.800000011921,
+          "terminalConvergence": 8678.699999988079,
+          "inverseConvergence": null,
+          "upToQuiet": 8882,
+          "eraseDuration": 8783.59999999404,
+          "phase": "up-immediate-pan",
+          "Up_handler_ms": 22.19999998807907,
+          "expectedGeneration": "17",
+          "UpToQualifiedCameraFrameMs": 8836.800000011921,
+          "inputEventsMaxMs": 22.19999998807907,
+          "inputEventsP95Ms": 0.30000001192092896,
+          "rafCallbacksMaxMs": 7854.4000000059605,
+          "rafCallbacksP95Ms": 617.3000000119209
+        },
+        {
+          "callbacks": 179,
+          "maximum": 8827.09999999404,
+          "p95": 751.5999999940395,
+          "firstEraseActivity": 8778.40000000596,
+          "preMotionActivity": 9735.699999988079,
+          "firstMotion": 114465.10000002384,
+          "firstPanActivity": 9603.799999982119,
+          "activeGestureWriteGap": 70.69999998807907,
+          "upToGenerationFrame": 10113.5,
+          "terminalConvergence": 9955.699999988079,
+          "inverseConvergence": 8576.199999988079,
+          "upToQuiet": 18939.70000001788,
+          "eraseDuration": 17787.30000001192,
+          "phase": "up-immediate-pinch",
+          "Up_handler_ms": 28.69999998807907,
+          "expectedGeneration": "18",
+          "UpToQualifiedCameraFrameMs": 10113.5,
+          "inputEventsMaxMs": 28.69999998807907,
+          "inputEventsP95Ms": 0.4000000059604645,
+          "rafCallbacksMaxMs": 8827.09999999404,
+          "rafCallbacksP95Ms": 728.5
+        }
+      ],
+      "final": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "fb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "18",
+        "presentedGeneration": "18",
+        "runtimeEpoch": "1"
+      },
+      "capture": {
+        "readback": {
+          "schema": "g5-qualified-default-readback-v1",
+          "id": 1,
+          "role": "canonical",
+          "status": "VALID",
+          "started": 136928,
+          "selected": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 1,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "errors": {
+            "preexisting": {
+              "codes": [],
+              "truncated": false
+            },
+            "setup": {
+              "codes": [],
+              "truncated": false
+            },
+            "read": {
+              "codes": [],
+              "truncated": false
+            },
+            "restore": {
+              "codes": [],
+              "truncated": false
+            }
+          },
+          "restoration": {
+            "status": "RESTORED",
+            "failures": []
+          },
+          "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+          "canvas": {
+            "id": "axiom-sdk-1-6gslk7kqy6l-canonical",
+            "identity": "canvas-1",
+            "width": 3600,
+            "height": 2600
+          },
+          "context": {
+            "identity": "context-2",
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": true,
+              "stencil": true,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 3600,
+            "drawingBufferHeight": 2600,
+            "lost": false
+          },
+          "before": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "rectangle": {
+            "x": 0,
+            "y": 0,
+            "width": 3600,
+            "height": 2600,
+            "origin": "top-left",
+            "readY": 0
+          },
+          "defaultReadBufferBefore": 1029,
+          "defaultReadBufferAfter": 1029,
+          "after": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "finished": 136949.20000001788
+        },
+        "generation": "18",
+        "throughCommit": {
+          "ordinal": "18",
+          "runtimeEpoch": "1"
+        }
+      },
+      "driver": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26"
+    },
+    "matched-C-mask": {
+      "status": "OBSERVED",
+      "closed": true,
+      "browser": "157.0.8103.79",
+      "gpu": [
+        {
+          "vendorId": 4203,
+          "deviceId": 0,
+          "vendorString": "Google Inc. (Apple)",
+          "deviceString": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Version 27.2.1 (Build 26B131))",
+          "driverVendor": "Apple",
+          "driverVersion": "27.2.1"
+        }
+      ],
+      "rows": [
+        {
+          "callbacks": 904,
+          "maximum": 27,
+          "p95": 2.9000000059604645,
+          "firstEraseActivity": 33.5,
+          "preMotionActivity": 13011.09999999404,
+          "firstMotion": 25095.09999999404,
+          "firstPanActivity": 12992.09999999404,
+          "activeGestureWriteGap": 182.90000000596046,
+          "upToGenerationFrame": 13025.59999999404,
+          "terminalConvergence": 12868.199999988079,
+          "inverseConvergence": null,
+          "upToQuiet": 13070.5,
+          "eraseDuration": 2002.8999999761581,
+          "phase": "up-immediate-pan",
+          "Up_handler_ms": 32.30000001192093,
+          "expectedGeneration": "17",
+          "UpToQualifiedCameraFrameMs": 13025.59999999404,
+          "inputEventsMaxMs": 32.30000001192093,
+          "inputEventsP95Ms": 0.5,
+          "rafCallbacksMaxMs": 27.0,
+          "rafCallbacksP95Ms": 2.9000000059604645
+        },
+        {
+          "callbacks": 1077,
+          "maximum": 94.69999998807907,
+          "p95": 3.5999999940395355,
+          "firstEraseActivity": 7.799999982118607,
+          "preMotionActivity": 16446,
+          "firstMotion": 40256.59999999404,
+          "firstPanActivity": 16428.19999998808,
+          "activeGestureWriteGap": 184.5,
+          "upToGenerationFrame": 16462.90000000596,
+          "terminalConvergence": 16294.90000000596,
+          "inverseConvergence": 571.7000000178814,
+          "upToQuiet": 17272,
+          "eraseDuration": 2001.8999999761581,
+          "phase": "up-immediate-pinch",
+          "Up_handler_ms": 25.5,
+          "expectedGeneration": "18",
+          "UpToQualifiedCameraFrameMs": 16462.90000000596,
+          "inputEventsMaxMs": 25.5,
+          "inputEventsP95Ms": 0.4000000059604645,
+          "rafCallbacksMaxMs": 94.69999998807907,
+          "rafCallbacksP95Ms": 3.5999999940395355
+        }
+      ],
+      "final": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "fb313d8efe45db694605ae2eb66a3734",
+        "ordinal": "18",
+        "presentedGeneration": "18",
+        "runtimeEpoch": "1"
+      },
+      "capture": {
+        "readback": {
+          "schema": "g5-qualified-default-readback-v1",
+          "id": 1,
+          "role": "canonical",
+          "status": "VALID",
+          "started": 61159.39999997616,
+          "selected": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 1,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "errors": {
+            "preexisting": {
+              "codes": [],
+              "truncated": false
+            },
+            "setup": {
+              "codes": [],
+              "truncated": false
+            },
+            "read": {
+              "codes": [],
+              "truncated": false
+            },
+            "restore": {
+              "codes": [],
+              "truncated": false
+            }
+          },
+          "restoration": {
+            "status": "RESTORED",
+            "failures": []
+          },
+          "error_queue": "Preexisting/read/restore errors are consumed and recorded; the GL error queue is not restorable.",
+          "canvas": {
+            "id": "axiom-sdk-1-vrz61fg3rk-canonical",
+            "identity": "canvas-1",
+            "width": 3600,
+            "height": 2600
+          },
+          "context": {
+            "identity": "context-2",
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": true,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": true,
+              "preserveDrawingBuffer": true,
+              "stencil": true,
+              "xrCompatible": false
+            },
+            "drawingBufferWidth": 3600,
+            "drawingBufferHeight": 2600,
+            "lost": false
+          },
+          "before": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "rectangle": {
+            "x": 0,
+            "y": 0,
+            "width": 3600,
+            "height": 2600,
+            "origin": "top-left",
+            "readY": 0
+          },
+          "defaultReadBufferBefore": 1029,
+          "defaultReadBufferAfter": 1029,
+          "after": {
+            "readFramebuffer": "DEFAULT",
+            "drawFramebuffer": "DEFAULT",
+            "readBuffer": 1029,
+            "pixelPackBuffer": "NONE",
+            "pack": {
+              "PACK_ALIGNMENT": 4,
+              "PACK_ROW_LENGTH": 0,
+              "PACK_SKIP_ROWS": 0,
+              "PACK_SKIP_PIXELS": 0
+            }
+          },
+          "finished": 61182.5
+        },
+        "generation": "18",
+        "throughCommit": {
+          "ordinal": "18",
+          "runtimeEpoch": "1"
+        }
+      },
+      "driver": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26"
+    }
+  },
+  "finalArtifacts": "final-pixels-operations.json",
+  "firstCorrectPhysicalPixel": null,
+  "hardwareGpuTime": null,
+  "note": "3s/5s bands not met; GL color writes are activity proxies. Exact same coordinates and explicit timestamps; only serial candidate follow-up after mask fix."
+}

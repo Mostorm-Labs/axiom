@@ -1,0 +1,191 @@
+{
+  "targetedNative": {
+    "passed": 14,
+    "total": 14,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-stamp-regression.log"
+  },
+  "expandedNative": {
+    "passed": 59,
+    "total": 63,
+    "failed": [
+      "G5CanonicalPreparedCompatibility",
+      "G5SharedSceneRetention",
+      "G5CpuPendingRuntime-radius",
+      "G5CpuPendingRuntime-mixedimage"
+    ],
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-relevant-ctest.log"
+  },
+  "mixedimageRecheck": {
+    "source": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+    "target": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-object-interaction-r2-image-move-diagnostic/image-2_3mb.png",
+    "sourceExists": true,
+    "reason": "Existing native test expects retained PNG at source-root-relative historical fixture path.",
+    "sha256": "b176b55520a33c844f1cbd52e779d1db3d0f550f1bfdaa040df8f37b6f56a660",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-native",
+      "--output-on-failure",
+      "-R",
+      "^G5CpuPendingRuntime-mixedimage$"
+    ],
+    "exitCode": 0,
+    "seconds": 2.5340219999925466,
+    "temporaryLinkRemoved": true
+  },
+  "finalStampGreen": {
+    "appendPass": true,
+    "changedValueStampDiffers": true,
+    "fullSceneEquivalent": true,
+    "pass": true,
+    "rows": [
+      {
+        "case": "append-existing8192-new64",
+        "historyMasks": 2,
+        "historyPrimitives": 8192,
+        "newPrimitives": 64,
+        "turns": 2
+      },
+      {
+        "case": "sorted-front-insertion",
+        "turns": 260
+      },
+      {
+        "case": "changed-value-after-compensation",
+        "turns": 2
+      },
+      {
+        "case": "cold-restored-history",
+        "turns": 258
+      }
+    ]
+  },
+  "counterfactualFinalStampRed": {
+    "appendPass": false,
+    "changedValueStampDiffers": true,
+    "fullSceneEquivalent": true,
+    "pass": false,
+    "rows": [
+      {
+        "case": "append-existing8192-new64",
+        "historyMasks": 2,
+        "historyPrimitives": 8192,
+        "newPrimitives": 64,
+        "turns": 258
+      },
+      {
+        "case": "sorted-front-insertion",
+        "turns": 260
+      },
+      {
+        "case": "changed-value-after-compensation",
+        "turns": 260
+      },
+      {
+        "case": "cold-restored-history",
+        "turns": 258
+      }
+    ]
+  },
+  "counterfactualRadius": {
+    "exitCode": -6,
+    "sameFailure": "capturedradiuschanged",
+    "manifest": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/counterfactual-owner.json"
+  },
+  "renderOnlyFailures": {
+    "tests": [
+      "G5CanonicalPreparedCompatibility",
+      "G5SharedSceneRetention"
+    ],
+    "reason": "Their render-only link targets do not link canvas_runtime_editor, the sole modified production owner. Compatibility failure was also retained in accepted range evidence."
+  },
+  "fullNativeBuild": {
+    "status": "BLOCKED_TEST_DEFINITION",
+    "command": {
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-post-range-convergence-r1/build-native",
+        "-j4"
+      ],
+      "exitCode": 1,
+      "seconds": 55.8665242499992
+    },
+    "error": "Uncovered kSection/kTable switch cases under Werror in two unchanged semantic test files. Full configured CTest cannot be completed.",
+    "files": [
+      {
+        "path": "runtime/semantic/tests/object_store_differential_test.cpp",
+        "sha256": "7a88f4906aa571dfe763e9894fd5ffc5867c9c751e451aee8d62a846f72858e7",
+        "identicalToAnchor": true
+      },
+      {
+        "path": "runtime/semantic/tests/stateful_kind_applicability_test.cpp",
+        "sha256": "084eb45879bac1eba54d6920b20dc57d8efa7bd9a9717a1038ab31d256de2e97",
+        "identicalToAnchor": true
+      }
+    ]
+  },
+  "node": {
+    "passed": 25,
+    "total": 26,
+    "command": "node --experimental-vm-modules --test (five named files in command ledger)",
+    "remaining": "actual HTTP entry serves browser-only consumer and exact public SDK entry: missing historical immutable SDK fixture",
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/node-tests-vm.log",
+    "setupFindings": [
+      "Initial dependencies link missing; reused accepted existing Playwright install via temporary local link, removed afterwards.",
+      "VM tests require --experimental-vm-modules.",
+      "No historical SDK bytes were fabricated to satisfy the missing fixture."
+    ]
+  },
+  "python": {
+    "passed": 1,
+    "total": 1,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/python-tests.log"
+  },
+  "boundaries": {
+    "contracts": 122,
+    "passed": true,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/boundaries.log"
+  },
+  "normalBuilds": {
+    "B": {
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-post-range-convergence-r1/build-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j",
+        "4"
+      ],
+      "exitCode": 0,
+      "seconds": 173.68176399999356
+    },
+    "C": {
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-post-range-convergence-r1/build-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "exitCode": 0,
+      "seconds": 35.270171665993985
+    },
+    "installCorrection": {
+      "command": [
+        "cmake",
+        "--install",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-web",
+        "--prefix",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C"
+      ],
+      "exitCode": 0,
+      "seconds": 0.044165416999021545,
+      "correction": "No named AxiomJS component exists; prior install command was a no-op. No recompilation."
+    }
+  },
+  "noThirdPartyRebuild": true,
+  "noDescriptorOrAuthorityChange": true
+}

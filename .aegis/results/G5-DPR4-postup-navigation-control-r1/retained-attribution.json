@@ -1,0 +1,1311 @@
+{
+  "schema": "axiom-postup-retained-attribution-v1",
+  "method": "Run analyze_retained.py from the controlled worktree. Align by PN_CALLBACK event order, then validate each native start_ns (including numeric strings) against the wrapper interval. Windows end at the original matched camera canonical callback. Native records within an intersecting callback are kept whole; wrapper durations are clipped at window boundaries.",
+  "script": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-control-r1/analyze_retained.py",
+    "bytes": 11244,
+    "sha256": "28c3c11a36bdb64afd9a9b51ebd1f5e964f9fc467f318a49bc328765783039ab"
+  },
+  "limitations": [
+    "Diagnostic B and C used different driver hashes. These rows explain each build's path independently; use the separately retained timestamp-matched ordinary pair for comparison.",
+    "The diagnostic C run is an intermediate candidate, before the final review SDK. Its counts and timing do not describe the Demo 4357 build.",
+    "Outside-observed-RAF is elapsed wall time minus observed wrapper time. It measures the intervals between the wrappers, without identifying scheduler, compositor, event-loop or hardware causes.",
+    "Pressure work counters do not identify duplicate same-grid visits, and totals do not establish CPU/GPU resource waits. The recorded flush stage is CPU API wall time.",
+    "Visible DEFAULT content writes indicate activity. Correctness requires a content oracle and physical display timing is not measured.",
+    "commit-mask does not identify which equality guard declined. Existing records lack that discrimination."
+  ],
+  "diagnostic": [
+    {
+      "name": "diagnostic-B",
+      "observation": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-B/observation.json",
+        "bytes": 1711914,
+        "sha256": "06694350a2278a92d8a6a6e76f3a83e64a6e2dcd1300009788588eff088503db"
+      },
+      "console": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-B/native-console.json",
+        "bytes": 13702403,
+        "sha256": "fe0282cdf24ca3a95ddd6f688962ed36aad6199a2a1d4fbc2fcb02f737a993cf"
+      },
+      "launchLedger": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/diagnostic-B-ledger.json",
+        "bytes": 1026,
+        "sha256": "45f92987c63c9852b15809ec1209370ce6e0f01678ee185a3b317fe51b61852d"
+      },
+      "driverSHA256": "a7b5239ba1c6c7077ee89b0f2678bf6f5c1ce8c4136cb87c140e25496f2bf7b4",
+      "unscopedTrackedRecords": {
+        "AXIOM_IF_EVENT": 2
+      },
+      "rows": [
+        {
+          "name": "up-immediate-pan",
+          "upDispatchMs": 21.2,
+          "contacts": 2,
+          "expectedGeneration": "17",
+          "camera": {
+            "scale": 1,
+            "x": -48,
+            "y": 0
+          },
+          "windows": {
+            "activeGesture": {
+              "fromMs": 90267.79999999702,
+              "toMs": 90471.89999999106,
+              "elapsedMs": 204.1,
+              "visibleContentWrites": 0,
+              "scopes": {
+                "input": 28,
+                "raf": 13,
+                "owner": 13
+              },
+              "callbackMilliseconds": {
+                "input": 6.3,
+                "raf": 38.5,
+                "owner.attempt": 34.6,
+                "owner.canonical_frame": 0.0,
+                "owner.navigation_frame": 29.6
+              },
+              "outsideObservedRafMs": 165.6,
+              "rafStartIntervalMedianMs": 16.6,
+              "clockAlignment": {
+                "timedRecords": 26,
+                "insideWrapper": 26
+              },
+              "reasons": {
+                "reuse commit-mask": 13,
+                "navigation 0 presented=0 pending=1 reason=": 13
+              },
+              "preparation": {},
+              "navigationWork": {
+                "elapsed_ns": 17600000,
+                "query_ns": 0,
+                "initialization_ns": 100000,
+                "contour_ns": 3700000,
+                "material_ns": 500000,
+                "knots": 2844,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 9,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 15,
+                "prepared_builds": 1,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {},
+              "canonicalPreparedGeometry": {},
+              "canonicalPressure": {},
+              "canonicalExclusiveMilliseconds": {}
+            },
+            "quietToReceipt": {
+              "fromMs": 90471.89999999106,
+              "toMs": 99561.59999999404,
+              "elapsedMs": 9089.7,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "raf": 55,
+                "owner": 31,
+                "canonical": 24
+              },
+              "callbackMilliseconds": {
+                "raf": 8597.3,
+                "owner.attempt": 8567.2,
+                "owner.canonical_frame": 8535.6,
+                "owner.navigation_frame": 13.9,
+                "canonical.attempt": 8524.0,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 492.4,
+              "rafStartIntervalMedianMs": 17.4,
+              "clockAlignment": {
+                "timedRecords": 85,
+                "insideWrapper": 85
+              },
+              "reasons": {
+                "reuse commit-mask": 6,
+                "navigation 0 presented=0 pending=1 reason=": 6,
+                "canonical exact cache preparation pending": 23,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=0": 24,
+                "material code=1": 23,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 5700000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 1400000,
+                "material_ns": 400000,
+                "knots": 796,
+                "queries": 0,
+                "initialized": 0,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 5,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 0,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 7056,
+                "gpu_coverage_tiles": 876,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 158517664,
+                "max_resource_gpu_epochs": 11,
+                "coverageStepOpportunities": 11,
+                "gpuTileOpportunities": 24,
+                "coverageFlushOpportunities": 24
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 24,
+                "withAdvances": 0,
+                "canonical_queries": 0,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 24,
+                "withQueued": 24,
+                "maxQueued": 6041,
+                "direct_calls": 13,
+                "range_calls": 7806,
+                "visited": 1566288,
+                "queued": 80803,
+                "enqueue_ns": 342800000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 8056.5,
+                "gpu_coverage_submit": 349.9,
+                "cache_prepare": 44.6,
+                "render": 37.1,
+                "attempt": 21.5,
+                "group_update": 5.1,
+                "material_submit": 4.0,
+                "cache_begin": 1.5,
+                "reference_encode": 1.3,
+                "reference_digest": 1.3,
+                "feedback_gpu_flush": 0.4,
+                "validation": 0.3,
+                "feedback_gpu_submit": 0.3,
+                "frame_plan": 0.1,
+                "damage": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "acquire": 0.0,
+                "prepare_scan": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            },
+            "upToReceipt": {
+              "fromMs": 90267.39999999106,
+              "toMs": 99561.59999999404,
+              "elapsedMs": 9294.2,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 28,
+                "raf": 68,
+                "owner": 44,
+                "canonical": 24
+              },
+              "callbackMilliseconds": {
+                "input": 6.3,
+                "raf": 8635.8,
+                "owner.attempt": 8601.8,
+                "owner.canonical_frame": 8535.6,
+                "owner.navigation_frame": 43.5,
+                "canonical.attempt": 8524.0,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 658.4,
+              "rafStartIntervalMedianMs": 16.8,
+              "clockAlignment": {
+                "timedRecords": 111,
+                "insideWrapper": 111
+              },
+              "reasons": {
+                "reuse commit-mask": 19,
+                "navigation 0 presented=0 pending=1 reason=": 19,
+                "canonical exact cache preparation pending": 23,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=0": 24,
+                "material code=1": 23,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 23300000,
+                "query_ns": 0,
+                "initialization_ns": 100000,
+                "contour_ns": 5100000,
+                "material_ns": 900000,
+                "knots": 3640,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 14,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 15,
+                "prepared_builds": 1,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 7056,
+                "gpu_coverage_tiles": 876,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 158517664,
+                "max_resource_gpu_epochs": 11,
+                "coverageStepOpportunities": 11,
+                "gpuTileOpportunities": 24,
+                "coverageFlushOpportunities": 24
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 24,
+                "withAdvances": 0,
+                "canonical_queries": 0,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 24,
+                "withQueued": 24,
+                "maxQueued": 6041,
+                "direct_calls": 13,
+                "range_calls": 7806,
+                "visited": 1566288,
+                "queued": 80803,
+                "enqueue_ns": 342800000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 8056.5,
+                "gpu_coverage_submit": 349.9,
+                "cache_prepare": 44.6,
+                "render": 37.1,
+                "attempt": 21.5,
+                "group_update": 5.1,
+                "material_submit": 4.0,
+                "cache_begin": 1.5,
+                "reference_encode": 1.3,
+                "reference_digest": 1.3,
+                "feedback_gpu_flush": 0.4,
+                "validation": 0.3,
+                "feedback_gpu_submit": 0.3,
+                "frame_plan": 0.1,
+                "damage": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "acquire": 0.0,
+                "prepare_scan": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            }
+          }
+        },
+        {
+          "name": "up-immediate-pinch",
+          "upDispatchMs": 25.8,
+          "contacts": 2,
+          "expectedGeneration": "18",
+          "camera": {
+            "scale": 1.5,
+            "x": -379.5,
+            "y": -225
+          },
+          "windows": {
+            "activeGesture": {
+              "fromMs": 115367.19999998808,
+              "toMs": 115571.19999998808,
+              "elapsedMs": 204.0,
+              "visibleContentWrites": 0,
+              "scopes": {
+                "input": 28,
+                "raf": 8,
+                "owner": 8
+              },
+              "callbackMilliseconds": {
+                "input": 6.1,
+                "raf": 126.6,
+                "owner.attempt": 123.2,
+                "owner.canonical_frame": 0.0,
+                "owner.navigation_frame": 119.4
+              },
+              "outsideObservedRafMs": 77.4,
+              "rafStartIntervalMedianMs": 16.5,
+              "clockAlignment": {
+                "timedRecords": 16,
+                "insideWrapper": 16
+              },
+              "reasons": {
+                "reuse commit-mask": 8,
+                "navigation 0 presented=0 pending=1 reason=": 8
+              },
+              "preparation": {},
+              "navigationWork": {
+                "elapsed_ns": 110700000,
+                "query_ns": 100000,
+                "initialization_ns": 100000,
+                "contour_ns": 2200000,
+                "material_ns": 0,
+                "knots": 1760,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 1,
+                "discarded_knots": 3640,
+                "throttled": 6,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {},
+              "canonicalPreparedGeometry": {},
+              "canonicalPressure": {},
+              "canonicalExclusiveMilliseconds": {}
+            },
+            "quietToReceipt": {
+              "fromMs": 115571.19999998808,
+              "toMs": 126094.59999999404,
+              "elapsedMs": 10523.4,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 1,
+                "raf": 55,
+                "owner": 31,
+                "canonical": 24
+              },
+              "callbackMilliseconds": {
+                "input": 0,
+                "raf": 10049.5,
+                "owner.attempt": 10017.4,
+                "owner.canonical_frame": 9988.3,
+                "owner.navigation_frame": 10.5,
+                "canonical.attempt": 9977.0,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 473.9,
+              "rafStartIntervalMedianMs": 17.5,
+              "clockAlignment": {
+                "boundarySpanningCallbacks": 1,
+                "timedRecords": 85,
+                "insideWrapper": 85
+              },
+              "reasons": {
+                "reuse commit-mask": 6,
+                "navigation 0 presented=0 pending=1 reason=": 6,
+                "canonical exact cache preparation pending": 23,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=0": 24,
+                "material code=1": 23,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 1100000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 0,
+                "material_ns": 0,
+                "knots": 0,
+                "queries": 0,
+                "initialized": 0,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 6,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 0,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 7896,
+                "gpu_coverage_tiles": 1331,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 18333888,
+                "max_resource_gpu_epochs": 15,
+                "coverageStepOpportunities": 11,
+                "gpuTileOpportunities": 24,
+                "coverageFlushOpportunities": 24
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 24,
+                "withAdvances": 0,
+                "canonical_queries": 0,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 24,
+                "withQueued": 24,
+                "maxQueued": 8323,
+                "direct_calls": 13,
+                "range_calls": 9086,
+                "visited": 2379828,
+                "queued": 92631,
+                "enqueue_ns": 424900000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 9425.9,
+                "gpu_coverage_submit": 433.3,
+                "cache_prepare": 47.8,
+                "render": 34.9,
+                "attempt": 18.8,
+                "group_update": 5.8,
+                "material_submit": 5.1,
+                "reference_digest": 1.4,
+                "feedback_gpu_flush": 1.2,
+                "reference_encode": 1.1,
+                "cache_begin": 0.9,
+                "validation": 0.3,
+                "feedback_gpu_submit": 0.3,
+                "frame_plan": 0.1,
+                "prepare_scan": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "acquire": 0.0,
+                "damage": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            },
+            "upToReceipt": {
+              "fromMs": 115366.89999999106,
+              "toMs": 126094.59999999404,
+              "elapsedMs": 10727.7,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 29,
+                "raf": 63,
+                "owner": 39,
+                "canonical": 24
+              },
+              "callbackMilliseconds": {
+                "input": 6.1,
+                "raf": 10176.1,
+                "owner.attempt": 10140.6,
+                "owner.canonical_frame": 9988.3,
+                "owner.navigation_frame": 129.9,
+                "canonical.attempt": 9977.0,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 551.6,
+              "rafStartIntervalMedianMs": 17.5,
+              "clockAlignment": {
+                "boundarySpanningCallbacks": 1,
+                "timedRecords": 101,
+                "insideWrapper": 101
+              },
+              "reasons": {
+                "reuse commit-mask": 14,
+                "navigation 0 presented=0 pending=1 reason=": 14,
+                "canonical exact cache preparation pending": 23,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=0": 24,
+                "material code=1": 23,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 111800000,
+                "query_ns": 100000,
+                "initialization_ns": 100000,
+                "contour_ns": 2200000,
+                "material_ns": 0,
+                "knots": 1760,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 1,
+                "discarded_knots": 3640,
+                "throttled": 12,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 7896,
+                "gpu_coverage_tiles": 1331,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 18333888,
+                "max_resource_gpu_epochs": 15,
+                "coverageStepOpportunities": 11,
+                "gpuTileOpportunities": 24,
+                "coverageFlushOpportunities": 24
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 24,
+                "withAdvances": 0,
+                "canonical_queries": 0,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 24,
+                "withQueued": 24,
+                "maxQueued": 8323,
+                "direct_calls": 13,
+                "range_calls": 9086,
+                "visited": 2379828,
+                "queued": 92631,
+                "enqueue_ns": 424900000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 9425.9,
+                "gpu_coverage_submit": 433.3,
+                "cache_prepare": 47.8,
+                "render": 34.9,
+                "attempt": 18.8,
+                "group_update": 5.8,
+                "material_submit": 5.1,
+                "reference_digest": 1.4,
+                "feedback_gpu_flush": 1.2,
+                "reference_encode": 1.1,
+                "cache_begin": 0.9,
+                "validation": 0.3,
+                "feedback_gpu_submit": 0.3,
+                "frame_plan": 0.1,
+                "prepare_scan": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "acquire": 0.0,
+                "damage": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "diagnostic-C",
+      "observation": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-C/observation.json",
+        "bytes": 2475151,
+        "sha256": "dd0970866bc823f80ca05f6d07f76be25004b3d3149134e181f8366bc277eb5e"
+      },
+      "console": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-C/native-console.json",
+        "bytes": 29376954,
+        "sha256": "3bbe6de36c128e8df465f821f9f9b1fba0fa97d164997075ddb433c611049212"
+      },
+      "launchLedger": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/diagnostic-C-ledger.json",
+        "bytes": 1038,
+        "sha256": "8c46224c3ffcb990d9d991fc830376fec0a12f78451aaf003c5fc1a984cfbb66"
+      },
+      "driverSHA256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "unscopedTrackedRecords": {
+        "AXIOM_IF_EVENT": 2
+      },
+      "rows": [
+        {
+          "name": "up-immediate-pan",
+          "upDispatchMs": 24.9,
+          "contacts": 2,
+          "expectedGeneration": "17",
+          "camera": {
+            "scale": 1,
+            "x": -48,
+            "y": 0
+          },
+          "windows": {
+            "activeGesture": {
+              "fromMs": 25773.90000000596,
+              "toMs": 25976.59999999404,
+              "elapsedMs": 202.7,
+              "visibleContentWrites": 0,
+              "scopes": {
+                "input": 28,
+                "raf": 14,
+                "owner": 14
+              },
+              "callbackMilliseconds": {
+                "input": 5.7,
+                "raf": 42.6,
+                "owner.attempt": 36.7,
+                "owner.canonical_frame": 0.0,
+                "owner.navigation_frame": 31.6
+              },
+              "outsideObservedRafMs": 160.1,
+              "rafStartIntervalMedianMs": 16.0,
+              "clockAlignment": {
+                "timedRecords": 28,
+                "insideWrapper": 28
+              },
+              "reasons": {
+                "reuse commit-mask": 14,
+                "navigation 0 presented=0 pending=1 reason=": 14
+              },
+              "preparation": {},
+              "navigationWork": {
+                "elapsed_ns": 18500000,
+                "query_ns": 0,
+                "initialization_ns": 200000,
+                "contour_ns": 3600000,
+                "material_ns": 600000,
+                "knots": 2844,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 10,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {},
+              "canonicalPreparedGeometry": {},
+              "canonicalPressure": {},
+              "canonicalExclusiveMilliseconds": {}
+            },
+            "quietToReceipt": {
+              "fromMs": 25976.59999999404,
+              "toMs": 38655.59999999404,
+              "elapsedMs": 12679.0,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 1,
+                "raf": 761,
+                "owner": 759,
+                "canonical": 752
+              },
+              "callbackMilliseconds": {
+                "input": 0,
+                "raf": 2747.1,
+                "owner.attempt": 2446.1,
+                "owner.canonical_frame": 2070.1,
+                "owner.navigation_frame": 47.8,
+                "canonical.attempt": 1891.7,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 9931.9,
+              "rafStartIntervalMedianMs": 16.7,
+              "clockAlignment": {
+                "boundarySpanningCallbacks": 1,
+                "timedRecords": 2269,
+                "insideWrapper": 2269
+              },
+              "reasons": {
+                "reuse commit-mask": 6,
+                "navigation 0 presented=0 pending=1 reason=": 6,
+                "canonical canonical body preparation pending": 750,
+                "canonical exact cache preparation pending": 1,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=1": 750,
+                "bodies code=0": 2,
+                "material code=1": 1,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 5800000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 1200000,
+                "material_ns": 300000,
+                "knots": 732,
+                "queries": 0,
+                "initialized": 0,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 5,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 0,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 49958,
+                "gpu_coverage_tiles": 876,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 170200640,
+                "max_resource_gpu_epochs": 11,
+                "coverageStepOpportunities": 752,
+                "gpuTileOpportunities": 601,
+                "coverageFlushOpportunities": 752
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 752,
+                "withAdvances": 0,
+                "canonical_queries": 17877,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 752,
+                "withQueued": 751,
+                "maxQueued": 128,
+                "direct_calls": 0,
+                "range_calls": 5569,
+                "visited": 177836,
+                "queued": 80803,
+                "enqueue_ns": 158900000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "render": 713.8,
+                "attempt": 439.5,
+                "coverage_flush": 379.0,
+                "gpu_coverage_submit": 180.2,
+                "group_update": 138.7,
+                "cache_begin": 15.0,
+                "feedback_gpu_flush": 4.7,
+                "cache_prepare": 4.4,
+                "material_submit": 4.1,
+                "historical_mask_draw": 3.9,
+                "validation": 2.6,
+                "feedback_gpu_submit": 2.2,
+                "reference_encode": 1.1,
+                "reference_digest": 1.1,
+                "damage": 0.8,
+                "acquire": 0.5,
+                "frame_plan": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "prepare_scan": 0.0,
+                "raster_snapshot": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            },
+            "upToReceipt": {
+              "fromMs": 25773.59999999404,
+              "toMs": 38655.59999999404,
+              "elapsedMs": 12882.0,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 28,
+                "raf": 775,
+                "owner": 773,
+                "canonical": 752
+              },
+              "callbackMilliseconds": {
+                "input": 5.7,
+                "raf": 2789.7,
+                "owner.attempt": 2482.8,
+                "owner.canonical_frame": 2070.1,
+                "owner.navigation_frame": 79.4,
+                "canonical.attempt": 1891.7,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 10092.3,
+              "rafStartIntervalMedianMs": 16.7,
+              "clockAlignment": {
+                "timedRecords": 2297,
+                "insideWrapper": 2297
+              },
+              "reasons": {
+                "reuse commit-mask": 20,
+                "navigation 0 presented=0 pending=1 reason=": 20,
+                "canonical canonical body preparation pending": 750,
+                "canonical exact cache preparation pending": 1,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=1": 750,
+                "bodies code=0": 2,
+                "material code=1": 1,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 24300000,
+                "query_ns": 0,
+                "initialization_ns": 200000,
+                "contour_ns": 4800000,
+                "material_ns": 900000,
+                "knots": 3576,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 15,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 49958,
+                "gpu_coverage_tiles": 876,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 170200640,
+                "max_resource_gpu_epochs": 11,
+                "coverageStepOpportunities": 752,
+                "gpuTileOpportunities": 601,
+                "coverageFlushOpportunities": 752
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 752,
+                "withAdvances": 0,
+                "canonical_queries": 17877,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 752,
+                "withQueued": 751,
+                "maxQueued": 128,
+                "direct_calls": 0,
+                "range_calls": 5569,
+                "visited": 177836,
+                "queued": 80803,
+                "enqueue_ns": 158900000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "render": 713.8,
+                "attempt": 439.5,
+                "coverage_flush": 379.0,
+                "gpu_coverage_submit": 180.2,
+                "group_update": 138.7,
+                "cache_begin": 15.0,
+                "feedback_gpu_flush": 4.7,
+                "cache_prepare": 4.4,
+                "material_submit": 4.1,
+                "historical_mask_draw": 3.9,
+                "validation": 2.6,
+                "feedback_gpu_submit": 2.2,
+                "reference_encode": 1.1,
+                "reference_digest": 1.1,
+                "damage": 0.8,
+                "acquire": 0.5,
+                "frame_plan": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "prepare_scan": 0.0,
+                "raster_snapshot": 0.0,
+                "scene_draw": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            }
+          }
+        },
+        {
+          "name": "up-immediate-pinch",
+          "upDispatchMs": 25.1,
+          "contacts": 2,
+          "expectedGeneration": "18",
+          "camera": {
+            "scale": 1.5,
+            "x": -379.5,
+            "y": -225
+          },
+          "windows": {
+            "activeGesture": {
+              "fromMs": 40768.90000000596,
+              "toMs": 40973.09999999404,
+              "elapsedMs": 204.2,
+              "visibleContentWrites": 0,
+              "scopes": {
+                "input": 28,
+                "raf": 13,
+                "owner": 13
+              },
+              "callbackMilliseconds": {
+                "input": 4.6,
+                "raf": 40.4,
+                "owner.attempt": 36.3,
+                "owner.canonical_frame": 0.0,
+                "owner.navigation_frame": 31.2
+              },
+              "outsideObservedRafMs": 163.8,
+              "rafStartIntervalMedianMs": 16.6,
+              "clockAlignment": {
+                "timedRecords": 26,
+                "insideWrapper": 26
+              },
+              "reasons": {
+                "reuse commit-mask": 13,
+                "navigation 0 presented=0 pending=1 reason=": 13
+              },
+              "preparation": {},
+              "navigationWork": {
+                "elapsed_ns": 20700000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 4700000,
+                "material_ns": 700000,
+                "knots": 3548,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 1,
+                "discarded_knots": 3576,
+                "throttled": 8,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {},
+              "canonicalPreparedGeometry": {},
+              "canonicalPressure": {},
+              "canonicalExclusiveMilliseconds": {}
+            },
+            "quietToReceipt": {
+              "fromMs": 40973.09999999404,
+              "toMs": 57254.5,
+              "elapsedMs": 16281.4,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "raf": 880,
+                "owner": 878,
+                "canonical": 870
+              },
+              "callbackMilliseconds": {
+                "raf": 4920.5,
+                "owner.attempt": 4575.9,
+                "owner.canonical_frame": 4142.4,
+                "owner.navigation_frame": 48.9,
+                "canonical.attempt": 3933.2,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 11360.9,
+              "rafStartIntervalMedianMs": 16.7,
+              "clockAlignment": {
+                "timedRecords": 2625,
+                "insideWrapper": 2625
+              },
+              "reasons": {
+                "reuse commit-mask": 7,
+                "navigation 0 presented=0 pending=1 reason=": 7,
+                "canonical canonical body preparation pending": 867,
+                "canonical exact cache preparation pending": 2,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=1": 867,
+                "bodies code=0": 3,
+                "material code=1": 2,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 2900000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 200000,
+                "material_ns": 400000,
+                "knots": 28,
+                "queries": 0,
+                "initialized": 0,
+                "built": 0,
+                "cancelled": 0,
+                "discarded_knots": 0,
+                "throttled": 6,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 0,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 75887,
+                "gpu_coverage_tiles": 1331,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 172100912,
+                "max_resource_gpu_epochs": 6,
+                "coverageStepOpportunities": 870,
+                "gpuTileOpportunities": 786,
+                "coverageFlushOpportunities": 870
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 870,
+                "withAdvances": 0,
+                "canonical_queries": 20367,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 870,
+                "withQueued": 868,
+                "maxQueued": 128,
+                "direct_calls": 0,
+                "range_calls": 7441,
+                "visited": 237636,
+                "queued": 92631,
+                "enqueue_ns": 190700000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 2078.9,
+                "render": 895.7,
+                "attempt": 502.1,
+                "gpu_coverage_submit": 218.9,
+                "group_update": 157.9,
+                "validation": 26.6,
+                "cache_begin": 17.2,
+                "historical_mask_draw": 8.4,
+                "material_submit": 7.2,
+                "cache_prepare": 6.9,
+                "feedback_gpu_flush": 5.8,
+                "feedback_gpu_submit": 3.4,
+                "reference_digest": 1.5,
+                "reference_encode": 1.1,
+                "acquire": 0.7,
+                "damage": 0.7,
+                "frame_plan": 0.1,
+                "scene_draw": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "prepare_scan": 0.0,
+                "raster_snapshot": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            },
+            "upToReceipt": {
+              "fromMs": 40768.59999999404,
+              "toMs": 57254.5,
+              "elapsedMs": 16485.9,
+              "visibleContentWrites": 1,
+              "scopes": {
+                "input": 28,
+                "raf": 893,
+                "owner": 891,
+                "canonical": 870
+              },
+              "callbackMilliseconds": {
+                "input": 4.6,
+                "raf": 4960.9,
+                "owner.attempt": 4612.2,
+                "owner.canonical_frame": 4142.4,
+                "owner.navigation_frame": 80.1,
+                "canonical.attempt": 3933.2,
+                "canonical.canonical_frame": 0.0,
+                "canonical.navigation_frame": 0.0
+              },
+              "outsideObservedRafMs": 11525.0,
+              "rafStartIntervalMedianMs": 16.7,
+              "clockAlignment": {
+                "timedRecords": 2651,
+                "insideWrapper": 2651
+              },
+              "reasons": {
+                "reuse commit-mask": 20,
+                "navigation 0 presented=0 pending=1 reason=": 20,
+                "canonical canonical body preparation pending": 867,
+                "canonical exact cache preparation pending": 2,
+                "canonical accepted": 1
+              },
+              "preparation": {
+                "bodies code=1": 867,
+                "bodies code=0": 3,
+                "material code=1": 2,
+                "material code=0": 1
+              },
+              "navigationWork": {
+                "elapsed_ns": 23600000,
+                "query_ns": 0,
+                "initialization_ns": 0,
+                "contour_ns": 4900000,
+                "material_ns": 1100000,
+                "knots": 3576,
+                "queries": 1,
+                "initialized": 1,
+                "built": 0,
+                "cancelled": 1,
+                "discarded_knots": 3576,
+                "throttled": 14,
+                "coverage": 0,
+                "presented": 0,
+                "prepared_hits": 16,
+                "prepared_builds": 0,
+                "regional_tile_proofs": 0,
+                "retained_region_max": 0
+              },
+              "canonicalWork": {
+                "coverage_steps": 75887,
+                "gpu_coverage_tiles": 1331,
+                "cpu_coverage_tiles": 0,
+                "mask_primitive_draws": 0,
+                "render_alloc_denials": 0,
+                "max_resource_pending_release": 172100912,
+                "max_resource_gpu_epochs": 6,
+                "coverageStepOpportunities": 870,
+                "gpuTileOpportunities": 786,
+                "coverageFlushOpportunities": 870
+              },
+              "canonicalPreparedGeometry": {
+                "samples": 870,
+                "withAdvances": 0,
+                "canonical_queries": 20367,
+                "job_admissions": 0,
+                "advances": 0,
+                "support_knots": 0,
+                "distance_inputs": 0,
+                "compile_inputs": 0,
+                "path_primitives": 0
+              },
+              "canonicalPressure": {
+                "samples": 870,
+                "withQueued": 868,
+                "maxQueued": 128,
+                "direct_calls": 0,
+                "range_calls": 7441,
+                "visited": 237636,
+                "queued": 92631,
+                "enqueue_ns": 190700000
+              },
+              "canonicalExclusiveMilliseconds": {
+                "coverage_flush": 2078.9,
+                "render": 895.7,
+                "attempt": 502.1,
+                "gpu_coverage_submit": 218.9,
+                "group_update": 157.9,
+                "validation": 26.6,
+                "cache_begin": 17.2,
+                "historical_mask_draw": 8.4,
+                "material_submit": 7.2,
+                "cache_prepare": 6.9,
+                "feedback_gpu_flush": 5.8,
+                "feedback_gpu_submit": 3.4,
+                "reference_digest": 1.5,
+                "reference_encode": 1.1,
+                "acquire": 0.7,
+                "damage": 0.7,
+                "frame_plan": 0.1,
+                "scene_draw": 0.1,
+                "visibility": 0.0,
+                "reference_build": 0.0,
+                "reference_entries": 0.0,
+                "presentation_adapt": 0.0,
+                "prepare_scan": 0.0,
+                "raster_snapshot": 0.0,
+                "navigation_snapshot": 0.0,
+                "provider_present": 0.0,
+                "feedback_provider_flush": 0.0,
+                "feedback_provider_submit": 0.0
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "ordinaryControl": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-control-r1/control-review.json",
+    "bytes": 6986,
+    "sha256": "39e5a2cdc17cd462147551b9861307fc5f922c14d31a1c6bbe339650d87c0e22"
+  }
+}

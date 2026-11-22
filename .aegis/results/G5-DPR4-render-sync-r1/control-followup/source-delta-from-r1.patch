@@ -1,0 +1,331 @@
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -253,7 +253,7 @@
+         target_link_libraries(axiom_dpr4_render_sync_tests PRIVATE canvas_runtime_render CanvasSkia::Skia "-framework Foundation" objc)
+         target_include_directories(axiom_dpr4_render_sync_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
+         add_test(NAME G5Dpr4RenderSync COMMAND axiom_dpr4_render_sync_tests "${CMAKE_CURRENT_BINARY_DIR}/dpr4-render-sync.json")
+-        foreach(case down bounded prepared pixels lifecycle quota oversize suspended interleaved mask-budget)
++        foreach(case down bounded prepared pixels lifecycle quota oversize suspended interleaved mask-budget entry-limit continuation)
+             add_test(NAME G5Dpr4RenderSync-${case} COMMAND axiom_dpr4_render_sync_tests "${CMAKE_CURRENT_BINARY_DIR}/dpr4-render-sync-${case}.json" ${case})
+         endforeach()
+     endif()
+--- a/runtime/render/src/skia_prepared_geometry.cpp
++++ b/runtime/render/src/skia_prepared_geometry.cpp
+@@ -435,7 +435,10 @@
+         aliases_.erase(alias);
+     }
+     const bool criticalContour=criticalReplay&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
+-    auto retained=retainSource(entry,budget,criticalContour);if(!retained)return denied();
++    const bool pressurePreparation=deferred&&compact&&
++        (compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6);
++    const bool mandatoryBody=criticalContour||pressurePreparation;
++    auto retained=retainSource(entry,budget,mandatoryBody);if(!retained)return denied();
+     std::size_t sourceBytes=0;for(const auto& lease:*retained)sourceBytes+=lease->bytes;
+     const auto hash=fingerprint(entry.command,work_);++work_.indexLookups;
+     const auto [first,last]=fingerprints_.equal_range(hash);
+@@ -444,7 +447,7 @@
+         ++work_.contentComparisons;
+         if(equalBody(body->second.geometry->source_,entry.command,work_)){
+             auto geometry=body->second.geometry;const auto id=body->first;
+-            try{if(!remember(key,geometry,id,std::move(*retained),limits,budget,criticalContour))return denied();}
++            try{if(!remember(key,geometry,id,std::move(*retained),limits,budget,mandatoryBody))return denied();}
+             catch(const std::bad_alloc&){return denied();}
+             ++work_.indexLookups;body=entries_.find(id);if(body!=entries_.end())body->second.used=++tick_;
+             ++work_.hits;return geometry->ready()||deferred?geometry:nullptr;
+@@ -461,7 +464,11 @@
+     }
+     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
+     if(deferred&&compact&&(compact->content.get().stroke.config.algorithmVersion==4||compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)){
+-        const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
++        // Deferred pressure metrics are mandatory bounded work, not optional
++        // pixel residency. Charge the complete source/metrics to the existing
++        // shared hard quota; a legal large stroke can then use ordered staging.
++        // V4 retains its established optional-entry/checkpoint contract.
++        const auto entryCap=pressurePreparation?limits.sharedMaxBytes:std::min(limits.maxBytes,limits.maxEntryBytes);
+         const auto minimum=compact->content.get().stroke.config.algorithmVersion==4?PreparedBodyJob::minimumBytes(count):sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+512+(count+1)*sizeof(double)+(count/32+(count%32!=0))*sizeof(PreparedNavigationGeometry::Group);
+         if(sourceBytes>=entryCap||minimum>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
+         try{
+--- a/runtime/render/src/render_execution.hpp
++++ b/runtime/render/src/render_execution.hpp
+@@ -58,7 +58,8 @@
+     void preparedUse(bool direct) noexcept {if(direct)++totals_.preparedDirectDraws;else ++totals_.preparedCanonicalDraws;}
+     bool pending()const noexcept{return pending_;}
+     bool rejected()const noexcept{return rejected_;}
+-    bool gpuWorkRecorded()const noexcept{return gpu_||directGpu_||totals_.executionGpuAllocations>beforeGpuAllocations_;}
++    void recordGpuWork(const SkCanvas&) noexcept;
++    bool gpuWorkRecorded()const noexcept{return recordedGpuWork_||gpu_||directGpu_||totals_.executionGpuAllocations>beforeGpuAllocations_;}
+  private:
+     RenderExecutionScope* previous_=nullptr;
+     [[maybe_unused]] ExecutionPurpose purpose_;
+@@ -67,7 +68,7 @@
+     unsigned composition_=0;
+     ExecutionBasis basis_;
+     const void* rootContext_=nullptr;
+-    bool gpuEnabled_=false,pending_=false,rejected_=false;
++    bool gpuEnabled_=false,pending_=false,rejected_=false,recordedGpuWork_=false;
+     std::size_t capacity_=0;
+     CompactCoverageTargets* targets_=nullptr;
+     RenderCacheWork& totals_;
+--- a/runtime/render/src/render_execution.cpp
++++ b/runtime/render/src/render_execution.cpp
+@@ -74,6 +74,11 @@
+     if(surface.recordingContext()){++gpu_;++totals_.executionGpuTiles;if(direct){++directGpu_;++totals_.executionDirectGpuTiles;}}
+     else{++cpu_;++totals_.executionCpuTiles;if(direct){++directCpu_;++totals_.executionDirectCpuTiles;}}
+ }
++void RenderExecutionScope::recordGpuWork(const SkCanvas& canvas) noexcept {
++    // Resumed offscreen draws need a finished callback even when this owner
++    // opportunity neither allocates a tile nor reaches provider publication.
++    if(rootContext_&&canvas.recordingContext()==rootContext_)recordedGpuWork_=true;
++}
+ void RenderExecutionScope::unavailable(const ExecutionDecision&,ExecutionReason reason,bool terminal) noexcept {
+     reason_=reason;
+     if(terminal){rejected_=true;++totals_.executionRejected;}else{pending_=true;++totals_.executionPending;}
+--- a/runtime/render/src/skia_compact_material.cpp
++++ b/runtime/render/src/skia_compact_material.cpp
+@@ -128,6 +128,7 @@
+         ++pressureDiagnosticWork.queued;
+ #endif
+         paint.setShader(builder.makeShader());canvas.drawRect(bounds,paint);
++        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+         if(pressureCommandCounter)++*pressureCommandCounter;
+ #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+         ++pressureTestCommands;
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -145,6 +145,7 @@
+         if(allowance.exhausted())return Preparation::kPending;
+         const auto status=maskHistory->replayNavigationHistory(pending.masks,canvas,pending.maskReplay,
+             std::min(std::size_t(32),128-allowance.materialMaskDraws));++allowance.steps;
++        if(pending.maskReplay.lastDraws)if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+         allowance.materialMaskDraws+=pending.maskReplay.lastDraws;
+ #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+         materialMaskTestDraws+=pending.maskReplay.lastDraws;
+--- a/runtime/render/tests/dpr4_render_sync_test.cpp
++++ b/runtime/render/tests/dpr4_render_sync_test.cpp
+@@ -4,6 +4,7 @@
+ #include "canvas/ink/brush_package_catalog.hpp"
+ #include <nlohmann/json.hpp>
+ #include <iostream>
++#include "../src/skia_gpu_lifetime.hpp"
+ #include <filesystem>
+ using nlohmann::json;
+ 
+@@ -229,6 +230,111 @@
+     require(direct.renderFrame(target,changed).code==BackendSubmissionCode::kAccepted&&actual==pressurePixels(target),"interleaved coverage corrupted pixels");
+     return {{"pass",true},{"consumer","prefix-insert-before-suspended-pressure"},{"completed",true},{"exactPixels",true}};
+ }
++// Regression: optional entry size must not reject a legal mandatory pressure body.
++json geometryEntryLimit(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm){
++    constexpr std::size_t mib=1048576;
++    NativeMetalTarget target(completion),reference(completion);
++    require(target.resize(256,128).code==BackendSubmissionCode::kAccepted&&
++        reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"entry limit targets");
++    auto plan=pressurePlan(algorithm,40000,1,1,false,target.generation(),0);
++    auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
++    const auto prior=pressurePixels(target);
++    SkiaRenderer renderer;auto options=pressureOptions();options.maxBytes=32*mib;
++    options.sharedMaxBytes=96*mib;options.maxEntryBytes=mib;renderer.setRenderCacheOptions(options);
++    std::shared_ptr<resources::ResourceBudgetManager> budget;
++    temporaryRetirementFault=[&](auto&,const auto& actual){budget=actual;};
++    RenderPreparationBudget slice;std::uint64_t maximum=0;unsigned calls=0;
++    BackendSubmissionResult result=BackendSubmissionResult::retry("not started");
++    for(;calls<8192;++calls){
++        const auto before=pressureTestCommands;result=renderer.renderFrame(target,plan,nullptr,&slice);
++        temporaryRetirementFault={};maximum=std::max(maximum,pressureTestCommands-before);
++        require(maximum<=128,"oversized geometry escaped pressure command allowance");
++        require(budget&&budget->used()<=96*mib,"oversized geometry uncharged/hard quota exceeded");
++        if(result.code==BackendSubmissionCode::kRejected)return {{"algorithm",algorithm},{"calls",calls+1},
++            {"reason",result.message},{"pass",false}};
++        if(result.code==BackendSubmissionCode::kAccepted)break;
++        require(target.presentCount()==0,"oversized geometry pending presented");
++        if(calls==0)require(pressurePixels(target)==prior,"entry denial changed qualified provider pixels");
++    }
++    require(calls<8192,"oversized geometry permanent retry");
++    SkiaRenderer independent;auto disabled=options;disabled.enabled=false;independent.setRenderCacheOptions(disabled);
++    require(independent.renderFrame(reference,plan).code==BackendSubmissionCode::kAccepted,"entry limit independent null-cache");
++    const auto actual=pressurePixels(target),expected=pressurePixels(reference);unsigned difference=0;
++    for(std::size_t i=0;i<actual.size();++i)difference=std::max(difference,unsigned(std::abs(int(actual[i])-int(expected[i]))));
++    require(difference<=2,"oversized geometry pixels changed");
++    // Check real shared admission with optional entry limits unchanged.
++    PreparedGeometryCache geometry;const auto& entry=plan.referenceDrawList.entries[1];
++    auto quota=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{32*mib,96*mib});
++    const auto hold=quota->reserve(resources::ResourceClass::kRecorded,96*mib-4096,true);require(bool(hold),"entry quota hold");
++    require(!geometry.request(entry,options,quota)&&!geometry.requestRejected(),"shared pressure not retryable");
++    quota->release(*hold);auto body=geometry.request(entry,options,quota);require(bool(body),"released shared quota did not readmit");
++    RenderPreparationBudget one;one.maxCoverageSteps=1;
++    while(!body->ready()){PreparationAllowance a(one);const auto before=geometry.statistics();geometry.advance(body,a);
++        const auto after=geometry.statistics();require(after.supportKnots-before.supportKnots<=32&&
++            after.distanceInputs-before.distanceInputs<=32,"oversized body hidden full-history metrics");}
++    require(quota->used()>mib&&quota->used()<=96*mib,"mandatory source/body not charged beyond optional entry");
++    geometry.clear();body.reset();require(quota->used()==0,"mandatory geometry lease leaked");
++    renderer.clearRenderCache();completion->context->flushAndSubmit(GrSyncCpu::kYes);renderer.serviceResourceRetirements();
++    return {{"algorithm",algorithm},{"consumer","canonical-40000-knot-entry-limit"},{"calls",calls+1},
++        {"maximumCommands",maximum},{"maximumPixelDifference",difference},{"presentCount",target.presentCount()},
++        {"sharedQuotaRetry",true},{"pass",target.presentCount()==1}};
++}
++// Actual owner resumes work inside the same execution/lifetime scope used by renderer preflight.
++// Missing work marking would resolve the ticket as unused and immediately release its pixels.
++json continuationLifetime(const std::shared_ptr<NativeMetalCompletion>& completion,bool maskOnly){
++    NativeMetalTarget target(completion);require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"continuation target");
++    auto base=pressurePlan(5,maskOnly?65:257,1,1,true,target.generation(),0);auto draw=base.referenceDrawList;
++    if(maskOnly){auto& entry=draw.entries.back();semantic::SweptCircleMask sweep;
++        for(unsigned n=0;n<512;++n){const double x=95+double(n%20),y=20+double(n%90);
++            sweep.segments.push_back({{{x,y},2},{{x+3,y+2},2},{x+1,y},{x+2,y+1}});}
++        entry.record.eraseMasks={{ObjectId::fromUint64(700),std::move(sweep)}};
++    }
++    FramePlan plan{base.frame,std::move(draw),{},false,true};auto acquired=target.acquire();
++    auto* canvas=acquired.frame.surface->getCanvas();auto limits=pressureOptions();
++    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
++    auto geometry=std::make_shared<PreparedGeometryCache>();auto sources=std::make_shared<SourceRetentionPool>();geometry->setRetentionPool(sources);
++    SkiaRenderCache cache;cache.options=limits;cache.budget=budget;cache.sourcePool=sources;cache.preparedGeometry=geometry;
++    cache.maskHistory=std::make_shared<EraseMaskPathCache>();cache.maskHistory->setRetentionPool(sources);
++    cache.begin(plan,&target,*acquired.frame.surface,0);
++    while(true){PreparationAllowance a;const auto r=cache.prepareBodies(*canvas,plan,a);
++        if(r==SkiaRenderCache::Preparation::kReady)break;require(r==SkiaRenderCache::Preparation::kPending,"continuation metrics");}
++    GpuResourceRetirement retirement;
++    RenderPreparationBudget one;one.maxCoverageSteps=1;unsigned calls=0;bool tested=false,marked=false,unretired=false;std::size_t pending=0;
++    for(;calls<1024&&!tested;++calls){
++        const auto pressureBefore=pressureTestCommands,maskBefore=materialMaskTestDraws;
++        const auto coverageBefore=cache.work.executionGpuTiles,allocationsBefore=cache.work.executionGpuAllocations;
++        {
++            RenderExecutionScope execution(ExecutionPurpose::kCanonical,plan,*acquired.frame.surface,&target,0,true,limits.sharedMaxBytes,cache.work,target.describe().kind);
++            execution.bindTargets(cache.executionTargets());
++            SkiaGpuLifetime gpu(retirement,budget,target,completion->context.get(),
++                GpuResourceRetirement::canonicalAllocations,GpuResourceRetirement::canonicalReads);
++            require(gpu.ready(),"continuation real lifetime admission");
++            const auto epoch=gpu.epoch();cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance a(one);
++            const auto status=maskOnly?cache.prepare(*canvas,plan,one,nullptr,nullptr,&a):cache.preparePressureBodies(*canvas,plan,a);
++            require(status==SkiaRenderCache::Preparation::kPending||status==SkiaRenderCache::Preparation::kReady,"continuation preparation failed");
++            const auto pressure=pressureTestCommands-pressureBefore,masks=materialMaskTestDraws-maskBefore;
++            const bool resumed=maskOnly?(masks>0&&pressure==0):(pressure>0&&cache.work.executionGpuTiles==coverageBefore&&cache.work.executionGpuAllocations==allocationsBefore);
++            if(resumed){
++                require(status==SkiaRenderCache::Preparation::kPending,"continuation must exercise early return");
++                marked=execution.gpuWorkRecorded();
++                // No service/readback/CPU fence before observation: finish must leave a
++                // real submitted epoch pending, rather than synchronous unused retirement.
++                require(gpu.finish(),"continuation actual GPU submit failed");
++                unretired=!budget->gpuEpochRetired(epoch);cache.clear();geometry->clear();cache.maskHistory.reset();
++                for(auto kind:{resources::ResourceClass::kScratch,resources::ResourceClass::kRaster,resources::ResourceClass::kCanonicalFrame})pending+=budget->snapshot(kind).pendingRelease;
++                tested=true;
++            }
++        }
++        if(!tested){completion->context->flushAndSubmit(GrSyncCpu::kYes);retirement.service();}
++    }
++    // Poll the actual Metal completion; only it may drain the released pixels.
++    completion->context->flushAndSubmit(GrSyncCpu::kYes);completion->service();retirement.service();
++    cache.clear();geometry->clear();cache.maskHistory.reset();retirement.service();target.release();
++    require(budget->pendingGpuEpochCount()==0&&budget->used()==0,"continuation lease final drain");
++    return {{"consumer",maskOnly?"body-complete-mask-only-early-return":"capture-pressure-continuation"},
++        {"calls",calls},{"tested",tested},{"workMarked",marked},{"epochUnretiredBeforeService",unretired},
++        {"pendingPixelBytes",pending},{"lastReleaseBytes",budget->used()},{"pass",tested&&marked&&unretired&&pending>0}};
++}
+ json maskAllowance(const std::shared_ptr<NativeMetalCompletion>& completion){
+     NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"mask allowance target");
+     auto base=pressurePlan(5,65,2,2,true,target.generation());auto draw=base.referenceDrawList;
+@@ -261,7 +367,9 @@
+             const auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
+             GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
+             completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"Metal context");
+-            if(argc>2&&std::string_view(argv[2])=="mask-budget")report["rows"].push_back(maskAllowance(completion));
++            if(argc>2&&std::string_view(argv[2])=="entry-limit")for(unsigned algorithm:{5U,6U})report["rows"].push_back(geometryEntryLimit(completion,algorithm));
++            else if(argc>2&&std::string_view(argv[2])=="continuation")for(bool maskOnly:{false,true})report["rows"].push_back(continuationLifetime(completion,maskOnly));
++            else if(argc>2&&std::string_view(argv[2])=="mask-budget")report["rows"].push_back(maskAllowance(completion));
+             else if(argc>2&&std::string_view(argv[2])=="interleaved")report["rows"].push_back(interleavedSource(completion));
+             else if(argc>2&&std::string_view(argv[2])=="oversize")for(unsigned variant:{0U,1U,2U})report["rows"].push_back(oversize(completion,variant));
+             else if(argc>2&&std::string_view(argv[2])=="suspended")report["rows"].push_back(suspendedTile(completion));
+--- /dev/null
++++ b/verification/runners/g5/dpr4_render_sync/followup_narrow.mjs
+@@ -0,0 +1,93 @@
++// Correctness-only serial follow-up: immutable r1 ordinary SDK versus repaired SDK.
++// Replays the existing 18 Operations, then one erase/camera/return sequence.
++import fs from 'node:fs/promises';
++import path from 'node:path';
++import http from 'node:http';
++import {createHash} from 'node:crypto';
++import {chromium} from '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/node_modules/playwright/index.mjs';
++import {entropyStream,installEntropy} from '/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_fixed_scene_contract.mjs';
++const [baseline,candidate,fixture,out,reuseReference]=process.argv.slice(2);
++if(!baseline||!candidate||!fixture||!out)throw Error('baseline/candidate/fixture/output required');
++const sha=b=>createHash('sha256').update(b).digest('hex');
++const helpers='/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5';
++const result={purpose:'narrow ordinary exported SDK correctness; not performance sampling',status:'STARTED',driverSha256:sha(await fs.readFile(new URL(import.meta.url))),cases:[],errors:[]};
++if(reuseReference){const previous=JSON.parse(await fs.readFile(reuseReference));const reference=previous.cases.find(c=>c.label==='r1'&&c.status==='OBSERVED');if(!reference)throw Error('exact retained r1 reference unavailable');result.cases.push(reference);result.reusedReference={path:reuseReference,sha256:sha(await fs.readFile(reuseReference))};}
++await fs.mkdir(out,{recursive:true});
++const save=()=>fs.writeFile(path.join(out,'observation.json'),JSON.stringify(result,null,2)+'\n');
++let browser,server;
++try{
++ for(const [label,sdk] of (reuseReference?[['repaired',candidate]]:[['r1',baseline],['repaired',candidate]])){
++  const row={label,sdk,status:'STARTED',served:{},artifacts:{}};result.cases.push(row);await save();
++  server=http.createServer(async(req,res)=>{try{
++   const n=new URL(req.url,'http://localhost').pathname;let bytes;
++   if(n==='/'){res.setHeader('Content-Type','text/html');res.end('<style>html,body{margin:0}#mount{position:relative;width:900px;height:650px}</style><div id="mount"></div>');return;}
++   if(n==='/favicon.ico'){res.statusCode=204;res.end();return;}
++   if(n.includes('..'))throw Error('path');
++   if(n.startsWith('/sdk/'))bytes=await fs.readFile(path.join(sdk,n.slice(5)));
++   else if(n.startsWith('/g5/'))bytes=await fs.readFile(path.join(helpers,n.slice(4)));
++   else if(n.startsWith('/operation/'))bytes=await fs.readFile(path.join(fixture,'wax16-default-operation-'+Number(n.slice(11))+'.bin'));
++   else throw Error('route');
++   row.served[n]={bytes:bytes.length,sha256:sha(bytes)};
++   res.setHeader('Content-Type',n.endsWith('.mjs')?'text/javascript':n.endsWith('.wasm')?'application/wasm':'application/octet-stream');res.end(bytes);
++  }catch(error){result.errors.push(String(error));res.statusCode=404;res.end(String(error));}});
++  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
++  browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});row.browser=browser.version();
++  const context=await browser.newContext({viewport:{width:900,height:650},deviceScaleFactor:4});
++  const page=await context.newPage();page.on('pageerror',error=>result.errors.push(String(error)));page.on('crash',()=>{result.crash=true;});
++  await page.exposeFunction('saveNarrowDiagnostic',async value=>{row.live=value;await save();});
++  await page.exposeFunction('saveArtifact',async({name,index,last,bytes})=>{
++   const p=path.join(out,label+'-'+name);const chunk=typeof bytes==='string'?Buffer.from(bytes,'base64'):Buffer.from(bytes);if(index===0)await fs.writeFile(p,chunk);else await fs.appendFile(p,chunk);
++   if(last){const b=await fs.readFile(p);row.artifacts[name]={path:p,bytes:b.length,sha256:sha(b)};await save();}
++  });
++  await page.addInitScript({content:entropyStream.toString()+';'+installEntropy.toString()+';installEntropy(610839776);'});
++  await page.goto('http://127.0.0.1:'+server.address().port+'/');
++  row.observed=await page.evaluate(async()=>{
++   const {createRuntime}=await import('/sdk/axiom.mjs');
++   const {installNavigationObserver}=await import('/g5/wax_postup_navigation/observer.mjs');
++   const {readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++   const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));const check=(v,m)=>{if(!v)throw Error(m);};
++   let sdk;const frames=[],errors=[],operations=[];
++   const observer=installNavigationObserver(()=>[...document.querySelectorAll('#mount canvas')].map(canvas=>({canvas,role:canvas.id.endsWith('-canonical')?'canonical':'preview'})),globalThis,{trace:false});
++   sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'49000000000000000000000000000001',builtinFonts:false,permission:'localSingleUser',onError:e=>{errors.push({code:e.code,message:e.message});void window.saveNarrowDiagnostic({errors,state:sdk?.readState()});},onFrame:f=>frames.push({at:performance.now(),...f,camera:sdk?.readState().camera}),onOperation:b=>operations.push(b.slice())});
++   sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
++   const settle=async()=>{let quiet=0;const start=performance.now();for(;;){const s=sdk.readState(),frame=frames.at(-1);
++    const matches=frame?.camera&&Math.abs(frame.camera.scale-s.camera.scale)<1e-6&&Math.abs(frame.camera.x-s.camera.x)<.001&&Math.abs(frame.camera.y-s.camera.y)<.001;
++    quiet=!s.activeContacts&&s.generation===s.lastCommit.presentedGeneration&&!observer.activity().pending&&matches?quiet+1:0;
++    if(quiet>=3)return s;check(performance.now()-start<45000,'narrow settle timeout');await pause(16);}};
++   const stream=async(name,bytes)=>{const count=1048576;for(let offset=0,index=0;offset<bytes.length;offset+=count,index++){const chunk=bytes.subarray(offset,offset+count);let text='';for(let i=0;i<chunk.length;i+=8192)text+=String.fromCharCode(...chunk.subarray(i,i+8192));await window.saveArtifact({name,index,last:offset+count>=bytes.length,bytes:btoa(text)});}};
++   for(let i=0;i<18;i++){const bytes=new Uint8Array(await(await fetch('/operation/'+i)).arrayBuffer());await sdk.applyReplayOperation(bytes);}
++   await settle();check(sdk.readState().objects===16&&sdk.readState().generation==='18','frozen replay state');
++   await sdk.zoomAt(450,325,1.5);await settle();
++   await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();
++   const pointer=(phase,x,y,stamp)=>{const e=new PointerEvent('pointer'+phase,{pointerId:1,pointerType:'mouse',clientX:x,clientY:y,button:phase==='move'?-1:0,buttons:phase==='up'?0:1,pressure:.5,bubbles:true,cancelable:true});Object.defineProperty(e,'timeStamp',{value:stamp});sdk.canvas.dispatchEvent(e);};
++   // Choose a visible ink interior from the actual canonical pixels; this is
++   // a correctness fixture location, not a second stroke/geometry evaluator.
++   const prior=readWebGLTarget(sdk.canvas,{role:'canonical'});let hit=null;
++   for(let y=100;y<550&&!hit;y++)for(let x=100;x<800;x++){
++    const at=((y*4)*sdk.canvas.width+x*4)*4;
++    if(prior.bytes[at]<180&&prior.bytes[at+2]>prior.bytes[at]+20){hit=[x,y];break;}}
++   check(hit,'visible blue ink fixture location');
++   const phase={started:performance.now(),hit};pointer('down',hit[0],hit[1],2000000);
++   for(let i=1;i<=24;i++){await pause(16);pointer('move',hit[0]+8*Math.sin(i*.2),hit[1]+20*i/24,2000000+i*16);}
++   pointer('up',hit[0]+8*Math.sin(4.8),hit[1]+20,2000385);phase.up=performance.now();
++   // Same immediate command sequence for both ordinary SDKs; no new performance assertion.
++   await sdk.panBy(-48,0);await settle();phase.cameraSettled=performance.now();
++   const eraseState=sdk.readState();await window.saveNarrowDiagnostic({eraseState,phase,errors,newOperations:operations.length});
++   await sdk.zoomAt(450,325,1);await settle();phase.returnSettled=performance.now();
++   const state=sdk.readState(),snapshot=await sdk.captureSnapshot({generation:state.generation,documentRevision:'31',recoveryFrontier:[8,1,16,1,24,1]});
++   await stream('final.axsnap',snapshot.bytes);const pixels=readWebGLTarget(sdk.canvas,{role:'canonical'});
++   await stream('final.rgba',pixels.bytes);for(let i=0;i<operations.length;i++)await stream('new-operation-'+i+'.bin',operations[i]);
++   check(pixels.metadata.status==='VALID','canonical readback qualification');check(errors.length===0,'SDK errors '+JSON.stringify(errors));check(eraseState.generation==='19','one erasure operation: '+JSON.stringify({eraseState,operations:operations.length}));
++   const build=sdk.readBuildInfo();await sdk.close();observer.restore();return {state,build,frames,phase,capture:pixels.metadata,errors,newOperations:operations.length,closed:!document.querySelector('#mount canvas')};
++  });
++  row.status='OBSERVED';await save();await browser.close();browser=null;await new Promise(resolve=>server.close(resolve));server=null;
++ }
++ result.comparison={};
++ for(const name of ['final.axsnap','final.rgba','new-operation-0.bin']){
++  const a=result.cases[0].artifacts[name],b=result.cases[1].artifacts[name];result.comparison[name]={baseline:a,candidate:b,equal:!!a&&!!b&&a.bytes===b.bytes&&a.sha256===b.sha256};
++ }
++ result.status=Object.values(result.comparison).every(v=>v.equal)&&!result.errors.length&&!result.crash?'CORRECTNESS_OBSERVED':'FAILED';
++}catch(error){result.status='FAILED';result.error=String(error.stack??error);process.exitCode=1;}
++finally{await browser?.close();if(server)await new Promise(resolve=>server.close(resolve));result.closed=true;await save();}
++console.log(JSON.stringify({status:result.status,error:result.error,comparison:result.comparison}));
++if(result.status!=='CORRECTNESS_OBSERVED')process.exitCode=1;

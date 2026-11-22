@@ -1,0 +1,150 @@
+{
+  "classification": "OBSERVED_WITH_FINDINGS",
+  "timings": {
+    "B": {
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "browser": "157.0.8103.79",
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Version 27.2.1 (Build 26B131))",
+      "rows": [
+        {
+          "callbacks": 97,
+          "maximum": 7126.0999999940395,
+          "p95": 566.2999999970198,
+          "firstEraseActivity": 7093.899999991059,
+          "preMotionActivity": 7963.79999999702,
+          "firstMotion": 83468.5,
+          "firstPanActivity": 7944.0999999940395,
+          "activeGestureWriteGap": 184.09999999403954,
+          "upToGenerationFrame": 8273.59999999404,
+          "terminalConvergence": 8115,
+          "inverseConvergence": null,
+          "upToQuiet": 8319.09999999404,
+          "eraseDuration": 8115.5999999940395,
+          "phase": "up-immediate-pan",
+          "Up_handler_ms": 19.100000008940697,
+          "expectedCommittedGeneration": "17",
+          "Up_to_erase_camera_qualified_callback_ms": 8273.59999999404,
+          "canonicalGeneration": "17"
+        },
+        {
+          "callbacks": 151,
+          "maximum": 8046.9000000059605,
+          "p95": 736,
+          "firstEraseActivity": 8003.399999991059,
+          "preMotionActivity": 9454,
+          "firstMotion": 107249,
+          "firstPanActivity": 9325.79999999702,
+          "activeGestureWriteGap": 74.3999999910593,
+          "upToGenerationFrame": 9768.29999999702,
+          "terminalConvergence": 9609.40000000596,
+          "inverseConvergence": 7988,
+          "upToQuiet": 18002.5,
+          "eraseDuration": 15311.59999999404,
+          "phase": "up-immediate-pinch",
+          "Up_handler_ms": 21.100000008940697,
+          "expectedCommittedGeneration": "18",
+          "Up_to_erase_camera_qualified_callback_ms": 9768.29999999702,
+          "canonicalGeneration": "18"
+        }
+      ],
+      "artifacts": {
+        "wax16-default-final.axsnap": {
+          "bytes": 846985,
+          "sha256": "fb3ca5d2d83dc12cbf6e12e7e500e1a29d79c1f69413145e3dc41c89e50e7c76"
+        },
+        "wax16-default-final.rgba": {
+          "bytes": 37440000,
+          "sha256": "8e5efae17233816ddb3eebb35fc2290e868d536f487d494578ac6f7dbc10d996"
+        }
+      },
+      "finalGeneration": "18",
+      "finalPresentedGeneration": "18",
+      "driverSHA256": "028b88fcbcc8ff167150dc8e2f1bcba777b381fdc9a209a0fc006e9df1f79055"
+    },
+    "C": {
+      "status": "OBSERVED",
+      "closed": true,
+      "errors": [],
+      "browser": "157.0.8103.79",
+      "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Version 27.2.1 (Build 26B131))",
+      "rows": [
+        {
+          "callbacks": 98,
+          "maximum": 7108.100000008941,
+          "p95": 564.1000000089407,
+          "firstEraseActivity": 7064.899999991059,
+          "preMotionActivity": 7863.199999988079,
+          "firstMotion": 83129.59999999404,
+          "firstPanActivity": 7843,
+          "activeGestureWriteGap": 184.5,
+          "upToGenerationFrame": 8190.100000008941,
+          "terminalConvergence": 8029.300000011921,
+          "inverseConvergence": null,
+          "upToQuiet": 8234.40000000596,
+          "eraseDuration": 8057.29999999702,
+          "phase": "up-immediate-pan",
+          "Up_handler_ms": 19.599999994039536,
+          "expectedCommittedGeneration": "17",
+          "Up_to_erase_camera_qualified_callback_ms": 8190.100000008941,
+          "canonicalGeneration": "17"
+        },
+        {
+          "callbacks": 131,
+          "maximum": 7857.5999999940395,
+          "p95": 676.5999999940395,
+          "firstEraseActivity": 7816.29999999702,
+          "preMotionActivity": 9331.70000000298,
+          "firstMotion": 102371.79999999702,
+          "firstPanActivity": 9262.70000000298,
+          "activeGestureWriteGap": 133.5,
+          "upToGenerationFrame": 9645.70000000298,
+          "terminalConvergence": 9482.20000000298,
+          "inverseConvergence": 7965.4000000059605,
+          "upToQuiet": 17852.90000000596,
+          "eraseDuration": 10917.09999999404,
+          "phase": "up-immediate-pinch",
+          "Up_handler_ms": 19.799999997019768,
+          "expectedCommittedGeneration": "18",
+          "Up_to_erase_camera_qualified_callback_ms": 9645.70000000298,
+          "canonicalGeneration": "18"
+        }
+      ],
+      "artifacts": {
+        "wax16-default-final.axsnap": {
+          "bytes": 846985,
+          "sha256": "fb3ca5d2d83dc12cbf6e12e7e500e1a29d79c1f69413145e3dc41c89e50e7c76"
+        },
+        "wax16-default-final.rgba": {
+          "bytes": 37440000,
+          "sha256": "8e5efae17233816ddb3eebb35fc2290e868d536f487d494578ac6f7dbc10d996"
+        }
+      },
+      "finalGeneration": "18",
+      "finalPresentedGeneration": "18",
+      "driverSHA256": "028b88fcbcc8ff167150dc8e2f1bcba777b381fdc9a209a0fc006e9df1f79055"
+    }
+  },
+  "comparison": {
+    "wax16-default-final.axsnap": {
+      "bytes": 846985,
+      "equal": true,
+      "B_sha256": "fb3ca5d2d83dc12cbf6e12e7e500e1a29d79c1f69413145e3dc41c89e50e7c76",
+      "C_sha256": "fb3ca5d2d83dc12cbf6e12e7e500e1a29d79c1f69413145e3dc41c89e50e7c76"
+    },
+    "wax16-default-final.rgba": {
+      "bytes": 37440000,
+      "equal": true,
+      "B_sha256": "8e5efae17233816ddb3eebb35fc2290e868d536f487d494578ac6f7dbc10d996",
+      "C_sha256": "8e5efae17233816ddb3eebb35fc2290e868d536f487d494578ac6f7dbc10d996"
+    }
+  },
+  "limits": [
+    "One serial current B/C pair, not a relative performance PASS.",
+    "Color writes are activity proxies, not first correct displayed pixels.",
+    "upToGenerationFrame from the retained driver is a legacy value; use recomputed expected committed generation callback field.",
+    "Native frame timing and qualification are disabled in both SDKs.",
+    "No Render/brush/AA changes in this candidate; current long synchronous callbacks remain a finding."
+  ]
+}

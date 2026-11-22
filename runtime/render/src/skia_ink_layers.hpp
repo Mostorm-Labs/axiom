@@ -31,14 +31,45 @@ class SkiaInkLayers final {
     bool projectNavigationBody(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,
         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
     void bindSurfaceBasis(const void*,std::uint64_t resource,std::uint64_t surface,std::uint64_t view,std::uint64_t metrics);
-    void clearDeviceLayers()noexcept;
+    void clearDeviceLayers(bool keepPressure=false)noexcept;
+    void clearPressureBodies()noexcept;
     void clear()noexcept;
+    bool beginPressureDemand(const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
+    BodyPreparation requirePressureBody(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,const CompactDeviceGrid&);
+    void finishPressureDemand();
+    BodyPreparation preparePressureBody(const ReferenceTraversalEntry&,const std::shared_ptr<const PreparedNavigationGeometry>&,
+        SkCanvas&,const CompactDeviceGrid&,const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
+        CompactCoverageTargets&,RenderCacheWork&,PreparationAllowance&);
+    sk_sp<SkImage> pressureTile(const PreparedNavigationGeometry*,SkCanvas&,const SkMatrix&,const SkIRect&,int,int,int,int);
+    bool retainPressureTile(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,const SkMatrix&,
+        const SkIRect&,int,int,sk_sp<SkImage>,CompactCoverageTargets&,const SkSurface*,resources::ResourceLease* exclusive=nullptr);
     void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
     void prune(std::span<const ReferenceTraversalEntry>);
     // Owner-thread preparation opportunity only. Plan values and pixel/GPU
     // leases remain valid; every retained mask result loses qualification.
     std::size_t retireIdleHistoryPreparation() noexcept;
  private:
+    struct PressureKey {
+        std::uint64_t body=0;const void* context=nullptr;
+        std::array<std::uint32_t,9> matrix{};
+        std::array<int,4> grid{};int colorType=0,alphaType=0;std::uint64_t colorSpace=0;
+        bool operator<(const PressureKey& b)const{return std::tie(body,context,matrix,grid,colorType,alphaType,colorSpace)<std::tie(b.body,b.context,b.matrix,b.grid,b.colorType,b.alphaType,b.colorSpace);}
+    };
+    struct PressureTile {sk_sp<SkImage> image;resources::ResourceLease pixels,metadata;std::size_t bytes=0;};
+    struct PressureBody {
+        std::shared_ptr<const PreparedNavigationGeometry> body;
+        std::map<std::pair<int,int>,PressureTile> tiles;
+        std::unique_ptr<CompactStrokeRasterJob> job;
+        resources::ResourceLease metadata;
+        std::size_t bytes=0,required=0;std::uint64_t used=0,demand=0;
+    };
+    std::map<PressureKey,PressureBody> pressureBodies_;
+    std::shared_ptr<resources::ResourceBudgetManager> pressureBudget_;
+    RenderCacheOptions pressureLimits_{};
+    std::uint64_t pressureDemand_=0;
+    std::size_t pressureBytes_=0,pressureDemandBytes_=0;
+    static PressureKey pressureKey(const PreparedNavigationGeometry&,SkCanvas&,const SkMatrix&,const SkIRect&);
+    bool reclaimPressure(std::size_t bytes,std::size_t entries=0);
     struct NavigationBodyKey {
         std::uint64_t body=0;const void* context=nullptr;
         std::array<std::uint32_t,9> matrix{};std::array<int,6> crop{};int colorType=0,alphaType=0;std::uint64_t colorSpace=0;

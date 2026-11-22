@@ -1,0 +1,34 @@
+{
+  "task": "G5-DPR4-render-sync-r1",
+  "purpose": "control correctness narrow recheck",
+  "command": [
+    "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/followup_narrow.mjs",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/install-normal/js",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-B",
+    "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web"
+  ],
+  "driverSha256": "2c5e7e616796020d84620eada042441d1b6c0140335df3ac2269ed18566ab3ff",
+  "started": 1795328763.518193,
+  "guardSeconds": 180,
+  "guardRssBytes": 3221225472,
+  "oldBrowserRunsUnchanged": true,
+  "pid": 81696,
+  "exitCode": 1,
+  "seconds": 46.54628300666809,
+  "actualCeilSeconds": 47,
+  "ownedPids": [
+    81696,
+    81698,
+    81704,
+    81705,
+    81706,
+    81707,
+    81709,
+    81711,
+    81712
+  ],
+  "cleanupSurvivors": [],
+  "peakRssBytes": 1431158784
+}

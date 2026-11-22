@@ -1,0 +1,200 @@
+{
+  "task": "G5-post-range-convergence-r1",
+  "rows": [
+    {
+      "id": "fixed40-B",
+      "status": "FINISHED",
+      "at_unix": 1795252792.374316,
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/fixed40-B.json",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/fixed40-B"
+      ],
+      "timeout_s": 420,
+      "rss_mib": 4096,
+      "result": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/fixed40-B.json",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/fixed40-B"
+        ],
+        "reason": "timeout",
+        "returncode": 1,
+        "elapsed_s": 420.33283679200395,
+        "peak_process_family_rss_kib": 1656960,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 420,
+        "last_stage": {
+          "stage": "closed",
+          "id": "PRC-FIXED40-B",
+          "status": "FAILED",
+          "error": "page.evaluate: Target crashed \n    at run (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs:30:25)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs:41:123"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "elapsedCeilSeconds": 421
+    },
+    {
+      "id": "wax-DPR4-B",
+      "status": "FINISHED",
+      "at_unix": 1795253267.872236,
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-B/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/wax-DPR4-B",
+        "canary"
+      ],
+      "timeout_s": 240,
+      "rss_mib": 4096,
+      "result": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-B/js",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/wax-DPR4-B",
+          "canary"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 206.91083691699896,
+        "peak_process_family_rss_kib": 1858544,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "complete",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "elapsedCeilSeconds": 207
+    },
+    {
+      "id": "wax-DPR4-C",
+      "status": "FINISHED",
+      "at_unix": 1795253474.784331,
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/wax-DPR4-C",
+        "canary"
+      ],
+      "timeout_s": 240,
+      "rss_mib": 4096,
+      "result": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C/js",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/wax-DPR4-C",
+          "canary"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 219.87982137499785,
+        "peak_process_family_rss_kib": 1877504,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "complete",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "elapsedCeilSeconds": 220
+    },
+    {
+      "id": "postup-batch-B",
+      "status": "FINISHED",
+      "at_unix": 1795253755.155618,
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/batched_web.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/postup-batch-B.json",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/postup-batch-B"
+      ],
+      "timeout_s": 240,
+      "rss_mib": 4096,
+      "result": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/batched_web.mjs",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/postup-batch-B.json",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/postup-batch-B"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 160.37401587500062,
+        "peak_process_family_rss_kib": 2446368,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "id": "PRC-POSTUP-BATCH-B",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "elapsedCeilSeconds": 161
+    },
+    {
+      "id": "postup-batch-C",
+      "status": "FINISHED",
+      "at_unix": 1795253915.531091,
+      "command": [
+        "node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/batched_web.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/postup-batch-C.json",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/postup-batch-C"
+      ],
+      "timeout_s": 240,
+      "rss_mib": 4096,
+      "result": {
+        "command": [
+          "node",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/batched_web.mjs",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/postup-batch-C.json",
+          "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/postup-batch-C"
+        ],
+        "reason": "completed",
+        "returncode": 0,
+        "elapsed_s": 159.197081374994,
+        "peak_process_family_rss_kib": 2539424,
+        "rss_limit_kib": 4194304,
+        "timeout_s": 240,
+        "last_stage": {
+          "stage": "closed",
+          "id": "PRC-POSTUP-BATCH-C",
+          "status": "OBSERVED"
+        },
+        "cleanup_complete": true,
+        "remaining_owned_pids": []
+      },
+      "elapsedCeilSeconds": 160
+    }
+  ],
+  "browserStarts": 5,
+  "actualCeilSeconds": 1169,
+  "allOwnedWorkersCleaned": true,
+  "originalPairCandidate": "NOT_STARTED after baseline guard",
+  "preservedUserDemos": [
+    4351,
+    4352
+  ],
+  "keptNormalDemo": {
+    "url": "http://127.0.0.1:4353/example.html",
+    "pid": 37882,
+    "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C/js",
+    "normal": true,
+    "diagnostics": false,
+    "verification": "HTTP public wrapper bytes equal matching candidate normal SDK; same SDK exercised in completed headless B/C cases.",
+    "kept_running_for_user": true
+  }
+}

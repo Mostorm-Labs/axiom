@@ -6,6 +6,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "compact_raster_internal.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "skia_prepared_geometry.hpp"
+#include "skia_ink_layers.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
@@ -92,6 +93,12 @@ const sk_sp<SkRuntimeEffect>& dryWetEffect(bool material){
 }
 void drawPressureMaterialCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double distance,double total,std::uint64_t seed){
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    const auto began=foundation::internal::frame_timing::now();
+    ++pressureDiagnosticWork.rangeCalls;
+    pressureDiagnosticWork.visited+=std::min(end,knots.size())-std::min(begin,knots.size());
+    struct End {std::uint64_t start;~End(){pressureDiagnosticWork.enqueueNs+=foundation::internal::frame_timing::now()-start;}} endTiming{began};
+#endif
     if(knots.empty()||begin>=knots.size())return;
     if(distance<0)distance=ink::compactLength(knots.first(begin));
     SkRuntimeShaderBuilder builder(config.algorithmVersion==6?dryWetEffect(false):crayonCoverageEffect());
@@ -117,7 +124,15 @@ void drawPressureMaterialCoverage(SkCanvas& canvas,const foundation::InkBrushCon
         builder.uniform("clipCaps")=SkV2{float(i<=1&&distance==0&&!config.startCap),float(i+1==knots.size()&&distance+std::hypot(b.x-a.x,b.y-a.y)>=total-1e-5&&!config.endCap)};
         distance+=std::hypot(b.x-a.x,b.y-a.y);
         if(!SkRect::Intersects(bounds,clip))continue;
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+        ++pressureDiagnosticWork.queued;
+#endif
         paint.setShader(builder.makeShader());canvas.drawRect(bounds,paint);
+        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+        if(pressureCommandCounter)++*pressureCommandCounter;
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+        ++pressureTestCommands;
+#endif
     }
 }
 const sk_sp<SkRuntimeEffect>& materialV2Effect(){
@@ -243,14 +258,19 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
     if(config.materialVersion==4){
         builder.uniform("family")=float(config.family);builder.uniform("textureScale")=float(config.textureScale);
         builder.uniform("wetEdge")=float(config.wetEdge);builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
-        SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;
+        SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
+        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+        return;
     }
-    if(config.algorithmVersion==4||config.materialVersion==3){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;}
+    if(config.algorithmVersion==4||config.materialVersion==3){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
+        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+        return;}
     builder.uniform("family")=float(config.family);
     builder.uniform("density")=float(config.density);builder.uniform("textureScale")=float(config.textureScale);
     builder.uniform("deposition")=float(config.deposition);builder.uniform("wetEdge")=float(config.wetEdge);
     builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
     SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
+    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
 }
 
 void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
@@ -260,6 +280,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
 
     if(knots.empty())return;
+#if defined(AXIOM_ENABLE_FRAME_TIMING)
+    if(config.algorithmVersion==5||config.algorithmVersion==6){++pressureDiagnosticWork.directCalls;pressureDiagnosticWork.directKnots+=knots.size();}
+#endif
     std::vector<foundation::InkKnot> selected;
     double rangeStartDistance = 0.0;
     double rangeTotalDistance = -1.0;
@@ -332,6 +355,16 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
 #endif
         AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);
         AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
+        auto* retained=targets?targets:execution?execution->targets():nullptr;
+        if(retained&&retained->retainedPressure&&prepared&&prepared->isPressureMaterial()){
+            auto image=retained->retainedPressure->pressureTile(prepared,canvas,matrix,clip,x,y,w,h);
+            if(!image){if(work)work->resourcePending=true;if(execution)execution->unavailable({},ExecutionReason::kAllocationDenied);return;}
+            auto shaded=SkIRect::MakeXYWH(x,y,w,h);
+            if(canCull){SkIRect rounded;support.roundOut(&rounded);if(!shaded.intersect(rounded))continue;}
+            canvas.save();canvas.resetMatrix();canvas.clipIRect(shaded);canvas.setMatrix(matrix);
+            compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x,y);canvas.restore();
+            if(execution)execution->reusePixels();continue;
+        }
         CompactCoverageTargets localTargets;
         auto* allocationOwner=targets?targets:(execution&&execution->targets()?execution->targets():&localTargets);
         auto tile=decision?allocationOwner->acquire(canvas,w,h,*decision,work).surface
@@ -380,6 +413,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     }
 }
 
+resources::ResourceLease CompactCoverageTargets::detach(const SkSurface* surface){
+    for(auto& slot:slots_)if(slot.surface.get()==surface){auto lease=std::move(slot.lease);slot=Slot{};return lease;}return {};
+}
 sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bool compatible,CompactRasterWork* work,bool scalar){
     // Explicit legacy wrapper. A compatible request on Raster is CPU truth,
     // never a retained GPU key. Other compatibility fallbacks remain declared.
@@ -434,7 +470,7 @@ CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& can
 CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
     std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,std::shared_ptr<const PreparedNavigationGeometry> prepared,bool directConsumer,bool whiteOnly)
-    :prepared_(prepared&&config.algorithmVersion==4&&prepared->isContour()&&prepared->ready()?std::move(prepared):nullptr),directConsumer_(directConsumer),whiteOnly_(whiteOnly),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
+    :prepared_(prepared&&prepared->ready()&&((config.algorithmVersion==4&&prepared->isContour())||((config.algorithmVersion==5||config.algorithmVersion==6)&&prepared->isPressureMaterial()))?std::move(prepared):nullptr),directConsumer_(directConsumer),whiteOnly_(whiteOnly),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
     support_=prepared_?prepared_->support():SkRect::MakeEmpty();
@@ -583,7 +619,8 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
 }
 bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
-    bool compatible,CompactRasterWork* work){
+    bool compatible,CompactRasterWork* work,std::size_t* pressureCommands){
+    PressureCommandScope commandScope(pressureCommands);
     G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
 
     resourcePending_=false;
@@ -597,6 +634,15 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         }
         if(y_>=clip_.bottom()){done_=true;return true;}
         const auto w=std::min(256,clip_.right()-x_),h=std::min(256,clip_.bottom()-y_);
+        if(targets.retainedPressure&&prepared_&&prepared_->isPressureMaterial()){
+            if(auto image=targets.retainedPressure->pressureTile(prepared_.get(),canvas,matrix_,clip_,x_,y_,w,h)){
+                if(!captureOnly_){canvas.save();canvas.resetMatrix();auto shaded=SkIRect::MakeXYWH(x_,y_,w,h);
+                    if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
+                    canvas.clipIRect(shaded);canvas.setMatrix(matrix_);compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);canvas.restore();}
+                if(auto* execution=RenderExecutionScope::current())execution->reusePixels();
+                x_+=256;if(x_>=clip_.right()){x_=clip_.left();y_+=256;}done_=y_>=clip_.bottom();return done_;
+            }
+        }
         tileInterior_=interior_;tileInterior_.op(SkIRect::MakeXYWH(x_,y_,w,h),SkRegion::kIntersect_Op);
         hybrid_=compatible&&canvas.recordingContext()&&config.algorithmVersion==3&&!tileInterior_.isEmpty();
         tileInterior_.translate(-x_,-y_);
@@ -610,6 +656,9 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             tile_=targets.acquire(canvas,w,h,decision,work,!compatible&&config.materialVersion<3).surface;
         }else tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&((config.algorithmVersion==4&&canvas.recordingContext())||config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
         if(!tile_){resourcePending_=true;return false;}
+        // Transfer before yielding: another object or navigation pool cleanup
+        // must never borrow this producer's incomplete pixels or release its lease.
+        if(captureOnly_)tileLease_=targets.detach(tile_.get());
         if(execution)execution->coverage(*tile_,false);
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
         if(tile_->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
@@ -648,7 +697,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         knot_=0;distance_=0;preparedPrimitive_=0;
         if(!prepared_&&config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
     }
-    if(prepared_){
+    if(prepared_&&prepared_->isContour()){
         auto* target=tile_->getCanvas();
         preparedPrimitive_=prepared_->nextVisiblePrimitive(*target,preparedPrimitive_);
         const auto count=std::min(std::size_t(32),prepared_->primitiveCount()-preparedPrimitive_);
@@ -725,9 +774,14 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
             {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
                 drawContourCoverage(*target,config,emitted,contourBlend_);}
             if(checkpoint)recordContour(config,emitted,std::move(*checkpoint));
-        }else drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,distance_,totalDistance_,seed);
+        }else if(!prepared_||prepared_->materialRangeVisible(*target,knot_)){
+            const auto beginDistance=prepared_?prepared_->distances()[knot_]:distance_;
+            drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,beginDistance,totalDistance_,seed);
+            if(prepared_)if(auto* execution=RenderExecutionScope::current())execution->preparedUse(directConsumer_);
+        }
         target->restore();
-        if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
+        if(prepared_&&prepared_->isPressureMaterial())distance_=prepared_->distances()[end];
+        else if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
             distance_+=std::hypot(knots[i].x-knots[i-1].x,knots[i].y-knots[i-1].y);
         knot_=end;
     }
@@ -745,12 +799,15 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
     {
         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
         auto image=tile_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
+        if(targets.retainedPressure&&prepared_&&prepared_->isPressureMaterial()){
+            if(!targets.retainedPressure->retainPressureTile(prepared_,canvas,matrix_,clip_,x_,y_,image,targets,tile_.get(),captureOnly_?&tileLease_:nullptr)){resourcePending_=true;return false;}
+        }
         canvas.save();canvas.resetMatrix();
         auto shaded=SkIRect::MakeXYWH(x_,y_,tile_->width(),tile_->height());
         if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
         canvas.clipIRect(shaded);canvas.setMatrix(matrix_);
         if(work)work->compositedPixels+=std::uint64_t(shaded.width())*shaded.height();
-        if(whiteOnly_){
+        if(captureOnly_){}else if(whiteOnly_){
             // Same qualified ordered white coverage, before per-object mask and
             // material. This is an immutable producer, not another evaluator.
             canvas.resetMatrix();SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);

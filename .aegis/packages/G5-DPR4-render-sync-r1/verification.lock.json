@@ -1,0 +1,77 @@
+{
+  "profile": "SCOPED_ENGINEERING_REVIEW",
+  "obligations": [
+    {
+      "id": "DS0",
+      "requirement": "Explain current DPR4 7–8 second owner/RAF calls in actual Render path and reconcile relevant r3 changes.",
+      "oracle": "Read retained records, trace current call chain, then focused diagnostic build/actual-owner test as needed. Attribute source preparation, command enqueue, material/mask replay and flush CPU API separately.",
+      "acceptance": "Specific current path and synchronous mechanism demonstrated with exact source/build identity and an old-behavior counterfactual or reproducible owner observation. Unknown hardware GPU time and outside-owner intervals stay explicit.",
+      "evidence_required": "Short attribution and current-vs-r3 disposition with raw observation references."
+    },
+    {
+      "id": "DS1",
+      "requirement": "Remove or bound proven redundant/unbounded work in existing Render owner without resetting progress.",
+      "oracle": "Focused actual production-owner RED→GREEN with work/cursor counts, plus unchanged independent full-render oracle. Use old source counterfactual without overwriting candidate artifacts.",
+      "acceptance": "Old behavior violates selected work/progress invariant, candidate satisfies it, and job completes under unchanged resource profile. Cache misses, retry, cancellation and target changes preserve correct progress and last successful visible content.",
+      "evidence_required": "Test source, old/new results, exact source delta. If attribution disproves actionable narrow improvement, return evidence-based finding instead of speculative changes."
+    },
+    {
+      "id": "DS2",
+      "requirement": "Preserve brush/material/mask/ordering and lifecycle semantics on changed paths.",
+      "oracle": "Relevant v5/v6 actual-owner pixel comparisons against independent established evaluator or frozen accepted Render archive. Cover historical mask then new mask, transform, overlap/opacity and retry/target invalidation for newly retained state. Reuse unchanged-path evidence.",
+      "acceptance": "Exact or established AA-edge-only differences explained by independent reference. No wider contour, pressure, texture, opacity, self-overlap, erased-region or ordering differences. Pending publishes no partial frame. New retention validates full source/transform/target/resource identities and releases leases.",
+      "evidence_required": "Focused native regressions, independent pixel/semantic observations, preserved failure classifications."
+    },
+    {
+      "id": "DS3",
+      "requirement": "Measure user-visible effect of the repair in ordinary exported Web SDK.",
+      "oracle": "Serial matched baseline/candidate ordinary SDK with fixed wax16-default DPR4 scenario from the bound driver, two erases followed immediately by pan, pinch and inverse zoom. Same 512/1024/128MiB profile and immutable dependencies, instrumentation off. No simultaneous heavy build/tests.",
+      "acceptance": "Complete scenario or report precise timed blocker. Report handler/callback max and p95, first correct feedback when observable, color-write proxy separately, Up to qualified committed camera frame and final convergence. Report 3s/5s bands descriptively. Smaller callbacks alone do not close total latency. Snapshot/Operations/final pixels agree with baseline/reference.",
+      "evidence_required": "One complete serial current baseline/candidate pair, source/SDK/driver bindings, timings and final artifacts. Bounded serial follow-up only if needed to resolve a measurement or correctness issue."
+    },
+    {
+      "id": "DS4",
+      "requirement": "Keep accepted Scene stamp and P36 lifecycle work, public boundary and ordinary build intact.",
+      "oracle": "Relevant focused native render/preview/lifecycle tests including SceneStampPreparation, runtime boundary checker, git diff --check, matching normal Web SDK build.",
+      "acceptance": "No new regression in affected paths. Previously established unrelated failures can remain findings when exact baseline comparison confirms them. Full-suite completion is corroborative if unchanged semantic-test build errors or historical fixture gaps remain.",
+      "evidence_required": "Commands, results, baseline failure comparison where needed, final source manifest."
+    }
+  ],
+  "inputs": {
+    "current_DPR4_observation": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/wax-DPR4-paired.json",
+      "bytes": 5883,
+      "sha256": "dc8a59d2176b9366dc398999ff8af14c90f0ce09688607720a549263934d2666"
+    },
+    "driver": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+      "bytes": 12390,
+      "sha256": "028b88fcbcc8ff167150dc8e2f1bcba777b381fdc9a209a0fc006e9df1f79055"
+    },
+    "baseline_verification": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/verification-summary.json",
+      "bytes": 6228,
+      "sha256": "3b8030e02114c2cebb817ebb6df13720f33810e4c497dac4dde8c391cc70f5ca"
+    },
+    "r3_attribution": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/diagnostic-attribution.json",
+      "bytes": 125667,
+      "sha256": "a5f962db4ca2aeb2ab64cfa17f8f4d1c8cf6f22072e24fd1e58e0536ddae3efe"
+    },
+    "r3_remaining": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/remaining-analysis.json",
+      "bytes": 2399,
+      "sha256": "7a617a368bfad1e53b0f5f03c6051ff9d9d102a8e811d55aa8f6519c5c55e04b"
+    },
+    "r3_native": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/native-mechanism.json",
+      "bytes": 2977,
+      "sha256": "e21ddf5f54bf51aa59283bb37318d2fce55e2899f925fd4cc795b18366da852a"
+    },
+    "r3_source_binding": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/source-and-SDK-binding.json",
+      "bytes": 3726,
+      "sha256": "b1890b2d511c7f70ead08dd2bdbe531334794caad28450901c239610866c33e9"
+    }
+  }
+}

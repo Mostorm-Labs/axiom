@@ -1,0 +1,94 @@
+{
+  "expandedNative": {
+    "passed": 44,
+    "total": 46,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-ctest.log",
+    "unchangedFailures": [
+      {
+        "test": "G5CanonicalPreparedCompatibility",
+        "baselineCommand": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared-corrected.json",
+        "baselineLog": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared-corrected.log",
+        "message": "exact pressure eviction lost retained-image navigation feedback"
+      },
+      {
+        "test": "G5TransientDisplayContinuity",
+        "baselineCommand": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-corrected.json",
+        "baselineLog": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-corrected.log",
+        "message": "after-one-tile fault accepted; failure stage accepted"
+      }
+    ]
+  },
+  "baselineArchive": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-render/libcanvas_runtime_render.a",
+    "bytes": 6812024,
+    "sha256": "f94df3c0aa00cc8deded6f964150c7bf3cff42a3808521ae9a3865f3d00d1973",
+    "source": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d Render with diagnostic-only changes compiled out. Original Render headers/tests reconstructed from HEAD; library copied before behavior changes. Corrected relinks use old private layouts."
+  },
+  "ownNative": {
+    "passed": 11,
+    "total": 11,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-final-own-ctest.log"
+  },
+  "P36Material": {
+    "pass": true,
+    "evidence": "P36-material-lifecycle.json"
+  },
+  "P36Runtime": {
+    "pass": true,
+    "rows": 21,
+    "evidence": "P36-runtime-lifecycle.json"
+  },
+  "python": {
+    "passed": 1,
+    "total": 1,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/python-regression.log"
+  },
+  "Node": {
+    "passed": 25,
+    "total": 26,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/node-regression.log",
+    "remaining": "Historical immutable SDK normal/axiom.mjs missing, same baseline ENOENT; not replaced with candidate."
+  },
+  "boundaries": {
+    "passed": true,
+    "contracts": 122,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/runtime-boundaries.log"
+  },
+  "fullSuite": "Corroborative only; prior unchanged two semantic switch -Werror blockers remain bound in previous verification-summary.json; no new full build attempted.",
+  "setupFindings": [
+    "System python3=3.9 did not support resolver/emcc; used existing python3.12, offline resolution passed.",
+    "First optional test targets unavailable under normal profile; enabled existing HiDPI test switches, omitted timing-only targets.",
+    "NavigationMaskReuse target requires timing-only hook names absent from normal profile; old source, not repaired in scope.",
+    "Initial counterfactual linked changed private test layouts to old library; invalid link/segfault results retained and superseded by corrected exact-old-header/source compilation.",
+    "Two own test setup errors corrected: reference surface generation, Scratch class lease assertion."
+  ],
+  "finalHandoffNative": {
+    "passed": 11,
+    "total": 11,
+    "command": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/handoff-final-own-ctest.json",
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/handoff-final-own-ctest.log",
+    "sourceRebuiltAtHandoff": true
+  },
+  "independentPixelDetails": {
+    "evidence": "final-independent-pixels.json",
+    "rows": 16,
+    "byteExactRows": 15,
+    "remainingRows": [
+      {
+        "CPUtiles": 0,
+        "GPUtiles": 14,
+        "algorithm": 5,
+        "attempts": 11,
+        "changedBytes": 1,
+        "dpr": 4,
+        "inkOnly": true,
+        "isolated": false,
+        "maximumPixelDifference": 1,
+        "pass": true,
+        "preparedCanonical": 50,
+        "preparedDirect": 0
+      }
+    ],
+    "acceptance": "Established channel tolerance <=2; observed one channel byte differs by 1. Web final RGBA byte-exact."
+  }
+}

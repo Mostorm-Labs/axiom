@@ -1,0 +1,998 @@
+{
+  "commands": [
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/DN4-focused.json",
+        "bytes": 528,
+        "sha256": "b8b8107922c377cef602343e6ed8cd94cd4002415d0abfb0d04b9cb1f6636e56"
+      },
+      "command": [
+        "ctest",
+        "--test-dir",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--output-on-failure",
+        "-R",
+        "^(G5Dpr4RenderSync.*|G5TransientDisplay(RetryPixels|Handoff|HandoffInflight)|G5MaskedNavigationProgress|G5ErasedMixedNavigation|G5SceneStampPreparation|G5TemporaryRetirement(Wait|Safety|Completion)|G5CanonicalPreparedBody)$",
+        "-j1"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342765.6716402,
+      "exitCode": 0,
+      "seconds": 54.41361474990845
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/boundaries-final.json",
+        "bytes": 273,
+        "sha256": "10570020fd300f3404f52ab876439484cccba0f4dae6cd59cefde5982dcd35db"
+      },
+      "command": [
+        "/opt/homebrew/bin/python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343316.3226082,
+      "exitCode": 0,
+      "seconds": 0.09032964706420898
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/boundaries.json",
+        "bytes": 272,
+        "sha256": "0c253c53c5982c108c149f2f7d3b47bb67f5a0b45a8c2a3c2a0957706ae72c90"
+      },
+      "command": [
+        "/opt/homebrew/bin/python3.12",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342883.021329,
+      "exitCode": 0,
+      "seconds": 0.14023327827453613
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/candidate-diagnostic-build.json",
+        "bytes": 305,
+        "sha256": "f7d06856fd953b3fc78f7d4439f6458c5be6ccee098621a1b9d670bbd954af69"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341436.552827,
+      "exitCode": 0,
+      "seconds": 29.468475103378296
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/candidate-diagnostic-v2-build.json",
+        "bytes": 305,
+        "sha256": "954ea24441b179de26a339b79befbfc28cebdb8e67835e6bbdc8ca085a550c8a"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342090.237432,
+      "exitCode": 0,
+      "seconds": 30.474080085754395
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/candidate-normal-build.json",
+        "bytes": 301,
+        "sha256": "0e5f3f4ea406797de8a8a52101aa111b611377e867ae38963ed3ca98b5f16621"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-normal-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342808.022673,
+      "exitCode": 0,
+      "seconds": 35.112513065338135
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/diagnostic-guard-build-corrected.json",
+        "bytes": 305,
+        "sha256": "99b0f169e2f88ce7cc0e810ab70fd392c8cc90c3f32c16f53600dc49f02d0acc"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339202.239437,
+      "exitCode": 1,
+      "seconds": 5.6474878787994385
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/diagnostic-guard-build-final.json",
+        "bytes": 306,
+        "sha256": "002038840f610d3f65b4a5826e8d53f66da122f9f159b3fead276b0893933972"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339272.4581509,
+      "exitCode": 0,
+      "seconds": 28.736857175827026
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/diagnostic-guard-build.json",
+        "bytes": 305,
+        "sha256": "04401d3b4c4d20f2ce970a1fea1fdb04b70e6bd0fd7a844b2e898c6733bf37c7"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+        "--target",
+        "axiom_js_runtime",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339089.259619,
+      "exitCode": 1,
+      "seconds": 11.151367902755737
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/diff-check.json",
+        "bytes": 210,
+        "sha256": "fc1d523832a4d25dbf10a635b917a4bbf9bc091c96372063222bccc25fcb519e"
+      },
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342883.196506,
+      "exitCode": 0,
+      "seconds": 0.09313797950744629
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/diff-final.json",
+        "bytes": 210,
+        "sha256": "ca9c3da271ed84c857976c7d220fd449e82df49d3a3a65de7ab1661f9b60ea0c"
+      },
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343316.443102,
+      "exitCode": 0,
+      "seconds": 0.08895015716552734
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/exact-accepted-final-fixture.json",
+        "bytes": 327,
+        "sha256": "efac846e0fb6f57db5455e6f64e528dcce526a2df63c5de68e6f52b8a58f046c"
+      },
+      "command": [
+        "out/G5-DPR4-postup-navigation-r1/accepted-render-final-fixture",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/exact-accepted-final-fixture.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342388.8472419,
+      "exitCode": 1,
+      "seconds": 2.8007891178131104
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/final-fixture-accepted-red.json",
+        "bytes": 325,
+        "sha256": "e53a1e06bf25ee88741977dcc5974912f4eea3333cd9efae350630adad786596"
+      },
+      "command": [
+        "out/G5-DPR4-postup-navigation-r1/accepted-render-final-fixture",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/final-fixture-accepted-red.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343385.223181,
+      "exitCode": -6,
+      "seconds": 2.3053131103515625
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/final-mechanism-green.json",
+        "bytes": 346,
+        "sha256": "a515f15530fa0007f95adfb233e8a9b3bd5ed8783a8f0f6772b8d1a79e8f1f7a"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/final-mechanism-green.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343529.127522,
+      "exitCode": 0,
+      "seconds": 2.3065900802612305
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/final-mechanism-red.json",
+        "bytes": 334,
+        "sha256": "296c50a025c08fd144ae9b8b4cf72594ffbe3170d5db17f2a65827878f004d6c"
+      },
+      "command": [
+        "out/G5-DPR4-postup-navigation-r1/accepted-render-final-fixture",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/final-mechanism-red.json",
+        "mechanism"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343528.179991,
+      "exitCode": 1,
+      "seconds": 2.4471261501312256
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/final-native-lease-build.json",
+        "bytes": 313,
+        "sha256": "cdc3e727c79d36a773afec09a109eed9de66a090325382e244812d37b9ab8342"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342764.562978,
+      "exitCode": 0,
+      "seconds": 6.10992693901062
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/final-native-targets-build.json",
+        "bytes": 655,
+        "sha256": "231b222e77e1b88162acfb941792bb9867ac326b1dbb7168d9043a9f5a7d4bef"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "axiom_dpr4_render_sync_tests",
+        "axiom_transient_display_retry_tests",
+        "axiom_render_cache_tests",
+        "axiom_scene_stamp_preparation_tests",
+        "axiom_canonical_prepared_body_tests",
+        "axiom_temporary_retirement_completion_tests",
+        "axiom_temporary_retirement_safety_tests",
+        "axiom_temporary_retirement_wait_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342656.168163,
+      "exitCode": 0,
+      "seconds": 19.438792943954468
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/last-native-build.json",
+        "bytes": 315,
+        "sha256": "c8684b9ccc44e74df922bec370fecf0970ae3f7aa676b7123f35b547144aef5d"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343493.0328488,
+      "exitCode": 0,
+      "seconds": 6.158017158508301
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-alpha-build.json",
+        "bytes": 314,
+        "sha256": "923d17608d6aaa7c5f56f5bd3df61b47a0e05db39558195d7243be1292191b54"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341263.711642,
+      "exitCode": 0,
+      "seconds": 5.554732799530029
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-alpha.json",
+        "bytes": 336,
+        "sha256": "30f97a9d0d23de100380363d1695547c7e5da5b6c4f83a7d7b6e36c39d496b0b"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-alpha.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341298.099261,
+      "exitCode": 1,
+      "seconds": 2.163909912109375
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-build-v2.json",
+        "bytes": 314,
+        "sha256": "9504b1e71d887f9f392a45f2f1cdd0aa2d95433b5a36dddf7ff4537cb186f4da"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340251.641546,
+      "exitCode": 0,
+      "seconds": 5.685457944869995
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-build-v3.json",
+        "bytes": 314,
+        "sha256": "8d117b4d4176b0088840a46986f478c4cc576de73d9f27ec2a5d698318a124cd"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340459.327168,
+      "exitCode": 0,
+      "seconds": 6.095839977264404
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-build.json",
+        "bytes": 315,
+        "sha256": "01971546be00fc96954cb705dfad949a189f4893efa3814f2264f3730c548ab9"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340183.268325,
+      "exitCode": 1,
+      "seconds": 2.3714499473571777
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-debug-build.json",
+        "bytes": 314,
+        "sha256": "30c80bc6ade302617886e4aa2832a41d42cc5d6928f6a003066e95a6dc4956d3"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340358.549085,
+      "exitCode": 0,
+      "seconds": 5.587527275085449
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-debug.json",
+        "bytes": 346,
+        "sha256": "08e4ec6e3d3a8bba10bcf8d76716eee1e8122cbbb96d07184c27271d636db9da"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-boundaries-debug.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340374.51355,
+      "exitCode": 1,
+      "seconds": 2.878321886062622
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-v1.json",
+        "bytes": 347,
+        "sha256": "f252e4830a6782abbbc601cb04d4352d73f8b67c70df42a9a292e6d67f49c4a7"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-boundaries-v1.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340273.1799738,
+      "exitCode": -6,
+      "seconds": 2.5157229900360107
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-boundaries-v2.json",
+        "bytes": 345,
+        "sha256": "1845db0499abf59914946f1732c69a5347facf21d3235383a7822da8348e944a"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-boundaries-v2.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340478.579541,
+      "exitCode": 1,
+      "seconds": 1.9183759689331055
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-bounded-mask-build.json",
+        "bytes": 314,
+        "sha256": "357bfd018e24d014f204eb0c16acca8d85f19a6282564ea312d6418231bd1021"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340789.884486,
+      "exitCode": 0,
+      "seconds": 5.521156072616577
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-bounded-mask.json",
+        "bytes": 344,
+        "sha256": "991ca4e93c1147c5ae5a2176179dd5dc23939f5369a3a1546d94397a090b3a47"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-bounded-mask.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340820.597866,
+      "exitCode": 0,
+      "seconds": 1.5092508792877197
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-ctest-final.json",
+        "bytes": 330,
+        "sha256": "a92a0dac3671e2ec4aeebef3b9fc179efbf234c9d47737d4a40f13ce1c483d94"
+      },
+      "command": [
+        "ctest",
+        "--test-dir",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--output-on-failure",
+        "-R",
+        "^G5Dpr4PostupNavigation$",
+        "-j1"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343225.6269271,
+      "exitCode": 0,
+      "seconds": 1.2651448249816895
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-edge-build.json",
+        "bytes": 313,
+        "sha256": "890e8974d62e054f97b6fd2fa2810e4aeecf14f324f957ae0ad860a0dfaf0438"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341353.90638,
+      "exitCode": 0,
+      "seconds": 5.797345161437988
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-edge.json",
+        "bytes": 335,
+        "sha256": "ab7d01ef5e9583fca8c59a89a87bfe583e8ba6e520558af5c3272865308836e7"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-edge.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341384.55154,
+      "exitCode": 0,
+      "seconds": 1.8802120685577393
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-final-build.json",
+        "bytes": 314,
+        "sha256": "132f70c3b1edfddc464a193f99d173d9104bd7101174bd84a733d1593f11f07d"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340637.059956,
+      "exitCode": 0,
+      "seconds": 5.673303842544556
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-final-lease.json",
+        "bytes": 343,
+        "sha256": "cab9d801bd04944966938f2ce92a58c436d7257f72cce0d0960ccd8578148470"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-final-lease.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342806.869419,
+      "exitCode": 0,
+      "seconds": 1.8660879135131836
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-final.json",
+        "bytes": 337,
+        "sha256": "45237d09981138272c99b203e2606adc4475bdeac231f7e1a55534217d40e234"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-final.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340666.045532,
+      "exitCode": 0,
+      "seconds": 1.5353598594665527
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-ordered-build.json",
+        "bytes": 314,
+        "sha256": "d7f8bb520cbcf66646fd0d5ecfba6c5ba15f533979e1778099889fdb533671e7"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341060.358896,
+      "exitCode": 0,
+      "seconds": 5.859742164611816
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-ordered.json",
+        "bytes": 337,
+        "sha256": "6c00bdd86023357e85e8393c404d086d5bab51ef21881dd7818d876e011b9af3"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-ordered.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341083.6245499,
+      "exitCode": 1,
+      "seconds": 2.2658851146698
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-owner-green-build.json",
+        "bytes": 314,
+        "sha256": "d47c0b438514a2c464bf046c71adbee0bc49a6d05e23b5f4740ce4dc3520313e"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339878.32673,
+      "exitCode": 0,
+      "seconds": 6.1282570362091064
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-owner-green-v1.json",
+        "bytes": 347,
+        "sha256": "d01a48d78e7cfa5fb7adee4f36085633f03f16eef35da7288d72e15d393d4808"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-owner-green-v1.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339929.7266219,
+      "exitCode": 0,
+      "seconds": 1.0048801898956299
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-owner-red-v2-build.json",
+        "bytes": 314,
+        "sha256": "4b1e0c8238cddfd811be0255cf9826cb1eea2257256ad7d41ef340c206a8f307"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339667.2377012,
+      "exitCode": 0,
+      "seconds": 5.99883770942688
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-owner-red-v2.json",
+        "bytes": 344,
+        "sha256": "beee8021ae705760d8671ddfcdaa7d599fb2380955708a9f4f0c9c870b18fb06"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-owner-red-v2.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339726.528853,
+      "exitCode": 1,
+      "seconds": 1.1042401790618896
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-owner-red.json",
+        "bytes": 341,
+        "sha256": "3e6be1b0f7e139b27eb880d54f1546af84274d7522168e49794c3ceb84b92a96"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-owner-red.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339225.152509,
+      "exitCode": 1,
+      "seconds": 1.1764159202575684
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-pinch-build.json",
+        "bytes": 314,
+        "sha256": "ab2bdf0b0c828311f122116b89662d87cc1aeee39d3d2c5052c8520d0b90d008"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340049.489735,
+      "exitCode": 0,
+      "seconds": 5.930783987045288
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-pinch.json",
+        "bytes": 337,
+        "sha256": "c1809cb061a47d211dddd488d1f6d4998349cbcedc306cedf886d72f698b882a"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-pinch.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340080.135401,
+      "exitCode": 0,
+      "seconds": 1.3356101512908936
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-red-build-corrected.json",
+        "bytes": 314,
+        "sha256": "038127e03a0f1f58472b2bf95f09765000d2d77a3af6c86368c1586d4508bcd8"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339201.071439,
+      "exitCode": 0,
+      "seconds": 6.901942014694214
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-red-build.json",
+        "bytes": 314,
+        "sha256": "c69f73d54fb27d50ed7aa8c20f7361f1f5ff9032ce6b08ab6a3e710f7fd3ebce"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795339154.677103,
+      "exitCode": 1,
+      "seconds": 7.418646812438965
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-region-build.json",
+        "bytes": 314,
+        "sha256": "d4632c2c18516c5ebc87846a6096c2e2e09375b6b8a0b44e9f73ed48ab1bb5b8"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340944.764336,
+      "exitCode": 0,
+      "seconds": 6.020632743835449
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-region.json",
+        "bytes": 338,
+        "sha256": "09a3a0920e84a90b71cd4dd37e491f914dd70e97fba76f445a6ca0f01c4bc880"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-region.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795340976.694985,
+      "exitCode": 0,
+      "seconds": 1.4194591045379639
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-roster-final-build.json",
+        "bytes": 314,
+        "sha256": "f80539954e466d10ac3ea8690292667134763133f48f24de51b14db2e3a0f275"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343279.914882,
+      "exitCode": 0,
+      "seconds": 6.143832206726074
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/native-roster-final.json",
+        "bytes": 343,
+        "sha256": "cb2e206cec1b83f7bf558d9fe5583978f52acba98e162a03f0f413d123cef42d"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/native-roster-final.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343315.072974,
+      "exitCode": 0,
+      "seconds": 1.937075138092041
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/node-render-driver.json",
+        "bytes": 297,
+        "sha256": "9bb73fc508c88f0460c65512332a3bed3af3f53cba455d1b95453e51b7031630"
+      },
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "--test",
+        "verification/tests/g5_render_execution.test.mjs"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343226.6560168,
+      "exitCode": 0,
+      "seconds": 0.1366720199584961
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/python-runner-syntax.json",
+        "bytes": 427,
+        "sha256": "ae99688f222bf358bf3ac20362b8c45c03a2fb29bcb1702a752cf7c52a10d2ca"
+      },
+      "command": [
+        "/opt/homebrew/bin/python3.12",
+        "-m",
+        "py_compile",
+        "verification/runners/g5/dpr4_postup_navigation/run.py",
+        "verification/runners/g5/dpr4_postup_navigation/browser.py",
+        "verification/runners/g5/dpr4_postup_navigation/analyze.py"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343226.822738,
+      "exitCode": 0,
+      "seconds": 0.04325699806213379
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/terminal-stream-build-v2.json",
+        "bytes": 312,
+        "sha256": "b68e694311736d69422fe99dd5ae3dfb10a519e9eb58e5aed41927d9f7133aaf"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342056.8429,
+      "exitCode": 0,
+      "seconds": 5.801700115203857
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/terminal-stream-build.json",
+        "bytes": 315,
+        "sha256": "5c54e54ba3b4fa2f768fab453a72047bd77fbf5c1ba44edf946babed645f71a1"
+      },
+      "command": [
+        "cmake",
+        "--build",
+        "out/G5-DPR4-render-sync-r1/build-native",
+        "--target",
+        "axiom_dpr4_postup_navigation_tests",
+        "-j4"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795341983.9049642,
+      "exitCode": 0,
+      "seconds": 7.005512952804565
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/terminal-stream-v2.json",
+        "bytes": 342,
+        "sha256": "2bce495d822508ae24ee57a8ff0021e56151611e3a4f006cb7367db047e9ceee"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/terminal-stream-v2.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342074.269431,
+      "exitCode": 0,
+      "seconds": 2.014814853668213
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/terminal-stream.json",
+        "bytes": 340,
+        "sha256": "a113360e7fb2fa6489bafca823ec1464e4ae5e663b818b7e6435642a8bac3d6f"
+      },
+      "command": [
+        "out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/terminal-stream.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795342003.918179,
+      "exitCode": -6,
+      "seconds": 2.078908920288086
+    },
+    {
+      "record": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/verify-frozen-native-final.json",
+        "bytes": 341,
+        "sha256": "783013ffbe096426799e49375524371d88049e5cdb0e24e26a0f9ec7aed1bc15"
+      },
+      "command": [
+        "out/G5-DPR4-postup-navigation-r1/final-native/axiom_dpr4_postup_navigation_tests",
+        ".aegis/results/G5-DPR4-postup-navigation-r1/verify-frozen-native-final.json"
+      ],
+      "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "started": 1795343940.523166,
+      "exitCode": 0,
+      "seconds": 1.995704174041748
+    }
+  ],
+  "note": "All recorded early failures retained; final candidate required checks passed. One copied binary initially lacked executable mode; chmod restored original mode and frozen-byte verification passed. Early native invariant failures including an accepted-archive lease negative were preserved; all Web runs ended cleanly without guard/crash. No failed or partial browser run was discarded."
+}

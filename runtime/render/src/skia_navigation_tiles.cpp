@@ -1157,6 +1157,7 @@ NM_INVOCATION(navigationMasks);
         gpu.touch();
         G5_ROUTE(g5NavCompose,g5::Route::nav_retained);
         G5_TARGET(acquired.frame.surface,true);
+        for(const auto& p:patches)if(p.retained&&p.retained->gpuUse)p.retained->gpuUse(gpu.epoch());
         compose(*target,patches,camera,frame);
         if(drawOverlay)drawOverlay(*target);
         provider.release();release.active=false;

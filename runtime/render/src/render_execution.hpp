@@ -58,7 +58,8 @@ class RenderExecutionScope final {
     void preparedUse(bool direct) noexcept {if(direct)++totals_.preparedDirectDraws;else ++totals_.preparedCanonicalDraws;}
     bool pending()const noexcept{return pending_;}
     bool rejected()const noexcept{return rejected_;}
-    bool gpuWorkRecorded()const noexcept{return gpu_||directGpu_||totals_.executionGpuAllocations>beforeGpuAllocations_;}
+    void recordGpuWork(const SkCanvas&) noexcept;
+    bool gpuWorkRecorded()const noexcept{return recordedGpuWork_||gpu_||directGpu_||totals_.executionGpuAllocations>beforeGpuAllocations_;}
  private:
     RenderExecutionScope* previous_=nullptr;
     [[maybe_unused]] ExecutionPurpose purpose_;
@@ -67,7 +68,7 @@ class RenderExecutionScope final {
     unsigned composition_=0;
     ExecutionBasis basis_;
     const void* rootContext_=nullptr;
-    bool gpuEnabled_=false,pending_=false,rejected_=false;
+    bool gpuEnabled_=false,pending_=false,rejected_=false,recordedGpuWork_=false;
     std::size_t capacity_=0;
     CompactCoverageTargets* targets_=nullptr;
     RenderCacheWork& totals_;

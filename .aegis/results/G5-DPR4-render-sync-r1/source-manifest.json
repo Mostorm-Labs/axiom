@@ -1,0 +1,146 @@
+{
+  "task": "G5-DPR4-render-sync-r1",
+  "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "branch": "codex/g5-post-range-convergence",
+  "indexEmpty": true,
+  "files": [
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "bytes": 75202,
+      "sha256": "aeabc89fa23f89a72865bdfe461ec50d42676f0348cd014307b0bb4d2f79c58d"
+    },
+    {
+      "path": "runtime/render/src/compact_raster_internal.hpp",
+      "bytes": 6882,
+      "sha256": "c8c33565544692471be31dce50185d479474ef53564b8ceebdd80d46b1fbde76"
+    },
+    {
+      "path": "runtime/render/src/prepared_body_job.cpp",
+      "bytes": 11077,
+      "sha256": "85396b318508ab974fb3f9b75aec79ed2229601b05db650b15122fa31851d3fb"
+    },
+    {
+      "path": "runtime/render/src/skia_compact_material.cpp",
+      "bytes": 54899,
+      "sha256": "860773c06399ada0b2d4900097d74a970bc16ec35a2c90086b27ead51ea7ffb8"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.cpp",
+      "bytes": 41648,
+      "sha256": "560318be17df1f4d015320d259f695ee5d47129ebf3592262692261d4ad18dfa"
+    },
+    {
+      "path": "runtime/render/src/skia_ink_layers.hpp",
+      "bytes": 8489,
+      "sha256": "958557f93c96e9910b6c5d6f5f529c5862615fb06a86aaa7f59002ddd2b8a7ae"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.cpp",
+      "bytes": 41756,
+      "sha256": "2cf66aec4904f4568ac67ea5af7cd71f713603ab0d0751d7527c7f8ed5337b11"
+    },
+    {
+      "path": "runtime/render/src/skia_prepared_geometry.hpp",
+      "bytes": 11124,
+      "sha256": "ba76a07752c0748af6585adba8f8247007407706a3bc6d117eee58bf7678667a"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache.cpp",
+      "bytes": 115632,
+      "sha256": "778d50b9ebd593f92a14f4f97830903d4273ad63269969ab5043fc037cc77a27"
+    },
+    {
+      "path": "runtime/render/src/skia_render_cache_internal.hpp",
+      "bytes": 15686,
+      "sha256": "084f027e0716dcfe1f5520ca04c5fcda95b9152011d14fb837e29ba6f278e1ea"
+    },
+    {
+      "path": "runtime/render/src/skia_renderer.cpp",
+      "bytes": 172358,
+      "sha256": "acba384290ebe6726ed9a3a47e9d13b5c0197a02526abb47c8358582c469a612"
+    },
+    {
+      "path": "runtime/render/tests/dpr4_render_sync_test.cpp",
+      "bytes": 26272,
+      "sha256": "8d6b4c3f7786a8e5aeac0eeecb3a32dc345f763015891b7151896db0417ed93d"
+    },
+    {
+      "path": "verification/runners/g5/dpr4_render_sync/browser.py",
+      "bytes": 3162,
+      "sha256": "e4b78aaccda8a86a59e247897630f68e39e54cd652f918a60f3efa1826e63416"
+    },
+    {
+      "path": "verification/runners/g5/dpr4_render_sync/run.py",
+      "bytes": 1166,
+      "sha256": "97bbd5d1e451c9851e3b651ebb8aebf5d813f17d84045d8766a5930317fa7f65"
+    },
+    {
+      "path": "verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+      "bytes": 12861,
+      "sha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26"
+    }
+  ],
+  "locks": [
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "unchangedFromHEAD": true
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "unchangedFromHEAD": true
+    }
+  ],
+  "preservedAcceptedOverlay": [
+    {
+      "path": ".aegis/packages/G5-post-range-convergence-r1/package.json",
+      "sha256": "f29e30b771d197614968ea6c4c203d435b48a540e07b611fba9b5c3dd436f5ce",
+      "unchanged": true
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "cebaf4b7ba94a1b61ac475ef672dadd9383e53d0cb16f1b73371586c63cb372c",
+      "unchanged": true
+    },
+    {
+      "path": "runtime/composition/tests/scene_stamp_preparation_test.cpp",
+      "sha256": "81dce06fe5d0dcf9210c34695730410a0a2a1d9f4aaa2246d7f445c867f43c7d",
+      "unchanged": true
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "ef77eef3fc40e83b7cbdefbdc9020fa066ae7ac9432576becdb3b59fd5e85e1a",
+      "unchanged": true
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/analyze.py",
+      "sha256": "0ba25e7acc0f3dfaecac0d1871796d768713c11a3111a04692475ac24a3240e5",
+      "unchanged": true
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/batched_web.mjs",
+      "sha256": "6f1d99dbade21959401f5938da3e867c1dec151896532c9007b9c908405aaac8",
+      "unchanged": true
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/compare_pixels.mjs",
+      "sha256": "2580d548af330fb2f0a1e1620bad3b2d3119ba69eae9ff0bdcd5eb0caf1128f3",
+      "unchanged": true
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/primary_batched.mjs",
+      "sha256": "91c5437745cbadabdad0e6e8ea7057a0f97ac565eef9b372c8f8e28531fe8931",
+      "unchanged": true
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+      "sha256": "028b88fcbcc8ff167150dc8e2f1bcba777b381fdc9a209a0fc006e9df1f79055",
+      "unchanged": true
+    }
+  ],
+  "productionScope": "Render private implementation only",
+  "publicAPIChanged": false,
+  "noCommitOrPush": true
+}

@@ -359,7 +359,21 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       for(const auto& mask:item.masks)job.masks.push_back(&mask);
       std::sort(job.masks.begin(),job.masks.end(),[](auto a,auto b){return a->id<b->id;});
       job.hashes.reserve(job.masks.size());
-      for(unsigned char c:job.body){job.hash^=c;job.hash*=16777619U;}
+      // The published Scene already hashed this immutable mask history. Reuse
+      // only its exact sorted prefix; an inserted mask invalidates the suffix.
+      // IDs/counts alone do not prove that the serialized values are unchanged.
+      if (const auto found=stampMetadata_.find(before.objectId);found!=stampMetadata_.end()) {
+        const auto& memo=found->second;
+        const auto storage=before.eraseMasks.storage(),known=memo.masks.storage();
+        if (memo.body==job.body && memo.hashAfterMask.size()==memo.masks.size() &&
+            storage.get()==known.get() && !storage.owner_before(known) && !known.owner_before(storage)) {
+          while (job.mask<memo.masks.size() && job.mask<job.masks.size() &&
+                 job.masks[job.mask]==&std::as_const(memo.masks)[job.mask]) ++job.mask;
+          job.hashes.assign(memo.hashAfterMask.begin(),memo.hashAfterMask.begin()+job.mask);
+        }
+      }
+      if (job.mask) job.hash=job.hashes.back();
+      else for(unsigned char c:job.body){job.hash^=c;job.hash*=16777619U;}
     }
     // Exact immutable owners and pointees are part of the cursor, not just IDs.
     if(job.operation.get()!=operation.get()||job.operation.owner_before(operation)||operation.owner_before(job.operation))return false;

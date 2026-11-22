@@ -1,0 +1,209 @@
+--- a/runtime/render/src/skia_compact_material.cpp
++++ b/runtime/render/src/skia_compact_material.cpp
+@@ -258,14 +258,19 @@
+     if(config.materialVersion==4){
+         builder.uniform("family")=float(config.family);builder.uniform("textureScale")=float(config.textureScale);
+         builder.uniform("wetEdge")=float(config.wetEdge);builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
+-        SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;
+-    }
+-    if(config.algorithmVersion==4||config.materialVersion==3){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;}
++        SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
++        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
++        return;
++    }
++    if(config.algorithmVersion==4||config.materialVersion==3){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
++        if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
++        return;}
+     builder.uniform("family")=float(config.family);
+     builder.uniform("density")=float(config.density);builder.uniform("textureScale")=float(config.textureScale);
+     builder.uniform("deposition")=float(config.deposition);builder.uniform("wetEdge")=float(config.wetEdge);
+     builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
+     SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);
++    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(canvas);
+ }
+ 
+ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -487,6 +487,7 @@
+        basis.transform!=source.record.transform||basis.properties!=source.record.properties)return false;
+     (void)basis.pixels.markGpuUse();auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
+     SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);target->drawImage(pixels.image,float(crop.left()),float(crop.top()),SkSamplingOptions{},&copy);
++    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*target);
+     ++work.bodyPixelHits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();return true;
+ }
+ void SkiaRenderCache::retainBodyPixels(SkCanvas& canvas,const ReferenceTraversalEntry& source,const SkIRect& crop){
+@@ -505,7 +506,9 @@
+     resources::ResourceLease meta(budget,*metadata);auto bodySource=source;bodySource.record.eraseMasks.clear();bodySource.presentationEraseMasks.clear();
+     auto sources=sourcePool->get(bodySource,budget,true);if(!sources)return;
+     auto target=canvas.makeSurface(surface_->imageInfo().makeWH(crop.width(),crop.height()));if(!target)return;
+-    target->getCanvas()->clear(SK_ColorTRANSPARENT);auto image=scratch_->makeImageSnapshot();if(!image)return;
++    target->getCanvas()->clear(SK_ColorTRANSPARENT);
++    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*target->getCanvas());
++    auto image=scratch_->makeImageSnapshot();if(!image)return;
+     target->getCanvas()->drawImage(image,float(-crop.left()),float(-crop.top()));image=target->makeImageSnapshot();if(!image)return;
+     auto material=std::make_shared<Material>();material->body=body;material->command=source.command;
+     material->transform=source.record.transform;material->properties=source.record.properties;material->sources=std::move(*sources);
+@@ -664,7 +667,8 @@
+         const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
+         const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+         if(!pending_){
+-            if(isolated){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
++            if(isolated){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
++                if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*target);}
+             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+             auto job=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,
+                 options.gpuCoverageCandidate,budget,std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,
+@@ -698,6 +702,7 @@
+         if(isolated){
+             SkPaint paint;paint.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
+             composite_->getCanvas()->drawImage(scratch_->makeImageSnapshot(),0,0,SkSamplingOptions{},&paint);
++            if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*composite_->getCanvas());
+         }
+         pending_.reset();bodyDependencies_.erase(entry.record.objectId);++built;++work.rasterizedGroups;
+     }
+@@ -869,6 +874,7 @@
+             if(streamFrame_){
+                 if(exhausted())return yield();
+                 composite_->getCanvas()->drawImage(found->second.image,float(found->second.bounds.left()),float(found->second.bounds.top()));
++                if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*composite_->getCanvas());
+                 found->second.used=tick_;++work.hits;if(auto* execution=RenderExecutionScope::current())execution->reusePixels();++allowance.steps;
+             }
+             continue;
+@@ -936,7 +942,8 @@
+                 if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
+                 const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
+                 auto* target=(directComposite?composite_:scratch_)->getCanvas();
+-                if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);}
++                if(!directComposite){target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
++                    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*target);}
+                 configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+                 const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+                 auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
+@@ -1003,6 +1010,7 @@
+                 compositeTarget->drawImage(scratch_->makeImageSnapshot(),0,0);compositeTarget->restore();
+                 ++work.rasterizedGroups;
+             }
++            if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*compositeTarget);
+         }else if(!stored){
+             // Global shared-budget pressure can deny a previously admitted
+             // object. Restart as streamed composition instead of accumulating
+@@ -1254,7 +1262,9 @@
+ bool SkiaRenderCache::ensureComposite(SkCanvas& canvas,const FramePlan& plan){
+     if(composite_){(void)compositeLease_.markGpuUse();return true;}
+     if(!acquireWorkSurface(canvas,composite_,compositeLease_,true,resources::ResourceClass::kCanonicalFrame))return false;
+-    drawReferenceBackgroundToSkCanvas(*composite_->getCanvas(),plan);return true;
++    drawReferenceBackgroundToSkCanvas(*composite_->getCanvas(),plan);
++    if(auto* execution=RenderExecutionScope::current())execution->recordGpuWork(*composite_->getCanvas());
++    return true;
+ }
+ bool SkiaRenderCache::finishComposite(){
+     const auto bytes=sizeof(PreparedFrameImage)+128;
+--- a/runtime/render/tests/dpr4_render_sync_test.cpp
++++ b/runtime/render/tests/dpr4_render_sync_test.cpp
+@@ -281,16 +281,18 @@
+ }
+ // Actual owner resumes work inside the same execution/lifetime scope used by renderer preflight.
+ // Missing work marking would resolve the ticket as unused and immediately release its pixels.
+-json continuationLifetime(const std::shared_ptr<NativeMetalCompletion>& completion,bool maskOnly){
+-    NativeMetalTarget target(completion);require(target.resize(256,128).code==BackendSubmissionCode::kAccepted,"continuation target");
+-    auto base=pressurePlan(5,maskOnly?65:257,1,1,true,target.generation(),0);auto draw=base.referenceDrawList;
++enum class ContinuationCase { kPressure, kMask, kCachedMaterial, kStagedBackground };
++json continuationLifetime(const std::shared_ptr<NativeMetalCompletion>& completion,ContinuationCase test){
++    const bool maskOnly=test==ContinuationCase::kMask,cached=test==ContinuationCase::kCachedMaterial,staged=test==ContinuationCase::kStagedBackground;
++    NativeMetalTarget target(completion);require(target.resize(cached?512:256,cached?256:128).code==BackendSubmissionCode::kAccepted,"continuation target");
++    auto base=pressurePlan(5,maskOnly?65:257,(cached||staged)?3:1,cached?2:1,true,target.generation(),0);auto draw=base.referenceDrawList;
+     if(maskOnly){auto& entry=draw.entries.back();semantic::SweptCircleMask sweep;
+         for(unsigned n=0;n<512;++n){const double x=95+double(n%20),y=20+double(n%90);
+             sweep.segments.push_back({{{x,y},2},{{x+3,y+2},2},{x+1,y},{x+2,y+1}});}
+         entry.record.eraseMasks={{ObjectId::fromUint64(700),std::move(sweep)}};
+     }
+     FramePlan plan{base.frame,std::move(draw),{},false,true};auto acquired=target.acquire();
+-    auto* canvas=acquired.frame.surface->getCanvas();auto limits=pressureOptions();
++    auto* canvas=acquired.frame.surface->getCanvas();auto limits=pressureOptions();if(staged)limits.maxEntries=1;
+     auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
+     auto geometry=std::make_shared<PreparedGeometryCache>();auto sources=std::make_shared<SourceRetentionPool>();geometry->setRetentionPool(sources);
+     SkiaRenderCache cache;cache.options=limits;cache.budget=budget;cache.sourcePool=sources;cache.preparedGeometry=geometry;
+@@ -299,9 +301,10 @@
+     while(true){PreparationAllowance a;const auto r=cache.prepareBodies(*canvas,plan,a);
+         if(r==SkiaRenderCache::Preparation::kReady)break;require(r==SkiaRenderCache::Preparation::kPending,"continuation metrics");}
+     GpuResourceRetirement retirement;
+-    RenderPreparationBudget one;one.maxCoverageSteps=1;unsigned calls=0;bool tested=false,marked=false,unretired=false;std::size_t pending=0;
++    RenderPreparationBudget one;one.maxCoverageSteps=1;unsigned calls=0;bool tested=false,marked=false,unretired=false;std::size_t pending=0;bool pressureReady=false,lookupChecked=false;unsigned cachedReuses=0;
+     for(;calls<1024&&!tested;++calls){
+         const auto pressureBefore=pressureTestCommands,maskBefore=materialMaskTestDraws;
++        const auto reusesBefore=cache.work.executionPixelReuses;
+         const auto coverageBefore=cache.work.executionGpuTiles,allocationsBefore=cache.work.executionGpuAllocations;
+         {
+             RenderExecutionScope execution(ExecutionPurpose::kCanonical,plan,*acquired.frame.surface,&target,0,true,limits.sharedMaxBytes,cache.work,target.describe().kind);
+@@ -310,10 +313,22 @@
+                 GpuResourceRetirement::canonicalAllocations,GpuResourceRetirement::canonicalReads);
+             require(gpu.ready(),"continuation real lifetime admission");
+             const auto epoch=gpu.epoch();cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance a(one);
+-            const auto status=maskOnly?cache.prepare(*canvas,plan,one,nullptr,nullptr,&a):cache.preparePressureBodies(*canvas,plan,a);
++            const bool materialStep=cached&&pressureReady;
++            if(staged)a.steps=one.maxCoverageSteps; // exhausted by earlier CPU preparation; background still writes first.
++            canvas->save();if(materialStep)canvas->scale(2,2);
++            const auto status=staged?cache.prepareWorkingSet(*canvas,plan,a,nullptr,nullptr,false):
++                (maskOnly||materialStep)?cache.prepare(*canvas,plan,one,nullptr,nullptr,&a):cache.preparePressureBodies(*canvas,plan,a);
++            canvas->restore();
++            if(status!=SkiaRenderCache::Preparation::kPending&&status!=SkiaRenderCache::Preparation::kReady)
++                std::cerr<<"continuation test="<<int(test)<<" call="<<calls<<" status="<<int(status)<<'\n';
++            if(cached&&!materialStep&&status==SkiaRenderCache::Preparation::kReady)pressureReady=true;
+             require(status==SkiaRenderCache::Preparation::kPending||status==SkiaRenderCache::Preparation::kReady,"continuation preparation failed");
+             const auto pressure=pressureTestCommands-pressureBefore,masks=materialMaskTestDraws-maskBefore;
+-            const bool resumed=maskOnly?(masks>0&&pressure==0):(pressure>0&&cache.work.executionGpuTiles==coverageBefore&&cache.work.executionGpuAllocations==allocationsBefore);
++            const bool noNewCoverage=cache.work.executionGpuTiles==coverageBefore&&cache.work.executionGpuAllocations==allocationsBefore;
++            if(cached&&materialStep&&cache.work.executionPixelReuses>reusesBefore)++cachedReuses;
++            const bool resumed=staged?(status==SkiaRenderCache::Preparation::kPending&&pressure==0&&masks==0&&noNewCoverage):cached?(materialStep&&status==SkiaRenderCache::Preparation::kPending&&
++                cachedReuses>1&&cache.work.executionPixelReuses>reusesBefore&&pressure==0&&masks==0&&noNewCoverage):
++                maskOnly?(masks>0&&pressure==0):(pressure>0&&noNewCoverage);
+             if(resumed){
+                 require(status==SkiaRenderCache::Preparation::kPending,"continuation must exercise early return");
+                 marked=execution.gpuWorkRecorded();
+@@ -326,13 +341,34 @@
+             }
+         }
+         if(!tested){completion->context->flushAndSubmit(GrSyncCpu::kYes);retirement.service();}
++        if(cached&&pressureReady&&!lookupChecked){
++            // A ready tile lookup in capture-only mode issues no material draw.
++            RenderExecutionScope execution(ExecutionPurpose::kCanonical,plan,*acquired.frame.surface,&target,0,true,limits.sharedMaxBytes,cache.work,target.describe().kind);
++            execution.bindTargets(cache.executionTargets());
++            SkiaGpuLifetime gpu(retirement,budget,target,completion->context.get(),
++                GpuResourceRetirement::canonicalAllocations,GpuResourceRetirement::canonicalReads);
++            require(gpu.ready(),"lookup-only GPU scope");const auto epoch=gpu.epoch();
++            const auto& entry=plan.referenceDrawList.entries[1];const auto body=cache.readyBody(entry,PreparedConsumer::kCanonical);
++            const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
++            const auto& t=entry.record.transform;const auto& v=plan.referenceDrawList.worldToView;
++            SkMatrix object,view;object.setAll(float(t.a),float(t.c),float(t.tx),float(t.b),float(t.d),float(t.ty),0,0,1);
++            view.setAll(float(v.a),float(v.c),float(v.tx),float(v.b),float(v.d),float(v.ty),0,0,1);
++            canvas->save();canvas->setMatrix(SkMatrix::Concat(SkMatrix::Scale(cached?2:1,cached?2:1),SkMatrix::Concat(view,object)));
++            CompactDeviceGrid grid{0,0,cached?512:256,cached?256:128};
++            CompactStrokeRasterJob lookup(*canvas,stroke.config,stroke.knots,&grid,true,budget,limits.maxEntryBytes,{},true,body);
++            lookup.setCaptureOnly();CompactRasterWork work;const auto reuses=cache.work.executionPixelReuses;
++            lookup.step(*canvas,stroke.config,stroke.knots,stroke.seed,cache.executionTargets(),true,&work);canvas->restore();
++            require(cache.work.executionPixelReuses>reuses&&!execution.gpuWorkRecorded(),"capture-only pixel lookup pretended to draw GPU work");
++            require(gpu.finish()&&budget->gpuEpochRetired(epoch),"lookup-only scope should remain unused");
++            retirement.service();lookupChecked=true;
++        }
+     }
+     // Poll the actual Metal completion; only it may drain the released pixels.
+     completion->context->flushAndSubmit(GrSyncCpu::kYes);completion->service();retirement.service();
+     cache.clear();geometry->clear();cache.maskHistory.reset();retirement.service();target.release();
+     require(budget->pendingGpuEpochCount()==0&&budget->used()==0,"continuation lease final drain");
+-    return {{"consumer",maskOnly?"body-complete-mask-only-early-return":"capture-pressure-continuation"},
+-        {"calls",calls},{"tested",tested},{"workMarked",marked},{"epochUnretiredBeforeService",unretired},
++    return {{"consumer",staged?"staged-pressure-background-yield":cached?"cached-pressure-composite-yield":maskOnly?"body-complete-mask-only-early-return":"capture-pressure-continuation"},
++        {"calls",calls},{"tested",tested},{"cachedReusesBeforeProbe",cachedReuses},{"lookupOnlyChecked",lookupChecked},{"workMarked",marked},{"epochUnretiredBeforeService",unretired},
+         {"pendingPixelBytes",pending},{"lastReleaseBytes",budget->used()},{"pass",tested&&marked&&unretired&&pending>0}};
+ }
+ json maskAllowance(const std::shared_ptr<NativeMetalCompletion>& completion){
+@@ -368,7 +404,7 @@
+             GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
+             completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"Metal context");
+             if(argc>2&&std::string_view(argv[2])=="entry-limit")for(unsigned algorithm:{5U,6U})report["rows"].push_back(geometryEntryLimit(completion,algorithm));
+-            else if(argc>2&&std::string_view(argv[2])=="continuation")for(bool maskOnly:{false,true})report["rows"].push_back(continuationLifetime(completion,maskOnly));
++            else if(argc>2&&std::string_view(argv[2])=="continuation")for(auto test:{ContinuationCase::kPressure,ContinuationCase::kMask,ContinuationCase::kCachedMaterial,ContinuationCase::kStagedBackground})report["rows"].push_back(continuationLifetime(completion,test));
+             else if(argc>2&&std::string_view(argv[2])=="mask-budget")report["rows"].push_back(maskAllowance(completion));
+             else if(argc>2&&std::string_view(argv[2])=="interleaved")report["rows"].push_back(interleavedSource(completion));
+             else if(argc>2&&std::string_view(argv[2])=="oversize")for(unsigned variant:{0U,1U,2U})report["rows"].push_back(oversize(completion,variant));

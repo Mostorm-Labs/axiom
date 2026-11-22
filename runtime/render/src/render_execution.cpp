@@ -74,6 +74,11 @@ void RenderExecutionScope::coverage(SkSurface& surface,bool direct) noexcept {
     if(surface.recordingContext()){++gpu_;++totals_.executionGpuTiles;if(direct){++directGpu_;++totals_.executionDirectGpuTiles;}}
     else{++cpu_;++totals_.executionCpuTiles;if(direct){++directCpu_;++totals_.executionDirectCpuTiles;}}
 }
+void RenderExecutionScope::recordGpuWork(const SkCanvas& canvas) noexcept {
+    // Resumed offscreen draws need a finished callback even when this owner
+    // opportunity neither allocates a tile nor reaches provider publication.
+    if(rootContext_&&canvas.recordingContext()==rootContext_)recordedGpuWork_=true;
+}
 void RenderExecutionScope::unavailable(const ExecutionDecision&,ExecutionReason reason,bool terminal) noexcept {
     reason_=reason;
     if(terminal){rejected_=true;++totals_.executionRejected;}else{pending_=true;++totals_.executionPending;}

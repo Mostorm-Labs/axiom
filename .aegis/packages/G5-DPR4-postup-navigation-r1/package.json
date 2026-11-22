@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-DPR4-postup-navigation-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/g5-post-range-convergence",
+  "execution_worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "path": ".aegis/packages/G5-DPR4-postup-navigation-r1/package.json"
+  },
+  "task_anchor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "execution_ref": "refs/heads/codex/g5-post-range-convergence",
+    "accepted_overlay": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/final-freeze.json",
+      "bytes": 131609,
+      "sha256": "41676dcc33f23bc6afe7578bfaf87115422421411af5028c944a3bb6c4df8b43"
+    },
+    "completed_through": "Scene stamp / DPR4 Render overlay reviewed; old browser logs correlated and time/witness limitations pinned.",
+    "next_action": "DN0 actual owner guard and pass-by-pass work attribution on accepted starting overlay; then DN1 RED and fix, DN2 targeted work reduction, DN3/DN4 validation."
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 3910,
+    "sha256": "aca8da9b3796f463570ab28f962f7ece16365485f3bc24afe479032b2eaaa520"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 8691,
+    "sha256": "46d70cc760064b6c48232faeaf493892a36af096b172125b2c9904766f1a401a"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 4025,
+    "sha256": "49a9e8645ca45efc7cdd3ee4065d79895aed073e06c711f6dfff22d27d31266c"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 2923,
+    "sha256": "f1c1eeec6d642c611f1f1fdf75193b07512a180374203609463001708cde5ed5"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 1122,
+    "sha256": "7c27a34e808ce937c642e3f884485d74aa7dfb22132e536ea105552d940a18be"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

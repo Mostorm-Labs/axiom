@@ -1,0 +1,51 @@
+{
+  "native": {
+    "focusedPassed": 23,
+    "focusedTotal": 23,
+    "command": "out/G5-DPR4-postup-navigation-r1/DN4-focused.json",
+    "ownRows": 8,
+    "ownPassed": 8,
+    "ownResult": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/native-final.json"
+  },
+  "web": {
+    "B": "ordinary-B",
+    "C": "ordinary-C",
+    "sameDriver": true,
+    "sameOperationBytes": 18,
+    "sameFinalSnapshot": true,
+    "sameFullFinalRGBA": true,
+    "canonicalReceipts": true,
+    "gestureContentWrites": {
+      "B": [
+        0,
+        0
+      ],
+      "C": [
+        0,
+        0
+      ]
+    },
+    "feedbackClosed": false
+  },
+  "boundaries": {
+    "contracts": 122,
+    "pass": true,
+    "command": "boundaries-final.json"
+  },
+  "Node": {
+    "passed": 3,
+    "total": 3,
+    "command": "node-render-driver.json"
+  },
+  "Python": {
+    "syntax": true,
+    "command": "python-runner-syntax.json"
+  },
+  "diffCheck": true,
+  "knownPreexistingNotRerun": [
+    "G5CanonicalPreparedCompatibility",
+    "G5TransientDisplayContinuity"
+  ],
+  "priorEvidence": ".aegis/results/G5-DPR4-render-sync-r1/baseline-regression-relink.json",
+  "noFullHistoricalMatrix": "Frozen DN4 scope only; no platform/Gate/P34 claim."
+}

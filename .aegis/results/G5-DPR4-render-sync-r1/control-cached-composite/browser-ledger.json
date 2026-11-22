@@ -1,0 +1,57 @@
+{
+  "runs": [
+    {
+      "task": "G5-DPR4-render-sync-r1",
+      "purpose": "control correctness narrow recheck",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/followup_narrow.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/install-normal/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-B",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/narrow-web",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-final/observation.json"
+      ],
+      "driverSha256": "6d552770d1f6dd0d23cb2bb11aa1d5fb635b2008cd9543be9ab432458405379d",
+      "started": 1795330953.053482,
+      "guardSeconds": 180,
+      "guardRssBytes": 3221225472,
+      "oldBrowserRunsUnchanged": true,
+      "pid": 85859,
+      "exitCode": 0,
+      "seconds": 60.923320055007935,
+      "actualCeilSeconds": 61,
+      "ownedPids": [
+        85859,
+        85861,
+        85867,
+        85868,
+        85869,
+        85870,
+        85872,
+        85874,
+        85875
+      ],
+      "cleanupSurvivors": [],
+      "peakRssBytes": 1641889792
+    }
+  ],
+  "starts": 1,
+  "actualCeilSeconds": 61,
+  "allCleaned": true,
+  "activeWorkers": [],
+  "previousControlFollowupLedger": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/browser-ledger.json",
+    "bytes": 6760,
+    "sha256": "abd1e47f91e228934bb0c25b3b47ead2ff784d64ded08dd1906c173cca14031c"
+  },
+  "originalR1Ledger": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/browser-ledger.json",
+    "bytes": 9378,
+    "sha256": "9ea0407912d463f3582c8cf43be15c70da75594a2d8d7c90ff5564eaff19eddc"
+  },
+  "previousLedgersUnchanged": true,
+  "aggregateDocumentedOwnedStarts": 13,
+  "aggregateDocumentedActualCeilSeconds": 1855,
+  "scope": "One candidate-only correctness continuation using sealed clean r1 reference; no full long performance replay."
+}

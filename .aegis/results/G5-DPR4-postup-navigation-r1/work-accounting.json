@@ -1,0 +1,529 @@
+{
+  "rows": [
+    {
+      "lane": "up-immediate-pan",
+      "canonicalPressure": {
+        "visited": 177836,
+        "queued": 80803,
+        "range_calls": 5569,
+        "direct_calls": 0,
+        "enqueue_ns": 159500000,
+        "commandProducingOpportunities": 751
+      },
+      "canonicalWork": {
+        "coverage_steps": 49958,
+        "gpu_coverage_tiles": 876,
+        "cpu_coverage_tiles": 0,
+        "render_alloc_denials": 0,
+        "history_draw_primitives": 0,
+        "mask_primitive_draws": 0,
+        "prepare_resets": 1
+      },
+      "resetReasonsAcrossWindow": {
+        "cache-site-245": 2
+      },
+      "observedYieldDeviceTileIdentities": [
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 2,
+          "tileX": 2048,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 3,
+          "tileX": 1536,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 4,
+          "tileX": 768,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 5,
+          "tileX": 1536,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 6,
+          "tileX": 1280,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 7,
+          "tileX": 3072,
+          "tileY": 1792,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 8,
+          "tileX": 3328,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 9,
+          "tileX": 3328,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 10,
+          "tileX": 3584,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 11,
+          "tileX": 3584,
+          "tileY": 2304,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 12,
+          "tileX": 3072,
+          "tileY": 2560,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 14,
+          "tileX": 0,
+          "tileY": 0,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "17",
+          "scene": "17",
+          "camera": "1",
+          "targetEpoch": "1",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          "entryCursor": 15,
+          "tileX": 1792,
+          "tileY": 2560,
+          "yieldCount": 1
+        }
+      ],
+      "terminalMaterialProgress": [
+        {
+          "atMs": 25708.9,
+          "line": "AXIOM_IF_EVENT t_ns=25708900000 nc_prepare role=transient phase=material code=1 steps=5 max_groups=2 elapsed_us=2400"
+        },
+        {
+          "atMs": 25711.7,
+          "line": "AXIOM_IF_EVENT t_ns=25711700000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1400"
+        },
+        {
+          "atMs": 25722.1,
+          "line": "AXIOM_IF_EVENT t_ns=25722100000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1500"
+        },
+        {
+          "atMs": 25737.6,
+          "line": "AXIOM_IF_EVENT t_ns=25737600000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1400"
+        },
+        {
+          "atMs": 25755.1,
+          "line": "AXIOM_IF_EVENT t_ns=25755100000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1500"
+        },
+        {
+          "atMs": 25773.1,
+          "line": "AXIOM_IF_EVENT t_ns=25773100000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1700"
+        },
+        {
+          "atMs": 25789.9,
+          "line": "AXIOM_IF_EVENT t_ns=25789900000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1700"
+        },
+        {
+          "atMs": 25806.5,
+          "line": "AXIOM_IF_EVENT t_ns=25806500000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1900"
+        },
+        {
+          "atMs": 25823.1,
+          "line": "AXIOM_IF_EVENT t_ns=25823100000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1600"
+        },
+        {
+          "atMs": 25839.9,
+          "line": "AXIOM_IF_EVENT t_ns=25839900000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1700"
+        },
+        {
+          "atMs": 25854.9,
+          "line": "AXIOM_IF_EVENT t_ns=25854900000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1600"
+        },
+        {
+          "atMs": 25871.1,
+          "line": "AXIOM_IF_EVENT t_ns=25871100000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1500"
+        },
+        {
+          "atMs": 25889.4,
+          "line": "AXIOM_IF_EVENT t_ns=25889400000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1300"
+        },
+        {
+          "atMs": 25905.2,
+          "line": "AXIOM_IF_EVENT t_ns=25905200000 nc_prepare role=transient phase=material code=1 steps=54 max_groups=2 elapsed_us=1500"
+        },
+        {
+          "atMs": 25922.8,
+          "line": "AXIOM_IF_EVENT t_ns=25922800000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1200"
+        },
+        {
+          "atMs": 25938.9,
+          "line": "AXIOM_IF_EVENT t_ns=25938900000 nc_prepare role=transient phase=material code=0 steps=8 max_groups=2 elapsed_us=800"
+        }
+      ]
+    },
+    {
+      "lane": "up-immediate-pinch",
+      "canonicalPressure": {
+        "visited": 237636,
+        "queued": 92631,
+        "range_calls": 7441,
+        "direct_calls": 0,
+        "enqueue_ns": 193800000,
+        "commandProducingOpportunities": 868
+      },
+      "canonicalWork": {
+        "coverage_steps": 75887,
+        "gpu_coverage_tiles": 1331,
+        "cpu_coverage_tiles": 0,
+        "render_alloc_denials": 0,
+        "history_draw_primitives": 0,
+        "mask_primitive_draws": 0,
+        "prepare_resets": 1
+      },
+      "resetReasonsAcrossWindow": {
+        "cache-site-245": 2
+      },
+      "observedYieldDeviceTileIdentities": [
+        {
+          "semantic": "18",
+          "scene": "18",
+          "camera": "26",
+          "targetEpoch": "2",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            -48,
+            0
+          ],
+          "entryCursor": 2,
+          "tileX": 1536,
+          "tileY": 768,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "18",
+          "scene": "18",
+          "camera": "26",
+          "targetEpoch": "2",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            -48,
+            0
+          ],
+          "entryCursor": 3,
+          "tileX": 2816,
+          "tileY": 2048,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "18",
+          "scene": "18",
+          "camera": "26",
+          "targetEpoch": "2",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            -48,
+            0
+          ],
+          "entryCursor": 5,
+          "tileX": 768,
+          "tileY": 2304,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "18",
+          "scene": "18",
+          "camera": "26",
+          "targetEpoch": "2",
+          "transform": [
+            1,
+            0,
+            0,
+            1,
+            -48,
+            0
+          ],
+          "entryCursor": 6,
+          "tileX": 3072,
+          "tileY": 2304,
+          "yieldCount": 1
+        },
+        {
+          "semantic": "18",
+          "scene": "18",
+          "camera": "51",
+          "targetEpoch": "3",
+          "transform": [
+            1.5,
+            0,
+            0,
+            1.5,
+            -379.5,
+            -224.999985
+          ],
+          "entryCursor": 8,
+          "tileX": 0,
+          "tileY": 0,
+          "yieldCount": 1
+        }
+      ],
+      "terminalMaterialProgress": [
+        {
+          "atMs": 40868.3,
+          "line": "AXIOM_IF_EVENT t_ns=40868300000 nc_prepare role=transient phase=material code=1 steps=8 max_groups=2 elapsed_us=1800"
+        },
+        {
+          "atMs": 40899.3,
+          "line": "AXIOM_IF_EVENT t_ns=40899300000 nc_prepare role=transient phase=material code=1 steps=1 max_groups=2 elapsed_us=2800"
+        },
+        {
+          "atMs": 40906.2,
+          "line": "AXIOM_IF_EVENT t_ns=40906200000 nc_prepare role=transient phase=material code=1 steps=1 max_groups=2 elapsed_us=2700"
+        },
+        {
+          "atMs": 40923.8,
+          "line": "AXIOM_IF_EVENT t_ns=40923800000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=3200"
+        },
+        {
+          "atMs": 40939.2,
+          "line": "AXIOM_IF_EVENT t_ns=40939200000 nc_prepare role=transient phase=material code=1 steps=5 max_groups=2 elapsed_us=2600"
+        },
+        {
+          "atMs": 40955.9,
+          "line": "AXIOM_IF_EVENT t_ns=40955900000 nc_prepare role=transient phase=material code=1 steps=4 max_groups=2 elapsed_us=1600"
+        },
+        {
+          "atMs": 40973.2,
+          "line": "AXIOM_IF_EVENT t_ns=40973200000 nc_prepare role=transient phase=material code=1 steps=16 max_groups=2 elapsed_us=3000"
+        },
+        {
+          "atMs": 40988.8,
+          "line": "AXIOM_IF_EVENT t_ns=40988800000 nc_prepare role=transient phase=material code=1 steps=58 max_groups=2 elapsed_us=2200"
+        },
+        {
+          "atMs": 41005.3,
+          "line": "AXIOM_IF_EVENT t_ns=41005300000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=2000"
+        },
+        {
+          "atMs": 41020.7,
+          "line": "AXIOM_IF_EVENT t_ns=41020700000 nc_prepare role=transient phase=material code=1 steps=9 max_groups=2 elapsed_us=1600"
+        },
+        {
+          "atMs": 41037.9,
+          "line": "AXIOM_IF_EVENT t_ns=41037900000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1800"
+        },
+        {
+          "atMs": 41054.9,
+          "line": "AXIOM_IF_EVENT t_ns=41054900000 nc_prepare role=transient phase=material code=1 steps=4 max_groups=2 elapsed_us=1700"
+        },
+        {
+          "atMs": 41071.7,
+          "line": "AXIOM_IF_EVENT t_ns=41071700000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=2100"
+        },
+        {
+          "atMs": 41088.7,
+          "line": "AXIOM_IF_EVENT t_ns=41088700000 nc_prepare role=transient phase=material code=1 steps=18 max_groups=2 elapsed_us=1500"
+        },
+        {
+          "atMs": 41105.2,
+          "line": "AXIOM_IF_EVENT t_ns=41105200000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1900"
+        },
+        {
+          "atMs": 41122.0,
+          "line": "AXIOM_IF_EVENT t_ns=41122000000 nc_prepare role=transient phase=material code=1 steps=9 max_groups=2 elapsed_us=1900"
+        },
+        {
+          "atMs": 41138.5,
+          "line": "AXIOM_IF_EVENT t_ns=41138500000 nc_prepare role=transient phase=material code=1 steps=64 max_groups=2 elapsed_us=1900"
+        },
+        {
+          "atMs": 41154.9,
+          "line": "AXIOM_IF_EVENT t_ns=41154900000 nc_prepare role=transient phase=material code=1 steps=4 max_groups=2 elapsed_us=1600"
+        }
+      ]
+    }
+  ],
+  "actualNativeReduction": {
+    "before": "native-alpha.json ordered-clear-ink-only: 825 pressure commands in 9 opportunities",
+    "after": "final-mechanism-green.json ordered-clear-ink-only: 0 pressure commands in 1 opportunity; independent full null-cache pixels exactly equal"
+  },
+  "remaining": [
+    "Canonical target matrix/grid changes at pan/pinch. Counts are actual queued procedural draws, not prepared knot compilation.",
+    "Ready pixel bypass exists under full body/context/matrix/grid/material identity. Integer-translation grid aliasing has no independent correctness proof in this package and was left unchanged.",
+    "Yield tile identities are cursor observations, not complete per-primitive command stamps; repeated observations can mean continued work. They do not prove duplicate replay.",
+    "GPU API flush/enqueue durations are CPU API time. Hardware duration is unknown. Inter-RAF wall time remains unattributed.",
+    "Terminal material and nonempty exposure still exceed the fixed active-gesture opportunity window. No new budget or cadence policy was introduced."
+  ]
+}

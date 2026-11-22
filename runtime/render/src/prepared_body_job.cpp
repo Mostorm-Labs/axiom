@@ -23,6 +23,20 @@ std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const Refere
     std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage,const ValidationPressure& pressure){
     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source).content.get().stroke;
     const auto count=stroke.knots.size();
+    if(stroke.config.algorithmVersion==5||stroke.config.algorithmVersion==6){
+        const auto groups=count/32+(count%32!=0);
+        const auto fixed=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+512;
+        if(fixed>cap||cap-fixed<sizeof(double)||count>(cap-fixed)/sizeof(double)-1)return {};
+        const auto metrics=fixed+(count+1)*sizeof(double);
+        if(groups>(cap-metrics)/sizeof(PreparedNavigationGeometry::Group))return {};
+        const auto bytes=metrics+groups*sizeof(PreparedNavigationGeometry::Group);
+        auto token=reserveWithSourcePressure(budget,pressure,resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};
+        resources::ResourceLease reservation(budget,*token);auto result=std::make_shared<PreparedNavigationGeometry>();
+        result->distances_.reserve(count+1);result->ribbonGroups_.reserve(groups);
+        result->source_=source;result->sourceLeases_=std::move(sources);result->ready_=false;
+        result->lease_=std::move(reservation);result->bytes_=bytes;result->usage_=usage;usage->bytes+=bytes;
+        result->job_=std::make_unique<PreparedBodyJob>(stroke.config);return result;
+    }
     if(baseBytes>cap)return {};
     const auto patchCount=ink::CompactContourCompiler::maxPatches(count);
     const auto capCount=ink::CompactContourCompiler::maxCaps(count);
@@ -60,14 +74,28 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
     const auto& knots=stroke.knots;
     ++work.advances;
     if(phase_==Phase::kMetrics){
+        const bool material=stroke.config.algorithmVersion==5||stroke.config.algorithmVersion==6;
         if(cursor_==0)body.exactValidationValid_=foundation::validInkBrushConfig(stroke.config,true)&&!knots.empty()&&knots.size()<=262144;
+        if(material&&cursor_==0)body.distances_.push_back(0);
         const auto end=std::min(cursor_+32,knots.size());
         for(auto i=cursor_;i<end;++i){const auto& k=knots[i];const auto radius=ink::compactRadius(stroke.config,k.pressure);
             body.exactValidationValid_=body.exactValidationValid_&&std::isfinite(k.x)&&std::isfinite(k.y);++work.validationKnots;
             body.support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));++work.supportKnots;
-            if(i){body.replayDistance_+=std::hypot(k.x-knots[i-1].x,k.y-knots[i-1].y);++work.distanceInputs;}}
+            if(i){body.replayDistance_+=std::hypot(k.x-knots[i-1].x,k.y-knots[i-1].y);++work.distanceInputs;}
+            if(material){
+                body.distances_.push_back(body.replayDistance_);
+                if(i%32==0)body.ribbonGroups_.push_back({SkRect::MakeEmpty(),i,i});
+                auto& group=body.ribbonGroups_.back();group.bounds.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
+                if(i){const auto& prev=knots[i-1];const auto r=std::max(radius,ink::compactRadius(stroke.config,prev.pressure));
+                    group.bounds.join(SkRect::MakeLTRB(float(std::min(prev.x,k.x)-r),float(std::min(prev.y,k.y)-r),float(std::max(prev.x,k.x)+r),float(std::max(prev.y,k.y)+r)));}
+                group.end=i+1;
+            }}
         work.maxAdvanceKnots=std::max<std::uint64_t>(work.maxAdvanceKnots,end-cursor_);cursor_=end;
-        if(cursor_==knots.size()){body.exactValidationComplete_=true;cursor_=0;phase_=Phase::kCompile;}return false;
+        if(cursor_==knots.size()){
+            body.exactValidationComplete_=true;
+            if(material){body.ready_=true;phase_=Phase::kDone;++work.builds;return true;}
+            cursor_=0;phase_=Phase::kCompile;
+        }return false;
     }
     if(phase_==Phase::kCompile){
         emitted_.patches.clear();emitted_.caps.clear();blockKnot_=cursor_;blockCount_=std::min(std::size_t(32),knots.size()-cursor_);

@@ -1,0 +1,169 @@
+{
+  "schema": "axiom-scoped-control-correctness-followup-v1",
+  "task_id": "G5-DPR4-render-sync-r1",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "classification": "CONTROL_CORRECTNESS_REGRESSIONS_FIXED_WITH_EXISTING_PERFORMANCE_FINDING",
+  "sourceRevision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "branch": "codex/g5-post-range-convergence",
+  "worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "indexEmpty": true,
+  "commitPushPerformed": false,
+  "GateP34PerformancePassIssued": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/packages/G5-DPR4-render-sync-r1/package.json",
+    "bytes": 2531,
+    "sha256": "40926f14239ff221d7ff22d1e4ace3eff7391fee6fa0fb0d27828ca1d6e8a61b"
+  },
+  "previousR1": {
+    "result": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/result.json",
+      "bytes": 13664,
+      "sha256": "1bfb56bdb327a9fe8c980afd530ac454a31828ae421aca3180152a9e3bd55b1f"
+    },
+    "manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/artifact-manifest.json",
+      "bytes": 187719,
+      "sha256": "6cfe6967b9008799d57651faa4cc9bcbba59e8609308ef5f4eab3c6a6f1a2c09"
+    },
+    "retainedSourcesAndBuilds": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/r1-build-preservation.json",
+      "bytes": 9474,
+      "sha256": "a6b3bbf0c4c553c84d955cc94fc43dffdd0c7cecfa02f7e1b2ca1b9023d58faf"
+    },
+    "preservedPerformanceSDK": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+    "performanceMetricsApplyOnlyToOriginalBuild": true
+  },
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/source-manifest.json",
+    "bytes": 3487,
+    "sha256": "b414381bf23be30eb538aeec1b70f92c9d0663f9d6a07753eebba9874ff6113d"
+  },
+  "deltaFromR1": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/source-delta-from-r1.patch",
+    "bytes": 28691,
+    "sha256": "c3a2f54b9c3b79b9852c1d5202914e928d02d685e51cbd3f31e52ae0992e07a3"
+  },
+  "sourceSDKFreeze": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/narrow-freeze.json",
+    "bytes": 131789,
+    "sha256": "52f95990d96a6eb389e15e89427c8c29060fff1547d79f8b1d6505cd5e05b8d6"
+  },
+  "sourceAggregate": "423b33b42877c7f4445d975bffd6a14ff958fee81e1e30115dc8493fcc00eaae",
+  "verification": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/verification-summary.json",
+    "bytes": 6190,
+    "sha256": "0bef10f2b3993d94c89b93c914b5a755192f8e4b60306a5a6b05da0b8ffb0249"
+  },
+  "commands": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/command-ledger.json",
+    "bytes": 11594,
+    "sha256": "1296c3f8ab02f8d23e2616d5df77a4aa7860f93e2ab16080bc346fa435eea259"
+  },
+  "browserLedger": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/browser-ledger.json",
+    "bytes": 6760,
+    "sha256": "abd1e47f91e228934bb0c25b3b47ead2ff784d64ded08dd1906c173cca14031c"
+  },
+  "rawBuffers": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/raw-manifest.json",
+    "bytes": 5281,
+    "sha256": "3eaa113636c68028f88bd0262eb5aa7d62bd1c567315ca9c6aeff48c91d97a37"
+  },
+  "validation": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/validation.json",
+    "bytes": 772,
+    "sha256": "905cd4bf716efb17c48a9e70455efca144716af8f59be9e6f6d5856899ba8618"
+  },
+  "scope": {
+    "owners": "PreparedGeometryCache/PreparedBodyJob and existing RenderExecutionScope GPU work witness. Existing renderer queue and completion architecture unchanged.",
+    "productionFiles": [
+      "runtime/render/src/skia_prepared_geometry.cpp",
+      "runtime/render/src/render_execution.hpp",
+      "runtime/render/src/render_execution.cpp",
+      "runtime/render/src/skia_compact_material.cpp",
+      "runtime/render/src/skia_render_cache.cpp"
+    ],
+    "publicAPIChanged": false,
+    "v4PreparationContractChanged": false,
+    "budgetsChanged": false,
+    "SDKInteractionSceneOperationHistoryBrushChanged": false,
+    "thirdPartyRebuilt": false
+  },
+  "correctness": {
+    "entryLimit": {
+      "case": "v5 and v6,40000 knots,1MiB entry,32MiB optional,96MiB shared",
+      "before": "first call rejected canonical body cannot fit preparation capacity",
+      "after": "both313 calls,one present,maximum128 commands per call,independent null-cache pixels exact; shared pressure retry and source+metrics charged >1MiB;32-knot metrics advances."
+    },
+    "continuation": {
+      "cases": [
+        "resumed capture tile pressure",
+        "bodyComplete historical-mask-only early return"
+      ],
+      "before": "gpuWorkRecorded=false;epoch incorrectly completed unused;pending pixel bytes0",
+      "after": "actual draw sites mark GPU work;epoch unresolved before callback service;131072/283860 pixel bytes retained until real Metal completion,then all leases drain."
+    }
+  },
+  "ordinaryWeb": {
+    "status": "CORRECTNESS_OBSERVED",
+    "artifactsIdentical": [
+      "one new erasure Operation",
+      "final857085-byte Snapshot",
+      "final37440000-byteRGBA"
+    ],
+    "generation": "19",
+    "build": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/install-normal/js",
+    "originalR1ComparisonRetained": true,
+    "performancePass": false
+  },
+  "browser": {
+    "followupGuardedStarts": 4,
+    "followupActualCeilSeconds": 422,
+    "allCleaned": true,
+    "oldStarts": 8,
+    "oldCeilSeconds": 1372,
+    "newMetricsMustNotRelabelR1Performance": true
+  },
+  "liveLogs": {
+    "policy": "append-only mutable, frozen prefix/snapshot only",
+    "r1LogPrefix": [
+      {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/review-demo.log",
+        "classification": "LIVE_APPEND_ONLY_LOG",
+        "frozenPrefix": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/r1-review-demo-frozen-prefix.log",
+          "bytes": 395,
+          "sha256": "2a1e6feba8b93f6be5a875d31620b79a6e2e2b404e4d9083a4fd9176a23b08f3"
+        },
+        "currentBytes": 467
+      }
+    ],
+    "newLiveLog": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/demo-4356.log",
+    "excludedFromImmutableManifest": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4356/example.html",
+    "pid": 82704,
+    "SDK": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/install-normal/js",
+    "diagnostics": false,
+    "qualification": false,
+    "mutableLiveLog": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/demo-4356.log",
+    "oldDemosPreserved": [
+      4351,
+      4352,
+      4353,
+      4354,
+      4355
+    ]
+  },
+  "remainingFindings": [
+    "Original r1 Up→qualified camera wait13.0/16.5s and3s/5s target unmet remain. No new whole performance matrix or claim for this build.",
+    "Two native baseline failures and one historical Node fixture gap remain separately classified.",
+    "Physical scanout and hardware GPU timing remain unmeasured."
+  ],
+  "notification": {
+    "target": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+    "requiredAfterMaterialization": true
+  },
+  "manifest": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/artifact-manifest.json"
+}

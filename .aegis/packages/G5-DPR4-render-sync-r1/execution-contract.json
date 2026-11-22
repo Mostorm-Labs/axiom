@@ -1,0 +1,85 @@
+{
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "Reconcile accepted dirty starting overlay and exact current Render/r3 source before mutation.",
+        "Demonstrate current synchronous mechanism. Implement the smallest justified Render-owner repair, with real owner RED before production mutation.",
+        "Keep execution through verification and reviewable result, including honest latency findings."
+      ],
+      "authorized_scope": [
+        "runtime/render/src/",
+        "runtime/render/include/canvas/render/ only existing private implementation and diagnostics",
+        "runtime/render/tests/",
+        "runtime/render/CMakeLists.txt",
+        "verification/runners/g5/dpr4_render_sync/",
+        ".aegis/packages/G5-DPR4-render-sync-r1/",
+        ".aegis/results/G5-DPR4-render-sync-r1/",
+        "out/G5-DPR4-render-sync-r1/"
+      ],
+      "preserved_work": "Current 7d3ea0aa plus exact accepted Scene stamp overlay. Existing worktrees, r3 dirty source/evidence and Demos4351/4352/4353 stay available. A safe new codex worktree is allowed only with exact overlay reconciliation.",
+      "forbidden_changes": [
+        "Wholesale import of unaccepted r3 overlay",
+        "New renderer or canonical/selection/history owner",
+        "OperationEngine, algorithms/schema/wire or public SDK APIs changes",
+        "Input admission or Interaction quiet-threshold changes to mask Render cost",
+        "Cache budget/profile increase as the performance repair",
+        "Worker-count or threading/platform expansion",
+        "Fresh third-party dependency compilation or lock changes",
+        "Git commit/push/tag unless separately requested in the current task",
+        "Automatic replacement of user Demo or deletion of prior evidence"
+      ]
+    },
+    "tests": {
+      "required_obligations": [
+        "DS0",
+        "DS1 when reducible mechanism is proven",
+        "DS2 for every changed path",
+        "DS3",
+        "DS4"
+      ],
+      "corroborative": [
+        "Full native/Node suite if existing fixtures/build permit. Do not widen the package to repair unrelated test definitions."
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": []
+    },
+    "evidence": {
+      "blocking": [
+        "Exact starting/final source and delta, focused actual-owner RED/GREEN or disproof, affected correctness and current ordinary Web observations, commands and known failures."
+      ],
+      "corroborative": [
+        "Historical r3 statistics, unrelated existing full-suite data and proxy activity metrics."
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "DS0 completed.",
+        "Any justified narrow repair verified against DS1/DS2, or explicit evidence that a narrow production change is unjustified/outside this scope.",
+        "DS3/DS4 completed or genuine external blocker documented with valid work preserved.",
+        "Reviewer-accessible local result and binding manifest exist.",
+        "Notify control chat with exact paths and findings."
+      ],
+      "scope": "READY_FOR_CONTROL_REVIEW with measured findings, no implied overall G5/Gate/performance PASS."
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "EXECUTION_DIVERGENCE",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "UNRESOLVED_CORRECTNESS_REGRESSION",
+        "NEW_HIGH_IMPACT_FAILURE_REQUIRING_UPSTREAM_DECISION"
+      ],
+      "ordinary_failures": "Diagnose and fix recoverable build/fixture/driver issues within scope using available accepted inputs. Scope-neutral implementation choices do not require new approval."
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "notify_control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+      "notification_required": true
+    }
+  },
+  "design_preflight": "Record owner/prepare/progress/publication/retry/cancel flow for new retained state, then continue autonomously when semantic decisions are resolved. No additional human plan approval step.",
+  "resource_practice": "Run browser and native GPU work serially, reuse existing immutable SDK builds, use bounded guards with preserved partial observations, keep artifacts concise and gzip large raw pixels. Historical r3 sampling ceilings are historical facts, not authorization limits for this new package."
+}

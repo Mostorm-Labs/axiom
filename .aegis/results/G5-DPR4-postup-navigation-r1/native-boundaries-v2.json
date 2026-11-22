@@ -1,0 +1,118 @@
+{
+  "pass": false,
+  "rows": [
+    {
+      "calls": 1,
+      "case": "equal-final-same-owner",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "calls": 1,
+      "case": "committed-tail-pan",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "calls": 1,
+      "case": "committed-tail-pinch",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "case": "wrong-query-pose-provider-generation-quota-recovery",
+      "leaseFinalDrain": true,
+      "pass": true,
+      "pendingNoWrite": true,
+      "recoveryCalls": 65
+    },
+    {
+      "calls": 2,
+      "case": "retained-overlap-nonempty-exposure",
+      "exposedInteriorMaximumDifference": 0,
+      "knotSteps": 0,
+      "mismatches": [
+        [
+          31,
+          0,
+          0,
+          207,
+          255
+        ],
+        [
+          31,
+          0,
+          2,
+          48,
+          0
+        ],
+        [
+          31,
+          1,
+          0,
+          191,
+          255
+        ],
+        [
+          31,
+          1,
+          2,
+          64,
+          0
+        ],
+        [
+          31,
+          2,
+          0,
+          191,
+          255
+        ],
+        [
+          31,
+          2,
+          2,
+          64,
+          0
+        ],
+        [
+          31,
+          3,
+          0,
+          191,
+          255
+        ],
+        [
+          31,
+          3,
+          2,
+          64,
+          0
+        ]
+      ],
+      "overlapMaximumDifference": 64,
+      "pass": false,
+      "retainedFraction": 0.9375,
+      "seamOpaque": true,
+      "tilesBuilt": 2
+    }
+  ],
+  "task": "G5-DPR4-postup-navigation-r1"
+}

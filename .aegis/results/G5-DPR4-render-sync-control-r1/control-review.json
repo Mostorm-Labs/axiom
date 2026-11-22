@@ -1,0 +1,155 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "created_utc": "2026-11-22T07:10:10.989931+00:00",
+  "task_id": "G5-DPR4-render-sync-r1",
+  "scope": "DPR4 synchronous Render work and correctness of cooperative continuation",
+  "verdict": "PASS_WITH_FINDINGS",
+  "candidateUse": "LOCAL_TRIAL",
+  "publication": "LOCAL_UNCOMMITTED",
+  "worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "branch": "codex/g5-post-range-convergence",
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "bindings": {
+    "package": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/packages/G5-DPR4-render-sync-r1/package.json",
+      "bytes": 2531,
+      "sha256": "40926f14239ff221d7ff22d1e4ace3eff7391fee6fa0fb0d27828ca1d6e8a61b"
+    },
+    "finalResult": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/result.json",
+      "bytes": 7963,
+      "sha256": "34fc443e2bd289d0855789124bb553e54c9e3fc45587f4a3477e39b6296953ed"
+    },
+    "finalSourceDelta": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/source-delta.patch",
+      "bytes": 18399,
+      "sha256": "4b16cb899e9de8e65bbafab2e96d9e7e97585c3ea71750bf19d92f618419a221"
+    },
+    "finalArtifactManifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/artifact-manifest.json",
+      "bytes": 113892,
+      "sha256": "99bb6e7794381f6feef17ade112927d2433e97b76e3b95e7e705fe218ee0e8f2"
+    },
+    "finalSourceSdkFreeze": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/final-freeze.json",
+      "bytes": 131609,
+      "sha256": "41676dcc33f23bc6afe7578bfaf87115422421411af5028c944a3bb6c4df8b43"
+    },
+    "independentIdentity": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-control-r1/final-review/identity-review.json",
+      "bytes": 613,
+      "sha256": "e18166727a765e6b834f0dc35b599fda64f6913578d8025d43711939f895a521"
+    },
+    "independentNative": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-control-r1/final-review/native-review.json",
+      "bytes": 7860,
+      "sha256": "d88d14beca4e27c3f80a7107d694c253e9e01f29222ebdd5777089bb8ef1f123"
+    },
+    "sameFixtureCounterfactual": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/same-fixture-counterfactual-red.json",
+      "bytes": 1385,
+      "sha256": "79ab885908742f2229ae45e9c4d6299499f0865fddd1f7dba74db0435f2ba214"
+    },
+    "finalContinuation": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-control-r1/final-review/G5Dpr4RenderSync-continuation.json",
+      "bytes": 1389,
+      "sha256": "a33f62adcd88ade3b521ea969574d46211a2f28a5cb05f20fbde4b7ac8b16b23"
+    },
+    "finalEntryLimit": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-control-r1/final-review/G5Dpr4RenderSync-entry-limit.json",
+      "bytes": 571,
+      "sha256": "7a66e68804bfed7d6fecde856cc9005cc7e450ed40b4d60be2f235f8d9c51305"
+    },
+    "ordinaryWebCorrectness": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/narrow-web/observation.json",
+      "bytes": 36312,
+      "sha256": "5d0b51224b1876e54c2f4174c3a69912a7becf32f17a9a036102903c57234dad"
+    }
+  },
+  "verification": {
+    "independentNativePassed": 14,
+    "independentNativeTotal": 14,
+    "boundaries": "Runtime module boundary check passed (122 contract files)",
+    "diffCheck": "PASS",
+    "expandedNativePassed": 46,
+    "expandedNativeTotal": 48,
+    "existingNativeFailures": [
+      "G5CanonicalPreparedCompatibility",
+      "G5TransientDisplayContinuity"
+    ],
+    "historicalNodeSdkFixture": "MISSING",
+    "finalWebArtifactsByteIdentical": true,
+    "finalWebReceipt": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "5b5e4ae4336c5c0507d8bb85f9e68d79",
+      "ordinal": "19",
+      "presentedGeneration": "19",
+      "runtimeEpoch": "1"
+    },
+    "demo": "http://127.0.0.1:4357/example.html"
+  },
+  "performance": {
+    "status": "TARGET_UNMET_WITH_R1_NAVIGATION_REGRESSION",
+    "samples": [
+      {
+        "sample": "matched-B",
+        "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-B/js",
+        "observation": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-B/observation.json",
+          "bytes": 1680950,
+          "sha256": "6f37d0d753ad3cbd44d8d4000a230df9b83377a5379311bf11d97451d522e1a1"
+        },
+        "rows": [
+          {
+            "phase": "up-immediate-pan",
+            "maxSdkRafMs": 7854.4,
+            "upToQualifiedCameraFrameMs": 8836.8,
+            "outsideObservedSdkRafMs": 588.6,
+            "touchContactsAdmitted": 2,
+            "gestureVisibleContentWrites": 0
+          },
+          {
+            "phase": "up-immediate-pinch",
+            "maxSdkRafMs": 8827.1,
+            "upToQualifiedCameraFrameMs": 10113.5,
+            "outsideObservedSdkRafMs": 561.5,
+            "touchContactsAdmitted": 2,
+            "gestureVisibleContentWrites": 0
+          }
+        ]
+      },
+      {
+        "sample": "matched-C-review",
+        "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+        "observation": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-C-review/observation.json",
+          "bytes": 2490590,
+          "sha256": "8d20a25bb88559dc458e7cf56fe1fca39703f35f6339d8dd6eb7ba04cbb1b668"
+        },
+        "rows": [
+          {
+            "phase": "up-immediate-pan",
+            "maxSdkRafMs": 21.6,
+            "upToQualifiedCameraFrameMs": 13029.8,
+            "outsideObservedSdkRafMs": 11791.0,
+            "touchContactsAdmitted": 2,
+            "gestureVisibleContentWrites": 0
+          },
+          {
+            "phase": "up-immediate-pinch",
+            "maxSdkRafMs": 92.9,
+            "upToQualifiedCameraFrameMs": 16462.9,
+            "outsideObservedSdkRafMs": 13289.9,
+            "touchContactsAdmitted": 2,
+            "gestureVisibleContentWrites": 0
+          }
+        ]
+      }
+    ],
+    "finalBuildVerification": "Ordinary Web correctness-only pair",
+    "hardwareGpuElapsedMs": null,
+    "physicalInputToPixelMs": null,
+    "nextFocus": "First correct camera feedback while contacts are active, then qualified recovery. Attribute cold device-grid work, retained coverage and mask reuse, and the gaps between Render opportunities."
+  }
+}

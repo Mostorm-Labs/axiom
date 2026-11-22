@@ -1,0 +1,217 @@
+{
+  "schema": "axiom-scoped-implementation-return-v1",
+  "task": "G5-DPR4-postup-navigation-r1",
+  "status": "BLOCKED",
+  "blocker": "UNMET_FEEDBACK_WITH_SCOPED_FINDINGS",
+  "returnSurface": "CONTROL_REVIEW",
+  "continueExecution": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/packages/G5-DPR4-postup-navigation-r1/package.json",
+    "bytes": 2640,
+    "sha256": "bf284ba1d12792282df3d4d14c530aa246403e27b9089514609abb1dc6b81e77"
+  },
+  "repository": {
+    "fullName": "Mostorm-Labs/axiom",
+    "worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "branch": "codex/g5-post-range-convergence",
+    "HEAD": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "dirtyOverlayPreserved": true,
+    "indexEmpty": true,
+    "commitPushTag": false
+  },
+  "sourceAggregate": "c3e9c4256ddaa4670598151d465c70edb63b5fc125aa42ad718f71f18af437a5",
+  "SDKAggregate": "16b2ea9241667bb5953b03ecb719c0b0a5b77a4571420b184a5353a8d7f7386d",
+  "SDKWasmSha256": "02febe2870df8502210b868f590710a7777963f3ccfd77e4294fd81d51440463",
+  "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+  "evidence": {
+    "README.md": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/README.md",
+      "bytes": 7635,
+      "sha256": "2e7169a5dca3a5ed99dabc471fde4aaa46ebf5c9ec293a81788f461c4baf8cca"
+    },
+    "preflight.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/preflight.json",
+      "bytes": 14323,
+      "sha256": "be0b1e2033029ae8fd92f0be28fb7c1dcdeb7431686eb5c26d05e17353ce370f"
+    },
+    "accepted-overlay-delta.patch": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/accepted-overlay-delta.patch",
+      "bytes": 28802,
+      "sha256": "5786475bf602b05f350e71167c9bdcc968e82df894570177b175e64c0de6520b"
+    },
+    "source-delta-identity.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/source-delta-identity.json",
+      "bytes": 2763,
+      "sha256": "0b30b07f076c2a3d2d07ef705498313c225155b2279c1a719ceaab812a273982"
+    },
+    "final-freeze.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/final-freeze.json",
+      "bytes": 133350,
+      "sha256": "540c07c508e460770a450ff0672a3fcec4d57c8e9a12c8bd7dd6b2a749273804"
+    },
+    "DN0-attribution.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/DN0-attribution.json",
+      "bytes": 21419,
+      "sha256": "997c99548a39730e068c4986471512e48cb8a59818e8610cc1dfea19d488f5e3"
+    },
+    "DN1-stream-attribution.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/DN1-stream-attribution.json",
+      "bytes": 19003,
+      "sha256": "589b1afeeb9ffd23101a2fb8c069d58a0da83a1d81561273573c876022e333b7"
+    },
+    "runtime-pending-route.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/runtime-pending-route.json",
+      "bytes": 6125,
+      "sha256": "bdd4a174fe348732a1c102166d6b06361b72f7710ef947f26a3209d3dcb314ff"
+    },
+    "work-accounting.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/work-accounting.json",
+      "bytes": 15359,
+      "sha256": "d12b8d8e8da39da0347e403bac8096733fb5e3bcef9423570aa13d07a2497687"
+    },
+    "native-final.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/native-final.json",
+      "bytes": 3440,
+      "sha256": "b94486900f0689d4aefa2c5c5dc60137bcfbd0e2f2f4b5d980702cd753e787ac"
+    },
+    "final-mechanism-red.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/final-mechanism-red.json",
+      "bytes": 3299,
+      "sha256": "3277c8068a161f641e6f72bac088289da158711538506b7fe4265ce8873b128e"
+    },
+    "verify-frozen-native-final.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/verify-frozen-native-final.json",
+      "bytes": 3440,
+      "sha256": "b94486900f0689d4aefa2c5c5dc60137bcfbd0e2f2f4b5d980702cd753e787ac"
+    },
+    "verification-summary.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/verification-summary.json",
+      "bytes": 1254,
+      "sha256": "1d878d8975895a39f484648f1b31130285f2e3a02038506f88dad678ec22d433"
+    },
+    "ordinary-comparison.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/ordinary-comparison.json",
+      "bytes": 64357,
+      "sha256": "d95e236c0ab748ec39ef2ed3a5afcf0eaf19d5c13419ee2cddd96e7161bddfe6"
+    },
+    "DN3-pair-freeze.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/DN3-pair-freeze.json",
+      "bytes": 25321,
+      "sha256": "e6c2fdf516e19323294109290082eaf9bada952cde18f4bd610f8937aead8395"
+    },
+    "browser-ledger.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/browser-ledger.json",
+      "bytes": 5619,
+      "sha256": "9d1d588c7f440b026db7a39d748209e44b0dd617779c79d2cf0cb6199de2ead1"
+    },
+    "preserved-proof-assets.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/preserved-proof-assets.json",
+      "bytes": 7324,
+      "sha256": "7a2d1f49790ec7bfbe0fbabdef6b004cd35811323fd2a3adffd6936140254d4a"
+    },
+    "live-log-prefix.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/live-log-prefix.json",
+      "bytes": 394,
+      "sha256": "9a7afddcda8f8be3e1a7e6e607b9f88302e63b05f2b3b34f6bacebff0d811b17"
+    },
+    "demo-preservation.json": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/demo-preservation.json",
+      "bytes": 613,
+      "sha256": "b4890dda7735bbf17be4da56b575eb80985a19b37230709f722fb50eb42b48c7"
+    }
+  },
+  "obligations": {
+    "DN0": "Guard/route attribution complete; actual final mask mismatch, separate nonempty exposure and distinct grid work",
+    "DN1": "Native independent correctness and continuation/lease passed; ordinary active motion unmet in both lanes",
+    "DN2": "Terminal same-grid redundant work reduced with native RED/GREEN; different-grid canonical reduction not proven, left intact",
+    "DN3": "Same-input serial ordinary B/C once each, all 20 artifacts equal, final receipts correct; 0 active gesture content writes",
+    "DN4": "23/23 focused +8 native rows, boundary122, Node3 and syntax/diff pass"
+  },
+  "normalSummary": [
+    {
+      "lane": "up-immediate-pan",
+      "B": {
+        "callbacks": 903,
+        "p95": 2.300000011920929,
+        "maximum": 23.100000023841858,
+        "upToGenerationFrame": 13029.700000017881,
+        "terminalConvergence": 12864.90000000596,
+        "inverseConvergence": null,
+        "activeGestureWriteGap": 183.90000000596046,
+        "firstPanActivity": 12994.100000023842,
+        "gestureContentWrites": 0,
+        "cameraReceiptMatches": true
+      },
+      "C": {
+        "callbacks": 904,
+        "p95": 2.300000011920929,
+        "maximum": 20.30000001192093,
+        "upToGenerationFrame": 13021.699999988079,
+        "terminalConvergence": 12858.600000023842,
+        "inverseConvergence": null,
+        "activeGestureWriteGap": 184.7999999821186,
+        "firstPanActivity": 12987.5,
+        "gestureContentWrites": 0,
+        "cameraReceiptMatches": true
+      },
+      "bands": {
+        "pan3s": "NOT_REACHED"
+      }
+    },
+    {
+      "lane": "up-immediate-pinch",
+      "B": {
+        "callbacks": 1079,
+        "p95": 3.300000011920929,
+        "maximum": 91.90000000596046,
+        "upToGenerationFrame": 16469.70000001788,
+        "terminalConvergence": 16321,
+        "inverseConvergence": 565.2999999821186,
+        "activeGestureWriteGap": 183.90000000596046,
+        "firstPanActivity": 16432.20000001788,
+        "gestureContentWrites": 0,
+        "cameraReceiptMatches": true
+      },
+      "C": {
+        "callbacks": 1079,
+        "p95": 2.9000000059604645,
+        "maximum": 87.7999999821186,
+        "upToGenerationFrame": 16496.5,
+        "terminalConvergence": 16333.40000000596,
+        "inverseConvergence": 568.0999999940395,
+        "activeGestureWriteGap": 184,
+        "firstPanActivity": 16463.69999998808,
+        "gestureContentWrites": 0,
+        "cameraReceiptMatches": true
+      },
+      "bands": {
+        "pinch5s": "NOT_REACHED"
+      }
+    }
+  ],
+  "findings": [
+    "Fixed DPR4 active Web feedback unresolved; not a claimed production closure",
+    "13.0s/16.5s exact convergence unchanged; 3s/5s bands not reached",
+    "No complete per-command same-grid duplicate ledger for canonical; no integer-translation reuse change",
+    "Long native mask differs only at independent CPU AA edges (2 channels, max8); no new policy",
+    "Physical screen latency / GPU hardware duration / inter-RAF gap causes unmeasured"
+  ],
+  "candidateDemo": {
+    "url": "http://127.0.0.1:4358/example.html",
+    "PID": 99512,
+    "reviewOnly": true,
+    "normalFlagsOff": true,
+    "old4351Through4357Preserved": true
+  },
+  "browserAccounting": {
+    "starts": 5,
+    "actualCeilSeconds": 729,
+    "ordinaryBSeconds": 142,
+    "ordinaryCSeconds": 141,
+    "peakRssBytes": 2480701440,
+    "cleanupSurvivors": [],
+    "oldLedgerUnmodified": true
+  },
+  "smallestNextAction": "Control review localized terminal-mask/validated-region repair and exposure frontier under unchanged limits; freeze independent sampling/pixel proof before another normal pair.",
+  "noOfficialGateOrP34OrPerformancePASS": true
+}

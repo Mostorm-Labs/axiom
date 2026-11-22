@@ -1,0 +1,154 @@
+{
+  "schema": "axiom-scoped-control-correctness-followup-v1",
+  "task": "G5-DPR4-render-sync-r1",
+  "continuation": "cached-pressure-composite",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "classification": "GPU_WORK_CONTINUATION_CORRECTNESS_FIXED_WITH_REMAINING_PERFORMANCE_FINDINGS",
+  "worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "branch": "codex/g5-post-range-convergence",
+  "indexEmpty": true,
+  "commitPushPerformed": false,
+  "GateP34PerformancePassIssued": false,
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/packages/G5-DPR4-render-sync-r1/package.json",
+    "bytes": 2531,
+    "sha256": "40926f14239ff221d7ff22d1e4ace3eff7391fee6fa0fb0d27828ca1d6e8a61b"
+  },
+  "source": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/source-manifest.json",
+    "bytes": 1842,
+    "sha256": "f4b4782315065cbbd7c764b183fe12c5aff393d6917d22d107d20c323fec6f09"
+  },
+  "delta": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/source-delta.patch",
+    "bytes": 18399,
+    "sha256": "4b16cb899e9de8e65bbafab2e96d9e7e97585c3ea71750bf19d92f618419a221"
+  },
+  "sourceSDKFreeze": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/final-freeze.json",
+    "bytes": 131609,
+    "sha256": "41676dcc33f23bc6afe7578bfaf87115422421411af5028c944a3bb6c4df8b43"
+  },
+  "sourceAggregate": "18c1dc0293cc3d9ba363ad5036d7483abad110ddb759bfb1351da8942e8a9091",
+  "previousResults": {
+    "r1": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/result.json",
+      "bytes": 13664,
+      "sha256": "1bfb56bdb327a9fe8c980afd530ac454a31828ae421aca3180152a9e3bd55b1f"
+    },
+    "controlFollowup": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/result.json",
+      "bytes": 8094,
+      "sha256": "cb75edba7aced17d1e4fad5ce82d6d2494599e1fdd15b556b39aa4fccda6c64e"
+    },
+    "preservation": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/previous-preservation.json",
+      "bytes": 7575,
+      "sha256": "dabf255192caf62a127a083f723197abf91178841ebcb21d0da06a21c3bc9c57"
+    }
+  },
+  "changes": [
+    "Actual compositeCompactCoverageToSkCanvas drawPaint branches mark existing GPU work witness; matrix rejection,CPU-only and captureOnly lookup do not manufacture GPU work.",
+    "Cooperative staging actual background/scratch clears and body pixel copy/material composition mark work before early return.",
+    "Single reusable Metal continuation fixture covers previous pressure/mask cases plus second cached tile material composition and exhausted-allowance staging background; captureOnly ready lookup negative case remains unused."
+  ],
+  "counterfactual": {
+    "RED": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/same-fixture-counterfactual-red.json",
+      "bytes": 1385,
+      "sha256": "79ab885908742f2229ae45e9c4d6299499f0865fddd1f7dba74db0435f2ba214"
+    },
+    "GREEN": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/continuation-final.json",
+      "bytes": 1389,
+      "sha256": "a33f62adcd88ade3b521ea969574d46211a2f28a5cb05f20fbde4b7ac8b16b23"
+    },
+    "sameFinalFixture": true,
+    "previousPrivateLayoutUnchanged": true,
+    "newCases": {
+      "cachedMaterial": "2 reuses before probe,call38;RED workMarked=false/no pending bytes;GREEN epoch pending and1979904 pixel bytes charged;real completion drains0.",
+      "stagedBackground": "call1 with allowance already consumed;RED unused;GREEN131072 pending pixel bytes;completion drains0."
+    },
+    "existingCases": "Pressure and mask-only remain passing in both counterfactual and candidate."
+  },
+  "verification": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/verification-summary.json",
+    "bytes": 7415,
+    "sha256": "2ab801eab4f411e68c2f866f5077498646c7fb04814118558fd0123e58db2a42"
+  },
+  "commands": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/command-ledger.json",
+    "bytes": 16808,
+    "sha256": "239ef7663af0de27f76a944dc434f636126353f3bf48814f61bf2b0eb4052345"
+  },
+  "browser": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/browser-ledger.json",
+    "bytes": 2406,
+    "sha256": "fecc5479dae637c3f9443882c051a2bb74f7c82e32ef89aeba1bc5725bc1585f"
+  },
+  "raw": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/raw-manifest.json",
+    "bytes": 1716,
+    "sha256": "c3567aeca03bc482d7cfc785ee9d866ab983522012c7c42b9c9c575227e10d47"
+  },
+  "validation": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/validation.json",
+    "bytes": 694,
+    "sha256": "bc36e76a82bee4bcac60f97db64362635d0af9cb7e8c1032fa5273c91c327e9b"
+  },
+  "webCorrectness": {
+    "observed": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/narrow-web/observation.json",
+      "bytes": 36312,
+      "sha256": "5d0b51224b1876e54c2f4174c3a69912a7becf32f17a9a036102903c57234dad"
+    },
+    "reusedSealedReference": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/reused-web-reference.json",
+      "bytes": 1509,
+      "sha256": "a85851d4b83caae9bab293b903f0f43458826bfd18fb120b8a650c4f76268b96"
+    },
+    "artifactsIdentical": true,
+    "receipt": "generation19/ordinal19 same operationId",
+    "newGuardedStarts": 1,
+    "actualCeilSeconds": 61,
+    "allCleaned": true
+  },
+  "SDK": {
+    "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/install-normal/js",
+    "wasm": {
+      "bytes": 14026901,
+      "sha256": "74d2bea61194678d4935be13fa1a4601035a1dd823ae92a24c6a7489f81bd931"
+    },
+    "normal": true,
+    "diagnosticsAndQualification": false,
+    "prebuiltDependencies": true
+  },
+  "demo": {
+    "url": "http://127.0.0.1:4357/example.html",
+    "pid": 85957,
+    "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/install-normal/js",
+    "diagnostics": false,
+    "qualification": false,
+    "oldDemosPreserved": [
+      4351,
+      4352,
+      4353,
+      4354,
+      4355,
+      4356
+    ],
+    "liveLogMutable": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-cached-composite/demo-4357.log"
+  },
+  "remainingFindings": [
+    "R1 navigation13.0/16.5s tail and3s/5s target unmet remain unchanged as follow-up scope. No new performance claim.",
+    "Two native baseline failures and historical Node fixture gap remain.",
+    "GPU hardware time and physical scanout unmeasured."
+  ],
+  "mutableLogs": "Old and new demo server logs stay mutable; excluded from immutable manifest. Earlier frozen-prefix snapshots retained.",
+  "notification": {
+    "required": true,
+    "target": "01a1c344-e48c-7db3-8c35-39732cb81dc5"
+  },
+  "artifactManifest": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/artifact-manifest.json"
+}

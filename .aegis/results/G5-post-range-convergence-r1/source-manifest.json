@@ -1,0 +1,105 @@
+{
+  "anchor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "relation": "ancestor"
+  },
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "branch": "codex/g5-post-range-convergence",
+  "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "files": [
+    {
+      "path": ".aegis/packages/G5-post-range-convergence-r1/package.json",
+      "bytes": 5233,
+      "sha256": "f29e30b771d197614968ea6c4c203d435b48a540e07b611fba9b5c3dd436f5ce"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "bytes": 30726,
+      "sha256": "cebaf4b7ba94a1b61ac475ef672dadd9383e53d0cb16f1b73371586c63cb372c"
+    },
+    {
+      "path": "runtime/composition/tests/scene_stamp_preparation_test.cpp",
+      "bytes": 8206,
+      "sha256": "81dce06fe5d0dcf9210c34695730410a0a2a1d9f4aaa2246d7f445c867f43c7d"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "bytes": 333316,
+      "sha256": "ef77eef3fc40e83b7cbdefbdc9020fa066ae7ac9432576becdb3b59fd5e85e1a"
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/analyze.py",
+      "bytes": 6898,
+      "sha256": "0ba25e7acc0f3dfaecac0d1871796d768713c11a3111a04692475ac24a3240e5"
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/batched_web.mjs",
+      "bytes": 5448,
+      "sha256": "6f1d99dbade21959401f5938da3e867c1dec151896532c9007b9c908405aaac8"
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/compare_pixels.mjs",
+      "bytes": 2223,
+      "sha256": "2580d548af330fb2f0a1e1620bad3b2d3119ba69eae9ff0bdcd5eb0caf1128f3"
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/primary_batched.mjs",
+      "bytes": 8222,
+      "sha256": "91c5437745cbadabdad0e6e8ea7057a0f97ac565eef9b372c8f8e28531fe8931"
+    },
+    {
+      "path": "verification/runners/g5/post_range_convergence/wax_dpr4.mjs",
+      "bytes": 12390,
+      "sha256": "028b88fcbcc8ff167150dc8e2f1bcba777b381fdc9a209a0fc006e9df1f79055"
+    }
+  ],
+  "bindings": [
+    {
+      "key": "manifest",
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/docs/notion/manifest.yaml",
+      "bytes": 11224,
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "verified": true
+    },
+    {
+      "key": "architecture",
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "bytes": 4508,
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "verified": true
+    },
+    {
+      "key": "heavy_scene_report",
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/docs/planning/G5_HEAVY_SCENE_ATTRIBUTION_20261114.md",
+      "bytes": 7013,
+      "sha256": "c0097f390c2a8f4b8fcf43d0831a1dbd9d064b952fa3c3d79def86fff98f4f59",
+      "verified": true
+    },
+    {
+      "key": "range_report",
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/docs/planning/G5_RENDER_RANGE_TRAVERSAL_20261114.md",
+      "bytes": 5181,
+      "sha256": "04b2b162babef6f54815c0c4c5e8214b15b94896833a97b08e5f25047c0cc25b",
+      "verified": true
+    },
+    {
+      "key": "range_review",
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-render-range-traversal-control-r2/control-review.json",
+      "bytes": 7009,
+      "sha256": "7d0c501f9a058690c07c498e8c285317cd6398c1a855830b6c942e6ad46ffa8c",
+      "verified": true
+    },
+    {
+      "key": "p36_review",
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-crayon-chalk-hidpi-preview-control-r1/p36-control-review.json",
+      "bytes": 7892,
+      "sha256": "688922ab6679c59eb6ba459658756b77f210e4f8e9877fafd4c54c0eeddde22a",
+      "verified": true
+    }
+  ],
+  "noPublicAPIChange": true,
+  "productionChangedFiles": [
+    "runtime/interaction/src/canvas_editing_runtime.cpp"
+  ],
+  "indexEmpty": true
+}

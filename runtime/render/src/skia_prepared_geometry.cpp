@@ -29,6 +29,16 @@ void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink
 
 }
 PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
+bool PreparedNavigationGeometry::isPressureMaterial()const noexcept{
+    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source_);
+    return compact&&(compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)&&!distances_.empty();
+}
+bool PreparedNavigationGeometry::materialRangeVisible(SkCanvas& canvas,std::size_t first)const{
+    if(!isPressureMaterial()||first/32>=ribbonGroups_.size())return true;
+    const auto& bounds=ribbonGroups_[first/32].bounds;
+    const auto clip=canvas.getLocalClipBounds();
+    return !clip.isFinite()||!bounds.isFinite()||bounds.isEmpty()||SkRect::Intersects(clip,bounds);
+}
 SkPath PreparedNavigationGeometry::exactCapPath(const foundation::InkBrushConfig& config,const ink::ContourCap& cap){
     // Match the original exact kernel, including SkScalar conversion and the
     // final marker transform. Finite source doubles alone do not prove this.
@@ -425,7 +435,10 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         aliases_.erase(alias);
     }
     const bool criticalContour=criticalReplay&&compact&&compact->content.get().stroke.config.algorithmVersion==4;
-    auto retained=retainSource(entry,budget,criticalContour);if(!retained)return denied();
+    const bool pressurePreparation=deferred&&compact&&
+        (compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6);
+    const bool mandatoryBody=criticalContour||pressurePreparation;
+    auto retained=retainSource(entry,budget,mandatoryBody);if(!retained)return denied();
     std::size_t sourceBytes=0;for(const auto& lease:*retained)sourceBytes+=lease->bytes;
     const auto hash=fingerprint(entry.command,work_);++work_.indexLookups;
     const auto [first,last]=fingerprints_.equal_range(hash);
@@ -434,7 +447,7 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         ++work_.contentComparisons;
         if(equalBody(body->second.geometry->source_,entry.command,work_)){
             auto geometry=body->second.geometry;const auto id=body->first;
-            try{if(!remember(key,geometry,id,std::move(*retained),limits,budget,criticalContour))return denied();}
+            try{if(!remember(key,geometry,id,std::move(*retained),limits,budget,mandatoryBody))return denied();}
             catch(const std::bad_alloc&){return denied();}
             ++work_.indexLookups;body=entries_.find(id);if(body!=entries_.end())body->second.used=++tick_;
             ++work_.hits;return geometry->ready()||deferred?geometry:nullptr;
@@ -450,9 +463,14 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
         if(victim==entries_.end())return denied();const auto id=victim->first;eraseBody(id);++work_.evictions;
     }
     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
-    if(deferred&&compact&&compact->content.get().stroke.config.algorithmVersion==4){
-        const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
-        if(sourceBytes>=entryCap||PreparedBodyJob::minimumBytes(count)>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
+    if(deferred&&compact&&(compact->content.get().stroke.config.algorithmVersion==4||compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)){
+        // Deferred pressure metrics are mandatory bounded work, not optional
+        // pixel residency. Charge the complete source/metrics to the existing
+        // shared hard quota; a legal large stroke can then use ordered staging.
+        // V4 retains its established optional-entry/checkpoint contract.
+        const auto entryCap=pressurePreparation?limits.sharedMaxBytes:std::min(limits.maxBytes,limits.maxEntryBytes);
+        const auto minimum=compact->content.get().stroke.config.algorithmVersion==4?PreparedBodyJob::minimumBytes(count):sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+512+(count+1)*sizeof(double)+(count/32+(count%32!=0))*sizeof(PreparedNavigationGeometry::Group);
+        if(sourceBytes>=entryCap||minimum>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
         try{
             auto candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_,pressure_);
             // Reclaim only cache-owned work on an actual quota miss. Current

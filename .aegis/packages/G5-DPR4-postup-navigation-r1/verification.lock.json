@@ -1,0 +1,102 @@
+{
+  "profile": "SCOPED_ENGINEERING_REVIEW",
+  "inputs": {
+    "retainedAttribution": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-control-r1/retained-attribution.json",
+      "bytes": 48650,
+      "sha256": "42187859a47cc3a474598bbe32d9b94d63d260a5c967d5b80a61067711ed5654"
+    },
+    "reproducibleAttribution": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-control-r1/analyze_retained.py",
+      "bytes": 11244,
+      "sha256": "28c3c11a36bdb64afd9a9b51ebd1f5e964f9fc467f318a49bc328765783039ab"
+    },
+    "oldOrdinaryComparison": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/ordinary-review-comparison.json",
+      "bytes": 14263,
+      "sha256": "bf9c97fdb25a19b48d4307657e642b31bbb5648b3b5a4e77bd9aa571156980ad"
+    },
+    "acceptedSourceAndSDK": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/final-freeze.json",
+      "bytes": 131609,
+      "sha256": "41676dcc33f23bc6afe7578bfaf87115422421411af5028c944a3bb6c4df8b43"
+    },
+    "startingScopedNativeRegression": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-cached-composite/verification-summary.json",
+      "bytes": 7415,
+      "sha256": "2ab801eab4f411e68c2f866f5077498646c7fb04814118558fd0123e58db2a42"
+    },
+    "timestampLockedDriver": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+      "bytes": 12861,
+      "sha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26"
+    },
+    "rafObserver": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5/wax_postup_navigation/observer.mjs",
+      "bytes": 4849,
+      "sha256": "c349ef09a11964c31fdeee9eacf689d1e24c6a625a21b3201c159be3ce52d26a"
+    },
+    "metrics": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5/wax_postup_navigation/metrics.mjs",
+      "bytes": 1554,
+      "sha256": "bdcee24bd8d2d14675029631af6775d9d3681660ad728f8b00823a1b4af54ff9"
+    },
+    "readback": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5/webgl_target_readback.mjs",
+      "bytes": 8398,
+      "sha256": "1086e57c6bab1b0d5a6e9f311e07868b694137308245a7b180da6f1b16909642"
+    },
+    "r3Mechanism": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/implementation-design.json",
+      "bytes": 2823,
+      "sha256": "1ea7430062de0303d6b29aa7d45058c46ca337edbfc5bd0932859921f68d1b45"
+    },
+    "r3Remaining": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/remaining-analysis.json",
+      "bytes": 2399,
+      "sha256": "7a617a368bfad1e53b0f5f03c6051ff9d9d102a8e811d55aa8f6519c5c55e04b"
+    },
+    "r3IndependentLimitations": {
+      "path": "/Users/qing/.codex/worktrees/g5-wax-postup-navigation/.aegis/results/G5-wax-postup-navigation-r3/native-pixels.json",
+      "bytes": 1328,
+      "sha256": "57a564a6f10e4b5ddf274f7ec716cf852ac50b8d9052fcf0876b0a9b82bbb08f"
+    }
+  },
+  "obligations": [
+    {
+      "id": "DN0",
+      "requirement": "Explain why accepted motion yields no visible feedback and what makes the exact frame wait.",
+      "oracle": "Reuse bound logs; close their reason granularity with an actual owner RED or minimal diagnostics on the accepted starting overlay. Join per-opportunity reasons, coverage/source/cursor progress and PN_CALLBACK using immutable frame/scene/camera/surface identifiers and shared browser clock.",
+      "acceptance": "Resolve the first refusing guard and any subsequent nonempty exposure separately. Attribute exact phase to geometry, actual pressure and mask coverage, resets/duplicate replay, GPU API scopes, blocked work and inter-callback wall time using observed counters. Draws, no-progress, denials and resets must remain distinct; explicitly label unknown causes. Current source can differ from intermediate diagnostic C.",
+      "evidence_required": "Brief causal account and an exact replayable diagnostic/owner witness with raw references. State how applicable r3 behavior differs."
+    },
+    {
+      "id": "DN1",
+      "requirement": "Publish correct camera feedback during motion where a scoped deficiency is proven.",
+      "oracle": "Actual SkiaRenderer navigation route and runtime handoff when affected, frozen starting source negative and candidate positive on same test. Compare intermediate pixels to independently assembled scene at the declared sampling basis, with old history, latest committed mask suffix, mixed translucent overlap/ordering if the touched path admits it, a valid overlap and nonempty exposure.",
+      "acceptance": "Eligible pan and pinch publish during active motion with correct latest masks and exposed pixels. Hold last valid display on incomplete or invalid work. Exercise wrong source/mask/surface and staged resource retry for the introduced reuse. GPU epoch/lease and CanonicalVisible stay valid. Correctness failure blocks the candidate; an unproven optimization remains a finding.",
+      "evidence_required": "RED/GREEN, exact source delta, retained/exposure pixel comparison and publication identity rather than merely a default color write."
+    },
+    {
+      "id": "DN2",
+      "requirement": "Cut demonstrated avoidable new-viewport work while preserving canonical exactness.",
+      "oracle": "Measure entries, device-grid tiles, relevant primitive visits, queued pressure draws, history draw counts, resets, ready reuse and total required opportunities. If a same-output cause is found, compare the actual owner before and after against independent full pixels.",
+      "acceptance": "Reduce the evidenced duplicate or avoidable work without changing tile/material/AA rules or work budgets. Treat required coverage on a different sampling grid as separate work. If no safe narrow reduction is established, record precise remaining cost and leave that path intact.",
+      "evidence_required": "Attribution with action or bounded finding, and counterfactual plus correctness proof for any exact-path production change."
+    },
+    {
+      "id": "DN3",
+      "requirement": "Quantify the result on a matching ordinary SDK and fixed DPR4 workload.",
+      "oracle": "Serial Chrome/ANGLE Metal ordinary B = accepted 4357 SDK and C = matching candidate SDK, same driver/helper hashes, same input coordinates and timestamps, 900x650 CSS at DPR4, crayon-wax-v1 size32 opacity.65, 1,800 Move stroke plus 15 default-offset duplicates, two 120 Move/2s erases, immediate ~200ms pan and pinch, then inverse zoom. Sample only wax16-default. Use baseline frozen SDK without rebuilding it. Keep correctness readback outside timing or make a distinctly labeled narrow correctness observation.",
+      "acceptance": "Report callback p95 and max, gesture-time feedback and gaps, first correct feedback when independently proven, Up-to-matching canonical receipt and quiet convergence per lane, including inverse. Compare operation sequence/bytes, final Snapshot and full final RGBA with already accepted AA-edge-only allowance. Report 3s/5s as bands. Physical screen latency and GPU hardware execution are unknown without direct measurement.",
+      "evidence_required": "Exact ordinary B/C SDK and driver identity, JSON observations and raw artifact hashes, or finite confirmed blocker with partials retained. Record any regression without promoting candidate to default."
+    },
+    {
+      "id": "DN4",
+      "requirement": "Preserve prior DPR4 cooperative Render and Scene stamp work.",
+      "oracle": "Run relevant existing G5Dpr4RenderSync (including continuation, entry-limit and mask-budget), G5TransientDisplayRetryPixels/Handoff, G5MaskedNavigationProgress, G5ErasedMixedNavigation and G5SceneStampPreparation plus test derivatives defined by DN1/DN2, runtime boundary checker, and git diff --check. Run G5Navigation/G5UR2ANavigationSafety if Interaction/Composition changes.",
+      "acceptance": "Required touched-path checks pass and no new correctness regression. Known unrelated canonical compatibility / transient continuity baselines and historical Node fixture remain classified with precise prior evidence. Reuse exact unaffected results.",
+      "evidence_required": "Fresh commands, outputs, source/SDK/delta/artifact manifests and reproducible known gaps."
+    }
+  ]
+}

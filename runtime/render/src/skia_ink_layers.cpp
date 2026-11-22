@@ -16,7 +16,8 @@ void SkiaInkLayers::bindSurfaceBasis(const void*owner,std::uint64_t resource,std
  const std::array<std::uint64_t,4> basis{resource,surface,view,metrics};
  if(surfaceOwner_!=owner||surfaceBasis_!=basis){clear();surfaceOwner_=owner;surfaceBasis_=basis;}
 }
-void SkiaInkLayers::clearDeviceLayers()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
+void SkiaInkLayers::clearPressureBodies()noexcept{pressureBodies_.clear();pressureBytes_=pressureDemandBytes_=0;pressureBudget_.reset();}
+void SkiaInkLayers::clearDeviceLayers(bool keepPressure)noexcept{if(!keepPressure)clearPressureBodies();tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
 void SkiaInkLayers::clear()noexcept{fullBodies_.clear();navigationBodies_.clear();navigationBudget_.reset();navigationWork_={};clearDeviceLayers();}
 std::size_t SkiaInkLayers::retireIdleHistoryPreparation()noexcept{
     if(drawDepth_)return 0;
@@ -42,8 +43,9 @@ bool SkiaInkLayers::reserve(std::size_t bytes,const Key& key,const RenderCacheOp
     for(;;){
         const bool newKey=!tiles_.contains(key);
         const auto count=std::min(std::size_t(1024),limits.maxEntries);
-        const bool room=navigationWork_.bytes<=limits.maxBytes-bytes&&bytes_<=limits.maxBytes-bytes-navigationWork_.bytes&&
-            (!newKey||tiles_.size()+navigationWork_.entries<count);
+        const bool room=pressureBytes_<=limits.maxBytes-bytes&&navigationWork_.bytes<=limits.maxBytes-bytes-pressureBytes_&&
+            bytes_<=limits.maxBytes-bytes-pressureBytes_-navigationWork_.bytes&&
+            (!newKey||tiles_.size()+navigationWork_.entries+pressureBodies_.size()<count);
         auto token=room?reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
         if(token){lease=resources::ResourceLease(budget,*token);return true;}
         auto victim=tiles_.end();for(auto it=tiles_.begin();it!=tiles_.end();++it)
@@ -296,7 +298,7 @@ void SkiaInkLayers::rememberNavigationBody(const std::shared_ptr<const PreparedN
  if(bytes>options.maxEntryBytes||bytes>options.maxBytes)return;
  std::optional<std::uint64_t> token;
  while(!token){
-  if(navigationBodies_.size()+fullBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-bytes)token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
+  if(navigationBodies_.size()+fullBodies_.size()+tiles_.size()+pressureBodies_.size()<count&&pressureBytes_<=options.maxBytes-bytes&&navigationWork_.bytes+bytes_<=options.maxBytes-bytes-pressureBytes_)token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
   if(token)break;if(!evictNavigationBody())return;
  }
  resources::ResourceLease lease(budget,*token);(void)lease.markGpuUse();navigationBodies_.emplace(key,NavigationBody{body,std::move(pixels),std::move(lease),++tick_,bytes});navigationWork_.bytes+=bytes;++navigationWork_.builds;navigationWork_.entries=navigationBodies_.size()+fullBodies_.size();
@@ -361,7 +363,7 @@ SkiaInkLayers::BodyPreparation SkiaInkLayers::prepareNavigationBody(const Refere
   const auto count=std::min(std::size_t(1024),options.maxEntries);if(!count)return BodyPreparation::kUnavailable;
   const auto charge=bytes*2+metadata;std::optional<std::uint64_t>token;
   while(!token){
-   if(fullBodies_.size()+navigationBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-charge)token=budget->reserve(resources::ResourceClass::kRaster,bytes+metadata,true);
+   if(fullBodies_.size()+navigationBodies_.size()+tiles_.size()+pressureBodies_.size()<count&&pressureBytes_<=options.maxBytes-charge&&navigationWork_.bytes+bytes_<=options.maxBytes-charge-pressureBytes_)token=budget->reserve(resources::ResourceClass::kRaster,bytes+metadata,true);
    if(token)break;if(!evictNavigationBody())return BodyPreparation::kPending;
   }
   resources::ResourceLease resident(budget,*token);
@@ -418,5 +420,116 @@ bool SkiaInkLayers::projectNavigationBody(const std::shared_ptr<const PreparedNa
   canvas.drawImage(item.pixels,0,0,SkSamplingOptions(SkFilterMode::kLinear));canvas.restore();++navigationWork_.hits;return true;
  }
  if(!hasBody)++navigationWork_.projectionBodyMiss;++navigationWork_.misses;return false;
+}
+}
+
+namespace canvas::render::internal {
+SkiaInkLayers::PressureKey SkiaInkLayers::pressureKey(const PreparedNavigationGeometry& body,SkCanvas& canvas,
+    const SkMatrix& matrix,const SkIRect& grid){
+    PressureKey key;key.body=body.identity();key.context=canvas.recordingContext();SkScalar values[9];matrix.get9(values);
+    for(unsigned i=0;i<9;++i)key.matrix[i]=std::bit_cast<std::uint32_t>(values[i]==0?0.F:values[i]);
+    key.grid={grid.left(),grid.top(),grid.right(),grid.bottom()};const auto info=canvas.imageInfo();
+    key.colorType=int(info.colorType());key.alphaType=int(info.alphaType());key.colorSpace=info.colorSpace()?info.colorSpace()->hash():0;
+    return key;
+}
+bool SkiaInkLayers::reclaimPressure(std::size_t bytes,std::size_t entries){
+    const auto& limits=pressureLimits_;
+    if(bytes>limits.maxBytes)return false;
+    while(pressureBytes_>limits.maxBytes-bytes||bytes_+navigationWork_.bytes>limits.maxBytes-bytes-pressureBytes_||
+          pressureBodies_.size()+navigationWork_.entries+tiles_.size()+entries>limits.maxEntries){
+        auto victim=pressureBodies_.end();
+        for(auto it=pressureBodies_.begin();it!=pressureBodies_.end();++it)
+            if(it->second.demand!=pressureDemand_&&(victim==pressureBodies_.end()||it->second.used<victim->second.used))victim=it;
+        if(victim!=pressureBodies_.end()){pressureBytes_-=victim->second.bytes;pressureBodies_.erase(victim);continue;}
+        if(evictNavigationBody())continue;
+        if(tiles_.empty())return false;
+        auto tile=std::min_element(tiles_.begin(),tiles_.end(),[](const auto& a,const auto& b){return a.second.used<b.second.used;});
+        bytes_-=tile->second.bytes;tiles_.erase(tile);
+    }
+    return true;
+}
+bool SkiaInkLayers::beginPressureDemand(const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget){
+    if(!budget)return false;
+    if(pressureBudget_!=budget){pressureBodies_.clear();pressureBytes_=0;pressureBudget_=budget;}
+    pressureLimits_=limits;pressureDemandBytes_=0;++pressureDemand_;
+    return true;
+}
+SkiaInkLayers::BodyPreparation SkiaInkLayers::requirePressureBody(const std::shared_ptr<const PreparedNavigationGeometry>& body,
+    SkCanvas& canvas,const CompactDeviceGrid& grid){
+    if(!body||!body->ready()||!body->isPressureMaterial()||!canvas.recordingContext())return BodyPreparation::kUnavailable;
+    const auto matrix=canvas.getTotalMatrix();if(!matrix.isFinite()||matrix.hasPerspective())return BodyPreparation::kUnavailable;
+    const auto clip=SkIRect::MakeLTRB(grid.left,grid.top,grid.right,grid.bottom);
+    const auto key=pressureKey(*body,canvas,matrix,clip);
+    auto found=pressureBodies_.find(key);
+    if(found!=pressureBodies_.end()&&found->second.demand==pressureDemand_)return BodyPreparation::kReady;
+    auto bounds=matrix.mapRect(body->support());bounds.outset(2,2);if(!bounds.isFinite())return BodyPreparation::kUnavailable;
+    constexpr auto metadata=sizeof(PressureBody)+sizeof(PressureKey)+sizeof(CompactStrokeRasterJob)+256;
+    std::size_t required=metadata;
+    for(int y=grid.top;y<grid.bottom;y+=256)for(int x=grid.left;x<grid.right;x+=256){
+        const auto w=std::min(256,grid.right-x),h=std::min(256,grid.bottom-y);
+        if(!SkRect::Intersects(bounds,SkRect::MakeXYWH(float(x),float(y),float(w),float(h))))continue;
+        const auto bytes=std::size_t(w)*h*4+sizeof(PressureTile)+64;
+        if(bytes>pressureLimits_.maxEntryBytes||required>pressureLimits_.maxEntryBytes-bytes)return BodyPreparation::kUnavailable;
+        required+=bytes;
+    }
+    if(required>pressureLimits_.maxBytes||pressureDemandBytes_>pressureLimits_.maxBytes-required)return BodyPreparation::kUnavailable;
+    pressureDemandBytes_+=required;
+    if(found==pressureBodies_.end()){
+        if(!reclaimPressure(metadata,1))return BodyPreparation::kPending;
+        const auto token=pressureBudget_->reserve(resources::ResourceClass::kRecorded,metadata,true);if(!token)return BodyPreparation::kPending;
+        PressureBody item;item.body=body;item.metadata=resources::ResourceLease(pressureBudget_,*token);item.bytes=metadata;
+        found=pressureBodies_.emplace(key,std::move(item)).first;pressureBytes_+=metadata;
+    }
+    found->second.demand=pressureDemand_;found->second.required=required;found->second.used=++tick_;
+    return BodyPreparation::kReady;
+}
+void SkiaInkLayers::finishPressureDemand(){
+    for(auto it=pressureBodies_.begin();it!=pressureBodies_.end();){
+        if(it->second.job&&it->second.demand!=pressureDemand_){pressureBytes_-=it->second.bytes;it=pressureBodies_.erase(it);}else ++it;
+    }
+}
+sk_sp<SkImage> SkiaInkLayers::pressureTile(const PreparedNavigationGeometry* body,SkCanvas& canvas,
+    const SkMatrix& matrix,const SkIRect& grid,int x,int y,int w,int h){
+    if(!body||!body->ready()||!body->isPressureMaterial())return {};
+    const auto found=pressureBodies_.find(pressureKey(*body,canvas,matrix,grid));if(found==pressureBodies_.end())return {};
+    const auto tile=found->second.tiles.find({x,y});if(tile==found->second.tiles.end()||tile->second.image->width()!=w||tile->second.image->height()!=h)return {};
+    found->second.used=++tick_;(void)tile->second.pixels.markGpuUse();return tile->second.image;
+}
+bool SkiaInkLayers::retainPressureTile(const std::shared_ptr<const PreparedNavigationGeometry>& body,SkCanvas& canvas,
+    const SkMatrix& matrix,const SkIRect& grid,int x,int y,sk_sp<SkImage> image,CompactCoverageTargets& targets,const SkSurface* surface,resources::ResourceLease* exclusive){
+    if(!body||!image||!pressureBudget_||(!exclusive&&!targets.owns(surface)))return false;
+    const auto found=pressureBodies_.find(pressureKey(*body,canvas,matrix,grid));if(found==pressureBodies_.end())return false;
+    auto& item=found->second;if(item.tiles.contains({x,y}))return true;
+    constexpr auto metadata=sizeof(PressureTile)+64;const auto bytes=std::size_t(image->width())*image->height()*4+metadata;
+    if(bytes>pressureLimits_.maxEntryBytes||item.bytes>pressureLimits_.maxEntryBytes-bytes||!reclaimPressure(bytes))return false;
+    const auto token=pressureBudget_->reserve(resources::ResourceClass::kRecorded,metadata,true);if(!token)return false;
+    resources::ResourceLease meta(pressureBudget_,*token);auto pixels=exclusive?std::move(*exclusive):targets.detach(surface);
+    (void)pixels.markGpuUse();item.tiles.emplace(std::pair{x,y},PressureTile{std::move(image),std::move(pixels),std::move(meta),bytes});
+    item.bytes+=bytes;pressureBytes_+=bytes;return true;
+}
+SkiaInkLayers::BodyPreparation SkiaInkLayers::preparePressureBody(const ReferenceTraversalEntry& entry,
+    const std::shared_ptr<const PreparedNavigationGeometry>& body,SkCanvas& canvas,const CompactDeviceGrid& grid,
+    const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
+    CompactCoverageTargets& targets,RenderCacheWork& work,PreparationAllowance& allowance){
+    if(!body||!body->ready()||!body->isPressureMaterial()||pressureBudget_!=budget)return BodyPreparation::kUnavailable;
+    const auto key=pressureKey(*body,canvas,canvas.getTotalMatrix(),SkIRect::MakeLTRB(grid.left,grid.top,grid.right,grid.bottom));
+    const auto found=pressureBodies_.find(key);if(found==pressureBodies_.end())return BodyPreparation::kUnavailable;
+    auto& item=found->second;targets.retainedPressure=this;
+    if(!item.job&&item.bytes==item.required)return BodyPreparation::kReady;
+    if(!item.job){
+        const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+        item.job=std::make_unique<CompactStrokeRasterJob>(canvas,stroke.config,stroke.knots,&grid,limits.gpuCoverageCandidate,
+            budget,limits.maxEntryBytes,std::function<void(std::size_t)>{},true,body);
+        item.job->setCaptureOnly();
+    }
+    const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
+    while(!allowance.exhausted()){
+        CompactRasterWork raster;const bool complete=item.job->step(canvas,stroke.config,stroke.knots,stroke.seed,targets,
+            limits.gpuCoverageCandidate,&raster,&allowance.pressureCommands);
+        ++allowance.steps;++work.preparationCoverageSteps;work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;
+        if(item.job->resourcePending())return BodyPreparation::kPending;
+        if(complete){item.job.reset();return BodyPreparation::kReady;}
+    }
+    return BodyPreparation::kPending;
 }
 }

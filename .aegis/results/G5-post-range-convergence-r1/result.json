@@ -1,0 +1,119 @@
+{
+  "task_id": "G5-post-range-convergence-r1",
+  "stage": "P32",
+  "return_surface": "CONTROL_REVIEW",
+  "terminal_state": "READY_FOR_CONTROL_REVIEW",
+  "qualification": "SCOPED_IMPLEMENTATION_AND_FINDINGS; NOT_G5_GATE_OR_PERFORMANCE_PASS",
+  "package_ref": {
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/packages/G5-post-range-convergence-r1/package.json",
+    "sha256": "f29e30b771d197614968ea6c4c203d435b48a540e07b611fba9b5c3dd436f5ce"
+  },
+  "execution": {
+    "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "branch": "codex/g5-post-range-convergence",
+    "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "anchor_relation": "EXACT_ANCHOR_WITH_OWN_DIRTY_DELTA",
+    "indexEmpty": true,
+    "commitOrPush": false,
+    "source_manifest": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/source-manifest.json",
+    "source_manifest_sha256": "ee07f45e1ec56b55e3d5380fe69017314a84dddc3ebbfffa985d0ee478777c91",
+    "delta": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/source-delta.patch",
+    "delta_sha256": "18f702f95e8555278821d024697aa17c3401097143b7b188aed9b541eef894d2"
+  },
+  "sequence_results": [
+    {
+      "item": 1,
+      "status": "RECONCILED",
+      "evidence": "preflight.json/source-manifest.json; six exact refs; accepted range work not repeated; r3 and user demos preserved."
+    },
+    {
+      "item": 2,
+      "status": "SCOPED_FIX_VERIFIED",
+      "evidence": "Actual OperationEngine+EditingSceneCompiler final owner counterfactual RED258steps; candidate GREEN2steps. Full original compiler records equal after append,front insertion,remove/reapply changed same-ID values; cold path explicitly258steps."
+    },
+    {
+      "item": 3,
+      "status": "ATTRIBUTED_WITH_LIMITS",
+      "evidence": "retained-frame-waits.json and focused-postup-paired.json. CPU owner, RAF wrapper and outside-callback intervals separated; no new timer/SDK/budget shortcut."
+    },
+    {
+      "item": 4,
+      "status": "ISOLATED_REMEASUREMENT_WITH_FINDINGS",
+      "evidence": "wax-DPR4-paired.json: matching normal B/C,AppleM2/ANGLEMetal,DPR4,16defaultcopies,2erase/navigation phases,finalpixel+semantic identity+qualified receipt. Long synchronous spikes remain in both builds."
+    }
+  ],
+  "verification": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/verification-summary.json",
+  "remaining": [
+    {
+      "id": "cold-and-sorted-suffix",
+      "kind": "IMPLEMENTATION_BOUNDARY",
+      "detail": "Cold restore has no cumulative memo; first preparation remains258steps. A new mask inserted before all historical IDs recomputes260steps. Hash/geometry authority is unchanged."
+    },
+    {
+      "id": "original-heavy",
+      "kind": "BLOCKED_EVIDENCE",
+      "detail": "Original7200Move/RAF-interleaved baseline timed out at420s before Up. Only one guarded attempt; original paired candidate not started. 507 complete owner calls recovered, median664.8ms/max1132.2ms during input. No crash claim from guard termination."
+    },
+    {
+      "id": "end-to-end-tail",
+      "kind": "PERFORMANCE_FINDING",
+      "detail": "Focused batched-before-RAF AB34.843s B /28.4195s C; followup62.6654s B /68.3428s C. One pair is mixed and cannot establish a relative performance PASS. Lightweight status supplies no Scene stamp stage timing."
+    },
+    {
+      "id": "DPR4-crayon",
+      "kind": "PERFORMANCE_FINDING",
+      "detail": "Isolated normal current crayon default16copies:7.1–8.0s RAF spikes in both B and C; first motion color-write activity7.8–9.3s. Final snapshots and37,440,000RGBAbytes are byte-identical; generation18 qualified. No new source-specific regression attributable to this Scene-only delta was established. Existing synchronous Render material/preparation work remains unresolved; r3 is preserved, not silently imported."
+    },
+    {
+      "id": "focused-pixel-rounding",
+      "kind": "PIXEL_FINDING",
+      "detail": "All snapshots and5Operation buffers byte-identical. Each of4actual92,499,840byte target captures differs at14–15pixels,max1LSB,noalpha difference. No AA policy changed and no byte-equality claim."
+    },
+    {
+      "id": "native-baseline",
+      "kind": "BASELINE_TEST_FAILURES",
+      "detail": "G5CanonicalPreparedCompatibility and G5SharedSceneRetention are Render-only failures outside changed owner link. G5CpuPendingRuntime-radius also fails in exact-anchor owner counterfactual. mixedimage passes with exact original PNG fixture linked temporarily."
+    },
+    {
+      "id": "full-native",
+      "kind": "BLOCKED_TEST_DEFINITION",
+      "detail": "Full build fails in two unchanged semantic tests on unhandled kSection/kTable enums under Werror. Full configured CTest not completed."
+    },
+    {
+      "id": "node-fixture",
+      "kind": "BLOCKED_EVIDENCE",
+      "detail": "25/26 Node checks pass; one HTTP-entry test needs historical immutable-sdk/normal/axiom.mjs that is absent. No historical SDK evidence fabricated."
+    },
+    {
+      "id": "feedback-time",
+      "kind": "MEASUREMENT_LIMIT",
+      "detail": "GL writes are activity proxies. Qualified callbacks and final captures do not establish earliest correct physical feedback pixel or hardware GPU waiting time."
+    }
+  ],
+  "browser": {
+    "ledger": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/browser-ledger.json",
+    "starts": 5,
+    "actualCeilSeconds": 1169,
+    "allOwnedWorkersCleaned": true
+  },
+  "normalDemo": {
+    "url": "http://127.0.0.1:4353/example.html",
+    "pid": 37882,
+    "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C/js",
+    "normal": true,
+    "diagnostics": false,
+    "verification": "HTTP public wrapper bytes equal matching candidate normal SDK; same SDK exercised in completed headless B/C cases.",
+    "kept_running_for_user": true
+  },
+  "preservation": {
+    "originalWorktreeAndR3UntouchedByThisExecution": true,
+    "oldDemosListening": [
+      4351,
+      4352
+    ],
+    "semanticAndSkiaLocksUnchanged": true,
+    "SDKBrushAABudgetAndSemanticContractsUnchanged": true
+  },
+  "artifacts": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/artifact-manifest.json"
+}

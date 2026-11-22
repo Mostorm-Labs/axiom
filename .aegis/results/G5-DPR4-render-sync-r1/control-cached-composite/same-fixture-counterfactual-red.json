@@ -1,0 +1,54 @@
+{
+  "pass": false,
+  "rows": [
+    {
+      "cachedReusesBeforeProbe": 0,
+      "calls": 2,
+      "consumer": "capture-pressure-continuation",
+      "epochUnretiredBeforeService": true,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": false,
+      "pass": true,
+      "pendingPixelBytes": 131072,
+      "tested": true,
+      "workMarked": true
+    },
+    {
+      "cachedReusesBeforeProbe": 0,
+      "calls": 13,
+      "consumer": "body-complete-mask-only-early-return",
+      "epochUnretiredBeforeService": true,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": false,
+      "pass": true,
+      "pendingPixelBytes": 283860,
+      "tested": true,
+      "workMarked": true
+    },
+    {
+      "cachedReusesBeforeProbe": 2,
+      "calls": 38,
+      "consumer": "cached-pressure-composite-yield",
+      "epochUnretiredBeforeService": false,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": true,
+      "pass": false,
+      "pendingPixelBytes": 0,
+      "tested": true,
+      "workMarked": false
+    },
+    {
+      "cachedReusesBeforeProbe": 0,
+      "calls": 1,
+      "consumer": "staged-pressure-background-yield",
+      "epochUnretiredBeforeService": false,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": false,
+      "pass": false,
+      "pendingPixelBytes": 0,
+      "tested": true,
+      "workMarked": false
+    }
+  ],
+  "task": "G5-DPR4-render-sync-r1"
+}

@@ -21,8 +21,12 @@ struct PreparationAllowance final {
     RenderPreparationBudget limits;
     std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();
     std::size_t steps=0;
+    // Aggregate actual procedural commands, including all objects and tiles.
+    std::size_t pressureCommands=0;
+    std::size_t materialMaskDraws=0;
+    static constexpr std::size_t pressureCommandLimit=128;
     explicit PreparationAllowance(RenderPreparationBudget value={}):limits(value){}
-    bool exhausted()const noexcept {return steps>=limits.maxCoverageSteps||!limits.maxMicroseconds||
+    bool exhausted()const noexcept {return materialMaskDraws>=128||pressureCommands+32>pressureCommandLimit||steps>=limits.maxCoverageSteps||!limits.maxMicroseconds||
         (steps&&std::chrono::steady_clock::now()-start>=std::chrono::microseconds(limits.maxMicroseconds));}
 };
 struct PreparedGeometryStatistics final {
@@ -50,6 +54,8 @@ class PreparedNavigationGeometry final {
     const SkRect& support()const noexcept{return support_;}
     const SkPath* vectorPath()const noexcept{return vector_?&*vector_:nullptr;}
     bool isContour()const noexcept{return contour_;}
+    bool isPressureMaterial()const noexcept;
+    bool materialRangeVisible(SkCanvas&,std::size_t first)const;
     bool exactValidated()const noexcept{return ready_&&exactValidationComplete_&&exactValidationValid_&&exactDerivedFinite_;}
     std::uint64_t identity()const noexcept{return cacheId_;}
     // Exact CPU components only: bounds are negative filters, never a hit.

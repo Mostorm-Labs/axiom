@@ -1,0 +1,39 @@
+{
+  "pass": false,
+  "rows": [
+    {
+      "calls": 2,
+      "consumer": "capture-pressure-continuation",
+      "epochUnretiredBeforeService": true,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": false,
+      "pass": true,
+      "pendingPixelBytes": 131072,
+      "tested": true,
+      "workMarked": true
+    },
+    {
+      "calls": 13,
+      "consumer": "body-complete-mask-only-early-return",
+      "epochUnretiredBeforeService": true,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": false,
+      "pass": true,
+      "pendingPixelBytes": 283860,
+      "tested": true,
+      "workMarked": true
+    },
+    {
+      "calls": 28,
+      "consumer": "cached-pressure-composite-yield",
+      "epochUnretiredBeforeService": false,
+      "lastReleaseBytes": 0,
+      "lookupOnlyChecked": true,
+      "pass": false,
+      "pendingPixelBytes": 0,
+      "tested": true,
+      "workMarked": false
+    }
+  ],
+  "task": "G5-DPR4-render-sync-r1"
+}

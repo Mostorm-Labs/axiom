@@ -1,0 +1,1410 @@
+diff --git a/runtime/render/CMakeLists.txt b/runtime/render/CMakeLists.txt
+index cf13b7f9..edd28a2a 100644
+--- a/runtime/render/CMakeLists.txt
++++ b/runtime/render/CMakeLists.txt
+@@ -247,6 +247,16 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+         target_link_libraries(axiom_canonical_prepared_body_tests PRIVATE "-framework Foundation" objc)
+     endif()
+     add_test(NAME G5CanonicalPreparedBody COMMAND axiom_canonical_prepared_body_tests)
++    if(APPLE)
++        add_executable(axiom_dpr4_render_sync_tests tests/dpr4_render_sync_test.cpp)
++        target_compile_definitions(axiom_dpr4_render_sync_tests PRIVATE AXIOM_TRANSIENT_DISPLAY_TESTS=1)
++        target_link_libraries(axiom_dpr4_render_sync_tests PRIVATE canvas_runtime_render CanvasSkia::Skia "-framework Foundation" objc)
++        target_include_directories(axiom_dpr4_render_sync_tests PRIVATE "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include")
++        add_test(NAME G5Dpr4RenderSync COMMAND axiom_dpr4_render_sync_tests "${CMAKE_CURRENT_BINARY_DIR}/dpr4-render-sync.json")
++        foreach(case down bounded prepared pixels lifecycle quota oversize suspended interleaved mask-budget)
++            add_test(NAME G5Dpr4RenderSync-${case} COMMAND axiom_dpr4_render_sync_tests "${CMAKE_CURRENT_BINARY_DIR}/dpr4-render-sync-${case}.json" ${case})
++        endforeach()
++    endif()
+     if(APPLE)
+       add_executable(axiom_navigation_display_workavoidance_tests tests/navigation_display_workavoidance_test.cpp)
+       target_link_libraries(axiom_navigation_display_workavoidance_tests PRIVATE canvas_runtime_render CanvasSkia::Skia "-framework Foundation" objc)
+diff --git a/runtime/render/src/compact_raster_internal.hpp b/runtime/render/src/compact_raster_internal.hpp
+index 55d76d11..50b86164 100644
+--- a/runtime/render/src/compact_raster_internal.hpp
++++ b/runtime/render/src/compact_raster_internal.hpp
+@@ -12,14 +12,46 @@
+ #include <array>
+ #include <functional>
+ #include "source_retention.hpp"
++#include "canvas/foundation/internal/frame_timing.hpp"
+ 
+ namespace canvas::render::internal {
++class SkiaInkLayers;
++inline thread_local std::size_t* pressureCommandCounter=nullptr;
++struct PressureCommandScope final {
++    std::size_t* previous=pressureCommandCounter;
++    explicit PressureCommandScope(std::size_t* value){pressureCommandCounter=value;}
++    ~PressureCommandScope(){pressureCommandCounter=previous;}
++};
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
++inline thread_local std::uint64_t pressureTestCommands=0;
++#endif
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++// Diagnostic-only attribution of procedural enqueue versus later flush APIs.
++// The ordinary SDK compiles out this state and every update.
++struct PressureDiagnosticWork final {
++    std::uint64_t directCalls=0,directKnots=0,rangeCalls=0,visited=0,queued=0,enqueueNs=0;
++};
++inline thread_local PressureDiagnosticWork pressureDiagnosticWork;
++struct PressureDiagnosticScope final {
++    const char* role;std::uint64_t started=foundation::internal::frame_timing::now();
++    PressureDiagnosticWork before=pressureDiagnosticWork;
++    explicit PressureDiagnosticScope(const char* value):role(value){}
++    ~PressureDiagnosticScope(){const auto& w=pressureDiagnosticWork;
++        std::fprintf(stderr,"AXIOM_PRESSURE_WORK {\"role\":\"%s\",\"start_ns\":%.0f,\"end_ns\":%.0f,\"direct_calls\":%.0f,\"direct_knots\":%.0f,\"range_calls\":%.0f,\"visited\":%.0f,\"queued\":%.0f,\"enqueue_ns\":%.0f}\n",
++            role,double(started),double(foundation::internal::frame_timing::now()),double(w.directCalls-before.directCalls),
++            double(w.directKnots-before.directKnots),double(w.rangeCalls-before.rangeCalls),double(w.visited-before.visited),
++            double(w.queued-before.queued),double(w.enqueueNs-before.enqueueNs));}
++};
++#endif
+ // Render-owner temporary resources only. Eight slots cover GPU/CPU full/edge
+ // tile extents (up to 2 MiB before backend COW/driver residency);
+ // snapshots keep Skia's copy-on-write semantics, never borrowed mutable pixels.
+ class CompactCoverageTargets final {
+  public:
+     std::shared_ptr<resources::ResourceBudgetManager> budget;
++    SkiaInkLayers* retainedPressure=nullptr;
++    resources::ResourceLease detach(const SkSurface*);
++    bool owns(const SkSurface* value)const noexcept{return std::any_of(slots_.begin(),slots_.end(),[&](const auto& s){return s.surface.get()==value;});}
+     void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
+     sk_sp<SkSurface> acquire(SkCanvas&,int width,int height,bool compatible,CompactRasterWork*,bool scalar=false);
+     struct Allocation final {
+@@ -46,8 +78,9 @@ class CompactStrokeRasterJob final {
+         std::size_t maxRecordedBytes=RenderCacheOptions{}.maxEntryBytes,
+         std::function<void(std::size_t)> reclaim={},bool canonicalReplay=false,std::shared_ptr<const PreparedNavigationGeometry> prepared=nullptr,bool directConsumer=false,bool whiteOnly=false);
+     bool step(SkCanvas&,const foundation::InkBrushConfig&,std::span<const foundation::InkKnot>,
+-        std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*);
++        std::uint64_t seed,CompactCoverageTargets&,bool compatible,CompactRasterWork*,std::size_t* pressureCommands=nullptr);
+     [[nodiscard]] bool resourcePending()const noexcept{return resourcePending_;}
++    void setCaptureOnly()noexcept{captureOnly_=true;}
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+     void diagnosticCursor(std::uint64_t& primitive,std::uint64_t& knot,int& x,int& y,bool& done)const noexcept {
+         primitive=preparedPrimitive_;knot=knot_;x=x_;y=y_;done=done_;
+@@ -56,7 +89,7 @@ class CompactStrokeRasterJob final {
+  private:
+     std::shared_ptr<const PreparedNavigationGeometry> prepared_;
+     std::size_t preparedPrimitive_=0;
+-    bool directConsumer_=false,whiteOnly_=false;
++    bool directConsumer_=false,whiteOnly_=false,captureOnly_=false;
+     SkMatrix matrix_{};
+     SkIRect clip_{},deviceClip_{};
+     SkRect support_{};
+@@ -70,6 +103,7 @@ class CompactStrokeRasterJob final {
+     double distance_=0,totalDistance_=0;
+     std::optional<ink::CompactContourCompiler> contour_;
+     sk_sp<SkSurface> tile_;
++    resources::ResourceLease tileLease_; // Exclusive suspended capture, never a pooled borrow.
+     struct ContourRecord {
+         sk_sp<SkPicture> picture;resources::ResourceLease lease;SkRect bounds{};
+         std::optional<ink::CompactContourCompiler> checkpoint;
+diff --git a/runtime/render/src/prepared_body_job.cpp b/runtime/render/src/prepared_body_job.cpp
+index 77c91efd..3c7131a3 100644
+--- a/runtime/render/src/prepared_body_job.cpp
++++ b/runtime/render/src/prepared_body_job.cpp
+@@ -23,6 +23,20 @@ std::shared_ptr<PreparedNavigationGeometry> PreparedBodyJob::create(const Refere
+     std::size_t cap,const std::shared_ptr<resources::ResourceBudgetManager>& budget,const std::shared_ptr<PreparedGeometryUsage>& usage,const ValidationPressure& pressure){
+     const auto& stroke=std::get<CompactStrokeReferenceCommand>(source).content.get().stroke;
+     const auto count=stroke.knots.size();
++    if(stroke.config.algorithmVersion==5||stroke.config.algorithmVersion==6){
++        const auto groups=count/32+(count%32!=0);
++        const auto fixed=sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+512;
++        if(fixed>cap||cap-fixed<sizeof(double)||count>(cap-fixed)/sizeof(double)-1)return {};
++        const auto metrics=fixed+(count+1)*sizeof(double);
++        if(groups>(cap-metrics)/sizeof(PreparedNavigationGeometry::Group))return {};
++        const auto bytes=metrics+groups*sizeof(PreparedNavigationGeometry::Group);
++        auto token=reserveWithSourcePressure(budget,pressure,resources::ResourceClass::kRecorded,bytes,true);if(!token)return {};
++        resources::ResourceLease reservation(budget,*token);auto result=std::make_shared<PreparedNavigationGeometry>();
++        result->distances_.reserve(count+1);result->ribbonGroups_.reserve(groups);
++        result->source_=source;result->sourceLeases_=std::move(sources);result->ready_=false;
++        result->lease_=std::move(reservation);result->bytes_=bytes;result->usage_=usage;usage->bytes+=bytes;
++        result->job_=std::make_unique<PreparedBodyJob>(stroke.config);return result;
++    }
+     if(baseBytes>cap)return {};
+     const auto patchCount=ink::CompactContourCompiler::maxPatches(count);
+     const auto capCount=ink::CompactContourCompiler::maxCaps(count);
+@@ -60,14 +74,28 @@ bool PreparedBodyJob::advance(PreparedNavigationGeometry& body,PreparedGeometryS
+     const auto& knots=stroke.knots;
+     ++work.advances;
+     if(phase_==Phase::kMetrics){
++        const bool material=stroke.config.algorithmVersion==5||stroke.config.algorithmVersion==6;
+         if(cursor_==0)body.exactValidationValid_=foundation::validInkBrushConfig(stroke.config,true)&&!knots.empty()&&knots.size()<=262144;
++        if(material&&cursor_==0)body.distances_.push_back(0);
+         const auto end=std::min(cursor_+32,knots.size());
+         for(auto i=cursor_;i<end;++i){const auto& k=knots[i];const auto radius=ink::compactRadius(stroke.config,k.pressure);
+             body.exactValidationValid_=body.exactValidationValid_&&std::isfinite(k.x)&&std::isfinite(k.y);++work.validationKnots;
+             body.support_.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));++work.supportKnots;
+-            if(i){body.replayDistance_+=std::hypot(k.x-knots[i-1].x,k.y-knots[i-1].y);++work.distanceInputs;}}
++            if(i){body.replayDistance_+=std::hypot(k.x-knots[i-1].x,k.y-knots[i-1].y);++work.distanceInputs;}
++            if(material){
++                body.distances_.push_back(body.replayDistance_);
++                if(i%32==0)body.ribbonGroups_.push_back({SkRect::MakeEmpty(),i,i});
++                auto& group=body.ribbonGroups_.back();group.bounds.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
++                if(i){const auto& prev=knots[i-1];const auto r=std::max(radius,ink::compactRadius(stroke.config,prev.pressure));
++                    group.bounds.join(SkRect::MakeLTRB(float(std::min(prev.x,k.x)-r),float(std::min(prev.y,k.y)-r),float(std::max(prev.x,k.x)+r),float(std::max(prev.y,k.y)+r)));}
++                group.end=i+1;
++            }}
+         work.maxAdvanceKnots=std::max<std::uint64_t>(work.maxAdvanceKnots,end-cursor_);cursor_=end;
+-        if(cursor_==knots.size()){body.exactValidationComplete_=true;cursor_=0;phase_=Phase::kCompile;}return false;
++        if(cursor_==knots.size()){
++            body.exactValidationComplete_=true;
++            if(material){body.ready_=true;phase_=Phase::kDone;++work.builds;return true;}
++            cursor_=0;phase_=Phase::kCompile;
++        }return false;
+     }
+     if(phase_==Phase::kCompile){
+         emitted_.patches.clear();emitted_.caps.clear();blockKnot_=cursor_;blockCount_=std::min(std::size_t(32),knots.size()-cursor_);
+diff --git a/runtime/render/src/skia_compact_material.cpp b/runtime/render/src/skia_compact_material.cpp
+index afac925b..ea4e947f 100644
+--- a/runtime/render/src/skia_compact_material.cpp
++++ b/runtime/render/src/skia_compact_material.cpp
+@@ -6,6 +6,7 @@ namespace g5 = canvas::foundation::internal::g5;
+ #include "compact_raster_internal.hpp"
+ #include "compact_contour_skia_path.hpp"
+ #include "skia_prepared_geometry.hpp"
++#include "skia_ink_layers.hpp"
+ #include "include/core/SkCanvas.h"
+ #include "include/core/SkImage.h"
+ #include "include/core/SkPaint.h"
+@@ -92,6 +93,12 @@ const sk_sp<SkRuntimeEffect>& dryWetEffect(bool material){
+ }
+ void drawPressureMaterialCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+     std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double distance,double total,std::uint64_t seed){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    const auto began=foundation::internal::frame_timing::now();
++    ++pressureDiagnosticWork.rangeCalls;
++    pressureDiagnosticWork.visited+=std::min(end,knots.size())-std::min(begin,knots.size());
++    struct End {std::uint64_t start;~End(){pressureDiagnosticWork.enqueueNs+=foundation::internal::frame_timing::now()-start;}} endTiming{began};
++#endif
+     if(knots.empty()||begin>=knots.size())return;
+     if(distance<0)distance=ink::compactLength(knots.first(begin));
+     SkRuntimeShaderBuilder builder(config.algorithmVersion==6?dryWetEffect(false):crayonCoverageEffect());
+@@ -117,7 +124,14 @@ void drawPressureMaterialCoverage(SkCanvas& canvas,const foundation::InkBrushCon
+         builder.uniform("clipCaps")=SkV2{float(i<=1&&distance==0&&!config.startCap),float(i+1==knots.size()&&distance+std::hypot(b.x-a.x,b.y-a.y)>=total-1e-5&&!config.endCap)};
+         distance+=std::hypot(b.x-a.x,b.y-a.y);
+         if(!SkRect::Intersects(bounds,clip))continue;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++        ++pressureDiagnosticWork.queued;
++#endif
+         paint.setShader(builder.makeShader());canvas.drawRect(bounds,paint);
++        if(pressureCommandCounter)++*pressureCommandCounter;
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
++        ++pressureTestCommands;
++#endif
+     }
+ }
+ const sk_sp<SkRuntimeEffect>& materialV2Effect(){
+@@ -260,6 +274,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
+     G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
+ 
+     if(knots.empty())return;
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    if(config.algorithmVersion==5||config.algorithmVersion==6){++pressureDiagnosticWork.directCalls;pressureDiagnosticWork.directKnots+=knots.size();}
++#endif
+     std::vector<foundation::InkKnot> selected;
+     double rangeStartDistance = 0.0;
+     double rangeTotalDistance = -1.0;
+@@ -332,6 +349,16 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
+ #endif
+         AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);
+         AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
++        auto* retained=targets?targets:execution?execution->targets():nullptr;
++        if(retained&&retained->retainedPressure&&prepared&&prepared->isPressureMaterial()){
++            auto image=retained->retainedPressure->pressureTile(prepared,canvas,matrix,clip,x,y,w,h);
++            if(!image){if(work)work->resourcePending=true;if(execution)execution->unavailable({},ExecutionReason::kAllocationDenied);return;}
++            auto shaded=SkIRect::MakeXYWH(x,y,w,h);
++            if(canCull){SkIRect rounded;support.roundOut(&rounded);if(!shaded.intersect(rounded))continue;}
++            canvas.save();canvas.resetMatrix();canvas.clipIRect(shaded);canvas.setMatrix(matrix);
++            compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x,y);canvas.restore();
++            if(execution)execution->reusePixels();continue;
++        }
+         CompactCoverageTargets localTargets;
+         auto* allocationOwner=targets?targets:(execution&&execution->targets()?execution->targets():&localTargets);
+         auto tile=decision?allocationOwner->acquire(canvas,w,h,*decision,work).surface
+@@ -380,6 +407,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
+     }
+ }
+ 
++resources::ResourceLease CompactCoverageTargets::detach(const SkSurface* surface){
++    for(auto& slot:slots_)if(slot.surface.get()==surface){auto lease=std::move(slot.lease);slot=Slot{};return lease;}return {};
++}
+ sk_sp<SkSurface> CompactCoverageTargets::acquire(SkCanvas& canvas,int w,int h,bool compatible,CompactRasterWork* work,bool scalar){
+     // Explicit legacy wrapper. A compatible request on Raster is CPU truth,
+     // never a retained GPU key. Other compatibility fallbacks remain declared.
+@@ -434,7 +464,7 @@ CompactCoverageTargets::Allocation CompactCoverageTargets::acquire(SkCanvas& can
+ CompactStrokeRasterJob::CompactStrokeRasterJob(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+     std::span<const foundation::InkKnot> knots,const CompactDeviceGrid* grid,bool compatible,std::shared_ptr<resources::ResourceBudgetManager> budget,
+     std::size_t maxRecordedBytes,std::function<void(std::size_t)> reclaim,bool canonicalReplay,std::shared_ptr<const PreparedNavigationGeometry> prepared,bool directConsumer,bool whiteOnly)
+-    :prepared_(prepared&&config.algorithmVersion==4&&prepared->isContour()&&prepared->ready()?std::move(prepared):nullptr),directConsumer_(directConsumer),whiteOnly_(whiteOnly),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
++    :prepared_(prepared&&prepared->ready()&&((config.algorithmVersion==4&&prepared->isContour())||((config.algorithmVersion==5||config.algorithmVersion==6)&&prepared->isPressureMaterial()))?std::move(prepared):nullptr),directConsumer_(directConsumer),whiteOnly_(whiteOnly),matrix_(canvas.getTotalMatrix()),deviceClip_(canvas.getDeviceClipBounds()),canonicalReplay_(canonicalReplay),reclaim_(std::move(reclaim)){
+     clip_=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip_;
+     x_=clip_.left();y_=clip_.top();done_=knots.empty()||clip_.isEmpty();
+     support_=prepared_?prepared_->support():SkRect::MakeEmpty();
+@@ -583,7 +613,8 @@ void CompactStrokeRasterJob::recordContour(const foundation::InkBrushConfig& con
+ }
+ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+     std::span<const foundation::InkKnot> knots,std::uint64_t seed,CompactCoverageTargets& targets,
+-    bool compatible,CompactRasterWork* work){
++    bool compatible,CompactRasterWork* work,std::size_t* pressureCommands){
++    PressureCommandScope commandScope(pressureCommands);
+     G5_SCOPE(g5Coverage,g5::Tag::coverage,g5::Purpose::none);
+ 
+     resourcePending_=false;
+@@ -597,6 +628,15 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+         }
+         if(y_>=clip_.bottom()){done_=true;return true;}
+         const auto w=std::min(256,clip_.right()-x_),h=std::min(256,clip_.bottom()-y_);
++        if(targets.retainedPressure&&prepared_&&prepared_->isPressureMaterial()){
++            if(auto image=targets.retainedPressure->pressureTile(prepared_.get(),canvas,matrix_,clip_,x_,y_,w,h)){
++                if(!captureOnly_){canvas.save();canvas.resetMatrix();auto shaded=SkIRect::MakeXYWH(x_,y_,w,h);
++                    if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
++                    canvas.clipIRect(shaded);canvas.setMatrix(matrix_);compositeCompactCoverageToSkCanvas(canvas,*image,config,seed,x_,y_);canvas.restore();}
++                if(auto* execution=RenderExecutionScope::current())execution->reusePixels();
++                x_+=256;if(x_>=clip_.right()){x_=clip_.left();y_+=256;}done_=y_>=clip_.bottom();return done_;
++            }
++        }
+         tileInterior_=interior_;tileInterior_.op(SkIRect::MakeXYWH(x_,y_,w,h),SkRegion::kIntersect_Op);
+         hybrid_=compatible&&canvas.recordingContext()&&config.algorithmVersion==3&&!tileInterior_.isEmpty();
+         tileInterior_.translate(-x_,-y_);
+@@ -610,6 +650,9 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+             tile_=targets.acquire(canvas,w,h,decision,work,!compatible&&config.materialVersion<3).surface;
+         }else tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&((config.algorithmVersion==4&&canvas.recordingContext())||config.algorithmVersion==5||config.algorithmVersion==6)),work,config.algorithmVersion==4&&config.materialVersion<3);
+         if(!tile_){resourcePending_=true;return false;}
++        // Transfer before yielding: another object or navigation pool cleanup
++        // must never borrow this producer's incomplete pixels or release its lease.
++        if(captureOnly_)tileLease_=targets.detach(tile_.get());
+         if(execution)execution->coverage(*tile_,false);
+         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
+         if(tile_->getCanvas()->recordingContext())AXIOM_FRAME_TIMING_ADD(gpu_coverage_tiles,1);
+@@ -648,7 +691,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+         knot_=0;distance_=0;preparedPrimitive_=0;
+         if(!prepared_&&config.algorithmVersion==4&&!recordComplete_)contour_.emplace(config);else contour_.reset();
+     }
+-    if(prepared_){
++    if(prepared_&&prepared_->isContour()){
+         auto* target=tile_->getCanvas();
+         preparedPrimitive_=prepared_->nextVisiblePrimitive(*target,preparedPrimitive_);
+         const auto count=std::min(std::size_t(32),prepared_->primitiveCount()-preparedPrimitive_);
+@@ -725,9 +768,14 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+             {AXIOM_FRAME_TIMING_SCOPE(drawTiming,contour_draw);
+                 drawContourCoverage(*target,config,emitted,contourBlend_);}
+             if(checkpoint)recordContour(config,emitted,std::move(*checkpoint));
+-        }else drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,distance_,totalDistance_,seed);
++        }else if(!prepared_||prepared_->materialRangeVisible(*target,knot_)){
++            const auto beginDistance=prepared_?prepared_->distances()[knot_]:distance_;
++            drawCompactCoverageRangeToSkCanvas(*target,config,knots,knot_,end,beginDistance,totalDistance_,seed);
++            if(prepared_)if(auto* execution=RenderExecutionScope::current())execution->preparedUse(directConsumer_);
++        }
+         target->restore();
+-        if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
++        if(prepared_&&prepared_->isPressureMaterial())distance_=prepared_->distances()[end];
++        else if(config.algorithmVersion!=4)for(std::size_t i=std::max(std::size_t(1),knot_);i<end;++i)
+             distance_+=std::hypot(knots[i].x-knots[i-1].x,knots[i].y-knots[i-1].y);
+         knot_=end;
+     }
+@@ -745,12 +793,15 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
+     {
+         AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
+         auto image=tile_->makeImageSnapshot();if(!image){resourcePending_=true;return false;}
++        if(targets.retainedPressure&&prepared_&&prepared_->isPressureMaterial()){
++            if(!targets.retainedPressure->retainPressureTile(prepared_,canvas,matrix_,clip_,x_,y_,image,targets,tile_.get(),captureOnly_?&tileLease_:nullptr)){resourcePending_=true;return false;}
++        }
+         canvas.save();canvas.resetMatrix();
+         auto shaded=SkIRect::MakeXYWH(x_,y_,tile_->width(),tile_->height());
+         if(canCull_){SkIRect rounded;support_.roundOut(&rounded);if(!shaded.intersect(rounded))shaded=SkIRect::MakeEmpty();}
+         canvas.clipIRect(shaded);canvas.setMatrix(matrix_);
+         if(work)work->compositedPixels+=std::uint64_t(shaded.width())*shaded.height();
+-        if(whiteOnly_){
++        if(captureOnly_){}else if(whiteOnly_){
+             // Same qualified ordered white coverage, before per-object mask and
+             // material. This is an immutable producer, not another evaluator.
+             canvas.resetMatrix();SkPaint copy;copy.setBlendMode(SkBlendMode::kSrc);
+diff --git a/runtime/render/src/skia_ink_layers.cpp b/runtime/render/src/skia_ink_layers.cpp
+index d2b45bfd..ac109580 100644
+--- a/runtime/render/src/skia_ink_layers.cpp
++++ b/runtime/render/src/skia_ink_layers.cpp
+@@ -16,7 +16,8 @@ void SkiaInkLayers::bindSurfaceBasis(const void*owner,std::uint64_t resource,std
+  const std::array<std::uint64_t,4> basis{resource,surface,view,metrics};
+  if(surfaceOwner_!=owner||surfaceBasis_!=basis){clear();surfaceOwner_=owner;surfaceBasis_=basis;}
+ }
+-void SkiaInkLayers::clearDeviceLayers()noexcept{tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
++void SkiaInkLayers::clearPressureBodies()noexcept{pressureBodies_.clear();pressureBytes_=pressureDemandBytes_=0;pressureBudget_.reset();}
++void SkiaInkLayers::clearDeviceLayers(bool keepPressure)noexcept{if(!keepPressure)clearPressureBodies();tiles_.clear();sources_.clear();geometry_.reset();histories_.reset();bytes_=0;}
+ void SkiaInkLayers::clear()noexcept{fullBodies_.clear();navigationBodies_.clear();navigationBudget_.reset();navigationWork_={};clearDeviceLayers();}
+ std::size_t SkiaInkLayers::retireIdleHistoryPreparation()noexcept{
+     if(drawDepth_)return 0;
+@@ -42,8 +43,9 @@ bool SkiaInkLayers::reserve(std::size_t bytes,const Key& key,const RenderCacheOp
+     for(;;){
+         const bool newKey=!tiles_.contains(key);
+         const auto count=std::min(std::size_t(1024),limits.maxEntries);
+-        const bool room=navigationWork_.bytes<=limits.maxBytes-bytes&&bytes_<=limits.maxBytes-bytes-navigationWork_.bytes&&
+-            (!newKey||tiles_.size()+navigationWork_.entries<count);
++        const bool room=pressureBytes_<=limits.maxBytes-bytes&&navigationWork_.bytes<=limits.maxBytes-bytes-pressureBytes_&&
++            bytes_<=limits.maxBytes-bytes-pressureBytes_-navigationWork_.bytes&&
++            (!newKey||tiles_.size()+navigationWork_.entries+pressureBodies_.size()<count);
+         auto token=room?reserveWithSourcePressure(budget,pressure_,resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
+         if(token){lease=resources::ResourceLease(budget,*token);return true;}
+         auto victim=tiles_.end();for(auto it=tiles_.begin();it!=tiles_.end();++it)
+@@ -296,7 +298,7 @@ void SkiaInkLayers::rememberNavigationBody(const std::shared_ptr<const PreparedN
+  if(bytes>options.maxEntryBytes||bytes>options.maxBytes)return;
+  std::optional<std::uint64_t> token;
+  while(!token){
+-  if(navigationBodies_.size()+fullBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-bytes)token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
++  if(navigationBodies_.size()+fullBodies_.size()+tiles_.size()+pressureBodies_.size()<count&&pressureBytes_<=options.maxBytes-bytes&&navigationWork_.bytes+bytes_<=options.maxBytes-bytes-pressureBytes_)token=budget->reserve(resources::ResourceClass::kRaster,bytes,true);
+   if(token)break;if(!evictNavigationBody())return;
+  }
+  resources::ResourceLease lease(budget,*token);(void)lease.markGpuUse();navigationBodies_.emplace(key,NavigationBody{body,std::move(pixels),std::move(lease),++tick_,bytes});navigationWork_.bytes+=bytes;++navigationWork_.builds;navigationWork_.entries=navigationBodies_.size()+fullBodies_.size();
+@@ -361,7 +363,7 @@ SkiaInkLayers::BodyPreparation SkiaInkLayers::prepareNavigationBody(const Refere
+   const auto count=std::min(std::size_t(1024),options.maxEntries);if(!count)return BodyPreparation::kUnavailable;
+   const auto charge=bytes*2+metadata;std::optional<std::uint64_t>token;
+   while(!token){
+-   if(fullBodies_.size()+navigationBodies_.size()+tiles_.size()<count&&navigationWork_.bytes+bytes_<=options.maxBytes-charge)token=budget->reserve(resources::ResourceClass::kRaster,bytes+metadata,true);
++   if(fullBodies_.size()+navigationBodies_.size()+tiles_.size()+pressureBodies_.size()<count&&pressureBytes_<=options.maxBytes-charge&&navigationWork_.bytes+bytes_<=options.maxBytes-charge-pressureBytes_)token=budget->reserve(resources::ResourceClass::kRaster,bytes+metadata,true);
+    if(token)break;if(!evictNavigationBody())return BodyPreparation::kPending;
+   }
+   resources::ResourceLease resident(budget,*token);
+@@ -420,3 +422,114 @@ bool SkiaInkLayers::projectNavigationBody(const std::shared_ptr<const PreparedNa
+  if(!hasBody)++navigationWork_.projectionBodyMiss;++navigationWork_.misses;return false;
+ }
+ }
++
++namespace canvas::render::internal {
++SkiaInkLayers::PressureKey SkiaInkLayers::pressureKey(const PreparedNavigationGeometry& body,SkCanvas& canvas,
++    const SkMatrix& matrix,const SkIRect& grid){
++    PressureKey key;key.body=body.identity();key.context=canvas.recordingContext();SkScalar values[9];matrix.get9(values);
++    for(unsigned i=0;i<9;++i)key.matrix[i]=std::bit_cast<std::uint32_t>(values[i]==0?0.F:values[i]);
++    key.grid={grid.left(),grid.top(),grid.right(),grid.bottom()};const auto info=canvas.imageInfo();
++    key.colorType=int(info.colorType());key.alphaType=int(info.alphaType());key.colorSpace=info.colorSpace()?info.colorSpace()->hash():0;
++    return key;
++}
++bool SkiaInkLayers::reclaimPressure(std::size_t bytes,std::size_t entries){
++    const auto& limits=pressureLimits_;
++    if(bytes>limits.maxBytes)return false;
++    while(pressureBytes_>limits.maxBytes-bytes||bytes_+navigationWork_.bytes>limits.maxBytes-bytes-pressureBytes_||
++          pressureBodies_.size()+navigationWork_.entries+tiles_.size()+entries>limits.maxEntries){
++        auto victim=pressureBodies_.end();
++        for(auto it=pressureBodies_.begin();it!=pressureBodies_.end();++it)
++            if(it->second.demand!=pressureDemand_&&(victim==pressureBodies_.end()||it->second.used<victim->second.used))victim=it;
++        if(victim!=pressureBodies_.end()){pressureBytes_-=victim->second.bytes;pressureBodies_.erase(victim);continue;}
++        if(evictNavigationBody())continue;
++        if(tiles_.empty())return false;
++        auto tile=std::min_element(tiles_.begin(),tiles_.end(),[](const auto& a,const auto& b){return a.second.used<b.second.used;});
++        bytes_-=tile->second.bytes;tiles_.erase(tile);
++    }
++    return true;
++}
++bool SkiaInkLayers::beginPressureDemand(const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget){
++    if(!budget)return false;
++    if(pressureBudget_!=budget){pressureBodies_.clear();pressureBytes_=0;pressureBudget_=budget;}
++    pressureLimits_=limits;pressureDemandBytes_=0;++pressureDemand_;
++    return true;
++}
++SkiaInkLayers::BodyPreparation SkiaInkLayers::requirePressureBody(const std::shared_ptr<const PreparedNavigationGeometry>& body,
++    SkCanvas& canvas,const CompactDeviceGrid& grid){
++    if(!body||!body->ready()||!body->isPressureMaterial()||!canvas.recordingContext())return BodyPreparation::kUnavailable;
++    const auto matrix=canvas.getTotalMatrix();if(!matrix.isFinite()||matrix.hasPerspective())return BodyPreparation::kUnavailable;
++    const auto clip=SkIRect::MakeLTRB(grid.left,grid.top,grid.right,grid.bottom);
++    const auto key=pressureKey(*body,canvas,matrix,clip);
++    auto found=pressureBodies_.find(key);
++    if(found!=pressureBodies_.end()&&found->second.demand==pressureDemand_)return BodyPreparation::kReady;
++    auto bounds=matrix.mapRect(body->support());bounds.outset(2,2);if(!bounds.isFinite())return BodyPreparation::kUnavailable;
++    constexpr auto metadata=sizeof(PressureBody)+sizeof(PressureKey)+sizeof(CompactStrokeRasterJob)+256;
++    std::size_t required=metadata;
++    for(int y=grid.top;y<grid.bottom;y+=256)for(int x=grid.left;x<grid.right;x+=256){
++        const auto w=std::min(256,grid.right-x),h=std::min(256,grid.bottom-y);
++        if(!SkRect::Intersects(bounds,SkRect::MakeXYWH(float(x),float(y),float(w),float(h))))continue;
++        const auto bytes=std::size_t(w)*h*4+sizeof(PressureTile)+64;
++        if(bytes>pressureLimits_.maxEntryBytes||required>pressureLimits_.maxEntryBytes-bytes)return BodyPreparation::kUnavailable;
++        required+=bytes;
++    }
++    if(required>pressureLimits_.maxBytes||pressureDemandBytes_>pressureLimits_.maxBytes-required)return BodyPreparation::kUnavailable;
++    pressureDemandBytes_+=required;
++    if(found==pressureBodies_.end()){
++        if(!reclaimPressure(metadata,1))return BodyPreparation::kPending;
++        const auto token=pressureBudget_->reserve(resources::ResourceClass::kRecorded,metadata,true);if(!token)return BodyPreparation::kPending;
++        PressureBody item;item.body=body;item.metadata=resources::ResourceLease(pressureBudget_,*token);item.bytes=metadata;
++        found=pressureBodies_.emplace(key,std::move(item)).first;pressureBytes_+=metadata;
++    }
++    found->second.demand=pressureDemand_;found->second.required=required;found->second.used=++tick_;
++    return BodyPreparation::kReady;
++}
++void SkiaInkLayers::finishPressureDemand(){
++    for(auto it=pressureBodies_.begin();it!=pressureBodies_.end();){
++        if(it->second.job&&it->second.demand!=pressureDemand_){pressureBytes_-=it->second.bytes;it=pressureBodies_.erase(it);}else ++it;
++    }
++}
++sk_sp<SkImage> SkiaInkLayers::pressureTile(const PreparedNavigationGeometry* body,SkCanvas& canvas,
++    const SkMatrix& matrix,const SkIRect& grid,int x,int y,int w,int h){
++    if(!body||!body->ready()||!body->isPressureMaterial())return {};
++    const auto found=pressureBodies_.find(pressureKey(*body,canvas,matrix,grid));if(found==pressureBodies_.end())return {};
++    const auto tile=found->second.tiles.find({x,y});if(tile==found->second.tiles.end()||tile->second.image->width()!=w||tile->second.image->height()!=h)return {};
++    found->second.used=++tick_;(void)tile->second.pixels.markGpuUse();return tile->second.image;
++}
++bool SkiaInkLayers::retainPressureTile(const std::shared_ptr<const PreparedNavigationGeometry>& body,SkCanvas& canvas,
++    const SkMatrix& matrix,const SkIRect& grid,int x,int y,sk_sp<SkImage> image,CompactCoverageTargets& targets,const SkSurface* surface,resources::ResourceLease* exclusive){
++    if(!body||!image||!pressureBudget_||(!exclusive&&!targets.owns(surface)))return false;
++    const auto found=pressureBodies_.find(pressureKey(*body,canvas,matrix,grid));if(found==pressureBodies_.end())return false;
++    auto& item=found->second;if(item.tiles.contains({x,y}))return true;
++    constexpr auto metadata=sizeof(PressureTile)+64;const auto bytes=std::size_t(image->width())*image->height()*4+metadata;
++    if(bytes>pressureLimits_.maxEntryBytes||item.bytes>pressureLimits_.maxEntryBytes-bytes||!reclaimPressure(bytes))return false;
++    const auto token=pressureBudget_->reserve(resources::ResourceClass::kRecorded,metadata,true);if(!token)return false;
++    resources::ResourceLease meta(pressureBudget_,*token);auto pixels=exclusive?std::move(*exclusive):targets.detach(surface);
++    (void)pixels.markGpuUse();item.tiles.emplace(std::pair{x,y},PressureTile{std::move(image),std::move(pixels),std::move(meta),bytes});
++    item.bytes+=bytes;pressureBytes_+=bytes;return true;
++}
++SkiaInkLayers::BodyPreparation SkiaInkLayers::preparePressureBody(const ReferenceTraversalEntry& entry,
++    const std::shared_ptr<const PreparedNavigationGeometry>& body,SkCanvas& canvas,const CompactDeviceGrid& grid,
++    const RenderCacheOptions& limits,const std::shared_ptr<resources::ResourceBudgetManager>& budget,
++    CompactCoverageTargets& targets,RenderCacheWork& work,PreparationAllowance& allowance){
++    if(!body||!body->ready()||!body->isPressureMaterial()||pressureBudget_!=budget)return BodyPreparation::kUnavailable;
++    const auto key=pressureKey(*body,canvas,canvas.getTotalMatrix(),SkIRect::MakeLTRB(grid.left,grid.top,grid.right,grid.bottom));
++    const auto found=pressureBodies_.find(key);if(found==pressureBodies_.end())return BodyPreparation::kUnavailable;
++    auto& item=found->second;targets.retainedPressure=this;
++    if(!item.job&&item.bytes==item.required)return BodyPreparation::kReady;
++    if(!item.job){
++        const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
++        item.job=std::make_unique<CompactStrokeRasterJob>(canvas,stroke.config,stroke.knots,&grid,limits.gpuCoverageCandidate,
++            budget,limits.maxEntryBytes,std::function<void(std::size_t)>{},true,body);
++        item.job->setCaptureOnly();
++    }
++    const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke;
++    while(!allowance.exhausted()){
++        CompactRasterWork raster;const bool complete=item.job->step(canvas,stroke.config,stroke.knots,stroke.seed,targets,
++            limits.gpuCoverageCandidate,&raster,&allowance.pressureCommands);
++        ++allowance.steps;++work.preparationCoverageSteps;work.gpuCoverageTiles+=raster.gpuTiles;work.cpuCoverageTiles+=raster.cpuTiles;
++        if(item.job->resourcePending())return BodyPreparation::kPending;
++        if(complete){item.job.reset();return BodyPreparation::kReady;}
++    }
++    return BodyPreparation::kPending;
++}
++}
+diff --git a/runtime/render/src/skia_ink_layers.hpp b/runtime/render/src/skia_ink_layers.hpp
+index 3bac8f74..a781e287 100644
+--- a/runtime/render/src/skia_ink_layers.hpp
++++ b/runtime/render/src/skia_ink_layers.hpp
+@@ -31,14 +31,45 @@ class SkiaInkLayers final {
+     bool projectNavigationBody(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,
+         const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
+     void bindSurfaceBasis(const void*,std::uint64_t resource,std::uint64_t surface,std::uint64_t view,std::uint64_t metrics);
+-    void clearDeviceLayers()noexcept;
++    void clearDeviceLayers(bool keepPressure=false)noexcept;
++    void clearPressureBodies()noexcept;
+     void clear()noexcept;
++    bool beginPressureDemand(const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&);
++    BodyPreparation requirePressureBody(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,const CompactDeviceGrid&);
++    void finishPressureDemand();
++    BodyPreparation preparePressureBody(const ReferenceTraversalEntry&,const std::shared_ptr<const PreparedNavigationGeometry>&,
++        SkCanvas&,const CompactDeviceGrid&,const RenderCacheOptions&,const std::shared_ptr<resources::ResourceBudgetManager>&,
++        CompactCoverageTargets&,RenderCacheWork&,PreparationAllowance&);
++    sk_sp<SkImage> pressureTile(const PreparedNavigationGeometry*,SkCanvas&,const SkMatrix&,const SkIRect&,int,int,int,int);
++    bool retainPressureTile(const std::shared_ptr<const PreparedNavigationGeometry>&,SkCanvas&,const SkMatrix&,
++        const SkIRect&,int,int,sk_sp<SkImage>,CompactCoverageTargets&,const SkSurface*,resources::ResourceLease* exclusive=nullptr);
+     void setValidationPressure(ValidationPressure pressure){pressure_=std::move(pressure);}
+     void prune(std::span<const ReferenceTraversalEntry>);
+     // Owner-thread preparation opportunity only. Plan values and pixel/GPU
+     // leases remain valid; every retained mask result loses qualification.
+     std::size_t retireIdleHistoryPreparation() noexcept;
+  private:
++    struct PressureKey {
++        std::uint64_t body=0;const void* context=nullptr;
++        std::array<std::uint32_t,9> matrix{};
++        std::array<int,4> grid{};int colorType=0,alphaType=0;std::uint64_t colorSpace=0;
++        bool operator<(const PressureKey& b)const{return std::tie(body,context,matrix,grid,colorType,alphaType,colorSpace)<std::tie(b.body,b.context,b.matrix,b.grid,b.colorType,b.alphaType,b.colorSpace);}
++    };
++    struct PressureTile {sk_sp<SkImage> image;resources::ResourceLease pixels,metadata;std::size_t bytes=0;};
++    struct PressureBody {
++        std::shared_ptr<const PreparedNavigationGeometry> body;
++        std::map<std::pair<int,int>,PressureTile> tiles;
++        std::unique_ptr<CompactStrokeRasterJob> job;
++        resources::ResourceLease metadata;
++        std::size_t bytes=0,required=0;std::uint64_t used=0,demand=0;
++    };
++    std::map<PressureKey,PressureBody> pressureBodies_;
++    std::shared_ptr<resources::ResourceBudgetManager> pressureBudget_;
++    RenderCacheOptions pressureLimits_{};
++    std::uint64_t pressureDemand_=0;
++    std::size_t pressureBytes_=0,pressureDemandBytes_=0;
++    static PressureKey pressureKey(const PreparedNavigationGeometry&,SkCanvas&,const SkMatrix&,const SkIRect&);
++    bool reclaimPressure(std::size_t bytes,std::size_t entries=0);
+     struct NavigationBodyKey {
+         std::uint64_t body=0;const void* context=nullptr;
+         std::array<std::uint32_t,9> matrix{};std::array<int,6> crop{};int colorType=0,alphaType=0;std::uint64_t colorSpace=0;
+diff --git a/runtime/render/src/skia_prepared_geometry.cpp b/runtime/render/src/skia_prepared_geometry.cpp
+index c6f6609c..4d5cd5de 100644
+--- a/runtime/render/src/skia_prepared_geometry.cpp
++++ b/runtime/render/src/skia_prepared_geometry.cpp
+@@ -29,6 +29,16 @@ void drawCap(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink
+ 
+ }
+ PreparedNavigationGeometry::~PreparedNavigationGeometry(){if(usage_)usage_->bytes-=bytes_;}
++bool PreparedNavigationGeometry::isPressureMaterial()const noexcept{
++    const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&source_);
++    return compact&&(compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)&&!distances_.empty();
++}
++bool PreparedNavigationGeometry::materialRangeVisible(SkCanvas& canvas,std::size_t first)const{
++    if(!isPressureMaterial()||first/32>=ribbonGroups_.size())return true;
++    const auto& bounds=ribbonGroups_[first/32].bounds;
++    const auto clip=canvas.getLocalClipBounds();
++    return !clip.isFinite()||!bounds.isFinite()||bounds.isEmpty()||SkRect::Intersects(clip,bounds);
++}
+ SkPath PreparedNavigationGeometry::exactCapPath(const foundation::InkBrushConfig& config,const ink::ContourCap& cap){
+     // Match the original exact kernel, including SkScalar conversion and the
+     // final marker transform. Finite source doubles alone do not prove this.
+@@ -450,9 +460,10 @@ std::shared_ptr<const PreparedNavigationGeometry> PreparedGeometryCache::get(
+         if(victim==entries_.end())return denied();const auto id=victim->first;eraseBody(id);++work_.evictions;
+     }
+     const auto count=compact?compact->content.get().stroke.knots.size():vector->content.get().stroke.vector_output.outline.size();
+-    if(deferred&&compact&&compact->content.get().stroke.config.algorithmVersion==4){
++    if(deferred&&compact&&(compact->content.get().stroke.config.algorithmVersion==4||compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)){
+         const auto entryCap=std::min(limits.maxBytes,limits.maxEntryBytes);
+-        if(sourceBytes>=entryCap||PreparedBodyJob::minimumBytes(count)>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
++        const auto minimum=compact->content.get().stroke.config.algorithmVersion==4?PreparedBodyJob::minimumBytes(count):sizeof(PreparedNavigationGeometry)+sizeof(PreparedBodyJob)+512+(count+1)*sizeof(double)+(count/32+(count%32!=0))*sizeof(PreparedNavigationGeometry::Group);
++        if(sourceBytes>=entryCap||minimum>entryCap-sourceBytes){lastRequestRejected_=true;return denied();}
+         try{
+             auto candidate=PreparedBodyJob::create(entry.command,*retained,entryCap-sourceBytes,budget,usage_,pressure_);
+             // Reclaim only cache-owned work on an actual quota miss. Current
+diff --git a/runtime/render/src/skia_prepared_geometry.hpp b/runtime/render/src/skia_prepared_geometry.hpp
+index b2408311..967a8e86 100644
+--- a/runtime/render/src/skia_prepared_geometry.hpp
++++ b/runtime/render/src/skia_prepared_geometry.hpp
+@@ -21,8 +21,12 @@ struct PreparationAllowance final {
+     RenderPreparationBudget limits;
+     std::chrono::steady_clock::time_point start=std::chrono::steady_clock::now();
+     std::size_t steps=0;
++    // Aggregate actual procedural commands, including all objects and tiles.
++    std::size_t pressureCommands=0;
++    std::size_t materialMaskDraws=0;
++    static constexpr std::size_t pressureCommandLimit=128;
+     explicit PreparationAllowance(RenderPreparationBudget value={}):limits(value){}
+-    bool exhausted()const noexcept {return steps>=limits.maxCoverageSteps||!limits.maxMicroseconds||
++    bool exhausted()const noexcept {return materialMaskDraws>=128||pressureCommands+32>pressureCommandLimit||steps>=limits.maxCoverageSteps||!limits.maxMicroseconds||
+         (steps&&std::chrono::steady_clock::now()-start>=std::chrono::microseconds(limits.maxMicroseconds));}
+ };
+ struct PreparedGeometryStatistics final {
+@@ -50,6 +54,8 @@ class PreparedNavigationGeometry final {
+     const SkRect& support()const noexcept{return support_;}
+     const SkPath* vectorPath()const noexcept{return vector_?&*vector_:nullptr;}
+     bool isContour()const noexcept{return contour_;}
++    bool isPressureMaterial()const noexcept;
++    bool materialRangeVisible(SkCanvas&,std::size_t first)const;
+     bool exactValidated()const noexcept{return ready_&&exactValidationComplete_&&exactValidationValid_&&exactDerivedFinite_;}
+     std::uint64_t identity()const noexcept{return cacheId_;}
+     // Exact CPU components only: bounds are negative filters, never a hit.
+diff --git a/runtime/render/src/skia_render_cache.cpp b/runtime/render/src/skia_render_cache.cpp
+index cb80fb23..59b3509e 100644
+--- a/runtime/render/src/skia_render_cache.cpp
++++ b/runtime/render/src/skia_render_cache.cpp
+@@ -107,6 +107,10 @@ bool SkiaRenderCache::buildStaticScene(SkCanvas& canvas,const FramePlan& plan,
+ }
+ void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry){
+     AXIOM_FRAME_TIMING_SCOPE(historyTiming,historical_mask_draw);
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
++    for(const auto& mask:entry.record.eraseMasks)materialMaskTestDraws+=
++        std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1;
++#endif
+ #if defined(AXIOM_ENABLE_FRAME_TIMING)
+     for(const auto& mask:entry.record.eraseMasks)AXIOM_FRAME_TIMING_ADD(history_draw_primitives,
+         std::holds_alternative<semantic::SweptCircleMask>(mask.geometry)?std::get<semantic::SweptCircleMask>(mask.geometry).segments.size():1);
+@@ -126,6 +130,29 @@ void SkiaRenderCache::drawHistoricalMasks(SkCanvas& canvas,const ReferenceTraver
+     // evaluator and target. This is not a CPU coverage or whole-frame fallback.
+     drawEraseMasksToSkCanvas(canvas,entry);
+ }
++SkiaRenderCache::Preparation SkiaRenderCache::prepareMaterialMasks(SkCanvas& canvas,const ReferenceTraversalEntry& entry,PreparationAllowance& allowance){
++    if(entry.record.eraseMasks.empty())return Preparation::kReady;
++    if(!pending_||!maskHistory)return Preparation::kResourcePending;
++    auto& pending=*pending_;
++    if(!pending.masks)pending.masks=maskHistory->requestNavigationHistory(entry.record.eraseMasks,budget,std::min(options.maxEntryBytes,options.maxBytes/4));
++    if(!pending.masks)return Preparation::kResourcePending;
++    while(!pending.masks->ready){
++        if(allowance.exhausted())return Preparation::kPending;
++        const auto status=maskHistory->advanceNavigationHistory(pending.masks);++allowance.steps;
++        if(status==EraseMaskPathCache::NavigationMaskStatus::kInvalid)return Preparation::kRejected;
++    }
++    for(;;){
++        if(allowance.exhausted())return Preparation::kPending;
++        const auto status=maskHistory->replayNavigationHistory(pending.masks,canvas,pending.maskReplay,
++            std::min(std::size_t(32),128-allowance.materialMaskDraws));++allowance.steps;
++        allowance.materialMaskDraws+=pending.maskReplay.lastDraws;
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
++        materialMaskTestDraws+=pending.maskReplay.lastDraws;
++#endif
++        if(status==EraseMaskPathCache::NavigationMaskStatus::kInvalid)return Preparation::kRejected;
++        if(status==EraseMaskPathCache::NavigationMaskStatus::kReady)return Preparation::kReady;
++    }
++}
+ bool SkiaRenderCache::canRetainCompact(const SkCanvas& canvas,const ReferenceTraversalEntry& entry) const noexcept {
+     // GPU v4 SrcOver material can be retained after an object affine. Keep
+     // CPU Direct's exact quantization and permanent destination-clear masks.
+@@ -194,7 +221,7 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface&
+         frame_->metricsGeneration!=f.metricsGeneration;
+     const bool changed=targetChanged||transform_!=plan.referenceDrawList.worldToView;
+     if(changed || !transient || activeSource_!=activeSource) invalidateStaticScene();
+-    if(changed){bodyPixels_.reset();work.bodyPixelBytes=0;inkLayers_->clearDeviceLayers();work.inkLayerBytes=0;}
++    if(changed){bodyPixels_.reset();work.bodyPixelBytes=0;inkLayers_->clearDeviceLayers(!targetChanged);work.inkLayerBytes=0;}
+     else inkLayers_->prune(plan.referenceDrawList.entries);
+     coverageTargets_.budget=budget;
+     const auto pressure=validationPressure(validationProofs,budget);
+@@ -492,7 +519,7 @@ bool SkiaRenderCache::hasPixels(const ReferenceTraversalEntry& entry)const{
+ bool SkiaRenderCache::needsPreparedBody(const ReferenceTraversalEntry& entry)const noexcept{
+     const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
+     return options.enabled&&options.gpuCoverageCandidate&&surface_&&surface_->recordingContext()&&preparedGeometry&&
+-        compact&&compact->content.get().stroke.config.algorithmVersion==4&&entry.contributesPixels;
++        compact&&(compact->content.get().stroke.config.algorithmVersion==4||compact->content.get().stroke.config.algorithmVersion==5||compact->content.get().stroke.config.algorithmVersion==6)&&entry.contributesPixels;
+ }
+ SkiaRenderCache::Preparation SkiaRenderCache::prepareBody(const ReferenceTraversalEntry& entry,PreparationAllowance& allowance){
+     if(!needsPreparedBody(entry))return Preparation::kReady;
+@@ -641,12 +668,13 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas
+             auto job=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,
+                 options.gpuCoverageCandidate,budget,std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,
+                 readyBody(entry,direct?PreparedConsumer::kDirect:PreparedConsumer::kCanonical),direct);
+-            target->restore();pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,{},std::move(job)});
++            target->restore();pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,{},std::move(job),false,{},{}});
+         }
+         bool complete=false;
++        if(!pending_->bodyComplete){
+         do{
+             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));CompactRasterWork rasterWork;
+-            try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
++            try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,coverageTargets_,options.gpuCoverageCandidate,&rasterWork,&allowance.pressureCommands);}
+             catch(...){target->restore();throw;}
+             target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
+             if(pending_->raster->resourcePending()){
+@@ -658,8 +686,14 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepareWorkingSet(SkCanvas& canvas
+             }
+             if(!complete&&allowance.exhausted())return yield();
+         }while(!complete);
++        pending_->bodyComplete=true;
++        }
+         configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+-        drawHistoricalMasks(*target,entry);drawPresentationEraseMasksToSkCanvas(*target,entry);target->restore();
++        if(stroke.config.algorithmVersion==5||stroke.config.algorithmVersion==6){
++            const auto history=prepareMaterialMasks(*target,entry,allowance);
++            if(history!=Preparation::kReady){target->restore();flushPreparation();return history;}
++        }else drawHistoricalMasks(*target,entry);
++        drawPresentationEraseMasksToSkCanvas(*target,entry);target->restore();
+         if(isolated){
+             SkPaint paint;paint.setAlphaf(std::clamp(entry.presentationOpacity,0.0F,1.0F));
+             composite_->getCanvas()->drawImage(scratch_->makeImageSnapshot(),0,0,SkSamplingOptions{},&paint);
+@@ -706,7 +740,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+             // Keep its body cooperative; applying masks via Direct here made
+             // an individual entry bypass the owner's coverage quantum.
+             if(!compact||!entry.contributesPixels||(!entry.record.eraseMasks.empty()&&
+-               compact->content.get().stroke.config.algorithmVersion!=4)){
++               compact->content.get().stroke.config.algorithmVersion!=4&&compact->content.get().stroke.config.algorithmVersion!=5&&compact->content.get().stroke.config.algorithmVersion!=6)){
+                 admissions_.insert_or_assign(entry.record.objectId,Admission{{},AdmissionKind::kDirect});
+                 AXIOM_FRAME_TIMING_ADD(prepare_direct,1);
+                 ++work.preparationDirectEntries;continue;
+@@ -730,6 +764,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 ++work.preparationDirectEntries;continue;
+             }
+             SkIRect crop;device.roundOut(&crop);
++            // Legacy affine pressure ink clears the ordered destination even
++            // when pigment support is offscreen. Preserve its full mask clip.
++            if(!entry.record.eraseMasks.empty()&&!plan.isolateEraseMasks&&
++               !requiresInkEntryIsolation(entry,isolatedInk)&&!canRetainCompact(canvas,entry))crop=canvas.getDeviceClipBounds();
+             if(!crop.intersect(canvas.getDeviceClipBounds())){
+                 admissions_.insert_or_assign(entry.record.objectId,Admission{SkIRect::MakeEmpty(),AdmissionKind::kEmpty});
+                 continue;
+@@ -876,7 +914,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+         if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
+         bool bodyHit=bodyReusable&&!pending_&&restoreBodyPixels(canvas,entry,admission->second.crop);
+         auto* target=(directComposite?composite_:scratch_)->getCanvas();
+-        if(!bodyHit&&bodyReusable&&!entry.geometryChunked){
++        if(!bodyHit&&bodyReusable&&!entry.geometryChunked&&(!pending_||!pending_->bodyComplete)){
+             sk_sp<SkImage> bodyImage;SkMatrix sourceMatrix;
+             const auto transform=entryMatrix(canvas,plan,entry);
+             const auto status=inkLayers_->prepareNavigationBody(entry,readyBody(entry,PreparedConsumer::kCanonical),transform,*target,
+@@ -892,7 +930,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 target->restore();bodyHit=true;
+             }
+         }
+-        if(!bodyHit){
++        if(!bodyHit&&(!pending_||!pending_->bodyComplete)){
+             if(!pending_){
+                 if(!directComposite&&!ensureScratch(canvas,true))return allocationFailure_;
+                 const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
+@@ -903,7 +941,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget,
+                     std::min(options.maxEntryBytes,options.maxBytes),reclaimRecorded,true,readyBody(entry,PreparedConsumer::kCanonical));
+                 target->restore();
+-                pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
++                pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob),false,{},{}});
+                 ++work.misses;
+             }
+             if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
+@@ -915,7 +953,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+                 CompactRasterWork rasterWork;
+                 try{complete=pending_->raster->step(*target,stroke.config,stroke.knots,stroke.seed,
+-                        coverageTargets_,options.gpuCoverageCandidate,&rasterWork);}
++                        coverageTargets_,options.gpuCoverageCandidate,&rasterWork,&allowance.pressureCommands);}
+                 catch(...){target->restore();pending_.reset();throw;}
+                 target->restore();noteCoverage(rasterWork);++allowance.steps;++work.preparationCoverageSteps;
+                 if(pending_->raster->resourcePending()){
+@@ -931,6 +969,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+                 }
+                 if(!complete&&exhausted())return yield();
+             }while(!complete);
++            pending_->bodyComplete=true;
+             if(movingEraseBodies_&&transientTileRefused())return yield();
+             if(bodyReusable)retainBodyPixels(canvas,entry,admission->second.crop);
+         }
+@@ -939,7 +978,12 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
+         // entries clear the ordered composite, preserving existing semantics.
+         if(!entry.record.eraseMasks.empty()){
+             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
+-            drawHistoricalMasks(*target,entry);target->restore();
++            const auto& config=std::get<CompactStrokeReferenceCommand>(entry.command).content.get().stroke.config;
++            if(config.algorithmVersion==5||config.algorithmVersion==6){
++                if(!pending_){pending_=std::make_unique<Pending>();pending_->id=entry.record.objectId;pending_->validity=validity;pending_->bodyComplete=true;}
++                const auto history=prepareMaterialMasks(*target,entry,allowance);target->restore();
++                if(history!=Preparation::kReady){flushPreparation();return history;}
++            }else{drawHistoricalMasks(*target,entry);target->restore();}
+         }
+         const auto crop=admission->second.crop;pending_.reset();
+         if(directComposite){++work.rasterizedGroups;++built;continue;}
+@@ -1452,3 +1496,40 @@ void SkiaRenderCache::diagnosticProgress(const char* phase,const char* reason,in
+ }
+ }
+ #endif
++
++namespace canvas::render::internal {
++SkiaRenderCache::Preparation SkiaRenderCache::preparePressureBodies(SkCanvas& canvas,const FramePlan& plan,PreparationAllowance& allowance){
++    if(!options.enabled||!options.gpuCoverageCandidate||!canvas.recordingContext())return Preparation::kReady;
++    if(!sourceAdmission_)return Preparation::kResourcePending;
++    if(stagedBodies_){inkLayers_->clearPressureBodies();coverageTargets_.retainedPressure=nullptr;return Preparation::kReady;}
++    SkAutoCanvasRestore restore(&canvas,true);canvas.resetMatrix();
++    canvas.scale(plan.frame.metrics.physicalWidth/plan.frame.metrics.logicalWidth,plan.frame.metrics.physicalHeight/plan.frame.metrics.logicalHeight);
++    const auto& clip=plan.referenceDrawList.viewportClip;canvas.clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
++    const auto device=canvas.getDeviceClipBounds();const CompactDeviceGrid grid{device.left(),device.top(),device.right(),device.bottom()};
++    if(!inkLayers_->beginPressureDemand(options,budget))return Preparation::kResourcePending;
++    const auto pressure=[](const auto& entry){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
++        return c&&entry.contributesPixels&&(c->content.get().stroke.config.algorithmVersion==5||c->content.get().stroke.config.algorithmVersion==6);};
++    for(const auto& entry:plan.referenceDrawList.entries){
++        if(!pressure(entry))continue;
++        auto status=prepareBody(entry,allowance);if(status!=Preparation::kReady)return status;
++        const auto matrix=entryMatrix(canvas,plan,entry);canvas.save();canvas.setMatrix(matrix);
++        const auto fits=inkLayers_->requirePressureBody(readyBody(entry,PreparedConsumer::kCanonical),canvas,grid);canvas.restore();
++        if(fits!=SkiaInkLayers::BodyPreparation::kReady){
++            // Optional residency cannot become a document/work-set limit.
++            inkLayers_->clearPressureBodies();coverageTargets_.retainedPressure=nullptr;
++            stagedBodies_=true;stagedMaterial_=true;stagedDemand_=std::count_if(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),
++                [&](const auto& source){return needsPreparedBody(source)&&(!hasPixels(source)||source.presentationEraseActive);});
++            bodyDependencies_.clear();resetPreparation("pressure-demand-staging");return Preparation::kReady;
++        }
++    }
++    inkLayers_->finishPressureDemand();
++    for(const auto& entry:plan.referenceDrawList.entries){
++        if(!pressure(entry))continue;
++        const auto matrix=entryMatrix(canvas,plan,entry);canvas.save();canvas.setMatrix(matrix);
++        const auto result=inkLayers_->preparePressureBody(entry,readyBody(entry,PreparedConsumer::kCanonical),canvas,grid,
++            options,budget,coverageTargets_,work,allowance);canvas.restore();
++        if(result!=SkiaInkLayers::BodyPreparation::kReady){flushPreparation();return result==SkiaInkLayers::BodyPreparation::kUnavailable?Preparation::kRejected:Preparation::kPending;}
++    }
++    return Preparation::kReady;
++}
++}
+diff --git a/runtime/render/src/skia_render_cache_internal.hpp b/runtime/render/src/skia_render_cache_internal.hpp
+index ffc2c5aa..d6a43556 100644
+--- a/runtime/render/src/skia_render_cache_internal.hpp
++++ b/runtime/render/src/skia_render_cache_internal.hpp
+@@ -11,10 +11,14 @@
+ #include "canvas/resources/resource_budget_manager.hpp"
+ #include "source_retention.hpp"
+ #include "skia_ink_layers.hpp"
++#include "navigation_mask_plan.hpp"
+ #include "canvas/scheduling/runtime_scheduler.hpp"
+ #include <unordered_map>
+ 
+ namespace canvas::render::internal {
++#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
++inline thread_local std::uint64_t materialMaskTestDraws=0;
++#endif
+ class ReferenceValidationCache;
+ #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+ class GpuResourceRetirement;
+@@ -59,6 +63,7 @@ class SkiaRenderCache final {
+     enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
+     Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*,PreparationAllowance* shared=nullptr);
+     Preparation prepareBodies(SkCanvas&,const FramePlan&,PreparationAllowance&);
++    Preparation preparePressureBodies(SkCanvas&,const FramePlan&,PreparationAllowance&);
+     Preparation prepareWorkingSet(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*,bool direct,const EditingOverlay* overlay=nullptr);
+     bool stagedBodies()const noexcept{return stagedBodies_;}
+     bool needsPreparedBody(const ReferenceTraversalEntry&)const noexcept;
+@@ -88,6 +93,7 @@ class SkiaRenderCache final {
+     InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
+     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
+     void drawHistoricalMasks(SkCanvas&,const ReferenceTraversalEntry&);
++    Preparation prepareMaterialMasks(SkCanvas&,const ReferenceTraversalEntry&,PreparationAllowance&);
+     std::shared_ptr<SkiaInkLayers> navigationBodies()const{return inkLayers_;}
+     void clear() noexcept;
+     // Entering live erasure changes the useful representation. Retire old
+@@ -208,7 +214,13 @@ class SkiaRenderCache final {
+     std::unordered_map<foundation::ObjectId,Coverage,foundation::ObjectIdHash> coverage_;
+     CompactCoverageTargets coverageTargets_;
+     std::shared_ptr<SkiaInkLayers> inkLayers_=std::make_shared<SkiaInkLayers>();
+-    struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
++    struct Pending {
++        foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;
++        std::unique_ptr<CompactStrokeRasterJob> raster;
++        bool bodyComplete=false;
++        std::shared_ptr<NavigationMaskPlan> masks;
++        NavigationMaskReplay maskReplay;
++    };
+     std::unique_ptr<Pending> pending_;
+     enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
+     struct Admission {SkIRect crop;AdmissionKind kind=AdmissionKind::kRaster;};
+diff --git a/runtime/render/src/skia_renderer.cpp b/runtime/render/src/skia_renderer.cpp
+index 7dd30c28..7c968f15 100644
+--- a/runtime/render/src/skia_renderer.cpp
++++ b/runtime/render/src/skia_renderer.cpp
+@@ -449,6 +449,9 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
+ BackendSubmissionResult SkiaRenderer::renderFrame(
+     SkiaSurfaceProvider& provider, const FramePlan& plan,
+     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    internal::PressureDiagnosticScope pressureObservation{"canonical"};
++#endif
+     G5_SCOPE(g5Render,g5::Tag::material,g5::Purpose::none);
+ #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
+     ObservationCounters observationCounters{*this};
+@@ -542,14 +545,15 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
+         cache=renderCache_.get();execution.bindTargets(cache->executionTargets());
+     } catch(const std::bad_alloc&) {clearRenderCache();}
+     if(!cache&&renderCacheOptions_.enabled&&renderCacheOptions_.gpuCoverageCandidate&&gpuContext&&
+-       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&c->content.get().stroke.config.algorithmVersion==4;})){
++       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&(c->content.get().stroke.config.algorithmVersion==4||c->content.get().stroke.config.algorithmVersion==5||c->content.get().stroke.config.algorithmVersion==6);})){
+         provider.release();return BackendSubmissionResult::retry("canonical prepared owner unavailable");
+     }
+     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"canonical");
+     internal::PreparationAllowance allowance(preparation?*preparation:RenderPreparationBudget{});
+     if(cpuPendingOpportunity_)allowance.start=*cpuPendingOpportunity_;
+     if(cache){
+-        const auto bodies=cache->prepareBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
++        auto bodies=cache->prepareBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
++        if(bodies==internal::SkiaRenderCache::Preparation::kReady)bodies=cache->preparePressureBodies(*acquired.frame.surface->getCanvas(),plan,allowance);
+         AXIOM_IF_EVENT("nc_prepare role=canonical phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("canonical body cannot fit preparation capacity"):BackendSubmissionResult::retry("canonical body preparation pending");
+@@ -1356,6 +1360,9 @@ AXIOM_IF_EVENT("ien_reuse reason=%s canonical=%u camera=%llu",reason,unsigned(ca
+ }
+ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(SkiaSurfaceProvider& provider,const FramePlan& plan,
+     const EditingOverlay* overlay,const TransientDisplayIdentity& identity){
++#if defined(AXIOM_ENABLE_FRAME_TIMING)
++    internal::PressureDiagnosticScope pressureObservation{"transient"};
++#endif
+     AXIOM_FRAME_TIMING_SCOPE(feedbackEntryTiming,feedback_entry);
+     const auto old=pendingNavigation_;
+     if(identity.owner&&feedbackBare(overlay)&&old&&old->sameTarget(&provider,plan.frame)&&old->resource==resourceEpoch_&&old->frame->camera.generation!=plan.frame.camera.generation){
+@@ -1505,13 +1512,14 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
+     AXIOM_FRAME_TIMING_END(feedbackCacheBeginTiming);
+     if(!renderCache_){cache=nullptr;execution.unbindTargets();}
+     if(!cache&&renderCacheOptions_.enabled&&renderCacheOptions_.gpuCoverageCandidate&&gpuContext&&
+-       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&c->content.get().stroke.config.algorithmVersion==4;})){
++       std::any_of(plan.referenceDrawList.entries.begin(),plan.referenceDrawList.entries.end(),[](const auto& e){const auto* c=std::get_if<CompactStrokeReferenceCommand>(&e.command);return c&&(c->content.get().stroke.config.algorithmVersion==4||c->content.get().stroke.config.algorithmVersion==5||c->content.get().stroke.config.algorithmVersion==6);})){
+         provider.release();return BackendSubmissionResult::retry("transient prepared owner unavailable");
+     }
+     AXIOM_PREPARED_TRACE(preparedTrace,preparedGeometry_,"edit");
+     AXIOM_FRAME_TIMING_SCOPE(feedbackPrepareTiming,feedback_prepare);
+     if(cache){
+-        const auto bodies=cache->prepareBodies(*canvas,plan,allowance);
++        auto bodies=cache->prepareBodies(*canvas,plan,allowance);
++        if(bodies==internal::SkiaRenderCache::Preparation::kReady)bodies=cache->preparePressureBodies(*canvas,plan,allowance);
+         AXIOM_IF_EVENT("nc_prepare role=transient phase=bodies code=%u steps=%llu max_groups=%llu elapsed_us=%llu",unsigned(bodies),(unsigned long long)allowance.steps,(unsigned long long)allowance.limits.maxGroups,(unsigned long long)std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now()-allowance.start).count());
+         if(bodies!=internal::SkiaRenderCache::Preparation::kReady){
+             provider.release();return bodies==internal::SkiaRenderCache::Preparation::kRejected?BackendSubmissionResult::rejected("transient body cannot fit preparation capacity"):BackendSubmissionResult::retry("transient body preparation pending");
+diff --git a/runtime/render/tests/dpr4_render_sync_test.cpp b/runtime/render/tests/dpr4_render_sync_test.cpp
+new file mode 100644
+index 00000000..a8a6785b
+--- /dev/null
++++ b/runtime/render/tests/dpr4_render_sync_test.cpp
+@@ -0,0 +1,286 @@
++#define main dpr4InheritedFixtureMain
++#include "canonical_prepared_body_test.cpp"
++#undef main
++#include "canvas/ink/brush_package_catalog.hpp"
++#include <nlohmann/json.hpp>
++#include <iostream>
++#include <filesystem>
++using nlohmann::json;
++
++namespace {
++#if defined(__APPLE__)
++RenderCacheOptions pressureOptions(){
++    RenderCacheOptions o;o.maxBytes=512U*1048576;o.sharedMaxBytes=1024U*1048576;
++    o.maxEntryBytes=128U*1048576;return o;
++}
++FramePlan pressurePlan(unsigned algorithm,unsigned count,unsigned copies,unsigned dpr,
++                       bool isolated,std::uint64_t surface=1,unsigned masks=1){
++    auto loaded=ink::BrushPackageCatalog{}.loadDefault(algorithm==5?"crayon-wax-v1":"chalk-compact-v1",3);
++    require(bool(loaded)&&loaded.package.compactConfig.has_value(),"pressure package");
++    semantic::CompactStrokeContent content;content.stroke.config=*loaded.package.compactConfig;
++    content.stroke.config.size=18;content.stroke.config.opacity=.65;
++    content.stroke.config.color={.12,.27,.61,1};content.stroke.config.startTaper=9;
++    content.stroke.config.endTaper=13;content.stroke.seed=0x13579bdf;
++    for(unsigned i=0;i<count;++i)content.stroke.knots.push_back({128+100*std::sin(i*.012),64+42*std::sin(i*.019),std::uint16_t(18000+(i%190)*240)});
++    semantic::ObjectRecord object;object.id=ObjectId::fromUint64(1);
++    object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;object.content=std::move(content);
++    for(unsigned n=0;n<masks;++n){semantic::SweptCircleMask mask;
++        mask.segments.push_back({{{125.+n*20,15},5},{{125.+n*20,112},5},{125.+n*20,40},{125.+n*20,80}});
++        object.erase_masks.push_back({ObjectId::fromUint64(700+n),mask});}
++    ReferenceTraversalEntry e;e.record=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1}).records.front();
++    e.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(e.record.content)};
++    auto base=renderPlan(e,1,dpr,surface);auto draw=base.referenceDrawList;
++    for(unsigned i=0;i<copies;++i){auto copy=e;copy.record.objectId=ObjectId::fromUint64(i+1);
++        copy.record.transform={.97,.03,-.03,.97,double(i*24),double(i*12)};
++        if(i==0)draw.entries[1]=copy;else draw.entries.push_back(std::move(copy));}
++    return {base.frame,std::move(draw),{},false,isolated};
++}
++json mechanism(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"mechanism target");
++    auto plan=pressurePlan(algorithm,7199,8,2,false,target.generation());
++    SkiaRenderer renderer;renderer.setRenderCacheOptions(pressureOptions());
++    RenderPreparationBudget one;one.maxCoverageSteps=1;
++    auto acquired=target.acquire();acquired.frame.surface->getCanvas()->clear(SK_ColorMAGENTA);target.release();
++    const auto started=std::chrono::steady_clock::now();const auto result=renderer.renderFrame(target,plan,nullptr,&one);
++    const auto milliseconds=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-started).count();
++    const auto work=renderer.renderCacheWork();
++    return {{"algorithm",algorithm},{"consumer","SkiaRenderer::renderFrame"},{"firstCallMs",milliseconds},
++        {"result",int(result.code)},{"presentCount",target.presentCount()},
++        {"supportKnots",work.preparedSupportKnots},{"coverageSteps",work.preparationCoverageSteps},
++        {"directEntries",work.preparationDirectEntries},{"directGroups",work.directGroups},
++        {"pass",result.code==BackendSubmissionCode::kRetry&&target.presentCount()==0&&
++            work.preparedSupportKnots>0&&work.preparedSupportKnots<=32&&work.directGroups==0}};
++}
++json downMechanism(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"Down target");
++    auto base=pressurePlan(algorithm,7199,8,2,false,target.generation());auto draw=base.referenceDrawList;
++    const auto masks=draw.entries[1].record.eraseMasks;
++    for(auto& e:draw.entries)if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command)){
++        e.presentationEraseActive=true;e.presentationEraseMasks=masks;e.record.eraseMasks.clear();}
++    FramePlan plan{base.frame,std::move(draw),{},false,false};EditingOverlay bare{plan.frame};
++    SkiaRenderer renderer;renderer.setRenderCacheOptions(pressureOptions());
++    const auto before=target.presentCount();const auto start=std::chrono::steady_clock::now();
++    const auto r=renderer.renderTransientOverlay(target,plan,&bare);
++    const auto w=renderer.renderCacheWork();
++    return {{"consumer","SkiaRenderer::renderTransientOverlay"},{"algorithm",algorithm},
++        {"firstCallMs",std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count()},
++        {"supportKnots",w.preparedSupportKnots},{"coverageSteps",w.preparationCoverageSteps},
++        {"directGroups",w.directGroups},{"presentCount",target.presentCount()-before},
++        {"pass",r.code==BackendSubmissionCode::kRetry&&target.presentCount()==before&&w.directGroups==0}};
++}
++std::vector<std::uint8_t> pressurePixels(NativeMetalTarget& target){
++    auto a=target.acquire();std::vector<std::uint8_t> pixels(a.frame.surface->width()*a.frame.surface->height()*4);target.release();
++    require(target.readbackRgba(pixels).code==BackendSubmissionCode::kAccepted,"pressure readback");return pixels;
++}
++json pixels(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm,bool isolated,unsigned dpr,bool inkOnly=false){
++    NativeMetalTarget target(completion),reference(completion);
++    require(target.resize(256*dpr,128*dpr).code==BackendSubmissionCode::kAccepted&&reference.resize(256*dpr,128*dpr).code==BackendSubmissionCode::kAccepted,"pixel targets");
++    const auto base=pressurePlan(algorithm,257,3,dpr,isolated,target.generation());auto draw=base.referenceDrawList;
++    if(inkOnly){draw.entries.erase(draw.entries.begin());draw.entries.front().record.eraseMasks.clear();}
++    FramePlan plan{base.frame,std::move(draw),{},false,isolated};
++    SkiaRenderer renderer,independent;renderer.setRenderCacheOptions(pressureOptions());
++    auto disabled=pressureOptions();disabled.enabled=false;independent.setRenderCacheOptions(disabled);
++    unsigned attempts=0;
++    for(;attempts<4096;++attempts){auto r=renderer.renderFrame(target,plan);if(r.code==BackendSubmissionCode::kAccepted)break;
++        require(r.code==BackendSubmissionCode::kRetry&&target.presentCount()==0,"pressure pending partial/rejected");}
++    require(attempts<4096,"pressure canonical stalled");
++    require(independent.renderFrame(reference,plan).code==BackendSubmissionCode::kAccepted,"pressure independent Direct");
++    auto a=pressurePixels(target),b=pressurePixels(reference);unsigned maximum=0;std::size_t changed=0;
++    for(std::size_t i=0;i<a.size();++i)if(a[i]!=b[i]){++changed;maximum=std::max(maximum,unsigned(std::abs(int(a[i])-int(b[i]))));}
++    auto work=renderer.renderCacheWork();return {{"algorithm",algorithm},{"isolated",isolated},{"dpr",dpr},
++        {"inkOnly",inkOnly},{"attempts",attempts+1},{"maximumPixelDifference",maximum},{"changedBytes",changed},
++        {"preparedCanonical",work.preparedCanonicalDraws},{"preparedDirect",work.preparedDirectDraws},
++        {"GPUtiles",work.gpuCoverageTiles},{"CPUtiles",work.cpuCoverageTiles},{"pass",maximum<=2}};
++}
++json boundedComplete(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm,bool preparation=false){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"bounded complete target");
++    const auto base=pressurePlan(algorithm,7199,8,2,false,target.generation());auto draw=base.referenceDrawList;
++    if(preparation){draw.entries.erase(draw.entries.begin());draw.entries.front().record.eraseMasks.clear();}
++    FramePlan plan{base.frame,std::move(draw),{},false,false};
++    SkiaRenderer renderer;renderer.setRenderCacheOptions(pressureOptions());
++    std::uint64_t maximum=0,total=0;unsigned calls=0;
++    RenderPreparationBudget budget;
++    for(;calls<8192;++calls){const auto before=pressureTestCommands;auto r=renderer.renderFrame(target,plan,nullptr,preparation?&budget:nullptr);
++        const auto commands=pressureTestCommands-before;maximum=std::max(maximum,commands);total+=commands;
++        if(commands>128)return {{"consumer","canonical-with-preparation"},{"algorithm",algorithm},{"calls",calls+1},{"maximumCommands",maximum},{"pass",false}};
++        if(r.code==BackendSubmissionCode::kAccepted)break;
++        require(r.code==BackendSubmissionCode::kRetry&&target.presentCount()==0,"pending changed provider");}
++    require(calls<8192,"bounded producer did not converge");
++    return {{"consumer",preparation?"canonical-with-preparation":"canonical-completion"},{"algorithm",algorithm},{"calls",calls+1},
++        {"maximumCommands",maximum},{"totalCommands",total},{"complete",true},{"pass",true}};
++}
++json lifecycle(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned algorithm){
++    NativeMetalTarget target(completion),reference(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted&&reference.resize(512,256).code==BackendSubmissionCode::kAccepted,"lifecycle targets");
++    auto plan=pressurePlan(algorithm,257,3,2,false,target.generation());SkiaRenderer renderer;renderer.setRenderCacheOptions(pressureOptions());
++    auto disabled=pressureOptions();disabled.enabled=false;SkiaRenderer oracle;oracle.setRenderCacheOptions(disabled);
++    const auto finish=[&](const FramePlan& p){unsigned calls=0;std::uint64_t maximum=0;
++        for(;calls<4096;++calls){const auto before=pressureTestCommands;auto r=renderer.renderFrame(target,p);maximum=std::max(maximum,pressureTestCommands-before);
++            require(pressureTestCommands-before<=128,"lifecycle aggregate command allowance");
++            if(r.code==BackendSubmissionCode::kAccepted)break;require(r.code==BackendSubmissionCode::kRetry,"lifecycle retry rejected");}
++        require(calls<4096,"lifecycle producer stalled");require(oracle.renderFrame(reference,p).code==BackendSubmissionCode::kAccepted,"lifecycle oracle");
++        auto a=pressurePixels(target),b=pressurePixels(reference);unsigned difference=0;for(std::size_t i=0;i<a.size();++i)difference=std::max(difference,unsigned(std::abs(int(a[i])-int(b[i]))));
++        require(difference<=2,"lifecycle pixels changed");return std::pair{calls+1,maximum};};
++    finish(plan);const auto before=pressureTestCommands;
++    auto draw=plan.referenceDrawList;for(auto& e:draw.entries)if(std::holds_alternative<CompactStrokeReferenceCommand>(e.command)){
++        auto mask=e.record.eraseMasks.front();mask.id=ObjectId::fromUint64(900);auto& sweep=std::get<semantic::SweptCircleMask>(mask.geometry);
++        sweep.segments.front().p0.position.x+=25;e.record.eraseMasks.push_back(mask);}
++    FramePlan second{plan.frame,std::move(draw),{},false,false};
++    // Count only the candidate, not the independent oracle's work.
++    std::uint64_t candidateCommands=0;unsigned calls=0;
++    for(;calls<4096;++calls){const auto n=pressureTestCommands;const auto r=renderer.renderFrame(target,second);candidateCommands+=pressureTestCommands-n;
++        if(r.code==BackendSubmissionCode::kAccepted)break;require(r.code==BackendSubmissionCode::kRetry,"mask append retry");}
++    require(calls<4096&&candidateCommands==0,"history-only change rebuilt pressure body");
++    require(oracle.renderFrame(reference,second).code==BackendSubmissionCode::kAccepted&&pressurePixels(target)==pressurePixels(reference),"mask append exact pixels");
++    auto transformed=second.referenceDrawList;transformed.entries.back().record.transform.tx+=.25;
++    FramePlan moved{second.frame,std::move(transformed),{},false,false};finish(moved);
++    auto camera=moved.referenceDrawList;camera.worldToView.tx+=1;FramePlan panned{moved.frame,std::move(camera),{},false,false};finish(panned);
++    renderer.setImageResolver(nullptr);finish(panned);
++    require(target.advanceGeneration().code==BackendSubmissionCode::kAccepted&&reference.advanceGeneration().code==BackendSubmissionCode::kAccepted,"generation change");
++    auto rebound=pressurePlan(algorithm,257,3,2,false,target.generation(),2);finish(rebound);
++    RenderPreparationBudget one;one.maxCoverageSteps=1;
++    auto pending=pressurePlan(algorithm,7199,8,2,false,target.generation());const auto presents=target.presentCount();
++    require(renderer.renderFrame(target,pending,nullptr,&one).code==BackendSubmissionCode::kRetry&&target.presentCount()==presents,"cancel seed published");
++    renderer.clearRenderCache();finish(rebound);
++    return {{"algorithm",algorithm},{"consumer","mask-transform-camera-resource-target-cancel"},
++        {"maskOnlyCommands",candidateCommands},{"historyReused",true},{"pixelParity",true},{"pass",pressureTestCommands>=before}};
++}
++json quotaAndLease(const std::shared_ptr<NativeMetalCompletion>& completion){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"quota target");
++    auto plan=pressurePlan(5,7199,2,2,false,target.generation());auto acquired=target.acquire();auto* canvas=acquired.frame.surface->getCanvas();
++    const auto limits=pressureOptions();auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
++    auto sources=std::make_shared<SourceRetentionPool>();auto geometry=std::make_shared<PreparedGeometryCache>();geometry->setRetentionPool(sources);
++    SkiaRenderCache cache;cache.budget=budget;cache.sourcePool=sources;cache.preparedGeometry=geometry;cache.options=limits;
++    auto held=budget->reserve(resources::ResourceClass::kScratch,limits.sharedMaxBytes-4096,true);require(bool(held),"quota hold");
++    cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance denied;
++    const auto r=cache.prepareBodies(*canvas,plan,denied);
++    require(r==SkiaRenderCache::Preparation::kResourcePending||cache.stagedBodies(),"quota denial escaped bounded preparation");
++    require(target.presentCount()==0,"quota denial presented");budget->release(*held);
++    const auto epoch=budget->beginGpuEpoch();require(bool(epoch),"lease epoch");
++    RenderPreparationBudget one;one.maxCoverageSteps=1;bool ready=false;std::uint64_t maximum=0;
++    for(unsigned calls=0;calls<8192;++calls){cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance allowance(one);
++        auto status=cache.prepareBodies(*canvas,plan,allowance);
++        if(status==SkiaRenderCache::Preparation::kReady)status=cache.preparePressureBodies(*canvas,plan,allowance);
++        maximum=std::max(maximum,std::uint64_t(allowance.steps));require(allowance.steps<=1,"fresh per-object allowance");
++        if(status==SkiaRenderCache::Preparation::kReady){ready=true;break;}
++        require(status==SkiaRenderCache::Preparation::kPending||status==SkiaRenderCache::Preparation::kResourcePending,"quota retry rejected");}
++    require(ready,"released quota did not resume");
++    cache.clear();geometry->clear();require(budget->used()>0&&budget->snapshot(resources::ResourceClass::kScratch).pendingRelease>0,"pressure coverage retired before GPU completion");
++    require(budget->endGpuEpoch(*epoch)&&budget->completeGpuEpoch(*epoch),"lease completion");
++    require(budget->used()==0,"pressure retained state leaked after completion");target.release();
++    return {{"consumer","actual-cache-pressure-producer"},{"quotaRetry",true},{"maximumSteps",maximum},
++        {"pendingNoPresent",true},{"lastReleaseBytes",budget->used()},{"pass",true}};
++}
++json oversize(const std::shared_ptr<NativeMetalCompletion>& completion,unsigned variant=0){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"oversize target");
++    auto plan=pressurePlan(5,129,3,2,false,target.generation());SkiaRenderer renderer;
++    auto options=pressureOptions();
++    if(variant==0)options.maxEntries=1;
++    if(variant==1)options.maxBytes=1024*1024;
++    if(variant==2)options.maxEntryBytes=256*1024;
++    renderer.setRenderCacheOptions(options);RenderPreparationBudget one;one.maxCoverageSteps=1;
++    for(unsigned call=0;call<8192;++call){const auto before=pressureTestCommands;auto result=renderer.renderFrame(target,plan,nullptr,&one);
++        if(result.code==BackendSubmissionCode::kRejected)return {{"pass",false},{"consumer","oversize-staged-canonical"},{"variant",variant},{"calls",call+1},{"reason",result.message}};
++        require(pressureTestCommands-before<=128,"oversize synchronous pressure replay");
++        if(result.code==BackendSubmissionCode::kAccepted)return {{"pass",true},{"consumer","oversize-staged-canonical"},{"variant",variant},{"calls",call+1}};
++        require(target.presentCount()==0,"oversize partial present");
++    }
++    return {{"pass",false},{"consumer","oversize-staged-canonical"},{"reason","no progress"}};
++}
++json suspendedTile(const std::shared_ptr<NativeMetalCompletion>& completion){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"suspended tile target");
++    const auto plan=pressurePlan(5,257,1,2,false,target.generation());auto acquired=target.acquire();auto* canvas=acquired.frame.surface->getCanvas();
++    auto limits=pressureOptions();auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
++    auto pool=std::make_shared<SourceRetentionPool>();auto geometry=std::make_shared<PreparedGeometryCache>();geometry->setRetentionPool(pool);
++    SkiaRenderCache cache;cache.budget=budget;cache.sourcePool=pool;cache.preparedGeometry=geometry;cache.options=limits;
++    RenderPreparationBudget one;one.maxCoverageSteps=1;bool interrupted=false,ready=false;
++    for(unsigned n=0;n<4096;++n){cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance a(one);
++        auto r=cache.prepareBodies(*canvas,plan,a);if(r==SkiaRenderCache::Preparation::kReady)r=cache.preparePressureBodies(*canvas,plan,a);
++        if(!interrupted&&cache.work.preparationCoverageSteps){
++            // This is the production navigation release entry, not a forged slot.
++            cache.releaseIdleWorkBuffers(plan.frame,plan.referenceDrawList.worldToView,&target,0);interrupted=true;
++        }
++        if(r==SkiaRenderCache::Preparation::kReady){ready=true;break;}
++        require(r==SkiaRenderCache::Preparation::kPending||r==SkiaRenderCache::Preparation::kResourcePending,"suspended tile rejected");
++    }
++    cache.clear();geometry->clear();target.release();return {{"pass",interrupted&&ready},{"consumer","suspended-pressure-navigation-release"},{"completed",ready}};
++}
++json interleavedSource(const std::shared_ptr<NativeMetalCompletion>& completion){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"interleaved target");
++    auto base=pressurePlan(5,257,2,2,false,target.generation());auto draw=base.referenceDrawList;
++    auto added=draw.entries.back();added.record.objectId=ObjectId::fromUint64(404);
++    added.record.content.update([](auto& value){++std::get<semantic::CompactStrokeContent>(value).stroke.seed;});
++    added.command=CompactStrokeReferenceCommand{scene::ImmutableValue<semantic::CompactStrokeContent>::alias(added.record.content)};
++    draw.entries.insert(draw.entries.begin()+1,std::move(added));FramePlan changed{base.frame,std::move(draw),{},false,false};
++    auto acquired=target.acquire();auto* canvas=acquired.frame.surface->getCanvas();auto limits=pressureOptions();
++    auto budget=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{limits.maxBytes,limits.sharedMaxBytes});
++    auto pool=std::make_shared<SourceRetentionPool>();auto geometry=std::make_shared<PreparedGeometryCache>();geometry->setRetentionPool(pool);
++    SkiaRenderCache cache;cache.budget=budget;cache.sourcePool=pool;cache.preparedGeometry=geometry;cache.options=limits;
++    RenderPreparationBudget one;one.maxCoverageSteps=1;unsigned calls=0;
++    const auto advance=[&](const FramePlan& plan){cache.begin(plan,&target,*acquired.frame.surface,0);PreparationAllowance a(one);
++        auto r=cache.prepareBodies(*canvas,plan,a);if(r==SkiaRenderCache::Preparation::kReady)r=cache.preparePressureBodies(*canvas,plan,a);return r;};
++    while(!cache.work.preparationCoverageSteps){advance(base);require(++calls<256,"interleave seed");}
++    bool complete=false;
++    for(unsigned n=0;n<4096;++n){auto r=advance(changed);if(r==SkiaRenderCache::Preparation::kReady){complete=true;break;}
++        require(r==SkiaRenderCache::Preparation::kPending||r==SkiaRenderCache::Preparation::kResourcePending,"interleaved rejected");}
++    require(complete,"new prefix source lost suspended tile");
++    canvas->clear(SK_ColorWHITE);drawValidatedReferenceRangeToSkCanvas(*canvas,changed,0,changed.referenceDrawList.entries.size(),nullptr,nullptr,true,&cache);
++    auto actual=pressurePixels(target);cache.clear();geometry->clear();target.release();
++    SkiaRenderer direct;auto disabled=limits;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
++    require(direct.renderFrame(target,changed).code==BackendSubmissionCode::kAccepted&&actual==pressurePixels(target),"interleaved coverage corrupted pixels");
++    return {{"pass",true},{"consumer","prefix-insert-before-suspended-pressure"},{"completed",true},{"exactPixels",true}};
++}
++json maskAllowance(const std::shared_ptr<NativeMetalCompletion>& completion){
++    NativeMetalTarget target(completion);require(target.resize(512,256).code==BackendSubmissionCode::kAccepted,"mask allowance target");
++    auto base=pressurePlan(5,65,2,2,true,target.generation());auto draw=base.referenceDrawList;
++    for(auto& entry:draw.entries)if(std::holds_alternative<CompactStrokeReferenceCommand>(entry.command)){
++        semantic::SweptCircleMask sweep;
++        for(unsigned n=0;n<1024;++n){const double x=95+double(n%20),y=20+double(n%90);
++            sweep.segments.push_back({{{x,y},2},{{x+3,y+2},2},{x+1,y},{x+2,y+1}});}
++        entry.record.eraseMasks={{ObjectId::fromUint64(700),std::move(sweep)}};
++    }
++    FramePlan plan{base.frame,std::move(draw),{},false,true};SkiaRenderer renderer;renderer.setRenderCacheOptions(pressureOptions());
++    RenderPreparationBudget one;one.maxCoverageSteps=1;std::uint64_t maximum=0;unsigned calls=0;
++    for(;calls<8192;++calls){const auto before=materialMaskTestDraws;auto result=renderer.renderFrame(target,plan,nullptr,&one);
++        maximum=std::max(maximum,materialMaskTestDraws-before);
++        if(maximum>32)return {{"pass",false},{"maximumMaskDraws",maximum},{"consumer","canonical-history-mask-allowance"}};
++        if(result.code==BackendSubmissionCode::kAccepted)break;
++        require(result.code==BackendSubmissionCode::kRetry&&target.presentCount()==0,"mask allowance partial frame");}
++    NativeMetalTarget reference(completion);require(reference.resize(512,256).code==BackendSubmissionCode::kAccepted,"mask pixel reference target");
++    SkiaRenderer independent;auto disabled=pressureOptions();disabled.enabled=false;independent.setRenderCacheOptions(disabled);
++    require(independent.renderFrame(reference,plan).code==BackendSubmissionCode::kAccepted&&pressurePixels(target)==pressurePixels(reference),"segmented history pixels changed");
++    return {{"pass",calls<8192},{"maximumMaskDraws",maximum},{"calls",calls+1},{"consumer","canonical-history-mask-allowance"}};
++}
++#endif
++}
++int main(int argc,char** argv){
++    json report={{"task","G5-DPR4-render-sync-r1"},{"rows",json::array()}};bool pass=false;
++    try{
++#if defined(__APPLE__)
++        auto pool=message(message(reinterpret_cast<id>(objc_getClass("NSAutoreleasePool")),"alloc"),"init");
++        {auto completion=std::make_shared<NativeMetalCompletion>();
++            const auto device=MTLCreateSystemDefaultDevice(),queue=message(device,"newCommandQueue");
++            GrMtlBackendContext backend{sk_cfp<GrMTLHandle>(device),sk_cfp<GrMTLHandle>(queue)};
++            completion->context=GrDirectContexts::MakeMetal(backend);require(bool(completion->context),"Metal context");
++            if(argc>2&&std::string_view(argv[2])=="mask-budget")report["rows"].push_back(maskAllowance(completion));
++            else if(argc>2&&std::string_view(argv[2])=="interleaved")report["rows"].push_back(interleavedSource(completion));
++            else if(argc>2&&std::string_view(argv[2])=="oversize")for(unsigned variant:{0U,1U,2U})report["rows"].push_back(oversize(completion,variant));
++            else if(argc>2&&std::string_view(argv[2])=="suspended")report["rows"].push_back(suspendedTile(completion));
++            else if(argc>2&&std::string_view(argv[2])=="quota")report["rows"].push_back(quotaAndLease(completion));
++            else for(unsigned algorithm:{5U,6U}){
++                if(argc>2&&std::string_view(argv[2])=="prepared")report["rows"].push_back(boundedComplete(completion,algorithm,true));
++                else if(argc>2&&std::string_view(argv[2])=="bounded")report["rows"].push_back(boundedComplete(completion,algorithm));
++                else if(argc>2&&std::string_view(argv[2])=="lifecycle")report["rows"].push_back(lifecycle(completion,algorithm));
++                else if(argc>2&&std::string_view(argv[2])=="pixels"){
++                    for(bool isolate:{false,true})for(unsigned dpr:{1U,2U,4U})report["rows"].push_back(pixels(completion,algorithm,isolate,dpr));
++                    for(unsigned dpr:{1U,4U})report["rows"].push_back(pixels(completion,algorithm,false,dpr,true));
++                }
++                else if(argc>2&&std::string_view(argv[2])=="down")report["rows"].push_back(downMechanism(completion,algorithm));
++                else report["rows"].push_back(mechanism(completion,algorithm));
++            }
++        }message(pool,"drain");
++#endif
++        pass=!report["rows"].empty();for(const auto& row:report["rows"])pass=pass&&row["pass"].get<bool>();
++    }catch(const std::exception& e){report["error"]=e.what();}
++    report["pass"]=pass;if(argc>1)std::ofstream(argv[1])<<report.dump(2)<<'\n';
++    std::cout<<report.dump()<<'\n';return pass?0:1;
++}
+diff --git a/verification/runners/g5/dpr4_render_sync/browser.py b/verification/runners/g5/dpr4_render_sync/browser.py
+new file mode 100644
+index 00000000..ef8ecd6e
+--- /dev/null
++++ b/verification/runners/g5/dpr4_render_sync/browser.py
+@@ -0,0 +1,84 @@
++"""Serial guarded ordinary/diagnostic observation, with owned-process cleanup."""
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import signal
++import shutil
++import subprocess
++import sys
++import time
++
++ROOT = Path(__file__).resolve().parents[4]
++OUT = ROOT / "out/G5-DPR4-render-sync-r1"
++RESULT = ROOT / ".aegis/results/G5-DPR4-render-sync-r1"
++
++
++def family(pid):
++    records = {}
++    for row in subprocess.check_output(["ps", "-axo", "pid=,ppid=,rss="], text=True).splitlines():
++        p, parent, rss = map(int, row.split())
++        records[p] = (parent, rss)
++    owned = {pid}
++    while True:
++        more = {p for p, (parent, _) in records.items() if parent in owned}
++        if more <= owned:
++            break
++        owned |= more
++    return owned, sum(records.get(p, (0, 0))[1] for p in owned) * 1024
++
++
++def main(label, sdk, mode):
++    destination = OUT / label
++    destination.mkdir(parents=True, exist_ok=True)
++    driver = ROOT / "verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs"
++    command = [shutil.which("node"), str(driver), sdk, str(destination), mode]
++    started = time.time()
++    ledger = {"label": label, "sdk": sdk, "mode": mode, "command": command,
++              "driverSha256": hashlib.sha256(driver.read_bytes()).hexdigest(),
++              "started": started, "guardSeconds": 300, "guardRssBytes": 3 * 1024**3}
++    peak, known = 0, set()
++    with (destination / "worker.log").open("wb") as log:
++        child = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
++                                 start_new_session=True)
++        ledger["pid"] = child.pid
++        try:
++            while child.poll() is None:
++                owned, rss = family(child.pid)
++                known |= owned
++                peak = max(peak, rss)
++                if time.time() - started > ledger["guardSeconds"] or rss > ledger["guardRssBytes"]:
++                    ledger["guardTriggered"] = "time" if rss <= ledger["guardRssBytes"] else "rss"
++                    os.killpg(child.pid, signal.SIGTERM)
++                    break
++                time.sleep(1)
++            try:
++                child.wait(timeout=8)
++            except subprocess.TimeoutExpired:
++                os.killpg(child.pid, signal.SIGKILL)
++                child.wait()
++        finally:
++            for pid in known - {child.pid}:
++                try:
++                    os.kill(pid, signal.SIGTERM)
++                except ProcessLookupError:
++                    pass
++    survivors = []
++    for pid in known:
++        try:
++            os.kill(pid, 0)
++            survivors.append(pid)
++        except ProcessLookupError:
++            pass
++    ledger.update(exitCode=child.returncode, seconds=time.time() - started,
++                  actualCeilSeconds=math.ceil(time.time() - started),
++                  peakRssBytes=peak, ownedPids=sorted(known), cleanupSurvivors=survivors)
++    RESULT.mkdir(parents=True, exist_ok=True)
++    (RESULT / (label + "-ledger.json")).write_text(json.dumps(ledger, indent=2) + "\n")
++    print(json.dumps(ledger), flush=True)
++    return child.returncode
++
++
++if __name__ == "__main__":
++    sys.exit(main(*sys.argv[1:]))
+diff --git a/verification/runners/g5/dpr4_render_sync/run.py b/verification/runners/g5/dpr4_render_sync/run.py
+new file mode 100644
+index 00000000..80f272da
+--- /dev/null
++++ b/verification/runners/g5/dpr4_render_sync/run.py
+@@ -0,0 +1,32 @@
++"""Record bounded task commands without changing historical artifacts."""
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++
++ROOT = Path(__file__).resolve().parents[4]
++OUT = ROOT / "out/G5-DPR4-render-sync-r1"
++
++
++def run(label, command, timeout=600, env=None):
++    OUT.mkdir(parents=True, exist_ok=True)
++    started = time.time()
++    record = {"command": command, "cwd": str(ROOT), "started": started}
++    with (OUT / (label + ".log")).open("wb") as log:
++        try:
++            process = subprocess.run(command, cwd=ROOT, stdout=log,
++                                     stderr=subprocess.STDOUT, timeout=timeout,
++                                     env=dict(os.environ, **(env or {})))
++            record["exitCode"] = process.returncode
++        except subprocess.TimeoutExpired:
++            record.update(exitCode=124, timedOut=True)
++    record["seconds"] = time.time() - started
++    (OUT / (label + ".json")).write_text(json.dumps(record, indent=2) + "\n")
++    print(json.dumps({"label": label, **record}), flush=True)
++    return record["exitCode"]
++
++
++if __name__ == "__main__":
++    sys.exit(run(sys.argv[1], sys.argv[2:]))
+diff --git a/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs b/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs
+new file mode 100644
+index 00000000..8550c1b7
+--- /dev/null
++++ b/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs
+@@ -0,0 +1,69 @@
++// G5-DPR4-render-sync-r1: same bound default scenario; diagnostic covers both Down events.
++// Isolated current DPR4 verification adapted from retained ordinary r3 driver.
++// New task ledger; no r3 window or acceptance thresholds are reused.
++import fs from'node:fs/promises';import path from'node:path';import http from'node:http';import{createHash}from'node:crypto';
++import{chromium}from'/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/node_modules/playwright/index.mjs';
++import{entropyStream,installEntropy}from'/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/exact_fixed_scene_contract.mjs';import{metrics,percentile}from'/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5/wax_postup_navigation/metrics.mjs';
++const [sdk,out,mode]=process.argv.slice(2);const diagnostic=mode==='diagnostic',canary=mode==='canary'||diagnostic;if(!sdk||!out)throw Error('SDK/out required');
++const helpers='/Users/qing/.codex/worktrees/g5-wax-postup-navigation/verification/runners/g5',sha=b=>createHash('sha256').update(b).digest('hex');
++const result={sdk,driverSHA256:sha(await fs.readFile(new URL(import.meta.url))),status:'STARTED',cases:[],errors:[],served:{}};
++let browser,server;const nativeConsole=[];const save=()=>fs.writeFile(path.join(out,'observation.json'),JSON.stringify(result,null,2)+'\n');
++await fs.mkdir(out,{recursive:true});await save();
++try{
++ server=http.createServer(async(req,res)=>{try{const n=new URL(req.url,'http://localhost').pathname;let b;if(n==='/'){b=Buffer.from('<style>html,body{margin:0}#mount{position:relative;width:900px;height:650px}</style><div id="mount"></div>');res.setHeader('Content-Type','text/html');}
++ else if(n==='/favicon.ico'){res.statusCode=204;res.end();return;}else if(n.startsWith('/sdk/')&&!n.includes('..'))b=await fs.readFile(path.join(sdk,n.slice(5)));else if(n.startsWith('/g5/')&&!n.includes('..'))b=await fs.readFile(path.join(helpers,n.slice(4)));else throw Error('route');
++ if(n!=='/')res.setHeader('Content-Type',n.endsWith('.mjs')?'text/javascript':n.endsWith('.wasm')?'application/wasm':'application/octet-stream');result.served[n]={bytes:b.length,sha256:sha(b)};res.end(b);}catch(e){result.errors.push(String(e));res.statusCode=404;res.end(String(e));}});
++ await new Promise(r=>server.listen(0,'127.0.0.1',r));browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});result.browserVersion=browser.version();
++ const system=await browser.newBrowserCDPSession();result.system=await system.send('SystemInfo.getInfo');
++ for(const id of (canary?['wax16-default']:['wax16-default','wax16-overlap'])){
++  console.log(JSON.stringify({stage:'setup',id}));const entry={id};result.cases.push(entry);await save();
++  const context=await browser.newContext({viewport:{width:900,height:650},deviceScaleFactor:4}),page=await context.newPage();page.on('pageerror',e=>result.errors.push(String(e)));await page.exposeFunction('persistArtifact',async({name,index,last,bytes})=>{const p=path.join(out,name);if(index===0)await fs.writeFile(p,Buffer.from(bytes));else await fs.appendFile(p,Buffer.from(bytes));if(last){const b=await fs.readFile(p);entry.artifacts??={};entry.artifacts[name]={bytes:b.length,sha256:sha(b)};}});if(diagnostic)page.on('console',m=>nativeConsole.push({at:Date.now(),type:m.type(),text:m.text()}));await page.exposeFunction('saveLiveProgress',async value=>{entry.progress??=[];entry.progress.push(value);await save();});
++  await page.addInitScript({content:entropyStream.toString()+';'+installEntropy.toString()+';installEntropy(324508639);'});await page.goto('http://127.0.0.1:'+server.address().port+'/');
++  entry.data=await page.evaluate(async ({id,canary,diagnostic})=>{
++   const{createRuntime}=await import('/sdk/axiom.mjs'),{installNavigationObserver}=await import('/g5/wax_postup_navigation/observer.mjs');
++   const pause=ms=>new Promise(r=>setTimeout(r,ms)),check=(v,m)=>{if(!v)throw Error(m);};let sdk;const observer=installNavigationObserver(()=>[...document.querySelectorAll('#mount canvas')].filter(c=>c.id.endsWith('-canonical')||c.id.endsWith('-preview')).map(canvas=>({canvas,role:canvas.id.endsWith('-preview')?'preview':'canonical'})),globalThis,{trace:diagnostic}),frames=[],errors=[],operations=[],operationBuffers=[];
++   sdk=await createRuntime({mount:document.getElementById('mount'),documentId:'49000000000000000000000000000001',builtinFonts:false,permission:'localSingleUser',onError:e=>errors.push({code:e.code,message:e.message}),onOperation:b=>{operationBuffers.push(b.slice());operations.push({at:performance.now(),bytes:b.length});},onFrame:f=>frames.push({at:performance.now(),...f,semanticPresented:sdk?.readState().lastCommit.presentedGeneration??null,camera:sdk?.readState().camera??null})});
++   sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
++   const state=()=>sdk.readState(),settle=async()=>{let quiet=0;const started=performance.now();for(;;){const s=state(),a=observer.activity();quiet=!s.activeContacts&&!s.pending?.intents?.length&&s.generation===s.lastCommit.presentedGeneration&&a.pending===0?quiet+1:0;
++    if(quiet>=3)return{elapsed:performance.now()-started,state:s};if(performance.now()-started>40000)throw Error('truequiet timeout');await pause(16);}};
++   const pointer=(phase,x,y,pointerId=1,type='mouse',timeStamp)=>{const e=new PointerEvent('pointer'+phase,{pointerId,pointerType:type,clientX:x,clientY:y,button:phase==='move'?-1:0,buttons:['up','cancel'].includes(phase)?0:1,pressure:.5,width:type==='touch'?10:1,height:type==='touch'?10:1,bubbles:true,cancelable:true});if(timeStamp!==undefined)Object.defineProperty(e,'timeStamp',{value:timeStamp});const started=performance.now();observer.dispatch(sdk.canvas,e);return{phase,x,y,pointerId,type,started,ended:performance.now(),timeStamp:e.timeStamp};};
++   await sdk.selectBrush('crayon-wax-v1',3);await sdk.setBrushConfig({...sdk.readBrushConfig(),size:32,opacity:.65,color:[.12,.27,.61,1],pressureSource:1,startTaper:0,endTaper:0});await sdk.selectTool('ink');await settle();
++   const point=i=>[360+220*Math.sin(i*.012)+35*Math.sin(i*.043),300+140*Math.sin(i*.019)],drawEvents=[];drawEvents.push(pointer('down',...point(0),1,'mouse',1000));const began=performance.now();for(let i=1;i<=1800;i++){await pause(Math.max(0,began+i*5-performance.now()));drawEvents.push(pointer('move',...point(i),1,'mouse',1000+i*5));}drawEvents.push(pointer('up',...point(1800),1,'mouse',10005));await settle();
++   await sdk.selectTool('select');await sdk.setSelectionMode('point');pointer('down',360,300);pointer('up',360,300);check(sdk.readSelection().count===1,'select first stroke');await settle();
++   const duplicates=[];for(let i=1;i<=15;i++){const phase={name:'duplicate'+i,started:performance.now()};observer.begin(phase);const value=id==='wax16-default'?await sdk.duplicateSelection():await sdk.duplicateSelection({offset:[0,0]});phase.returned=performance.now();phase.commandResult=value;phase.generation=state().generation;await settle();phase.ended=performance.now();phase.firstFrame=frames.find(f=>f.at>=phase.started&&f.semanticPresented===phase.generation)?.at;observer.end(phase);duplicates.push(phase);await window.saveLiveProgress({stage:phase.name,phase});}
++   check(state().objects===16,'16 objects');await sdk.selectTool('partialEraser');await sdk.setEraser({mode:2,diameter:32});await settle();
++   const repeats=[];for(let repeat=0;repeat<2;repeat++){
++    const phase={name:repeat===0?'up-immediate-pan':'up-immediate-pinch',started:performance.now(),before:state(),events:[]};observer.begin(phase);phase.eraseStarted=performance.now();const eraseX=repeat===0?360:420,eventBase=1000000+repeat*10000;phase.events.push(pointer('down',eraseX,190,1,'mouse',eventBase));const start=performance.now();
++    for(let i=1;i<=120;i++){const due=start+i*2000/120;await pause(Math.max(0,due-performance.now()));const e=pointer('move',eraseX+12*Math.sin(i*.12),190+220*i/120,1,'mouse',eventBase+i*2000/120);e.due=due;e.lateness=e.started-due;phase.events.push(e);}
++    phase.preUp=state();phase.up=pointer('up',eraseX+12*Math.sin(120*.12),410,1,'mouse',eventBase+2001);phase.events.push(phase.up);phase.eraseGeneration=state().generation;phase.afterUp=state();phase.panStart=performance.now();
++    const gesture=async(inverse=false)=>{const span=inverse?105:70,ratio=inverse?1/1.5:1.5;
++     const gestureBase=eventBase+(inverse?5000:3000);phase.events.push(pointer('down',615-span/2,450,21,'touch',gestureBase));phase.events.push(pointer('down',615+span/2,450,22,'touch',gestureBase));if(!inverse)phase.panContacts=state().activeContacts;const began=performance.now();
++     for(let i=1;i<=12;i++){const due=began+i*200/12;await pause(Math.max(0,due-performance.now()));const delta=repeat===0&&!inverse?-i*4:0,half=repeat===0&&!inverse?35:span*(1+(ratio-1)*i/12)/2;
++      for(const [x,pid]of[[615-half+delta,21],[615+half+delta,22]]){const e=pointer('move',x,450,pid,'touch',gestureBase+i*200/12);e.due=due;e.lateness=e.started-due;phase.events.push(e);}}
++     const delta=repeat===0&&!inverse?-48:0,half=repeat===0&&!inverse?35:span*ratio/2;
++     phase.events.push(pointer('up',615-half+delta,450,21,'touch',gestureBase+201));phase.events.push(pointer('up',615+half+delta,450,22,'touch',gestureBase+201));
++    };
++    await gesture();phase.panEnded=performance.now();phase.afterPan=state();phase.settled=await settle();phase.gestureQuietAt=performance.now();
++    check(phase.panContacts===2,'touch contacts not admitted');if(repeat===0)check(Math.abs(phase.afterPan.camera.x-phase.before.camera.x+48)<1,'pan displacement');else{
++     check(Math.abs(phase.afterPan.camera.scale/phase.before.camera.scale-1.5)<.01,'pinch ratio');
++     const before=phase.before.camera,after=phase.afterPan.camera;check(Math.abs(after.x-(615-(615-before.x)*1.5))<1&&Math.abs(after.y-(450-(450-before.y)*1.5))<1,'pinch anchor');
++     phase.inverseStarted=performance.now();await gesture(true);phase.inverseEnded=performance.now();phase.inverseSettled=await settle();phase.inverseQuietAt=performance.now();check(Math.abs(state().camera.scale/before.scale-1)<.01,'inverse pinch');
++    }
++    phase.ended=performance.now();phase.generationFrame=frames.find(f=>f.at>=phase.panEnded&&f.semanticPresented===phase.eraseGeneration&&f.camera&&Math.abs(f.camera.scale-phase.afterPan.camera.scale)<.00001&&Math.abs(f.camera.x-phase.afterPan.camera.x)<.001&&Math.abs(f.camera.y-phase.afterPan.camera.y)<.001)?.at;observer.end(phase);repeats.push(phase);await window.saveLiveProgress({stage:phase.name,phase});
++   }
++   // Readback/serialization are outside the timed phases and use the actual canonical target.
++   const final=state(),config=sdk.readBrushConfig(),build=sdk.readBuildInfo();
++   const {readWebGLTarget}=await import('/g5/webgl_target_readback.mjs');
++   const stream=async(name,bytes)=>{for(let offset=0,index=0;offset<bytes.length;offset+=49152,index++)await window.persistArtifact({name,index,last:offset+49152>=bytes.length,bytes:Array.from(bytes.subarray(offset,offset+49152))});};
++   for(let i=0;i<operationBuffers.length;i++)await stream(id+'-operation-'+i+'.bin',operationBuffers[i]);
++   const snapshot=await sdk.captureSnapshot({generation:final.generation,documentRevision:'30',recoveryFrontier:[8,1,16,1,24,1]});await stream(id+'-final.axsnap',snapshot.bytes);
++   const pixels=readWebGLTarget(sdk.canvas,{role:'canonical'});check(pixels.metadata.status==='VALID','final canonical readback');await stream(id+'-final.rgba',pixels.bytes);
++   const capture={readback:pixels.metadata,generation:snapshot.generation,throughCommit:snapshot.throughCommit};
++   check(!errors.length,'ordinary SDK errors');await sdk.close();observer.restore();return{capture,build,config,drawEvents,duplicates,repeats,final,frames,errors,operations,closed:!document.querySelector('#mount canvas')};
++  },{id,canary,diagnostic});
++  entry.metrics=entry.data.repeats.map(metrics);entry.duplicateMetrics={p95:percentile(entry.data.duplicates.map(p=>p.ended-p.started)),firstFrameP95:percentile(entry.data.duplicates.map(p=>p.firstFrame-p.started)),commandMax:Math.max(...entry.data.duplicates.map(p=>p.returned-p.started)),callbackMaximum:Math.max(...entry.data.duplicates.flatMap(p=>p.rafCallbacks.map(r=>r.ended-r.started)))};
++  await save();await context.close();console.log(JSON.stringify({stage:'case-complete',id,metrics:entry.metrics}));
++ }
++ result.status='OBSERVED';
++}catch(e){result.status='FAILED';result.error=String(e.stack??e);process.exitCode=1;}
++finally{await browser?.close();if(server)await new Promise(r=>server.close(r));result.closed=true;if(diagnostic)await fs.writeFile(path.join(out,'native-console.json'),JSON.stringify(nativeConsole,null,2)+'\n');await save();console.log(JSON.stringify({stage:'complete',status:result.status,error:result.error}));}

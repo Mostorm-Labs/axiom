@@ -1,0 +1,126 @@
+{
+  "nativeFocused": {
+    "passed": 46,
+    "total": 48,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/followup-focused-ctest.log",
+    "ownPassed": 13,
+    "ownTotal": 13,
+    "failuresUnchangedFromR1": [
+      "G5CanonicalPreparedCompatibility",
+      "G5TransientDisplayContinuity"
+    ],
+    "baselineProof": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/baseline-regression-relink.json"
+  },
+  "entryLimit": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/entry-limit-green.json",
+    "bytes": 571,
+    "sha256": "7a66e68804bfed7d6fecde856cc9005cc7e450ed40b4d60be2f235f8d9c51305"
+  },
+  "continuation": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/continuation-green.json",
+    "bytes": 591,
+    "sha256": "e0710f9445ab6e1fd28f202e47451e356703c861404aa67315540ba6fd2d24fe"
+  },
+  "P36Material": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/P36-material.json",
+    "bytes": 248,
+    "sha256": "4f0640a04e3f088f654dbe232305b00faf7a22335802a82a9bb8c2487f2b66ff"
+  },
+  "P36Runtime": {
+    "reference": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/P36-runtime.json",
+      "bytes": 2848,
+      "sha256": "a3d9c3a46556ede249e6f3a80b557fe3bfb8b304d7231a0461395010d10b4deb"
+    },
+    "rows": 21
+  },
+  "Node": {
+    "passed": 25,
+    "total": 26,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/followup-node-regression-corrected.log",
+    "failure": "actual HTTP entry serves browser-only consumer and exact public SDK entry: immutable historical normal/axiom.mjs ENOENT, unchanged from r1."
+  },
+  "Python": {
+    "passed": 1,
+    "total": 1,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/followup-python-regression.log"
+  },
+  "boundaries": {
+    "contracts": 122,
+    "passed": true,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/followup-boundaries.log"
+  },
+  "ordinaryWeb": {
+    "status": "CORRECTNESS_OBSERVED",
+    "observation": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-candidate/observation.json",
+      "bytes": 36413,
+      "sha256": "f740439fd44a4f59a96ebffa8d19b3151205d9b7fc1c96cb33a5d6acd55c211b"
+    },
+    "artifactComparisons": {
+      "final.axsnap": {
+        "baseline": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-final/r1-final.axsnap",
+          "bytes": 857085,
+          "sha256": "3f66f418505124e4623450bb725a65c0a7a59b4a14ebf9ce0223261b5d724f50"
+        },
+        "candidate": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-candidate/repaired-final.axsnap",
+          "bytes": 857085,
+          "sha256": "3f66f418505124e4623450bb725a65c0a7a59b4a14ebf9ce0223261b5d724f50"
+        },
+        "equal": true
+      },
+      "final.rgba": {
+        "baseline": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-final/r1-final.rgba",
+          "bytes": 37440000,
+          "sha256": "ec76b828373df947a4baa70daacc238d2fc163babbffb1761ba3bbf3c14389bb"
+        },
+        "candidate": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-candidate/repaired-final.rgba",
+          "bytes": 37440000,
+          "sha256": "ec76b828373df947a4baa70daacc238d2fc163babbffb1761ba3bbf3c14389bb"
+        },
+        "equal": true
+      },
+      "new-operation-0.bin": {
+        "baseline": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-final/r1-new-operation-0.bin",
+          "bytes": 10242,
+          "sha256": "3f6946cecfc5d253b65b56aba102b6ec56b119f84b79698a237e36e8477f4759"
+        },
+        "candidate": {
+          "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/narrow-web-candidate/repaired-new-operation-0.bin",
+          "bytes": 10242,
+          "sha256": "3f6946cecfc5d253b65b56aba102b6ec56b119f84b79698a237e36e8477f4759"
+        },
+        "equal": true
+      }
+    },
+    "receipt": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "5b5e4ae4336c5c0507d8bb85f9e68d79",
+      "ordinal": "19",
+      "presentedGeneration": "19",
+      "runtimeEpoch": "1"
+    }
+  },
+  "normalSDK": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/install-normal/js",
+    "diagnostics": false,
+    "qualification": false,
+    "wasm": {
+      "bytes": 14026369,
+      "sha256": "ed0ee0eb2218ee541e953f85f3dc47752e6237772cde225613c9d761ece5f24d"
+    }
+  },
+  "knownSetupFindings": [
+    "Initial web build used system Python3.9; rebuilt successfully with EMSDK_PYTHON=/opt/homebrew/bin/python3.12. No source/dependency fix.",
+    "Node modules local link absent after earlier cleanup: reused existing shared directory by temporary symlink; removed link after tests.",
+    "First narrow browser attempt did not hit ink, second replayed fixture identities collided with newly seeded Operation identity; retained as invalid test setup, not product correctness pass.",
+    "Third narrow run preserved a complete clean r1 reference but hit 180s total guard during candidate. Candidate-only continuation reuses exact reference and changes only byte-transfer encoding. All raw buffers retained."
+  ],
+  "fullSuite": "Not re-expanded: previous frozen unrelated failures remain corroborative findings; narrow scope instructions require targeted correctness and lifecycle regressions."
+}

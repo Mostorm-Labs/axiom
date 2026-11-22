@@ -1,0 +1,1586 @@
+[
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-compile.json",
+    "sha256": "a8bb3eb35f3f1e7bf66fb09c2614686cd603791e3a5a1b0e339e22bb141f0315",
+    "command": [
+      "/usr/bin/c++",
+      "-DAXIOM_TRANSIENT_DISPLAY_TESTS=1",
+      "-DCANVAS_RENDER_HAS_SKIA=1",
+      "-DCANVAS_SEMANTIC_PROTOBUF=1",
+      "-DG47_LATIN_FONT=\"/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/resources/fonts/Roboto-Regular.ttf\"",
+      "-DSK_RELEASE",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-source/runtime/render/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/scene/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/text/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/scheduling/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/resources/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/foundation/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/semantic/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/ink/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/.deps/nlohmann-json/single_include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/input/include",
+      "-isystem",
+      "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release",
+      "-O3",
+      "-UNDEBUG",
+      "-std=c++20",
+      "-arch",
+      "arm64",
+      "-o",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity.o",
+      "-c",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-source/runtime/render/tests/transient_display_retry_test.cpp"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325398.8813162,
+    "exitCode": 0,
+    "seconds": 8.556758642196655
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-corrected.json",
+    "sha256": "d0003127769436f6fb1459dc07ac97cc231e59985a6eab70b27fdd9ea99d9100",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-corrected",
+      "--continuity",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-pixels-corrected"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325407.647378,
+    "exitCode": -6,
+    "seconds": 1.2012641429901123
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity.json",
+    "sha256": "40b2f7bcb8a794ad374f2b074c6d868be278cd7234953a4bd006a907daf6894d",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity",
+      "--continuity",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-continuity-pixels"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325162.846386,
+    "exitCode": -11,
+    "seconds": 0.8839590549468994
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared-compile.json",
+    "sha256": "3edc10e88dc34e4bd1bafc24f480105774391c87458d8989fdb225bc3059daeb",
+    "command": [
+      "/usr/bin/c++",
+      "-DCANVAS_RENDER_HAS_SKIA=1",
+      "-DCANVAS_SEMANTIC_PROTOBUF=1",
+      "-DSK_RELEASE",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-source/runtime/render/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/scene/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/text/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/scheduling/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/resources/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/foundation/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/semantic/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/ink/include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/.deps/nlohmann-json/single_include",
+      "-I/Users/qing/.codex/worktrees/g5-post-range-convergence/runtime/input/include",
+      "-isystem",
+      "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release",
+      "-O3",
+      "-UNDEBUG",
+      "-std=c++20",
+      "-arch",
+      "arm64",
+      "-o",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared.o",
+      "-c",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-source/runtime/render/tests/render_cache_test.cpp"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325408.8494248,
+    "exitCode": 0,
+    "seconds": 11.399188995361328
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared-corrected.json",
+    "sha256": "fae362e5e54990a29b8b905b0b006a6bbe210268280c528a85d686ea2db2747a",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/baseline-prepared-corrected",
+      "--exact-pressure-only"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325420.450356,
+    "exitCode": -6,
+    "seconds": 0.7424790859222412
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/boundary-green-build.json",
+    "sha256": "fea12d0197b08103c1daa2bb3c3ddc055b787e3c8b4646bd7af8df34f5462fcb",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323313.910801,
+    "exitCode": 0,
+    "seconds": 10.904112100601196
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/boundary-red-build.json",
+    "sha256": "bf04c8209f8d86a3bb9dd81be9d85b1f43c3ebff87e6fbb25a70897143a30555",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323172.1457732,
+    "exitCode": 0,
+    "seconds": 5.658434867858887
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/bounded.json",
+    "sha256": "36d5ffed0ed2259b1738534ed7ced3d2a30f57b08b4224cbcfcfd0cb1613a9aa",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/bounded.json",
+      "bounded"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322161.008501,
+    "exitCode": 0,
+    "seconds": 8.134294986724854
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/configure-diagnostic-web-corrected.json",
+    "sha256": "b19d8e1f312564e3b003efe2b70396d105798b69ff24287662b4562c44f052b6",
+    "command": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_TOOLCHAIN_FILE=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "-DCanvasSkia_DIR=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release/lib/cmake/CanvasSkia",
+      "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_POC02=OFF",
+      "-DCANVAS_BUILD_POC03=OFF",
+      "-DCANVAS_BUILD_POC05=OFF",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DAXIOM_BUILD_JS_SDK=ON",
+      "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_CPU_PENDING_ERASE=ON",
+      "-DAXIOM_ENABLE_FRAME_TIMING=ON",
+      "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+      "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+      "-DAXIOM_RENDER_CACHE_MIB=512",
+      "-DAXIOM_RENDER_SHARED_MIB=1024",
+      "-DAXIOM_RENDER_ENTRY_MIB=128",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_CXX_FLAGS=",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DCMAKE_MAKE_PROGRAM=/opt/homebrew/bin/ninja"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267514.020991,
+    "exitCode": 0,
+    "seconds": 3.8228647708892822
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/configure-diagnostic-web.json",
+    "sha256": "ae303a2e07418e876050fcc1e9e22e7d89b609381a3f7bf48b2bd62a9b130a38",
+    "command": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_TOOLCHAIN_FILE=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "-DCanvasSkia_DIR=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release/lib/cmake/CanvasSkia",
+      "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_POC02=OFF",
+      "-DCANVAS_BUILD_POC03=OFF",
+      "-DCANVAS_BUILD_POC05=OFF",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DAXIOM_BUILD_JS_SDK=ON",
+      "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_CPU_PENDING_ERASE=ON",
+      "-DAXIOM_ENABLE_FRAME_TIMING=ON",
+      "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+      "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+      "-DAXIOM_RENDER_CACHE_MIB=512",
+      "-DAXIOM_RENDER_SHARED_MIB=1024",
+      "-DAXIOM_RENDER_ENTRY_MIB=128",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_CXX_FLAGS=",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DCMAKE_MAKE_PROGRAM=/opt/homebrew/bin/ninja"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267371.563777,
+    "exitCode": 1,
+    "seconds": 0.18494606018066406
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/configure-native.json",
+    "sha256": "964f4788b3fd113f5867d772cedd5f9aa77efeab7b13f9114900d272430c6d91",
+    "command": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_POC02=OFF",
+      "-DCANVAS_BUILD_POC03=OFF",
+      "-DCANVAS_BUILD_POC05=OFF",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=ON",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_CPU_PENDING_ERASE=ON",
+      "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+      "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DCanvasSkia_DIR=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release/lib/cmake/CanvasSkia",
+      "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64/skia-sdk/macos-arm64-metal/release",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+      "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/0300e0904b3bab8998a85e3b7d9886d983a1c1c6c4545cf24611877c331e5dd4",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DAXIOM_ENABLE_FRAME_TIMING=OFF",
+      "-DCMAKE_CXX_FLAGS=",
+      "-DAXIOM_RENDER_CACHE_MIB=512",
+      "-DAXIOM_RENDER_SHARED_MIB=1024",
+      "-DAXIOM_RENDER_ENTRY_MIB=128",
+      "-DCMAKE_CXX_FLAGS_RELEASE=-O3 -UNDEBUG"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267369.146604,
+    "exitCode": 0,
+    "seconds": 2.416529893875122
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/configure-normal-web.json",
+    "sha256": "bfa9dcb924ed2f5f58679bd8a2fd4d0bca7d4d0bd2ecbfd05ef1c5573d7b1a7c",
+    "command": [
+      "cmake",
+      "-G",
+      "Ninja",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_TOOLCHAIN_FILE=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "-DCanvasSkia_DIR=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release/lib/cmake/CanvasSkia",
+      "-DCANVAS_SKIA_SDK_ROOT=/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.deps/skia-sdk/web-wasm-webgl2/release",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_POC02=OFF",
+      "-DCANVAS_BUILD_POC03=OFF",
+      "-DCANVAS_BUILD_POC05=OFF",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DAXIOM_BUILD_JS_SDK=ON",
+      "-DAXIOM_BUILD_LEGACY_CANVAS_DEMO=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_BUILD_BRUSH_LAB=OFF",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DAXIOM_CPU_PENDING_ERASE=ON",
+      "-DAXIOM_ENABLE_FRAME_TIMING=OFF",
+      "-DAXIOM_G5_UR0_DIAGNOSTICS=OFF",
+      "-DAXIOM_RENDER_MEMORY_PROFILE=DESKTOP",
+      "-DAXIOM_RENDER_CACHE_MIB=512",
+      "-DAXIOM_RENDER_SHARED_MIB=1024",
+      "-DAXIOM_RENDER_ENTRY_MIB=128",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DCMAKE_PREFIX_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DAXIOM_PROTOC=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+      "-DCMAKE_FIND_ROOT_PATH=/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_CXX_FLAGS=",
+      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF",
+      "-DCMAKE_MAKE_PROGRAM=/opt/homebrew/bin/ninja"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322240.675332,
+    "exitCode": 0,
+    "seconds": 5.5501158237457275
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-web-build.json",
+    "sha256": "358744c050e4446c35aa5f0405962315cd2d2850e9f2a8c4fb5253bc213a4def",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267517.844497,
+    "exitCode": 0,
+    "seconds": 133.08820390701294
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-web-candidate-build.json",
+    "sha256": "ad78cdcc6eac9be42c6e6313319f844081d8d363cd0b09f6d8dba7284b0531ba",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324126.4552152,
+    "exitCode": 0,
+    "seconds": 35.475913763046265
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-web-candidate-install.json",
+    "sha256": "a67f0ba15f23ff5d31ce66205c46afb4834ae92b0f75b9a2c3b7ef9635f7ba03",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-C"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324161.9315462,
+    "exitCode": 0,
+    "seconds": 0.02463078498840332
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-web-install.json",
+    "sha256": "ce6ef7b4d6dbde732a4f408d5e448022dfd7749dfdeb10aaacc38d9ab921eb68",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-diagnostic-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-B"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267650.933093,
+    "exitCode": 0,
+    "seconds": 0.024789810180664062
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diff-check.json",
+    "sha256": "e1a28fa671f6e915827dfdc988f00e9dcdc3dfdf1160ebe73af20b3f78013399",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325481.049081,
+    "exitCode": 0,
+    "seconds": 0.08221292495727539
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/down-green.json",
+    "sha256": "70520cb0f2613769e9585e1fa0b3de3adb481bb4bece474e2ae406e523600ed5",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/down-green.json",
+      "down"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795321909.325102,
+    "exitCode": 0,
+    "seconds": 0.13303399085998535
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/down-red-build.json",
+    "sha256": "81ca10dda5c9c228581c821d596182ee0dc6ebe45b809b6defa9bcf38bd11ab4",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795268096.944716,
+    "exitCode": 0,
+    "seconds": 5.4628050327301025
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/down-red.json",
+    "sha256": "c97842724bc73d9717fef4ce1c8237d55f95f78dfc78abf58ba350e6d87c7347",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/down-red.json",
+      "down"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795268102.4080179,
+    "exitCode": 1,
+    "seconds": 8.462568283081055
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/final-boundary-test-build.json",
+    "sha256": "29caf758de2906b5084f690efaa2dcb7d48dcf072e67d6b5575100ed59c06eb1",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325641.010871,
+    "exitCode": 0,
+    "seconds": 6.196851015090942
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/final-pixel-test-build.json",
+    "sha256": "79b5234d46467486e4c0721dda9dc715a1b493c2a7e22d4e9ad115b20551f301",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795326122.139864,
+    "exitCode": 0,
+    "seconds": 6.086573839187622
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/final-pixel-test.json",
+    "sha256": "d5b2cf5f785ec4ab975d267ea0bbf5b7e5572e54aa01ec956cdcbecff571cd1e",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/final-independent-pixels.json",
+      "pixels"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795326128.226807,
+    "exitCode": 0,
+    "seconds": 3.3486108779907227
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/hidpi-material-lifecycle.json",
+    "sha256": "94fb38f315b752fc81c2c9b3c954cdca36df8379990a68dd165e9f925e646f7e",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_hidpi_material_preview_tests",
+      "--lifecycle",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/P36-material-lifecycle.json"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324985.758126,
+    "exitCode": 0,
+    "seconds": 1.1500279903411865
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/hidpi-runtime-lifecycle.json",
+    "sha256": "b5249d9d9cffb6279cf475a3629a61371779219f77679ac4890de8aa3a628226",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_hidpi_preview_lifecycle_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/P36-runtime-lifecycle.json"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324986.908594,
+    "exitCode": 0,
+    "seconds": 2.228553056716919
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/interleaved-build.json",
+    "sha256": "fd497ce2832825b9a714bba4cc323b49bd4f488963dfda5032e552890fa66536",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323620.864196,
+    "exitCode": 0,
+    "seconds": 6.0422279834747314
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/interleaved-final.json",
+    "sha256": "b79b0701bfbbd72d2a4fabc3e0eb95eb83c639b8068ec8164edeee47b7d3d2c9",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/interleaved-final.json",
+      "interleaved"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323626.9069371,
+    "exitCode": 0,
+    "seconds": 1.30610990524292
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/interleaved-green3.json",
+    "sha256": "043b95e1fe50e54ca2e7ff883bade5d6dddc840888dfccf196aa73869d8b0af2",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/interleaved-green3.json",
+      "interleaved"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324614.8008268,
+    "exitCode": 0,
+    "seconds": 0.2950773239135742
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle-build-corrected.json",
+    "sha256": "fa256fb38fee2c65f09505e9a399695b0710295a9c474aba998182c1eed8edd6",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322232.831746,
+    "exitCode": 0,
+    "seconds": 5.576323747634888
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle-build.json",
+    "sha256": "81af2b1792e4a23687daa8dbd7d8b4e19325eda1cb37b251c6e70fa95a9b1961",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322155.393482,
+    "exitCode": 0,
+    "seconds": 5.614526987075806
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle-corrected.json",
+    "sha256": "2a13222165a863d0c03e86d69f59607f234ec0b56e5ef0be38c9158384b715b0",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/lifecycle.json",
+      "lifecycle"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322238.408549,
+    "exitCode": 0,
+    "seconds": 2.265519857406616
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle-green2.json",
+    "sha256": "bef6e32f858513a85d4563ba9bb3f17dba98e992b0990d9f1073bf0b37d31ff8",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/lifecycle-green2.json",
+      "lifecycle"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323371.071657,
+    "exitCode": 0,
+    "seconds": 1.6863501071929932
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle-green3.json",
+    "sha256": "d94f54f30a7f9157c5d78427342ec369805e6b35662cf556e6fc01df77e47675",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/lifecycle-green3.json",
+      "lifecycle"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324610.922425,
+    "exitCode": 0,
+    "seconds": 2.190492868423462
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/lifecycle.json",
+    "sha256": "381ac0472dfda1f7b9374962284fbc4ce81440a7cd41999345d4ff4b7ff06ebb",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/lifecycle.json",
+      "lifecycle"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322169.143269,
+    "exitCode": -6,
+    "seconds": 0.859691858291626
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-budget-final.json",
+    "sha256": "79252bd398c4e83281b64256ff07c68fd02b301d62f293a2ceaa749b6483c9bb",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/mask-budget-final.json",
+      "mask-budget"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325648.2412539,
+    "exitCode": 0,
+    "seconds": 0.13355326652526855
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-budget-green3.json",
+    "sha256": "a5592a5cbad454ad8b30e8f0d29dc4c0a6b929587d63a3fff974a852538a73d6",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/mask-budget-green3.json",
+      "mask-budget"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324599.82771,
+    "exitCode": 0,
+    "seconds": 0.8789350986480713
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-green-build-corrected.json",
+    "sha256": "62db36aa1018aaa2912784ec2fce8268712452abc05e6b0757661b3a24fbc642",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324593.65392,
+    "exitCode": 0,
+    "seconds": 6.173325061798096
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-green-build.json",
+    "sha256": "7aeb5587be66d8a423fe9c3dc96bf68a06fe5fbd71c391b628e8ffc4b7096337",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324516.380445,
+    "exitCode": 1,
+    "seconds": 6.1946611404418945
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-red-build.json",
+    "sha256": "b2521283a79805e7ebd85352f6706937631e69394f8c36361c0b7ae3ba42edbc",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324431.4289439,
+    "exitCode": 0,
+    "seconds": 10.61092233657837
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mask-red.json",
+    "sha256": "5040d37f3b679d92dced3e9eba53542c1720cacd273baa4958f53f0ac425abb9",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/mask-red.json",
+      "mask-budget"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324442.040223,
+    "exitCode": 1,
+    "seconds": 0.8247859477996826
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mixed-prepared-red-build-corrected.json",
+    "sha256": "4aa3b5ec508a4d02a957e2cc683919143067d62a8f51dd83252e0aaf14f1c2fc",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323094.2580988,
+    "exitCode": 0,
+    "seconds": 5.793527126312256
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mixed-prepared-red-build.json",
+    "sha256": "a1195df79f3fabb7267078a7ac860863541da56476c5b8ca980e3c807f9a3362",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323005.380085,
+    "exitCode": 1,
+    "seconds": 2.3020081520080566
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/mixed-prepared-red.json",
+    "sha256": "5c92eaa58a61ecb5ba9895a4dba0184cf12cee9ed5deace1232842fbc5b4cbd1",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/mixed-prepared-red.json",
+      "prepared"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323100.05206,
+    "exitCode": 1,
+    "seconds": 9.402587175369263
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-enable-preview-tests.json",
+    "sha256": "2177f74233e19eae8a2aea1fc42062f360cd4fdd78792e0e92bae9958ba2077b",
+    "command": [
+      "cmake",
+      "-S",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+      "-B",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "-DAXIOM_RENDER_BUILD_HIDPI_PREVIEW_TESTS=ON",
+      "-DAXIOM_RENDER_BUILD_HIDPI_LIFECYCLE_TESTS=ON"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324746.9859982,
+    "exitCode": 0,
+    "seconds": 1.6731898784637451
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-final-own-ctest.json",
+    "sha256": "aee2b69987c71ee073167fa1bd6ebf6d2feb1311911e05d809ccad6aee7f9bcc",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--output-on-failure",
+      "-R",
+      "^G5Dpr4RenderSync"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325769.69959,
+    "exitCode": 0,
+    "seconds": 21.767979860305786
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-final-retirement-build.json",
+    "sha256": "77d7325ccdcc1208b3037ca0032695a9a08ead2f2aa1e5576297635882244eed",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325758.04123,
+    "exitCode": 0,
+    "seconds": 11.65795111656189
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-build-corrected.json",
+    "sha256": "e627b72fa7c11db632c2409a45786eeada4dba5eaf59970be0b8c61b2559ae7e",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "axiom_canonical_prepared_body_tests",
+      "axiom_render_cache_tests",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_prepared_body_index_tests",
+      "axiom_render_execution_tests",
+      "axiom_gpu_retirement_contract_tests",
+      "axiom_gpu_resource_recovery_tests",
+      "axiom_temporary_retirement_wait_tests",
+      "axiom_temporary_retirement_safety_tests",
+      "axiom_temporary_retirement_completion_tests",
+      "axiom_render_preview_surface_tests",
+      "axiom_transient_display_retry_tests",
+      "axiom_ur2a_mask_isolation_tests",
+      "axiom_ur2c_mask_history_tests",
+      "axiom_hidpi_material_preview_tests",
+      "axiom_hidpi_preview_lifecycle_tests",
+      "axiom_shared_scene_tests",
+      "axiom_navigation_mask_reuse_tests",
+      "axiom_reference_validation_cache_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324748.659609,
+    "exitCode": 1,
+    "seconds": 0.07770180702209473
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-build-final.json",
+    "sha256": "ba35e2388a32be328616668a4313ddd9769bf83439a41da5644e92d2490306da",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "axiom_canonical_prepared_body_tests",
+      "axiom_render_cache_tests",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_prepared_body_index_tests",
+      "axiom_render_execution_tests",
+      "axiom_gpu_retirement_contract_tests",
+      "axiom_gpu_resource_recovery_tests",
+      "axiom_temporary_retirement_wait_tests",
+      "axiom_temporary_retirement_safety_tests",
+      "axiom_temporary_retirement_completion_tests",
+      "axiom_render_preview_surface_tests",
+      "axiom_transient_display_retry_tests",
+      "axiom_ur2a_mask_isolation_tests",
+      "axiom_ur2c_mask_history_tests",
+      "axiom_hidpi_material_preview_tests",
+      "axiom_hidpi_preview_lifecycle_tests",
+      "axiom_shared_scene_tests",
+      "axiom_navigation_mask_reuse_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324827.817627,
+    "exitCode": 1,
+    "seconds": 61.844245195388794
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-build-no-timing-only.json",
+    "sha256": "a1aebbe29be91067be1026f5c55203a10e21eaed58501a4d0f48e0f3d2800a65",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "axiom_canonical_prepared_body_tests",
+      "axiom_render_cache_tests",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_prepared_body_index_tests",
+      "axiom_render_execution_tests",
+      "axiom_gpu_retirement_contract_tests",
+      "axiom_gpu_resource_recovery_tests",
+      "axiom_temporary_retirement_wait_tests",
+      "axiom_temporary_retirement_safety_tests",
+      "axiom_temporary_retirement_completion_tests",
+      "axiom_render_preview_surface_tests",
+      "axiom_transient_display_retry_tests",
+      "axiom_ur2a_mask_isolation_tests",
+      "axiom_ur2c_mask_history_tests",
+      "axiom_hidpi_material_preview_tests",
+      "axiom_hidpi_preview_lifecycle_tests",
+      "axiom_shared_scene_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324917.214635,
+    "exitCode": 0,
+    "seconds": 16.942727088928223
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-build.json",
+    "sha256": "c56a90e87a73da9f298eea2d45aa4eb57b459af290861346120ee8b334428a89",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "axiom_canonical_prepared_body_tests",
+      "axiom_render_cache_tests",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_prepared_body_index_tests",
+      "axiom_render_execution_tests",
+      "axiom_gpu_retirement_contract_tests",
+      "axiom_gpu_resource_recovery_tests",
+      "axiom_temporary_retirement_wait_tests",
+      "axiom_temporary_retirement_safety_tests",
+      "axiom_temporary_retirement_completion_tests",
+      "axiom_render_preview_surface_tests",
+      "axiom_transient_display_retry_tests",
+      "axiom_ur2a_mask_isolation_tests",
+      "axiom_ur2c_mask_history_tests",
+      "axiom_hidpi_material_preview_tests",
+      "axiom_shared_scene_tests",
+      "axiom_navigation_mask_reuse_tests",
+      "axiom_reference_validation_cache_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324677.307675,
+    "exitCode": 1,
+    "seconds": 1.6673030853271484
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-focused-ctest.json",
+    "sha256": "58e125298f2996da21f6e6103fc37263e9ec15b7810bd63b86a859a4f5b851d0",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--output-on-failure",
+      "-R",
+      "^(G5Dpr4RenderSync.*|G5CanonicalPrepared(Body|BodyBounded|BodyPixels|WorkingSet|Compatibility)|G5PreparedBodyIndex|G5RenderExecution|G5GpuRetirementContract|G5GpuResourceRecovery|G5TemporaryRetirement(Wait|Safety|Completion)|G3PreviewSurface|G5TransientDisplay(RetryPixels|Continuity|Recovery|Handoff|HandoffInflight)|G5UR2AMaskIsolation.*|G5UR2C.*|G5SceneStampPreparation|G5LiveEraseGpuMiss|G5LiveEraseDpr|G5TranslatedV4Drag|G5InkBodyMaskReuse|G5RegionalMaskValidity)$"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324934.1577752,
+    "exitCode": 8,
+    "seconds": 51.600050926208496
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-green-build.json",
+    "sha256": "f6aaa8c07fc4aa23e0faf4d9c1952f4d13e69a35cf042a15a8d4891308fbeac1",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795321858.219913,
+    "exitCode": 0,
+    "seconds": 13.82205581665039
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-red-build.json",
+    "sha256": "c34f74ac1377b20e270f47f7b1f90c9ae3188a75d496e58e3829c3a6d4269bf8",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267442.296108,
+    "exitCode": 0,
+    "seconds": 63.541183948516846
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-red.json",
+    "sha256": "d10ce759f89daae0dd0a04ec86a1582d31f3fb31b26f0555df67405a32d83628",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/owner-red.json"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267505.837755,
+    "exitCode": 1,
+    "seconds": 8.182804822921753
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/native-regression-build.json",
+    "sha256": "262c93cf72ade55c1528ddb1b521e7fcdb829a6174bb79faf9db22c08d2a4a3b",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322119.886949,
+    "exitCode": 1,
+    "seconds": 9.10935091972351
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/node-regression.json",
+    "sha256": "f0b28931de3c7df93ee3c4125b787c6515bf42a65b84e7d6bf61a64b393734e0",
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "--test",
+      "verification/tests/g5_web_up_attribution.test.mjs",
+      "verification/tests/g5_canonical_prepared_body.test.mjs",
+      "verification/tests/g5_crossframe_history_driver.test.mjs",
+      "verification/tests/g5_post_erase_interaction_readiness.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_heavy_scene_attribution.test.mjs"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325480.58929,
+    "exitCode": 1,
+    "seconds": 0.4593620300292969
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-build-final.json",
+    "sha256": "20f37ff1b55d9961a947e94a2c0b5aa468dfa09290f3c964b40f3d01b3623a0a",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323628.417005,
+    "exitCode": 0,
+    "seconds": 30.852458953857422
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-build-mask.json",
+    "sha256": "de70e18f51f6f276e5c21bca7730a40074092f5ef0bffb8967c0e8a0bb127029",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324989.13754,
+    "exitCode": 0,
+    "seconds": 36.85324287414551
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-build.json",
+    "sha256": "863ca0ccb4bed09a85cffe931c81e2afa361acb394c11c5c0fc1f1201a1321ad",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322246.2259562,
+    "exitCode": 0,
+    "seconds": 123.98324775695801
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-final-build.json",
+    "sha256": "56e2b6f72b749aeecb772376457287edc82fa37c711b546e4db64e33ff8d539a",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325791.467905,
+    "exitCode": 0,
+    "seconds": 30.517174005508423
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-final-install.json",
+    "sha256": "50f2b69edfc01764a6aab1ece887019c0d47ed8c079c0975ecf19cc67d68972d",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325821.985466,
+    "exitCode": 0,
+    "seconds": 0.04059886932373047
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-install-final.json",
+    "sha256": "d6d4fe0b9ce1f4a6c34ee96b4ea4d173ed0b6dab3e4f137e7bbca2274c508781",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-final"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323659.269838,
+    "exitCode": 0,
+    "seconds": 0.024248838424682617
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-install-mask.json",
+    "sha256": "b38a5ed2298b7304e0e2058b026ccfd3f714978522cac7f652dc1e9b9988e3d5",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-mask"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325025.991115,
+    "exitCode": 0,
+    "seconds": 0.02045297622680664
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-web-install.json",
+    "sha256": "18fd98097d14c3381a273c0e1a08741103c485f07ac51894128d8c801fed020e",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-normal-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322370.209582,
+    "exitCode": 0,
+    "seconds": 0.02429485321044922
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/oversize-final.json",
+    "sha256": "d03fe2826f2b29c389f0beea7305403883391d5e06bef838505159f2509b8399",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/oversize-final.json",
+      "oversize"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325647.2081332,
+    "exitCode": 0,
+    "seconds": 1.0326387882232666
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/oversize-green2.json",
+    "sha256": "0be971ba18ed4c056a26df07a3bcf157d7c8251186b4fd9a300e1ac2d7d018be",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/oversize-green2.json",
+      "oversize"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323368.8759072,
+    "exitCode": 0,
+    "seconds": 0.13548493385314941
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/oversize-green3.json",
+    "sha256": "2c10112e4b4ddc4c4610f5d732bdd94e13f878017ddc62abb617fccdea22c73e",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/oversize-green3.json",
+      "oversize"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324610.7944021,
+    "exitCode": 0,
+    "seconds": 0.12765002250671387
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/oversize-red.json",
+    "sha256": "8559f1951708075ec066ef22136230f968bcd3715434e088af1cf13794e2518b",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/oversize-red.json",
+      "oversize"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323177.8047512,
+    "exitCode": 1,
+    "seconds": 0.8328089714050293
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/owner-green.json",
+    "sha256": "9e14800b82bb3a7e74234917db4e570f6be108a74e207ce8f978231457d48df0",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/owner-green.json"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795321908.601345,
+    "exitCode": 0,
+    "seconds": 0.7233960628509521
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/pixels-build.json",
+    "sha256": "98cd8f15904d2de56033a432b706b6ac1192efa87206eaed97f865aeca9df9e5",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795321981.483504,
+    "exitCode": 0,
+    "seconds": 5.430964946746826
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/pixels-green2.json",
+    "sha256": "a465e8b1ae2013a43e849b769fc49ab215882fe0bbe0014c721506a4b59ab452",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/pixels-green2.json",
+      "pixels"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323369.155042,
+    "exitCode": 0,
+    "seconds": 1.9161522388458252
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/pixels-green3.json",
+    "sha256": "73c61d7d460937f4fc91f1d6be22431bee585e7350e9ae87c5bb5617b538ca2d",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/pixels-green3.json",
+      "pixels"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324600.707078,
+    "exitCode": 0,
+    "seconds": 2.5951759815216064
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/pixels.json",
+    "sha256": "f81c90f93a3deb294359f767e2f1e6eb00e427e38ec7a60b5749bf22d45700ea",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/pixels.json",
+      "pixels"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795321986.9148412,
+    "exitCode": 0,
+    "seconds": 2.4669108390808105
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/prepared-green2.json",
+    "sha256": "cebe8a82f7eb561b831efb7e7ec58851071805c912276885e7dee78a3b27608b",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/prepared-green2.json",
+      "prepared"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323360.820655,
+    "exitCode": 0,
+    "seconds": 8.054342985153198
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/prepared-green3.json",
+    "sha256": "5a06457cc9f1d3a9b37bd8d2dd242b20887428a69e80af6055e99f278d105ce4",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/prepared-green3.json",
+      "prepared"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324603.3113751,
+    "exitCode": 0,
+    "seconds": 7.482661962509155
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/prepared-red-build.json",
+    "sha256": "e076b41f7ce06c08afd18c246f076e72d3458dcca83fdd397e5297557fa578f5",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322939.29055,
+    "exitCode": 0,
+    "seconds": 5.993444204330444
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/prepared-red.json",
+    "sha256": "fe4ced92890e1b4411cf8e14a6521fcd92e436755771496110dce6a62fce6053",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/prepared-red.json",
+      "prepared"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322945.284419,
+    "exitCode": 0,
+    "seconds": 8.185354948043823
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/python-regression.json",
+    "sha256": "343290d3842398f87605df7117609a368c1b4d8da17f4f0af95ff35072b9da98",
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "verification/tests",
+      "-p",
+      "test_g5_web_up_attribution.py"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325480.511203,
+    "exitCode": 0,
+    "seconds": 0.0777130126953125
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota-build-corrected.json",
+    "sha256": "629bdd22e81c785cf0c6fae64ff0988b9e5e0fbeb5882b993244d6da76f5b985",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322449.61277,
+    "exitCode": 0,
+    "seconds": 5.72956395149231
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota-build.json",
+    "sha256": "c21c7b188776ed9208fe40f1b633399222769df98d327c8548cf1d881dcddd6c",
+    "command": [
+      "cmake",
+      "--build",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322384.6483352,
+    "exitCode": 0,
+    "seconds": 5.883433818817139
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota-corrected.json",
+    "sha256": "0d1ab4871aeb1d6feec32f06184a5a11292071b02769709f1f15469ff5be97c9",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/quota.json",
+      "quota"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322455.3428469,
+    "exitCode": 0,
+    "seconds": 2.253770112991333
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota-green2.json",
+    "sha256": "59d879834185b8a658cbaf777d7839c2d6c72e2610b8953dff5e9ac3759eda58",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/quota-green2.json",
+      "quota"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323372.75849,
+    "exitCode": 0,
+    "seconds": 1.6127219200134277
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota-green3.json",
+    "sha256": "90498595a1a457e214a91175ac9c091950be8cfd2e85acac9ab43ee0f35ee6bc",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/quota-green3.json",
+      "quota"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795324613.113345,
+    "exitCode": 0,
+    "seconds": 1.6868932247161865
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/quota.json",
+    "sha256": "fdf8b5e325b209791bacc132bf8b6c3919afb720b6e136b8801549af079b4d31",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/quota.json",
+      "quota"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795322390.53215,
+    "exitCode": -6,
+    "seconds": 2.0316150188446045
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/resolve-native.json",
+    "sha256": "6deab13229a41b2b4d5d543a2852f537906899c5729449253ae8b12bb047fbba",
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "tools/setup_build_environment.py",
+      "--semantic",
+      "--offline",
+      "--status"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795267368.774276,
+    "exitCode": 0,
+    "seconds": 0.37004613876342773
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/runtime-boundaries.json",
+    "sha256": "e9c262bc7dafe9ebac7ea958153781ff95b4ee5f9d4d4e24148ffb0575e56c70",
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795325480.435361,
+    "exitCode": 0,
+    "seconds": 0.07543706893920898
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/suspended-green2.json",
+    "sha256": "3856b7e3ac78752d4b77a5562df178f0ca4bd93c8d08c990323bc5062c022bab",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/suspended-green2.json",
+      "suspended"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323369.01173,
+    "exitCode": 0,
+    "seconds": 0.14287400245666504
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/suspended-red.json",
+    "sha256": "16fb5ba82471e978f43c0359f5483f579f0a8103722f8c3bf9af6ae064ea498f",
+    "command": [
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/build-native/runtime/render/axiom_dpr4_render_sync_tests",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/suspended-red.json",
+      "suspended"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795323178.6379561,
+    "exitCode": 1,
+    "seconds": 0.0905919075012207
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/handoff-final-build.json",
+    "sha256": "010604071d705c288544d62b8974527588f1da980bf845fdbfe3f2a8f20fa5f1",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-DPR4-render-sync-r1/build-native",
+      "--target",
+      "axiom_dpr4_render_sync_tests",
+      "-j4"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795326510.577952,
+    "exitCode": 0,
+    "seconds": 0.0739898681640625
+  },
+  {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/handoff-final-own-ctest.json",
+    "sha256": "edf20a6a47534fdf7518abdc93686ff559fcaa0f8ccdd1764b08d38202de687b",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-DPR4-render-sync-r1/build-native",
+      "-R",
+      "^G5Dpr4RenderSync",
+      "--output-on-failure",
+      "-j1"
+    ],
+    "cwd": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "started": 1795326534.923049,
+    "exitCode": 0,
+    "seconds": 21.955397129058838
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "status": "BLOCKED_EVIDENCE_ORIGINAL_HEAVY_PAIR",
+  "reason": "Baseline reached guarded420s during A-input before Up; candidate in that pair not started. Forced guard termination is not an independently observed application crash.",
+  "raw": {
+    "path": "out/G5-post-range-convergence-r1/web/fixed40-B/primary/records.jsonl.gz",
+    "bytes": 28164,
+    "sha256": "955129de9ac7b60ce814baa778b55432ff9e8e827605e08d8f4bcdc3a34ed4df"
+  },
+  "recovered_records": 1304,
+  "marks": [
+    {
+      "label": "initial",
+      "at": 691.7000000029802
+    }
+  ],
+  "frame_count": 507,
+  "max_frame_ms": 1132.2000000029802,
+  "median_frame_ms": 664.7999999970198,
+  "last_frame": {
+    "type": "owner-call",
+    "phase": "A-input",
+    "at": 199465.40000000596,
+    "call": 6862,
+    "raf": 507,
+    "id": 6862,
+    "started": 198759,
+    "ended": 199465.40000000596,
+    "result": {
+      "code": "FRAME_REJECTED",
+      "ok": true,
+      "pending": false,
+      "presented": "1",
+      "retry": true,
+      "surfaceReady": true
+    }
+  },
+  "measured_during_A_input": 498,
+  "operations_or_Up": "not observed before guard",
+  "no_B_C_relative_performance_claim": true,
+  "cleanup": {
+    "command": [
+      "node",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/requests/fixed40-B.json",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/web/fixed40-B"
+    ],
+    "reason": "timeout",
+    "returncode": 1,
+    "elapsed_s": 420.33283679200395,
+    "peak_process_family_rss_kib": 1656960,
+    "rss_limit_kib": 4194304,
+    "timeout_s": 420,
+    "last_stage": {
+      "stage": "closed",
+      "id": "PRC-FIXED40-B",
+      "status": "FAILED",
+      "error": "page.evaluate: Target crashed \n    at run (/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs:30:25)\n    at async file:///Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/runners/g5/heavy_scene_attribution_web.mjs:41:123"
+    },
+    "cleanup_complete": true,
+    "remaining_owned_pids": []
+  }
+}

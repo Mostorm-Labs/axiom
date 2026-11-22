@@ -1,0 +1,278 @@
+{
+  "ownedRuns": [
+    {
+      "label": "diagnostic-B",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-B/js",
+      "mode": "diagnostic",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-B/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-B",
+        "diagnostic"
+      ],
+      "driverSha256": "a7b5239ba1c6c7077ee89b0f2678bf6f5c1ce8c4136cb87c140e25496f2bf7b4",
+      "started": 1795267778.525038,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 46930,
+      "exitCode": 0,
+      "seconds": 218.1246747970581,
+      "actualCeilSeconds": 219,
+      "peakRssBytes": 2331672576,
+      "ownedPids": [
+        46930,
+        46932,
+        46938,
+        46939,
+        46940,
+        46943,
+        46945,
+        46946
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "diagnostic-C",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-C/js",
+      "mode": "diagnostic",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-diagnostic-C/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/diagnostic-C",
+        "diagnostic"
+      ],
+      "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "started": 1795324216.811109,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 72755,
+      "exitCode": 0,
+      "seconds": 142.07449889183044,
+      "actualCeilSeconds": 143,
+      "peakRssBytes": 2678308864,
+      "ownedPids": [
+        72755,
+        72757,
+        72764,
+        72765,
+        72766,
+        72767,
+        72769,
+        72771,
+        72772
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "matched-B",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-B/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-B/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-B",
+        "canary"
+      ],
+      "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "started": 1795323697.356552,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 71604,
+      "exitCode": 0,
+      "seconds": 214.24269914627075,
+      "actualCeilSeconds": 215,
+      "peakRssBytes": 1908047872,
+      "ownedPids": [
+        71604,
+        71606,
+        71612,
+        71613,
+        71614,
+        71615,
+        71617,
+        71619,
+        71620
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "matched-C",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-final/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-final/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-C",
+        "canary"
+      ],
+      "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "started": 1795323926.7082481,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 72093,
+      "exitCode": 0,
+      "seconds": 138.16829800605774,
+      "actualCeilSeconds": 139,
+      "peakRssBytes": 1727987712,
+      "ownedPids": [
+        72093,
+        72096,
+        72102,
+        72103,
+        72104,
+        72105,
+        72106,
+        72108,
+        72109
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "matched-C-mask",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-mask/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C-mask/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-C-mask",
+        "canary"
+      ],
+      "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "started": 1795325212.372417,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 75171,
+      "exitCode": 0,
+      "seconds": 139.0380129814148,
+      "actualCeilSeconds": 140,
+      "peakRssBytes": 1737441280,
+      "ownedPids": [
+        75171,
+        75173,
+        75179,
+        75180,
+        75181,
+        75182,
+        75185,
+        75187,
+        75188
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "matched-C-review",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-review/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/matched-C-review",
+        "canary"
+      ],
+      "driverSha256": "674f9eb84ae16cd07c0dd35a35af961307d0f89b3f3093a4be12916f8aa3bf26",
+      "started": 1795325871.4396281,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 76327,
+      "exitCode": 0,
+      "seconds": 138.92458391189575,
+      "actualCeilSeconds": 139,
+      "peakRssBytes": 1748533248,
+      "ownedPids": [
+        76327,
+        76330,
+        76336,
+        76337,
+        76338,
+        76339,
+        76341,
+        76343,
+        76344
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "normal-B",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-B/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-B/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-B",
+        "canary"
+      ],
+      "driverSha256": "a7b5239ba1c6c7077ee89b0f2678bf6f5c1ce8c4136cb87c140e25496f2bf7b4",
+      "started": 1795322476.930516,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 69288,
+      "exitCode": 0,
+      "seconds": 215.4730589389801,
+      "actualCeilSeconds": 216,
+      "peakRssBytes": 1889075200,
+      "ownedPids": [
+        69288,
+        69290,
+        69296,
+        69297,
+        69298,
+        69299,
+        69301,
+        69303,
+        69304
+      ],
+      "cleanupSurvivors": []
+    },
+    {
+      "label": "normal-C",
+      "sdk": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C/js",
+      "mode": "canary",
+      "command": [
+        "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/verification/runners/g5/dpr4_render_sync/wax_dpr4.mjs",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/install-C/js",
+        "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/normal-C",
+        "canary"
+      ],
+      "driverSha256": "a7b5239ba1c6c7077ee89b0f2678bf6f5c1ce8c4136cb87c140e25496f2bf7b4",
+      "started": 1795322714.7013829,
+      "guardSeconds": 300,
+      "guardRssBytes": 3221225472,
+      "pid": 69939,
+      "exitCode": 0,
+      "seconds": 160.0523703098297,
+      "actualCeilSeconds": 161,
+      "peakRssBytes": 1745043456,
+      "ownedPids": [
+        69939,
+        69942,
+        69948,
+        69949,
+        69950,
+        69951,
+        69952,
+        69954,
+        69955
+      ],
+      "cleanupSurvivors": []
+    }
+  ],
+  "starts": 8,
+  "actualCeilSeconds": 1372,
+  "allCleaned": true,
+  "activeWorkers": [],
+  "keptUserServers": [
+    4351,
+    4352,
+    4353,
+    4354,
+    4355
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "task_id": "G5-post-range-convergence-r1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "relation": "ancestor"
+  },
+  "starting_ref": "codex/g5-crayon-chalk-hidpi-preview",
+  "package_materialization_ref": {
+    "provider": "shared-worktree",
+    "root": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview",
+    "path": ".aegis/packages/G5-post-range-convergence-r1/package.json"
+  },
+  "authority": {
+    "manifest": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/docs/notion/manifest.yaml",
+      "bytes": 11224,
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459"
+    },
+    "architecture": {
+      "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "bytes": 4508,
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce"
+    }
+  },
+  "accepted_prior_results": {
+    "heavy_scene_report": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/docs/planning/G5_HEAVY_SCENE_ATTRIBUTION_20261114.md",
+      "bytes": 7013,
+      "sha256": "c0097f390c2a8f4b8fcf43d0831a1dbd9d064b952fa3c3d79def86fff98f4f59"
+    },
+    "range_report": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/docs/planning/G5_RENDER_RANGE_TRAVERSAL_20261114.md",
+      "bytes": 5181,
+      "sha256": "04b2b162babef6f54815c0c4c5e8214b15b94896833a97b08e5f25047c0cc25b"
+    },
+    "range_review": {
+      "path": "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/.aegis/results/G5-render-range-traversal-control-r2/control-review.json",
+      "bytes": 7009,
+      "sha256": "7d0c501f9a058690c07c498e8c285317cd6398c1a855830b6c942e6ad46ffa8c"
+    },
+    "p36_review": {
+      "path": "/Users/qing/.codex/worktrees/g5-exposure-checkpoint/axiom/.aegis/results/G5-crayon-chalk-hidpi-preview-control-r1/p36-control-review.json",
+      "bytes": 7892,
+      "sha256": "688922ab6679c59eb6ba459658756b77f210e4f8e9877fafd4c54c0eeddde22a"
+    }
+  },
+  "objective": "Continue user-approved post-erase convergence work using current code and retained observations. The range traversal RED and scoped repair are already done, accepted and in anchor; do not rerun them as new work.",
+  "scope": {
+    "sequence": [
+      "Reconcile exact current source, fixtures and earlier results, and establish a safe execution workspace.",
+      "Investigate Scene stamp serialization/hash and repeated preparation using actual owner paths; prove a specific reducible cost with a targeted failing-before test, implement a narrow improvement if demonstrated, and verify final behavior.",
+      "Attribute the observed frame-opportunity and outside-owner gaps using existing traces first, then only focused new measurements if needed. Distinguish scheduling, CPU, submission and resource wait where instrumentation allows.",
+      "Reassess DPR4 crayon feedback with an isolated matched current build and measurements, then address a reproducible actionable regression if warranted."
+    ],
+    "owners": "EditingSceneCompiler/Scene existing state and OperationEngine retain canonical authority; Render owns derived draw/caches; preserve CanonicalVisible, ordering, history, masks and surface lifecycle. No SDK API change.",
+    "preserve": "Do not disturb user demos or other worktrees and existing uncommitted work. Reuse locked prebuilt dependencies. A different current worktree may be used only after exact source reconciliation."
+  },
+  "verification": {
+    "regression_oracle": "Actual production owner test with independent full-scene/content stamp comparison and stale identity/mask/order/Undo-Redo coverage as relevant. Compare old/final working counts and actual user-visible long-erase response, not just microbenchmarks.",
+    "render": "Independent pixels and semantic/operation checks appropriate to changed render paths. Preserve confirmed AA tolerance and explicitly report findings.",
+    "measurements": "Keep instrumentation off for ordinary timings; avoid overlapping CPU work. Report Up, next edit and navigation correct feedback and canonical settle separately; user targets 3s/5s are progress bands, not absolute rejection.",
+    "minimum_checks": [
+      "Relevant focused native tests",
+      "Runtime boundary checker",
+      "git diff --check on code changes",
+      "Relevant Web SDK build and bounded representative browser verification when changed behavior warrants"
+    ],
+    "evidence": "Record commands, exact revision and source/build identity, old/new data, failures and unresolved uncertainty in reviewer-accessible output. Preserve existing results; no mandatory large evidence duplication."
+  },
+  "terminal": "Complete executable sequence including validated fixes or explicit evidence-based finding for each item. Report any genuine blocker and preserve valid work. Notify control thread 01a1c344-e48c-7db3-8c35-39732cb81dc5 when complete, with result paths and remaining issues. Continue until terminal; do not stop after acknowledging or RED alone."
+}

@@ -1,0 +1,14 @@
+{
+  "boundary": "Shared controlled local worktree with exact files and SHA256 manifest is reviewer-accessible for this task. No commit/push required.",
+  "result_directory": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1",
+  "minimum": [
+    "README.md concise entry",
+    "result.json with status, source/baseline identity, scope and pending findings",
+    "source delta/manifest and exact package refs",
+    "commands/check results, focused RED/GREEN and independent correctness references",
+    "ordinary Web source/SDK/driver bindings and comparison metrics"
+  ],
+  "reuse": "Reference existing immutable data by exact path/hash. Do not duplicate unchanged historical source/evidence trees.",
+  "timing": "Diagnostic CPU scope timings include their observation overhead. Ordinary performance must have timing/qualification off. Hardware GPU time unavailable unless actually measured. Keep null for unavailable stages.",
+  "communication": "When terminal, send completion to paired control thread with result path and any blocker. This task does not request user-facing Git publication."
+}

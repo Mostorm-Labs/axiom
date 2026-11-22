@@ -1,0 +1,58 @@
+{
+  "pass": false,
+  "rows": [
+    {
+      "calls": 1,
+      "case": "equal-final-same-owner",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "calls": 1,
+      "case": "committed-tail-pan",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "calls": 1,
+      "case": "committed-tail-pinch",
+      "maximumPixelDifference": 0,
+      "navigationKnots": 0,
+      "newPressureCommands": 0,
+      "pass": true,
+      "preparedBuilds": 1,
+      "presentDelta": 1,
+      "presented": true,
+      "samplingBasis": "full final committed scene on retained device grid then linear camera resample"
+    },
+    {
+      "case": "negative-quota",
+      "error": "stalled",
+      "pass": false
+    },
+    {
+      "calls": 2,
+      "case": "retained-overlap-nonempty-exposure",
+      "exposedInteriorMaximumDifference": 64,
+      "knotSteps": 0,
+      "overlapMaximumDifference": 112,
+      "pass": false,
+      "retainedFraction": 0.9375,
+      "seamOpaque": true,
+      "tilesBuilt": 2
+    }
+  ],
+  "task": "G5-DPR4-postup-navigation-r1"
+}

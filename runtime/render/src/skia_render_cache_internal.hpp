@@ -11,10 +11,14 @@
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "source_retention.hpp"
 #include "skia_ink_layers.hpp"
+#include "navigation_mask_plan.hpp"
 #include "canvas/scheduling/runtime_scheduler.hpp"
 #include <unordered_map>
 
 namespace canvas::render::internal {
+#if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
+inline thread_local std::uint64_t materialMaskTestDraws=0;
+#endif
 class ReferenceValidationCache;
 #if defined(AXIOM_TRANSIENT_DISPLAY_TESTS)
 class GpuResourceRetirement;
@@ -59,6 +63,7 @@ class SkiaRenderCache final {
     enum class Preparation { kReady, kPending, kFallback, kResourcePending, kRejected };
     Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*,PreparationAllowance* shared=nullptr);
     Preparation prepareBodies(SkCanvas&,const FramePlan&,PreparationAllowance&);
+    Preparation preparePressureBodies(SkCanvas&,const FramePlan&,PreparationAllowance&);
     Preparation prepareWorkingSet(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*,bool direct,const EditingOverlay* overlay=nullptr);
     bool stagedBodies()const noexcept{return stagedBodies_;}
     bool needsPreparedBody(const ReferenceTraversalEntry&)const noexcept;
@@ -73,7 +78,7 @@ class SkiaRenderCache final {
     }
     bool hasPixels(const ReferenceTraversalEntry&)const;
     // Cold transient material uses this same cooperative canonical preparation.
-    Preparation prepareTransientMaterial(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*);
+    Preparation prepareTransientMaterial(SkCanvas&,const FramePlan&,PreparationAllowance&,ImageResourceResolver*,SkiaTextResources*,bool terminal=false);
     bool compositePreparedFrame(SkCanvas&);
     [[nodiscard]] std::shared_ptr<const PreparedFrameImage> completedFrame()const noexcept{return preparedFrame_;}
     // Retained ordered compact runs qualify approximate editing only. Exact
@@ -88,6 +93,7 @@ class SkiaRenderCache final {
     InkDraw drawDamagedInk(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,ImageResourceResolver*,SkiaTextResources*,const CompactDeviceGrid*);
     bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void drawHistoricalMasks(SkCanvas&,const ReferenceTraversalEntry&);
+    Preparation prepareMaterialMasks(SkCanvas&,const ReferenceTraversalEntry&,PreparationAllowance&);
     std::shared_ptr<SkiaInkLayers> navigationBodies()const{return inkLayers_;}
     void clear() noexcept;
     // Entering live erasure changes the useful representation. Retire old
@@ -208,7 +214,13 @@ class SkiaRenderCache final {
     std::unordered_map<foundation::ObjectId,Coverage,foundation::ObjectIdHash> coverage_;
     CompactCoverageTargets coverageTargets_;
     std::shared_ptr<SkiaInkLayers> inkLayers_=std::make_shared<SkiaInkLayers>();
-    struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
+    struct Pending {
+        foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;
+        std::unique_ptr<CompactStrokeRasterJob> raster;
+        bool bodyComplete=false;
+        std::shared_ptr<NavigationMaskPlan> masks;
+        NavigationMaskReplay maskReplay;
+    };
     std::unique_ptr<Pending> pending_;
     enum class AdmissionKind {kRaster,kEmpty,kDirect,kComposite};
     struct Admission {SkIRect crop;AdmissionKind kind=AdmissionKind::kRaster;};

@@ -1,0 +1,332 @@
+[
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-B-web.json",
+    "sha256": "8e7eb4e01077e9bf35cab8837967880e9e7446c3e271b81070cc050b9c98c0df",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j",
+      "4"
+    ],
+    "exitCode": 0,
+    "seconds": 173.68176399999356
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-C-web.json",
+    "sha256": "faa6ba64b03edbc46e14148e6ec6f70aa400fc67da665b55ec6f214488e072c9",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-web",
+      "--target",
+      "axiom_js_runtime",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 35.270171665993985
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-stamp-red.json",
+    "sha256": "8491cd2fb6b6ebdbf47b42b78c78d21df4a32d9a3d405c9e7db6485a2dd25aa4",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_cpu_pending_runtime_tests",
+      "-j",
+      "4"
+    ],
+    "exitCode": 0,
+    "seconds": 150.40847045798728
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C-web-corrected.json",
+    "sha256": "f2146a6c968deaa98ca2a42db3625d51800cb292190faf021c650115df11f4ad",
+    "command": [
+      "cmake",
+      "--install",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/build-web",
+      "--prefix",
+      "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C"
+    ],
+    "exitCode": 0,
+    "seconds": 0.044165416999021545,
+    "correction": "No named AxiomJS component exists; prior install command was a no-op. No recompilation."
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/install-C-web.json",
+    "sha256": "ac99b28dac639624fdd569f03d70292227fc838781a00b5a9846c7129d1eaaf9",
+    "command": [
+      "cmake",
+      "--install",
+      "out/G5-post-range-convergence-r1/build-web",
+      "--prefix",
+      "out/G5-post-range-convergence-r1/install-C",
+      "--component",
+      "AxiomJS"
+    ],
+    "exitCode": 0,
+    "seconds": 0.012501084012910724
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-all-build.json",
+    "sha256": "c33e8b3468a513156cf13f6f7ad248abadc68f185de455e47e8155767a2b3cc2",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "-j4"
+    ],
+    "exitCode": 1,
+    "seconds": 55.8665242499992
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-regression-build.json",
+    "sha256": "672554abd739dd5d13aecfa04a8b5c88b6d16135199b212e6f03c24867b2178c",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_cpu_pending_runtime_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 8.68538808300218
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-relevant-build.json",
+    "sha256": "1db9590876d0976e10d9866ba8781253dfb99eb886539383c3cfe08dbe79fb55",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_canonical_prepared_body_tests",
+      "axiom_render_cache_tests",
+      "axiom_shared_scene_tests",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_cpu_pending_runtime_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 11.60770787500951
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-relevant-ctest.json",
+    "sha256": "67c6a93e57db6dd491b480a04996cc9fe73e54da1fb15ab9d3a005954bac2ad4",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--output-on-failure",
+      "-R",
+      "^(G5SceneStampPreparation|G5CpuPendingRuntime-.*|G5CanonicalPrepared(Body|BodyBounded|BodyPixels|WorkingSet|Compatibility)|G5SharedScene.*)$"
+    ],
+    "exitCode": 8,
+    "seconds": 48.690273250002065
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/native-stamp-regression.json",
+    "sha256": "dee52464d9a850138f5a710197517cb95d153b14b61a206cf922be9425b1566c",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--output-on-failure",
+      "-R",
+      "^(G5SceneStampPreparation|G5CpuPendingRuntime-(stampabort|stampfilled|progressstamp|progresshistory|progresspublication|progressbudget|twocommit|sourcecancel|historybarrier|postpublishfault|guards|dependencychain|activebasis))$"
+    ],
+    "exitCode": 0,
+    "seconds": 6.442938292006147
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/rebuild-stamp-green.json",
+    "sha256": "d889001eeffd7840cd5952853c0be104d733ef41190f74d28dc136b6ecf8da4d",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_cpu_pending_runtime_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 11.269513874998665
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/rebuild-stamp-green2.json",
+    "sha256": "54a112b4197c045cef54a64eee116436f1faeba708fe6efa01529611412a31b2",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "axiom_cpu_pending_runtime_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 11.28167100000428
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/rebuild-stamp-red.json",
+    "sha256": "db8e11a81334e76e7328a4a0beefe826e60b03eb37891858bfec9a53192a69e0",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 8.103093625002657
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/rebuild-stamp-red2.json",
+    "sha256": "cb8183c714052f782223d8daf0c7365f450c63a5778a3ce3946825e6a8b799a8",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 8.712993167006061
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/rebuild-stamp-red3.json",
+    "sha256": "b2dca8a8d673eea1d5a2335f80aafbe0361d12bcef8106af42528952805c0c6f",
+    "command": [
+      "cmake",
+      "--build",
+      "out/G5-post-range-convergence-r1/build-native",
+      "--target",
+      "axiom_scene_stamp_preparation_tests",
+      "-j4"
+    ],
+    "exitCode": 0,
+    "seconds": 11.721728707998409
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/stamp-green.json",
+    "sha256": "7aac74816c2425c248736b8af6c3db74451c15e072fac4b4b68c8eda64681287",
+    "command": [
+      "out/G5-post-range-convergence-r1/build-native/runtime/composition/axiom_scene_stamp_preparation_tests",
+      ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "out/G5-post-range-convergence-r1/stamp-green-result.json"
+    ],
+    "exitCode": 1,
+    "seconds": 1.4494507919880562
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/stamp-green2.json",
+    "sha256": "b173a1794e510ff87b74c2ba4b7aa98996883b148b87a5ac33e795eaabb37b55",
+    "command": [
+      "out/G5-post-range-convergence-r1/build-native/runtime/composition/axiom_scene_stamp_preparation_tests",
+      ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "out/G5-post-range-convergence-r1/stamp-green2-result.json"
+    ],
+    "exitCode": 0,
+    "seconds": 1.0611105419957312
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/stamp-red.json",
+    "sha256": "855dca6cc41d33f4d3e4db5c8b7b70666bc5003d5ec93638d5d68d483d509098",
+    "command": [
+      "out/G5-post-range-convergence-r1/build-native/runtime/composition/axiom_scene_stamp_preparation_tests",
+      ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "out/G5-post-range-convergence-r1/stamp-red-result.json"
+    ],
+    "exitCode": -6,
+    "seconds": 1.3052792500093346
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/stamp-red2.json",
+    "sha256": "162127bf6463afd964a38371f43f375119c46973300f8f5af145ec9466b7ce4f",
+    "command": [
+      "out/G5-post-range-convergence-r1/build-native/runtime/composition/axiom_scene_stamp_preparation_tests",
+      ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "out/G5-post-range-convergence-r1/stamp-red2-result.json"
+    ],
+    "exitCode": 1,
+    "seconds": 1.0505472920049215
+  },
+  {
+    "record": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/stamp-red3.json",
+    "sha256": "e21f8acdd63b427328bc0fdce5892d5ede451cb1e4c6cc56d041a6b5c27e58be",
+    "command": [
+      "out/G5-post-range-convergence-r1/build-native/runtime/composition/axiom_scene_stamp_preparation_tests",
+      ".aegis/results/G5-web-up-attribution-and-witness-r1/local-web/G5WA1-BASELINE-TAIL/growth6/initial.axsnap",
+      "out/G5-post-range-convergence-r1/stamp-red3-result.json"
+    ],
+    "exitCode": 1,
+    "seconds": 0.9584235840011388
+  },
+  {
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "exitCode": 0,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/boundaries.log"
+  },
+  {
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "verification/tests",
+      "-p",
+      "test_g5_web_up_attribution.py"
+    ],
+    "exitCode": 0,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/python-tests.log"
+  },
+  {
+    "command": [
+      "node",
+      "--experimental-vm-modules",
+      "--test",
+      "verification/tests/g5_web_up_attribution.test.mjs",
+      "verification/tests/g5_canonical_prepared_body.test.mjs",
+      "verification/tests/g5_crossframe_history_driver.test.mjs",
+      "verification/tests/g5_post_erase_interaction_readiness.test.mjs",
+      "/Users/qing/.codex/worktrees/axiom-geometry-navigation/axiom/verification/tests/g5_heavy_scene_attribution.test.mjs"
+    ],
+    "exitCode": 1,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/node-tests-vm.log"
+  },
+  {
+    "command": [
+      "node",
+      "verification/runners/g5/post_range_convergence/compare_pixels.mjs",
+      "out/G5-post-range-convergence-r1/web",
+      ".aegis/results/G5-post-range-convergence-r1/focused-pixel-differences.json"
+    ],
+    "exitCode": 0,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/pixel-compare.log"
+  },
+  {
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "verification/runners/g5/post_range_convergence/analyze.py"
+    ],
+    "exitCode": 0,
+    "log": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-post-range-convergence-r1/analysis.log"
+  }
+]

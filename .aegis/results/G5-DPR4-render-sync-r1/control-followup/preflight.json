@@ -1,0 +1,27 @@
+{
+  "task": "G5-DPR4-render-sync-r1",
+  "phase": "control-followup",
+  "repository": "git@github.com:Mostorm-Labs/axiom.git",
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "branch": "codex/g5-post-range-convergence",
+  "r1SourceVerified": true,
+  "r1SourceArchive": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/control-followup/r1-source",
+  "r1ResultSha256": "1bfb56bdb327a9fe8c980afd530ac454a31828ae421aca3180152a9e3bd55b1f",
+  "artifactManifestSha256": "6cfe6967b9008799d57651faa4cc9bcbba59e8609308ef5f4eab3c6a6f1a2c09",
+  "mutableFindings": [
+    {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-r1/review-demo.log",
+      "classification": "LIVE_APPEND_ONLY_LOG",
+      "frozenPrefix": {
+        "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-render-sync-r1/control-followup/r1-review-demo-frozen-prefix.log",
+        "bytes": 395,
+        "sha256": "2a1e6feba8b93f6be5a875d31620b79a6e2e2b404e4d9083a4fd9176a23b08f3"
+      },
+      "currentBytes": 467
+    }
+  ],
+  "controlReproducer": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-render-sync-control-r1/pressure-geometry-entry-limit.cpp",
+  "reproducerSha256": "ecf804ed27a7f3527f8917da11821228ddcd212b7cf79b411aff575a1b07b19c",
+  "timestamp": 1795327740.6859672,
+  "indexEmpty": true
+}

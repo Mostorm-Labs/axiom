@@ -1,0 +1,62 @@
+{
+  "schema": "axiom-scoped-execution-package-v1",
+  "task_id": "G5-DPR4-render-sync-r1",
+  "status": "FROZEN_AUTHORIZED_IMPLEMENTATION",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/g5-post-range-convergence",
+  "execution_worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "task_anchor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "execution_ref": "refs/heads/codex/g5-post-range-convergence",
+    "accepted_overlay": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/source-manifest.json",
+      "bytes": 4032,
+      "sha256": "ee07f45e1ec56b55e3d5380fe69017314a84dddc3ebbfffa985d0ee478777c91"
+    },
+    "completed_through": "Scene stamp scoped implementation accepted with findings; current DPR4 source comparison initiated by control.",
+    "next_action": "DS0 exact r3/current Render comparison, then owner RED and justified repair."
+  },
+  "package_materialization_ref": {
+    "provider": "shared-controlled-worktree",
+    "repository": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "path": ".aegis/packages/G5-DPR4-render-sync-r1/package.json"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "bytes": 2505,
+    "sha256": "001a154c1757e677c226d5b9d7dae302d2c72f70aed18ab88827620967f27d91"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "bytes": 6267,
+    "sha256": "8623a360c1a022ec5f88613c54ea1dddad178a497b6f7aa41b648d3f55cf3f0c"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "bytes": 4412,
+    "sha256": "67f99f8ca68cdd0390904545323925b5228852d70b20d32d441437bc8d028b2d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "bytes": 2996,
+    "sha256": "5876c7da65bd47293dccf4309a20bb13110a2ea9dd75c19b5a8f8f5a0f7f35af"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "bytes": 1140,
+    "sha256": "256c56599102c8ea2b7dd5b976500d9901b2f3ed29c7bd6c90469011f1657421"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "control_thread": "01a1c344-e48c-7db3-8c35-39732cb81dc5",
+  "implementation_thread": "01a1c345-6500-7ea0-984d-707b72878bd1"
+}

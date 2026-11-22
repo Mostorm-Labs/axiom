@@ -1,0 +1,113 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "created_utc": "2026-11-21T10:00:28.448011+00:00",
+  "task_id": "G5-post-range-convergence-r1",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "root": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+    "branch": "codex/g5-post-range-convergence",
+    "HEAD": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+    "anchor_relation": "exact-anchor-with-dirty-delta"
+  },
+  "package": {
+    "path": "/Users/qing/.codex/worktrees/g5-crayon-chalk-hidpi-preview/.aegis/packages/G5-post-range-convergence-r1/package.json",
+    "bytes": 5233,
+    "sha256": "f29e30b771d197614968ea6c4c203d435b48a540e07b611fba9b5c3dd436f5ce"
+  },
+  "result": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/result.json",
+    "bytes": 6428,
+    "sha256": "4ba00c2c1d6f8a1e641554d4b0d252d66b7b025d19fac35968c33e6e6dac0c89"
+  },
+  "source_manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/source-manifest.json",
+    "bytes": 4032,
+    "sha256": "ee07f45e1ec56b55e3d5380fe69017314a84dddc3ebbfffa985d0ee478777c91"
+  },
+  "delta": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/source-delta.patch",
+    "bytes": 49991,
+    "sha256": "18f702f95e8555278821d024697aa17c3401097143b7b188aed9b541eef894d2"
+  },
+  "artifact_manifest": {
+    "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-post-range-convergence-r1/artifact-manifest.json",
+    "bytes": 37341,
+    "sha256": "0bf297e365177c6d0ead7bd5c79e2c2c3f234f6c6c300b6bf66f5afe0f4adef3"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "Repository identity and anchor reconciled to Mostorm-Labs/axiom and 7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d.",
+      "Scene stamp optimization stays in the existing EditingSceneCompiler owner and preserves OperationEngine, semantic authority, API, and budgets.",
+      "Actual owner RED/GREEN distinguishes 258 old steps from 2 warm append steps. Full Scene output equals the independent original compiler for append, sorted insertion, compensated same-ID value change, and cold-restored history.",
+      "Frame-wait and DPR4 observations distinguish measured CPU owner/callback work from outside-callback unknown time.",
+      "Sequence reached terminal review with findings. It makes no G5, release, or overall performance pass claim."
+    ],
+    "failed": [],
+    "scope": "Scoped implementation result only. This review does not close the broader G5 performance target."
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "Six package-bound authority and prior-result references independently rehashed.",
+      "Nine source-manifest files and 147 artifact-manifest files independently rehashed with no mismatch.",
+      "14/14 targeted native regressions reported by the execution evidence, plus independent fresh CTest G5SceneStampPreparation 1/1 passed.",
+      "Independent fresh Runtime boundary checker passed 122 contracts and diff check passed.",
+      "Matching normal Web builds completed and current Demo endpoint returned HTTP 200.",
+      "B/C final snapshots, operation history, Undo/Redo, and DPR4 final RGBA are byte-identical as recorded."
+    ],
+    "failed": [],
+    "limitations": [
+      "The original interleaved 7200-Move baseline reached its 420-second guard before Up, so its paired candidate was not run.",
+      "The separate batched-before-RAF comparison is one mixed pair and does not establish relative performance improvement.",
+      "DPR4 B/C both retain 7–8 second RAF calls. The Scene-only change does not resolve this Render-path latency.",
+      "Four large target captures have 14–15 pixels of 1-LSB differences with alpha unchanged. No AA policy was changed.",
+      "Full native build remains blocked by two unchanged semantic-test enum switches under Werror. Node is 25/26 because a historical immutable SDK fixture is absent.",
+      "First correct physical feedback pixel and hardware GPU elapsed remain unqualified."
+    ]
+  },
+  "repository_reality_audit": {
+    "production_delta": "runtime/interaction/src/canvas_editing_runtime.cpp only. Test/CMake and task-local runners/evidence are additional scoped changes.",
+    "worktree": "Clean staging area, uncommitted package delta retained on branch codex/g5-post-range-convergence.",
+    "remote": "No remote branch ref found for codex/g5-post-range-convergence. This local shared worktree is the review materialization used here.",
+    "preservation": "Original execution worktrees, earlier R3 changes and user Demo ports remain outside this delta."
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      {
+        "id": "original-heavy-scenario-incomplete",
+        "classification": "BLOCKED_EVIDENCE_NON_BLOCKING_FOR_SCOPED_STAMP_FIX",
+        "detail": "The exact interleaved 7200-Move baseline exceeded the guard before Up. The separate batch pair and DPR4 test supply scoped observations, but long-scene end-to-end performance remains unresolved."
+      },
+      {
+        "id": "mixed-performance-pair",
+        "classification": "PERFORMANCE_REMAINS_OPEN",
+        "detail": "AB improved from 34.843s to 28.4195s while follow-up changed from 62.6654s to 68.3428s. One mixed pair does not show overall improvement."
+      },
+      {
+        "id": "dpr4-long-callbacks",
+        "classification": "PERFORMANCE_REMAINS_OPEN",
+        "detail": "Both current DPR4 builds show 7–8s RAF calls. This is outside the narrow Scene stamp change."
+      },
+      {
+        "id": "pixel-rounding",
+        "classification": "NON_BLOCKING_PIXEL_FINDING",
+        "detail": "Four target captures differ at 14–15 pixels each, maximum 1/255, with no alpha difference."
+      },
+      {
+        "id": "baseline-and-build-tests",
+        "classification": "BASELINE_TEST_FAILURES_AND_BUILD_LIMITS",
+        "detail": "Compatibility/shared-scene failures do not link the modified owner, radius also fails under anchor owner, mixedimage passed after the exact PNG fixture was supplied. Full native build and one Node HTTP fixture test remain blocked as recorded."
+      },
+      {
+        "id": "cold-restore-and-prefix-insertion",
+        "classification": "IMPLEMENTATION_BOUNDARY",
+        "detail": "Cold restore remains 258 steps and front insertion 260 steps. Warm appended history is the optimized case."
+      }
+    ]
+  },
+  "verdict": "PASS_WITH_FINDINGS",
+  "not_a_gate_pass": true,
+  "not_a_performance_pass": true,
+  "review_scope": "SCOPED_IMPLEMENTATION_REVIEW_ONLY"
+}

@@ -1,0 +1,127 @@
+{
+  "rows": [
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 2,
+      "noNewInputAfterCancel": true,
+      "profile": "crayon-wax-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 2,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 2,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 4,
+      "noNewInputAfterCancel": true,
+      "profile": "crayon-wax-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 4,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 4,
+      "profile": "crayon-wax-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 2,
+      "noNewInputAfterCancel": true,
+      "profile": "chalk-compact-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 2,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 2,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "actualPreviewRenderer": true,
+      "case": "deferred-cancel",
+      "dpr": 4,
+      "noNewInputAfterCancel": true,
+      "profile": "chalk-compact-v1",
+      "scratchLeaseBytesAfterIdle": 0,
+      "stableLeaseBytesAfterIdle": 0
+    },
+    {
+      "case": "preview-first",
+      "dpr": 4,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "canonical-first",
+      "dpr": 4,
+      "profile": "chalk-compact-v1",
+      "retired": true
+    },
+    {
+      "case": "acquire-unavailable-idle-recovery",
+      "released": true
+    },
+    {
+      "case": "two-contacts-retire-only-owned-prefix",
+      "prefixReleased": true,
+      "survivorReused": true
+    },
+    {
+      "case": "active-resize-old-context-release",
+      "releasedBeforeResize": true
+    },
+    {
+      "case": "provider-replacement-independent-contexts",
+      "oldOwnerReleased": true
+    },
+    {
+      "case": "physical-loss",
+      "released": true
+    },
+    {
+      "case": "logical-loss-unavailable-rebind-same-context",
+      "recoveredWithoutNewInput": true
+    },
+    {
+      "case": "set-options-with-unavailable-target",
+      "noOrphanedBudget": true
+    },
+    {
+      "acquireUnavailable": false,
+      "case": "close",
+      "ownerReleased": true
+    },
+    {
+      "acquireUnavailable": true,
+      "case": "close",
+      "ownerReleased": true
+    }
+  ]
+}

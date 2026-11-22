@@ -1,0 +1,219 @@
+{
+  "schema": "axiom-scoped-control-review-v1",
+  "created_utc": "2026-11-22T11:00:55.058800+00:00",
+  "task_id": "G5-DPR4-postup-navigation-r1",
+  "scope": "Immediate post-erase navigation feedback and viewport recovery at DPR4",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "executorReturn": "UNMET_FEEDBACK_WITH_SCOPED_FINDINGS",
+  "candidateUse": "LOCAL_TRIAL",
+  "publication": "LOCAL_UNCOMMITTED",
+  "repository": "Mostorm-Labs/axiom",
+  "worktree": "/Users/qing/.codex/worktrees/g5-post-range-convergence",
+  "branch": "codex/g5-post-range-convergence",
+  "head": "7d3ea0aaf75c8cf6d26e9eaa691b5d99ee82038d",
+  "bindings": {
+    "package": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/packages/G5-DPR4-postup-navigation-r1/package.json",
+      "bytes": 2640,
+      "sha256": "bf284ba1d12792282df3d4d14c530aa246403e27b9089514609abb1dc6b81e77"
+    },
+    "result": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/result.json",
+      "bytes": 10237,
+      "sha256": "97a7a822889b3e19d2d260772ccfd706db5121d844871cbaecd492e8692e94b5"
+    },
+    "sourceAndSdk": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/final-freeze.json",
+      "bytes": 133350,
+      "sha256": "540c07c508e460770a450ff0672a3fcec4d57c8e9a12c8bd7dd6b2a749273804"
+    },
+    "delta": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/accepted-overlay-delta.patch",
+      "bytes": 28802,
+      "sha256": "5786475bf602b05f350e71167c9bdcc968e82df894570177b175e64c0de6520b"
+    },
+    "artifacts": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/artifact-manifest.json",
+      "bytes": 128076,
+      "sha256": "39ae0370eef46d5afc0a29ad2878e4a6e48c2010d082dcbbe90ac92c000de9e8"
+    },
+    "guardAttribution": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/DN0-attribution.json",
+      "bytes": 21419,
+      "sha256": "997c99548a39730e068c4986471512e48cb8a59818e8610cc1dfea19d488f5e3"
+    },
+    "continuationRoute": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/runtime-pending-route.json",
+      "bytes": 6125,
+      "sha256": "bdd4a174fe348732a1c102166d6b06361b72f7710ef947f26a3209d3dcb314ff"
+    },
+    "workAccounting": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/work-accounting.json",
+      "bytes": 15359,
+      "sha256": "d12b8d8e8da39da0347e403bac8096733fb5e3bcef9423570aa13d07a2497687"
+    },
+    "ordinaryPair": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/ordinary-comparison.json",
+      "bytes": 64357,
+      "sha256": "d95e236c0ab748ec39ef2ed3a5afcf0eaf19d5c13419ee2cddd96e7161bddfe6"
+    },
+    "nativeCounterfactual": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/.aegis/results/G5-DPR4-postup-navigation-r1/exact-accepted-final-fixture.json",
+      "bytes": 3256,
+      "sha256": "64e380d4e1923515faaec580efdd1fb1e755f446c4cf3320f884585855cb2d31"
+    },
+    "independentNative": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-control-r1/independent-native.json",
+      "bytes": 3440,
+      "sha256": "b94486900f0689d4aefa2c5c5dc60137bcfbd0e2f2f4b5d980702cd753e787ac"
+    },
+    "focusedExecutorTests": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/DN4-focused.log",
+      "bytes": 2938,
+      "sha256": "e255c84316aeebc41b0b0763149c562bce0c82f3db61650aa5e840e548be3824"
+    },
+    "diagnosticObservation": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/DN1-stream/observation.json",
+      "bytes": 2475731,
+      "sha256": "f146f8d2bdef0a2f111ac1465c3c13ce10aea64a162d8ac849885caac12cc356"
+    },
+    "diagnosticConsole": {
+      "path": "/Users/qing/.codex/worktrees/g5-post-range-convergence/out/G5-DPR4-postup-navigation-r1/DN1-stream/native-console.json",
+      "bytes": 30040155,
+      "sha256": "f3949d68fc3e9309216a2c9cfe33c043afb6ab1d0fd4287be38e8e90038d79a1"
+    }
+  },
+  "independentIdentity": {
+    "archivedFiles": 485,
+    "resultReferences": 19,
+    "sourceFiles": 1003,
+    "sdkFilesPerBuild": 42,
+    "servedWasmComparedToFreeze": [
+      4357,
+      4358
+    ]
+  },
+  "obligations": {
+    "DN0": "SUPPORTED: actual first refusal is final mask value; terminal material and exposure are separate stages.",
+    "DN1": "FROZEN_REQUIREMENT_FAILURE: local Metal mechanisms pass while both ordinary active-gesture lanes produce zero content writes.",
+    "DN2": "SUPPORTED_SCOPED: ordered-clear same-grid consumption avoids 825 pressure commands; different-grid canonical replay is unresolved.",
+    "DN3": "SUPPORTED_EVIDENCE: one ordinary serial pair, identical input coordinates and timestamps, 18 matching operations, identical final Snapshot and RGBA, matching camera receipts.",
+    "DN4": "SUPPORTED_SCOPED: independent frozen native 8/8, executor focused CTest 23/23, runtime boundaries 122 and diff check."
+  },
+  "verification": {
+    "independentNativeRows": 8,
+    "executorFocusedNativePassed": 23,
+    "executorFocusedNativeTotal": 23,
+    "runtimeBoundaryContracts": 122,
+    "knownPriorNativeFindings": [
+      "G5CanonicalPreparedCompatibility",
+      "G5TransientDisplayContinuity"
+    ],
+    "knownPriorHistoricalNodeImmutableSdkFixture": "MISSING",
+    "finalArtifactsByteIdentical": 20,
+    "nativeSameGridReduction": {
+      "pressureCommandsBefore": 825,
+      "pressureCommandsAfter": 0,
+      "opportunitiesBefore": 9,
+      "opportunitiesAfter": 1,
+      "maximumPixelDifference": 0
+    },
+    "nativeExposureOracle": {
+      "retainedFraction": 0.9375,
+      "overlapMaximumDifference": 0,
+      "exposedInteriorMaximumDifference": 0
+    }
+  },
+  "ordinaryWeb": {
+    "scene": "wax16-default, 900 x 650 CSS, DPR 4, 1800 drawing moves plus 15 default-offset copies, 120 moves in each two-second erase followed by immediate pan or pinch",
+    "baseline": "http://127.0.0.1:4357/example.html",
+    "candidate": "http://127.0.0.1:4358/example.html",
+    "matchingPairCount": 1,
+    "rows": [
+      {
+        "lane": "up-immediate-pan",
+        "B": {
+          "gestureContentWrites": 0,
+          "upReturnToMatchingCanonicalReceiptMs": 13029.7,
+          "insideObservedSdkRafMs": 1252.4,
+          "outsideObservedSdkRafMs": 11777.3,
+          "sdkCallbackDurationP95Ms": 2.3
+        },
+        "C": {
+          "gestureContentWrites": 0,
+          "upReturnToMatchingCanonicalReceiptMs": 13021.7,
+          "insideObservedSdkRafMs": 1343.1,
+          "outsideObservedSdkRafMs": 11678.6,
+          "sdkCallbackDurationP95Ms": 2.3
+        }
+      },
+      {
+        "lane": "up-immediate-pinch",
+        "B": {
+          "gestureContentWrites": 0,
+          "upReturnToMatchingCanonicalReceiptMs": 16469.7,
+          "insideObservedSdkRafMs": 3207.5,
+          "outsideObservedSdkRafMs": 13262.2,
+          "sdkCallbackDurationP95Ms": 3.3
+        },
+        "C": {
+          "gestureContentWrites": 0,
+          "upReturnToMatchingCanonicalReceiptMs": 16496.5,
+          "insideObservedSdkRafMs": 3314.2,
+          "outsideObservedSdkRafMs": 13182.3,
+          "sdkCallbackDurationP95Ms": 2.9
+        }
+      }
+    ],
+    "reportedRecoveryBandsSeconds": [
+      3,
+      5
+    ]
+  },
+  "diagnosticWeb": {
+    "sample": "DN1-stream",
+    "firstGuardFromDN0": {
+      "reason": "mask-value",
+      "count": 39,
+      "contentOwnerRefusals": 0
+    },
+    "rows": [
+      {
+        "lane": "up-immediate-pan",
+        "terminalMaterialReadyMsAfterUpReturn": 234.9,
+        "exposureTileAttemptsBeforeCanonical": 5,
+        "completedExposureTilesBeforeCanonical": 0,
+        "exposureTileAttemptsMsAfterUpReturn": [
+          233.7,
+          250.4,
+          265.7,
+          283.7,
+          298.5
+        ],
+        "canonicalPressureDraws": 80803,
+        "canonicalPressureProducingOpportunities": 751,
+        "newPreparedGeometryJobsAdvancesOrCompile": 0,
+        "idealMinimumOpportunitiesAtExisting128CommandCap": 632,
+        "idealSecondsAt60OpportunitiesPerSecond": 10.53
+      },
+      {
+        "lane": "up-immediate-pinch",
+        "terminalMaterialReadyMsAfterUpReturn": null,
+        "exposureTileAttemptsBeforeCanonical": 0,
+        "completedExposureTilesBeforeCanonical": 0,
+        "exposureTileAttemptsMsAfterUpReturn": [],
+        "canonicalPressureDraws": 92631,
+        "canonicalPressureProducingOpportunities": 868,
+        "newPreparedGeometryJobsAdvancesOrCompile": 0,
+        "idealMinimumOpportunitiesAtExisting128CommandCap": 724,
+        "idealSecondsAt60OpportunitiesPerSecond": 12.07
+      }
+    ],
+    "timingInterpretation": "The hypothetical 60-opportunity calculation assumes exactly one Render opportunity per frame and full use of the existing command cap. It estimates the scheduling cost of the observed amount of work under those assumptions. RAF-external wall time and CPU-side flush API time leave hardware GPU duration and physical display latency unknown."
+  },
+  "nextReviewScope": {
+    "firstFeedback": "Prove conservative final-mask damage on the retained physical grid and give visible damage and nonempty exposure work access to the existing Render opportunity. Reuse validated regions and schedule only the uncovered viewport frontier needed for one complete present. Check whether the current scene's damage is actually local before selecting a new path.",
+    "oracle": "Render the complete final old-grid scene independently with reuse disabled and resample it for overlap. Independently render newly exposed content at its declared navigation sampling grid. Compare seams, material, mask history and final suffix, opacity and ordered clear, plus cancellation and GPU completion. Require correct intermediate frames during the same ordinary active pan and pinch as well as identical final operation, Snapshot, RGBA and canonical receipt.",
+    "canonical": "Attribute each draw to the full target sampling identity and advancing job cursor. Investigate exact same-grid overlap reuse only with phase/noise/clip witnesses and independent full-render equality. Record first-use new-scale work and frame-opportunity cadence independently."
+  }
+}
