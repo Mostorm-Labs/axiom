@@ -1,4 +1,4 @@
-import {createRuntime,AxiomError,type Color} from '../../sdk/web/axiom.mjs';
+import {createRuntime,createAnchorLayer,AxiomError,type AnchorRect,type Color} from '../../sdk/web/axiom.mjs';
 const sdk=await createRuntime({mount:document.createElement('div'),permission:'localSingleUser',onOperation:bytes=>{bytes.slice();}});
 const clipboard=sdk.copySelection();clipboard.bytes.slice();const clipboardRevision:string=clipboard.stamp.token[0];void clipboardRevision;
 await sdk.cutSelection(clipboard.stamp);await sdk.duplicateSelection({offset:[24,24]});await sdk.pasteObjects(clipboard.bytes);
@@ -47,6 +47,19 @@ await sdk.captureSnapshot({generation:1,documentRevision:'1',recoveryFrontier:[]
 // @ts-expect-error supported port identity is explicit
 await sdk.createConnector({start:{objectId:'a',port:99},end:{point:[0,0]}});
 const e=new AxiomError('STALE_TARGET');e.details;
+const anchors=createAnchorLayer({runtime:sdk});
+const anchorRect:AnchorRect=[24,36,160,90];
+const marker=anchors.create({rect:anchorRect});
+anchors.getElement(marker.id)?.append(document.createElement('iframe'));
+anchors.setRect(marker.id,[24,36,320,180]);
+anchors.list()[0].rect[3];anchors.readTransform()?.[5];
+// @ts-expect-error the Shell supplies its own iframe content
+anchors.create({rect:anchorRect,url:'https://example.com'});
+// @ts-expect-error a rectangle requires four coordinates
+anchors.setRect(marker.id,[24,36,320]);
+// @ts-expect-error expected a Web Runtime
+createAnchorLayer({runtime:sdk.canvas});
+anchors.remove(marker.id);anchors.dispose();
 await sdk.close();
 
 const tableCreated=await sdk.table.create({rows:3,columns:3});

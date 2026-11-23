@@ -4354,6 +4354,7 @@ bool CanvasEditingRuntime::stageSurfaceProvider(
 }
 
 void CanvasEditingRuntime::publishSurfaceBinding() noexcept {
+  submittedViewport_.reset();
   const auto& snapshot = appBinding_->surfaces().lifecycle().current();
   const auto& metrics = snapshot.metrics;
   surface_ = SurfaceBinding{snapshot.surfaceGeneration.value(), snapshot.metricsGeneration.value(),
@@ -4487,6 +4488,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  submittedViewport_.reset();
   exactDisplayRoster_={};submittedDisplayRoster_={};
   ++previewDisplayRevision_;previewDisplayDirty_=previewActive();
   for(auto& r:displayRecords_)if(r.serial){G5_OBSERVE(g5::Kind::Terminal,g5::Tag::display_record,true,r.serial,3,surface_.generation,surface_.metricsGeneration);}
@@ -4730,8 +4732,13 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       const auto visibility=render::VisibilityResolver::resolve(queryFrame,*runtimeSceneHost_);
       return visibility&&visibility.value().backToFront.empty();
   };
-  const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
+  auto& provider = *activeSurfaceProvider();
+  const auto presentsBefore = provider.presentCount();
+  const auto result=skiaRenderer_.renderNavigation(provider,
       {camera.scale,camera.translationX,camera.translationY},compositionFrame,query,idlePrewarm,selectionOverlay(),backgroundOnly,&composition.value());
+  if (provider.presentCount() != presentsBefore)
+    submittedViewport_ = render::WorldToViewAffine{camera.scale, 0, 0, camera.scale,
+        camera.translationX, camera.translationY};
   AXIOM_IF_EVENT("nc_render role=navigation semantic=%llu scene=%llu camera=%llu code=%u presented=%u pending=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),unsigned(result.code),unsigned(skiaRenderer_.navigationWork().presented),unsigned(skiaRenderer_.navigationWork().pending),result.message.c_str());
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
@@ -5234,6 +5241,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                        static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
     return false;
   }
+  submittedViewport_ = plan->referenceDrawList.worldToView;
   exactDemand_.reset();
   // Publish the replacement identity only after the provider accepts it. A
   // busy backbuffer must not invalidate feedback for the last submitted
@@ -5430,7 +5438,9 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   }
   // Canonical and preview providers have independent generations. Validate
   // the transient plan against the provider it actually renders into.
-  auto* target = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? activeSurfaceProvider() : previewProvider_;
+  const bool drawsToCanvas = platformPresentationDeferred_ ||
+      objectEraseFeedbackActive() || partialEraseFeedbackActive();
+  auto* target = drawsToCanvas ? activeSurfaceProvider() : previewProvider_;
   if (target == nullptr) return false;
   const render::FrameState frame{
       viewId_,
@@ -5679,11 +5689,14 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // Deferred editing uses the canonical target's warm cache for approximate
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
-  auto& renderer = (platformPresentationDeferred_||objectEraseFeedbackActive()||partialEraseFeedbackActive()) ? skiaRenderer_ : previewRenderer_;
+  auto& renderer = drawsToCanvas ? skiaRenderer_ : previewRenderer_;
   AXIOM_FRAME_TIMING_SCOPE(transientRenderTiming,render);
+  const auto presentsBefore = target->presentCount();
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay(),
       eraseDisplayIdentity());
+  if (drawsToCanvas && target->presentCount() != presentsBefore)
+    submittedViewport_ = plan.value().referenceDrawList.worldToView;
   AXIOM_FRAME_TIMING_END(transientRenderTiming);
   AXIOM_IF_EVENT("nc_render role=transient semantic=%llu scene=%llu camera=%llu frame=%llu code=%u reason=%s",(unsigned long long)semanticGeneration().value(),(unsigned long long)sceneRevision(),(unsigned long long)cameraGeneration(),(unsigned long long)frame.frameId.value(),unsigned(rendered.code),rendered.message.c_str());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;

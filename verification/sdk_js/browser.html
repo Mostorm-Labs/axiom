@@ -2,7 +2,7 @@
 <style>.mount{width:400px;height:300px;display:inline-block}</style>
 <div id="one" class="mount"></div><div id="two" class="mount"></div><pre id="result">PENDING</pre>
 <script type="module">
-import {createRuntime,AxiomError,SDK_VERSION,SDK_SEMVER,SDK_BUILD_NUMBER} from './axiom.mjs';
+import {createRuntime,createAnchorLayer,AxiomError,SDK_VERSION,SDK_SEMVER,SDK_BUILD_NUMBER} from './axiom.mjs';
 const results=[], errors=[], operations=[];
 const assert=(v,message)=>{if(!v)throw Error(message);results.push(message);};
 const pause=()=>new Promise(r=>setTimeout(r,50));
@@ -22,6 +22,33 @@ try {
   const buildInfo=a.readBuildInfo();
   assert(buildInfo.sdkSemver===SDK_SEMVER && buildInfo.buildNumber===SDK_BUILD_NUMBER && SDK_VERSION===SDK_SEMVER+'.'+SDK_BUILD_NUMBER && Number.isSafeInteger(buildInfo.buildNumber),'separate product SemVer and lossless build number');
   assert(a.readState().documentId!==b.readState().documentId,'independent document identity');
+  const anchors=createAnchorLayer({runtime:a});
+  const otherAnchors=createAnchorLayer({runtime:b});
+  const worldRect=[24,36,160,90];
+  const anchor=anchors.create({rect:worldRect});
+  const marker=anchors.getElement(anchor.id);
+  marker.append(document.createTextNode('Review comment'));
+  worldRect[0]=99;anchor.rect[1]=99;
+  assert(anchors.get(anchor.id).rect.join(',')==='24,36,160,90','anchors retain their own world coordinates');
+  assert(otherAnchors.get(anchor.id)===null && createAnchorLayer({runtime:a})===anchors,'anchor IDs are scoped to the runtime layer');
+  assert(anchors.setRect(anchor.id,[32,48,200,110]).rect[2]===200 && anchors.getElement(anchor.id)===marker,'anchor edits preserve mounted Shell content');
+  try{anchors.create({id:anchor.id,rect:worldRect});throw Error('duplicate anchor accepted');}
+  catch(e){assert(e instanceof AxiomError && e.code==='INVALID_ARGUMENT' && anchors.list().length===1,'duplicate anchor ID leaves existing content intact');}
+  try{anchors.setRect(anchor.id,[32,48,0,110]);throw Error('invalid anchor size accepted');}
+  catch(e){assert(e instanceof AxiomError && e.code==='INVALID_ARGUMENT' && anchors.get(anchor.id).rect[2]===200,'invalid anchor size leaves rectangle intact');}
+  otherAnchors.create({id:anchor.id,rect:worldRect});
+  const removable=otherAnchors.getElement(anchor.id);
+  let valueAtDisconnect;
+  customElements.define('anchor-lifetime-probe',class extends HTMLElement {
+    disconnectedCallback(){valueAtDisconnect=otherAnchors.get(anchor.id);}
+  });
+  removable.append(document.createElement('anchor-lifetime-probe'));
+  assert(otherAnchors.remove(anchor.id) && !removable.isConnected && !otherAnchors.remove(anchor.id),'explicit removal detaches only that anchor');
+  assert(valueAtDisconnect===null,'Shell teardown observes the completed anchor removal');
+  const temporary=otherAnchors.getElement(otherAnchors.create({rect:worldRect}).id);
+  otherAnchors.dispose();
+  assert(!temporary.isConnected && marker.isConnected,'disposing the layer leaves other runtimes alone');
+  assert(a.readState().objects===0 && !a.readState().canUndo && operations.length===0,'Shell anchors do not create canvas objects or operations');
   await a.selectShape('rectangle');await draw(a);
   assert(a.readState().objects===1 && b.readState().objects===0,'real pointer input and instance isolation');
   const pixel=()=>{const c=a.canvas,g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING),d=devicePixelRatio||1;g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.round(80*d),c.height-Math.round(80*d),1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20&&p[3]>0;};
@@ -53,6 +80,9 @@ try {
   assert(operations.length>0 && operations.every(o=>o instanceof Uint8Array&&o.length),'owned operation byte delivery');
   const foreignStamp=a.multi.read().stamp;
   await a.close();await a.close();
+  assert(!marker.isConnected,'successful Runtime close removes mounted anchor content');
+  try{anchors.get(anchor.id);throw Error('closed layer remained active');}
+  catch(e){assert(e.code==='CLOSED','closed anchor layer rejects reads');}
   a.canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:1,pointerType:'mouse',clientX:10,clientY:10,bubbles:true}));
   a.canvas.dispatchEvent(new MouseEvent('dblclick',{bubbles:true}));
   try{a.readState();throw Error('closed read accepted');}catch(e){assert(e.code==='CLOSED','late calls reject after close');}

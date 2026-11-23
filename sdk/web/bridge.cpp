@@ -78,7 +78,7 @@ class WebPlatform final : public sdk::SessionPlatform {
 #if defined(AXIOM_ENABLE_FRAME_TIMING)
         std::fprintf(stderr,"AXIOM_SNR_LIFECYCLE {\"event\":\"frame-outcome\",\"owner\":\"%llu\",\"was_pending\":%s,\"pending\":%s,\"result\":%u,\"presented\":\"%llu\"}\n",(unsigned long long)reinterpret_cast<std::uintptr_t>(this),wasPending?"true":"false",adapter_->frameStatus().pending?"true":"false",unsigned(result),(unsigned long long)adapter_->presentedCount());
 #endif
-        return {{"ok", result != platform::WebFrameResult::kRejected},
+        sdk::Json report = {{"ok", result != platform::WebFrameResult::kRejected},
                 {"code", "FRAME_REJECTED"},
                 {"pending", adapter_->frameStatus().pending},
                 {"retry", result == platform::WebFrameResult::kRetry},
@@ -86,6 +86,9 @@ class WebPlatform final : public sdk::SessionPlatform {
                 // since the latest binding, never disposable navigation work.
                 {"surfaceReady", adapter_->presentedCount() > resizePresented_},
                 {"presented", std::to_string(adapter_->presentedCount())}};
+        if (const auto viewport = adapter_->submittedViewport())
+            report["submittedViewport"] = *viewport;
+        return report;
     }
     bool shutdown() override {
         return !adapter_ || adapter_->shutdown();

@@ -598,6 +598,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       const render::PresentedFeedback& feedback) noexcept;
   [[nodiscard]] std::optional<render::RuntimeFrameIdentity>
       lastSubmittedCanonicalFrame() const noexcept;
+  [[nodiscard]] std::optional<render::WorldToViewAffine> submittedViewport() const noexcept {
+    return submittedViewport_;
+  }
   [[nodiscard]] std::uint64_t nextCanonicalFrameId() const noexcept {
     return frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()
                ? 0U : frameIdHighWater_ + 1U;
@@ -979,6 +982,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<render::FrameState> lastSubmittedCanonicalFrameState_;
   std::optional<render::RuntimeFrameIdentity> lastPresentedCanonicalFrame_;
   std::unique_ptr<render::FrameState> lastPresentedCanonicalFrameState_;
+  // The latest canvas submission can be navigation or editing feedback.
+  std::optional<render::WorldToViewAffine> submittedViewport_;
   std::uint64_t navigationCameraGeneration_=0,navigationSubmittedGeneration_=0;
   std::chrono::steady_clock::time_point navigationChangedAt_{};
   bool navigationActive_=false, navigationExactPreparation_=false;

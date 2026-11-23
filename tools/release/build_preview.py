@@ -94,7 +94,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         required = ['axiom.mjs', 'internal/axiom.mjs', 'axiom.d.mts',
                     'api/axiom.mjs', 'api/axiom.d.mts', 'api/internal/controller.mjs',
                     'api/internal/transport.mjs', 'api/internal/transport.d.mts', 'api/internal/values.mjs',
-                    'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
+                    'internal/anchor-layer.mjs', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
                     'example.html', 'serve.py', 'package.json', 'README.md', 'manifest.json']
         required += [path.relative_to(root).as_posix() for path in (root / 'internal').glob('cpu-worker-*') if path.is_file()]
         required += [path.relative_to(root).as_posix()

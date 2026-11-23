@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <memory>
+#include <optional>
 
 namespace canvas::runtime { class RuntimeComposition; }
 namespace canvas::platform {
@@ -38,6 +40,8 @@ class WebRuntimeAdapter final {
   // Poll only after yielding to the browser; pending means the GPU fence has not completed.
   [[nodiscard]] WebFrameResult pollFrame() noexcept;
   [[nodiscard]] WebFrameStatus frameStatus() const noexcept;
+  // World to logical CSS pixels for the latest canvas submission.
+  [[nodiscard]] std::optional<std::array<double, 6>> submittedViewport() const noexcept;
   [[nodiscard]] bool previewActive() const noexcept;
   [[nodiscard]] std::uint64_t presentedCount() const noexcept;
   [[nodiscard]] bool shutdown() noexcept;

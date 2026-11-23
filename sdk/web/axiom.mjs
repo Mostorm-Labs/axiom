@@ -1,7 +1,14 @@
 import {bindCpuWorkerOwner,unbindCpuWorkerOwner} from './internal/cpu-worker-owner.mjs';
 import {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError} from '../api/axiom.mjs';
 import {adaptController} from '../api/internal/controller.mjs';
+import {attachAnchorLayer} from './internal/anchor-layer.mjs';
 export {SDK_VERSION, SDK_SEMVER, SDK_BUILD_NUMBER, AxiomError};
+const anchorHosts = new WeakMap();
+export function createAnchorLayer(options) {
+  const attach = anchorHosts.get(options?.runtime);
+  if (!attach) throw new AxiomError('INVALID_ARGUMENT', 'Expected a Web Runtime from this SDK');
+  return attach();
+}
 /** Async, DOM-free control contract shared with the native SDK. */
 export async function createController(options) {return adaptController(await createRuntime(options));}
 const enumValue = (values, name) => {
@@ -34,6 +41,14 @@ export async function createRuntime({mount, documentId, restore, initialResource
   let module, closed = false, closing = false, scheduled = 0, observer, disposeInput, text, lastPresented = '0', tail = Promise.resolve();
   let boundWidth=0,boundHeight=0,boundDpr=0,pendingResize=false,resizeTimer=0;
   let retainedActive=false;
+  let anchorLayer, submittedViewport = null;
+  const updateAnchorViewport = transform => {
+    if (!transform && !submittedViewport) return;
+    if (transform && submittedViewport?.width === boundWidth && submittedViewport.height === boundHeight &&
+        transform.every((value, index) => value === submittedViewport.transform[index])) return;
+    submittedViewport = transform ? {transform, width: boundWidth, height: boundHeight} : null;
+    anchorLayer?.setViewport(submittedViewport);
+  };
   let closeBarrier=false;
   let pendingWorker=null,pendingTask=null,pendingFailed='0',pendingRestart=null,pendingRestarts=0,pendingReplacement=null,pendingRoot=null,pendingFactory=null;
   const pumpPending=()=>{
@@ -120,6 +135,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       if (retainedActive && !pendingResize && frame.surfaceReady) {
         retained.remove();retained.width=retained.height=0;retainedActive=false;
       }
+      if (!retainedActive) updateAnchorViewport(frame.submittedViewport);
       resolveTerminals();
       dispatch();
       if (frame.presented && frame.presented !== lastPresented) {
@@ -147,6 +163,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     });
   };
   const cleanup = () => {
+    anchorLayer?.api.dispose();
     listeners.clear();
     cancelAnimationFrame(scheduled); clearTimeout(resizeTimer); observer?.disconnect(); disposeInput?.(); text?.dispose();
     for(const [name,fn,options] of events)canonical.removeEventListener(name,fn,options);
@@ -178,7 +195,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const state=call('state').value;
     if(state.activeContacts){pendingResize=true;return;}
     if(state.surface.available && rect.width===boundWidth && rect.height===boundHeight && dpr===boundDpr){pendingResize=false;schedule();return;}
-    if (boundWidth > 0 && boundHeight > 0) retainVisibleFrame();
+    if (boundWidth > 0 && boundHeight > 0 && !retainVisibleFrame()) updateAnchorViewport(null);
     canonical.width=preview.width=Math.round(rect.width*dpr);canonical.height=preview.height=Math.round(rect.height*dpr);
     sizeDisplay(canonical,rect.width,rect.height);sizeDisplay(preview,rect.width,rect.height);
     call('resize',{width:rect.width,height:rect.height,dpr});boundWidth=rect.width;boundHeight=rect.height;boundDpr=dpr;pendingResize=false;schedule();
@@ -235,7 +252,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       if(e.ctrlKey){const s=call('state').value;call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale:s.camera.scale*Math.exp(-e.deltaY*.01)});}
       else call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});text.sync();schedule();
     }catch(error){emitError(error);}},{passive:false});
-    const contextLost=e=>{e.preventDefault();retainVisibleFrame();try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
+    const contextLost=e=>{e.preventDefault();if(!retainVisibleFrame())updateAnchorViewport(null);try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
     const contextRestored=()=>{if(!canonical.getContext('webgl2').isContextLost()&&!preview.getContext('webgl2').isContextLost())try{resize();}catch(error){emitError(error);}};
     for(const c of [canonical,preview]){c.addEventListener('webglcontextlost',contextLost);c.addEventListener('webglcontextrestored',contextRestored);}
     const inputCleanup=disposeInput;disposeInput=()=>{window.removeEventListener('blur',clearHover);inputCleanup();for(const c of [canonical,preview]){c.removeEventListener('webglcontextlost',contextLost);c.removeEventListener('webglcontextrestored',contextRestored);}};
@@ -424,6 +441,11 @@ export async function createRuntime({mount, documentId, restore, initialResource
       try{pendingFactory=(await import('./internal/cpu-worker-client.mjs')).createCpuWorker;pendingWorker=await pendingFactory(api);call('cpuPending',{action:'bind',executor:pendingWorker.status().executor});}
       catch(error){pendingWorker=null;emitError(error);}
     }
+    anchorHosts.set(api, () => {
+      if (closing || closed || closeBarrier) throw new AxiomError(closed ? 'CLOSED' : 'BUSY');
+      anchorLayer ??= attachAnchorLayer(mount, submittedViewport, () => { anchorLayer = undefined; }, newId);
+      return anchorLayer.api;
+    });
     schedule();return Object.freeze(api);
   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}
 }

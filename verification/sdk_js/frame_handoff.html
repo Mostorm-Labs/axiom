@@ -1,7 +1,7 @@
 <!doctype html><meta charset="utf-8"><title>SDK frame handoff regression</title>
 <style>#mount{width:480px;height:360px}</style><div id="mount"></div><pre id="result">PENDING</pre>
 <script type="module">
-import {createRuntime} from './axiom.mjs';
+import {createRuntime,createAnchorLayer} from './axiom.mjs';
 const results=[],errors=[],scenarios=[];
 const check=(ok,label)=>{if(!ok)throw Error(label);results.push(label);};
 const wait=()=>new Promise(r=>setTimeout(r,20));
@@ -37,16 +37,32 @@ try{
   sdk=await createRuntime({mount:document.getElementById('mount'),onError:e=>errors.push({code:e.code,details:e.details}),onFrame:()=>++frames});
   sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
   await until(()=>frames>0,'initial real presentation');
+  const anchors=createAnchorLayer({runtime:sdk});
+  const anchor=anchors.create({rect:[20,30,100,60]});
+  const anchorElement=anchors.getElement(anchor.id);
+  const anchorWidth=()=>anchorElement.getBoundingClientRect().width;
+  check(Math.abs(anchorWidth()-100)<.05,'anchor starts at the submitted scale');
+  const projected=anchors.readTransform();projected[4]=500;
+  check(Math.abs(anchors.readTransform()[4])<.05,'transform readback is an owned copy');
   await sdk.selectShape('rectangle');
   held=true;
   await sdk.zoomAt(0,0,1.01);
   await until(()=>delayed>0,'real pending GPU fence');
+  await until(()=>Math.abs(anchorWidth()-101)<.05,'anchor follows submitted pixels before the GPU fence is acknowledged');
+  check(Math.abs(anchorWidth()-101)<.05,'anchor follows submitted pixels before the GPU fence is acknowledged');
+  const beforeZoomDelay=delayed;
+  await sdk.zoomAt(0,0,1.05);
+  await until(()=>delayed>beforeZoomDelay+1,'new camera demand while the old frame is still held');
+  check(Math.abs(sdk.readState().camera.scale-1.05)<.001,
+    'new camera demand is accepted while the old frame is still held');
   pointer('pointerdown',40,40);
   pointer('pointermove',160,140);pointer('pointerup',160,140);
   await until(()=>sdk.readState().objects===1,'canonical input committed while prior fence pending');
   check(sdk.readState().objects===1,'canonical input committed while prior fence pending');
   held=false;
   await until(blue,'new canonical pixels after pending frame');
+  await until(()=>Math.abs(anchorWidth()-105)<.05,'anchor follows the replacement pixels');
+  check(anchors.get(anchor.id).rect[2]===100,'camera updates preserve the stored world rectangle');
   check(!errors.length,'no rejected completion after superseded preview');
   scenarios.push('pending-input');
   const before=frames;
@@ -64,6 +80,7 @@ try{
   await until(()=>frames>before,'resized real presentation');
   await until(()=>!document.querySelector('#mount canvas[id$="-retained"]'),'resized qualified display');
   check(sdk.readState().objects===1&&!errors.length,'resize invalidates old work without losing document');
+  check(Math.abs(anchorWidth()-110)<.05,'anchor projection follows the resized canvas');
   scenarios.push('pending-resize');
   const canvases=[sdk.canvas,document.querySelector('#mount canvas[id$="-preview"]')];
   const extensions=canvases.map(c=>c.getContext('webgl2').getExtension('WEBGL_lose_context'));
@@ -80,9 +97,12 @@ try{
   for(const e of extensions)e.restoreContext();
   await until(()=>sdk.readState().surface.available,'surface recovery');
   await until(blue,'recovered canonical pixels');
+  await until(()=>Math.abs(anchorWidth()-120)<.05,'anchor projection resumes after context recovery');
   check(!errors.length,'no stale completion after context recovery');
   scenarios.push('context-recovery');
+  anchors.dispose();
   await sdk.close();
+  check(!anchorElement.isConnected,'disposing the Shell layer releases its DOM anchors');
   document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,scenarios,delayed,frames});
 }catch(e){held=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,scenarios,delayed,frames,error:String(e),errors,state:sdk?.readState(),selection:sdk?.readSelection()});}
 finally{held=false;delayLoss=false;WebGL2RenderingContext.prototype.clientWaitSync=original;EventTarget.prototype.addEventListener=add;EventTarget.prototype.removeEventListener=remove;}

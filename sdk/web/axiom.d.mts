@@ -1,5 +1,23 @@
 import type {AxiomError,Id128,Revision,ImageExportOptions,ImageExportResult,CommitStamp,DataProgress,OperationMetadata,OperationPacket,DataStatus,Stamp,Color,InkBrushConfig,DocumentBackground,PropertyValue,Stroke,MultiProperty,MultiProjection,ResourceToken,ResourceCatalog,InitialResources,TextToken,TextSnapshot,FontEntry,FontCatalog,Endpoint,ImageContent,CommandResult,RuntimeState,SectionOptions,TextFormat,AppearanceStamp,AppearanceValues,AppearancePatch,AppearanceSnapshot,AppearanceToken,AppearanceResult,AppearanceAPI,TableTarget,TableSnapshot,TableAPI,VectorPathCommand,VectorPathOptions,VectorPathSnapshot,Controller} from '../api/axiom.mjs';
 export * from '../api/axiom.mjs';
+export type AnchorRect = readonly [number, number, number, number];
+export interface Anchor {
+  readonly id: Id128;
+  readonly rect: AnchorRect;
+}
+export interface AnchorLayer {
+  create(options: {id?: Id128; rect: AnchorRect}): Anchor;
+  get(id: Id128): Anchor | null;
+  /** Borrowed layout element. Attach Shell content as children. */
+  getElement(id: Id128): HTMLElement | null;
+  list(): Anchor[];
+  setRect(id: Id128, rect: AnchorRect): Anchor;
+  /** CSS affine matrix from world units to logical pixels of the submitted canvas. */
+  readTransform(): readonly [number, number, number, number, number, number] | null;
+  remove(id: Id128): boolean;
+  dispose(): void;
+}
+export function createAnchorLayer(options: {runtime: Runtime}): AnchorLayer;
 export interface RuntimeOptions {
   mount: HTMLElement; documentId?: Id128; assetBaseURL?: URL | string;
   builtinFonts?:boolean;initialResources?:InitialResources;permission?:'unconfigured'|'localSingleUser'|'contextUnavailable';

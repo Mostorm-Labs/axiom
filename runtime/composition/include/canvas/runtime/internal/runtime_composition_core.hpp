@@ -225,6 +225,7 @@ class RuntimeCompositionCore final {
   [[nodiscard]] std::uint64_t canonicalPresentCount() const noexcept;
   [[nodiscard]] RuntimeCompositionReceipt readback() const noexcept;
   [[nodiscard]] RuntimeSurfaceSnapshot surfaceSnapshot() const noexcept;
+  [[nodiscard]] std::optional<render::WorldToViewAffine> submittedViewport() const noexcept;
   [[nodiscard]] std::uint64_t previewSurfaceGeneration() const noexcept;
   [[nodiscard]] render::RenderTargetBackend canonicalBackend() const noexcept;
 #if defined(AXIOM_RUNTIME_QUALIFICATION)

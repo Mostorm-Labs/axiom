@@ -784,6 +784,11 @@ RuntimeCompositionReceipt RuntimeCompositionCore::readback() const noexcept {
   return {state_, resources_.lifetimeGeneration, ownerPumpCount_, lastOwnerControlCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value(), runtime.canonicalPresentationDirty()};
 }
 
+std::optional<render::WorldToViewAffine> RuntimeCompositionCore::submittedViewport() const noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return std::nullopt;
+  return runtime_->submittedViewport();
+}
+
 RuntimeSurfaceSnapshot RuntimeCompositionCore::surfaceSnapshot() const noexcept {
   const auto surface = runtime_->surface();
   RuntimeSurfaceSnapshot out{};

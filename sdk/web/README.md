@@ -217,6 +217,48 @@ outcomes, never a generic transaction or local echo. `resources.list/readBytes`
 allow an external data owner to discover and retain actual resource bytes.
 See `docs/planning/sdk/shell-axis-integration.md` in the source repository.
 
+## Shell-owned canvas anchors
+
+`createAnchorLayer({runtime})` returns the Web Runtime's anchor layer. Each
+anchor has a nonzero Id128 and a rectangle `[x, y, width, height]` in world units.
+The layer maps every rectangle into the canvas using the transform of the
+submitted display, including navigation and editing feedback. `readTransform()`
+returns a copy of the six CSS matrix coefficients in logical pixels, or `null`
+while the layer has no display to align with.
+
+```js
+import {createAnchorLayer} from '@mostorm/axiom';
+
+const anchors = createAnchorLayer({runtime});
+const {id} = anchors.create({rect: [240, 120, 560, 315]});
+const player = document.createElement('iframe');
+player.title = 'Review video';
+player.src = 'https://www.youtube.com/embed/M7lc1UVf-VE';
+player.allowFullscreen = true;
+Object.assign(player.style, {width: '100%', height: '100%', border: '0', pointerEvents: 'auto'});
+anchors.getElement(id).append(player);
+anchors.setRect(id, [200, 100, 640, 360]);
+```
+
+`get`, `list`, and `setRect` return copied rectangle values. `getElement` lends
+the layer element for the anchor's lifetime. Put Shell content inside this
+element and use `setRect` to change its position or size. Layer methods run
+synchronously on the browser's DOM thread. Content is pointer-transparent by
+default, while interactive children can opt into input with `pointer-events: auto`.
+
+Anchor IDs are unique within the layer. Supply a saved `id` when recreating an
+anchor, or omit it to generate one in a secure context. `remove(id)` detaches the
+corresponding content. `dispose()` and a successful `runtime.close()` detach the
+entire layer. The Shell owns content, permissions, and persistence. Store IDs,
+rectangles, and content references alongside your document ID when persisting.
+Canvas erasers affect canvas objects only. Canvas History, Snapshots, Operation
+packets, fitting, and image export use the canvas document.
+
+In the Demo's 画板 toolbar, use `插入 YouTube` or `添加评论标记`. The `移动`
+handle repositions the video, and the lower-right handle resizes it. Use
+`缩小` or `放大` to zoom the canvas with its anchors. Turn off `视频交互` to
+pass gestures and eraser input through the video to the canvas.
+
 | Area | Public methods |
 |---|---|
 | Tools and style | `selectTool`, `selectShape`, `setSelectionMode`, `brushPresets`, `selectBrush`, `setInk`, `setEraser`, `setAppearance` |

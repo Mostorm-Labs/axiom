@@ -46,6 +46,11 @@ foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${file}" "${_web_source}")
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${file}" DESTINATION js)
 endforeach()
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS internal/anchor-layer.mjs)
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/internal/anchor-layer.mjs" _anchor_source)
+string(REPLACE "'../../api/" "'../api/" _anchor_source "${_anchor_source}")
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/internal/anchor-layer.mjs" "${_anchor_source}")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/internal/anchor-layer.mjs" DESTINATION js/internal)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 execute_process(COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/tools/release/version_identity.py"
   --repo "${PROJECT_SOURCE_DIR}" --output "${CMAKE_CURRENT_BINARY_DIR}" --build-number "${AXIOM_BUILD_NUMBER}"

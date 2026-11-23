@@ -213,6 +213,11 @@ WebFrameStatus WebRuntimeAdapter::frameStatus() const noexcept {
 bool WebRuntimeAdapter::previewActive() const noexcept {
   return std::this_thread::get_id() == impl_->thread && impl_->bound && impl_->core.previewActive();
 }
+std::optional<std::array<double, 6>> WebRuntimeAdapter::submittedViewport() const noexcept {
+  const auto view = impl_->core.submittedViewport();
+  if (!view) return std::nullopt;
+  return std::array<double, 6>{view->a, view->b, view->c, view->d, view->tx, view->ty};
+}
 std::uint64_t WebRuntimeAdapter::presentedCount() const noexcept {
   return std::this_thread::get_id() == impl_->thread ? impl_->presented : 0;
 }
