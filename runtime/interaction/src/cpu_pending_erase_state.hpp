@@ -4,12 +4,14 @@
 #include "canvas/scene/scene_types.hpp"
 #include "canvas/semantic/operation.hpp"
 #include <array>
+#include <span>
 #include <tuple>
 #include "pending_scene_preparation.hpp"
 namespace canvas::interaction {
 struct CpuPendingEraseState final {
  enum class Kind { Erase,Create,Transform,Brush,Undo,Redo,Image };
  enum class Phase { Active,Frozen,Preparing,Waiting,Confirming,ExactReady,Ready,CommitPreparing };
+ static constexpr std::size_t localIntentGrantBytes = 65536;
  struct Intent {
   Kind kind=Kind::Erase;
   std::uint64_t activeSerial=0;
@@ -23,7 +25,15 @@ struct CpuPendingEraseState final {
   semantic::Operation preparedInverse;
   bool publicationPrepared=false;
   PendingSceneStampPreparation sceneStamp;
+  // The brush envelope is sealed at Up. Only its ID may change at dequeue.
   std::optional<semantic::Operation> brush;
+  // Keep a short verified packet within the slot's existing grant. Long
+  // strokes re-encode at publication without pinning budget behind an erase.
+  std::array<std::uint8_t, 1024> brushWire;
+  std::size_t brushWireSize = 0;
+  std::span<const std::uint8_t> verifiedBrushBytes() const noexcept {
+   return std::span(brushWire).first(brushWireSize);
+  }
   std::optional<semantic::Operation> brushInverse;
   std::optional<runtime::ImageImportRequest> image;
   std::vector<std::uint64_t> dependencies;
@@ -78,6 +88,7 @@ struct CpuPendingEraseState final {
   bool requestTaken=false,completion=false,success=false;
   std::chrono::steady_clock::time_point requestedAt{};
  };
+ static_assert(sizeof(Intent) <= localIntentGrantBytes);
  std::array<std::unique_ptr<Intent>,8> slots;
  std::array<std::uint64_t,4> basis{};
  std::uint64_t executor=0,nextSerial=0,nextJob=0,admitted=0,committed=0,noops=0,failed=0;

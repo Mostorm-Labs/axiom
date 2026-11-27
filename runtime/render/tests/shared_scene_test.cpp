@@ -140,6 +140,63 @@ void indexLinearParity(){
 #endif
 
 #if defined(CANVAS_RENDER_HAS_SKIA)
+void backgroundPrewarmDoesNotRedisplay() {
+    RasterSkiaSurfaceProvider surface;
+    check(surface.resize(256,128).code==BackendSubmissionCode::kAccepted,"prewarm target");
+    const FrameState state{ViewId{7},CameraState{{0,0},1,0,CameraGeneration{1}},
+        {0,0,256,128},{256,128,256,128,1,1},semantic::SemanticGeneration{9},
+        SceneRevision{9},SurfaceGeneration{surface.generation()},MetricsGeneration{4},FrameId{1}};
+    internal::SkiaNavigationTiles tiles;
+    RenderCacheOptions options;
+    options.navigationMicroseconds=1000000;
+    options.navigationMaxSteps=1;
+    auto budget=std::make_shared<resources::ResourceBudgetManager>();
+    unsigned draws=0,proofs=0;
+    internal::RetainedNavigationSource retained;
+    retained.bounds={-512,-512,512,512};
+    retained.density=1;
+    retained.draw=[&](SkCanvas&,const WorldRect&){++draws;};
+    NavigationSourceQuery query=[&](const WorldRect& area,std::vector<ReferenceTraversalEntry>&,
+                                    NavigationSourceDiagnostics& diagnostics){
+        diagnostics.sceneStamped=true;
+        diagnostics.semanticGeneration=state.sceneGeneration.value();
+        diagnostics.sceneRevision=state.sceneReadToken.value();
+        diagnostics.sceneEmptyProof=NavigationSceneEmptyProof{area,diagnostics.semanticGeneration,
+            diagnostics.sceneRevision,state.viewId.value(),state.surfaceGeneration.value(),state.metricsGeneration.value()};
+        ++proofs;
+        return true;
+    };
+    const auto render=[&](float x,bool prewarm){
+        auto result=tiles.render(surface,{1,x,0},state,query,0,options,budget,prewarm,&retained,
+                                 nullptr,nullptr,{}, {}, {}, {},SK_ColorWHITE,{},true);
+        check(result.code==BackendSubmissionCode::kAccepted&&tiles.work.coverageComplete,"prewarm render coverage");
+    };
+    render(0,false);
+    check(tiles.work.presented&&draws==1,"initial navigation display");
+    const auto firstPresent=surface.presentCount();
+    render(0,true);
+    check(proofs==1,"prewarm exercised an authoritative background query");
+    check(!tiles.work.presented&&surface.presentCount()==firstPresent&&draws==1,
+          "background-only prewarm resubmitted an unchanged sharp view");
+    check(tiles.work.prewarmTiles==1,"proof prewarm did not consume its allowance");
+    // A new camera still requires a complete presentation after proof caching.
+    render(4,false);
+    check(tiles.work.presented&&surface.presentCount()==firstPresent+1&&draws>1,"camera with prefetched proof skipped");
+    // Another writer can replace the displayed pixels without changing the surface generation.
+    auto external=surface.acquire();
+    check(external.code==SkiaSurfaceAcquireCode::kAcquired,"other writer acquire");
+    external.frame.surface->getCanvas()->clear(SK_ColorRED);
+    surface.release();
+    check(surface.present().code==BackendSubmissionCode::kAccepted,"other writer present");
+    const auto beforeRepair=surface.presentCount();
+    render(4,true);
+    check(tiles.work.presented&&surface.presentCount()==beforeRepair+1,"prefetch kept a foreign display");
+    std::vector<std::uint8_t> pixels(256*128*4);
+    check(surface.readbackRgba(pixels).code==BackendSubmissionCode::kAccepted&&
+          std::all_of(pixels.begin(),pixels.end(),[](auto byte){return byte==255;}),
+          "navigation did not restore the proven background");
+
+}
 void idleWorkBufferReclaim(){
     auto object=line(71,256);
     std::get<semantic::CompactStrokeContent>(object.content).stroke.config.algorithmVersion=4;
@@ -241,6 +298,7 @@ int main(int argc,char** argv){try{
     if(argc<2||std::string_view(argv[1])=="--snapshot")snapshotSharing();
     if(argc<2||std::string_view(argv[1])=="--index")indexedSelection();
 #if defined(CANVAS_RENDER_HAS_SKIA)
+    if(argc<2||std::string_view(argv[1])=="--background-prewarm")backgroundPrewarmDoesNotRedisplay();
     if(argc<2||std::string_view(argv[1])=="--retention"){sourceRetention();idleWorkBufferReclaim();}
 #endif
     if(argc<2||std::string_view(argv[1])=="--readers")retainedReadersAndVersions();

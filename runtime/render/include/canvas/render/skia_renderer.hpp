@@ -102,7 +102,7 @@ class SkiaRenderer final {
     [[nodiscard]] std::uint64_t rasterizationCount() const noexcept { return rasterizations_; }
     struct CompactWork final {std::uint64_t generatedKnots=0,retainedBytes=0,temporaryBytes=0;};
     [[nodiscard]] CompactWork compactWork()const noexcept{return compactWork_;}
-    void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;}
+    void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;compactWork_.temporaryBytes=0;}
     void setRenderCacheOptions(RenderCacheOptions options);
     void clearRenderCache() noexcept;
     [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
@@ -164,6 +164,8 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    bool drawPreviewContours(SkiaSurfaceProvider&, SkSurface&, const PreviewGeometry&,
+                            const PreviewStyleOverride&, bool soleV4);
     internal::ReferenceValidationCache* validationService() const noexcept;
     mutable std::shared_ptr<internal::ReferenceValidationCache> validationProofs_;
     std::shared_ptr<internal::GpuResourceRetirement> gpuRetirements_;

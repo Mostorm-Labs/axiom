@@ -53,8 +53,11 @@ class PublicationReservation final {
     bool ready_;
 
   public:
-    PublicationReservation(LocalOperationSink* sink, const semantic::Operation& op)
-        : sink_(sink), ready_(!sink || sink->preparePublication({&op, 1})) {}
+    PublicationReservation(LocalOperationSink* sink, const semantic::Operation& op,
+                           std::span<const std::uint8_t> verifiedBytes = {})
+        : sink_(sink), ready_(!sink || (verifiedBytes.empty()
+              ? sink->preparePublication({&op, 1})
+              : sink->prepareEncodedPublication(op, verifiedBytes))) {}
     ~PublicationReservation() {
         if (sink_)
             sink_->abortPreparedPublication();
@@ -2147,7 +2150,8 @@ bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operat
 }
 
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
-    semantic::Operation forward, semantic::Operation inverse) noexcept {
+    semantic::Operation forward, semantic::Operation inverse,
+    std::span<const std::uint8_t> verifiedBytes) noexcept {
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   if (canvas::qualification::observing(fc08Qualification_)) return false;
   canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
@@ -2185,7 +2189,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
       canvas::qualification::kApplyPlan | canvas::qualification::kHistoryEntry};
   if (canvas::qualification::notify(&fc08Context, canvas::qualification::Point::kCmdAdmitted, forward)) return false;
 #endif
-  PublicationReservation publication(localOperationSink_, forward);
+  PublicationReservation publication(localOperationSink_, forward, verifiedBytes);
   if (!publication)
       return false;
   const auto applied = resourceManifestPort_
@@ -3736,31 +3740,33 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
   brushSealedOutlineDigest_ = intent.compactConfig ? hashCompactKnots(intent.knots)
                                                    : hashOutline(intent.outline);
-  const auto package = brushSessionPackages_.at(pointerId);
-  const auto seed = brushSessionSeeds_.at(pointerId);
-  ink::BrushSession replay(pointerId, ink::resolveBrushState(package, seed));
+  const auto& package = brushSessionPackages_.at(pointerId);
+  if (!intent.compactConfig) {
+    const auto seed = brushSessionSeeds_.at(pointerId);
+    ink::BrushSession replay(pointerId, ink::resolveBrushState(package, seed));
     ink::BrushPreviewDelta replayPreview;
-  ink::BrushCommitIntent replayIntent;
-  if (!intent.compactConfig && (!replay.begin() ||
-      replay.append(intent.confirmed, {}, replayPreview) != ink::BrushSessionError::kNone ||
-      replay.seal(replayIntent) != ink::BrushSessionError::kNone)) return false;
-  brushReplayDigest_ = hashOutline(replayIntent.outline);
-  if (!intent.compactConfig && brushReplayDigest_ != brushSealedOutlineDigest_) return false;
-  const bool usesDabs = (package.profileId == "chalk-grain-v1" &&
-                         package.revision >= 2U && package.revision <= 4U) ||
-                        package.profileId == "membrane-v1";
-  if (usesDabs && replayIntent.dabDigest != intent.dabDigest) return false;
+    ink::BrushCommitIntent replayIntent;
+    if (!replay.begin() || replay.append(intent.confirmed, {}, replayPreview) != ink::BrushSessionError::kNone ||
+        replay.seal(replayIntent) != ink::BrushSessionError::kNone) return false;
+    brushReplayDigest_ = hashOutline(replayIntent.outline);
+    if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+    const bool usesDabs = (package.profileId == "chalk-grain-v1" &&
+                           package.revision >= 2U && package.revision <= 4U) ||
+                          package.profileId == "membrane-v1";
+    if (usesDabs && replayIntent.dabDigest != intent.dabDigest) return false;
+  }
   if (!BrushCommitAdapter::valid(intent, package)) return false;
   const auto operationId = localOperationOrdinal();
   if (operationId == 0U) return false;
   const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(operationId));
   if (objectId.isZero()) return false;
-  const auto operation = BrushCommitAdapter::build(
+  auto operation = BrushCommitAdapter::build(
       intent, package, operationId, documentId_, localOperationIdentity(operationId), objectId);
+  std::vector<std::uint8_t> verifiedBytes;
   if (intent.compactConfig) {
     // Compact replay starts from persisted effective pressure, never from raw
     // device samples or the live simulator. Verify the actual codec boundary.
-    const auto encoded = semantic::SemanticCodec::encodeProtobufOperation(operation);
+    auto encoded = semantic::SemanticCodec::encodeProtobufOperation(operation);
     if (!encoded.ok()) return false;
     const auto decoded = semantic::SemanticCodec::decodeProtobufOperation(encoded.bytes);
     if (!decoded.ok()) return false;
@@ -3770,6 +3776,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
         content->stroke.seed != intent.seed || content->stroke.knots != intent.knots) return false;
     brushReplayDigest_ = hashCompactKnots(content->stroke.knots);
     if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+    verifiedBytes = std::move(encoded.bytes);
   }
   brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
                                      brushReplayDigest_), intent.revision);
@@ -3783,7 +3790,20 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   if(pendingLocalEnabled()){
     for(auto& pending:cpuPending_->slots)if(pending&&!pending->serial&&pending->kind==CpuPendingEraseState::Kind::Brush&&pending->key==displayInputKey_){
       auto quota=skiaRenderer_.reserveCpuPendingMetadata(intent.knots.capacity()*sizeof(foundation::InkKnot)+intent.outline.capacity()*sizeof(ink::reference::StrokeOutlinePoint)+65536);if(!quota)return false;
-      pending->prefixMetadata=std::move(*quota);pending->brush=operation;pending->brushInverse=std::move(inverse);pending->session=pointerId;pending->serial=++cpuPending_->nextSerial;pending->phase=CpuPendingEraseState::Phase::Ready;pending->creates.push_back(std::get<semantic::AddStrokeOp>(operation.payload).object);++cpuPending_->admitted;++cpuPending_->revision;cpuPending_->lastAdmitted=pending->serial;
+      pending->prefixMetadata = std::move(*quota);
+      pending->creates.push_back(std::get<semantic::AddStrokeOp>(operation.payload).object);
+      pending->brush = std::move(operation);
+      pending->brushInverse = std::move(inverse);
+      if (localOperationSink_ && verifiedBytes.size() <= pending->brushWire.size()) {
+        std::copy(verifiedBytes.begin(), verifiedBytes.end(), pending->brushWire.begin());
+        pending->brushWireSize = verifiedBytes.size();
+      }
+      pending->session = pointerId;
+      pending->serial = ++cpuPending_->nextSerial;
+      pending->phase = CpuPendingEraseState::Phase::Ready;
+      ++cpuPending_->admitted;
+      ++cpuPending_->revision;
+      cpuPending_->lastAdmitted = pending->serial;
       brushSessions_.erase(it);brushSessionPackages_.erase(pointerId);brushSessionSeeds_.erase(pointerId);brushPreviews_.erase(pointerId);transientOverlayDirty_=true;canonicalPresentationDirty_=true;return true;
     }
     return false;
@@ -3797,7 +3817,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   auto handoffNode=stagedHandoff.extract(pointerId);
   pendingCanonicalIdentities_.reserve(pendingCanonicalIdentities_.size()+1);
   G5_SCOPE(g5Publication,g5::Tag::publication_prepare,g5::Purpose::none);
-  PublicationReservation publication(localOperationSink_, operation);
+  PublicationReservation publication(localOperationSink_, operation, verifiedBytes);
   G5_SCOPE_END(g5Publication);
   if (!publication) {
       (void)cancelBrushSession(pointerId);

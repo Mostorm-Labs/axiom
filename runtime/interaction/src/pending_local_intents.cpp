@@ -24,7 +24,7 @@ bool CanvasEditingRuntime::reservePendingLocal(input::PointerKey key,std::string
  if(!canonicalWriteAdmission()||pendingHistoryBarrier()||cpuPending_->unavailable||cpuPending_->nextActive==UINT64_MAX||cpuPending_->nextSerial>=(std::uint64_t{1}<<63)-1)return false;
  for(const auto& p:cpuPending_->slots)if(p&&!p->serial&&p->key==key)return true;
  auto slot=std::find_if(cpuPending_->slots.begin(),cpuPending_->slots.end(),[](const auto& p){return !p;});if(slot==cpuPending_->slots.end())return false;
- const auto grant=reserveCpuWorkerGrant(cpuPending_->executor,65536);if(!grant)return false;
+ const auto grant=reserveCpuWorkerGrant(cpuPending_->executor,CpuPendingEraseState::localIntentGrantBytes);if(!grant)return false;
  try{auto p=std::make_unique<CpuPendingEraseState::Intent>();p->activeSerial=++cpuPending_->nextActive;p->kind=kind=="transform"?CpuPendingEraseState::Kind::Transform:kind=="brush"?CpuPendingEraseState::Kind::Brush:CpuPendingEraseState::Kind::Create;p->key=key;p->traceGrant=grant;p->grantExecutor=cpuPending_->executor;*slot=std::move(p);++cpuPending_->revision;return true;}catch(...){(void)releaseCpuWorkerGrant(cpuPending_->executor,grant);return false;}
 }
 void CanvasEditingRuntime::cancelPendingLocal(input::PointerKey key)noexcept{
@@ -120,9 +120,20 @@ bool CanvasEditingRuntime::servicePendingLocalHead()noexcept{
    const semantic::Operation forward{allocateOperationId(),documentId_,1,1,semantic::InsertObjectsOp{std::move(objects)}};
    ok=applyLocalHistoryOperation(forward,{allocateOperationId(),documentId_,1,1,semantic::DeleteObjectsOp{std::move(ids)}});
   }else if(p->kind==CpuPendingEraseState::Kind::Brush){
-   if(p->brush)p->brush->id=localOperationIdentity(localOperationOrdinal());
    decltype(pendingCanonicalIdentities_) staged;staged.emplace(p->session,ink::CanonicalHandoffIdentity{});auto handoff=staged.extract(p->session);pendingCanonicalIdentities_.reserve(pendingCanonicalIdentities_.size()+1);
-   ok=p->brush&&p->brushInverse&&applyLocalHistoryOperation(*p->brush,*p->brushInverse);
+   if (p->brush && p->brushInverse) {
+     auto forward = std::move(*p->brush);
+     const auto ordinal = localOperationOrdinal();
+     if (ordinal) {
+       const auto id = localOperationIdentity(ordinal);
+       // A predecessor may have consumed the provisional ordinal. In that
+       // case normal publication encodes the new envelope before apply.
+       const auto bytes = (id == forward.id) ? p->verifiedBrushBytes()
+                                             : std::span<const std::uint8_t>{};
+       forward.id = id;
+       ok = applyLocalHistoryOperation(std::move(forward), std::move(*p->brushInverse), bytes);
+     }
+   }
    if(ok&&lastAppliedCommit_){
     if(auto* display=findDisplay(p->session,DisplayKind::kBrush))sealDisplay(*display,*lastAppliedCommit_,p->creates.front().id);
     const ink::CanonicalHandoffIdentity identity{1U,p->session,1U,lastAppliedCommit_->operation_id,lastAppliedCommit_->commit_stamp,render::SurfaceGeneration{previewProvider_?previewProvider_->generation():surface_.generation}};

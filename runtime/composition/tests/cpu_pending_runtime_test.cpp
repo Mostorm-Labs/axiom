@@ -4,6 +4,7 @@
 #undef main
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/snapshot.hpp"
+#include "canvas/semantic/codec.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/visibility_resolver.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
@@ -27,6 +28,20 @@ class InkPlaygroundHistoryTestAccess {public:
  static auto reuse(const interaction::CanvasEditingRuntime& r){std::pair<std::uint64_t,std::uint64_t> out{};for(const auto& p:r.cpuPending_->slots)if(p){out.first+=p->presentationBuilds;out.second+=p->presentationHits;}return out;}
  static auto renderSources(const interaction::CanvasEditingRuntime& r,const render::FrameState& frame){auto v=render::VisibilityResolver::resolve(frame,*r.runtimeSceneHost_,r.sceneCoordinator_->runtimeScene());require(bool(v),"test actual visibility");auto source=render::DirectReferenceSource::buildTransient(frame,v.value(),r.sceneCoordinator_->runtimeScene());require(bool(source),"test actual sources");return source.value();}
  static auto frozenTrace(const interaction::CanvasEditingRuntime& r){require(r.cpuPending_&&r.cpuPending_->head(),"test actual frozen trace");return r.cpuPending_->head()->trace;}
+ static semantic::OperationId provisionalBrushId(const interaction::CanvasEditingRuntime& r, bool oversized) {
+  for (const auto& intent : r.cpuPending_->slots) {
+   if (!intent || !intent->brush) continue;
+   const auto bytes = intent->verifiedBrushBytes();
+   if (oversized) {
+    require(bytes.empty(), "large queued packet must use normal publication without a second lease");
+    return intent->brush->id;
+   }
+   const auto decoded = semantic::SemanticCodec::decodeProtobufOperation({bytes.begin(), bytes.end()});
+   require(decoded.ok() && decoded.operation.id == intent->brush->id, "missing verified queued brush envelope");
+   return decoded.operation.id;
+  }
+  return {};
+ }
  static auto cameraChangedAt(const interaction::CanvasEditingRuntime& r){return r.navigationChangedAt_;}
  static auto* sink(interaction::CanvasEditingRuntime& r){return r.localOperationSink_;}
  static auto* head(interaction::CanvasEditingRuntime& r){return r.cpuPending_->head();}
@@ -53,11 +68,38 @@ class PostPublicationFaultSink final:public interaction::LocalOperationSink {
  void applied(const semantic::Operation& op,const semantic::CanonicalCommitRecord& record)noexcept override{if(inner)inner->applied(op,record);}
  interaction::AxisOperationStatus status(const semantic::OperationId& op,const semantic::CanonicalCommitStamp& stamp)const noexcept override{return inner?inner->status(op,stamp):interaction::AxisOperationStatus{};}
 };
+class BrushPublicationProbe final : public interaction::LocalOperationSink {
+public:
+ semantic::OperationId provisional{}, prepared{}, appliedId{};
+ bool reencoded = false;
+ bool preparePublication(std::span<const semantic::Operation> operations) noexcept override {
+  for (const auto& op : operations) {
+   if (op.kind() != semantic::OperationKind::kAddStroke) continue;
+   const auto packet = semantic::SemanticCodec::encodeProtobufOperation(op);
+   if (!packet.ok()) return false;
+   prepared = op.id;
+   reencoded = true;
+  }
+  return true;
+ }
+ bool prepareEncodedPublication(const semantic::Operation& op, std::span<const std::uint8_t> bytes) noexcept override {
+  if (op.kind() != semantic::OperationKind::kAddStroke) return true;
+  const auto decoded = semantic::SemanticCodec::decodeProtobufOperation({bytes.begin(), bytes.end()});
+  if (!decoded.ok() || decoded.operation.id != op.id) return false;
+  prepared = op.id;
+  return true;
+ }
+ void applied(const semantic::Operation& op, const semantic::CanonicalCommitRecord& receipt) noexcept override {
+  if (op.kind() == semantic::OperationKind::kAddStroke) appliedId = receipt.operation_id;
+ }
+ interaction::AxisOperationStatus status(const semantic::OperationId&, const semantic::CanonicalCommitStamp&) const noexcept override { return {}; }
+};
 #ifndef AXIOM_CPU_PENDING_FIXTURE_MAIN
 #define AXIOM_CPU_PENDING_FIXTURE_MAIN main
 #endif
 int AXIOM_CPU_PENDING_FIXTURE_MAIN(int argc,char**argv){try{
- require(argc>=3,"fixed40 output [mode]");const std::string mode=argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+ require(argc>=3,"fixed40 output [mode]");const bool oversizedBrush = argc > 3 && std::string_view(argv[3]) == "mixedbrushlarge";
+ const std::string mode=oversizedBrush?"mixedbrush":argc>3?argv[3]:"twocommit";const unsigned length=mode=="long"?7200:((mode.starts_with("postcommit")||mode.starts_with("progress")||mode=="mixedcommit"||mode=="mixedframe"||mode=="activecancel"||mode=="mixedsticky"||mode=="mixedtable"||mode=="mixedbrush"||mode=="historybarrier"||mode=="mixedimage"||mode=="timeline"||mode=="failedcreate"||mode=="dependencychain"||mode=="failuremixed"||mode=="quota8"||mode=="metadatapressure"||mode=="postpublishfault"||mode=="activebasis")?24:1600);std::ifstream file(argv[1],std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
  auto decoded=semantic::SnapshotCodec::decode(bytes,semantic::SnapshotCapability::kAllWithCompactStrokeV1);require(decoded.ok(),"fixture");auto s=*decoded.snapshot;
  if(mode.starts_with("progress")||mode.starts_with("postcommit")){
   const auto first=std::find_if(s.objects.begin(),s.objects.end(),[](const auto& o){return std::holds_alternative<semantic::CompactStrokeContent>(o.content);});require(first!=s.objects.end(),"progress actualstroke");auto base=*first;s.objects.clear();
@@ -69,8 +111,13 @@ int AXIOM_CPU_PENDING_FIXTURE_MAIN(int argc,char**argv){try{
 
  }
 
+ BrushPublicationProbe brushPublication;
  runtime::RuntimeCompositionCore core;require(core.openDocument(s.document_id),"open");require(core.restoreSnapshotBeforeSurface(s,{s.document_id,s.document_revision,s.recovery_frontier,s.checkpoint_digest},1)==runtime::DocumentRestoreStatus::kRestored,"restore");
  auto& editor=core.qualificationRuntime();ink_playground::InkPlaygroundHistoryTestAccess::profile(editor);
+ if (mode == "mixedbrush") {
+  editor.setLocalOperationSink(&brushPublication);
+  require(editor.selectBrushProfile("round-handdrawn", 4), "select compact v4 input");
+ }
  PostPublicationFaultSink faultSink(ink_playground::InkPlaygroundHistoryTestAccess::sink(editor));if(mode=="postpublishfault"){cpuFaultRuntime=&editor;editor.setLocalOperationSink(&faultSink);}
  require(core.bindSurface(1431,1010)&&core.registerSource(71)&&core.setPlatformPresentationDeferred(true),"bind");
  const auto frame=[&]{runtime::RuntimeFrameOpportunity work;require(core.serviceFrameOpportunity(false,work),"actualframeopportunity");if(work.previewWork)require(core.finishFrameOpportunity({work.previewWork,true}),"previewack");if(work.canonicalWork)require(core.receivePlatformPresented({*work.canonicalWork,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,{}}),"canonicalack");};
@@ -332,7 +379,10 @@ int AXIOM_CPU_PENDING_FIXTURE_MAIN(int argc,char**argv){try{
   auto unrelated=invalid;unrelated.id=foundation::ObjectId::fromUint64(900002);std::get<semantic::ShapeContent>(unrelated.content).width=120;require(editor.enqueuePendingCreate({unrelated}),"independent suffix admission");
  }
  if(mode=="mixedbrush"){
-  c={};c.kind=runtime::CanvasControlPayloadKind::kSelectTool;c.tool=runtime::CanvasToolKind::kInk;control(c);pointer(input::PointerPhase::kDown,800,500);pointer(input::PointerPhase::kMove,900,550);pointer(input::PointerPhase::kUp,950,580);require(core.cpuPendingFacts().pending==2&&editor.semanticGeneration().value()==generation,"Brush overtook A");
+  c={};c.kind=runtime::CanvasControlPayloadKind::kSelectTool;c.tool=runtime::CanvasToolKind::kInk;control(c);pointer(input::PointerPhase::kDown,800,500);
+  if (oversizedBrush) for (int i=0; i<96; ++i) pointer(input::PointerPhase::kMove,800+i,500+(i%7)*8);
+  pointer(input::PointerPhase::kMove,900,550);pointer(input::PointerPhase::kUp,950,580);require(core.cpuPendingFacts().pending==2&&editor.semanticGeneration().value()==generation,"Brush overtook A");
+  brushPublication.provisional = ink_playground::InkPlaygroundHistoryTestAccess::provisionalBrushId(editor, oversizedBrush);
  }
  if(mode=="historybarrier"){
   c={};c.kind=runtime::CanvasControlPayloadKind::kUndo;control(c);require(editor.pendingHistoryBarrier(),"History barrier missing");
@@ -384,7 +434,11 @@ render::internal::CpuExactPathJob job(value->geometry,value->prefixCount,value->
  if(mode=="dependencychain"){require(!facts.pending&&facts.failed==3&&!editor.pendingObject(foundation::ObjectId::fromUint64(900003)),"transitive dependency survived failed predecessor");return 0;}
  if(mode=="failedcreate"){require(!facts.pending&&facts.failed==2&&facts.committed==4&&editor.pendingObject(foundation::ObjectId::fromUint64(900002)),"failed create lost unrelated suffix or dependent remained");return 0;}
  if(mode=="mixedimage"){require(!facts.pending&&!facts.failed&&facts.committed==3&&editor.pendingObject(mixedId)&&editor.pendingObject(mixedId)->transform.tx==870,"image final ordered transform");require(editor.undo()&&editor.undo(),"image undo");require(!editor.pendingObject(mixedId),"image deleted by Undo");return 0;}
- if(mode=="mixedbrush"){require(editor.pendingCanonicalHandoffCount()==1,"queued Brush skipped canonical handoff identity");require(facts.pending==0&&facts.failed==0&&facts.committed==2&&editor.semanticObjectCount()==41,"queued brush commit failed");return 0;}
+ if(mode=="mixedbrush"){
+  require(!brushPublication.provisional.isZero() && brushPublication.reencoded &&
+          brushPublication.provisional != brushPublication.appliedId &&
+          brushPublication.prepared == brushPublication.appliedId, "queued Brush published an obsolete operation identity");
+  require(editor.pendingCanonicalHandoffCount()==1,"queued Brush skipped canonical handoff identity");require(facts.pending==0&&facts.failed==0&&facts.committed==2&&editor.semanticObjectCount()==41,"queued brush commit failed");return 0;}
  if(mode=="historybarrier"){require(!facts.pending&&!facts.failed&&facts.committed==4&&editor.pendingObject(mixedId)->transform.tx==800,"ordered undo target");require(!editor.pendingHistoryBarrier(),"history barrier never retired");return 0;}
  if(mode=="mixedcommit"||mode=="mixedframe"||mode=="mixedsticky"||mode=="mixedtable"){
   require(!facts.pending&&facts.failed==0&&facts.committed==3,"actual mixed head commits");const auto* actual=editor.pendingObject(mixedId);require(actual&&actual->transform.tx==870&&actual->transform.ty==540,"final transform from latest preimage");require(editor.undo(),"undo transform");require(editor.pendingObject(mixedId)->transform.tx==800,"undo preimage");require(editor.undo()&&!editor.pendingObject(mixedId),"undo create");require(editor.redo()&&editor.redo(),"redo create transform");require(editor.pendingObject(mixedId)->transform.tx==870,"redo final");return 0;

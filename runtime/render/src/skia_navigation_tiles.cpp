@@ -767,7 +767,20 @@ NM_INVOCATION(navigationMasks);
                 if(!token){NS_GATE(MetadataDenied);deferred=true;break;}
                 resources::ResourceLease metadata(budget,*token);if(tiles_.size()>=maximumTiles&&!evict(prewarm)){NS_GATE(ProtectedOrResident);deferred=true;break;}
                 ValidRegions region;region.reset(grid_.bounds(*next));tiles_.insert_or_assign(*next,Tile{desired.at(*next),nullptr,tick_,scene,std::move(metadata),region,true});
-                qualityPublished(*next,region);++initializations;++work.initializations;++steps;dirty_=true;NS_IF(++ns::state.row->proofPublishes);patches.clear();work.coverageComplete=coverage(visible,scene,patches,retained,&missing);continue;
+                qualityPublished(*next,region);
+                ++initializations;++work.initializations;++steps;
+                NS_IF(++ns::state.row->proofPublishes);
+                if(prewarm){
+                    ++warmed_;++work.prewarmTiles;
+                    // This proof adds no pixels to an already sharp, current display.
+                    // Keep it for the next camera. Other writes to this provider still
+                    // require recomposition, even when its generation is unchanged.
+                    if(!dirty_&&work.coverageComplete&&!qualityDemand&&last_&&*last_==frame&&
+                       lastDisplayPresentCount_==provider.presentCount())continue;
+                }
+                dirty_=true;
+                patches.clear();work.coverageComplete=coverage(visible,scene,patches,retained,&missing);
+                continue;
             }
             if(tileBytes>options.maxEntryBytes||(tileBytes*3+tileMetadataBytes)>options.maxBytes)return ns::result(BackendSubmissionResult::retry("world navigation tile budget"));
             const auto renderExtent=next->region?68:extent;
@@ -1169,7 +1182,7 @@ NM_INVOCATION(navigationMasks);
         const double displayUs=std::chrono::duration<double,std::micro>(PC_NAV_NOW()-displayStarted).count();
         displayCosts_[displayClass(patches.size())].observe(displayUs);
         displayLastUs_=displayUs;displayEwmaUs_=displayEstimateValid_?.75*displayEwmaUs_+.25*displayUs:displayUs;displayEstimateValid_=true;
-        work.presented=true;dirty_=false;
+        work.presented=true;dirty_=false;lastDisplayPresentCount_=provider.presentCount();
     }
     // Do not report convergence before completed finer pixels reach present.
     if(work.knotSteps+work.sourceSteps+work.tilesBuilt>usefulBefore)qualityAge_=0;

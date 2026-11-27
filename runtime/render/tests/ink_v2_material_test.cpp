@@ -1,3 +1,4 @@
+#include "retained_preview_test_target.hpp"
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
@@ -53,12 +54,302 @@ std::vector<std::uint8_t> fullStroke(const foundation::InkBrushConfig& config,st
     render::internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,42);
     provider.release();std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"full stroke readback");return pixels;
 }
+using render::testing::RetainedPreviewTarget;
+
+void checkSingleCapPreview() {
+    auto package = ink::BrushPackageCatalog{}.loadDefault("round-handdrawn", 4).package;
+    package.compactConfig->size = 7;
+    package.compactConfig->color = {.125, .375, .75, .8};
+    package.compactConfig->opacity = .5;
+    ink::BrushSession stroke(1, ink::resolveBrushState(package, 42));
+    require(stroke.begin(), "single cap begin");
+
+    RetainedPreviewTarget target, reference;
+    require(target.resize(width,height).code == render::BackendSubmissionCode::kAccepted &&
+            reference.resize(width,height).code == render::BackendSubmissionCode::kAccepted, "single cap target");
+    render::SkiaRenderer renderer, referenceRenderer;
+    render::PreviewGeometry geometry;
+    geometry.documentEpoch = geometry.session = geometry.sessionGeneration = 1;
+    geometry.surfaceGeneration = render::SurfaceGeneration{target.generation()};
+    geometry.logicalToPhysicalX = 1.25F;
+    geometry.logicalToPhysicalY = 1.5F;
+    geometry.viewport.scale = 1.25F;
+    geometry.viewport.translationX = 5;
+    geometry.viewport.translationY = -7;
+    geometry.contours.resize(1);
+    auto& c = geometry.contours.front();
+    c.session = 1;
+    c.compactConfig = *package.compactConfig;
+    c.compactSeed = 42;
+    ink::BrushPreviewDelta delta;
+    auto append = [&](unsigned i, double x, double y) {
+        const ink::BrushSample sample{x, y, 0, false, i+1, std::uint64_t(i+1)*8'000'000};
+        require(stroke.append({&sample,1},{},delta) == ink::BrushSessionError::kNone, "single cap append");
+        c.compactChunks = delta.compactChunks;
+    };
+    auto compare = [&](bool capturedPaint, bool direct) {
+        render::PreviewStyleOverride style;
+        style.preferCapturedPaint = capturedPaint;
+        ++geometry.revision;
+        const auto presents = target.presentCount();
+        require(renderer.renderPreview(target,geometry,style).code == render::BackendSubmissionCode::kAccepted &&
+                target.presentCount() == presents+1, "single cap present");
+        // A second, empty contact forces the general coverage route. It draws no pixels.
+        auto general = geometry;
+        general.contours.emplace_back().session = 2;
+        require(referenceRenderer.renderPreview(reference,general,style).code == render::BackendSubmissionCode::kAccepted,
+                "reference coverage present");
+        std::vector<std::uint8_t> pixels(width*height*4), expected(pixels.size());
+        require(target.readbackRgba(pixels).code == render::BackendSubmissionCode::kAccepted &&
+                reference.readbackRgba(expected).code == render::BackendSubmissionCode::kAccepted &&
+                sum(expected)>0, "single cap readback");
+        for(std::size_t i=0; i<pixels.size(); ++i) {
+            require(std::abs(int(pixels[i])-int(expected[i])) <= 2, "single cap color/AA differs from coverage");
+        }
+        require(referenceRenderer.compactWork().temporaryBytes>0 &&
+                (renderer.compactWork().temporaryBytes == 0) == direct, "single cap used coverage scratch");
+    };
+    append(0,55.25,47.875);
+    require(c.compactChunks && !c.compactChunks->previous &&
+            c.compactChunks->contour.patches.empty() && c.compactChunks->contour.caps.size()==1,
+            "expected single cap from BrushEngine");
+    compare(true,true);
+    compare(false,true);
+    const auto original = geometry.viewport;
+    geometry.viewport.scale = 64.F;
+    geometry.viewport.translationX = -55.25F*64.F + 80.F;
+    geometry.viewport.translationY = -47.875F*64.F + 45.F;
+    compare(true,false); // Large physical caps stay on the reference coverage path.
+    geometry.viewport = original;
+    append(1,71.25,42.25);
+    compare(false,false);
+}
+
+void checkRetainedTail() {
+    constexpr unsigned w = 515, h = 257;
+    auto package = ink::BrushPackageCatalog{}.loadDefault("round-handdrawn", 4).package;
+    auto& config = *package.compactConfig;
+    config.size = 5;
+    config.color = {.16, .4, .75, .8};
+    config.opacity = .5;
+    ink::BrushSession session(1, ink::resolveBrushState(package, 42));
+    require(session.begin(), "retained session");
+    RetainedPreviewTarget target;
+    render::RasterSkiaSurfaceProvider reference;
+    target.resize(w,h);
+    require(reference.resize(w,h).code == render::BackendSubmissionCode::kAccepted, "reference resize");
+    render::SkiaRenderer renderer;
+    render::PreviewSurfaceController preview(renderer,target);
+    require(preview.begin(1, 1, 1, target.generation()), "retained preview");
+    render::PreviewStyleOverride style;
+    style.preferCapturedPaint = true;
+    std::vector<std::uint8_t> actual(w*h*4), expected(actual.size());
+    ink::BrushPreviewDelta delta;
+    for (unsigned i = 0; i < 301; ++i) {
+        // Retrace across the x=256 canonical raster cell boundary.
+        const double x = 16. + (i % 120 <= 60 ? i % 120 : 120 - i % 120) * 8.;
+        ink::BrushSample point{x, 120 + 15 * std::sin(i * .16), 0, false, i+1,
+                               std::uint64_t(i) * 8'000'000, false, i == 300};
+        if (i == 215) {
+            auto acquired = target.acquire();
+            acquired.frame.surface->getCanvas()->clear(SK_ColorGREEN);
+            target.release();
+        }
+        const auto before = renderer.compactWork().generatedKnots;
+        auto previous = delta.compactChunks ? delta.compactChunks->previous : nullptr;
+        require(session.append({&point,1},{},delta) == ink::BrushSessionError::kNone &&
+                preview.update(delta) && preview.renderIfDirty(style), "retained update");
+        if (previous && previous == delta.compactChunks->previous)
+            require(renderer.compactWork().generatedKnots - before == delta.compactChunks->knots.size(),
+                    "unchanged v4 prefix regenerated");
+        if (i == 215) {
+            require(target.readbackRgba(actual).code == render::BackendSubmissionCode::kAccepted &&
+                    actual[3] == 0, "external mutation leaked through incremental present");
+        }
+    }
+    ink::BrushCommitIntent intent;
+    require(session.seal(intent) == ink::BrushSessionError::kNone, "retained seal");
+    auto acquired = reference.acquire();
+    auto& canvas = *acquired.frame.surface->getCanvas();
+    canvas.clear(SK_ColorTRANSPARENT);
+    render::internal::drawCompactStrokeToSkCanvas(canvas,config,intent.knots,42);
+    reference.release();
+    require(reference.readbackRgba(expected).code == render::BackendSubmissionCode::kAccepted &&
+            target.readbackRgba(actual).code == render::BackendSubmissionCode::kAccepted, "retained pixels");
+    for (std::size_t i = 0; i < actual.size(); ++i) {
+        require(std::abs(int(actual[i]) - int(expected[i])) <= 2, "retained crossing/AA/color handoff");
+    }
+    auto second = delta;
+    second.compactConfig->color = {.8,.2,.1,.7};
+    require(preview.begin(1,2,1,target.generation()) && preview.updateForSession(2,second) &&
+            preview.renderIfDirty(style), "second overlay contour");
+    target.readbackRgba(actual);
+    require(sum(actual) > sum(expected), "second contour lost on partial update");
+    const auto bytesForTwo = renderer.compactWork().retainedBytes;
+    for (unsigned frame = 0; frame < 4; ++frame) {
+        // Two live tails change independently while their long prefixes stay immutable.
+        auto firstTail = std::make_shared<ink::BrushPreviewDelta::Chunk>(*delta.compactChunks);
+        firstTail->contour.caps.push_back({230. + frame,200.,5.});
+        auto otherTail = std::make_shared<ink::BrushPreviewDelta::Chunk>(*second.compactChunks);
+        otherTail->contour.caps.push_back({260. - frame,190.,6.});
+        auto first = delta;
+        first.revision += frame + 1;
+        first.compactChunks = firstTail;
+        second.revision++;
+        second.compactChunks = otherTail;
+        require(preview.updateForSession(1,first) && preview.updateForSession(2,second), "two live tails");
+        const auto before = renderer.compactWork().generatedKnots;
+        require(preview.renderIfDirty(style), "multi-frame two contours");
+        require(renderer.compactWork().generatedKnots-before == firstTail->knots.size()+otherTail->knots.size(),
+                "interleaved v4 contacts rebuilt retained prefixes");
+        render::SkiaRenderer cold;
+        require(cold.renderPreview(reference,preview.geometry(),style).code == render::BackendSubmissionCode::kAccepted,
+                "cold two-contour replay");
+        require(reference.readbackRgba(expected).code == render::BackendSubmissionCode::kAccepted, "reference readback");
+        target.readbackRgba(actual);
+        require(actual==expected, "two-contact incremental pixels differ from cold replay");
+    }
+    delta.revision += 6;
+    require(preview.updateForSession(1,delta), "restore original first tail");
+    require(preview.cancelSession(2) && preview.renderIfDirty(style), "cancel second overlay contour");
+    target.readbackRgba(actual);
+    require(renderer.compactWork().retainedBytes < bytesForTwo, "cancel retained orphan prefix tiles");
+    acquired = reference.acquire();
+    acquired.frame.surface->getCanvas()->clear(SK_ColorTRANSPARENT);
+    render::internal::drawCompactStrokeToSkCanvas(*acquired.frame.surface->getCanvas(),config,intent.knots,42);
+    reference.release();
+    require(reference.readbackRgba(expected).code == render::BackendSubmissionCode::kAccepted, "reference readback");
+    require(std::equal(actual.begin(), actual.end(), expected.begin(),
+        [](auto a, auto b) { return std::abs(int(a) - int(b)) <= 2; }), "cancel lost first contour");
+    require(preview.cancelSession(1) && preview.renderIfDirty(style), "cancel final contour");
+    target.readbackRgba(actual);
+    require(sum(actual) == 0, "retired overlay still visible");
+    require(renderer.compactWork().retainedBytes == 0, "clear kept orphaned compact cache");
+}
+
+void checkSparseOverflow() {
+    constexpr unsigned side = 2560;
+    RetainedPreviewTarget target;
+    target.resize(side,side);
+    render::SkiaRenderer renderer;
+    render::PreviewSurfaceController preview(renderer,target);
+    require(preview.begin(1,1,1,target.generation()), "overflow preview begin");
+    auto config = *ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+    config.opacity = .5;
+    auto prefix = std::make_shared<ink::BrushPreviewDelta::Chunk>();
+    // 100 occupied cells cross the 96-cell (24 MiB) retention limit.
+    for (unsigned y = 128; y < side; y += 256)
+        for (unsigned x = 128; x < side; x += 256)
+            prefix->contour.caps.push_back({double(x),double(y),5});
+    ink::BrushPreviewDelta delta;
+    delta.compactConfig = config;
+    render::PreviewStyleOverride style;
+    style.preferCapturedPaint = true;
+    for (unsigned step = 0; step < 2; ++step) {
+        auto tail = std::make_shared<ink::BrushPreviewDelta::Chunk>();
+        tail->previous = prefix;
+        tail->contour.caps.push_back({2300. + step,2432,4});
+        delta.compactChunks = tail;
+        ++delta.revision;
+        require(preview.update(delta) && preview.renderIfDirty(style), "overflow tail update");
+        const auto work = renderer.compactWork();
+        require(work.retainedBytes <= 24 * 1024 * 1024 && work.temporaryBytes <= 256 * 256 * 4, "v4 residency limit");
+        std::vector<std::uint8_t> pixels(side*side*4);
+        require(target.readbackRgba(pixels).code == render::BackendSubmissionCode::kAccepted, "overflow readback");
+        for (unsigned y = 128; y < side; y += 256) {
+            for (unsigned x = 128; x < side; x += 256)
+                require(std::abs(int(pixels[(y*side+x)*4+3]) - 128) <= 1, "lost uncached v4 cell");
+        }
+    }
+    // Two v4 contacts and a legacy full-view material share the same cap.
+    // Switch the third session between a CPU material and v4 while both
+    // earlier contacts remain held, then retire all three.
+    constexpr unsigned mixedW = 1600, mixedH = 1300;
+    require(target.resize(mixedW,mixedH).code == render::BackendSubmissionCode::kAccepted &&
+            preview.rebind(target.generation()), "mixed resize");
+    require(preview.begin(1,2,1,target.generation()) && preview.updateForSession(2,delta),
+            "second dense session");
+    auto legacy = delta;
+    legacy.compactConfig = *ink::BrushPackageCatalog{}.loadDefault("round-regular",2).package.compactConfig;
+    auto legacyTail = std::make_shared<ink::BrushPreviewDelta::Chunk>();
+    legacyTail->knots = {{50,50,32000},{80,50,32000}};
+    legacy.compactChunks = legacyTail;
+    require(preview.begin(1,3,1,target.generation()), "mixed third session");
+    for (unsigned step=0; step<3; ++step) {
+        auto third = step == 1 ? delta : legacy;
+        third.revision = 10 + step;
+        require(preview.updateForSession(3,third) && preview.renderIfDirty(style), "mixed preview");
+        const auto work = renderer.compactWork();
+        require(work.retainedBytes + work.temporaryBytes <= 32 * 1024 * 1024, "mixed preview exceeds aggregate allowance");
+        std::vector<std::uint8_t> pixels(mixedW * mixedH * 4);
+        require(target.readbackRgba(pixels).code == render::BackendSubmissionCode::kAccepted, "mixed readback");
+        const int expected = step == 1 ? 224 : 192;
+        for (unsigned y = 128; y < mixedH; y += 256)
+            for (unsigned x = 128; x < mixedW; x += 256)
+                require(std::abs(int(pixels[(y*mixedW+x)*4+3])-expected) <= 2, "mixed contact pixels");
+    }
+    require(preview.clearAfterCanonicalVisible(target.generation()), "mixed canonical handoff");
+    require(renderer.compactWork().retainedBytes == 0, "final handoff retained coverage");
+
+}
+
+// Exercise the public preview controller on both sides of the old 8 MiB
+// full-canvas cutoff. The same 30 px stroke has identical device demand.
+void checkSmallPreview(unsigned physicalHeight) {
+    constexpr unsigned physicalWidth = 1600;
+    auto package = ink::BrushPackageCatalog{}.loadDefault("round-handdrawn", 4).package;
+    package.compactConfig->size = 3;
+    package.compactConfig->opacity = .5;
+    ink::BrushSession stroke(1, ink::resolveBrushState(package, 42));
+    require(stroke.begin(), "short stroke begin");
+    render::TransparentOverlaySkiaSurfaceProvider provider;
+    require(provider.resize(physicalWidth, physicalHeight).code == render::BackendSubmissionCode::kAccepted, "short preview resize");
+    render::SkiaRenderer renderer;
+    render::PreviewSurfaceController preview(renderer, provider);
+    require(preview.begin(1, 1, 1, provider.generation()), "short preview begin");
+    render::PreviewStyleOverride style;
+    style.preferCapturedPaint = true;
+    ink::BrushPreviewDelta delta;
+    for (unsigned i = 0; i <= 30; ++i) {
+        ink::BrushSample sample{110. + i, 64., 0, false, i + 1, std::uint64_t(i) * 8'000'000, false, i == 30};
+        require(stroke.append({&sample, 1}, {}, delta) == ink::BrushSessionError::kNone &&
+                preview.update(delta) && preview.renderIfDirty(style), "short preview draw");
+    }
+    ink::BrushCommitIntent intent;
+    require(stroke.seal(intent) == ink::BrushSessionError::kNone, "short preview seal");
+    auto checkPixels = [&](float scale, float x, float y) {
+        auto expected = draw(*package.compactConfig, intent.knots, scale, x, y, 42);
+        std::vector<std::uint8_t> actual(physicalWidth * provider.describe().metrics.physicalHeight * 4);
+        require(provider.readbackRgba(actual).code == render::BackendSubmissionCode::kAccepted, "short readback");
+        for (unsigned py = 0; py < height; ++py) {
+            for (unsigned px = 0; px < width * 4; ++px)
+                require(std::abs(int(actual[py * physicalWidth * 4 + px]) - int(expected[py * width * 4 + px])) <= 2,
+                        "short preview differs from canonical");
+        }
+    };
+    checkPixels(1, 0, 0);
+    require(preview.updateViewport(1.25F, -7, -8) && preview.renderIfDirty(style), "short viewport change");
+    checkPixels(1.25F, -7, -8);
+    require(provider.resize(physicalWidth, physicalHeight+1).code == render::BackendSubmissionCode::kAccepted &&
+            preview.rebind(provider.generation()) && preview.renderIfDirty(style), "short surface rebind");
+    checkPixels(1.25F, -7, -8);
+    const auto work = renderer.compactWork();
+    std::cout << "height=" << physicalHeight << " retained=" << work.retainedBytes << " scratch=" << work.temporaryBytes << std::endl;
+    require(work.retainedBytes + work.temporaryBytes < 256 * 1024, "short stroke allocated viewport-sized coverage");
+}
+
 }
 int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="chunk-range"){
+    if(mode=="preview-locality"){
+        checkSingleCapPreview();
+        checkSmallPreview(1300);
+        checkSmallPreview(1330);
+        checkRetainedTail();
+        checkSparseOverflow();
+    }else if(mode=="chunk-range"){
         c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;c.size=18;c.thinning=.65;c.startTaper=28;c.endTaper=46;
         std::vector<foundation::InkKnot> path;for(unsigned i=0;i<900;++i)path.push_back({8.+i*.24,64.+7.*std::sin(i*.035),static_cast<std::uint16_t>(18000+(i%180)*220)});
         const auto full=fullStroke(c,path);const std::size_t begin=256,end=770;const auto total=ink::compactLength(path);const auto start=ink::compactLength(std::span(path).first(begin));const auto part=rangedStroke(c,path,begin,end,start,total);

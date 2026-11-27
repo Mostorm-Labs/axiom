@@ -12,6 +12,7 @@
 EM_JS(void, notifyOperation, (const std::uint8_t* bytes, std::size_t size), {
     Module.onLocalOperation ?.(HEAPU8.slice(bytes, bytes + size));
 });
+EM_JS(int, hasLegacyOperationListener, (), { return typeof Module.onLocalOperation === "function"; });
 EM_JS(void, notifyDeliveryFailure, (), { Module.onDeliveryError ?.(); });
 EM_JS(void, notifyPreview, (int visible), { Module.onPreview ?.(!!visible); });
 namespace {
@@ -113,9 +114,9 @@ class WebPlatform final : public sdk::SessionPlatform {
 };
 sdk::Session session(std::make_unique<WebPlatform>(),
                      {nullptr,
-                      [](void*, const std::uint8_t* bytes, std::size_t size) noexcept {
+                      hasLegacyOperationListener() ? +[](void*, const std::uint8_t* bytes, std::size_t size) noexcept {
                           notifyOperation(bytes, size);
-                      },
+                      } : nullptr,
                       [](void*) noexcept { notifyDeliveryFailure(); }});
 } // namespace
 extern "C" {

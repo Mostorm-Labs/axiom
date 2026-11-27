@@ -121,6 +121,7 @@ class Session::Impl {
         if(!self.dataPort.prepared.empty()&&self.dataPort.prepared.front().id==op.id){
             const auto& bytes=self.dataPort.prepared.front().bytes;self.notifyOperation(bytes.data(),bytes.size());self.dataPort.prepared.clear();return;
         }
+        if (!self.callbacks.operation) return;
         try {
             auto encoded = semantic::SemanticCodec::encodeProtobufOperation(op);
             if (!encoded.ok()) {
@@ -137,7 +138,15 @@ class Session::Impl {
         return static_cast<Impl*>(context)->dataPort.prepare(ops);
     }
     static bool prepareEncodedPublication(void* context,const semantic::Operation& op,std::span<const std::uint8_t> bytes)noexcept{
-        return static_cast<Impl*>(context)->dataPort.prepareEncoded(op,bytes);
+        auto& self = *static_cast<Impl*>(context);
+        if (!self.dataPort.attached && op.kind() == semantic::OperationKind::kAddStroke) {
+            // A detached legacy subscriber has no pre-commit custody requirement.
+            // If the optional packet copy cannot be kept, localOperation encodes on delivery.
+            if (!self.callbacks.operation) return true;
+            if (!self.dataPort.prepareEncoded(op, bytes)) return self.dataPort.prepare({&op, 1});
+            return true;
+        }
+        return self.dataPort.prepareEncoded(op, bytes);
     }
     static void abortPublication(void* context) noexcept {
         static_cast<Impl*>(context)->dataPort.prepared.clear();

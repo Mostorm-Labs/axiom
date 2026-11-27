@@ -166,6 +166,7 @@ bool PreviewSurfaceController::retireSession(
     // A platform provider may synchronize an empty present with composition or
     // vsync, which makes the preview appear to linger after pen-up.
     if (geometry_.contours.empty()) {
+        renderer_.clearCompactCache();
         provider_.setOverlayVisible(false);
         active_ = false;
         state_.dirty = false;
@@ -260,6 +261,7 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     // CanonicalVisible is the handoff boundary. Hide the transient surface
     // before doing any further provider work so a platform present path with
     // vsync or composition latency cannot leave the old preview on screen.
+    renderer_.clearCompactCache();
     provider_.setOverlayVisible(false);
     active_ = false;
     state_.dirty = false;

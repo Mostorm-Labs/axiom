@@ -802,7 +802,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   void observeApplied(const semantic::Operation&, semantic::ApplyResult&&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
-      semantic::Operation forward, semantic::Operation inverse) noexcept;
+      semantic::Operation forward, semantic::Operation inverse,
+      std::span<const std::uint8_t> verifiedBytes = {}) noexcept;
   [[nodiscard]] bool recoverHistoryScene() noexcept;
   [[nodiscard]] interaction::SubmitResult submit(
       std::span<const semantic::Operation> operations,

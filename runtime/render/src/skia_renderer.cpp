@@ -9,6 +9,8 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "reference_validation_cache.hpp"
 #include "render_execution.hpp"
 #include "render_memory_budget.hpp"
+#include "compact_preview_coverage.hpp"
+#include "include/core/SkColorSpace.h"
 
 #include "canvas/render/skia_brush_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -181,10 +183,66 @@ struct SkiaRenderer::NavigationCache final {
     }
 };
 struct SkiaRenderer::CompactCache final {
+    std::unordered_map<std::uint64_t, internal::CompactPreviewCoverage> v4;
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
     std::unordered_map<std::uint64_t,Entry> entries;
     sk_sp<SkSurface> scratch;
     std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
+    std::size_t legacySlots = 0;
+    std::uint64_t temporaryBytes = 0;
+
+    // Budget all active sessions before allocating this frame's temporary.
+    // Raster and GPU material brushes need their existing full-view temporary
+    // planes; vector contours share the remaining space for immutable tiles.
+    void prepare(const PreviewGeometry& geometry, std::uint64_t planeBytes, std::uint64_t vectorScratchBytes) {
+        constexpr std::uint64_t mib = 1024 * 1024;
+        constexpr std::uint64_t limit = 32 * mib;
+        std::size_t vectorCount = 0, legacyCount = 0;
+        bool gpu = false, cpu = false, direct = false;
+        for (const auto& c : geometry.contours) {
+            if (!c.compactConfig || !c.compactChunks) continue;
+            const auto version = c.compactConfig->algorithmVersion;
+            if (version == 4) { ++vectorCount; continue; }
+            const bool gpuMaterial = version == 5 || version == 6;
+            if (planeBytes > (gpuMaterial ? 16 : 8) * mib) { direct = true; continue; }
+            ++legacyCount;
+            gpu |= gpuMaterial;
+            cpu |= !gpuMaterial;
+        }
+        const auto active = [&](std::uint64_t session, bool vector) {
+            return std::any_of(geometry.contours.begin(), geometry.contours.end(), [&](const auto& c) {
+                return c.session == session && c.compactConfig && c.compactChunks &&
+                       (c.compactConfig->algorithmVersion == 4) == vector;
+            });
+        };
+        std::erase_if(entries, [&](const auto& entry) { return !active(entry.first, false); });
+        std::erase_if(v4, [&](const auto& entry) { return !active(entry.first, true); });
+
+        constexpr std::uint64_t directTileBytes = 256 * 256 * 4;
+        temporaryBytes = vectorScratchBytes + (unsigned(cpu) + unsigned(gpu)) * planeBytes +
+                         (direct ? directTileBytes : 0);
+        legacySlots = temporaryBytes < limit ? std::min<std::size_t>(legacyCount, (limit-temporaryBytes)/planeBytes) : 0;
+        if (!legacySlots && legacyCount) {
+            // No room for a full frame stable/temporary pair. The existing
+            // clipped Direct route uses one device coverage tile.
+            temporaryBytes = vectorScratchBytes + directTileBytes;
+            gpu = false;
+        }
+        if (!gpu) scratch.reset();
+        while (entries.size() > legacySlots) entries.erase(entries.begin());
+
+        const auto tileSpace = limit - temporaryBytes - planeBytes * legacySlots;
+        const auto perSession = vectorCount ? std::min(24 * mib, tileSpace) / vectorCount : 0;
+        for (const auto& c : geometry.contours) {
+            if (c.compactConfig && c.compactConfig->algorithmVersion == 4 && c.compactChunks)
+                v4[c.session].setByteLimit(perSession);
+        }
+    }
+    std::uint64_t retainedBytes(std::uint64_t planeBytes) const {
+        auto bytes = planeBytes * entries.size();
+        for (const auto& [session, coverage] : v4) bytes += coverage.bytes();
+        return bytes;
+    }
 };
 namespace {
 // One connected mesh, including its edge fringe and end caps. Adjacent samples
@@ -1683,6 +1741,47 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     return presented;
 }
 
+namespace {
+foundation::InkBrushConfig previewCompactConfig(foundation::InkBrushConfig config,
+                                                 const PreviewStyleOverride& style) {
+    if (!style.preferCapturedPaint) {
+        if (style.overrideColor) config.color = {style.red, style.green, style.blue, 1.0};
+        if (style.overrideOpacity) {
+            config.color[3] = 1.0;
+            config.opacity = std::clamp(style.opacityMultiplier, 0.0F, 1.0F);
+        }
+    }
+    return config;
+}
+
+bool drawSingleRoundCap(SkCanvas& canvas, const PreviewGeometry::Contour& contour,
+                        const PreviewStyleOverride& style) {
+    const auto& config = *contour.compactConfig;
+    const auto& chunk = *contour.compactChunks;
+    if (config.family != foundation::InkFamily::kRound ||
+        config.materialVersion >= 3 || chunk.previous ||
+        !chunk.contour.patches.empty() || chunk.contour.caps.size() != 1 ||
+        style.blendMode > static_cast<unsigned>(SkBlendMode::kSrcOver)) return false;
+    const auto& cap = chunk.contour.caps.front();
+    const auto x = static_cast<float>(cap.x);
+    const auto y = static_cast<float>(cap.y);
+    const auto radius = static_cast<float>(cap.radius);
+    if (!(radius > 0) || !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(radius)) return false;
+    const auto device = canvas.getTotalMatrix().mapRect(SkRect::MakeLTRB(x-radius,y-radius,x+radius,y+radius));
+    // Limit direct cold drawing to a small cap including its AA fringe.
+    if (!device.isFinite() || device.width()+4 > 64 || device.height()+4 > 64) return false;
+    if (auto* cs = canvas.imageInfo().colorSpace(); cs && !cs->isSRGB()) return false;
+    const auto effective = previewCompactConfig(config, style);
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    paint.setColor4f({float(effective.color[0]), float(effective.color[1]), float(effective.color[2]),
+                      float(effective.color[3]*effective.opacity)}, nullptr);
+    canvas.clear(SK_ColorTRANSPARENT);
+    canvas.drawCircle(x, y, radius, paint);
+    return true;
+}
+}
+
 BackendSubmissionResult SkiaRenderer::renderPreview(
     SkiaSurfaceProvider& provider, const PreviewGeometry& geometry,
     const PreviewStyleOverride& style) {
@@ -1719,11 +1818,76 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     gpu.touch();
     G5_TARGET(acquired.frame.surface,true);
     auto* canvas = acquired.frame.surface->getCanvas();
-    canvas->clear(SK_ColorTRANSPARENT);
+    const bool soleV4 = geometry.contours.size() == 1 && geometry.contours.front().compactChunks &&
+        geometry.contours.front().compactConfig && geometry.contours.front().compactConfig->algorithmVersion == 4;
     canvas->save();
     canvas->scale(geometry.logicalToPhysicalX, geometry.logicalToPhysicalY);
     canvas->translate(geometry.viewport.translationX, geometry.viewport.translationY);
     canvas->scale(geometry.viewport.scale, geometry.viewport.scale);
+    const bool direct = soleV4 && drawSingleRoundCap(*canvas, geometry.contours.front(), style);
+    if (direct) {
+        // The direct frame has no coverage-cache display witness. A following
+        // curve must replace it through the regular complete-geometry path.
+        clearCompactCache();
+        compactWork_.generatedKnots += geometry.contours.front().compactChunks->knots.size();
+    } else if (!drawPreviewContours(provider, *acquired.frame.surface, geometry, style, soleV4)) {
+        canvas->restore();
+        provider.release();
+        return BackendSubmissionResult::retry("preview coverage unavailable");
+    }
+    canvas->restore();
+    const auto contents = soleV4 ? acquired.frame.surface->generationID() : 0;
+    provider.release();
+    if(!gpu.finish())return BackendSubmissionResult::rejected("preview GPU submission failed");
+    ++submissions_;
+    ++rasterizations_;
+    const auto result = provider.present();
+    if (soleV4 && !direct && result.code == BackendSubmissionCode::kAccepted)
+        compactCache_->v4.at(geometry.contours.front().session).presented(provider, contents);
+    return result;
+}
+
+bool SkiaRenderer::drawPreviewContours(SkiaSurfaceProvider& provider, SkSurface& surface,
+                                       const PreviewGeometry& geometry, const PreviewStyleOverride& style,
+                                       bool soleV4) {
+    auto* canvas = surface.getCanvas();
+    const auto scratchSize = internal::CompactPreviewCoverage::scratchSize(
+        geometry, canvas->getTotalMatrix(), canvas->getDeviceClipBounds());
+    const auto info = surface.imageInfo();
+    const auto planeBytes = std::uint64_t(info.width()) * info.height() * 4;
+    const bool hasCompact = std::any_of(geometry.contours.begin(), geometry.contours.end(),
+        [](const auto& c) { return c.compactConfig && c.compactChunks; });
+    if (hasCompact) {
+        if (!compactCache_ || compactCache_->generation != geometry.surfaceGeneration.value() ||
+            compactCache_->scale != geometry.viewport.scale || compactCache_->x != geometry.viewport.translationX ||
+            compactCache_->y != geometry.viewport.translationY || compactCache_->px != geometry.logicalToPhysicalX ||
+            compactCache_->py != geometry.logicalToPhysicalY || compactCache_->width != info.width() ||
+            compactCache_->height != info.height()) {
+            compactCache_ = std::make_shared<CompactCache>();
+            compactCache_->generation = geometry.surfaceGeneration.value();
+            compactCache_->scale = geometry.viewport.scale;
+            compactCache_->x = geometry.viewport.translationX;
+            compactCache_->y = geometry.viewport.translationY;
+            compactCache_->px = geometry.logicalToPhysicalX;
+            compactCache_->py = geometry.logicalToPhysicalY;
+            compactCache_->width = info.width();
+            compactCache_->height = info.height();
+        }
+        compactCache_->prepare(geometry, planeBytes, std::uint64_t(scratchSize.width()) * scratchSize.height() * 4);
+    } else {
+        clearCompactCache();
+    }
+    sk_sp<SkSurface> v4Scratch;
+    if (!scratchSize.isEmpty()) {
+        v4Scratch = SkSurfaces::Raster(SkImageInfo::MakeN32Premul(scratchSize.width(), scratchSize.height()));
+        if (!v4Scratch) {
+            return false;
+        }
+    }
+    if (!soleV4) {
+        canvas->clear(SK_ColorTRANSPARENT);
+        if (compactCache_) for (auto& [session, coverage] : compactCache_->v4) coverage.invalidateDisplay();
+    }
     SkPaint paint;
     paint.setAntiAlias(true);
     paint.setStyle(SkPaint::kFill_Style);
@@ -1768,50 +1932,41 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     };
     auto drawContour = [&](const PreviewGeometry::Contour& contour) {
         if(contour.compactConfig&&contour.compactChunks){
-            auto config=*contour.compactConfig;
-            if (!style.preferCapturedPaint) {
-                if (style.overrideColor)
-                    config.color = {style.red, style.green, style.blue, 1.0};
-                // As with outline/dab previews, this is the effective overlay
-                // alpha. Do not multiply by the captured stroke opacity again.
-                if (style.overrideOpacity) {
-                    config.color[3] = 1.0;
-                    config.opacity = alpha;
+            const auto config = previewCompactConfig(*contour.compactConfig, style);
+            auto& cache = *compactCache_;
+            if (config.algorithmVersion == 4) {
+                auto& coverage = cache.v4.at(contour.session);
+                if (v4Scratch) {
+                    coverage.draw(provider, surface, geometry, contour,
+                                  config, soleV4, *v4Scratch, compactWork_);
+                } else {
+                    coverage = internal::CompactPreviewCoverage{};
+                    if (soleV4) canvas->clear(SK_ColorTRANSPARENT);
                 }
+                return;
             }
-            const auto info=acquired.frame.surface->imageInfo();
-            const auto bytes=std::uint64_t(info.width())*info.height()*4;
-            if(!compactCache_||compactCache_->generation!=geometry.surfaceGeneration.value()||compactCache_->scale!=geometry.viewport.scale||
-               compactCache_->x!=geometry.viewport.translationX||compactCache_->y!=geometry.viewport.translationY||compactCache_->px!=geometry.logicalToPhysicalX||compactCache_->py!=geometry.logicalToPhysicalY||compactCache_->width!=info.width()||compactCache_->height!=info.height()){
-                compactCache_=std::make_shared<CompactCache>();compactCache_->generation=geometry.surfaceGeneration.value();
-                compactCache_->scale=geometry.viewport.scale;compactCache_->x=geometry.viewport.translationX;compactCache_->y=geometry.viewport.translationY;
-                compactCache_->px=geometry.logicalToPhysicalX;compactCache_->py=geometry.logicalToPhysicalY;compactCache_->width=info.width();compactCache_->height=info.height();
-            }
-            auto& cache=*compactCache_;
             // Persistent coverage is view-bounded and disposable. Large hosts
             // fall back to clipped reconstruction rather than exceed budget.
             const bool gpuMaterial=config.algorithmVersion==5||config.algorithmVersion==6;
             // Keep a 2x 1000x650 view incremental: two view surfaces fit the
             // existing 32MiB aggregate budget. Oversized views stay bounded.
             const std::uint64_t surfaceLimit=gpuMaterial?16*1024*1024:8*1024*1024;
-            if(bytes>surfaceLimit){
+            if(planeBytes>surfaceLimit || !cache.legacySlots){
                 std::vector<const ink::BrushPreviewDelta::Chunk*> chunks;
                 for(auto c=contour.compactChunks.get();c;c=c->previous.get())chunks.push_back(c);
                 std::vector<foundation::InkKnot> knots;
                 for(auto i=chunks.rbegin();i!=chunks.rend();++i)knots.insert(knots.end(),(*i)->knots.begin(),(*i)->knots.end());
                 compactWork_.generatedKnots+=knots.size();internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,contour.compactSeed);return;
             }
-            const auto stableLimit=gpuMaterial?32*1024*1024-bytes:
-                cache.scratch?32*1024*1024-2*bytes:24*1024*1024;
-            const auto nextCount=cache.entries.size()+(cache.entries.contains(contour.session)?0:1);
-            if(bytes*nextCount>stableLimit)cache.entries.clear();
+            if (!cache.entries.contains(contour.session) && cache.entries.size() >= cache.legacySlots)
+                cache.entries.erase(cache.entries.begin());
             auto& entry=cache.entries[contour.session];
             auto prefix=contour.compactChunks->previous;
             std::vector<const ink::BrushPreviewDelta::Chunk*> added;
             auto c=prefix;
             while(c&&c!=entry.prefix){added.push_back(c.get());c=c->previous;}
             if(!entry.surface||c!=entry.prefix||entry.config!=config){
-                entry.surface=gpuMaterial?acquired.frame.surface->makeSurface(info):SkSurfaces::Raster(info);
+                entry.surface=gpuMaterial?surface.makeSurface(info):SkSurfaces::Raster(info);
                 if(!entry.surface)return;
                 entry.surface->getCanvas()->clear(SK_ColorBLACK);entry.prefix.reset();added.clear();
                 for(auto v=prefix;v;v=v->previous)added.push_back(v.get());
@@ -1819,22 +1974,19 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             auto* stable=entry.surface->getCanvas();stable->save();
             stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);stable->scale(geometry.viewport.scale,geometry.viewport.scale);
-            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*stable,config,(*i)->contour);
-                else internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);}
+            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);}
             stable->restore();entry.prefix=prefix;entry.config=config;
             // Use the target backend, retaining one disposable scratch. A CPU
             // Raster here interprets every procedural shader pixel on Web.
-            if(gpuMaterial&&!cache.scratch)cache.scratch=acquired.frame.surface->makeSurface(info);
+            if(gpuMaterial&&!cache.scratch)cache.scratch=surface.makeSurface(info);
             auto combined=gpuMaterial?cache.scratch:SkSurfaces::Raster(info);if(!combined)return;
             auto* temporary=combined->getCanvas();temporary->resetMatrix();temporary->clear(SK_ColorBLACK);
             temporary->drawImage(entry.surface->makeImageSnapshot(),0,0);
             temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
             compactWork_.generatedKnots+=contour.compactChunks->knots.size();
-            if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*temporary,config,contour.compactChunks->contour);
-            else internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);
+            internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);
             internal::compositeCompactCoverageToSkCanvas(*canvas,*combined->makeImageSnapshot(),config,contour.compactSeed);
-            compactWork_.retainedBytes=bytes*cache.entries.size();compactWork_.temporaryBytes=bytes;
             return;
         }
         SkPaint contourPaint = paint;
@@ -1875,12 +2027,11 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         if (geometry.dabs.empty()) drawOutline(geometry.outline, paint);
         else drawDabs(geometry.dabs, paint);
     }
-    canvas->restore();
-    provider.release();
-    if(!gpu.finish())return BackendSubmissionResult::rejected("preview GPU submission failed");
-    ++submissions_;
-    ++rasterizations_;
-    return provider.present();
+    if (compactCache_) {
+        compactWork_.retainedBytes = compactCache_->retainedBytes(planeBytes);
+        compactWork_.temporaryBytes = compactCache_->temporaryBytes;
+    }
+    return true;
 }
 
 BackendSubmissionResult SkiaRenderer::clearPreview(
@@ -1909,7 +2060,9 @@ BackendSubmissionResult SkiaRenderer::clearPreview(
     if(!gpu.finish())return BackendSubmissionResult::rejected("preview clear GPU submission failed");
     ++submissions_;
     ++rasterizations_;
-    return provider.present();
+    auto result = provider.present();
+    if (result.code == BackendSubmissionCode::kAccepted) clearCompactCache();
+    return result;
 }
 
 BackendSubmissionResult SkiaRenderer::renderPrimitives(

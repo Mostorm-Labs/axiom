@@ -218,7 +218,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const assets=new URL(assetBaseURL,import.meta.url);
     module=await factory({canvas:canonical,locateFile:name=>new URL(name,assets).href,
       onPreview:visible=>{preview.style.visibility=visible?'visible':'hidden';},
-      onLocalOperation:bytes=>{if(onOperation)queueMicrotask(()=>{if(!closed)try{const result=onOperation(bytes);if(result?.catch)result.catch(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});},
+      onLocalOperation:onOperation ? bytes=>queueMicrotask(()=>{if(!closed)try{const result=onOperation(bytes);if(result?.catch)result.catch(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}}) : undefined,
       onDeliveryError:()=>emitError(new AxiomError('OPERATION_DELIVERY_FAILED'))});
     if(['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free','UTF8ToString','stringToNewUTF8'].some(key=>typeof module[key]!=='function'))throw new AxiomError('INCOMPATIBLE_ENGINE');
     if(call('version').apiVersion!==1||call('version').features?.shellAxis!==1)throw new AxiomError('INCOMPATIBLE_ENGINE');

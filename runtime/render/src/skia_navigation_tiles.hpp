@@ -116,6 +116,7 @@ class SkiaNavigationTiles final {
     std::uint64_t scene_=0;
     std::uint32_t background_=0xffffffffU;
     bool dirty_=true;
+    std::uint64_t lastDisplayPresentCount_=0;
     // Private bounded scheduling state; no per-camera task queue.
     std::uint32_t qualityAge_=0;
     struct QualityDemand {unsigned age=0;std::uint64_t seen=0;double costUs=0;resources::ResourceLease metadata;};

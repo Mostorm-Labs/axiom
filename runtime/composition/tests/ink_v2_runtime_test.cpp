@@ -1,12 +1,38 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "canvas/semantic/codec.hpp"
+#include <algorithm>
 #include <stdexcept>
 #include <iostream>
 using namespace canvas;
 class Inspect final:public interaction::CanvasEditingRuntime {
 public: auto objects() const{return semanticObjects_.allObjects();}
 };
+class CompactPublication final : public interaction::LocalOperationSink {
+public:
+    unsigned verified = 0;
+    unsigned committed = 0;
+    bool matches = true;
+
+    bool prepareEncodedPublication(const semantic::Operation& operation,
+                                   std::span<const std::uint8_t> bytes) noexcept override {
+        const auto reference = semantic::SemanticCodec::encodeProtobufOperation(operation);
+        matches = reference.ok() && std::ranges::equal(reference.bytes, bytes);
+        ++verified;
+        return matches;
+    }
+    void applied(const semantic::Operation& operation, const semantic::CanonicalCommitRecord& record) noexcept override {
+        matches = matches && operation.id == record.operation_id;
+        ++committed;
+    }
+    interaction::AxisOperationStatus status(const semantic::OperationId&,
+                                            const semantic::CanonicalCommitStamp&) const noexcept override {
+        return {};
+    }
+};
 void previewTint(const char* profile){
+    CompactPublication publication;
     Inspect runtime;
+    runtime.setLocalOperationSink(&publication);
     if(!runtime.bindSurface(256,256)||!runtime.registerInputSource(71,"ink-v2-preview")||
        !runtime.selectBrushProfile(profile,1)||!runtime.setInkOptions(24,.1F,.3F,.8F,1,.65F))
         throw std::runtime_error("preview prepare");
@@ -32,6 +58,8 @@ void previewTint(const char* profile){
     auto up=batch.samples.back();up.phase=input::PointerPhase::kUp;++up.sequence;up.timestampNs+=10'000'000;
     if(!runtime.acceptPlatformBatch({{up}},up.timestampNs)||runtime.objects().size()!=1)
         throw std::runtime_error("preview commit");
+    if (publication.verified != 1 || publication.committed != 1 || !publication.matches)
+        throw std::runtime_error("compact publication must reuse the exact verified operation envelope");
     const auto objects=runtime.objects();
     const auto& config=std::get<semantic::CompactStrokeContent>(objects.front().content).stroke.config;
     if(config.color!=std::array<double,4>{double(.1F),double(.3F),double(.8F),1}||config.opacity!=double(.65F))
