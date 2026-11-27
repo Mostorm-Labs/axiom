@@ -22,7 +22,13 @@ try{
  for(const name of ['rectangle','ellipse','triangle','line','arrow']){
   await open();await page.evaluate(async n=>{await sdk.setSelectionMode('lasso');await sdk.selectShape(n);},name);await start();await end();const s=await capture();result.observations[name]=s;result.checks[name+'SelectedInPointMode']=pointSelected(s)&&s.objects===1&&s.phase===0;
   if(name==='rectangle'){
-   await page.evaluate(()=>sdk.text.edit(sdk.readState().primary));await pause();await page.keyboard.insertText('shape');await page.keyboard.press('Enter');await page.keyboard.insertText('label');await page.keyboard.press('Control+Enter');await pause();const label=await capture();result.checks.shapeLabelNewlineAndFinish=label.phase===0&&label.text==='shape\nlabel'&&pointSelected(label)&&label.primary===s.primary;
+   await page.evaluate(()=>sdk.text.edit(sdk.readState().primary));await pause();await page.keyboard.insertText('shape');await page.keyboard.press('Enter');
+   await page.waitForFunction(()=>String.fromCharCode(...sdk.text.read().projection)==='shape\n');
+   result.checks.centeredShapeNewlineCaret=await page.evaluate(()=>{
+     const {geometry}=sdk.text.read(),{bounds}=sdk.readSelection();
+     return geometry.available && bounds && Math.abs(geometry.caret[0]-(bounds[0]+bounds[2])/2)<1;
+   });
+   await page.keyboard.insertText('label');await page.keyboard.press('Control+Enter');await pause();const label=await capture();result.checks.shapeLabelNewlineAndFinish=label.phase===0&&label.text==='shape\nlabel'&&pointSelected(label)&&label.primary===s.primary;
   }
  }
  await open();await page.evaluate(()=>sdk.selectTool('text'));await page.mouse.click(250,300);await pause();let s=await capture();result.checks.textClickDefaultWidth=s.phase===1&&s.width===320&&s.objects===0;
@@ -53,7 +59,35 @@ try{
    Math.abs((resized[2]-resized[0])/(resized[3]-resized[1])-imageAspect)<0.001 &&
    Math.abs(resized[0]-left)<0.01 && Math.abs(resized[1]-top)<0.01;
  await page.mouse.click(resized[2]+28,(resized[1]+resized[3])/2);await pause();
- result.checks.imageHasNoExpansionPort = (await capture()).objects===1;
+ const extension=await capture();
+ await page.mouse.click(resized[2]+80,(resized[1]+resized[3])/2);await pause();
+ const link=await page.evaluate(()=>sdk.readConnector());
+ result.observations.imageExtension={imageId:s.primary,link};
+ result.checks.imagePortCreatesLinkedShape=extension.objects===3 && link.available &&
+   link.start?.objectId===s.primary && link.start.port===2 && link.end?.port===4;
+ await page.evaluate(()=>sdk.undo());await pause();
+ result.checks.imagePortExtensionIsOneUndo=extension.objects===3 && (await capture()).objects===1;
+ await page.mouse.click((resized[0]+resized[2])/2,(resized[1]+resized[3])/2);await pause();
+ const imageTarget=await page.evaluate(async()=>{
+   const {content}=sdk.readSelectedImage();
+   await sdk.transformSelection([0,1,-1,0,715,285]);
+   return {x:715-content.height/2,y:285+content.width+28,centerY:285+content.width/2};
+ });
+ await page.evaluate(()=>sdk.selectShape('rectangle'));await start(195,345);await end(335,425);
+ const source=await page.evaluate(()=>sdk.readSelection());
+ await start(source.bounds[2]+28,(source.bounds[1]+source.bounds[3])/2);
+ await end(imageTarget.x,imageTarget.y);
+ const inbound=await page.evaluate(()=>sdk.readConnector());
+ result.checks.rotatedImageReceivesLinkOnItsLocalRightPort=(await capture()).objects===3 &&
+   inbound.start?.objectId===source.primary && inbound.end?.objectId===s.primary && inbound.end.port===2;
+ await page.evaluate(()=>sdk.undo());await pause();
+ await page.mouse.click(imageTarget.x,imageTarget.centerY);await pause();
+ await page.mouse.click(imageTarget.x,imageTarget.y);await pause();
+ await page.mouse.click(imageTarget.x,imageTarget.y+55);await pause();
+ const outward=await page.evaluate(()=>sdk.readConnector());
+ result.checks.rotatedImageExpandsOnTheDisplayedSide=outward.available && outward.start?.objectId===s.primary &&
+   outward.start.port===2 && outward.end?.port===1 && outward.route.length>=2 &&
+   outward.route.at(-1)[1]>outward.route[0][1]+100;
  await open();
  const draw = async (kind,x1,y1,x2,y2) => {
    await page.evaluate(k=>sdk.selectShape(k),kind);await start(x1,y1);await end(x2,y2);

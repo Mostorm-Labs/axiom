@@ -95,6 +95,51 @@ int main() {
     blankLines.document.paragraphs.push_back(first);
     blankLines.document.paragraphs.back().id = foundation::ObjectId::fromUint64(79);
     assert(!layout.resolveStickyLabel(noteId, blankLines, note, true)->placeholder);
+    auto label = content("A", latin);
+    label.document.paragraphs.push_back(content("", latin).document.paragraphs.front());
+    auto& nextLine = label.document.paragraphs.back();
+    nextLine.id = foundation::ObjectId::fromUint64(82);
+    semantic::ObjectRecord shape;
+    shape.id = foundation::ObjectId::fromUint64(83);
+    shape.kind = semantic::ObjectKind::kShape;
+    shape.kind_version = 3;
+    using Alignment = semantic::ParagraphAlignment;
+    struct CaretCase { Alignment alignment; bool bulleted; float x; };
+    // The 200-unit rectangle has 8 units of padding per side and a 24-unit list indent.
+    constexpr CaretCase cases[] = {{Alignment::kLeft, false, 8}, {Alignment::kCenter, false, 100},
+        {Alignment::kRight, false, 192}, {Alignment::kJustify, false, 8},
+        {Alignment::kLeft, true, 32}, {Alignment::kCenter, true, 112}, {Alignment::kRight, true, 192}};
+    for (const auto& test : cases) {
+        nextLine.style.alignment = test.alignment;
+        nextLine.style.bulleted = test.bulleted;
+        shape.content = semantic::ShapeContent{1, 200, 120, label};
+        const auto newline = layout.shapeEditingGeometry(shape, 2, 0);
+        assert(newline.available && std::abs(newline.caret.left - test.x) < 0.01F);
+    }
+    // A label consisting of two blank paragraphs still has two insertion positions.
+    label.document.paragraphs.front().runs.front().text.clear();
+    shape.content = semantic::ShapeContent{1, 200, 120, label};
+    const auto blanks = layout.resolveShape(shape.id, std::get<semantic::ShapeContent>(shape.content), {}, true);
+    assert(!blanks->placeholder);
+    const auto firstBlank = layout.shapeEditingGeometry(shape, 0, 0);
+    const auto secondBlank = layout.shapeEditingGeometry(shape, 1, 0);
+    assert(firstBlank.available && secondBlank.available && secondBlank.caret.top > firstBlank.caret.top);
+    assert(std::abs(firstBlank.caret.left - 8) < 0.01F && std::abs(secondBlank.caret.left - 192) < 0.01F);
+    // A split at the end stores an empty run list. The editing projection
+    // carries a typing font, and both must make room for the same blank line.
+    auto stored = content("A", latin);
+    auto editing = stored;
+    for (unsigned n = 0; n < 2; ++n) {
+        auto blank = content("", latin).document.paragraphs.front();
+        blank.id = foundation::ObjectId::fromUint64(86 + n);
+        editing.document.paragraphs.push_back(blank);
+        blank.runs.clear();
+        stored.document.paragraphs.push_back(blank);
+    }
+    const semantic::ShapeContent triangle{3, 260, 168};
+    const auto storedLayout = layout.resolveShapeNatural(shape.id, stored, triangle, {});
+    const auto editingLayout = layout.resolveShapeNatural(shape.id, editing, triangle, {});
+    assert(std::abs(storedLayout->localBounds.bottom - editingLayout->localBounds.bottom) < 0.01F);
     const auto breaks=layout.graphemeBoundaries(u"A\u0301\U0001F600B");
     assert((breaks==std::vector<std::uint32_t>{0,2,4,5}));
 

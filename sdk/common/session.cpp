@@ -10,6 +10,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include <algorithm>
 #include <atomic>
 #include <canvas/control/build_info.hpp>
+#include <canvas/text/section_title.hpp>
 #include <canvas/semantic/codec.hpp>
 #include <cmath>
 #include <cstring>
@@ -78,7 +79,7 @@ void validateTransportEnums(const Json& j) {
     else if (command == "textEdit")
         bounded(j.at("kind"), 6);
     else if (command == "section")
-        bounded(j.at("action"), 11);
+        bounded(j.at("action"), static_cast<unsigned>(runtime::SectionAction::kSetTitleEditor));
     else if (command == "pointer")
         bounded(j.at("phase"), 3);
 }
@@ -940,6 +941,16 @@ class Session::Impl {
         if (command == "readSection") {
             const auto s = facade().readSection(j.contains("objectId") ? rawId(j.at("objectId"))
                                                                        : foundation::ObjectId{});
+            J titleFrame = nullptr;
+            if (s.titleFrame) {
+                const auto& f = *s.titleFrame;
+                const auto& t = f.toWorld;
+                titleFrame = {{"toWorld", {t.a, t.b, t.c, t.d, t.tx, t.ty}},
+                              {"width", f.width}, {"height", f.height}, {"textWidth", f.textWidth}, {"textHeight", f.textHeight},
+                              {"insetX", text::kSectionTitleInsetX}, {"insetY", text::kSectionTitleInsetY}, {"ellipsized", f.ellipsized},
+                              {"fontSize", f.fontSize}, {"baseline", f.baseline}, {"lineHeight", f.lineHeight},
+                              {"fontId", hexId(f.fontId)}};
+            }
             return {{"ok", true},
                     {"value",
                      {{"available", s.available},
@@ -947,7 +958,8 @@ class Session::Impl {
                       {"children", ids(s.directChildren)},
                       {"roots", ids(s.selectedRoots)},
                       {"groupScope", s.groupScope ? J(hexId(*s.groupScope)) : J(nullptr)},
-                      {"title", s.content.title},
+                      {"title", s.content.title}, {"titleMaxCharacters", text::kSectionTitleMaxCharacters},
+                      {"titleFrame", std::move(titleFrame)},
                       {"boundary",
                        {s.content.boundary.x,
                         s.content.boundary.y,
@@ -1432,7 +1444,10 @@ class Session::Impl {
                 p.x = j.at("x");
                 p.y = j.at("y");
                 p.hasAnchor = true;
-                p.scale = j.at("scale");
+                // Keep positive JSON scales representable until the viewport owner clamps the zoom.
+                const double scale = j.at("scale").get<double>();
+                p.scale = scale > 0 ? static_cast<float>(std::clamp(scale,
+                    double(std::numeric_limits<float>::min()), double(std::numeric_limits<float>::max()))) : 0.0F;
             } else if (kind == "fit") {
                 p.kind = K::kFit;
                 p.fitTarget = static_cast<runtime::CanvasFitTarget>(
@@ -1488,10 +1503,14 @@ class Session::Impl {
             auto r = request();
             r.payload.kind = K::kSection;
             auto& p = r.payload.section;
-            const auto action = unsignedValue(j.at("action"), 11);
-            if (action > 11)
-                return error("INVALID_VALUE");
-            p.action = static_cast<runtime::SectionAction>(action);
+            p.action = static_cast<runtime::SectionAction>(
+                unsignedValue(j.at("action"), static_cast<unsigned>(runtime::SectionAction::kSetTitleEditor)));
+            if (p.action == runtime::SectionAction::kSetTitleEditor) {
+                const auto mode = j.at("mode").get<std::string>();
+                if (mode == "inline") p.titleEditorMode = runtime::SectionTitleEditorMode::kInline;
+                else if (mode == "panel") p.titleEditorMode = runtime::SectionTitleEditorMode::kPanel;
+                else if (mode != "closed") return error("INVALID_VALUE");
+            }
             if (j.contains("objectId"))
                 p.objectId = rawId(j.at("objectId"));
             if (j.contains("objects"))

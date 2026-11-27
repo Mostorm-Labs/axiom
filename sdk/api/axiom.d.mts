@@ -42,6 +42,8 @@ export interface PendingLocalState {
  readonly selection:{readonly selected:readonly Id128[];readonly primary:Id128|null;readonly bounds:readonly [number,number,number,number]|null};
 }
 export interface RuntimeState {pending?:PendingLocalState;documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};table:{objectId:Id128;rowId:Id128;columnId:Id128};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
+/** Title-local units before camera projection. Null titleFrame means no drawable title. */
+export interface SectionTitleFrame {toWorld:[number,number,number,number,number,number];width:number;height:number;textWidth:number;textHeight:number;insetX:number;insetY:number;ellipsized:boolean;fontId:Id128;fontSize:number;baseline:number;lineHeight:number;}
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
 export type AppearanceStamp = readonly [Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];
@@ -114,7 +116,8 @@ interface ControlMethods {
   resizeSelection(width:number,height:number):Promise<CommandResult>;transformSelection(matrix:[number,number,number,number,number,number]):Promise<CommandResult>;
   deleteSelection():Promise<CommandResult>;lockSelection(value:boolean):Promise<CommandResult>;setSelectionVisible(value:boolean):Promise<CommandResult>;unlockSelection():Promise<CommandResult>;
   createSection(options?:SectionOptions):Promise<CommandResult>;wrapInSection(options:SectionOptions):Promise<CommandResult>;releaseSection(id:Id128):Promise<CommandResult>;reparent(options:SectionOptions):Promise<CommandResult>;resizeSection(id:Id128,boundary:[number,number,number,number]):Promise<CommandResult>;renameSection(id:Id128,title:string):Promise<CommandResult>;
-  readSection(id?:Id128):{available:boolean;objectId:Id128;children:Id128[];roots:Id128[];groupScope:Id128|null;title:string;boundary:[number,number,number,number];generation:Revision};
+  setSectionTitleEditor(id:Id128,mode:"inline"|"panel"|"closed",selectionRevision:Revision):Promise<CommandResult>;
+  readSection(id?:Id128):{available:boolean;objectId:Id128;children:Id128[];roots:Id128[];groupScope:Id128|null;title:string;titleMaxCharacters:number;titleFrame:SectionTitleFrame|null;boundary:[number,number,number,number];generation:Revision};
   selectSection(id:Id128):Promise<CommandResult>;selectSectionChildren(id:Id128):Promise<CommandResult>;
   group():Promise<CommandResult>;ungroup(id?:Id128):Promise<CommandResult>;enterGroup(id?:Id128):Promise<CommandResult>;leaveGroup():Promise<CommandResult>;
   text:{read():TextSnapshot;fonts():FontCatalog;fontStatus(id:Id128):FontEntry|null;

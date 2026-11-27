@@ -1,4 +1,5 @@
 #include "canvas/text/text_layout.hpp"
+#include "canvas/text/section_title.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "sha256.h"
@@ -7,6 +8,7 @@
 #include <bit>
 #include <chrono>
 #include <cmath>
+#include <limits>
 #include <map>
 #include <span>
 #include <type_traits>
@@ -152,6 +154,27 @@ struct RichTextLayoutService::Impl {
     sk_sp<SkUnicode> unicode = SkUnicodes::ICU::Make();
 #endif
     Impl(const runtime::ResourceProvider& r,LayoutContext c) : resources(r), context(c) {}
+    semantic::RichTextContent shapeLabelForLayout(semantic::RichTextContent label, float width) const {
+        label.layout = semantic::RichTextLayout{width};
+        auto& paragraphs = label.document.paragraphs;
+        const auto first = std::find_if(paragraphs.begin(), paragraphs.end(),
+                                        [](const auto& p) { return !p.runs.empty(); });
+        semantic::TextStyle inherited;
+        if (first != paragraphs.end()) {
+            inherited = first->runs.front().style;
+        } else if (!descriptors.empty()) {
+            inherited = {descriptors.begin()->second.resourceId, 16, 400, false, false, {0, 0, 0, 1}};
+        } else {
+            return label;
+        }
+        // SplitParagraph may leave no run at all. Give the derived blank line its
+        // adjacent font so measuring, painting and editing use the same advance.
+        for (auto& p : paragraphs) {
+            if (p.runs.empty()) p.runs.push_back({"", inherited});
+            else inherited = p.runs.back().style;
+        }
+        return label;
+    }
     void dependencies(Encoding& key,const semantic::Paragraph& p) const {
         for(const auto& run:p.runs) {
             if(!run.style.font_resource_id) continue;
@@ -317,7 +340,7 @@ RichTextLayoutService::RichTextLayoutService(const runtime::ResourceProvider& r,
     : impl_(std::make_unique<Impl>(r,c)) {}
 RichTextLayoutService::~RichTextLayoutService() = default;
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveSectionTitle(
-    foundation::ObjectId id,const semantic::SectionContent& section) {
+    foundation::ObjectId id,const semantic::SectionContent& section,bool expanded) {
     // Plain metadata presentation, with the same deterministic admitted-font
     // fallback used by existing labels. This never creates canonical RichText.
     semantic::RichTextContent display;
@@ -325,9 +348,16 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveSectionT
     paragraph.style.alignment=semantic::ParagraphAlignment::kLeft;paragraph.style.line_height=1.2;
     semantic::TextStyle style;style.font_size=16;style.weight=400;style.color={.15F,.2F,.25F,1};
     if(!impl_->descriptors.empty())style.font_resource_id=impl_->descriptors.begin()->second.resourceId;
-    paragraph.runs.push_back({section.title,style});display.document.paragraphs.push_back(std::move(paragraph));
-    display.layout=semantic::RichTextLayout{std::max(1.0,section.boundary.width)};
-    return resolve(id,display);
+    paragraph.runs.push_back({sectionTitleDisplayLine(section.title),style});
+    display.document.paragraphs.push_back(std::move(paragraph));
+    // The inline editor uses the unwrapped line's metrics, including for older, longer titles.
+    const double width = expanded ? std::numeric_limits<float>::max() :
+        std::max(1.0, section.boundary.width - 2 * kSectionTitleInsetX);
+    display.layout=semantic::RichTextLayout{width};
+    auto context=impl_->context;
+    context.maxLines=1;
+    context.height=0;
+    return resolveWithContext(id,display,context);
 }
 void RichTextLayoutService::registerFont(FontResourceDescriptor d) { impl_->descriptors[d.resourceId.value]=std::move(d); }
 std::string RichTextLayoutService::fontFamilyName(foundation::ObjectId id) {
@@ -357,8 +387,12 @@ void RichTextLayoutService::clearFonts() noexcept {
 void RichTextLayoutService::setContext(LayoutContext c) { impl_->context=c; }
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     foundation::ObjectId id, const semantic::RichTextContent& content) {
+    return resolveWithContext(id,content,impl_->context);
+}
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveWithContext(
+    foundation::ObjectId id, const semantic::RichTextContent& content, LayoutContext context) {
     auto& state=*impl_; ++state.counters.requests;
-    auto context=state.context;if(content.layout)context.width=static_cast<float>(content.layout->wrap_width);
+    if(content.layout)context.width=static_cast<float>(content.layout->wrap_width);
     Encoding semantic; if(content.layout){semantic.string("fixed-width-v2");semantic.number(content.layout->wrap_width);}
     semantic.number<std::uint64_t>(content.document.paragraphs.size());
     for(const auto& p:content.document.paragraphs) encodeParagraph(semantic,p);
@@ -432,6 +466,20 @@ float basisX(const semantic::Transform2D& transform) {
 float basisY(const semantic::Transform2D& transform) {
     return std::max(0.001F, std::hypot(static_cast<float>(transform.c), static_cast<float>(transform.d)));
 }
+bool isEmptyLabel(const semantic::RichTextContent& content) {
+    const auto& paragraphs = content.document.paragraphs;
+    // Each paragraph separator is an editable character, even between two blank lines.
+    return paragraphs.empty() || (paragraphs.size() == 1 &&
+        std::all_of(paragraphs.front().runs.begin(), paragraphs.front().runs.end(),
+                    [](const auto& run) { return run.text.empty(); }));
+}
+
+float alignedCaretX(semantic::ParagraphAlignment alignment, float left, float right) {
+    if (alignment == semantic::ParagraphAlignment::kCenter) return left + (right - left) * 0.5F;
+    if (alignment == semantic::ParagraphAlignment::kRight) return right;
+    return left;
+}
+
 // Use the same inscribed region for wrapping, paint and input geometry.
 // The triangle's lower half provides room around its visual center.
 foundation::WorldRect shapeLabelViewport(unsigned kind, float width, float height) {
@@ -482,8 +530,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeNat
     const float height = static_cast<float>(shape.height) * sy;
     const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
     const float innerWidth = std::max(1.0F, viewport.right - viewport.left);
-    auto natural = content;
-    natural.layout = semantic::RichTextLayout{innerWidth};
+    const auto natural = impl_->shapeLabelForLayout(content, innerWidth);
     const auto previous = impl_->context;
     impl_->context.width = innerWidth;
     impl_->context.height = 0;
@@ -510,25 +557,24 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLab
     const float sx = basisX(transform), sy = basisY(transform);
     const float width = static_cast<float>(shape.width) * sx;
     const float height = static_cast<float>(shape.height) * sy;
-    semantic::RichTextContent display = canonical;
-    bool emptyLabel = true;
-    for (const auto& paragraph : display.document.paragraphs)
-        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
-    const bool placeholder = showPlaceholder && emptyLabel;
+    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
+    const float viewportWidth = std::max(1.0F, viewport.right - viewport.left);
+    const float viewportHeight = std::max(1.0F, viewport.bottom - viewport.top);
+    auto display = impl_->shapeLabelForLayout(canonical, viewportWidth);
+    const bool placeholder = showPlaceholder && isEmptyLabel(canonical);
     if (placeholder) {
         semantic::TextStyle style;
         style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
         if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
-        semantic::Paragraph paragraph;
-        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
-        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
-        paragraph.runs = {{"Type text...", style}};
-        display.document.paragraphs = {std::move(paragraph)};
+        auto& paragraphs = display.document.paragraphs;
+        if (paragraphs.empty()) {
+            semantic::Paragraph paragraph;
+            paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
+            paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
+            paragraphs.push_back(std::move(paragraph));
+        }
+        paragraphs.front().runs = {{"Type text...", style}};
     }
-    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
-    const float viewportWidth = std::max(1.0F, viewport.right - viewport.left);
-    const float viewportHeight = std::max(1.0F, viewport.bottom - viewport.top);
-    display.layout = semantic::RichTextLayout{viewportWidth};
     const auto previous = impl_->context;
     impl_->context.width = viewportWidth;
     impl_->context.height = 0;
@@ -580,12 +626,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveStickyLa
     const float width = std::max(1.0F, worldWidth - 2.0F * padding);
     const float height = std::max(1.0F, worldHeight - 2.0F * padding);
     semantic::RichTextContent display = canonical;
-    // Paragraph separators are editable content, even if every run is empty.
-    const bool placeholder = showPlaceholder && display.document.paragraphs.size() <= 1 &&
-        (display.document.paragraphs.empty() ||
-         std::all_of(display.document.paragraphs.front().runs.begin(),
-                     display.document.paragraphs.front().runs.end(),
-                     [](const auto& run) { return run.text.empty(); }));
+    const bool placeholder = showPlaceholder && isEmptyLabel(canonical);
     if (placeholder) {
         if (display.document.paragraphs.empty()) {
             semantic::Paragraph paragraph;
@@ -663,30 +704,29 @@ EditingGeometry RichTextLayoutService::shapeEditingGeometry(
     if (!shape) return {};
     const semantic::RichTextContent empty{};
     const auto& canonical = shape->label ? *shape->label : empty;
-    const float sx = basisX(record.transform), sy = basisY(record.transform);
-    const auto viewport = shapeLabelViewport(shape->shape_kind,
-        static_cast<float>(shape->width) * sx, static_cast<float>(shape->height) * sy);
-    const float width = std::max(1.0F, viewport.right - viewport.left);
-    auto display = canonical; display.layout = semantic::RichTextLayout{width};
-    bool emptyLabel = true;
-    for (const auto& paragraph : display.document.paragraphs)
-        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
-    if (emptyLabel) {
-        semantic::TextStyle style;
-        style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
-        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
-        semantic::Paragraph paragraph;
-        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
-        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
-        paragraph.runs = {{"Type text...", style}};
-        display.document.paragraphs = {std::move(paragraph)};
-    }
-    // Reuse the painted viewport, line budget and vertical alignment. Hit
-    // testing applies the inverse of that same translation.
     const auto painted = resolveShape(record.id, *shape, record.transform, true);
+    if (painted->placeholder) {
+        EditingGeometry geometry;
+        geometry.layoutIdentity = painted->digest;
+        geometry.diagnostics = painted->diagnostics;
+        if (start != 0 || length != 0 || !geometry.diagnostics.empty() || painted->lines.empty())
+            return geometry;
+        const auto& paragraphs = canonical.document.paragraphs;
+        const auto alignment = paragraphs.empty() ? semantic::ParagraphAlignment::kCenter
+                                                  : paragraphs.front().style.alignment;
+        const auto& line = painted->lines.front().bounds;
+        const float x = alignedCaretX(alignment, line.left, line.right);
+        geometry.caret = {x, line.top, x + 1, line.bottom};
+        geometry.available = true;
+        if (hit && hit->x >= 0 && hit->x <= shape->width * basisX(record.transform) &&
+            hit->y >= 0 && hit->y <= shape->height * basisY(record.transform))
+            geometry.hit = 0;
+        return geometry;
+    }
+    const auto display = impl_->shapeLabelForLayout(canonical, painted->context.width);
+    // Use the painted viewport, line budget and vertical offset for both caret and hit testing.
     const auto previous = impl_->context;
     impl_->context = painted->context;
-    const auto originalHit = hit;
     if (hit) { hit->x -= painted->labelOffsetX; hit->y -= painted->labelOffsetY; }
     auto geometry = editingGeometry(record.id, display, start, length, hit);
     impl_->context = previous;
@@ -696,16 +736,6 @@ EditingGeometry RichTextLayoutService::shapeEditingGeometry(
     for (auto& rect : geometry.selection) {
         rect.left += painted->labelOffsetX; rect.right += painted->labelOffsetX;
         rect.top += painted->labelOffsetY; rect.bottom += painted->labelOffsetY;
-    }
-    if (emptyLabel) {
-        const float displayHeight = static_cast<float>(shape->height) * sy;
-        geometry.caret.left = static_cast<float>(shape->width) * sx * 0.5F;
-        geometry.caret.right = geometry.caret.left + 1;
-        geometry.caret.top = std::max(viewport.top, (viewport.top + viewport.bottom) * 0.5F - 8);
-        geometry.caret.bottom = geometry.caret.top + 16;
-        geometry.available = !geometry.diagnostics.empty() ? false : true;
-        if (originalHit && originalHit->x >= 0 && originalHit->x <= static_cast<float>(shape->width) * sx &&
-            originalHit->y >= 0 && originalHit->y <= displayHeight) geometry.hit = 0;
     }
     return geometry;
 }
@@ -736,7 +766,8 @@ EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,c
             if (utf16.empty()) {
                 const float height = paragraph.getHeight();
                 if (!(height > 0)) return {};
-                out.caret = {indent, y, indent + 1, y + height};
+                const float x = alignedCaretX(source.style.alignment, indent, layout->context.width);
+                out.caret = {x, y, x + 1, y + height};
             } else {
                 const bool trailing = localStart == utf16.size();
                 const auto index = static_cast<std::size_t>(trailing ? localStart - 1 : localStart);

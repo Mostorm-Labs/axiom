@@ -280,6 +280,56 @@ TEST_F(SelectionInput, QueuedPropertyEditRejectsChangedSemanticGeneration) {
     EXPECT_EQ(snapshot().semanticGeneration,afterExternal.semanticGeneration);
     EXPECT_EQ(*c.qualificationRuntime().qualificationObjectRecord(a),original);
 }
+TEST_F(SelectionInput, SectionHasResizeHandlesOnlyAndTitleFocusKeepsHistory) {
+    using Mode=runtime::SectionTitleEditorMode;
+    const auto id=foundation::ObjectId::fromUint64(9340);
+    runtime::SectionIntent intent;
+    intent.objectId=id;
+    intent.transform={1,0,0,1,320,260};
+    auto submit=[&]() {
+        ASSERT_EQ(f.submitSectionIntent(intent,++request,9100).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());
+        const auto receipt=f.canvasControlReceipt({9100,request});
+        ASSERT_TRUE(receipt && receipt->section);
+        EXPECT_EQ(receipt->section->failure,runtime::SectionFailure::kNone);
+        if (intent.action==runtime::SectionAction::kSetTitleEditor) {
+            EXPECT_EQ(receipt->section->canonical,runtime::SectionCanonicalOutcome::kNoChange);
+            EXPECT_TRUE(receipt->section->operationId.isZero());
+        }
+    };
+    submit();
+    auto& editor=c.qualificationRuntime();
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    ASSERT_TRUE(editor.selectionOverlay());
+    const auto outline=editor.selectionOverlay()->selectionOutline();
+    const render::ScreenPoint formerRotationHandle{outline.corners[1].x+20.0F,outline.corners[1].y-20.0F};
+    const auto state=snapshot();
+    const auto history=ink_playground::InkPlaygroundHistoryTestAccess::historySize(editor);
+    auto checkHandles=[&](bool visible) {
+        const auto* overlay=editor.selectionOverlay();
+        ASSERT_TRUE(overlay);
+        EXPECT_EQ(overlay->selectionOutline(),outline);
+        EXPECT_EQ(overlay->hitTest(outline.corners[0]),visible?render::HandleKind::kTopLeft:render::HandleKind::kNone);
+        EXPECT_EQ(overlay->handle(render::HandleKind::kRotation).kind,render::HandleKind::kNone);
+        EXPECT_EQ(overlay->hitTest(formerRotationHandle),render::HandleKind::kNone);
+        EXPECT_EQ(overlay->hitTest(outline.rotationAnchor),render::HandleKind::kNone);
+    };
+    checkHandles(true);
+    intent.action=runtime::SectionAction::kSetTitleEditor;
+    intent.selectionRevision=state.selectionRevision;
+    intent.titleEditorMode=Mode::kInline;
+    submit();
+    checkHandles(false);
+    intent.titleEditorMode=Mode::kClosed;
+    intent.selectionRevision=state.selectionRevision+1;
+    submit();
+    checkHandles(false);
+    intent.selectionRevision=state.selectionRevision;
+    submit();
+    checkHandles(true);
+    EXPECT_EQ(snapshot().semanticGeneration,state.semanticGeneration);
+    EXPECT_EQ(ink_playground::InkPlaygroundHistoryTestAccess::historySize(editor),history);
+}
 TEST_F(SelectionInput, MultipleRootsHaveNoSingleObjectHandlesOrPorts) {
     rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);
     auto& editor=c.qualificationRuntime();ASSERT_TRUE(editor.renderSelectionOverlay());
@@ -408,6 +458,78 @@ TEST_F(SelectionInput, SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSele
     click(300,130);EXPECT_EQ(selected(),std::vector{b});EXPECT_TRUE(snapshot().selectedLocked);
 }
 
+TEST_F(SelectionInput, PointSelectsVisibleInkOrTheObjectUnderItsGap) {
+    auto& editor=c.qualificationRuntime();
+    ASSERT_TRUE(editor.setSelectionMode(false));
+    ASSERT_TRUE(editor.selectTool(interaction::CanvasEditingRuntime::ToolMode::kBrush));
+    ASSERT_TRUE(editor.selectBrushProfile("round-handdrawn",4));
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,80,75));
+    for (int i=1; i<=14; ++i)
+        ASSERT_TRUE(pointer(input::PointerPhase::kMove,80+i*10,75+i*7.5F));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,220,180));
+    ASSERT_EQ(c.semanticObjectCount(),4U);
+    mode(runtime::CanvasSelectionMode::kPoint);
+    const auto generation=snapshot().semanticGeneration;
+    click(140,120);
+    ASSERT_EQ(selected().size(),1U);
+    const auto stroke=selected().front();
+    ASSERT_EQ(editor.qualificationObjectRecord(stroke)->kind,semantic::ObjectKind::kVectorStroke);
+    click(155,108);
+    EXPECT_EQ(selected(),std::vector{a});
+    click(215,90);
+    EXPECT_TRUE(selected().empty());
+    click(155,108);
+    click(140,120,true);
+    EXPECT_EQ(selected(),(std::vector{a,stroke}));
+    EXPECT_EQ(snapshot().semanticGeneration,generation);
+}
+
+TEST_F(SelectionInput, PointPicksThroughTransformedDabGapsAndErasedPigment) {
+    semantic::StrokeRecord ink;
+    ink.brush.brush_family_id=1;
+    ink.brush.brush_version=1;
+    ink.brush.color={0,0,0,1};
+    ink.brush.opacity=1;
+    ink.brush.nominal_size=6;
+
+    semantic::ObjectRecord line;
+    line.id=foundation::ObjectId::fromUint64(9501);
+    line.kind=semantic::ObjectKind::kVectorStroke;
+    line.kind_version=1;
+    line.placement.order_key=semantic::OrderKey{{4}};
+    line.transform={1,0,0,1,100,130};
+    ink.data=semantic::VectorStrokeData{{{{0,0},1,{}},{{80,0},1,{}}}};
+    line.content=semantic::VectorStrokeContent{ink};
+
+    semantic::ObjectRecord stamps;
+    stamps.id=foundation::ObjectId::fromUint64(9502);
+    stamps.kind=semantic::ObjectKind::kDabStroke;
+    stamps.kind_version=1;
+    stamps.placement.order_key=semantic::OrderKey{{5}};
+    stamps.transform={0,1,-1,0,150,110};
+    ink.brush.brush_family_id=3;
+    ink.brush.texture_resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(9505)};
+    ink.data=semantic::DabStrokeData{{{{20,0},16,0,1},{{20,36},16,0,1}}};
+    stamps.content=semantic::DabStrokeContent{ink};
+    stamps.erase_masks.push_back({foundation::ObjectId::fromUint64(9503),semantic::FilledPathMask{
+        semantic::VectorPathGeometry{semantic::FillRule::kEvenOdd,{semantic::MoveTo{{17,-3}},
+            semantic::LineTo{{23,-3}},semantic::LineTo{{23,3}},semantic::LineTo{{17,3}},semantic::ClosePath{}}}}});
+    const semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(9504)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{line,stamps}}};
+    const auto applied=c.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync);
+    ASSERT_EQ(applied.disposition,semantic::ApplyDisposition::kApplied) << static_cast<int>(applied.error.issue);
+    auto& editor=c.qualificationRuntime();
+    const auto pick=[&](float x,float y,foundation::ObjectId expected){
+        ASSERT_TRUE(editor.selectAtViewPoint(x,y));
+        EXPECT_EQ(selected(),std::vector{expected});
+    };
+    pick(114,130,stamps.id);
+    pick(150,130,line.id);   // The center of this stamp was erased.
+    pick(150,135,stamps.id);
+    pick(131,130,line.id);   // Between stamps, the underlying line is visible.
+    pick(131,136,a);
+}
+
 TEST_F(SelectionInput, RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites) {
     ASSERT_EQ(f.setTool(4101,++request,f.readRuntimeState().identity.runtimeGeneration,9100).state,runtime::ProductControlState::kQueued);
     ASSERT_TRUE(c.ownerPump());
@@ -456,6 +578,17 @@ TEST_F(SelectionInput, ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOw
     image.width=100;image.height=100;image.transform.tx=550;image.transform.ty=300;
     image.sourceRect=semantic::NormalizedRect{.25,.25,.5,.5};image.contentMode=semantic::ImageContentMode::kStretch;
     ASSERT_EQ(f.importImage(image).state,runtime::ImageCommandState::kApplied);
+    click(600,350);
+    auto& editor=c.qualificationRuntime();
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    const auto* overlay=editor.selectionOverlay();
+    ASSERT_TRUE(overlay);
+    const auto corner=overlay->handle(render::HandleKind::kTopRight).center;
+    const auto rotation=overlay->handle(render::HandleKind::kRotation);
+    EXPECT_GT(rotation.center.x,corner.x);
+    EXPECT_LT(rotation.center.y,corner.y);
+    EXPECT_EQ(overlay->hitTest(rotation.center),render::HandleKind::kRotation);
+    EXPECT_EQ(overlay->attachmentPoints().size(),4U);
     mode(runtime::CanvasSelectionMode::kRectangle);const auto before=snapshot();
     rectangle(510,330,530,350);EXPECT_TRUE(selected().empty());
     rectangle(555,305,645,395);EXPECT_EQ(selected(),std::vector{image.objectId});

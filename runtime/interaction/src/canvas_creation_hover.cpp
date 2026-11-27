@@ -4,11 +4,20 @@
 #include <utility>
 
 namespace canvas::interaction {
-std::uint32_t CanvasEditingRuntime::oppositeAttachmentPort(std::uint32_t port) noexcept {
-    switch(port){case 1:return 3;case 2:return 4;case 3:return 1;case 4:return 2;default:return 4;}
+std::uint32_t CanvasEditingRuntime::siblingAttachmentPort(semantic::ObjectId sourceId,
+                                                         std::uint32_t sourcePort) const noexcept {
+    const auto* source = sceneCoordinator_ ? sceneCoordinator_->runtimeScene().find(sourceId) : nullptr;
+    const auto pose = source ? source->transform : semantic::Transform2D{};
+    const bool vertical = sourcePort == 1 || sourcePort == 3;
+    const double sign = sourcePort == 1 || sourcePort == 4 ? -1.0 : 1.0;
+    const double dx = sign * (vertical ? pose.c : pose.a);
+    const double dy = sign * (vertical ? pose.d : pose.b);
+    // New siblings are upright. Use their side facing the source's outward world direction.
+    if (std::abs(dx) >= std::abs(dy)) return dx >= 0 ? 4U : 2U;
+    return dy >= 0 ? 1U : 3U;
 }
 semantic::ObjectRecord CanvasEditingRuntime::makeConnectorSibling(semantic::ObjectId sourceId,
-    std::uint32_t sourcePort,foundation::WorldPoint end,semantic::ObjectRecord target) {
+    std::uint32_t targetPort,foundation::WorldPoint end,semantic::ObjectRecord target) {
     const auto* source=semanticObjects_.find(sourceId);if(!source)return {};
     auto preset=CreationPreset::kRectangle;
     if(const auto* shape=std::get_if<semantic::ShapeContent>(&source->content))
@@ -25,9 +34,9 @@ semantic::ObjectRecord CanvasEditingRuntime::makeConnectorSibling(semantic::Obje
         target.kind=semantic::ObjectKind::kSticky;target.kind_version=1;
         width=sticky->width;height=sticky->height;target.content=*sticky;
     }
-    target.transform={};const auto port=oppositeAttachmentPort(sourcePort);
+    target.transform={};
     const bool triangle=target.kind==semantic::ObjectKind::kShape&&std::get<semantic::ShapeContent>(target.content).shape_kind==3;
-    switch(port) {
+    switch(targetPort) {
       case 1:target.transform.tx=end.x-width*.5;target.transform.ty=end.y;break;
       case 2:target.transform.tx=end.x-width*(triangle?.75:1);target.transform.ty=end.y-height*.5;break;
       case 3:target.transform.tx=end.x-width*.5;target.transform.ty=end.y-height;break;
@@ -37,20 +46,20 @@ semantic::ObjectRecord CanvasEditingRuntime::makeConnectorSibling(semantic::Obje
 }
 foundation::WorldPoint CanvasEditingRuntime::defaultAttachmentEnd(const semantic::AttachedEndpoint& attached) const {
     const auto* anchor=std::get_if<semantic::StablePortAnchor>(&attached.anchor);
-    if(!anchor||!selectionView_||anchor->port_id<1||anchor->port_id>4)return {};
-    const auto& points=selectionView_->editingOverlay().attachmentPoints();
-    if(anchor->port_id>points.size())return {};
-    const auto screen=points[anchor->port_id-1].center;
+    if(!anchor||anchor->port_id<1||anchor->port_id>4||!sceneCoordinator_)return {};
+    const auto* source=sceneCoordinator_->runtimeScene().find(attached.target_object_id);
+    const auto* object=semanticObjects_.find(attached.target_object_id);
+    if(!source||!object)return {};
+    const auto screen=attachmentPortCenters(*source)[anchor->port_id-1];
+    const auto targetPort=siblingAttachmentPort(attached.target_object_id,anchor->port_id);
     const auto start=viewportController_->viewToContent(screen.x,screen.y);
     foundation::WorldPoint end{start.first,start.second};
-    switch(anchor->port_id){case 1:end.y-=120;break;case 3:end.y+=120;break;case 4:end.x-=120;break;default:end.x+=120;}
+    switch(targetPort){case 1:end.y+=120;break;case 3:end.y-=120;break;case 2:end.x-=120;break;default:end.x+=120;}
     semantic::ObjectRecord connector;connector.kind=semantic::ObjectKind::kConnector;connector.kind_version=1;
     connector.content=semantic::ConnectorContent{{attached},{semantic::FreePointEndpoint{{end.x,end.y}}},semantic::ConnectorRouting::kStraight};
-    if(const auto* source=sceneCoordinator_->runtimeScene().find(attached.target_object_id)) {
-        auto world=*semanticObjects_.find(attached.target_object_id);world.transform=source->transform;
-        if(const auto route=scene::connectorGeometry(connector,{world});route&&route->status==runtime::ConnectorRouteStatus::kReady) {
-            if(anchor->port_id==1||anchor->port_id==3)end.x=route->start.x;else end.y=route->start.y;
-        }
+    auto world=*object;world.transform=source->transform;
+    if(const auto route=scene::connectorGeometry(connector,{world});route&&route->status==runtime::ConnectorRouteStatus::kReady) {
+        if(targetPort==1||targetPort==3)end.x=route->start.x;else end.y=route->start.y;
     }
     return end;
 }
@@ -107,10 +116,11 @@ bool CanvasEditingRuntime::updateCreationHover(float x,float y) {
         } else next.preview.primary=makeCreationPrototype(preset);
         const semantic::AttachedEndpoint start{next.source,semantic::StablePortAnchor{next.port}};
         const auto end=defaultAttachmentEnd(start);
-        next.preview.sibling=makeConnectorSibling(next.source,next.port,end,next.preview.sibling.value_or(semantic::ObjectRecord{}));
+        const auto targetPort=siblingAttachmentPort(next.source,next.port);
+        next.preview.sibling=makeConnectorSibling(next.source,targetPort,end,next.preview.sibling.value_or(semantic::ObjectRecord{}));
         if(next.preview.primary.id.isZero()||next.preview.sibling->id.isZero())return clearCreationHover();
         next.preview.primary.content=semantic::ConnectorContent{{start},
-            {semantic::AttachedEndpoint{next.preview.sibling->id,semantic::StablePortAnchor{oppositeAttachmentPort(next.port)}}},connectorRoutingPreset_};
+            {semantic::AttachedEndpoint{next.preview.sibling->id,semantic::StablePortAnchor{targetPort}}},connectorRoutingPreset_};
         auto staged=semanticObjects_.allObjects();staged.push_back(*next.preview.sibling);staged.push_back(next.preview.primary);
         staged=scene::projectWorldObjects(staged);
         next.preview.route=scene::connectorGeometry(next.preview.primary,staged);

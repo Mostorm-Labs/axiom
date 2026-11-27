@@ -128,7 +128,7 @@ class RichTextLayoutService final {
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveTable(foundation::ObjectId, const semantic::TableContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
-    resolveSectionTitle(foundation::ObjectId, const semantic::SectionContent&);
+    resolveSectionTitle(foundation::ObjectId, const semantic::SectionContent&, bool expanded = false);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveNatural(foundation::ObjectId, const semantic::RichTextContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
@@ -170,6 +170,8 @@ class RichTextLayoutService final {
     [[nodiscard]] LayoutMetrics metrics() const noexcept;
 
   private:
+    std::shared_ptr<const TextLayoutSnapshot> resolveWithContext(
+        foundation::ObjectId, const semantic::RichTextContent&, LayoutContext);
     struct Impl;
     std::unique_ptr<Impl> impl_;
 };

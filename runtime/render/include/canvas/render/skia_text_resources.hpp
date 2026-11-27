@@ -9,6 +9,7 @@ class SkiaTextResources final {
     SkiaTextResources();
     ~SkiaTextResources();
     void draw(SkCanvas&, const text::TextLayoutSnapshot&);
+    void drawSectionTitle(SkCanvas&, const text::TextLayoutSnapshot&, float width, float height);
  private:
     struct Impl;
     std::unique_ptr<Impl> impl_;

@@ -169,6 +169,7 @@ void provisional_zero_mutation_test() {
 
 void viewport_gesture_state_test() {
   canvas::ink_playground::InkPlaygroundHost host;
+  assert(host.bindSurface(800, 600));
   const canvas::input::PointerKey first{10, 1, 1};
   const canvas::input::PointerKey second{10, 2, 1};
   assert(host.beginStroke(first, 401));
@@ -220,7 +221,7 @@ void viewport_fit_and_generation_test() {
   assert(host.fitViewportToContent());
   assert(host.cameraGeneration() > cameraBefore);
   assert(host.semanticGeneration() == semanticBefore);
-  assert(host.viewportGesture().scale == 32.0F);
+  assert(host.viewportGesture().scale == 3.0F);
 }
 
 void android_pointer_identity_test() {

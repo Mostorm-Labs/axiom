@@ -3,6 +3,7 @@
 namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 #include "cpu_worker_protocol.hpp"
 #include "cpu_local_exact.hpp"
 #include "resource_reclaim.hpp"
@@ -1088,6 +1089,35 @@ bool SkiaRenderer::retainCpuPendingHandoff(std::uint64_t serial,const std::vecto
 }
 void SkiaRenderer::retireCpuPendingHandoff(std::uint64_t serial)noexcept{cpuPathHandoffs_.erase(serial);}
 void SkiaRenderer::retireAllCpuPendingHandoffs()noexcept{cpuPathHandoffs_.clear();}
+SelectionGeometryHit SkiaRenderer::hitTestInkPoint(const ReferenceTraversalEntry& entry,
+    foundation::WorldPoint point, const semantic::Transform2D& worldToDevice) const noexcept {
+    try {
+        // Replay only this source at the pixel under the pointer. The surrounding pixels
+        // preserve antialiasing and linear coverage sampling; only the central alpha is tested.
+        constexpr int side = 3, center = side / 2;
+        std::array<std::uint8_t, side * side * 4> pixels{};
+        auto probe = worldToDevice;
+        probe.tx += center - std::floor(worldToDevice.a*point.x + worldToDevice.c*point.y + worldToDevice.tx);
+        probe.ty += center - std::floor(worldToDevice.b*point.x + worldToDevice.d*point.y + worldToDevice.ty);
+        const auto t = scene::composeTransform(probe, entry.record.transform);
+        const auto matrix = SkMatrix::MakeAll(SkScalar(t.a), SkScalar(t.c), SkScalar(t.tx),
+                                              SkScalar(t.b), SkScalar(t.d), SkScalar(t.ty), 0, 0, 1);
+        if (!matrix.isFinite()) return SelectionGeometryHit::kInvalid;
+        const auto info = SkImageInfo::Make(side, side, kRGBA_8888_SkColorType, kPremul_SkAlphaType);
+        auto canvas = SkCanvas::MakeRasterDirect(info, pixels.data(), info.minRowBytes());
+        if (!canvas) return SelectionGeometryHit::kInvalid;
+        canvas->setMatrix(matrix);
+        const auto body = preparedGeometry_ ? preparedGeometry_->lookup(entry, internal::PreparedConsumer::kExact) : nullptr;
+        internal::CompactRasterWork work;
+        internal::drawInkBodyToSkCanvas(*canvas, entry, nullptr, nullptr, nullptr, &work, false, nullptr, true, body.get());
+        if (work.resourcePending) return SelectionGeometryHit::kInvalid;
+        internal::drawEraseMasksToSkCanvas(*canvas, entry);
+        internal::drawPresentationEraseMasksToSkCanvas(*canvas, entry);
+        return pixels[(center * side + center) * 4 + 3] ? SelectionGeometryHit::kHit : SelectionGeometryHit::kMiss;
+    } catch (const std::exception&) {
+        return SelectionGeometryHit::kInvalid;
+    }
+}
 SelectionGeometryHit SkiaRenderer::intersectSelectionGeometry(const RuntimeSceneRecord& record,
     std::span<const foundation::WorldPoint> points,bool* pending)const noexcept{
     if(pending)*pending=false;

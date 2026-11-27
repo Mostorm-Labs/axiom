@@ -373,6 +373,9 @@ class Runtime final {
     Json renameSection(std::string id, std::string title) {
         return section({{"action", 5}, {"objectId", id}, {"title", title}});
     }
+    Json setSectionTitleEditor(std::string id, std::string mode, std::string selectionRevision) {
+        return section({{"action", 12}, {"objectId", id}, {"mode", mode}, {"selectionRevision", selectionRevision}});
+    }
     Json selectSection(std::string id) {
         return section({{"action", 6}, {"objectId", id}});
     }

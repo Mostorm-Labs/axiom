@@ -74,6 +74,15 @@ try{
       scenarios.push({cycle,selected,updated,samples:record.length,rafP50:sorted[17],rafP95:sorted[34],rafMax:sorted.at(-1),settleMilliseconds});
     }
   }
+  const original=sdk.readState(),origin={x:-original.camera.x/original.camera.scale,y:-original.camera.y/original.camera.scale};
+  for(const [target,expected] of [[Number.MAX_VALUE,3],[Number.MIN_VALUE,.1],[1.3,1.3]]){
+    await sdk.zoomAt(0,0,target);
+    const state=sdk.readState(),camera=state.camera;
+    check(Math.abs(camera.scale-expected)<1e-6,'absolute zoom reaches '+expected);
+    check(Math.abs(-camera.x/camera.scale-origin.x)<.001 && Math.abs(-camera.y/camera.scale-origin.y)<.001,
+      'zoom preserves the canvas origin at '+expected);
+    check(state.generation===original.generation && state.primary===original.primary,'zoom preserves the selection and document at '+expected);
+  }
   check(maxWait===0,'wheel input never blocks on GPU completion');check(!errors.length,'no rendering errors');
   for(let packet;(packet=sdk.data.readNext());)sdk.data.release(packet);
   await sdk.close();

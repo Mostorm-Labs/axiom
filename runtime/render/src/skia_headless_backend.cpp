@@ -366,7 +366,7 @@ float objectOpacity(const RuntimeSceneRecord& record) {
         if (entry.field_id==3U) if (const auto* value=std::get_if<float>(&entry.value)) return *value;
     return 1.0F;
 }
-SkPaint strokePaint(const semantic::SolidStroke& stroke,bool antiAlias=false) {
+SkPaint strokePaint(const semantic::SolidStroke& stroke, bool antiAlias = true) {
     return internal::geometryStrokePaint(stroke,antiAlias);
 }
 
@@ -521,7 +521,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
                 const auto triangleFill=propertyColor(record,0x100U,{0,0,0,0});
                 if(triangleFill.a>0) {
-                    SkPaint paint;paint.setAntiAlias(false);paint.setColor4f(color(triangleFill));
+                    SkPaint paint;paint.setAntiAlias(true);paint.setColor4f(color(triangleFill));
                     paint.setStyle(SkPaint::kFill_Style);canvas.drawPath(geometry,paint);
                 }
                 if(const auto* stroke=objectStroke(record);stroke && stroke->width>0 && stroke->color.a>0)
@@ -820,11 +820,9 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             }
             if(command.titleLayout&&textResources) {
                 canvas.save();
-                const double height=scene::sectionTitleHeight(command.content.get());
-                const double top=b.y-height;
-                canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(top),skScalar(b.width),skScalar(height)));
-                canvas.translate(skScalar(b.x),skScalar(top));
-                textResources->draw(canvas,*command.titleLayout);
+                const auto title = scene::sectionTitleBounds(command.content.get());
+                canvas.translate(skScalar(title.x), skScalar(title.y));
+                textResources->drawSectionTitle(canvas,*command.titleLayout,skScalar(title.width),skScalar(title.height));
                 canvas.restore();
             }
             canvas.restore();

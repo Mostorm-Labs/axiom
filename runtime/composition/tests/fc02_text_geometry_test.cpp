@@ -135,6 +135,12 @@ TEST(FC02ShapeLabel, EmptyCaretStartsInsideAllThreeShapeCenters) {
             EXPECT_GT(caret.caret[1], 100);
             EXPECT_LT(caret.caret[5], 142);
         } else EXPECT_LT(caret.caret[5], 125);
+        for (unsigned line = 0; line < 7; ++line)
+            ASSERT_EQ(h.intent(runtime::TextIntentKind::kInsertParagraph).status, runtime::TextStatus::kObserved);
+        const auto lastBlank = h.facade.readTextGeometry();
+        ASSERT_TRUE(lastBlank.available);
+        EXPECT_NEAR(lastBlank.caret[0], 120, 0.5F);
+        EXPECT_LE(lastBlank.caret[5], 150.0F);
         EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
         EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
     }
@@ -463,6 +469,11 @@ TEST(FC02ShapeLabel, FirstShapeLabelTextDefaultsToCenteredParagraph) {
     ASSERT_TRUE(geometry.available);
     EXPECT_GT(geometry.caret[0], 120.0F);
     EXPECT_LT(geometry.caret[0], 145.0F);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kInsertParagraph).status, runtime::TextStatus::kApplied);
+    const auto newline = h.facade.readTextGeometry();
+    ASSERT_TRUE(newline.available);
+    EXPECT_NEAR(newline.caret[0], 120.0F, 0.5F);
+    EXPECT_GT(newline.caret[1], geometry.caret[1]);
 }
 
 TEST(FC02ShapeLabel, TriangleAndEllipseUseInteriorLayoutGeometry) {
@@ -1970,6 +1981,20 @@ TEST(DefaultInteractions, EmptyStickyDraftCaretUsesItsAncestorsWorldPose) {
     edit();const auto after=h.facade.readTextGeometry();ASSERT_TRUE(after.available);
     EXPECT_NEAR(after.caret[0]-before.caret[0],30,0.01F);EXPECT_NEAR(after.caret[1]-before.caret[1],40,0.01F);
     EXPECT_EQ(h.runtime.semanticObjectCount(),2U); // Sticky + Section, no empty child.
+}
+TEST(PlacementDefaults, TableHasBoundaryResizeWithoutRotation) {
+    Host h(true);
+    ASSERT_TRUE(h.facade.tableCommand({}).applied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    auto& editor=h.runtime.qualificationRuntime();
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    const auto* overlay=editor.selectionOverlay();
+    ASSERT_TRUE(overlay);
+    const auto& outline=overlay->selectionOutline();
+    EXPECT_EQ(overlay->hitTest(outline.corners[2]),render::HandleKind::kBottomRight);
+    EXPECT_EQ(overlay->handle(render::HandleKind::kRotation).kind,render::HandleKind::kNone);
+    EXPECT_EQ(overlay->hitTest(outline.rotationAnchor),render::HandleKind::kNone);
+    EXPECT_TRUE(overlay->attachmentPoints().empty());
 }
 TEST(PlacementDefaults, CellTextGrowsOnlyItsRowWithOneUndoAndRedo) {
     Host h(true);

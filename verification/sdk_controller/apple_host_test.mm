@@ -127,9 +127,9 @@ int main(){@autoreleasepool{
     std::abs(zero.at("x").get<double>()+16)>1e-4 ||
     std::abs(zero.at("y").get<double>()+64)>1e-4)throw std::runtime_error("zero anchor changed");
  navigation.scale_delta=100;if(axiom_native_navigation(token.c_str(),attachment,&navigation)!=0)throw std::runtime_error("zoom limit");
- if(nlohmann::json::parse(call(R"({"command":"state"})")).at("value").at("camera").at("scale")!=8.0)throw std::runtime_error("max zoom");
+ if(nlohmann::json::parse(call(R"({"command":"state"})")).at("value").at("camera").at("scale")!=3.0)throw std::runtime_error("max zoom");
  navigation.scale_delta=.0001F;if(axiom_native_navigation(token.c_str(),attachment,&navigation)!=0)throw std::runtime_error("zoom limit");
- if(nlohmann::json::parse(call(R"({"command":"state"})")).at("value").at("camera").at("scale")!=.25)throw std::runtime_error("min zoom");
+ if(nlohmann::json::parse(call(R"({"command":"state"})")).at("value").at("camera").at("scale").get<float>()!=.1F)throw std::runtime_error("min zoom");
  [view detach];
  if(axiom_native_navigation(token.c_str(),attachment,&navigation)!=AXIOM_NATIVE_REJECTED)
    throw std::runtime_error("detached navigation admitted");

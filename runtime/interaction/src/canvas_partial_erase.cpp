@@ -56,15 +56,19 @@ std::optional<std::vector<semantic::EraseMaskAddItem>> CanvasEditingRuntime::par
 }
 bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& list) const {
     if(!partialEraseFeedbackActive())return true;
+    if (!appendPartialEraseMasks(list.entries)) return false;
+    list.canonicalBytes.clear();list.digest.clear();return true;
+}
+bool CanvasEditingRuntime::appendPartialEraseMasks(std::span<render::ReferenceTraversalEntry> entries) const {
     // Feedback may reuse transparent sources for translated ink too. Scope
     // this to the active gesture: exact canonical composition remains unchanged.
-    for(auto& entry:list.entries)
+    for(auto& entry:entries)
         if((entry.record.kind==semantic::ObjectKind::kVectorStroke || entry.record.kind==semantic::ObjectKind::kDabStroke) && textWritable(entry.record.objectId))
             entry.presentationEraseActive=true;
     const auto appendTrace=[&](std::span<const foundation::WorldPoint> trace,double radius){
         // Pure presentation mask generation uses the captured world trace;
         // no new PathOps or semantic target decision is made here.
-        for(auto& entry:list.entries){
+        for(auto& entry:entries){
             if(!entry.presentationEraseActive)continue;
             auto mask=partialEraseGeometry(trace,entry.record.transform,radius);
             if(!mask)return false;
@@ -76,7 +80,7 @@ bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& l
         std::vector<const CpuPendingEraseState::Intent*> ordered;
         for(const auto& p:cpuPending_->slots)if(p&&p->serial)ordered.push_back(p.get());
         std::sort(ordered.begin(),ordered.end(),[](const auto* a,const auto* b){return a->serial<b->serial;});
-        for(auto& entry:list.entries){
+        for(auto& entry:entries){
             if(!entry.presentationEraseActive)continue;
             std::uint64_t born=0;
             if(!semanticObjects_.contains(entry.record.objectId))for(const auto* p:ordered)for(const auto& created:p->creates)if(created.id==entry.record.objectId)born=p->serial;
@@ -114,9 +118,9 @@ bool CanvasEditingRuntime::applyPartialErasePreview(render::ReferenceDrawList& l
             if(found!=cpuPending_->slots.end()){if(!appendTrace(trace,(*found)->radius))return false;continue;}
         }
         auto masks=partialEraseTargets(trace,false);if(!masks)return false;
-        for(const auto& item:*masks)for(auto& entry:list.entries)if(entry.record.objectId==item.object_id)
+        for(const auto& item:*masks)for(auto& entry:entries)if(entry.record.objectId==item.object_id)
             entry.presentationEraseMasks.insert(entry.presentationEraseMasks.end(),item.masks.begin(),item.masks.end());
     }
-    list.canonicalBytes.clear();list.digest.clear();return true;
+    return true;
 }
 }

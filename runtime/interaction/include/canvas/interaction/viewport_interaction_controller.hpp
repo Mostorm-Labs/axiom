@@ -27,6 +27,7 @@ class ViewportInteractionController final {
                                    const input::PointerSample& second) noexcept;
   void endGesture() noexcept;
   [[nodiscard]] bool applyNavigation(const ViewportNavigationSample& sample) noexcept;
+  [[nodiscard]] bool zoomAt(float zoom, float anchorX, float anchorY) noexcept;
   [[nodiscard]] bool setCamera(float zoom, float translationX,
                                float translationY) noexcept;
   [[nodiscard]] std::uint64_t cameraGeneration() const noexcept {

@@ -55,7 +55,10 @@ The Web Demo groups primary tools in row one, active-tool subtypes (shape, brush
 selection or eraser mode) as flat buttons in row two, and board actions in row
 three. Both tool rows scroll horizontally when their choices exceed the width. Object
 properties/actions remain contextual. Creation-tool appearance controls update
-new-object defaults even if a previous object remains selected. Object actions
+new-object defaults even if a previous object remains selected. For new rectangles,
+ellipses and triangles, the Demo pairs the fill with an outline of the same hue.
+Choosing a stroke color in the creation controls keeps that choice for subsequent
+shapes, including after switching tools. Object actions
 delegate to the existing root SDK: text/cell Edit, sibling-level front/back,
 Lock/Unlock, and Delete. Front/back currently requires a single selected object
 and retains its parent/group. A locked selection exposes only Unlock in its
@@ -162,8 +165,9 @@ and Table uses 2×2 cells. Click creates that default; drag specifies custom siz
 or Table counts. The ghost is drawn at 25% of the object's opacity using the same
 shared Skia geometry and style. Runtime reserves the prospective identity/style
 once and reuses them on creation; hovering publishes no operation or History.
-Hovering a selected object's attachment point previews the sibling and connector
-that its existing point action will create. Leaving the canvas/point, changing
+A selected Shape, Sticky or Image has four side ports and a rotation handle outside its upper-right corner.
+Hovering a port previews the connected sibling. Clicking an Image port creates a connected rectangle.
+Image crop mode shows the crop controls. Tables expose resize handles at the boundary. Leaving the canvas/point, changing
 tools, editing text, navigation or stale context removes the preview. Ghosts are
 presentation only and are excluded from snapshots and image export.
 
@@ -266,11 +270,33 @@ pass gestures and eraser input through the video to the canvas.
 | View and selection | `readState`, `readSelection`, `panBy`, `zoomAt`, `fitContent`, `fitSelection`, `fitObject`, `resizeSelection`, `transformSelection`, `deleteSelection`, `lockSelection`, `unlockSelection`, `orderSelection`, `setSelectionVisible` |
 | Text and IME | `text.read`, `text.create`, `text.edit`, `text.editAtPoint`, `text.replace`, `text.select`, `text.selectAll`, caret/delete/paragraph/width methods, `text.format`, `text.fonts`, `text.fontStatus`, `text.completeComposition`, `text.finish`, `text.escape`, `text.resync`, `text.retry` |
 | Image and crop | `importImage`, `replaceImage`, `resizeImage`, `readSelectedImage`, `beginCrop`, `readCrop`, `updateCrop`, `commitCrop`, `cancelCrop` |
-| Containers | `createSection`, `wrapInSection`, `releaseSection`, `reparent`, `readSection`, `resizeSection`, `renameSection`, `selectSection`, `selectSectionChildren`, `group`, `ungroup`, `enterGroup`, `leaveGroup` |
+| Containers | `createSection`, `wrapInSection`, `releaseSection`, `reparent`, `readSection`, `resizeSection`, `renameSection`, `setSectionTitleEditor`, `selectSection`, `selectSectionChildren`, `group`, `ungroup`, `enterGroup`, `leaveGroup` |
 | Connectors and Sticky | `createConnector`, `setConnectorRouting`, `readConnector`, `createSticky`, `readSelectedSticky` |
 | Multiple objects | `multi.read`, `multi.readValues`, `multi.setPermission`, `multi.setProperty`, `multi.setStrokeWidth` |
 | Document and resources | `captureSnapshot`, `applyRemoteOperation`, `resources.token`, `resources.publish`, `resources.receipt`; startup `restore` and `initialResources` options |
 | Lifetime and events | `close`; `onOperation`, `onError`, `onChange`, `onFrame` options |
+
+Section creation, wrapping and renaming accept a single line of up to 50 Unicode code points.
+Read the limit from `readSection(id).titleMaxCharacters`. Invalid SDK requests reject before publishing
+an Operation. Existing Section/1 snapshots and history keep their original metadata. The Demo converts
+line breaks in pasted text to spaces, completes with Enter and lets the IME confirm a candidate first.
+
+A short caption fits its text. An overflowing caption spans the Section's width and ends in an ellipsis.
+A selected Section keeps the fitted caption and exposes only boundary resize handles.
+The inline editor expands to show the full text. Exports use the fitted caption.
+For a drawable title, `readSection(id).titleFrame` provides the displayed frame in local units.
+Its affine `toWorld` maps the frame's upper-left corner into document space, including ancestor transforms.
+`width` and `height` bound the header, `insetX` and `insetY` locate the text, and
+`textWidth`, `textHeight` and `ellipsized` describe the visible line. `fontId`, `fontSize`,
+`baseline` and `lineHeight` describe its type. Position inline controls with the submitted camera transform.
+The frame is null when the Section, layout or title is unavailable.
+Call `setSectionTitleEditor(id, mode, readState().selectionRevision)` when an editor takes focus.
+Both `inline` and `panel` hide the boundary resize handles for the single, selected, writable Section.
+An inline editor requires point selection and supplies its own glyphs. The panel editor keeps the canvas caption visible.
+Release focus with `closed` and the captured revision. Releases are idempotent and scoped to the selected ID and revision.
+Invalid targets and stale opens reject with a Section command receipt. Focus changes are view-local and produce
+a no-change receipt without publishing an Operation. Export and snapshots use the committed caption.
+Draft text stays in the shell until `renameSection` commits the metadata change.
 
 Single-object appearance/size/transform methods reject a multiselection. Use the
 explicit `multi` path for supported batch properties. To write opacity, read
@@ -283,7 +309,10 @@ Stamp and resource token DTOs include an instance owner tag; preserve the full
 value when retaining it for asynchronous work. Another Runtime rejects it even
 when native engine counters or document contents happen to match.
 
-`zoomAt(x,y,scale)` takes an absolute target scale. `setAppearance` merges only
+`zoomAt(x,y,scale)` takes a positive absolute target scale. The camera limits zoom
+to 10%–300% for commands, wheel and pinch gestures, and fitting content, selections or objects.
+Zoom keeps the world point under the anchor in place. Fit centers the target at the resulting scale.
+`setAppearance` merges only
 the supplied fields into the current single-object/future-object appearance.
 Connector routing defaults to orthogonal; a clear aligned route can contain one
 straight segment. Programmatic Sticky/Connector creation accepts an optional

@@ -3,18 +3,26 @@
 #include "canvas/foundation/object_id.hpp"
 #include "canvas/foundation/world_geometry.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <optional>
 #include <span>
 
 namespace canvas::interaction {
 
+inline constexpr float kMinViewportZoom = 0.1F;
+inline constexpr float kMaxViewportZoom = 3.0F;
+
+[[nodiscard]] constexpr float clampViewportZoom(double scale) noexcept {
+  return static_cast<float>(std::clamp(scale, double(kMinViewportZoom), double(kMaxViewportZoom)));
+}
+
 enum class ViewportFitTargetKind : std::uint8_t { kDocument, kSelection, kObject, kWorldRect };
 
 struct ViewportFitPolicy final {
   float paddingLogicalPx = 32.0F;
-  float minZoom = 0.05F;
-  float maxZoom = 32.0F;
+  float minZoom = kMinViewportZoom;
+  float maxZoom = kMaxViewportZoom;
 };
 
 struct ViewportFitResult final {

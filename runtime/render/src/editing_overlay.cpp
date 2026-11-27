@@ -60,7 +60,11 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
     std::array<ScreenPoint, 4> corners{
         map(localTopLeft), map(localTopRight), map(localBottomRight), map(localBottomLeft)};
     ScreenPoint cornerDirection{};
-    if (input.frameStyle != SelectionFrameStyle::kTight) {
+    const bool padded = input.frameStyle == SelectionFrameStyle::kPadded ||
+                        input.frameStyle == SelectionFrameStyle::kPaddedWithCornerRotation;
+    const bool cornerRotation = input.frameStyle == SelectionFrameStyle::kPaddedWithCornerRotation ||
+                                input.frameStyle == SelectionFrameStyle::kTightWithCornerRotation;
+    if (padded || cornerRotation) {
         // Offset the projected sides in logical pixels. Correct for shear so
         // the perpendicular gap is constant, with a bounded miter at acute joins.
         const auto unit = [](ScreenPoint a, ScreenPoint b, ScreenPoint fallback) {
@@ -72,7 +76,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         const auto down = unit(corners[0], corners[3], {-across.y, across.x});
         const float sine = std::abs(across.x * down.y - across.y * down.x);
         constexpr float selectionGap = 3.0F;
-        const float outset = selectionGap / std::max(0.25F, sine);
+        const float outset = padded ? selectionGap / std::max(0.25F, sine) : 0.0F;
         for (std::size_t i = 0; i < corners.size(); ++i) {
             const float dx = (i == 1 || i == 2) ? outset : -outset;
             const float dy = i >= 2 ? outset : -outset;
@@ -106,7 +110,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         ny = -1.0F;
     }
     ScreenPoint rotation;
-    if (input.frameStyle == SelectionFrameStyle::kPaddedWithCornerRotation) {
+    if (cornerRotation) {
         constexpr float cornerClearance = 28.0F;
         rotation = {corners[1].x + cornerDirection.x * cornerClearance,
                     corners[1].y + cornerDirection.y * cornerClearance};

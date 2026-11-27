@@ -48,5 +48,135 @@ try{
  }
  await open('/example.html');await page.waitForFunction(()=>document.getElementById('status').textContent.includes('0 objects'));await page.locator('#table-open').click();await pause();result.checks.demoTableButtonArmsTool=await page.evaluate(()=>sdk.readState().creationMode&&sdk.readState().shape===6);await page.mouse.click(180,240);await pause();a=await read();result.checks.demoTableClickCreatesMinimum=a.table.available&&a.table.rows.length===2&&a.table.columns.length===2&&a.text.phase===1;
  await page.keyboard.press('Control+Enter');await page.keyboard.press('Escape');await page.locator('#section-create').click();await pause();result.checks.demoSectionButtonArmsTool=await page.evaluate(()=>sdk.readState().creationMode&&sdk.readState().shape===7);await down(650,200);await up(950,400);a=await read();result.checks.demoSectionDragCreatesCustom=a.section.available&&a.section.boundary[2]===300&&a.section.boundary[3]===200;await page.screenshot({path:output.replace(/\.json$/,'-demo.png')});
+ // The inline editor owns the visible caption. Its text origin follows the Section,
+ // while the selected perimeter remains visible and the transform handles disappear.
+ await open('/example.html');
+ await page.locator('#section-create').click();await down(300,330);await up(630,510);
+ const beforeEdit=await read(),sectionId=beforeEdit.section.objectId;
+ const sectionChrome = async () => {
+   const png=await page.screenshot({clip:{x:295,y:270,width:378,height:69}});
+   return page.evaluate(async bytes=>{
+     const im=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'}));
+     const ctx=new OffscreenCanvas(im.width,im.height).getContext('2d');
+     ctx.drawImage(im,0,0);const d=im.width/378;im.close();
+     const count=(x,y,w,h)=>{
+       const pixels=ctx.getImageData(x*d,y*d,w*d,h*d).data;let n=0;
+       for(let i=0;i<pixels.length;i+=4)if(pixels[i+2]>pixels[i]+70 && pixels[i+2]>pixels[i+1]+70)n++;
+       return n;
+     };
+     return {corner:count(330,53,10,6),rotation:count(344,29,22,22),oldRotation:count(158,0,24,40),edge:count(200,58,20,4)};
+   },[...png]);
+ };
+ const idleChrome=await sectionChrome();
+ const titleFocused=()=>document.activeElement?.getAttribute('aria-label')==='分区标题';
+ await page.mouse.dblclick(342,311);await page.waitForFunction(titleFocused);
+ const titleBox=()=>page.evaluate(()=>{
+   const input=document.activeElement,r=input.getBoundingClientRect(),css=getComputedStyle(input),scale=sdk.readState().camera.scale;
+   return {x:r.x,y:r.y,tag:input.tagName,
+     width:r.width,height:r.height,bottom:r.bottom,radius:parseFloat(css.borderTopLeftRadius),ring:css.boxShadow};
+ });
+ const box=await titleBox();
+ await pause();const editingChrome=await sectionChrome();
+ result.observations.sectionChrome={idle:idleChrome,editing:editingChrome};
+ result.checks.selectedSectionShowsResizeWithoutRotation=idleChrome.corner>0 && idleChrome.edge>0 && idleChrome.rotation===0 && idleChrome.oldRotation===0;
+ result.checks.sectionEditingShowsOnlyFrame=editingChrome.corner===0 && editingChrome.rotation===0 && editingChrome.edge>0;
+ result.observations.sectionEditor=box;
+ result.checks.sectionTitleHasCompactRoundedBorder=box.tag==='INPUT' && box.radius>=3 && box.radius<=5 && box.ring!=='none' && box.width<130 && box.bottom<328;
+ result.checks.sectionEditorAnchoredAtTitle=Math.abs(box.x-300)<=1&&Math.abs(box.y-298)<=1;
+ await page.keyboard.press('Backspace');await pause();
+ const emptyBox=await titleBox();
+ result.checks.sectionTitleFrameFollowsDraft=emptyBox.width<box.width-8;
+ const clip={x:304,y:300,width:56,height:22};
+ const pixels=await page.screenshot({clip});
+ result.checks.emptyDraftCoversOriginalGlyphs=await page.evaluate(async bytes=>{
+   const bmp=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'}));
+   const ctx=new OffscreenCanvas(bmp.width,bmp.height).getContext('2d');ctx.drawImage(bmp,0,0);bmp.close();
+   const data=ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height).data;
+   for(let i=0;i<data.length;i+=4)if(data[i]<110&&data[i+1]<110&&data[i+2]<110)return false;
+   return true;
+ },[...pixels]);
+ const documentDuringEdit=await page.evaluate(async()=>{
+   const state=sdk.readState(),exp=await sdk.exportImage({format:'png',bounds:[300,298,370,326],padding:0,scale:2});
+   const im=await createImageBitmap(new Blob([exp.bytes],{type:exp.mimeType})),ctx=new OffscreenCanvas(im.width,im.height).getContext('2d');
+   ctx.drawImage(im,0,0);const data=ctx.getImageData(0,0,im.width,im.height).data;im.close();
+   let ink=0;for(let i=0;i<data.length;i+=4)if(data[i]<110&&data[i+1]<110&&data[i+2]<110)ink++;
+   return {generation:state.generation,operation:state.lastCommit.operationId,ink};
+ });
+ result.checks.sectionTitleDraftIsViewLocal=documentDuringEdit.generation===beforeEdit.state.generation &&
+   documentDuringEdit.operation===beforeEdit.state.lastCommit.operationId && documentDuringEdit.ink>40;
+ await page.keyboard.press('Escape');
+ await pause();const restoredChrome=await sectionChrome();
+ result.checks.escapeRestoresSectionGrips=restoredChrome.corner===idleChrome.corner && restoredChrome.rotation===0;
+ await page.mouse.click(90,435);await pause();const idleAfterDeselect=await sectionChrome();
+ result.checks.deselectSectionClearsGrips=idleAfterDeselect.rotation===0 && idleAfterDeselect.corner===0;
+ await page.evaluate(id=>sdk.selectSection(id),sectionId);await pause();
+ result.checks.sectionEscapePreservesTitle=await page.evaluate(({id,generation})=>sdk.readSection(id).title==='Section' && sdk.readState().generation===generation,{id:sectionId,generation:beforeEdit.state.generation});
+ await page.locator('#section-title').focus();await pause();const panelChrome=await sectionChrome();
+ result.checks.sectionPanelHidesGrips=panelChrome.corner===0 && panelChrome.rotation===0 && panelChrome.edge===idleChrome.edge;
+ await page.keyboard.press('Escape');await pause();
+ result.checks.sectionEditorRejectsInvalidOpens=await page.evaluate(async id=>{
+   const revision=sdk.readState().selectionRevision;
+   const reject=async (target,mode,stamp)=>{try{await sdk.setSectionTitleEditor(target,mode,stamp);return false;}catch{return true;}};
+   return await reject(id,'inline',String(BigInt(revision)+1n)) && await reject('00000000000000000000000000000001','inline',revision)
+     && await reject(id,'unknown',revision);
+ },sectionId);
+ await page.mouse.dblclick(438,419);await pause();
+ result.checks.sectionBodyDoesNotOpenTitleEditor=!(await page.evaluate(titleFocused));
+ if(await page.evaluate(titleFocused))await page.keyboard.press('Escape');
+ await page.evaluate(()=>sdk.zoomAt(300,330,2));await pause();
+ await page.mouse.dblclick(323,286);await page.waitForFunction(titleFocused);
+ const zoomed=await titleBox();
+ result.checks.zoomedTitleEditorTracksHeader=Math.abs(zoomed.x-300)<=1&&Math.abs(zoomed.y-266)<=1&&Math.abs(zoomed.height-2*box.height)<=2;
+ await page.keyboard.insertText('设计评审');await page.keyboard.press('Enter');await pause();
+ result.checks.inlineSectionRenameCommits=await page.evaluate(id=>sdk.readSection(id).title==='设计评审',sectionId);
+ await page.evaluate(()=>sdk.undo());await pause();
+ result.checks.inlineSectionRenameIsOneUndo=await page.evaluate(id=>sdk.readSection(id).title==='Section',sectionId);
+ // The title fits the Section even while selected; only its single-line editor expands.
+ await open('/example.html');await page.locator('#section-create').click();await down(320,370);await up(435,535);
+ const titleId=(await read()).section.objectId;
+ const longTitle='项目评审：'+'甲乙丙丁'.repeat(8)+' END';
+ await page.evaluate(([id,title])=>sdk.renameSection(id,title),[titleId,longTitle]);await pause();
+ const selectedFrame=await page.evaluate(id=>sdk.readSection(id).titleFrame,titleId);
+ // Sample both sides of the authored right edge through the middle of the title chip.
+ const badgeEdge=await page.screenshot({clip:{x:430,y:346,width:12,height:6}});
+ result.checks.longSectionTitleBorderAlignsAtRight=await page.evaluate(async bytes=>{
+   const im=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'}));
+   const ctx=new OffscreenCanvas(im.width,im.height).getContext('2d');ctx.drawImage(im,0,0);
+   const d=im.width/12, pixel=x=>ctx.getImageData(Math.floor(x*d),Math.floor(3*d),1,1).data;
+   const inside=pixel(4.5),outside=pixel(5.5);im.close();
+   return inside[0]<235 && inside[2]>inside[0] && outside[0]===255 && outside[1]===255 && outside[2]===255;
+ },[...badgeEdge]);
+ await page.mouse.click(90,430);await pause();
+ const compactFrame=await page.evaluate(id=>sdk.readSection(id).titleFrame,titleId);
+ result.observations.sectionCaption={selectedFrame,compactFrame};
+ result.checks.sectionTitleStaysFittedOnSelection=compactFrame && selectedFrame && compactFrame.ellipsized && selectedFrame.ellipsized &&
+   compactFrame.textWidth<=115 && compactFrame.textWidth===selectedFrame.textWidth &&
+   compactFrame.textHeight<25 && selectedFrame.textHeight<25;
+ await page.mouse.click(350,342);await pause();
+ result.checks.sectionTitleClickSelectsFittedCaption=await page.evaluate(id=>sdk.readState().primary===id && sdk.readSection().titleFrame.ellipsized,titleId);
+ await page.mouse.dblclick(350,347);await pause();
+ result.checks.expandedSectionTitleIsEditable=await page.evaluate(([id,title])=>{const input=document.activeElement;
+   return input?.id==='section-title-editor' && input.value===title && input.getBoundingClientRect().width>115 && !sdk.readSection(id).titleFrame.ellipsized;
+ },[titleId,longTitle]);
+ if(result.checks.expandedSectionTitleIsEditable){
+   const field=page.locator('#section-title-editor');
+   await page.keyboard.press('Meta+a');await page.keyboard.insertText('中'.repeat(51));await pause();
+   result.checks.sectionTitleLimitsInput=(await field.inputValue())==='中'.repeat(50);
+   await page.keyboard.press('Meta+a');await page.keyboard.insertText('一行标题');await page.keyboard.press('Shift+Enter');await pause();
+   result.checks.sectionReturnFinishesSingleLine=await page.evaluate(id=>sdk.readSection(id).title==='一行标题' && !document.getElementById('section-title-editor'),titleId);
+ }
+ result.checks.sectionPublicCommandsEnforceTitle=await page.evaluate(async id=>{
+   const invalid=async fn=>{try{await fn();return false;}catch{return true;}};
+   await sdk.renameSection(id,'甲'.repeat(50));
+   const generation=sdk.readState().generation;
+   return await invalid(()=>sdk.renameSection(id,'甲'.repeat(51))) && await invalid(()=>sdk.createSection({title:'甲\n乙'})) &&
+     await invalid(()=>sdk.renameSection(id,'甲\u2028乙')) && sdk.readState().generation===generation;
+ },titleId);
+ await page.evaluate(id=>sdk.selectSection(id),titleId);await pause();
+ const beforeHandleDrag=await read();
+ await down(455,350);await up(490,420);
+ const afterHandleDrag=await page.evaluate(id=>({section:sdk.readSection(id),generation:sdk.readState().generation}),titleId);
+ result.checks.formerSectionRotationHandleIsInert=afterHandleDrag.generation===beforeHandleDrag.state.generation &&
+   afterHandleDrag.section.titleFrame.toWorld.every((coordinate,i)=>coordinate===beforeHandleDrag.section.titleFrame.toWorld[i]);
  result.status=result.errors.length===0&&Object.values(result.checks).every(Boolean)?'PASS':'FAIL';if(result.status!=='PASS')process.exitCode=1;
 }catch(e){result.status='ERROR';result.error=String(e.stack??e);process.exitCode=1;}finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.rm(root,{recursive:true,force:true});await fs.writeFile(output,JSON.stringify(result,null,2));console.log(JSON.stringify(result));}

@@ -1,4 +1,4 @@
-import type {AxiomError,Id128,Revision,ImageExportOptions,ImageExportResult,CommitStamp,DataProgress,OperationMetadata,OperationPacket,DataStatus,Stamp,Color,InkBrushConfig,DocumentBackground,PropertyValue,Stroke,MultiProperty,MultiProjection,ResourceToken,ResourceCatalog,InitialResources,TextToken,TextSnapshot,FontEntry,FontCatalog,Endpoint,ImageContent,CommandResult,RuntimeState,SectionOptions,TextFormat,AppearanceStamp,AppearanceValues,AppearancePatch,AppearanceSnapshot,AppearanceToken,AppearanceResult,AppearanceAPI,TableTarget,TableSnapshot,TableAPI,VectorPathCommand,VectorPathOptions,VectorPathSnapshot,Controller} from '../api/axiom.mjs';
+import type {AxiomError,Id128,Revision,ImageExportOptions,ImageExportResult,CommitStamp,DataProgress,OperationMetadata,OperationPacket,DataStatus,Stamp,Color,InkBrushConfig,DocumentBackground,PropertyValue,Stroke,MultiProperty,MultiProjection,ResourceToken,ResourceCatalog,InitialResources,TextToken,TextSnapshot,FontEntry,FontCatalog,Endpoint,ImageContent,CommandResult,RuntimeState,SectionOptions,SectionTitleFrame,TextFormat,AppearanceStamp,AppearanceValues,AppearancePatch,AppearanceSnapshot,AppearanceToken,AppearanceResult,AppearanceAPI,TableTarget,TableSnapshot,TableAPI,VectorPathCommand,VectorPathOptions,VectorPathSnapshot,Controller} from '../api/axiom.mjs';
 export * from '../api/axiom.mjs';
 export type AnchorRect = readonly [number, number, number, number];
 export interface Anchor {
@@ -64,7 +64,8 @@ export interface Runtime {
   resizeSelection(width:number,height:number):Promise<CommandResult>;transformSelection(matrix:[number,number,number,number,number,number]):Promise<CommandResult>;
   deleteSelection():Promise<CommandResult>;lockSelection(value:boolean):Promise<CommandResult>;setSelectionVisible(value:boolean):Promise<CommandResult>;unlockSelection():Promise<CommandResult>;
   createSection(options?:SectionOptions):Promise<CommandResult>;wrapInSection(options:SectionOptions):Promise<CommandResult>;releaseSection(id:Id128):Promise<CommandResult>;reparent(options:SectionOptions):Promise<CommandResult>;resizeSection(id:Id128,boundary:[number,number,number,number]):Promise<CommandResult>;renameSection(id:Id128,title:string):Promise<CommandResult>;
-  readSection(id?:Id128):{available:boolean;objectId:Id128;children:Id128[];roots:Id128[];groupScope:Id128|null;title:string;boundary:[number,number,number,number];generation:Revision};
+  setSectionTitleEditor(id:Id128,mode:"inline"|"panel"|"closed",selectionRevision:Revision):Promise<CommandResult>;
+  readSection(id?:Id128):{available:boolean;objectId:Id128;children:Id128[];roots:Id128[];groupScope:Id128|null;title:string;titleMaxCharacters:number;titleFrame:SectionTitleFrame|null;boundary:[number,number,number,number];generation:Revision};
   selectSection(id:Id128):Promise<CommandResult>;selectSectionChildren(id:Id128):Promise<CommandResult>;
   group():Promise<CommandResult>;ungroup(id?:Id128):Promise<CommandResult>;enterGroup(id?:Id128):Promise<CommandResult>;leaveGroup():Promise<CommandResult>;
   text:{read():TextSnapshot;fonts():FontCatalog;fontStatus(id:Id128):FontEntry|null;

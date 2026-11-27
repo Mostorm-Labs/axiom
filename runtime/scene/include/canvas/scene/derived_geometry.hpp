@@ -31,6 +31,11 @@ struct ArrowHeadGeometry final { foundation::WorldPoint tip{}, left{}, right{}; 
 [[nodiscard]] inline double sectionTitleHeight(const semantic::SectionContent& section) noexcept {
     return section.title.empty() ? 0.0 : section.header_height;
 }
+[[nodiscard]] inline semantic::Rect2 sectionTitleBounds(const semantic::SectionContent& section) noexcept {
+    const auto& b = section.boundary;
+    const double height = sectionTitleHeight(section);
+    return {b.x, b.y - height, b.width, height};
+}
 struct SectionBoundaryGeometry final { foundation::WorldRect boundary{}; float titleHeight{}; bool operator==(const SectionBoundaryGeometry&) const = default; };
 using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, ConnectorGeometry, SectionBoundaryGeometry>;
 [[nodiscard]] DerivedGeometry deriveGeometry(const semantic::ObjectRecord&) noexcept;

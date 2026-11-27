@@ -17,11 +17,15 @@ void fitPolicy() {
   assert(!rejected.accepted);
   const auto degenerate = computeViewportFit(WorldRect{10, 20, 10, 20}, 800, 600, 0, 1);
   assert(degenerate.accepted && degenerate.centerX == 10.0F && degenerate.centerY == 20.0F);
-  assert(degenerate.zoom == 32.0F);
-  const auto normal = computeViewportFit(WorldRect{0, 0, 200, 100}, 800, 600, 0, 1);
-  assert(normal.accepted && std::abs(normal.zoom - 3.68F) < 1.0e-4F);
-  const auto rotated = computeViewportFit(WorldRect{0, 0, 200, 100}, 800, 600, 0.5F, 1);
-  const auto highDpr = computeViewportFit(WorldRect{0, 0, 200, 100}, 800, 600, 0.5F, 2);
+  assert(degenerate.zoom == 3.0F);
+  const auto large = computeViewportFit(WorldRect{-10000, -20000, 10000, 20000}, 800, 600, 0, 2);
+  assert(large.accepted && large.zoom == 0.1F && large.centerX == 0 && large.centerY == 0);
+  const auto widePolicy = computeViewportFit(WorldRect{0,0,1,1}, 800, 600, 0, 1, {0, .01F, 20});
+  assert(widePolicy.accepted && widePolicy.zoom == 3.0F);
+  const auto normal = computeViewportFit(WorldRect{0, 0, 400, 200}, 800, 600, 0, 1);
+  assert(normal.accepted && std::abs(normal.zoom - 1.84F) < 1.0e-4F);
+  const auto rotated = computeViewportFit(WorldRect{0, 0, 400, 200}, 800, 600, 0.5F, 1);
+  const auto highDpr = computeViewportFit(WorldRect{0, 0, 400, 200}, 800, 600, 0.5F, 2);
   assert(rotated.accepted && highDpr.accepted && std::abs(rotated.zoom - highDpr.zoom) < 1.0e-5F);
   assert(rotated.zoom < normal.zoom);
 }

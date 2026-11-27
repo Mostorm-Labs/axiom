@@ -159,6 +159,8 @@ class SkiaRenderer final {
     std::uint64_t reserveCpuWorkerGrant(std::uint64_t executor,std::size_t bytes) noexcept;
     bool releaseCpuWorkerGrant(std::uint64_t executor,std::uint64_t token) noexcept;
     std::size_t cpuWorkerGrantBytes() const noexcept;
+    [[nodiscard]] SelectionGeometryHit hitTestInkPoint(const ReferenceTraversalEntry&,
+        foundation::WorldPoint, const semantic::Transform2D& worldToDevice) const noexcept;
     [[nodiscard]] SelectionGeometryHit intersectSelectionGeometry(const RuntimeSceneRecord&,
         std::span<const foundation::WorldPoint>,bool* pending=nullptr) const noexcept;
     [[nodiscard]] RenderDamage renderDamage() const;

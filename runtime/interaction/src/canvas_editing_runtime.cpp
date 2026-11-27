@@ -9,6 +9,7 @@ namespace g5 = canvas::foundation::internal::g5;
 
 #include "canvas/semantic/brush_engine_codec.hpp"
 #include "canvas/semantic/codec.hpp"
+#include "canvas/semantic/connector_validation.hpp"
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
 #include "qualification_checkpoint.hpp"
 #endif
@@ -81,6 +82,7 @@ bool validAppearance(const runtime::CanvasAppearance& a) {
 bool usesDerivedAppearance(const semantic::PropertyBag& bag) {
   for(const auto& p:bag.entries){if(p.field_id==0x102U||p.field_id==0x103U)return true;if(const auto* fill=std::get_if<semantic::FillStyleValue>(&p.value);fill&&std::holds_alternative<semantic::PatternFillV1>(*fill))return true;}return false;
 }
+constexpr float kAttachmentPortGap = 28.0F;
 semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bool shape) {
   const auto color=[](runtime::RgbaColor c){return semantic::ColorValue{c.r,c.g,c.b,c.a};};
   semantic::PropertyBag bag;
@@ -625,6 +627,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  sectionTitleEditor_.reset();
   skiaRenderer_.retireAllCpuPendingHandoffs();
   clearAppearancePreview();
   abortExplicitIntent();
@@ -1177,6 +1180,34 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
   return true;
 }
 
+std::array<render::ScreenPoint, 4> CanvasEditingRuntime::attachmentPortCenters(
+    const RuntimeSceneRecord& record) const noexcept {
+  const auto& viewport = viewportController_->state();
+  const auto& geometry = record.geometryBounds;
+  const auto& outline = usesDerivedAppearance(record.properties) ? geometry : record.visualBounds;
+  const float axisX = (geometry.left + geometry.right) * 0.5F;
+  const float axisY = (geometry.top + geometry.bottom) * 0.5F;
+  const auto& t = record.transform;
+  const auto project = [&](float x, float y) -> render::ScreenPoint {
+    return {static_cast<float>((t.a*x + t.c*y + t.tx)*viewport.scale + viewport.translationX),
+            static_cast<float>((t.b*x + t.d*y + t.ty)*viewport.scale + viewport.translationY)};
+  };
+  const auto center = project(axisX, axisY);
+  // Stable ports follow the authored axes. Stroke joins can extend the visible
+  // outline asymmetrically, and the button gap is measured in screen pixels.
+  std::array ports{project(axisX, outline.top), project(outline.right, axisY),
+                   project(axisX, outline.bottom), project(outline.left, axisY)};
+  for (auto& port : ports) {
+    const float dx = port.x - center.x, dy = port.y - center.y;
+    const float length = std::hypot(dx, dy);
+    if (length > 1.0e-5F) {
+      port.x += kAttachmentPortGap * dx / length;
+      port.y += kAttachmentPortGap * dy / length;
+    }
+  }
+  return ports;
+}
+
 semantic::ObjectRecord CanvasEditingRuntime::makeCreationPrototype(CreationPreset preset,bool linked) {
   semantic::ObjectRecord record;record.id=allocateTextIdentity();if(record.id.isZero())return {};
   record.placement.order_key=semantic::OrderKey{{0xFE,1}};
@@ -1244,46 +1275,41 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     creationFences_.erase(key);
     creationClickCandidates_.erase(key);creationSiblingPrototypes_.erase(key);
   };
-  const auto attachmentAt = [&](foundation::WorldPoint point) -> std::optional<semantic::AttachedEndpoint> {
-    if (runtimeSceneHost_ == nullptr) return std::nullopt;
-    constexpr float kSnapRadius = 14.0F;
-    const float gap = 28.0F / std::max(0.001F, viewportController_->state().scale);
-    std::optional<semantic::AttachedEndpoint> result;
-    float best = kSnapRadius * kSnapRadius;
-    for (const auto& record : runtimeSceneHost_->read().records()) {
-      const auto* semanticRecord = semanticObjects_.find(record.objectId);
-      if (semanticRecord == nullptr ||
-          (semanticRecord->kind != semantic::ObjectKind::kShape &&
-           semanticRecord->kind != semantic::ObjectKind::kSticky)) continue;
-      const auto* projected=sceneCoordinator_?sceneCoordinator_->runtimeScene().find(record.objectId):nullptr;
-      const auto bounds=projected?interactionBounds(*projected):record.worldBounds;
-      const std::array<foundation::WorldPoint, 4> points{{
-          {(bounds.left + bounds.right) * 0.5F, bounds.top - gap},
-          {bounds.right + gap, (bounds.top + bounds.bottom) * 0.5F},
-          {(bounds.left + bounds.right) * 0.5F, bounds.bottom + gap},
-          {bounds.left - gap, (bounds.top + bounds.bottom) * 0.5F}}};
+  const auto attachmentAtView = [&](float viewX, float viewY) -> std::optional<semantic::AttachedEndpoint> {
+    if (creationPreset_ != CreationPreset::kLine && creationPreset_ != CreationPreset::kArrow)
+      return std::nullopt;
+    if (selectionView_ && !selection_.primary().isZero()) {
+      const auto& points = selectionView_->editingOverlay().attachmentPoints();
       for (std::size_t i = 0; i < points.size(); ++i) {
-        const float dx = points[i].x - point.x, dy = points[i].y - point.y;
-        const float distance = dx * dx + dy * dy;
-        if (distance >= best) continue;
+        const float dx = points[i].center.x - viewX, dy = points[i].center.y - viewY;
+        if (dx*dx + dy*dy <= 16.0F*16.0F)
+          return semantic::AttachedEndpoint{selection_.primary(), semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1)}};
+      }
+    }
+    if (!runtimeSceneHost_ || !sceneCoordinator_) return std::nullopt;
+    constexpr float snapRadius = 14.0F;
+    float best = snapRadius * snapRadius;
+    std::optional<semantic::AttachedEndpoint> result;
+    const auto& camera = viewportController_->state();
+    const auto [worldX, worldY] = viewportController_->viewToContent(viewX, viewY);
+    const float reach = (kAttachmentPortGap + snapRadius) / camera.scale;
+    const auto view = runtimeSceneHost_->read();
+    for (const auto& item : view.records()) {
+      const auto& bounds = item.worldBounds;
+      if (worldX < bounds.left - reach || worldX > bounds.right + reach ||
+          worldY < bounds.top - reach || worldY > bounds.bottom + reach) continue;
+      const auto* record = sceneCoordinator_->runtimeScene().find(item.objectId);
+      if (!record || !semantic::isConnectableObjectKind(record->kind, record->kindVersion)) continue;
+      const auto points = attachmentPortCenters(*record);
+      for (std::size_t i = 0; i < points.size(); ++i) {
+        const float dx = points[i].x - viewX, dy = points[i].y - viewY;
+        const float distance = dx*dx + dy*dy;
+        if (distance >= best || !textWritable(item.objectId)) continue;
         best = distance;
-        result = semantic::AttachedEndpoint{semanticRecord->id,
-          semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1U)}};
+        result = semantic::AttachedEndpoint{item.objectId, semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1)}};
       }
     }
     return result;
-  };
-  const auto attachmentAtView = [&](float viewX, float viewY) -> std::optional<semantic::AttachedEndpoint> {
-    if (!selectionView_ || selection_.primary().isZero()) return std::nullopt;
-    const auto& points = selectionView_->editingOverlay().attachmentPoints();
-    for (std::size_t index = 0; index < points.size(); ++index) {
-      const float dx = points[index].center.x - viewX;
-      const float dy = points[index].center.y - viewY;
-      if (dx * dx + dy * dy <= 16.0F * 16.0F)
-        return semantic::AttachedEndpoint{selection_.primary(),
-            semantic::StablePortAnchor{static_cast<std::uint32_t>(index + 1U)}};
-    }
-    return std::nullopt;
   };
   const auto refreshTargets = [&](CreationSession& creation) {
     if (!historySceneReady()) return false;
@@ -1315,9 +1341,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     latestCreationPointer_ = key;
     if (!refreshTargets(creation)) { eraseSession(); return false; }
     if (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) {
-      auto start = attachmentAtView(x, y);
-      if (!start) start = attachmentAt({content.first, content.second});
-      creation.setStartAttachment(start);
+      creation.setStartAttachment(attachmentAtView(x, y));
     }
     const bool normalHover=validCreationHover(true)&&creationHover_->source.isZero();
     const bool linkedHover=creationHover_&&!creationHover_->source.isZero()&&
@@ -1358,9 +1382,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     }
     if (!refreshTargets(creation)) eraseSession();
     else {
-      auto endpoint = attachmentAtView(x, y);
-      if (!endpoint) endpoint = attachmentAt({content.first, content.second});
-      creation.setEndAttachment(endpoint);
+      creation.setEndAttachment(attachmentAtView(x, y));
       if (!creation.move(key, {content.first, content.second})) eraseSession();
     }
     // The transient object and snap guides are part of the next display
@@ -1381,9 +1403,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   const auto fence = creationFences_.find(key);
   if (fence == creationFences_.end() || fence->second.semantic != semanticGeneration_.current() ||
       fence->second.camera != cameraGeneration()) { eraseSession(); return false; }
-  auto endAttachment = attachmentAtView(x, y);
-  if (!endAttachment) endAttachment = attachmentAt({content.first, content.second});
-  creation.setEndAttachment(endAttachment);
+  creation.setEndAttachment(attachmentAtView(x, y));
   foundation::WorldPoint finalEnd{content.first, content.second};
   if(creationClickCandidates_.contains(key)) {
     const auto start=creation.preview().start;
@@ -1408,8 +1428,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     // center/edge on another side.  Dragging still retains the normal snap
     // resolver and end attachment behavior.
     creation.setSnapTargets({});
-    endAttachment.reset();
-    creation.setEndAttachment(endAttachment);
+    creation.setEndAttachment(std::nullopt);
   }
   if (!creation.move(key, finalEnd)) { eraseSession(); return true; }
   const auto startAttachment = creation.startAttachment();
@@ -1442,8 +1461,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       if (freeEnd != nullptr) {
         std::uint32_t sourcePort=2;
         if(const auto* port=std::get_if<semantic::StablePortAnchor>(&startAttachment->anchor))sourcePort=port->port_id;
-        const auto targetPort=oppositeAttachmentPort(sourcePort);
-        auto target=makeConnectorSibling(startAttachment->target_object_id,sourcePort,
+        const auto targetPort=siblingAttachmentPort(startAttachment->target_object_id,sourcePort);
+        auto target=makeConnectorSibling(startAttachment->target_object_id,targetPort,
             {static_cast<float>(freeEnd->point.x),static_cast<float>(freeEnd->point.y)},siblingPrototype);
         if(target.id.isZero())return false;
         const auto targetOrdinal=ordinal+0x100000U;
@@ -1717,6 +1736,7 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
     return false;
   }
   if (selectionMode_ != enabled) {
+    if (sectionTitleEditor_) { sectionTitleEditor_.reset(); markCanonicalPresentationDirty(); }
     dispatchRuntime_.cancelAll();
     coordinator_->reset();viewportController_->endGesture();
     resetTextTap();
@@ -1744,16 +1764,18 @@ bool CanvasEditingRuntime::selectAtViewPoint(float x, float y) noexcept {
   const auto content = viewportController_->viewToContent(x, y);
   const auto tested = selectionPointHits({content.first,content.second});
   if (!tested) return false;
-  if (tested.value().frontToBack.empty()) {
+  const auto& ids = tested.value().frontToBack;
+  return selectPointRoot(ids.empty() ? foundation::ObjectId{} : resolveSelectionRoot(ids.front()));
+}
+
+bool CanvasEditingRuntime::selectPointRoot(foundation::ObjectId selectedId) noexcept {
+  if (selectedId.isZero()) {
     selection_.cancel();
     selectionView_.reset();
     snapGuides_.clear();
     canonicalPresentationDirty_ = true;
     return true;
   }
-  auto selectedId = tested.value().frontToBack.front();
-  selectedId=resolveSelectionRoot(selectedId);
-  if(selectedId.isZero())return false;
   const bool selected = selection_.click(selectedId);
   if (selected) {
     snapGuides_.clear();
@@ -2230,25 +2252,8 @@ bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
   if (!applyLocalHistoryOperation(std::move(forward), std::move(inverse))) return false;
   if (!isTextEdit) return true;
   const auto* updated = semanticObjects_.find(target);
-  const auto* shape = updated ? std::get_if<semantic::ShapeContent>(&updated->content) : nullptr;
-  semantic::ObjectId expansionTarget = target;
-  bool hasText = false;
-  if (shape && shape->label)
-    for (const auto& paragraph : shape->label->document.paragraphs)
-      for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
-  if (updated && updated->kind == semantic::ObjectKind::kRichText && updated->placement.parent_id) {
-    if (const auto* parent = semanticObjects_.find(*updated->placement.parent_id)) {
-      if (parent->kind == semantic::ObjectKind::kSticky) {
-        expansionTarget = parent->id;
-        if (const auto* rich = std::get_if<semantic::RichTextContent>(&updated->content))
-          for (const auto& paragraph : rich->document.paragraphs)
-            for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
-      }
-    }
-  }
-  // Sticky follows Shape's visible affordance contract: retain ellipsis while
-  // typing and expand only after the selected object's button is clicked.
-  if (shape && hasText) (void)expandShapeLabel(expansionTarget);
+  if (updated && updated->kind == semantic::ObjectKind::kShape)
+    (void)expandShapeLabel(target);
   return true;
 }
 
@@ -2282,8 +2287,9 @@ std::optional<semantic::Transform2D> CanvasEditingRuntime::fittedShapeLabelTrans
   const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
   if (!textLayoutService_ || !shape || shape->shape_kind < 1U || shape->shape_kind > 3U)
     return {};
-  const auto content = shape->label.value_or(semantic::RichTextContent{});
-  bool hasText = false;
+  if (!shape->label) return record.transform;
+  const auto& content = *shape->label;
+  bool hasText = content.document.paragraphs.size() > 1;
   for (const auto& paragraph : content.document.paragraphs)
     for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
   if (!hasText) return record.transform;
@@ -2572,6 +2578,10 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
 }
 
 bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
+  if (sectionTitleEditor_ && !sectionTitleEditorCurrent()) {
+    sectionTitleEditor_.reset();
+    markCanonicalPresentationDirty();
+  }
   if (regionSelection_.active()&&regionSelection_.context()!=regionContext()) {
     cancelRegionSelection();regionQueryStatus_=runtime::SelectionQueryStatus::kStale;
   }
@@ -2623,61 +2633,18 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   const auto cropBounds = imageCropPresentation_
       ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
   std::vector<render::AttachmentPointGeometry> attachmentPoints;
-  const bool hasAttachmentPorts = record->kind == semantic::ObjectKind::kShape ||
-      record->kind == semantic::ObjectKind::kSticky;
-  if (hasAttachmentPorts) {
-    // Attachment points are presentation affordances around the same visible
-    // outline used by the selection chrome.  Using geometryBounds here leaves
-    // the top and left ports inside the outline whenever a stroke expands the
-    // visual bounds, which makes those two ports look offset from the object.
-    const auto& bounds = cropBounds ? cropBounds->visual : usesDerivedAppearance(record->properties)?record->geometryBounds:record->visualBounds;
-    // Acute stroke joins can expand visual bounds asymmetrically. Keep the
-    // transverse port axes at the authored geometry center, as the semantic
-    // StablePort anchors do; only the outward gap follows the visible outline.
-    const auto& axes = cropBounds ? cropBounds->geometry : record->geometryBounds;
-    const float axisX=(axes.left+axes.right)*0.5F;
-    const float axisY=(axes.top+axes.bottom)*0.5F;
-    constexpr float kAttachmentGap = 28.0F;
-    const auto screenCenter = [&] {
-      const float x = axisX;
-      const float y = axisY;
-      const auto world = render::ScreenPoint{
-          static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
-          static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
-      return render::ScreenPoint{
-          static_cast<float>(surface_.logicalWidth * 0.5F + viewport.scale * (world.x - center.x)),
-          static_cast<float>(surface_.logicalHeight * 0.5F + viewport.scale * (world.y - center.y))};
-    }();
-    const auto point = [&](float x, float y) {
-      const auto world = render::ScreenPoint{
-          static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
-          static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
-      auto screen = render::ScreenPoint{
-          static_cast<float>(surface_.logicalWidth * 0.5F +
-                             viewport.scale * (world.x - center.x)),
-          static_cast<float>(surface_.logicalHeight * 0.5F +
-                             viewport.scale * (world.y - center.y))};
-      float nx = screen.x - screenCenter.x;
-      float ny = screen.y - screenCenter.y;
-      const float length = std::hypot(nx, ny);
-      if (length > 1.0e-5F) {
-        screen.x += nx / length * kAttachmentGap;
-        screen.y += ny / length * kAttachmentGap;
-      }
-      bool hovered = false;
-      for (const auto& previous : previousAttachmentPoints) {
-        const float dx = previous.center.x - screen.x;
-        const float dy = previous.center.y - screen.y;
-        if (dx * dx + dy * dy <= 4.0F * 4.0F) { hovered = previous.hovered; break; }
-      }
-      attachmentPoints.push_back({screen, true, hovered});
-    };
-    point(axisX, bounds.top);
-    point(bounds.right, axisY);
-    point(axisX, bounds.bottom);
-    point(bounds.left, axisY);
+  const bool hasAttachmentPorts = !imageCropPresentation_ &&
+      semantic::isConnectableObjectKind(record->kind, record->kindVersion) && textWritable(record->objectId);
+  if (hasAttachmentPorts && !transformDrag_.active()) {
+    for (const auto portCenter : attachmentPortCenters(*record)) {
+      const bool hovered = std::any_of(previousAttachmentPoints.begin(), previousAttachmentPoints.end(),
+          [&](const auto& point) {
+            const float dx = point.center.x - portCenter.x, dy = point.center.y - portCenter.y;
+            return point.hovered && dx*dx + dy*dy <= 4.0F*4.0F;
+          });
+      attachmentPoints.push_back({portCenter, true, hovered});
+    }
   }
-  if (transformDrag_.active()) attachmentPoints.clear();
   const bool sketchChrome=usesDerivedAppearance(record->properties);
   auto overlayBounds=cropBounds ? cropBounds->visual : sketchChrome?record->geometryBounds:record->visualBounds;
   if(record->kind==semantic::ObjectKind::kSection)overlayBounds=record->geometryBounds;
@@ -2690,15 +2657,19 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     frameStyle = render::SelectionFrameStyle::kPadded;
   else if (record->kind == semantic::ObjectKind::kShape || record->kind == semantic::ObjectKind::kSticky)
     frameStyle = render::SelectionFrameStyle::kPaddedWithCornerRotation;
+  else if (record->kind == semantic::ObjectKind::kImage && !imageCropPresentation_)
+    frameStyle = render::SelectionFrameStyle::kTightWithCornerRotation;
+  const auto* previewPose=transformOverrides_.find(record->objectId);
+  const auto& pose=previewPose ? *previewPose : record->transform;
+  const bool canTransform = !selectedObjectLocked() && !sectionTitleEditorCurrent();
+  const bool canRotate = canTransform && !imageCropPresentation_ &&
+      record->kind != semantic::ObjectKind::kTable && record->kind != semantic::ObjectKind::kSection;
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
-      record->objectId, overlayBounds,
-      transformOverrides_.find(record->objectId) == nullptr ? record->transform
-          : *transformOverrides_.find(record->objectId),
+      record->objectId, overlayBounds, pose,
       true, false, transformDrag_.active(),
-      render::HandleCapabilities{
-          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_},
+      render::HandleCapabilities{canTransform, canTransform, canRotate},
       snapGuides_, attachmentPoints, hasAttachmentPorts ? 60.0F : 32.0F, frameStyle});
-  if(updated)appendGroupScopeOutline(selectionView_->editingOverlay());
+  if (updated) appendGroupScopeOutline(selectionView_->editingOverlay());
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }
@@ -2745,6 +2716,11 @@ bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x,float y) noexcept {
 
 bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
                                          float x, float y) noexcept {
+  return selectionPointer(key, phase, x, y, std::nullopt);
+}
+
+bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
+                                           float x, float y, std::optional<foundation::ObjectId> downRoot) noexcept {
   if (!selectionMode_ || !key.valid()) return false;
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
   const auto observePose=[&]()noexcept{if(!g5::enabled())return;const auto id=selection_.primary();if(id.isZero())return;
@@ -2848,24 +2824,16 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     }
     editingHandle_ = selectionOverlay() == nullptr ? render::HandleKind::kNone
         : selectionOverlay()->hitTest({x,y});
-    bool moveSelected = false;
-    if (editingHandle_ == render::HandleKind::kNone && runtimeSceneHost_ != nullptr) {
-      const auto hit = selectionPointHits({world.first,world.second});
-      if (hit && !hit.value().frontToBack.empty()) {
-        auto hitId = hit.value().frontToBack.front();
-        if (const auto* hitRecord = semanticObjects_.find(hitId);
-            hitRecord != nullptr && hitRecord->kind == semantic::ObjectKind::kRichText &&
-            hitRecord->placement.parent_id) {
-          if (const auto* parent = semanticObjects_.find(*hitRecord->placement.parent_id);
-              parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
-            hitId = parent->id;
-        }
-        hitId=resolveSelectionRoot(hitId);
-        moveSelected = hitId == selection_.primary();
+    if (editingHandle_ == render::HandleKind::kNone && !downRoot) {
+      const auto hit = selectionPointHits({world.first, world.second});
+      if (hit) {
+        const auto& ids = hit.value().frontToBack;
+        downRoot = ids.empty() ? foundation::ObjectId{} : resolveSelectionRoot(ids.front());
       }
     }
-    if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
-      const bool selected = selectAtViewPoint(x,y);
+    if (editingHandle_ == render::HandleKind::kNone &&
+        (!downRoot || downRoot->isZero() || *downRoot != selection_.primary())) {
+      const bool selected = downRoot && selectPointRoot(*downRoot);
       const auto* acquired = pendingObject(selection_.primary());
       // A Group is the target of the original Down on any of its members.
       // Start the same whole-Group drag immediately instead of requiring a
@@ -3987,6 +3955,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
     return false;
   }
 
+  if (previousCameraGeneration == cameraGeneration()) return true;
   if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
@@ -4002,16 +3971,8 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
                                           float anchorY) noexcept {
   std::lock_guard lock(previewStateMutex_);
   const auto previousCameraGeneration=cameraGeneration();
-  if (viewportController_ == nullptr || !std::isfinite(zoom) || zoom <= 0.0F ||
-      !std::isfinite(anchorX) || !std::isfinite(anchorY)) {
-    return false;
-  }
-  const auto current = viewportController_->state();
-  if (current.scale <= 0.0F || !std::isfinite(current.scale)) return false;
-  const float ratio = zoom / current.scale;
-  const float translationX = anchorX - ratio * (anchorX - current.translationX);
-  const float translationY = anchorY - ratio * (anchorY - current.translationY);
-  if (!viewportController_->setCamera(zoom, translationX, translationY)) return false;
+  if (!viewportController_ || !viewportController_->zoomAt(zoom, anchorX, anchorY)) return false;
+  if (previousCameraGeneration == cameraGeneration()) return true;
   if (!invalidateViewportChange(previousCameraGeneration)) return false;
   if (surface_.available && activeSurfaceProvider() != nullptr) {
     if (platformPresentationDeferred_) {
@@ -4547,6 +4508,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  sectionTitleEditor_.reset();
   submittedViewport_.reset();
   exactDisplayRoster_={};submittedDisplayRoster_={};
   ++previewDisplayRevision_;previewDisplayDirty_=previewActive();
@@ -5222,6 +5184,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
   applyContainerPreview(references.value());
+  applySectionTitleEditor(references.value());
   AXIOM_FRAME_TIMING_END(adaptTiming);
   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return {}; }
@@ -5696,6 +5659,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     }
   }
   applyContainerPreview(references.value());
+  applySectionTitleEditor(references.value());
   if(objectEraseFeedbackActive()){
     for(auto& entry:references.value().entries)
       for(const auto& [pointer,ids]:objectEraseCandidates_){(void)pointer;if(ids.contains(entry.record.objectId)){entry.presentationOpacity=.2F;break;}}

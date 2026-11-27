@@ -1,4 +1,6 @@
 #include "canvas/render/skia_text_resources.hpp"
+#include "canvas/text/section_title.hpp"
+#include <cmath>
 #include "../../text/src/skia_font_materialization.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkFont.h"
@@ -14,6 +16,31 @@ struct SkiaTextResources::Impl {
 };
 SkiaTextResources::SkiaTextResources() : impl_(std::make_unique<Impl>()) {}
 SkiaTextResources::~SkiaTextResources()=default;
+void SkiaTextResources::drawSectionTitle(SkCanvas& canvas,const text::TextLayoutSnapshot& layout,
+                                         float width,float height) {
+    using namespace canvas::text;
+    if (width<=0 || height<=0 || (layout.runs.empty() && !layout.overflow)) return;
+    // With ellipsis, the last whole glyph may leave unused space. The caption
+    // still shares the Section's right edge as it is resized.
+    const float w=layout.overflow ? width : std::min(width,std::ceil(layout.localBounds.right)+2*kSectionTitleInsetX);
+    const float h=std::min(height,std::ceil(layout.localBounds.bottom)+2*kSectionTitleInsetY);
+    canvas.save();
+    canvas.clipRect(SkRect::MakeWH(w,h));
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    paint.setColor(0xfff3f5fa);
+    canvas.drawRoundRect(SkRect::MakeWH(w,h),kSectionTitleRadius,kSectionTitleRadius,paint);
+    if (w>1 && h>1) {
+        paint.setColor(0xffd9dfe9);
+        paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(1);
+        canvas.drawRoundRect(SkRect::MakeWH(w,h).makeInset(.5F,.5F),kSectionTitleRadius-.5F,kSectionTitleRadius-.5F,paint);
+    }
+    canvas.clipRect(SkRect::MakeLTRB(kSectionTitleInsetX,0,w-kSectionTitleInsetX,h));
+    canvas.translate(kSectionTitleInsetX,kSectionTitleInsetY);
+    draw(canvas,layout);
+    canvas.restore();
+}
 void SkiaTextResources::draw(SkCanvas& canvas,const text::TextLayoutSnapshot& snapshot) {
     for(const auto& run:snapshot.runs) {
         if(run.font>=snapshot.fonts.size() || run.glyphs.size()!=run.positions.size()) continue;

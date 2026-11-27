@@ -38,7 +38,7 @@ This package is marked `qualification = NOT_QUALIFIED` until each platform has a
 macOS collects trackpad magnification and precise scroll events in the native
 Canvas host, then delegates camera changes through generation-checked
 `axiom_native_navigation` to the shared Runtime viewport owner. Pinch zoom uses
-the event's view-local anchor and Runtime's 0.25–8 gesture limits; two-finger
+the event's view-local anchor and clamps the camera to 10%–300%. Two-finger
 scroll pans the canvas (including momentum). It does not create document
 Operations or History entries. The shared TypeScript Controller is unchanged.
 The additive C/POD host record is size/ABI-versioned; values are borrowed only

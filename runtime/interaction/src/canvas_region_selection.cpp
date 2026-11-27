@@ -1,11 +1,13 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/interaction/region_selection_geometry.hpp"
+#include "canvas/render/direct_reference_source.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <map>
 
 namespace canvas::interaction {
 void CanvasEditingRuntime::appendGroupScopeOutline(render::EditingOverlay& overlay) noexcept {
@@ -126,34 +128,96 @@ foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::Obje
     return selection_.resolveHit(id,semanticObjects_);
 }
 foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(foundation::WorldPoint point) const {
-    if(!runtimeSceneHost_||!historySceneReady())return foundation::Result<HitTestResult>::failure(
-        {foundation::ErrorCode::kInvalidRevision,"Selection requires a coherent published Scene"});
-    auto result=runtimeSceneHost_->hitTest({point,4,{HitTestKindMask::kAll,true},std::max<std::size_t>(1,semanticObjects_.size())});
-    if(!result)return result;
-    auto& ids=result.value().frontToBack;
-    if(pendingLocalEnabled()){
-      std::vector<std::pair<foundation::ObjectId,semantic::OrderKey>> pendingHits;
-      const auto value=pendingLocalValue();
-      for(const auto& intent:value.intents)for(const auto id:intent.objects){auto record=pendingSceneRecord(id);if(!record)continue;const auto& t=record->transform;semantic::Transform2D inv;if(!scene::inverseTransform(t,inv))continue;const double x=inv.a*point.x+inv.c*point.y+inv.tx,y=inv.b*point.x+inv.d*point.y+inv.ty;const auto& b=record->visualBounds;if(x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom)pendingHits.push_back({id,record->placement.order_key});ids.erase(std::remove(ids.begin(),ids.end(),id),ids.end());}
-      for(const auto& hit:pendingHits)ids.push_back(hit.first);
-      if(!pendingHits.empty())std::stable_sort(ids.begin(),ids.end(),[&](auto a,auto b){const auto ra=pendingSceneRecord(a),rb=pendingSceneRecord(b);if(!ra||!rb)return a<b;if(ra->placement.order_key!=rb->placement.order_key)return ra->placement.order_key>rb->placement.order_key;return a>b;});
-      ids.erase(std::unique(ids.begin(),ids.end()),ids.end());
+    if (!runtimeSceneHost_ || !historySceneReady() || !sceneCoordinator_ || !viewportController_)
+        return foundation::Result<HitTestResult>::failure(
+            {foundation::ErrorCode::kInvalidRevision, "Selection requires a coherent published Scene"});
+    if (!surface_.width || !surface_.height || surface_.logicalWidth <= 0 || surface_.logicalHeight <= 0)
+        return foundation::Result<HitTestResult>::failure(
+            {foundation::ErrorCode::kInvalidArgument, "Selection requires a drawable viewport"});
+    const auto& camera = viewportController_->state();
+    const double sx = static_cast<double>(surface_.width) / surface_.logicalWidth;
+    const double sy = static_cast<double>(surface_.height) / surface_.logicalHeight;
+    const semantic::Transform2D worldToDevice{camera.scale*sx, 0, 0, camera.scale*sy,
+                                              camera.translationX*sx, camera.translationY*sy};
+    const float inkTolerance = static_cast<float>(std::hypot(1.0/worldToDevice.a, 1.0/worldToDevice.d));
+    auto result = runtimeSceneHost_->hitTest({point, 4, {HitTestKindMask::kAll, true},
+                                              std::max<std::size_t>(1, semanticObjects_.size()), inkTolerance});
+    if (!result) return result;
+    auto& ids = result.value().frontToBack;
+    const auto isInk = [](semantic::ObjectKind kind) {
+        return kind == semantic::ObjectKind::kVectorStroke || kind == semantic::ObjectKind::kDabStroke;
+    };
+    std::map<foundation::ObjectId, RuntimeSceneRecord> pending;
+    const auto projection = [&](foundation::ObjectId id) -> const RuntimeSceneRecord* {
+        const auto it = pending.find(id);
+        return it != pending.end() ? &it->second : sceneCoordinator_->runtimeScene().find(id);
+    };
+    if (pendingLocalEnabled()) {
+        bool added = false;
+        for (const auto& intent : pendingLocalValue().intents) for (const auto id : intent.objects) {
+            if (pending.contains(id)) continue;
+            auto record = pendingSceneRecord(id);
+            if (!record) continue;
+            const auto& r = pending.emplace(id, std::move(*record)).first->second;
+            std::erase(ids, id);
+            bool hit;
+            if (isInk(r.kind)) {
+                const auto& b = r.worldBounds;
+                hit = point.x >= b.left-inkTolerance && point.x <= b.right+inkTolerance &&
+                      point.y >= b.top-inkTolerance && point.y <= b.bottom+inkTolerance;
+            } else {
+                semantic::Transform2D inv;
+                if (!scene::inverseTransform(r.transform, inv)) continue;
+                const double x = inv.a*point.x + inv.c*point.y + inv.tx, y = inv.b*point.x + inv.d*point.y + inv.ty;
+                const auto& b = r.visualBounds;
+                hit = x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+            }
+            if (hit) { ids.push_back(id); added = true; }
+        }
+        if (added) std::stable_sort(ids.begin(), ids.end(), [&](auto a, auto b) {
+            const auto* ra = projection(a);
+            const auto* rb = projection(b);
+            if (!ra || !rb) return a < b;
+            if (isInk(ra->kind) != isInk(rb->kind)) return isInk(ra->kind);
+            if (ra->placement.order_key != rb->placement.order_key) return ra->placement.order_key > rb->placement.order_key;
+            return a > b;
+        });
     }
     const std::array<RegionPoint,4> neighborhood{{{point.x-4,point.y-4},{point.x+4,point.y-4},{point.x+4,point.y+4},{point.x-4,point.y+4}}};
-    bool invalid=false;
-    ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){
-        if(resolveSelectionRoot(id).isZero())return true;
-        const auto* object=semanticObjects_.find(id);
-        if(!object)return false;
-        if(object->kind!=semantic::ObjectKind::kVectorPath&&std::none_of(object->properties.entries.begin(),object->properties.entries.end(),[](const auto& e){return e.field_id==0x103U;}))return false;
-        const auto* published=sceneCoordinator_->runtimeScene().find(id);
-        if(!published){invalid=true;return true;}
-        auto world=*object;world.transform=published->transform;
-        const auto hit=intersectSelectionRegion(world,neighborhood,published);
-        if(hit==RegionIntersection::kInvalid||hit==RegionIntersection::kUnsupported)invalid=true;
-        return hit!=RegionIntersection::kHit;
-    }),ids.end());
-    if(invalid)return foundation::Result<HitTestResult>::failure({foundation::ErrorCode::kInvalidRecord,"VectorPath selection geometry unavailable"});
+    // Every point-acquisition caller consumes the frontmost selectable object.
+    for (const auto id : ids) {
+        if (resolveSelectionRoot(id).isZero()) continue;
+        const auto* object = pendingObject(id);
+        if (!object) continue;
+        const auto* record = projection(id);
+        if (!record) return foundation::Result<HitTestResult>::failure(
+            {foundation::ErrorCode::kInvalidRecord, "Selection geometry unavailable"});
+        if (isInk(object->kind)) {
+            auto command = render::DirectReferenceSource::presentationCommand(*record);
+            if (!command) return foundation::Result<HitTestResult>::failure(command.error());
+            render::ReferenceTraversalEntry entry{};
+            entry.record = *record;
+            entry.command = std::move(command.value());
+            if (partialEraseFeedbackActive() && !appendPartialEraseMasks(std::span(&entry, 1)))
+                return foundation::Result<HitTestResult>::failure({foundation::ErrorCode::kInvalidRecord, "Ink erase feedback unavailable"});
+            const auto hit = skiaRenderer_.hitTestInkPoint(entry, point, worldToDevice);
+            if (hit == render::SelectionGeometryHit::kMiss) continue;
+            if (hit != render::SelectionGeometryHit::kHit) return foundation::Result<HitTestResult>::failure(
+                {foundation::ErrorCode::kInvalidRecord, "Ink selection coverage unavailable"});
+        } else if (object->kind == semantic::ObjectKind::kVectorPath ||
+                   std::any_of(object->properties.entries.begin(), object->properties.entries.end(),
+                               [](const auto& e) { return e.field_id == 0x103U; })) {
+            auto world = *object;
+            world.transform = record->transform;
+            const auto hit = intersectSelectionRegion(world, neighborhood, record);
+            if (hit == RegionIntersection::kMiss) continue;
+            if (hit != RegionIntersection::kHit) return foundation::Result<HitTestResult>::failure(
+                {foundation::ErrorCode::kInvalidRecord, "VectorPath selection geometry unavailable"});
+        }
+        ids.assign(1, id);
+        return result;
+    }
+    ids.clear();
     return result;
 }
 bool CanvasEditingRuntime::enterGroupAtViewPoint(float x,float y) {
@@ -186,7 +250,14 @@ bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionM
     if (mode>runtime::CanvasSelectionMode::kFreeform||closed_||imageCropPointer_||
         (interaction_->textSession()&&interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed)) return false;
     if (!setSelectionMode(true)) return false;
-    if (selectionAcquisitionMode_!=mode) {dispatchRuntime_.cancelAll();cancelRegionSelection();}
+    if (selectionAcquisitionMode_!=mode) {
+        dispatchRuntime_.cancelAll();
+        cancelRegionSelection();
+        if (sectionTitleEditor_ && sectionTitleEditor_->mode==runtime::SectionTitleEditorMode::kInline) {
+            sectionTitleEditor_.reset();
+            markCanonicalPresentationDirty();
+        }
+    }
     selectionAcquisitionMode_=mode;panTool_=false;textTool_=false;
     canonicalPresentationDirty_=true;return true;
 }
@@ -398,24 +469,23 @@ bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample
     const auto hit=selectionPointHits({w.first,w.second});
     if (!hit) {regionQueryStatus_=runtime::SelectionQueryStatus::kFailed;return true;}
     if (hit.value().frontToBack.empty()) return regionSelectionPointer(sample);
+    const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
     if (!input::hasShift(sample.modifiers) && selection_.selected().size()>1) {
-        const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
         if (!root.isZero() && std::find(selection_.selected().begin(),selection_.selected().end(),root)!=selection_.selected().end()) {
             pendingMultiClick_=root;
-            if (!selectionPointer(sample.key,sample.phase,sample.x,sample.y)) {
+            if (!selectionPointer(sample.key,sample.phase,sample.x,sample.y,root)) {
                 pendingMultiClick_.reset();acquisitionClickPointers_.insert(sample.key);
             }
             return true;
         }
     }
     if (input::hasShift(sample.modifiers)||selection_.selected().size()>1) {
-        const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
         if (!root.isZero()) {
             const std::array roots{root};
             (void)publishSelectionAcquisition(roots,input::hasShift(sample.modifiers)?SelectionCombineMode::kAdd:SelectionCombineMode::kReplace,selection_.revision());
         }
         acquisitionClickPointers_.insert(sample.key);canonicalPresentationDirty_=true;(void)renderSelectionOverlay();return true;
     }
-    return selectionPointer(sample.key,sample.phase,sample.x,sample.y);
+    return selectionPointer(sample.key,sample.phase,sample.x,sample.y,root);
 }
 } // namespace canvas::interaction

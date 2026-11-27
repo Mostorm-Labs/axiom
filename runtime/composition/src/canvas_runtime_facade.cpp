@@ -115,8 +115,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       case CanvasControlPayloadKind::kZoomAt:
       case CanvasControlPayloadKind::kSetZoom:
         applied = p.scale > 0.0F && runtime.setViewportZoomAt(
-            p.scale, p.x == 0.0F ? runtime.surface().logicalWidth * 0.5F : p.x,
-            p.y == 0.0F ? runtime.surface().logicalHeight * 0.5F : p.y);
+            p.scale, !p.hasAnchor && p.x == 0.0F ? runtime.surface().logicalWidth * 0.5F : p.x,
+            !p.hasAnchor && p.y == 0.0F ? runtime.surface().logicalHeight * 0.5F : p.y);
         break;
       case CanvasControlPayloadKind::kFit:
         applied = p.fitTarget == CanvasFitTarget::kSelection ? runtime.fitViewportToSelection()
@@ -484,6 +484,7 @@ ProductControlReceipt CanvasRuntimeFacade::submitProductControl(const ProductCon
         canvas.payload.x = request.deltaX; canvas.payload.y = request.deltaY;
       } else if (request.cameraAction == static_cast<std::uint32_t>(CameraControlAction::kZoomAt)) {
         canvas.payload.kind = CanvasControlPayloadKind::kZoomAt;
+        canvas.payload.hasAnchor = true;
         canvas.payload.x = request.anchorX; canvas.payload.y = request.anchorY;
         canvas.payload.scale = request.scaleDelta;
       } else {

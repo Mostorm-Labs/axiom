@@ -69,7 +69,7 @@ ViewportFitResult computeViewportFit(
   const float zoom = std::clamp(std::min(availableWidth / projectedWidth,
                                          availableHeight / projectedHeight),
                                 policy.minZoom, policy.maxZoom);
-  return {true, zoom, (target->left + target->right) * 0.5F,
+  return {true, clampViewportZoom(zoom), (target->left + target->right) * 0.5F,
           (target->top + target->bottom) * 0.5F};
 }
 

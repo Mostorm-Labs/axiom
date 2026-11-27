@@ -14,6 +14,11 @@ await sdk.selectTool('objectEraser');
 await sdk.selectShape('triangle');
 await sdk.selectShape('table');
 await sdk.selectShape('section');
+const section = sdk.readSection();
+section.titleFrame?.toWorld[5];section.titleFrame?.insetX;section.titleFrame?.ellipsized;section.titleMaxCharacters;
+await sdk.setSectionTitleEditor(section.objectId,'inline',sdk.readState().selectionRevision);
+// @ts-expect-error selection revisions are lossless decimal strings
+await sdk.setSectionTitleEditor(section.objectId,'closed',42);
 // @ts-expect-error creation presets remain a closed vocabulary
 await sdk.selectShape('unregistered-preset');
 const projection=sdk.multi.read(), property=projection.properties['3'];

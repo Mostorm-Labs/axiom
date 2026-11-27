@@ -5,7 +5,54 @@
 
 using namespace canvas::interaction;
 
+namespace {
+void zoomStopsAtLimits() {
+  ViewportInteractionController controller;
+  assert(controller.setCamera(1.0F, 20.0F, -10.0F));
+  const auto anchored = controller.viewToContent(100.0F, 50.0F);
+  const auto wheel = [&](float delta) {
+    return controller.applyNavigation({ViewportNavigationKind::kCtrlWheelZoom, 0, delta, 100, 50});
+  };
+  assert(wheel(-1000));
+  assert(controller.state().scale == 3.0F);
+  const auto atLimit = controller.cameraGeneration();
+  assert(wheel(-1000));
+  assert(controller.cameraGeneration() == atLimit);
+  assert(controller.viewToContent(100, 50) == anchored);
+  assert(wheel(10) && controller.state().scale < 3.0F);
+  assert(controller.applyNavigation({ViewportNavigationKind::kBrowserGesture, 0, 0, 100, 50, .001F}));
+  assert(controller.state().scale == .1F);
+  const auto after = controller.viewToContent(100, 50);
+  assert(std::abs(after.first-anchored.first) < .001F && std::abs(after.second-anchored.second) < .001F);
+  assert(controller.setCamera(100.0F, 20, 40) && controller.state().scale == 3.0F);
+  assert(controller.setCamera(.001F, 20, 40) && controller.state().scale == .1F);
+}
+
+void pinchTracksCentroidAndReversesAtLimit(float initial, float firstDistance,
+                                           float excessDistance, float reverseDistance, float limit) {
+  ViewportInteractionController controller;
+  assert(controller.setCamera(initial, 20, -30));
+  const auto pinch = [&](float center, float distance) {
+    return controller.updateGesture({1, 1, center-distance/2, 50, 0, false, {1,1,1}},
+                                    {1, 1, center+distance/2, 50, 0, false, {1,2,1}});
+  };
+  const auto anchored = controller.viewToContent(100, 50);
+  assert(pinch(100, 100));
+  assert(pinch(120, firstDistance) && controller.state().scale == limit);
+  assert(pinch(140, excessDistance) && controller.state().scale == limit);
+  const auto afterPan = controller.viewToContent(140, 50);
+  assert(std::abs(afterPan.first-anchored.first) < .001F && std::abs(afterPan.second-anchored.second) < .001F);
+  assert(pinch(140, reverseDistance));
+  assert(std::abs(controller.state().scale-limit*reverseDistance/excessDistance) < .00001F);
+  controller.endGesture();
+  assert(controller.committed().scale == controller.state().scale);
+}
+}  // namespace
+
 int main() {
+  zoomStopsAtLimits();
+  pinchTracksCentroidAndReversesAtLimit(2, 250, 400, 380, 3);
+  pinchTracksCentroidAndReversesAtLimit(.2F, 25, 10, 11, .1F);
   ViewportInteractionController controller;
   const canvas::input::PointerKey a{1, 1, 1};
   const canvas::input::PointerKey b{1, 2, 1};

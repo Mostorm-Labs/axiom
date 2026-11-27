@@ -1124,7 +1124,9 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
             foundation::ErrorCode::kParticipantRejected,
             "HitTest deferred while Scene publication is active"));
     }
-    if (!std::isfinite(request.worldPoint.x) || !std::isfinite(request.worldPoint.y) ||
+    const float inkTolerance = request.inkTolerance.value_or(request.tolerance);
+    if (!std::isfinite(inkTolerance) || inkTolerance < 0.0F ||
+        !std::isfinite(request.worldPoint.x) || !std::isfinite(request.worldPoint.y) ||
         !std::isfinite(request.tolerance) || request.tolerance < 0.0F ||
         request.maximumResults == 0U || !hasKnownHitKinds(request.filter.kinds)) {
         return foundation::Result<HitTestResult>::failure(
@@ -1134,8 +1136,8 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
                           std::max({1.0F,
                                     std::fabs(request.worldPoint.x),
                                     std::fabs(request.worldPoint.y),
-                                    request.tolerance});
-    const float radius = request.tolerance + epsilon;
+                                    request.tolerance, inkTolerance});
+    const float radius = std::max(request.tolerance, inkTolerance) + epsilon;
     const WorldRect coarseRect{
         request.worldPoint.x - radius,
         request.worldPoint.y - radius,
@@ -1186,8 +1188,10 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
         std::vector<ObjectId> sectionBackgrounds;
         for (ObjectId objectId : candidates) {
             ++result.diagnostics.preciseTests;
+            const auto* record = _records.find(objectId);
+            const float tolerance = isInkRecord(*record) ? inkTolerance : request.tolerance;
             auto precise = _renderScene->preciseHitTest(
-                PreciseHitRequest{objectId, request.worldPoint, request.tolerance});
+                PreciseHitRequest{objectId, request.worldPoint, tolerance});
             if (!precise) {
                 return foundation::Result<HitTestResult>::failure(precise.error());
             }
@@ -1197,7 +1201,7 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
             ++result.diagnostics.preciseHits;
             // Section interiors are a fallback target, not an occlusion mask.
             // A true border hit keeps normal front-to-back priority.
-            if (_records.find(objectId)->kind==SceneObjectKind::kSection &&
+            if (record->kind==SceneObjectKind::kSection &&
                 precise.value().distance>request.tolerance) {
                 sectionBackgrounds.push_back(objectId);
                 continue;

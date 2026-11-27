@@ -62,6 +62,7 @@ export function createTransportController(port) {
     deleteSelection:()=>control({kind:'delete'}),lockSelection:value=>control({kind:'lock',value}),setSelectionVisible:value=>control({kind:'visible',value}),unlockSelection:()=>control({kind:'unlock'}),
     createSection:options=>section(0,options),wrapInSection:options=>section(1,options),releaseSection:objectId=>section(2,{objectId}),
     reparent:options=>section(3,options),resizeSection:(objectId,boundary)=>section(4,{objectId,boundary}),renameSection:(objectId,title)=>section(5,{objectId,title}),
+    setSectionTitleEditor:(objectId,mode,selectionRevision)=>section(12,{objectId,mode,selectionRevision}),
     selectSection:objectId=>section(6,{objectId}),selectSectionChildren:objectId=>section(7,{objectId}),readSection:objectId=>read('readSection',objectId?{objectId}:{}),
     group:()=>run(async()=>{const s=await read('state');return request('section',{action:10,objects:s.selected,generation:s.generation,selectionRevision:s.selectionRevision});}),
     ungroup:objectId=>run(async()=>{const s=await read('state');return request('section',{action:11,objectId:objectId??s.primary,generation:s.generation,selectionRevision:s.selectionRevision});}),

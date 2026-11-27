@@ -44,6 +44,33 @@ try {
  for(const shape of ['sticky','table']){await open();await page.evaluate(shape=>sdk.selectShape(shape),shape);await page.mouse.click(250,250);await pause();await page.keyboard.press('Control+Enter');await pause();await page.locator('#object-edit').click();await pause();result.checks[shape+'ActionOpensTextEditor']=(await read()).text.phase===1;}
  await open();await draw();await page.evaluate(()=>sdk.selectShape('ellipse'));await pause();const before=await read();await page.locator('#sketch-roughness').evaluate(el=>{el.value='2';el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));});await pause();const after=await read();result.checks.creationDefaultsDoNotEditOldSelection=after.state.generation===before.state.generation&&after.style.values.roughness===before.style.values.roughness&&await page.evaluate(()=>sdk.appearance.readDefaults().values.roughness===2);
  await page.screenshot({path:output.replace(/\.json$/,'-desktop.png')});
+ // Creation colours are preferences for the active tool family.
+ await open();
+ const palette=()=>page.evaluate(()=>sdk.appearance.readDefaults().values);
+ const rgb=value=>value.slice(0,3).map(c=>Math.round(c*255)).join(',');
+ const changeColor=async(id,color)=>{await page.locator(id).fill(color);await pause();};
+ const otherStroke=rgb((await palette()).stroke);
+ await clickIf('shape-tool');
+ const blue=await palette();
+ result.checks.defaultShapeOutlineIsTonal=rgb(blue.fill)==='228,239,250' && rgb(blue.stroke)==='111,155,199' && blue.strokeEnabled;
+ await changeColor('#sketch-fill-color','#d8f0e0');
+ const green=await palette();
+ result.checks.shapeOutlineFollowsNewFill=green.stroke[1]>green.stroke[0] && green.stroke[1]>green.stroke[2] && green.stroke[1]<green.fill[1];
+ await page.evaluate(()=>{
+   for(const [id,color] of [['sketch-stroke-color','#794586'],['sketch-fill-color','#fcead4']]) {
+     const input=document.getElementById(id);input.value=color;input.dispatchEvent(new Event('change',{bubbles:true}));
+   }
+ });await pause();
+ result.checks.manualShapeStrokeWins=rgb((await palette()).stroke)==='121,69,134';
+ await page.locator('[data-tool="shape:3"]').click();await pause();
+ result.checks.connectorKeepsOwnStroke=rgb((await palette()).stroke)===otherStroke;
+ await page.locator('[data-tool="shape:5"]').click();await pause();
+ const sticky=await palette();
+ result.checks.stickyKeepsOwnPalette=!sticky.strokeEnabled && rgb(sticky.fill)==='255,235,173' && rgb(sticky.stroke)===otherStroke;
+ await clickIf('shape-tool');await page.locator('[data-tool="shape:2"]').click();await pause();
+ const recalled=await palette();
+ result.checks.shapeRemembersCustomPair=rgb(recalled.fill)==='252,234,212' && rgb(recalled.stroke)==='121,69,134';
+ result.checks.paletteDoesNotCreateHistory=!(await read()).state.canUndo;
  await page.setViewportSize({width:600,height:800});await open();result.checks.primaryToolbarFitsNarrow=await page.evaluate(()=>{const row=document.getElementById('drawing-tools');return row.scrollWidth<=row.clientWidth+1;});await page.screenshot({path:output.replace(/\.json$/,'-narrow.png')});
  await page.setViewportSize({width:360,height:800});await page.locator('#shape-tool').click();await page.locator('#path-curve').scrollIntoViewIfNeeded();result.checks.secondaryOverflowScrolls=await page.evaluate(()=>{const row=document.getElementById('tool-options');return row.scrollWidth>row.clientWidth&&row.scrollLeft>0;});await page.locator('#path-curve').click();await pause();result.checks.overflowChoiceIsReachable=(await read()).state.objects===1;await page.screenshot({path:output.replace(/\.json$/,'-overflow.png')});
  result.status=result.errors.length===0&&Object.values(result.checks).every(Boolean)?'PASS':'FAIL';if(result.status!=='PASS')process.exitCode=1;

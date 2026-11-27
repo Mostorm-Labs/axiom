@@ -37,7 +37,7 @@ enum axiom_native_navigation_kind { AXIOM_NATIVE_PAN=0, AXIOM_NATIVE_ZOOM=1 };
 /* Host viewport facts, not document edits. Values are logical view points;
    pan subtracts delta_x/y, zoom multiplies Runtime scale by scale_delta around
    anchor_x/y (including zero). All fields must be finite; scale_delta > 0.
-   Runtime owns camera math and its existing 0.25..8 gesture zoom limits. */
+   Runtime clamps camera zoom to 10% through 300% and preserves the anchor. */
 typedef struct axiom_native_navigation_sample {
  uint32_t size,abi_version,kind;
  float delta_x,delta_y,anchor_x,anchor_y,scale_delta;

@@ -265,7 +265,11 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
     const auto state = interaction_->textSession()->read();
     auto record = interaction_->textSession()->presentation();
     if (!record) return {};
+    bool fitDraft = state.composition != 0;
     if (const auto* current = semanticObjects_.find(record->id)) {
+        // A new shape label can contain draft paragraph breaks before its first committed glyph.
+        const auto* shape = std::get_if<semantic::ShapeContent>(&current->content);
+        if (shape && !shape->label && !state.projection.empty()) fitDraft = true;
         if(!historySceneReady())return {};
         const auto* world=sceneCoordinator_->runtimeScene().find(current->id);
         if(!world)return {};
@@ -275,9 +279,8 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
         if(!parent||!historySceneReady())return {};
         record->transform=scene::composeTransform(parent->transform,record->transform);
     }
-    // Native preedit is only a presentation. It can expand the drawn Shape,
-    // but cancellation must leave canonical geometry and history untouched.
-    if (state.composition)
+    // Fit uncommitted lines and IME preedit in the displayed shape until the edit commits.
+    if (fitDraft)
         if (const auto fitted = fittedShapeLabelTransform(*record))
             record->transform = *fitted;
     return record;

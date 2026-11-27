@@ -41,7 +41,14 @@
   .hint { color: #8290a3; white-space: nowrap; }
   #context-title { color: #52657d; font-weight: 500; white-space: nowrap; flex: none; }
   #canvas { position: absolute; z-index: 0; inset: 0; overflow: hidden; background: white; }
-  #section-title.on-canvas { position: fixed; z-index: 4; width: min(240px, 90vw); padding: 3px 6px; font: inherit; background: white; }
+  .section-title-anchor { transform-origin: 0 0; }
+  .section-title-editor {
+    position: absolute; left: 0; top: 0; field-sizing: content; pointer-events: auto; appearance: none;
+    min-width: 2.4em; min-height: 0; max-height: 100%; margin: 0;
+    padding: var(--title-inset-y) var(--title-inset-x); border: 0; border-radius: 4px; outline: none;
+    background: #f5f4ff; box-shadow: inset 0 0 0 2px #6761f8; color: #263340;
+    font-family: system-ui, sans-serif; -webkit-font-smoothing: antialiased; scrollbar-width: none;
+  }
   .anchor-note { display: grid; place-items: center; border: 1px solid #e5a126; border-radius: 8px; color: #62420b; background: #fff4cf; font-weight: 600; }
   .anchor-video { overflow: hidden; background: #16202e; box-shadow: 0 6px 24px #142a4a33; outline: 1px solid #3978cf; }
   .anchor-video iframe { display: block; border: 0; transform: scale(var(--video-scale)); transform-origin: 0 0; pointer-events: auto; }
@@ -111,7 +118,7 @@ const fail = error => { status.dataset.error = 'true'; status.textContent = `${e
 const show = (state = sdk?.readState()) => {
   if (!state) return;
   status.dataset.error = 'false';
-  status.textContent = `${state.objects} objects · ${state.selected.length} selected · Zoom ${state.camera.scale.toFixed(2)}`;
+  status.textContent = `${state.objects} objects · ${state.selected.length} selected · 缩放 ${Math.round(state.camera.scale * 100)}%`;
   try {
     syncContext(state); syncBackground();
   } catch (error) {
@@ -162,14 +169,26 @@ try {
   // The SDK has one active creation style. Remember only the palette fields
   // that differ between these Demo tools, including the user's own edits.
   const readPalette = () => {
-    const {fill, fillKind, strokeEnabled} = sdk.appearance.readDefaults().values;
-    return {fill, fillKind, strokeEnabled};
+    const {fill, fillKind, stroke, strokeEnabled} = sdk.appearance.readDefaults().values;
+    return {fill, fillKind, stroke, strokeEnabled};
   };
+  function shapeOutlineColor(fill, alpha = 1) {
+    const rgb = fill.slice(0, 3);
+    const lightness = (Math.min(...rgb) + Math.max(...rgb)) / 2;
+    const target = lightness < 0.25 ? lightness + 0.18 : lightness * 0.65;
+    // Preserve hue as lightness changes. Limit the saturation gain for near-white tints.
+    const range = Math.min(lightness, 1 - lightness);
+    const gain = range ? Math.min(4, 0.8 * Math.min(target, 1 - target) / range) : 0;
+    return [...rgb.map(c => Math.round((target + (c - lightness) * gain) * 255) / 255), alpha];
+  }
+  const basePalette = readPalette();
+  const shapeFill = rgba('#E4EFFA');
   const palettes = {
-    other: readPalette(),
-    shape: {fill: rgba('#E4EFFA'), fillKind: 'solid', strokeEnabled: true},
-    sticky: {fill: rgba('#FFEBAD'), fillKind: 'solid', strokeEnabled: false},
+    other: basePalette,
+    shape: {fill: shapeFill, fillKind: 'solid', stroke: shapeOutlineColor(shapeFill), strokeEnabled: true},
+    sticky: {...basePalette, fill: rgba('#FFEBAD'), fillKind: 'solid', strokeEnabled: false},
   };
+  let matchShapeOutline = true;
   let activePalette = 'other';
   const usePalette = async name => {
     if (name === activePalette) return;
@@ -302,9 +321,20 @@ try {
   quickStyle.onchange=()=>{if(quickStyle.value!=='')void run(()=>appearancePatch({enabled:true,roughness:Number(quickStyle.value)}));};
   sketchEnabled.onchange=()=>run(()=>appearancePatch({enabled:sketchEnabled.checked}));
   styleFill.onchange=()=>run(()=>appearancePatch({fillKind:styleFill.value}));
-  styleColor.onchange=()=>run(()=>appearancePatch({fill:rgba(styleColor.value)}));
+  const choosingShapeDefaults = () => activePalette === 'shape' && sdk.readState().creationMode;
+  styleColor.onchange=()=>run(()=>{
+    const fill=rgba(styleColor.value);
+    if (choosingShapeDefaults() && matchShapeOutline) {
+      const {stroke}=sdk.appearance.readDefaults().values;
+      return sdk.appearance.setDefaults({fill,stroke:shapeOutlineColor(fill,stroke[3])});
+    }
+    return appearancePatch({fill});
+  });
   styleStrokeEnabled.onchange=()=>run(()=>appearancePatch({strokeEnabled:styleStrokeEnabled.checked}));
-  styleStroke.onchange=()=>run(()=>appearancePatch({stroke:rgba(styleStroke.value),strokeEnabled:true}));
+  styleStroke.onchange=()=>run(()=>{
+    if (choosingShapeDefaults()) matchShapeOutline=false;
+    return appearancePatch({stroke:rgba(styleStroke.value),strokeEnabled:true});
+  });
   styleWidth.onchange=()=>run(()=>appearancePatch({strokeWidth:Number(styleWidth.value),strokeEnabled:true}));
   styleOpacity.onchange=()=>run(()=>appearancePatch({opacity:Number(styleOpacity.value)}));
   styleDash.onchange=()=>run(()=>appearancePatch({dash:styleDash.value==='dash'?[8,5]:[]}));
@@ -400,32 +430,155 @@ try {
   button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
   const sectionGroup = group(context, 'section-parameters');
   const sectionTitle = field(sectionGroup, '分区标题', 'text', 'section-title');
-  let titleDraft;
-  sectionTitle.onfocus = () => { titleDraft = sdk.readSection(); };
-  sectionTitle.onblur = () => {
-    const draft = titleDraft, value = sectionTitle.value;
-    titleDraft = null;
-    sectionTitle.classList.remove('on-canvas');
-    if (draft?.available && value !== draft.title && sdk.readSection(draft.objectId).title === draft.title)
-      void run(() => sdk.renameSection(draft.objectId, value));
-  };
-  sectionTitle.onkeydown = event => {
-    if (event.isComposing || event.keyCode === 229) return;
-    if (event.key === 'Escape') sectionTitle.value = titleDraft?.title ?? '';
-    if (event.key === 'Escape' || event.key === 'Enter') {
-      event.preventDefault();
-      sdk.canvas.focus({preventScroll:true});
+  let titleDraft, titleFont;
+  const titleLine = value => value.replace(/\r\n|[\n\r\v\f\u0085\u2028\u2029]/gu,' ');
+  const chars = value => Array.from(value);
+  function beginTitle(input, section, anchor) {
+    const draft = {input, anchor, objectId:section.objectId, title:section.title,
+      initialValue:input.value, limit:section.titleMaxCharacters, selectionRevision:sdk.readState().selectionRevision};
+    input.title = `分区标题，最多 ${draft.limit} 个字符`;
+    input.setCustomValidity('');
+    titleDraft = draft;
+    sdk.setSectionTitleEditor(draft.objectId, anchor ? 'inline' : 'panel', draft.selectionRevision).catch(error => {
+      if (titleDraft !== draft) return;
+      titleDraft = null;
+      if (anchor) anchors.remove(anchor.id);
+      input.blur(); show(); fail(error);
+    });
+    return draft;
+  }
+  function finishTitle(save) {
+    const draft = titleDraft;
+    if (!draft) return true;
+    const value = draft.input.value;
+    if (save && value !== draft.initialValue && chars(value).length > draft.limit) {
+      draft.input.setCustomValidity(draft.input.title);
+      draft.input.reportValidity();
+      return false;
     }
+    titleDraft = null;
+    if (draft.anchor) anchors.remove(draft.anchor.id);
+    if (!sdk.readState().surface.available) return true;
+    if (save && value !== draft.initialValue) {
+      const current = sdk.readSection(draft.objectId);
+      if (current.available && current.title === draft.title) void run(() => sdk.renameSection(draft.objectId, value));
+    }
+    void run(() => sdk.setSectionTitleEditor(draft.objectId, 'closed', draft.selectionRevision));
+    return true;
+  }
+  function bindTitleInput(input) {
+    // Keep the selected suffix when a paste or IME replacement reaches the character limit.
+    let composing = false;
+    const insert = (event, original) => {
+      if (!titleDraft || composing || event.isComposing || !event.cancelable) return;
+      const left=input.value.slice(0,input.selectionStart), right=input.value.slice(input.selectionEnd);
+      const room=Math.max(0,titleDraft.limit-chars(left+right).length);
+      let accepted='', count=0;
+      for (const ch of titleLine(original)) {
+        if (count===room) break;
+        accepted+=ch; ++count;
+      }
+      if (accepted===original) return;
+      event.preventDefault();
+      if (accepted) input.setRangeText(accepted,input.selectionStart,input.selectionEnd,'end');
+      input.setCustomValidity('');
+    };
+    const constrain = () => {
+      if (composing || titleDraft?.input!==input) return;
+      const value=titleLine(input.value), count=chars(value).length;
+      // An existing long title can be shortened in place or left intact on cancel.
+      const oldLong=chars(titleDraft.initialValue).length>titleDraft.limit;
+      if (count>titleDraft.limit && !oldLong) {
+        const caret=input.selectionEnd, right=value.slice(caret);
+        const left=chars(value.slice(0,caret)).slice(0,Math.max(0,titleDraft.limit-chars(right).length)).join('');
+        input.value=left+right;
+        input.setSelectionRange(left.length,left.length);
+      } else if (value!==input.value) input.value=value;
+      input.setCustomValidity('');
+    };
+    input.onpaste = event => {
+      if (event.clipboardData) insert(event,event.clipboardData.getData('text/plain'));
+    };
+    input.onbeforeinput = event => {
+      if (event.inputType.startsWith('insert') && typeof event.data==='string') insert(event,event.data);
+    };
+    input.oncompositionstart = () => { composing=true; };
+    input.oncompositionend = () => { composing=false; constrain(); };
+    input.oninput = event => { if (!event.isComposing) constrain(); };
+    input.onblur = () => {
+      if (titleDraft?.input !== input) return;
+      if (!finishTitle(true)) finishTitle(false);
+      show();
+    };
+    input.onkeydown = event => {
+      if (event.isComposing || event.keyCode === 229 || !['Enter','Escape'].includes(event.key)) return;
+      event.preventDefault(); event.stopPropagation();
+      if (finishTitle(event.key === 'Enter')) { sdk.canvas.focus({preventScroll:true}); show(); }
+    };
+  }
+  sectionTitle.enterKeyHint='done';
+  bindTitleInput(sectionTitle);
+  sectionTitle.onfocus = () => {
+    const section = sdk.readSection();
+    if (section.available) beginTitle(sectionTitle, section);
   };
+  function placeTitleEditor(draft, frame) {
+    const [a,b,c,d,x,y] = frame.toWorld;
+    anchors.setRect(draft.anchor.id, [x,y,frame.width,frame.height]);
+    const holder = anchors.getElement(draft.anchor.id);
+    holder.style.transform = `matrix(${a},${b},${c},${d},0,0)`;
+    draft.input.style.fontSize = frame.fontSize+'px';
+    draft.input.style.lineHeight = frame.lineHeight+'px';
+    draft.input.style.setProperty('--title-inset-x',frame.insetX+'px');
+    draft.input.style.setProperty('--title-inset-y',frame.insetY+'px');
+    const camera=anchors.readTransform();
+    if (camera) {
+      const m=new DOMMatrix(camera).multiply(new DOMMatrix(frame.toWorld)), rect=sdk.canvas.getBoundingClientRect();
+      const available=(origin,axis,extent)=>axis>0?(extent-origin)/axis:axis<0?-origin/axis:Infinity;
+      const width=Math.min(available(m.e,m.a,rect.width),available(m.f,m.b,rect.height));
+      draft.input.style.maxWidth=Math.max(2.4*frame.fontSize,width)+'px';
+    }
+  }
+  function useTitleFont(input, frame) {
+    const token = sdk.resources.token(frame.fontId);
+    if (!token) return;
+    if (titleFont?.hash !== token.expectedSha256) {
+      const family = 'axiom-section-'+frame.fontId;
+      const face = new FontFace(family, sdk.resources.readBytes(token), {
+        ascentOverride: (frame.baseline/frame.fontSize*100)+'%',
+        descentOverride: (Math.max(0,frame.lineHeight-frame.baseline)/frame.fontSize*100)+'%',
+        lineGapOverride: '0%',
+      });
+      if (titleFont) document.fonts.delete(titleFont.face);
+      titleFont = {hash:token.expectedSha256, face};
+      document.fonts.add(face);
+      face.load().catch(fail);
+    }
+    input.style.fontFamily = titleFont.face.family+', system-ui, sans-serif';
+  }
   $('canvas').addEventListener('dblclick', event => {
-    if (!sdk.readSection().available) return;
+    if (event.target !== sdk.canvas || sdk.readState().selectionMode !== 0 || !sdk.readSection().available) return;
     show();
     if (sectionGroup.hidden) return;
     event.preventDefault(); event.stopPropagation();
-    sectionTitle.style.left = Math.max(4, Math.min(innerWidth-250, event.clientX-8))+'px';
-    sectionTitle.style.top = Math.max(4, Math.min(innerHeight-36, event.clientY-14))+'px';
-    sectionTitle.classList.add('on-canvas');
-    sectionTitle.focus({preventScroll:true}); sectionTitle.select();
+    const section = sdk.readSection(), frame = section.titleFrame, camera = anchors.readTransform();
+    if (!frame || !camera) return;
+    const rect = sdk.canvas.getBoundingClientRect();
+    const toView = new DOMMatrix(camera).multiply(new DOMMatrix(frame.toWorld));
+    const hit = toView.inverse().transformPoint(new DOMPoint(event.clientX-rect.left,event.clientY-rect.top));
+    if (!(hit.x>=0 && hit.x<=Math.min(frame.width,frame.textWidth+2*frame.insetX) && hit.y>=0 && hit.y<=Math.min(frame.height,frame.textHeight+2*frame.insetY))) return;
+    const input = document.createElement('input');
+    input.type='text'; input.size=1; input.enterKeyHint='done'; input.autocomplete='off'; input.spellcheck=false;
+    input.className = 'section-title-editor'; input.id = 'section-title-editor';
+    input.setAttribute('aria-label','分区标题'); input.value = titleLine(section.title);
+    bindTitleInput(input);
+    useTitleFont(input, frame);
+    const anchor = anchors.create({rect:[frame.toWorld[4],frame.toWorld[5],frame.width,frame.height]});
+    const holder = anchors.getElement(anchor.id);
+    holder.classList.add('section-title-anchor'); holder.append(input);
+    placeTitleEditor(beginTitle(input, section, anchor), frame);
+    sectionGroup.hidden = true;
+    input.focus({preventScroll:true}); input.select();
   }, true);
   const objectGroup = group(details, 'object-actions');
   const editButton = button(objectGroup, '编辑', () => {
@@ -583,8 +736,7 @@ try {
   }, 'anchor-comment');
   const zoomBoard = factor => {
     const {camera, surface} = sdk.readState();
-    const scale = Math.max(0.05, Math.min(32, camera.scale * factor));
-    return sdk.zoomAt(surface.width / 2, surface.height / 2, scale);
+    return sdk.zoomAt(surface.width / 2, surface.height / 2, camera.scale * factor);
   };
   button(anchorGroup, '缩小', () => zoomBoard(0.8), 'anchor-zoom-out');
   button(anchorGroup, '放大', () => zoomBoard(1.25), 'anchor-zoom-in');
@@ -642,8 +794,16 @@ try {
     const capability = action => selected.actions[actionIndex[action]]?.available === true;
     const objectContext = !state.creationMode && state.tool === 1 && selected.count > 0;
     const locked = objectContext && (capability('unlock') || selected.actions[actionIndex.transform]?.reason === 10);
-    sectionGroup.hidden = !objectContext || locked || selected.count !== 1 || selected.kind !== 10;
-    if (!sectionGroup.hidden) setValue(sectionTitle, sdk.readSection().title);
+    const section = objectContext && !locked && selected.count === 1 && selected.kind === 10 ? sdk.readSection() : null;
+    if (titleDraft && (!section?.available || !state.surface.available || (titleDraft.anchor && state.selectionMode !== 0) ||
+        state.selectionRevision !== titleDraft.selectionRevision || section.objectId !== titleDraft.objectId ||
+        section.title !== titleDraft.title || (titleDraft.anchor && !section.titleFrame))) {
+      const input = titleDraft.input;
+      finishTitle(false); input.blur();
+    }
+    if (titleDraft?.anchor) placeTitleEditor(titleDraft, section.titleFrame);
+    sectionGroup.hidden = !section?.available || Boolean(titleDraft?.anchor);
+    if (!sectionGroup.hidden) setValue(sectionTitle, titleLine(section.title));
     const table=sdk.table.read();tableGroup.hidden=!objectContext||locked||!table.available;
     if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
       setValue(cellFont,cell.format.font??'');

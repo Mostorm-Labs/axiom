@@ -785,6 +785,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool textClosed() const noexcept override { return closed_; }
   [[nodiscard]] std::optional<std::vector<semantic::EraseMaskAddItem>> partialEraseTargets(std::span<const foundation::WorldPoint>, bool exactHit = true) const;
   [[nodiscard]] bool applyPartialErasePreview(render::ReferenceDrawList&) const;
+  [[nodiscard]] bool appendPartialEraseMasks(std::span<render::ReferenceTraversalEntry>) const;
   bool textWritable(semantic::ObjectId) const noexcept override;
   semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
@@ -950,6 +951,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool placeInContainingSection(semantic::ObjectRecord& worldRecord) const;
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&, foundation::WorldPoint release) noexcept;
   runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance = nullptr) noexcept;
+  struct SectionTitleEditorFocus final {
+    foundation::ObjectId section;
+    std::uint64_t selectionRevision;
+    runtime::SectionTitleEditorMode mode;
+  };
+  std::optional<SectionTitleEditorFocus> sectionTitleEditor_;
+  bool sectionTitleEditorCurrent() const noexcept;
+  void applySectionTitleEditor(render::ReferenceDrawList&) const;
   void applyContainerPreview(render::ReferenceDrawList&);
   void applyAppearancePreview(render::ReferenceDrawList&);
   bool applyAppearanceToRecord(canvas::RuntimeSceneRecord&);
@@ -1076,6 +1085,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   };
   [[nodiscard]] RegionSelectionContext regionContext() const noexcept;
   [[nodiscard]] foundation::Result<HitTestResult> selectionPointHits(foundation::WorldPoint) const;
+  [[nodiscard]] bool selectPointRoot(foundation::ObjectId) noexcept;
+  [[nodiscard]] bool selectionPointer(const input::PointerKey&, input::PointerPhase, float x, float y,
+                                      std::optional<foundation::ObjectId> downRoot) noexcept;
   [[nodiscard]] RegionQueryResult querySelectionRegion(std::span<const RegionPoint>) const;
   [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;
@@ -1129,7 +1141,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ObjectRecord makeCreationPrototype(CreationPreset,bool linked=false);
   semantic::ObjectRecord makeConnectorSibling(semantic::ObjectId,std::uint32_t,foundation::WorldPoint,semantic::ObjectRecord={});
   foundation::WorldPoint defaultAttachmentEnd(const semantic::AttachedEndpoint&) const;
-  static std::uint32_t oppositeAttachmentPort(std::uint32_t) noexcept;
+  std::uint32_t siblingAttachmentPort(semantic::ObjectId source, std::uint32_t sourcePort) const noexcept;
+  std::array<render::ScreenPoint, 4> attachmentPortCenters(const RuntimeSceneRecord&) const noexcept;
   bool updateCreationHover(float,float);
   bool validCreationHover(bool allowContact=false) const;
   bool clearCreationHover() noexcept;

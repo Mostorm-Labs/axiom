@@ -1,6 +1,7 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/text/section_title.hpp"
 #include "undoable_command.hpp"
 #include <algorithm>
 #include <cmath>
@@ -100,6 +101,29 @@ bool CanvasEditingRuntime::sectionBoundaryPointer(const input::PointerKey& key,i
     return true;
 }
 
+bool CanvasEditingRuntime::sectionTitleEditorCurrent() const noexcept {
+    return sectionTitleEditor_ && surface_.available && selectionMode_ && !panTool_ &&
+        (sectionTitleEditor_->mode==runtime::SectionTitleEditorMode::kPanel ||
+         selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint) &&
+        selection_.revision()==sectionTitleEditor_->selectionRevision &&
+        selection_.primary()==sectionTitleEditor_->section && selectedObjectCount()==1 &&
+        textWritable(sectionTitleEditor_->section);
+}
+
+void CanvasEditingRuntime::applySectionTitleEditor(render::ReferenceDrawList& list) const {
+    if (!sectionTitleEditorCurrent() || sectionTitleEditor_->mode!=runtime::SectionTitleEditorMode::kInline) return;
+    for (auto& entry:list.entries) {
+        if (entry.record.objectId!=sectionTitleEditor_->section) continue;
+        if (auto* section=std::get_if<render::SectionReferenceCommand>(&entry.command)) {
+            section->titleLayout.reset();
+            entry.record.textLayout.reset();
+            list.canonicalBytes.clear();
+            list.digest.clear();
+        }
+        break;
+    }
+}
+
 void CanvasEditingRuntime::applyContainerPreview(render::ReferenceDrawList& list) {
     const auto* selected=semanticObjects_.find(selection_.primary());
     if(!sectionBoundaryDrag_&&(!container(selected)||!transformDrag_.active()))return;
@@ -183,9 +207,31 @@ runtime::SectionSnapshot CanvasEditingRuntime::sectionSnapshot(foundation::Objec
     if(out.projectionReady) {
         out.worldTransform=derived->transform;
         if(derived->textLayout) {
-            out.titleDiagnostics=derived->textLayout->diagnostics;
-            for(const auto& run:derived->textLayout->runs)out.titleGlyphCount+=run.glyphs.size();
-            out.titleLayoutReady=out.titleDiagnostics.empty()&&(out.content.title.empty()||out.titleGlyphCount!=0);
+            const auto title=scene::sectionTitleBounds(out.content);
+            const bool inlineEdit=sectionTitleEditorCurrent() && sectionTitleEditor_->section==id &&
+                                  sectionTitleEditor_->mode==runtime::SectionTitleEditorMode::kInline;
+            auto layout=derived->textLayout;
+            // Narrow headers can elide every glyph. The editor still needs the font and baseline.
+            const bool needsMetrics=layout->runs.empty() && !out.content.title.empty() && layout->diagnostics.empty();
+            if (textLayoutService_ && (needsMetrics || (inlineEdit && layout->overflow)))
+                layout=textLayoutService_->resolveSectionTitle(id,out.content,true);
+            out.titleDiagnostics=layout->diagnostics;
+            for (const auto& run:layout->runs) out.titleGlyphCount+=run.glyphs.size();
+            out.titleLayoutReady=out.titleDiagnostics.empty() && (out.content.title.empty() || out.titleGlyphCount!=0);
+            if (out.titleLayoutReady && title.height>0 && !layout->lines.empty() && !layout->runs.empty()) {
+                const auto& line=layout->lines.front();
+                const auto& run=layout->runs.front();
+                if (run.font<layout->fonts.size()) {
+                    const double ink=std::max(0.0F,layout->localBounds.right);
+                    const double width=inlineEdit ? std::max(title.width,std::ceil(ink)+2*text::kSectionTitleInsetX) : title.width;
+                    const double textWidth=std::min(ink,std::max(0.0,width-2*text::kSectionTitleInsetX));
+                    const double textHeight=std::clamp(double(layout->localBounds.bottom),0.0,std::max(0.0,title.height-2*text::kSectionTitleInsetY));
+                    out.titleFrame=runtime::SectionSnapshot::TitleFrame{
+                        scene::composeTransform(out.worldTransform,{1,0,0,1,title.x,title.y}),width,title.height,
+                        textWidth,textHeight,run.fontSize,line.baseline,line.bounds.bottom-line.bounds.top,
+                        !inlineEdit && derived->textLayout->overflow,layout->fonts[run.font].resourceId.value};
+                }
+            }
         }
         const auto& b=out.content.boundary;const auto& t=out.worldTransform;
         const double xs[]{b.x,b.x+b.width,b.x+b.width,b.x},ys[]{b.y,b.y,b.y+b.height,b.y+b.height};
@@ -276,6 +322,39 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
     };
     try {
         if(closed_||!canonicalWriteAdmission())return fail(Failure::kBusy);
+        if (intent.action==A::kSetTitleEditor) {
+            using Mode=runtime::SectionTitleEditorMode;
+            if (intent.objectId.isZero() || !intent.selectionRevision || intent.titleEditorMode>Mode::kPanel)
+                return fail(Failure::kInvalidTarget);
+            const bool same=sectionTitleEditor_ && sectionTitleEditor_->section==intent.objectId &&
+                sectionTitleEditor_->selectionRevision==*intent.selectionRevision;
+            bool changed=false;
+            if (intent.titleEditorMode==Mode::kClosed) {
+                if (same) { sectionTitleEditor_.reset(); changed=true; }
+            } else {
+                if (*intent.selectionRevision!=selection_.revision()) return fail(Failure::kStale);
+                const auto* record=semanticObjects_.find(intent.objectId);
+                if (!selectionMode_ || (intent.titleEditorMode==Mode::kInline &&
+                    selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint) ||
+                    selectedObjectCount()!=1 || selection_.primary()!=intent.objectId ||
+                    !record || record->kind!=ObjectKind::kSection || !textWritable(intent.objectId))
+                    return fail(Failure::kInvalidTarget);
+                if (!historySceneReady()) return fail(Failure::kProjectionUnavailable);
+                if (creationActive() || selectionTransformActive() || imageCropPresentation_ ||
+                    (interaction_ && interaction_->textSession() &&
+                     interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed)) return fail(Failure::kBusy);
+                changed=!same || sectionTitleEditor_->mode!=intent.titleEditorMode;
+                sectionTitleEditor_=SectionTitleEditorFocus{intent.objectId,*intent.selectionRevision,intent.titleEditorMode};
+            }
+            if (changed) {
+                markCanonicalPresentationDirty();
+                (void)renderSelectionOverlay();
+            }
+            result.failure=Failure::kNone;
+            result.canonical=runtime::SectionCanonicalOutcome::kNoChange;
+            result.projection=runtime::SectionProjectionOutcome::kReady;
+            return result;
+        }
         if(intent.expectedSemanticGeneration!=0&&intent.expectedSemanticGeneration!=semanticGeneration().value())return fail(Failure::kStale);
         if(intent.selectionRevision&&*intent.selectionRevision!=selection_.revision())return fail(Failure::kStale);
         if(!historySceneReady())return fail(Failure::kProjectionUnavailable);
@@ -322,6 +401,8 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
             result.failure=Failure::kNone;result.canonical=runtime::SectionCanonicalOutcome::kNoChange;
             result.projection=runtime::SectionProjectionOutcome::kReady;return result;
         }
+        if ((intent.action==A::kCreate || intent.action==A::kWrap || intent.action==A::kRename) &&
+            !text::validSectionTitleEdit(intent.content.title)) return fail(Failure::kCommandRejected);
         Operation operation{allocateOperationId(),documentId_,1,1,{}};
         if(intent.action==A::kRename||intent.action==A::kResize) {
             if(!object||object->kind!=ObjectKind::kSection)return fail(Failure::kInvalidTarget);

@@ -32,6 +32,30 @@ TEST(FC08SectionConsumer, EmptyCreateRenameResizeReleaseUseRealHistory) {
     ASSERT_TRUE(c.ownerPump());EXPECT_EQ(f.readSection(intent.objectId).content.title,"区域 A");
     EXPECT_TRUE(c.close());
 }
+TEST(FC08SectionConsumer, TitleAuthoringLimitsApplyToWholeUnicodeCharactersAndOneLine) {
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade(); std::uint64_t request=0;
+    runtime::SectionIntent intent; intent.objectId=foundation::ObjectId::fromUint64(5127);
+    auto submit=[&](bool accepted) {
+        ASSERT_EQ(f.submitSectionIntent(intent,++request,8819).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());
+        const auto r=f.canvasControlReceipt({8819,request});
+        ASSERT_TRUE(r && r->section);
+        EXPECT_EQ(r->section->failure==runtime::SectionFailure::kNone,accepted);
+    };
+    std::string fifty;
+    for(int i=0;i<25;++i) fifty+="甲😀";
+    intent.content.title=fifty+"a"; submit(false);
+    intent.content.title=fifty; submit(true);
+    const auto generation=c.readback().semanticGeneration;
+    intent.action=runtime::SectionAction::kRename;
+    for(const auto* invalid:{"a\nb","a\rb","a\u0085b","a\u2028b","a\u2029b"}) {
+        intent.content.title=invalid;submit(false);
+    }
+    EXPECT_EQ(c.readback().semanticGeneration,generation);
+    EXPECT_EQ(f.readSection(intent.objectId).content.title,fifty);
+    EXPECT_TRUE(c.close());
+}
 TEST(FC08SectionConsumer, WrapReparentReleasePreserveWorldAndRejectCycleAtomically) {
     runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();

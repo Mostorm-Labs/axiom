@@ -264,8 +264,15 @@ export async function createRuntime({mount, documentId, restore, initialResource
     window.addEventListener('blur',clearHover);
 
     listen('wheel',e=>{e.preventDefault();const r=canonical.getBoundingClientRect();try{
-      if(e.ctrlKey){const s=call('state').value;call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale:s.camera.scale*Math.exp(-e.deltaY*.01)});}
-      else call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});text.sync();schedule();
+      if(e.ctrlKey){
+        const target=call('state').value.camera.scale*Math.exp(-e.deltaY*.01);
+        // Keep even very large wheel deltas serializable as positive JSON numbers.
+        const scale=Math.max(Number.MIN_VALUE,Math.min(Number.MAX_VALUE,target));
+        call('control',{kind:'zoom',x:e.clientX-r.left,y:e.clientY-r.top,scale});
+      } else {
+        call('control',{kind:'pan',x:e.deltaX,y:e.deltaY});
+      }
+      text.sync();schedule();
     }catch(error){emitError(error);}},{passive:false});
     const contextLost=e=>{e.preventDefault();if(!retainVisibleFrame())updateAnchorViewport(null);try{inputCleanup.cancelAll();call('lose');}catch(error){emitError(error);}};
     const contextRestored=()=>{if(!canonical.getContext('webgl2').isContextLost()&&!preview.getContext('webgl2').isContextLost())try{resize();}catch(error){emitError(error);}};
@@ -382,6 +389,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       setSelectionVisible:value=>control({kind:'visible',value}),unlockSelection:()=>control({kind:'unlock'}),
       createSection:options=>section(0,options),wrapInSection:options=>section(1,options),releaseSection:objectId=>section(2,{objectId}),
       readSection:objectId=>call('readSection',objectId?{objectId}:{}).value,
+      setSectionTitleEditor:(objectId,mode,selectionRevision)=>enqueue(()=>call('section',{action:12,objectId,mode,selectionRevision}),false),
       selectSection:objectId=>section(6,{objectId}),selectSectionChildren:objectId=>section(7,{objectId}),
       reparent:options=>section(3,options),resizeSection:(objectId,boundary)=>section(4,{objectId,boundary}),renameSection:(objectId,title)=>section(5,{objectId,title}),
       group:()=>enqueue(()=>{const s=call('state').value;return call('section',{action:10,objects:s.selected,generation:s.generation,selectionRevision:s.selectionRevision});}),

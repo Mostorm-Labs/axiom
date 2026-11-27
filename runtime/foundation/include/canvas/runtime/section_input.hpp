@@ -12,8 +12,9 @@
 namespace canvas::runtime {
 enum class SectionAction : std::uint8_t {
     kCreate, kWrap, kRelease, kReparent, kResize, kRename, kSelect, kSelectChildren,
-    kEnterGroupScope,kLeaveGroupScope, kGroup, kUngroup
+    kEnterGroupScope,kLeaveGroupScope, kGroup, kUngroup, kSetTitleEditor
 };
+enum class SectionTitleEditorMode : std::uint8_t { kClosed, kInline, kPanel };
 // Programmatic geometry is Section-local (boundary) and parent-local
 // (transform). Screen coordinates never enter these semantic intents.
 struct SectionIntent final {
@@ -25,6 +26,7 @@ struct SectionIntent final {
     semantic::Transform2D transform{};
     std::uint64_t expectedSemanticGeneration=0;
     std::optional<std::uint64_t> selectionRevision;
+    SectionTitleEditorMode titleEditorMode=SectionTitleEditorMode::kClosed;
     bool operator==(const SectionIntent&) const = default;
 };
 enum class SectionFailure : std::uint8_t {
@@ -53,6 +55,13 @@ struct SectionSnapshot final {
     semantic::SectionContent content{};
     semantic::Transform2D localTransform{},worldTransform{};
     std::array<foundation::WorldPoint,4> worldQuad{};
+    struct TitleFrame final {
+        semantic::Transform2D toWorld{};
+        double width{}, height{}, textWidth{}, textHeight{}, fontSize{}, baseline{}, lineHeight{};
+        bool ellipsized{};
+        foundation::ObjectId fontId{};
+    };
+    std::optional<TitleFrame> titleFrame;
     std::vector<foundation::ObjectId> directChildren,selectedRoots;
     struct Member final {
         foundation::ObjectId objectId{};

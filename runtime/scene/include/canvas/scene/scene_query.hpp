@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 namespace canvas {
@@ -47,6 +48,8 @@ struct HitTestRequest final {
     float tolerance = 0.0F;
     HitTestFilter filter;
     std::size_t maximumResults = 1U;
+    // Point selection refines ink at the display pixel; other queries use their common tolerance.
+    std::optional<float> inkTolerance = std::nullopt;
 };
 
 struct HitTestDiagnostics final {

@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <limits>
@@ -676,15 +677,8 @@ void productionRendererAcceptsFractionalStickyDimensions() {
     }
 }
 
-void productionConnectorUsesAntialiasedEdges() {
-    FrameState frame = fixtureFrame(FrameId{925});
-    auto entry = connectorEntry();
-    auto connector = std::get<ConnectorReferenceCommand>(entry.command);
-    connector.content.update([](auto& content){content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.25}};});
-    connector.content.update([](auto& content){content.end.value = canvas::semantic::FreePointEndpoint{{112.25, 72.25}};});
-    entry.command = connector;
-    entry.record.content = connector.content;
-    entry.record.visualBounds = WorldRect{70.0F, 46.0F, 115.0F, 75.0F};
+std::vector<std::uint8_t> productionEntryPixels(ReferenceTraversalEntry entry) {
+    const FrameState frame = fixtureFrame(FrameId{925});
     ReferenceDrawList list = fixtureDrawList(frame, false);
     list.entries = {std::move(entry)};
     list.candidatesExamined = 1U;
@@ -698,6 +692,18 @@ void productionConnectorUsesAntialiasedEdges() {
     assert(renderer.renderFrame(provider, FramePlan{frame, list}).code == BackendSubmissionCode::kAccepted);
     std::vector<std::uint8_t> pixels(static_cast<std::size_t>(kWidth) * kHeight * 4U);
     assert(provider.readbackRgba(pixels).code == BackendSubmissionCode::kAccepted);
+    return pixels;
+}
+
+void productionConnectorUsesAntialiasedEdges() {
+    auto entry = connectorEntry();
+    auto connector = std::get<ConnectorReferenceCommand>(entry.command);
+    connector.content.update([](auto& content){content.start.value = canvas::semantic::FreePointEndpoint{{72.25, 48.25}};});
+    connector.content.update([](auto& content){content.end.value = canvas::semantic::FreePointEndpoint{{112.25, 72.25}};});
+    entry.command = connector;
+    entry.record.content = connector.content;
+    entry.record.visualBounds = WorldRect{70.0F, 46.0F, 115.0F, 75.0F};
+    const auto pixels = productionEntryPixels(std::move(entry));
     std::size_t mixed = 0U;
     for (std::size_t i = 0; i + 3U < pixels.size(); i += 4U) {
         const auto r = pixels[i], g = pixels[i + 1U], b = pixels[i + 2U];
@@ -706,6 +712,34 @@ void productionConnectorUsesAntialiasedEdges() {
         if (!background && !solidStroke) ++mixed;
     }
     assert(mixed > 0U && "production Connector edges must use Skia anti-aliasing");
+}
+
+void rotatedShapeEdgesUseSubpixelCoverage() {
+    const ColorValue black{0, 0, 0, 1}, white{1, 1, 1, 1};
+    // A shallow rotation moves a horizontal edge by about one pixel over its length.
+    const double sine = std::sin(0.008), cosine = std::cos(0.008);
+    struct Case { std::uint32_t kind; bool fillOnly; };
+    constexpr Case cases[] = {{1, false}, {2, false}, {3, false}, {3, true}};
+    for (const auto [kind, fillOnly] : cases) {
+        const canvas::semantic::ShapeContent content{kind, 160, 70};
+        auto record = baseRecord(702, ObjectKind::kShape, {-1, -1, 161, 71});
+        record.kindVersion = 2;
+        record.content = content;
+        record.geometryBounds = {0, 0, 160, 70};
+        record.transform = {cosine, sine, -sine, cosine, 40.25, 70.25};
+        record.worldBounds = {38, 69, 202, 144};
+        record.properties = solidFill(fillOnly ? black : white);
+        if (!fillOnly)
+            record.properties.entries.push_back({0x101U, canvas::semantic::StrokeStyleValue{
+                canvas::semantic::SolidStroke{black, 2}}});
+        const auto pixels = productionEntryPixels({std::move(record), true, ShapeReferenceCommand{content}});
+        std::size_t solid = 0, partial = 0;
+        for (std::size_t i = 0; i < pixels.size(); i += 4) {
+            if (pixels[i] == 0) ++solid;
+            if (pixels[i] > 8 && pixels[i] < 247) ++partial;
+        }
+        assert(solid > 100 && partial > 40 && "rotated Shape needs both solid ink and antialiased edges");
+    }
 }
 
 void fc01TriangleAndConnectorStyleProbes() {
@@ -832,5 +866,6 @@ int main(int argc,char** argv) {
     orthogonalConnectorUsesDeterministicElbow();
     deterministicRejectionsPreservePriorObservation();
     productionRendererAcceptsFractionalSnapBounds();
+    rotatedShapeEdgesUseSubpixelCoverage();
     return 0;
 }

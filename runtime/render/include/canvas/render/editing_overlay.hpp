@@ -68,7 +68,7 @@ struct SelectionOutline final {
     bool operator==(const SelectionOutline&) const = default;
 };
 
-enum class SelectionFrameStyle { kTight, kPadded, kPaddedWithCornerRotation };
+enum class SelectionFrameStyle { kTight, kPadded, kPaddedWithCornerRotation, kTightWithCornerRotation };
 
 struct EditingOverlayInput final {
     foundation::ObjectId selectedObject{};
