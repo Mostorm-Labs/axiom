@@ -378,15 +378,19 @@ ImageCommandReceipt CanvasRuntimeFacade::updateImageCrop(const ImageCropUpdateRe
     const double scale = *request.contentScale;
     if (!std::isfinite(scale) || scale < .25 || scale > 4)
       return rejected(ImageFailureReason::kInvalidRequest);
-    const auto original = imageCrop_->original.source_rect.value_or(semantic::NormalizedRect{0,0,1,1});
     const auto previous = imageCrop_->current.source_rect.value_or(semantic::NormalizedRect{0,0,1,1});
-    const double width = std::min(1.0,original.width/scale), height = std::min(1.0,original.height/scale);
+    // Scale both axes around the current crop center, including any frame edits
+    // made since entry. Stop zooming out when either axis reaches the source edge.
+    const double factor = std::min(imageCrop_->contentScale / scale,
+                                   1.0 / std::max(previous.width, previous.height));
+    const double width = std::min(1.0, previous.width * factor);
+    const double height = std::min(1.0, previous.height * factor);
     if (width <= 1.0/4096 || height <= 1.0/4096)
       return rejected(ImageFailureReason::kInvalidRequest);
     semantic::NormalizedRect rect{std::clamp(previous.x+previous.width/2-width/2,0.0,1-width),
         std::clamp(previous.y+previous.height/2-height/2,0.0,1-height),width,height};
     imageCrop_->current.source_rect = canonicalRect(rect);
-    imageCrop_->contentScale = scale;
+    imageCrop_->contentScale /= factor;
     if (runtime_.imageCropPresentation_) runtime_.imageCropPresentation_->content = imageCrop_->current;
     runtime_.markCanonicalPresentationDirty();
     auto out=applied(imageCrop_->objectId,runtime_,imageCrop_->current,false);

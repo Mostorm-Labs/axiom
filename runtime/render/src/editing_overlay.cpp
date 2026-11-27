@@ -57,8 +57,30 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         const ScreenPoint world = applyTransform(input.objectTransform, point);
         return mapWorld(frame_, world.x, world.y);
     };
-    const std::array<ScreenPoint, 4> corners{
+    std::array<ScreenPoint, 4> corners{
         map(localTopLeft), map(localTopRight), map(localBottomRight), map(localBottomLeft)};
+    ScreenPoint cornerDirection{};
+    if (input.frameStyle != SelectionFrameStyle::kTight) {
+        // Offset the projected sides in logical pixels. Correct for shear so
+        // the perpendicular gap is constant, with a bounded miter at acute joins.
+        const auto unit = [](ScreenPoint a, ScreenPoint b, ScreenPoint fallback) {
+            const float dx = b.x - a.x, dy = b.y - a.y;
+            const float length = std::hypot(dx, dy);
+            return length > 1e-5F ? ScreenPoint{dx / length, dy / length} : fallback;
+        };
+        const auto across = unit(corners[0], corners[1], {1, 0});
+        const auto down = unit(corners[0], corners[3], {-across.y, across.x});
+        const float sine = std::abs(across.x * down.y - across.y * down.x);
+        constexpr float selectionGap = 3.0F;
+        const float outset = selectionGap / std::max(0.25F, sine);
+        for (std::size_t i = 0; i < corners.size(); ++i) {
+            const float dx = (i == 1 || i == 2) ? outset : -outset;
+            const float dy = i >= 2 ? outset : -outset;
+            corners[i].x += dx * across.x + dy * down.x;
+            corners[i].y += dx * across.y + dy * down.y;
+        }
+        cornerDirection = unit(down, across, {across.y, -across.x});
+    }
     const ScreenPoint top{(corners[0].x + corners[1].x) * 0.5F,
                           (corners[0].y + corners[1].y) * 0.5F};
     const ScreenPoint right{(corners[1].x + corners[2].x) * 0.5F,
@@ -83,22 +105,29 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         nx = 0.0F;
         ny = -1.0F;
     }
-    float rotationGap = input.rotationGap;
-    // Connector ports have a 16px hit radius, rotation has 12px. Leave a
-    // further 4px gap so neither visible affordance steals the other's drag.
-    constexpr float kPortClearance = 32.0F;
-    for (const auto& point : attachmentPoints_) {
-        if (!point.active) continue;
-        const float dx = point.center.x - top.x;
-        const float dy = point.center.y - top.y;
-        const float along = dx * nx + dy * ny;
-        const float across = dx * ny - dy * nx;
-        if (std::abs(across) < kPortClearance) {
-            rotationGap = std::max(rotationGap, along +
-                std::sqrt(kPortClearance * kPortClearance - across * across));
+    ScreenPoint rotation;
+    if (input.frameStyle == SelectionFrameStyle::kPaddedWithCornerRotation) {
+        constexpr float cornerClearance = 28.0F;
+        rotation = {corners[1].x + cornerDirection.x * cornerClearance,
+                    corners[1].y + cornerDirection.y * cornerClearance};
+    } else {
+        float rotationGap = input.rotationGap;
+        // Connector ports have a 16px hit radius, rotation has 12px. Leave a
+        // further 4px gap so neither visible affordance steals the other's drag.
+        constexpr float kPortClearance = 32.0F;
+        for (const auto& point : attachmentPoints_) {
+            if (!point.active) continue;
+            const float dx = point.center.x - top.x;
+            const float dy = point.center.y - top.y;
+            const float along = dx * nx + dy * ny;
+            const float across = dx * ny - dy * nx;
+            if (std::abs(across) < kPortClearance) {
+                rotationGap = std::max(rotationGap, along +
+                    std::sqrt(kPortClearance * kPortClearance - across * across));
+            }
         }
+        rotation = {top.x + nx * rotationGap, top.y + ny * rotationGap};
     }
-    const ScreenPoint rotation{top.x + nx * rotationGap, top.y + ny * rotationGap};
     outline_ = SelectionOutline{corners, rotation, input.selected};
     const std::array<std::pair<HandleKind, ScreenPoint>, kHandleCount> geometry{{
         {HandleKind::kTopLeft, corners[0]},
@@ -122,7 +151,8 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
               kind == HandleKind::kBottom || kind == HandleKind::kLeft) &&
              input.capabilities.sides);
         handles_[index] = enabled
-                              ? HandleGeometry{kind, geometry[index].second, 4.0F, 12.0F,
+                              ? HandleGeometry{kind, geometry[index].second,
+                                               kind == HandleKind::kRotation ? 7.5F : 4.0F, 12.0F,
                                                input.active}
                               : HandleGeometry{};
     }

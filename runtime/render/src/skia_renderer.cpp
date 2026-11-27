@@ -300,14 +300,21 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
     }
     SkPaint attachmentPaint;
     attachmentPaint.setAntiAlias(true);
-    attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
     for (const auto& point : overlay.attachmentPoints()) {
-        if (point.active) {
-            attachmentPaint.setColor4f(point.hovered
-                ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
-                : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
-            canvas.drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
-                               attachmentPaint);
+        if (!point.active) continue;
+        const auto [x, y] = point.center;
+        const float radius = point.hovered ? 5.5F : 2.75F;
+        attachmentPaint.setStyle(SkPaint::kFill_Style);
+        attachmentPaint.setColor(SK_ColorWHITE);
+        canvas.drawCircle(x, y, radius, attachmentPaint);
+        attachmentPaint.setStyle(SkPaint::kStroke_Style);
+        attachmentPaint.setStrokeWidth(1.25F);
+        attachmentPaint.setColor(point.hovered ? SkColorSetRGB(0x67, 0x61, 0xF8)
+                                              : SkColorSetRGB(0x99, 0x96, 0xE5));
+        canvas.drawCircle(x, y, radius, attachmentPaint);
+        if (point.hovered) {
+            canvas.drawLine(x - 2.5F, y, x + 2.5F, y, attachmentPaint);
+            canvas.drawLine(x, y - 2.5F, x, y + 2.5F, attachmentPaint);
         }
     }
     if (overlay.selectionOutline().visible) {
@@ -347,6 +354,19 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
             fill.setColor(SK_ColorWHITE);
             drawGrip(fill);
             drawGrip(chrome);
+            if (kind == HandleKind::kRotation) {
+                const auto [x, y] = handle.center;
+                SkPaint ink = chrome;
+                ink.setStrokeCap(SkPaint::kRound_Cap);
+                ink.setStrokeJoin(SkPaint::kRound_Join);
+                canvas.drawArc(SkRect::MakeLTRB(x-3.5F, y-3.5F, x+3.5F, y+3.5F),
+                               42.0F, 278.0F, false, ink);
+                SkPathBuilder arrow;
+                arrow.moveTo(x+0.2F, y-2.0F);
+                arrow.lineTo(x+3.0F, y-2.0F);
+                arrow.lineTo(x+3.0F, y-4.8F);
+                canvas.drawPath(arrow.detach(), ink);
+            }
         }
     }
     canvas.restore();

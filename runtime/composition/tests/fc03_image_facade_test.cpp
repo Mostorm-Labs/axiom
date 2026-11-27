@@ -152,6 +152,19 @@ int main() {
   assert(facade.updateImageCrop(scaleRequest).state == runtime::ImageCommandState::kApplied);
   assert(facade.readImageCrop().content.source_rect == semantic::NormalizedRect(.25,.25,.5,.5));
   assert(facade.readImageCrop().contentScale == 2);
+  // Narrow the frame horizontally, then scale the artwork inside that frame.
+  assert(facade.updateImageCrop({started.cropToken, {.375,.25,.25,.5}, 60,80}).state ==
+      runtime::ImageCommandState::kApplied);
+  scaleRequest.contentScale = 4;
+  assert(facade.updateImageCrop(scaleRequest).state == runtime::ImageCommandState::kApplied);
+  auto scaledFrame = facade.readImageCrop();
+  assert(scaledFrame.content.width == 60 && scaledFrame.content.height == 80);
+  assert(scaledFrame.content.source_rect == semantic::NormalizedRect(.4375,.375,.125,.25));
+  scaleRequest.contentScale = .25;
+  assert(facade.updateImageCrop(scaleRequest).state == runtime::ImageCommandState::kApplied);
+  scaledFrame = facade.readImageCrop();
+  assert(scaledFrame.contentScale == 1);
+  assert(scaledFrame.content.source_rect == semantic::NormalizedRect(.25,0,.5,1));
   runtime::ImageCropUpdateRequest update{};
   update.cropToken = started.cropToken;
   update.sourceRect = semantic::NormalizedRect{0.1, 0.1, 0.8, 0.8};

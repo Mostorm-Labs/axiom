@@ -380,6 +380,20 @@ try {
   const imageGroup = group(details, 'image-parameters');
   button(imageGroup, '替换图片', () => chooseImage(true), 'image-replace');
   const crop = button(imageGroup, '裁剪', () => sdk.beginCrop(sdk.readSelectedImage().objectId), 'image-crop');
+  const cropZoomGroup = group(context, 'crop-zoom-parameters');
+  const cropZoom = field(cropZoomGroup, '图片缩放', 'range', 'crop-zoom');
+  cropZoom.max = '400'; cropZoom.step = '1';
+  const cropZoomValue = document.createElement('output');
+  cropZoomValue.setAttribute('for', cropZoom.id);
+  cropZoom.parentElement.append(cropZoomValue);
+  cropZoom.oninput = () => {
+    const {active, token, content} = sdk.readCrop();
+    if (!active) return;
+    const percent = Number(cropZoom.value);
+    cropZoomValue.value = percent + '%';
+    void run(() => sdk.updateCrop({token, sourceRect: content.sourceRect,
+      width: content.width, height: content.height, scale: percent / 100}));
+  };
   const cropGroup = group(details, 'crop-parameters');
   button(cropGroup, '完成裁剪', () => sdk.commitCrop(sdk.readCrop().token), 'crop-done');
   button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
@@ -664,7 +678,15 @@ try {
       for (const [name, element] of textButtons) element.setAttribute('aria-pressed', String(Boolean(text.format[name])));
     }
     imageGroup.hidden = !objectContext || locked || !image.available; crop.disabled = !image.editable || cropping.active;
-    cropGroup.hidden = !cropping.active;
+    cropGroup.hidden = cropZoomGroup.hidden = !cropping.active;
+    if (cropping.active) {
+      const [, , w, h] = cropping.content.sourceRect;
+      const minimum = Math.max(25, Math.ceil(100 * cropping.scale * Math.max(w, h) - 1e-8));
+      cropZoom.min = String(minimum);
+      setValue(cropZoom, Math.round(cropping.scale * 100));
+      cropZoomValue.value = cropZoom.value + '%';
+      cropZoom.setAttribute('aria-valuetext', cropZoomValue.value);
+    }
     objectGroup.hidden = !objectContext || text.phase !== 0 || cropping.active;
     editButton.hidden = locked || selected.count !== 1 || ![1, 4, 8, 11].includes(selected.kind);
     editButton.disabled = !capability('transform') || table.available && !table.editable;

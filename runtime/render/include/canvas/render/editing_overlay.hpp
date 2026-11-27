@@ -68,6 +68,8 @@ struct SelectionOutline final {
     bool operator==(const SelectionOutline&) const = default;
 };
 
+enum class SelectionFrameStyle { kTight, kPadded, kPaddedWithCornerRotation };
+
 struct EditingOverlayInput final {
     foundation::ObjectId selectedObject{};
     foundation::WorldRect worldBounds{};
@@ -80,6 +82,7 @@ struct EditingOverlayInput final {
     std::span<const AttachmentPointGeometry> attachmentPoints{};
     // Retain layout clearance while attachment affordances are hidden in a drag.
     float rotationGap = 32.0F;
+    SelectionFrameStyle frameStyle = SelectionFrameStyle::kTight;
 };
 
 // Bounded, presentation-only geometry: one tool object or connector + sibling.

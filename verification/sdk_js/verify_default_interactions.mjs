@@ -43,7 +43,17 @@ try{
  await open();await page.evaluate(()=>sdk.table.create({rows:2,columns:2,x:250,y:300}));await pause();s=await capture();const table=await page.evaluate(()=>sdk.table.read());result.observations.table=s;result.checks.tableOpensFirstCell=s.phase===1&&s.row===table.rows[0].id&&s.column===table.columns[0].id;
  await page.keyboard.insertText('cell');await page.keyboard.press('Enter');await page.keyboard.insertText('line');await page.keyboard.press('Control+Enter');await pause();s=await capture();result.checks.tableFinishSelectsTable=s.phase===0&&pointSelected(s)&&s.primary===table.objectId&&s.text==='cell\nline';
  await open();await page.evaluate(async()=>{await sdk.zoomAt(0,0,2);await sdk.selectTool('text');});await start(600,300);await end(400,360);s=await capture();result.checks.reverseDragUsesWorldWidth=s.phase===1&&Math.abs(s.width-100)<1&&s.objects===0;
- await open();await page.evaluate(async()=>{await sdk.setSelectionMode('lasso');const c=document.createElement('canvas');c.width=c.height=32;c.getContext('2d').fillRect(0,0,32,32);const blob=await new Promise(r=>c.toBlob(r));await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png');});await pause();s=await capture();result.checks.imageAlwaysSelectsInPointMode=pointSelected(s)&&s.objects===1;
+ await open();await page.evaluate(async()=>{await sdk.setSelectionMode('lasso');const c=document.createElement('canvas');c.width=180;c.height=100;c.getContext('2d').fillRect(0,0,180,100);const blob=await new Promise(r=>c.toBlob(r));await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png');});await pause();s=await capture();result.checks.imageAlwaysSelectsInPointMode=pointSelected(s)&&s.objects===1;
+ const imageBounds = await page.evaluate(()=>sdk.readSelection().bounds);
+ const [left,top,right,bottom] = imageBounds;
+ const imageAspect = (right-left)/(bottom-top);
+ await start(right,bottom);await end(right+80,bottom-10);
+ const resized = await page.evaluate(()=>sdk.readSelection().bounds);
+ result.checks.imageCornerResizePreservesAspect = resized[2]>right &&
+   Math.abs((resized[2]-resized[0])/(resized[3]-resized[1])-imageAspect)<0.001 &&
+   Math.abs(resized[0]-left)<0.01 && Math.abs(resized[1]-top)<0.01;
+ await page.mouse.click(resized[2]+28,(resized[1]+resized[3])/2);await pause();
+ result.checks.imageHasNoExpansionPort = (await capture()).objects===1;
  // The first IME composition can arrive before the next animation frame.
  // Hold that frame to exercise focus transfer during the trusted pointer Up.
  await open();

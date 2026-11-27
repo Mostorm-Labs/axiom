@@ -1254,7 +1254,6 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       const auto* semanticRecord = semanticObjects_.find(record.objectId);
       if (semanticRecord == nullptr ||
           (semanticRecord->kind != semantic::ObjectKind::kShape &&
-           semanticRecord->kind != semantic::ObjectKind::kImage &&
            semanticRecord->kind != semantic::ObjectKind::kSticky)) continue;
       const auto* projected=sceneCoordinator_?sceneCoordinator_->runtimeScene().find(record.objectId):nullptr;
       const auto bounds=projected?interactionBounds(*projected):record.worldBounds;
@@ -2623,7 +2622,6 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
   std::vector<render::AttachmentPointGeometry> attachmentPoints;
   const bool hasAttachmentPorts = record->kind == semantic::ObjectKind::kShape ||
-      record->kind == semantic::ObjectKind::kImage ||
       record->kind == semantic::ObjectKind::kSticky;
   if (hasAttachmentPorts) {
     // Attachment points are presentation affordances around the same visible
@@ -2684,6 +2682,11 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     const auto& b=sectionBoundaryDrag_->preview.boundary;
     overlayBounds={static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
   }
+  auto frameStyle = render::SelectionFrameStyle::kTight;
+  if (record->kind == semantic::ObjectKind::kTable)
+    frameStyle = render::SelectionFrameStyle::kPadded;
+  else if (record->kind == semantic::ObjectKind::kShape || record->kind == semantic::ObjectKind::kSticky)
+    frameStyle = render::SelectionFrameStyle::kPaddedWithCornerRotation;
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, overlayBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
@@ -2691,7 +2694,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       true, false, transformDrag_.active(),
       render::HandleCapabilities{
           !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_},
-      snapGuides_, attachmentPoints, hasAttachmentPorts ? 60.0F : 32.0F});
+      snapGuides_, attachmentPoints, hasAttachmentPorts ? 60.0F : 32.0F, frameStyle});
   if(updated)appendGroupScopeOutline(selectionView_->editingOverlay());
   if (updated) ++selectionOverlayUpdates_;
   return updated;
@@ -2932,8 +2935,16 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     const bool right=editingHandle_==H::kRight||editingHandle_==H::kTopRight||editingHandle_==H::kBottomRight;
     const bool top=editingHandle_==H::kTop||editingHandle_==H::kTopLeft||editingHandle_==H::kTopRight;
     const bool bottom=editingHandle_==H::kBottom||editingHandle_==H::kBottomLeft||editingHandle_==H::kBottomRight;
-    const double ax=left?editingLocalBounds_.right:editingLocalBounds_.left;
-    const double ay=top?editingLocalBounds_.bottom:editingLocalBounds_.top;
+    const auto* selectedObject = pendingObject(selection_.primary());
+    const bool imageResize = selectedObject && selectedObject->kind == semantic::ObjectKind::kImage &&
+                             (left || right || top || bottom);
+    const auto& box = editingLocalBounds_;
+    // On a side drag keep the opposite edge's midpoint fixed. On a corner
+    // drag the diagonally opposite corner remains fixed.
+    const double ax = imageResize && !(left || right) ? (box.left + box.right) * 0.5 :
+                      left ? box.right : box.left;
+    const double ay = imageResize && !(top || bottom) ? (box.top + box.bottom) * 0.5 :
+                      top ? box.bottom : box.top;
     double sx=1.0, sy=1.0;
     if (editingHandle_ == render::HandleKind::kNone) {
       next.tx += world.first-editingDownWorld_.x;
@@ -2959,8 +2970,16 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const double height=editingLocalBounds_.bottom-editingLocalBounds_.top;
       sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
       sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
-      const auto* selectedObject = pendingObject(selection_.primary());
-      if (selectedObject != nullptr && selectedObject->kind == semantic::ObjectKind::kSticky) {
+      if (imageResize) {
+        // Project the pointer displacement onto the transformed handle axis.
+        // Both dimensions track the same factor even after cropping or rotation.
+        const double spanX = left ? -width : right ? width : 0.0;
+        const double spanY = top ? -height : bottom ? height : 0.0;
+        const double vx = t.a * spanX + t.c * spanY, vy = t.b * spanX + t.d * spanY;
+        const double squaredLength = vx * vx + vy * vy;
+        sx = sy = squaredLength > 1e-12 ?
+            std::clamp(1.0 + (dx * vx + dy * vy) / squaredLength, 0.01, 100.0) : 1.0;
+      } else if (selectedObject != nullptr && selectedObject->kind == semantic::ObjectKind::kSticky) {
         const double uniform = std::max(sx, sy);
         sx = uniform;
         sy = uniform;
@@ -2973,8 +2992,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const auto sourceWorld = transformedBounds(editingLocalBounds_, next);
       const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
           ? viewport.scale : 1.0F;
-      const auto* moving = pendingObject(selection_.primary());
-      const bool layoutMove = editingHandle_ == H::kNone && moving && !isInkKind(moving->kind);
+      const bool layoutMove = editingHandle_ == H::kNone && selectedObject && !isInkKind(selectedObject->kind);
       // Look across the gap between neighbouring objects. The resolver still
       // engages only when the two edge or centre coordinates are within 6 px.
       constexpr float neighbourReachLogicalPx = 160.0F;
@@ -3014,8 +3032,6 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
                                  {guide->spanEnd, guide->position}});
         }
       };
-      appendGuide(resolved.xGuide);
-      appendGuide(resolved.yGuide);
       const float scale = viewport.scale > 0.0F ? viewport.scale : 1.0F;
       const auto featureValue = [](const foundation::WorldRect& rect,
                                    interaction::SnapFeatureKind feature,
@@ -3056,13 +3072,36 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       };
       const bool resizeX = left || right;
       const bool resizeY = top || bottom;
-      if (resolved.x.has_value()) {
-        if (resizeX) solveScaleForSnap(*resolved.x, true, snappedSx);
-        else next.tx += resolved.x->correction / scale;
-      }
-      if (resolved.y.has_value()) {
-        if (resizeY) solveScaleForSnap(*resolved.y, false, snappedSy);
-        else next.ty += resolved.y->correction / scale;
+      if (imageResize) {
+        // Uniform scaling moves every world-space bounds feature along a ray
+        // from the fixed anchor. Choose the snap requiring the least scale change.
+        const auto candidateScale = [&](const auto& candidate, bool horizontal) -> std::optional<double> {
+          if (!candidate) return {};
+          const double anchor = horizontal ? t.a*ax+t.c*ay+t.tx : t.b*ax+t.d*ay+t.ty;
+          const double span = featureValue(sourceWorld, candidate->sourceFeature, horizontal) - anchor;
+          if (std::abs(span) < 1e-6) return {};
+          const double factor = sx * (1.0 + candidate->correction / (scale * span));
+          if (factor < 0.01 || factor > 100.0) return {};
+          return factor;
+        };
+        const auto xScale = candidateScale(resolved.x, true);
+        const auto yScale = candidateScale(resolved.y, false);
+        const double factor = xScale && (!yScale || std::abs(*xScale-sx) <= std::abs(*yScale-sx))
+            ? *xScale : yScale.value_or(sx);
+        snappedSx = snappedSy = factor;
+        if (xScale && std::abs(*xScale-factor) < 1e-9) appendGuide(resolved.xGuide);
+        if (yScale && std::abs(*yScale-factor) < 1e-9) appendGuide(resolved.yGuide);
+      } else {
+        appendGuide(resolved.xGuide);
+        appendGuide(resolved.yGuide);
+        if (resolved.x.has_value()) {
+          if (resizeX) solveScaleForSnap(*resolved.x, true, snappedSx);
+          else next.tx += resolved.x->correction / scale;
+        }
+        if (resolved.y.has_value()) {
+          if (resizeY) solveScaleForSnap(*resolved.y, false, snappedSy);
+          else next.ty += resolved.y->correction / scale;
+        }
       }
       if (resizeX || resizeY) next = rebuildScaled(snappedSx, snappedSy);
     }

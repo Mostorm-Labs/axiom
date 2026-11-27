@@ -159,9 +159,37 @@ void rotation_follows_top_edge_and_preserves_edge_hit_targets() {
     assert(view.editingOverlay().update(input));
     assert(overlay.handle(HandleKind::kRotation).center == rotation);
 }
+void padded_shape_handles_follow_local_corner_at_constant_screen_distance() {
+    for (float zoom : {0.5F, 1.0F, 3.0F}) {
+        RenderViewRuntime view(frame(ViewId(1), CameraGeneration(1), zoom));
+        EditingOverlayInput input{id(18), {-50,-25,50,25}, {}, true};
+        input.frameStyle = canvas::render::SelectionFrameStyle::kPaddedWithCornerRotation;
+        auto& overlay = view.editingOverlay();
+        assert(overlay.update(input));
+        const auto corner = overlay.handle(HandleKind::kTopRight).center;
+        assert(corner.x == 400 + 50 * zoom + 3 && corner.y == 300 - 25 * zoom - 3);
+        const auto rotation = overlay.handle(HandleKind::kRotation).center;
+        assert(rotation.x > corner.x && rotation.y < corner.y);
+        assert(overlay.hitTest(rotation) == HandleKind::kRotation);
+        assert(overlay.hitTest(corner) == HandleKind::kTopRight);
+        input.frameStyle = canvas::render::SelectionFrameStyle::kPadded;
+        assert(overlay.update(input));
+        assert(overlay.handle(HandleKind::kTopRight).center == corner);
+        const auto tableRotation = overlay.handle(HandleKind::kRotation).center;
+        assert(tableRotation.x == 400 && tableRotation.y == corner.y - input.rotationGap);
+        assert(overlay.hitTest(tableRotation) == HandleKind::kRotation);
+        input.frameStyle = canvas::render::SelectionFrameStyle::kPaddedWithCornerRotation;
+        input.objectTransform = {0,1,-1,0,0,0};
+        assert(overlay.update(input));
+        const auto turned = overlay.handle(HandleKind::kRotation).center;
+        assert(std::abs(turned.x - (400 + 300 - rotation.y)) < 0.001F);
+        assert(std::abs(turned.y - (300 + rotation.x - 400)) < 0.001F);
+    }
+}
 } // namespace
 
 int main() {
+    padded_shape_handles_follow_local_corner_at_constant_screen_distance();
     two_views_keep_overlay_state_independent();
     chrome_is_screen_space_stable_and_hit_slop_is_larger();
     chrome_is_stable_across_device_pixel_ratios();
