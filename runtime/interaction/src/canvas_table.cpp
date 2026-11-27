@@ -47,10 +47,6 @@ runtime::TableResult CanvasEditingRuntime::createTableObject(const runtime::Tabl
   if(auto* editor=interaction_->textSession();editor&&editor->read().phase!=runtime::TextPhase::kClosed)return failure;
     if(request.rows<1||request.rows>64||request.columns<1||request.columns>64||request.rows*request.columns>1024||!std::isfinite(request.x)||!std::isfinite(request.y))return failure;
     ObjectRecord object;object.id=preview?preview->id:allocateTextIdentity();object.kind=ObjectKind::kTable;object.kind_version=1;object.transform.tx=request.x;object.transform.ty=request.y;
-    object.placement.parent_id=selection_.groupScope();
-    if(object.placement.parent_id){const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);Transform2D inverse;if(!parent||!textWritable(parent->objectId)||!scene::inverseTransform(parent->transform,inverse))return failure;object.transform=scene::composeTransform(inverse,object.transform);}
-    std::vector<std::uint8_t> key;for(const auto& existing:semanticObjects_.allObjects())if(existing.placement.parent_id==object.placement.parent_id&&(key.empty()||OrderKey(key)<existing.placement.order_key))key.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());
-    if(key.size()>=OrderKey::kMaxSize)return failure;key.push_back(128);object.placement.order_key=OrderKey(key);
     TableContent t;
     if(preview) {
       const auto* source=std::get_if<TableContent>(&preview->content);
@@ -61,6 +57,17 @@ runtime::TableResult CanvasEditingRuntime::createTableObject(const runtime::Tabl
       for(std::uint32_t i=0;i<request.columns;++i)t.columns.push_back({allocateTextIdentity(),120});
     }
     t.cells.resize(request.rows*request.columns);widths(t);object.content=t;if(preview){object.kind_version=preview->kind_version;object.properties=preview->properties;}else materializeStructuralAppearance(object);
+    if(!preview || !placeInContainingSection(object)) {
+      object.placement.parent_id=selection_.groupScope();
+      if(object.placement.parent_id) {
+        const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);
+        Transform2D inverse;
+        if(!parent||!textWritable(parent->objectId)||!scene::inverseTransform(parent->transform,inverse))return failure;
+        object.transform=scene::composeTransform(inverse,object.transform);
+      }
+    }
+    std::vector<std::uint8_t> key;for(const auto& existing:semanticObjects_.allObjects())if(existing.placement.parent_id==object.placement.parent_id&&(key.empty()||OrderKey(key)<existing.placement.order_key))key.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());
+    if(key.size()>=OrderKey::kMaxSize)return failure;key.push_back(128);object.placement.order_key=OrderKey(key);
     if(pendingLocalEnabled()){if(!enqueuePendingCreate({std::move(object)},true))return failure;return {false,preview?preview->id:selection_.primary(),semanticGeneration_.current().value(),true,lastPendingLocalSerial()};}
     const auto f=allocateOperationId(),u=allocateOperationId();
     if(!applyLocalHistoryOperation({f,documentId_,1,1,InsertObjectsOp{{object}}},{u,documentId_,1,1,DeleteObjectsOp{{object.id}}}))return failure;

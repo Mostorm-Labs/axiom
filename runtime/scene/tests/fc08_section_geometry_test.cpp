@@ -31,7 +31,7 @@ TEST(FC08SectionGeometry, AncestorsComposeOnceAndBoundaryDoesNotClipChildren) {
     const auto* s=projection.find(section.id);ASSERT_NE(s,nullptr);
     EXPECT_DOUBLE_EQ(s->transform.tx,60);EXPECT_DOUBLE_EQ(s->transform.ty,220);
     EXPECT_FLOAT_EQ(s->geometryBounds.left,-10);EXPECT_FLOAT_EQ(s->geometryBounds.bottom,40);
-    EXPECT_FLOAT_EQ(s->worldBounds.left,-20);EXPECT_FLOAT_EQ(s->worldBounds.right,100);
+    EXPECT_FLOAT_EQ(s->worldBounds.left,-20);EXPECT_FLOAT_EQ(s->worldBounds.right,140); // includes the outside title after rotation
     const auto* child=projection.find(shape.id);ASSERT_NE(child,nullptr);
     EXPECT_DOUBLE_EQ(child->transform.tx,50);EXPECT_DOUBLE_EQ(child->transform.ty,520);
     EXPECT_FLOAT_EQ(child->worldBounds.left,30);EXPECT_FLOAT_EQ(child->worldBounds.bottom,560);

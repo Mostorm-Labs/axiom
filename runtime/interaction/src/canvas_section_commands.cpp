@@ -199,9 +199,37 @@ runtime::SectionSnapshot CanvasEditingRuntime::sectionSnapshot(foundation::Objec
     return out;
 }
 
+bool CanvasEditingRuntime::placeInContainingSection(ObjectRecord& record) const {
+    if (!sceneCoordinator_ || record.placement.parent_id) return false;
+    const auto bounds=scene::computeBounds(record);
+    const auto hits=runtimeSceneHost_->query(canvas::SceneQuery{bounds.world});
+    if (!bounds.finite || !hits) return false;
+    for (auto it=hits.value().backToFront.rbegin(); it!=hits.value().backToFront.rend(); ++it) {
+        const auto* section=sceneCoordinator_->runtimeScene().find(*it);
+        if (!section || section->kind!=ObjectKind::kSection || !textWritable(*it) ||
+            selection_.resolveHit(*it,semanticObjects_)!=*it) continue;
+        Transform2D inverse{};
+        if (!scene::inverseTransform(section->transform,inverse)) continue;
+        const auto local=scene::composeTransform(inverse,record.transform);
+        const auto& b=std::get<SectionContent>(section->content.get()).boundary;
+        bool inside=true;
+        for (float x:{bounds.geometry.left,bounds.geometry.right})
+            for (float y:{bounds.geometry.top,bounds.geometry.bottom}) {
+                const auto px=local.a*x+local.c*y+local.tx, py=local.b*x+local.d*y+local.ty;
+                inside=inside && px>=b.x && py>=b.y && px<=b.x+b.width && py<=b.y+b.height;
+            }
+        if (inside) {
+            record.placement.parent_id=*it;
+            record.transform=local;
+            return true;
+        }
+    }
+    return false;
+}
+
 std::optional<interaction::SubmitResult> CanvasEditingRuntime::tryCommitSectionDrop(
-    const semantic::SetTransformsOp& desiredWorld) noexcept {
-    if(editingHandle_!=render::HandleKind::kNone||!transformDrag_.active()||desiredWorld.items.size()!=1)return std::nullopt;
+    const semantic::SetTransformsOp& desiredWorld, foundation::WorldPoint release) noexcept {
+    if(desiredWorld.items.size()!=1)return std::nullopt;
     try {
         const auto id=desiredWorld.items.front().object_id;
         const auto* source=semanticObjects_.find(id);if(!source||!historySceneReady())return interaction::SubmitResult::rejected();
@@ -214,18 +242,18 @@ std::optional<interaction::SubmitResult> CanvasEditingRuntime::tryCommitSectionD
                !textWritable(it->objectId)||selection_.resolveHit(it->objectId,semanticObjects_)!=it->objectId)continue;
             Transform2D inverse{};
             if(!scene::inverseTransform(it->transform,inverse)) {
-                const auto& b=it->worldBounds;const auto p=editingDropWorld_;
+                const auto& b=it->worldBounds;const auto p=release;
                 if(p.x>=b.left&&p.x<=b.right&&p.y>=b.top&&p.y<=b.bottom)return interaction::SubmitResult::rejected();
                 continue;
             }
-            const double x=(inverse.a*editingDropWorld_.x+inverse.c*editingDropWorld_.y)+inverse.tx;
-            const double y=(inverse.b*editingDropWorld_.x+inverse.d*editingDropWorld_.y)+inverse.ty;
+            const double x=(inverse.a*release.x+inverse.c*release.y)+inverse.tx;
+            const double y=(inverse.b*release.x+inverse.d*release.y)+inverse.ty;
             const auto& b=std::get<SectionContent>(it->content.get()).boundary;
             if(x>=b.x&&x<=b.x+b.width&&y>=b.y&&y<=b.y+b.height){destination=it->objectId;break;}
         }
         if(destination==source->placement.parent_id)return std::nullopt;
         runtime::SectionIntent intent;intent.action=runtime::SectionAction::kReparent;intent.objects={id};intent.parentId=destination;
-        intent.expectedSemanticGeneration=editingGeneration_.value();intent.selectionRevision=editingSelectionRevision_;
+        intent.expectedSemanticGeneration=semanticGeneration().value();
         const auto result=executeSectionCommand(intent,&desiredWorld);
         return result.failure==runtime::SectionFailure::kNone?interaction::SubmitResult::acceptedResult():interaction::SubmitResult::rejected();
     } catch(const std::bad_alloc&) {return interaction::SubmitResult::rejected();}
@@ -251,7 +279,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
         if(intent.expectedSemanticGeneration!=0&&intent.expectedSemanticGeneration!=semanticGeneration().value())return fail(Failure::kStale);
         if(intent.selectionRevision&&*intent.selectionRevision!=selection_.revision())return fail(Failure::kStale);
         if(!historySceneReady())return fail(Failure::kProjectionUnavailable);
-        if(confirmedDrop&&(intent.action!=A::kReparent||!transformDrag_.active()||editingHandle_!=render::HandleKind::kNone||
+        if(confirmedDrop&&(intent.action!=A::kReparent||
            confirmedDrop->items.size()!=1||intent.objects.size()!=1||confirmedDrop->items.front().object_id!=intent.objects.front()))return fail(Failure::kInvalidTarget);
         if(creationActive()||(!confirmedDrop&&selectionTransformActive())||imageCropPresentation_||
            (interaction_&&interaction_->textSession()&&interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed))return fail(Failure::kBusy);

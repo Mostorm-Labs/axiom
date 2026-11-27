@@ -283,6 +283,11 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
         distance=std::min({scene::distanceToSegment(request.worldPoint,a,topRight),scene::distanceToSegment(request.worldPoint,topRight,c),
             scene::distanceToSegment(request.worldPoint,c,bottomLeft),scene::distanceToSegment(request.worldPoint,bottomLeft,a)});
         hit=scene::pointInTriangle(request.worldPoint,first)||scene::pointInTriangle(request.worldPoint,second)||distance<=request.tolerance;
+        if (section->titleHeight > 0) {
+            const auto tl=world({b.left,b.top-section->titleHeight}), tr=world({b.right,b.top-section->titleHeight});
+            if (scene::pointInTriangle(request.worldPoint,{tl,tr,topRight,{}}) ||
+                scene::pointInTriangle(request.worldPoint,{tl,topRight,a,{}})) { hit=true; distance=0; }
+        }
     } else if (const auto* triangle = std::get_if<scene::TriangleGeometry>(&record.derivedGeometry)) {
         const scene::TriangleGeometry transformed{world(triangle->top), world(triangle->right), world(triangle->left), {}};
         distance = std::min({scene::distanceToSegment(request.worldPoint, transformed.top, transformed.right),

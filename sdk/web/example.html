@@ -41,6 +41,7 @@
   .hint { color: #8290a3; white-space: nowrap; }
   #context-title { color: #52657d; font-weight: 500; white-space: nowrap; flex: none; }
   #canvas { position: absolute; z-index: 0; inset: 0; overflow: hidden; background: white; }
+  #section-title.on-canvas { position: fixed; z-index: 4; width: min(240px, 90vw); padding: 3px 6px; font: inherit; background: white; }
   .anchor-note { display: grid; place-items: center; border: 1px solid #e5a126; border-radius: 8px; color: #62420b; background: #fff4cf; font-weight: 600; }
   .anchor-video { overflow: hidden; background: #16202e; box-shadow: 0 6px 24px #142a4a33; outline: 1px solid #3978cf; }
   .anchor-video iframe { display: block; border: 0; transform: scale(var(--video-scale)); transform-origin: 0 0; pointer-events: auto; }
@@ -397,6 +398,35 @@ try {
   const cropGroup = group(details, 'crop-parameters');
   button(cropGroup, '完成裁剪', () => sdk.commitCrop(sdk.readCrop().token), 'crop-done');
   button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
+  const sectionGroup = group(context, 'section-parameters');
+  const sectionTitle = field(sectionGroup, '分区标题', 'text', 'section-title');
+  let titleDraft;
+  sectionTitle.onfocus = () => { titleDraft = sdk.readSection(); };
+  sectionTitle.onblur = () => {
+    const draft = titleDraft, value = sectionTitle.value;
+    titleDraft = null;
+    sectionTitle.classList.remove('on-canvas');
+    if (draft?.available && value !== draft.title && sdk.readSection(draft.objectId).title === draft.title)
+      void run(() => sdk.renameSection(draft.objectId, value));
+  };
+  sectionTitle.onkeydown = event => {
+    if (event.isComposing || event.keyCode === 229) return;
+    if (event.key === 'Escape') sectionTitle.value = titleDraft?.title ?? '';
+    if (event.key === 'Escape' || event.key === 'Enter') {
+      event.preventDefault();
+      sdk.canvas.focus({preventScroll:true});
+    }
+  };
+  $('canvas').addEventListener('dblclick', event => {
+    if (!sdk.readSection().available) return;
+    show();
+    if (sectionGroup.hidden) return;
+    event.preventDefault(); event.stopPropagation();
+    sectionTitle.style.left = Math.max(4, Math.min(innerWidth-250, event.clientX-8))+'px';
+    sectionTitle.style.top = Math.max(4, Math.min(innerHeight-36, event.clientY-14))+'px';
+    sectionTitle.classList.add('on-canvas');
+    sectionTitle.focus({preventScroll:true}); sectionTitle.select();
+  }, true);
   const objectGroup = group(details, 'object-actions');
   const editButton = button(objectGroup, '编辑', () => {
     sdk.canvas.focus({preventScroll: true});
@@ -612,6 +642,8 @@ try {
     const capability = action => selected.actions[actionIndex[action]]?.available === true;
     const objectContext = !state.creationMode && state.tool === 1 && selected.count > 0;
     const locked = objectContext && (capability('unlock') || selected.actions[actionIndex.transform]?.reason === 10);
+    sectionGroup.hidden = !objectContext || locked || selected.count !== 1 || selected.kind !== 10;
+    if (!sectionGroup.hidden) setValue(sectionTitle, sdk.readSection().title);
     const table=sdk.table.read();tableGroup.hidden=!objectContext||locked||!table.available;
     if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
       setValue(cellFont,cell.format.font??'');

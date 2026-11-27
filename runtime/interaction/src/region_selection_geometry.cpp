@@ -90,7 +90,8 @@ RegionIntersection intersectSelectionRegion(const semantic::ObjectRecord& object
         if (!c) return RegionIntersection::kInvalid;w=c->width;h=c->height;
     } else if(object.kind==semantic::ObjectKind::kSection) {
         const auto* c=std::get_if<semantic::SectionContent>(&object.content);if(!c)return RegionIntersection::kInvalid;
-        w=c->boundary.width;h=c->boundary.height;ox=c->boundary.x;oy=c->boundary.y;
+        const double titleHeight=scene::sectionTitleHeight(*c);
+        w=c->boundary.width;h=c->boundary.height+titleHeight;ox=c->boundary.x;oy=c->boundary.y-titleHeight;
     } else return RegionIntersection::kUnsupported;
     const auto& t=object.transform;const double det=t.a*t.d-t.b*t.c;
     if (!std::isfinite(w)||!std::isfinite(h)||w<=0||h<=0||!std::isfinite(det)||std::abs(det)<1e-12)

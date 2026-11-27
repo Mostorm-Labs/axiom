@@ -210,6 +210,8 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
         const float extra=std::max(outline,static_cast<float>(hatch));
         result.visual=foundation::unionRects(result.visual,{b.left-extra,b.top-extra,b.right+extra,b.bottom+extra});
     }
+    if (const auto* section = std::get_if<semantic::SectionContent>(&record.content))
+        result.visual.top = std::min(result.visual.top, static_cast<float>(section->boundary.y - sectionTitleHeight(*section)));
     const double xs[] = {result.visual.left, result.visual.right};
     const double ys[] = {result.visual.top, result.visual.bottom};
     foundation::WorldRect transformed{};

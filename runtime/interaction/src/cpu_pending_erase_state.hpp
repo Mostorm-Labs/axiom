@@ -16,6 +16,8 @@ struct CpuPendingEraseState final {
   std::optional<resources::ResourceLease> prefixMetadata;
   std::vector<semantic::ObjectRecord> creates;
   semantic::SetTransformsOp transforms;
+  std::optional<foundation::WorldPoint> sectionDropPoint;
+  std::optional<foundation::ObjectId> dropScope;
   std::vector<std::pair<foundation::ObjectId,semantic::Transform2D>> initialPoses;
   std::vector<RuntimeSceneRecord> transformBasis;
   std::shared_ptr<semantic::PreparedEraseOperation> preparedErase;

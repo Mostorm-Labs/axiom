@@ -188,7 +188,8 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         const auto* c=std::get_if<semantic::SectionContent>(&r.content.get());if(!c)return Hit::kInvalid;
         // Keep the established whole-boundary acquisition area. Membership and
         // header semantics still use the stable authored rectangle.
-        path=rectangle(c->boundary.x,c->boundary.y,c->boundary.width,c->boundary.height);
+        const double titleHeight=scene::sectionTitleHeight(*c);
+        path=rectangle(c->boundary.x,c->boundary.y-titleHeight,c->boundary.width,c->boundary.height+titleHeight);
         break;
     }
     case semantic::ObjectKind::kImage: {

@@ -947,7 +947,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   };
   std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
   bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
-  std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
+  bool placeInContainingSection(semantic::ObjectRecord& worldRecord) const;
+  std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&, foundation::WorldPoint release) noexcept;
   runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance = nullptr) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
   void applyAppearancePreview(render::ReferenceDrawList&);

@@ -516,7 +516,7 @@ canvas::foundation::WorldRect transformedBounds(
   return result;
 }
 canvas::foundation::WorldRect interactionBounds(const canvas::RuntimeSceneRecord& record) noexcept {
-  return canvas::interaction::usesDerivedAppearance(record.properties)?transformedBounds(record.geometryBounds,record.transform):record.worldBounds;
+  return (record.kind==canvas::semantic::ObjectKind::kSection || canvas::interaction::usesDerivedAppearance(record.properties))?transformedBounds(record.geometryBounds,record.transform):record.worldBounds;
 }
 
 
@@ -1471,6 +1471,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       return false;
     }
   }
+  if (inserted.front().kind==semantic::ObjectKind::kShape || inserted.front().kind==semantic::ObjectKind::kSticky)
+    placeInContainingSection(inserted.front());
   if(pendingLocalEnabled())return enqueuePendingCreate(std::move(inserted),commit->record.kind==semantic::ObjectKind::kSticky);
   semantic::Operation operation{
       localOperationIdentity(ordinal), documentId_,
@@ -2678,6 +2680,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   if (transformDrag_.active()) attachmentPoints.clear();
   const bool sketchChrome=usesDerivedAppearance(record->properties);
   auto overlayBounds=cropBounds ? cropBounds->visual : sketchChrome?record->geometryBounds:record->visualBounds;
+  if(record->kind==semantic::ObjectKind::kSection)overlayBounds=record->geometryBounds;
   if(sectionBoundaryDrag_) {
     const auto& b=sectionBoundaryDrag_->preview.boundary;
     overlayBounds={static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
@@ -2896,7 +2899,8 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     editingPendingBasis_=pendingSceneRecord(object->id);
     editingPointer_ = key;
     editingInitial_ = t;
-    editingLocalBounds_ = usesDerivedAppearance(object->properties)?bounds.geometry:bounds.visual;
+    editingLocalBounds_ = object->kind==semantic::ObjectKind::kSection || usesDerivedAppearance(object->properties)
+        ? bounds.geometry : bounds.visual;
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
     editingCameraGeneration_=cameraGeneration();editingMetricsGeneration_=surface_.metricsGeneration;
@@ -3012,6 +3016,15 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
         if (record == nullptr) continue;
         if (record->objectId == selection_.primary()) continue;
+        if (selectedObject && (selectedObject->kind==semantic::ObjectKind::kGroup ||
+                               selectedObject->kind==semantic::ObjectKind::kSection)) {
+          auto parent=record->placement.parent_id;
+          while (parent && *parent!=selectedObject->id) {
+            const auto* ancestor=semanticObjects_.find(*parent);
+            parent=ancestor ? ancestor->placement.parent_id : std::nullopt;
+          }
+          if (parent) continue; // Children move with this container.
+        }
         targets.push_back({record->objectId, viewBounds(interactionBounds(*record), viewport),
                            false, transformOverrides_.find(record->objectId) != nullptr,
                            layoutMove && isInkKind(record->kind)});
@@ -3172,7 +3185,8 @@ interaction::SubmitResult CanvasEditingRuntime::submit(const semantic::SetTransf
       editingGeneration_!=semanticGeneration_.current()) return interaction::SubmitResult::rejected();
   const auto* before=semanticObjects_.find(transforms.items.front().object_id);
   if (before==nullptr || before->id!=selection_.primary() || selectedObjectLocked()) return interaction::SubmitResult::rejected();
-  if(const auto drop=tryCommitSectionDrop(transforms))return *drop;
+  if(editingHandle_==render::HandleKind::kNone && transformDrag_.active())
+    if(const auto drop=tryCommitSectionDrop(transforms,editingDropWorld_))return *drop;
   const auto forwardId=allocateOperationId(), inverseId=allocateOperationId();
   if (forwardId.isZero() || inverseId.isZero()) return interaction::SubmitResult::rejected();
   auto localTransforms=transforms;

@@ -54,6 +54,23 @@ try{
    Math.abs(resized[0]-left)<0.01 && Math.abs(resized[1]-top)<0.01;
  await page.mouse.click(resized[2]+28,(resized[1]+resized[3])/2);await pause();
  result.checks.imageHasNoExpansionPort = (await capture()).objects===1;
+ await open();
+ const draw = async (kind,x1,y1,x2,y2) => {
+   await page.evaluate(k=>sdk.selectShape(k),kind);await start(x1,y1);await end(x2,y2);
+   return (await capture()).primary;
+ };
+ const inside=await draw('rectangle',300,300,360,350);
+ const outside=await draw('rectangle',630,320,690,370);
+ const section=await draw('section',220,250,530,540);
+ const members=()=>page.evaluate(id=>sdk.readSection(id).children,section);
+ const initialMembers=await members();
+ result.checks.sectionWrapKeepsOutsideRoot=initialMembers.includes(inside)&&!initialMembers.includes(outside);
+ await page.mouse.click(660,345);await start(660,345);await end(460,430);
+ result.checks.sectionDropAdoptsObject=(await members()).includes(outside);
+ await page.evaluate(()=>sdk.undo());await pause();
+ result.checks.sectionDropUndoRestoresParent=!(await members()).includes(outside);
+ await page.evaluate(()=>sdk.redo());await pause();
+ result.checks.sectionDropRedoRestoresParent=(await members()).includes(outside);
  // The first IME composition can arrive before the next animation frame.
  // Hold that frame to exercise focus transfer during the trusted pointer Up.
  await open();

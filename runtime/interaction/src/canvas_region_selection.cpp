@@ -136,7 +136,7 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
       const auto value=pendingLocalValue();
       for(const auto& intent:value.intents)for(const auto id:intent.objects){auto record=pendingSceneRecord(id);if(!record)continue;const auto& t=record->transform;semantic::Transform2D inv;if(!scene::inverseTransform(t,inv))continue;const double x=inv.a*point.x+inv.c*point.y+inv.tx,y=inv.b*point.x+inv.d*point.y+inv.ty;const auto& b=record->visualBounds;if(x>=b.left&&x<=b.right&&y>=b.top&&y<=b.bottom)pendingHits.push_back({id,record->placement.order_key});ids.erase(std::remove(ids.begin(),ids.end(),id),ids.end());}
       for(const auto& hit:pendingHits)ids.push_back(hit.first);
-      std::sort(ids.begin(),ids.end(),[&](auto a,auto b){const auto ra=pendingSceneRecord(a),rb=pendingSceneRecord(b);if(!ra||!rb)return a<b;if(ra->placement.order_key!=rb->placement.order_key)return ra->placement.order_key>rb->placement.order_key;return a>b;});
+      if(!pendingHits.empty())std::stable_sort(ids.begin(),ids.end(),[&](auto a,auto b){const auto ra=pendingSceneRecord(a),rb=pendingSceneRecord(b);if(!ra||!rb)return a<b;if(ra->placement.order_key!=rb->placement.order_key)return ra->placement.order_key>rb->placement.order_key;return a>b;});
       ids.erase(std::unique(ids.begin(),ids.end()),ids.end());
     }
     const std::array<RegionPoint,4> neighborhood{{{point.x-4,point.y-4},{point.x+4,point.y-4},{point.x+4,point.y+4},{point.x-4,point.y+4}}};

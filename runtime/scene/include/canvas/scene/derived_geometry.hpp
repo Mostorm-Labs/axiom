@@ -28,7 +28,10 @@ struct ConnectorGeometry final {
     }
 };
 struct ArrowHeadGeometry final { foundation::WorldPoint tip{}, left{}, right{}; };
-struct SectionBoundaryGeometry final { foundation::WorldRect boundary{}; bool operator==(const SectionBoundaryGeometry&) const = default; };
+[[nodiscard]] inline double sectionTitleHeight(const semantic::SectionContent& section) noexcept {
+    return section.title.empty() ? 0.0 : section.header_height;
+}
+struct SectionBoundaryGeometry final { foundation::WorldRect boundary{}; float titleHeight{}; bool operator==(const SectionBoundaryGeometry&) const = default; };
 using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, ConnectorGeometry, SectionBoundaryGeometry>;
 [[nodiscard]] DerivedGeometry deriveGeometry(const semantic::ObjectRecord&) noexcept;
 [[nodiscard]] std::optional<TriangleGeometry> triangleGeometry(const semantic::ShapeContent&) noexcept;

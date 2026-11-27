@@ -820,9 +820,10 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             }
             if(command.titleLayout&&textResources) {
                 canvas.save();
-                canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),
-                    skScalar(std::min(b.height,command.content.get().header_height))));
-                canvas.translate(skScalar(b.x+command.content.get().padding),skScalar(b.y));
+                const double height=scene::sectionTitleHeight(command.content.get());
+                const double top=b.y-height;
+                canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(top),skScalar(b.width),skScalar(height)));
+                canvas.translate(skScalar(b.x),skScalar(top));
                 textResources->draw(canvas,*command.titleLayout);
                 canvas.restore();
             }

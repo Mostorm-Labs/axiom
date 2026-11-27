@@ -94,6 +94,10 @@ bool CanvasEditingRuntime::enqueuePendingTransform(const semantic::SetTransforms
   if(!reservePendingLocal(editingPointer_,"transform"))return false;PendingAdmission admission{*this,editingPointer_};
   CpuPendingEraseState::Intent* target=nullptr;for(auto& p:cpuPending_->slots)if(p&&!p->serial&&p->kind==CpuPendingEraseState::Kind::Transform&&p->key==editingPointer_){target=p.get();break;}if(!target||cpuPending_->nextSerial==UINT64_MAX)return false;
   for(const auto& value:values.items){const auto* record=pendingObject(value.object_id);const auto pose=pendingPose(value.object_id);if(!record||!pose)return false;target->initialPoses.push_back({value.object_id,*pose});if(auto projected=pendingSceneRecord(value.object_id))target->transformBasis.push_back(std::move(*projected));if(!semanticObjects_.contains(value.object_id))for(const auto& prior:cpuPending_->slots)if(prior&&prior->serial)for(const auto& created:prior->creates)if(created.id==value.object_id)target->dependencies.push_back(prior->serial);}
+  if (values.items.size()==1 && transformDrag_.active() && editingHandle_==render::HandleKind::kNone) {
+    target->sectionDropPoint=editingDropWorld_;
+    target->dropScope=selection_.groupScope();
+  }
   target->transforms=values;
   const auto displaySession=(std::uint64_t{1}<<63)| (cpuPending_->nextSerial+1);
   if(displayOwner_&&!reserveDisplay(displaySession,DisplayKind::kLocal))return false;target->session=displaySession;target->serial=++cpuPending_->nextSerial;target->phase=CpuPendingEraseState::Phase::Ready;target->focusRevision=selection_.revision();cpuPending_->lastAdmitted=target->serial;++cpuPending_->admitted;++cpuPending_->revision;transientOverlayDirty_=true;canonicalPresentationDirty_=true;return true;
@@ -143,7 +147,13 @@ bool CanvasEditingRuntime::servicePendingLocalHead()noexcept{
    ok=true;
    for(auto& item:values.items){const auto* current=semanticObjects_.find(item.object_id);if(!current||!textWritable(item.object_id)){ok=false;break;}
     const auto initial=std::find_if(p->initialPoses.begin(),p->initialPoses.end(),[&](const auto& v){return v.first==item.object_id;});const auto* projected=sceneCoordinator_->runtimeScene().find(item.object_id);const auto body=std::find_if(p->transformBasis.begin(),p->transformBasis.end(),[&](const auto& v){return v.objectId==item.object_id;});if(initial==p->initialPoses.end()||!projected||projected->transform!=initial->second||body==p->transformBasis.end()||body->content!=projected->content||body->placement!=projected->placement||body->properties!=projected->properties){ok=false;break;}inverse.items.push_back({item.object_id,current->transform});if(current->placement.parent_id){const auto* parent=sceneCoordinator_->runtimeScene().find(*current->placement.parent_id);semantic::Transform2D inv;if(!parent||!scene::inverseTransform(parent->transform,inv)){ok=false;break;}item.transform=scene::composeTransform(inv,item.transform);}}
-   if(ok)ok=applyLocalHistoryOperation({allocateOperationId(),documentId_,1,1,std::move(values)},{allocateOperationId(),documentId_,1,1,std::move(inverse)});
+   std::optional<SubmitResult> drop;
+   if(ok && p->sectionDropPoint) {
+     ok=p->dropScope==selection_.groupScope();
+     if(ok)drop=tryCommitSectionDrop(p->transforms,*p->sectionDropPoint);
+   }
+   if(drop)ok=drop->accepted;
+   else if(ok)ok=applyLocalHistoryOperation({allocateOperationId(),documentId_,1,1,std::move(values)},{allocateOperationId(),documentId_,1,1,std::move(inverse)});
   }else if(p->kind==CpuPendingEraseState::Kind::Undo)ok=history_.undo();
   else if(p->kind==CpuPendingEraseState::Kind::Redo)ok=history_.redo();
   state.headApplying=false;

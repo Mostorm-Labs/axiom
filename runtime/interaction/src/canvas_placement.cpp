@@ -110,15 +110,35 @@ bool CanvasEditingRuntime::placementPointer(const input::PointerKey& key,
     request.generation=completed.generation;
     const auto result=createTableObject(request,&completed.preview.record);return result.applied||result.pending;
   }
+  cancelPendingLocal(key);
   runtime::SectionIntent request;request.objectId=completed.preview.record.id;
   request.content=std::get<semantic::SectionContent>(completed.preview.record.content);
   request.transform=completed.preview.record.transform;request.parentId=completed.scope;
   request.expectedSemanticGeneration=completed.generation;request.selectionRevision=completed.selection;
-  if (completed.scope) {
+  auto placed=completed.preview.record;
+  if (placeInContainingSection(placed)) {
+    request.parentId=placed.placement.parent_id;
+    request.transform=placed.transform;
+  } else if (completed.scope) {
     const auto* parent=sceneCoordinator_->runtimeScene().find(*completed.scope);
     semantic::Transform2D inverse;
     if(!parent||!textWritable(*completed.scope)||!scene::inverseTransform(parent->transform,inverse))return false;
     request.transform=scene::composeTransform(inverse,request.transform);
+  }
+  // Only immediate siblings can be adopted. Descendants travel with their
+  // parent, so wrapping a group never flattens it or moves a label on its own.
+  const auto& b=request.content.boundary;
+  const auto& pose=completed.preview.record.transform;
+  const foundation::WorldRect frame{float(pose.tx+b.x),float(pose.ty+b.y),
+      float(pose.tx+b.x+b.width),float(pose.ty+b.y+b.height)};
+  const auto candidates=runtimeSceneHost_->query(canvas::SceneQuery{frame});
+  if(!candidates)return false;
+  for(const auto id:candidates.value().backToFront) {
+    const auto* item=sceneCoordinator_->runtimeScene().find(id);
+    if(!item || item->placement.parent_id!=request.parentId || !textWritable(id))continue;
+    const auto& bounds=item->worldBounds;
+    if(bounds.left>=frame.left && bounds.right<=frame.right &&
+       bounds.top>=frame.top && bounds.bottom<=frame.bottom)request.objects.push_back(id);
   }
   const auto result=executeSectionCommand(request,nullptr,&completed.preview.record.properties);
   if(result.canonical!=runtime::SectionCanonicalOutcome::kCommitted)return false;

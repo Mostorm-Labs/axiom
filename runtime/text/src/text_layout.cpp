@@ -326,7 +326,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveSectionT
     semantic::TextStyle style;style.font_size=16;style.weight=400;style.color={.15F,.2F,.25F,1};
     if(!impl_->descriptors.empty())style.font_resource_id=impl_->descriptors.begin()->second.resourceId;
     paragraph.runs.push_back({section.title,style});display.document.paragraphs.push_back(std::move(paragraph));
-    display.layout=semantic::RichTextLayout{std::max(1.0,section.boundary.width-2*section.padding)};
+    display.layout=semantic::RichTextLayout{std::max(1.0,section.boundary.width)};
     return resolve(id,display);
 }
 void RichTextLayoutService::registerFont(FontResourceDescriptor d) { impl_->descriptors[d.resourceId.value]=std::move(d); }
