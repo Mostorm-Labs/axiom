@@ -24,6 +24,7 @@ bool objectIdLess(const foundation::ObjectId& left,
 }
 
 bool candidateLess(const SnapCandidate& left, const SnapCandidate& right) noexcept {
+  if (left.fallback != right.fallback) return !left.fallback;
   const float leftDistance = std::abs(left.correction);
   const float rightDistance = std::abs(right.correction);
   if (leftDistance != rightDistance) return leftDistance < rightDistance;
@@ -101,7 +102,7 @@ std::optional<SnapCandidate> SnapResolver::resolveAxis(
         if ((features & (1U << static_cast<unsigned>(sourceFeature))) == 0U) continue;
         const float correction = featureValue(target.viewBounds, targetFeature, horizontal) -
                                  sourceValue;
-        SnapCandidate candidate{target.objectId, targetFeature, sourceFeature, correction};
+        SnapCandidate candidate{target.objectId, targetFeature, sourceFeature, correction, target.fallback};
         if (std::abs(correction) > engage) continue;
         if (!best.has_value() || candidateLess(candidate, *best)) best = candidate;
       }
@@ -150,6 +151,7 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
         : active->sourceFeature == SnapFeatureKind::kCenter
             ? (sourceMin + sourceMax) * 0.5F : sourceMax;
     SnapCandidate refreshed = *active;
+    refreshed.fallback = target->fallback;
     refreshed.correction = featureValue(target->viewBounds, active->targetFeature,
                                          horizontal) - sourceValue;
     return std::abs(refreshed.correction) <= release
@@ -160,7 +162,7 @@ SnapResolution SnapResolver::resolve(const SnapSource& source,
       bool horizontal) {
     if (active.has_value()) {
       const auto refreshed = currentCorrection(active, horizontal);
-      if (refreshed.has_value()) {
+      if (refreshed && !(refreshed->fallback && candidate && !candidate->fallback)) {
         active = refreshed;
         return active;
       }

@@ -197,14 +197,14 @@ std::uint32_t sceneContentGeneration(const Record& record) {
   return hash == 0U ? 1U : hash;
 }
 
+bool isInkKind(semantic::ObjectKind kind) noexcept {
+  return kind == semantic::ObjectKind::kVectorStroke || kind == semantic::ObjectKind::kDabStroke;
+}
+
 bool runtimeTraversalLess(const canvas::RuntimeSceneRecord& left,
                           const canvas::RuntimeSceneRecord& right) noexcept {
-  const auto isInk = [](semantic::ObjectKind kind) noexcept {
-    return kind == semantic::ObjectKind::kVectorStroke ||
-           kind == semantic::ObjectKind::kDabStroke;
-  };
-  const bool leftInk = isInk(left.kind);
-  const bool rightInk = isInk(right.kind);
+  const bool leftInk = isInkKind(left.kind);
+  const bool rightInk = isInkKind(right.kind);
   if(left.hierarchyOrder&&right.hierarchyOrder) {if(leftInk!=rightInk)return !leftInk;return left.hierarchyOrder<right.hierarchyOrder;}
   if (left.kind == semantic::ObjectKind::kSticky && right.kind == semantic::ObjectKind::kRichText) return true;
   if (left.kind == semantic::ObjectKind::kRichText && right.kind == semantic::ObjectKind::kSticky) return false;
@@ -2973,8 +2973,13 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const auto sourceWorld = transformedBounds(editingLocalBounds_, next);
       const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
           ? viewport.scale : 1.0F;
-      const float snapWorldRadius = interaction::SnapResolver::kEngageThresholdLogicalPx /
-          std::max(zoom, 1.0e-6F);
+      const auto* moving = pendingObject(selection_.primary());
+      const bool layoutMove = editingHandle_ == H::kNone && moving && !isInkKind(moving->kind);
+      // Look across the gap between neighbouring objects. The resolver still
+      // engages only when the two edge or centre coordinates are within 6 px.
+      constexpr float neighbourReachLogicalPx = 160.0F;
+      const float snapWorldRadius = (layoutMove ? neighbourReachLogicalPx :
+          interaction::SnapResolver::kEngageThresholdLogicalPx) / zoom;
       const canvas::foundation::WorldRect queryBounds{
           sourceWorld.left - snapWorldRadius,
           sourceWorld.top - snapWorldRadius,
@@ -2990,7 +2995,8 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         if (record == nullptr) continue;
         if (record->objectId == selection_.primary()) continue;
         targets.push_back({record->objectId, viewBounds(interactionBounds(*record), viewport),
-                           false, transformOverrides_.find(record->objectId) != nullptr});
+                           false, transformOverrides_.find(record->objectId) != nullptr,
+                           layoutMove && isInkKind(record->kind)});
       }
       const auto resolved = snapResolver_.resolve(
           interaction::SnapSource{viewBounds(sourceWorld, viewport)}, targets, 1.0F);

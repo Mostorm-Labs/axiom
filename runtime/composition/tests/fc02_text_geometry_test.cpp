@@ -235,9 +235,9 @@ TEST(FC02StickyLabel, SelectedExpandButtonCommitsSquareGrowth) {
     ASSERT_TRUE(h.runtime.registerSource(86));
     input::PlatformPointerBatch batch;
     // Sticky is at (20,40) with a 48x48 local box.  The rendered affordance
-    // occupies the inset bottom-right corner; click its center rather than
+    // occupies the inset bottom-left corner; click its center rather than
     // relying on the inclusive outer edge of the hit rectangle.
-    batch.samples.push_back({86, 1, 1, 1000, 48, 68, 0, 0, 0, {}, {},
+    batch.samples.push_back({86, 1, 1, 1000, 40, 68, 0, 0, 0, {}, {},
         input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
     ASSERT_TRUE(h.runtime.submit(batch));
     const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
@@ -276,7 +276,7 @@ TEST(FC02StickyLabel, SelectedExpandButtonGrowsForHorizontalOverflow) {
     ASSERT_EQ(h.runtime.qualificationRuntime().selectedPrimaryObject(), record.id);
     ASSERT_TRUE(h.runtime.registerSource(86));
     input::PlatformPointerBatch batch;
-    batch.samples.push_back({86, 1, 1, 1000, 200, 220, 0, 0, 0, {}, {},
+    batch.samples.push_back({86, 1, 1, 1000, 40, 220, 0, 0, 0, {}, {},
         input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
     ASSERT_TRUE(h.runtime.submit(batch));
     const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
@@ -337,9 +337,9 @@ TEST(FC02StickyLabel, SelectedExpandAfterManualScaleUsesVisibleButton) {
     ASSERT_TRUE(h.runtime.registerSource(86));
     input::PlatformPointerBatch batch;
     // The renderer applies the inverse label scale inside the Sticky
-    // transform. The visible button therefore lands at world center (100,120)
+    // transform. The visible button therefore lands at world center (40,120)
     // for this 0.5-scaled 200px Sticky, not at the canonical local midpoint.
-    batch.samples.push_back({86, 1, 1, 1000, 100, 120, 0, 0, 0, {}, {},
+    batch.samples.push_back({86, 1, 1, 1000, 40, 120, 0, 0, 0, {}, {},
         input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
     ASSERT_TRUE(h.runtime.submit(batch));
     const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);

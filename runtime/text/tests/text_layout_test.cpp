@@ -1,5 +1,6 @@
 #include "canvas/text/text_layout.hpp"
 #include <cassert>
+#include <cmath>
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -52,6 +53,48 @@ int main() {
     assert(stickyCaret.available);
     assert(stickyCaret.caret.left >= 12.0F && stickyCaret.caret.right <= 108.0F);
     assert(stickyCaret.caret.top >= 12.0F && stickyCaret.caret.bottom <= 36.0F);
+    // A caret beyond the ellipsis belongs to the last painted line, even
+    // when one long paragraph wraps to many lines inside the note.
+    const semantic::StickyContent wrappedNote{140, 100};
+    auto overflowText = content(std::string(150, 'W'), latin);
+    const auto overflowId = foundation::ObjectId::fromUint64(80);
+    const auto visible = layout.resolveStickyLabel(overflowId, overflowText, wrappedNote, false);
+    assert(visible->overflow && visible->lines.size() > 1);
+    const auto hiddenEnd = layout.stickyEditingGeometry(overflowId, overflowText, wrappedNote, 150, 0);
+    const auto& last = visible->lines.back().bounds;
+    assert(hiddenEnd.available && std::abs(hiddenEnd.caret.top - last.top) < 0.01F);
+    assert(std::abs(hiddenEnd.caret.bottom - last.bottom) < 0.01F);
+    assert(std::abs(hiddenEnd.caret.left - std::min(last.right, 127.0F)) < 0.01F);
+    const auto firstLine = layout.stickyEditingGeometry(overflowId, overflowText, wrappedNote, 1, 0);
+    assert(firstLine.available && firstLine.caret.bottom <= hiddenEnd.caret.top + 0.01F);
+    // Replacing the empty note's prompt with the same text must not move
+    // the glyphs or the insertion line, even with custom paragraph metrics.
+    const auto noteId = foundation::ObjectId::fromUint64(78);
+    const semantic::StickyContent note{240, 160};
+    auto emptyNote = content("", latin);
+    auto& first = emptyNote.document.paragraphs.front();
+    first.style = {semantic::ParagraphAlignment::kCenter, 1.4, 3, 0};
+    first.runs.front().style.font_size = 22;
+    const auto prompt = layout.resolveStickyLabel(noteId, emptyNote, note, true);
+    auto entered = emptyNote;
+    entered.document.paragraphs.front().runs.front().text = "Type text...";
+    const auto typed = layout.resolveStickyLabel(noteId, entered, note, true);
+    assert(prompt->placeholder && !typed->placeholder && prompt->lines.size() == 1);
+    assert(!prompt->runs.empty() && !typed->runs.empty());
+    assert(prompt->runs.front().positions == typed->runs.front().positions);
+    const auto promptCaret = layout.stickyEditingGeometry(noteId, emptyNote, note, 0, 0,
+                                                           foundation::WorldPoint{100, 30});
+    const auto typedCaret = layout.stickyEditingGeometry(noteId, entered, note, 0, 0);
+    assert(promptCaret.available && promptCaret.hit == 0 && typedCaret.available);
+    assert(std::abs(promptCaret.caret.left - typedCaret.caret.left) < 0.01F);
+    assert(std::abs(promptCaret.caret.top - typedCaret.caret.top) < 0.01F);
+    assert(std::abs(promptCaret.caret.bottom - typedCaret.caret.bottom) < 0.01F);
+    const auto cjkPrompt = layout.stickyEditingGeometry(noteId, content("", cjk), note, 0, 0);
+    assert(cjkPrompt.available && cjkPrompt.diagnostics.empty());
+    auto blankLines = emptyNote;
+    blankLines.document.paragraphs.push_back(first);
+    blankLines.document.paragraphs.back().id = foundation::ObjectId::fromUint64(79);
+    assert(!layout.resolveStickyLabel(noteId, blankLines, note, true)->placeholder);
     const auto breaks=layout.graphemeBoundaries(u"A\u0301\U0001F600B");
     assert((breaks==std::vector<std::uint32_t>{0,2,4,5}));
 

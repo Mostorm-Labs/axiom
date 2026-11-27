@@ -29,6 +29,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkDashPathEffect.h"
+#include "include/effects/SkGradient.h"
 #include "skia_render_cache_internal.hpp"
 
 #include <algorithm>
@@ -369,6 +370,50 @@ SkPaint strokePaint(const semantic::SolidStroke& stroke,bool antiAlias=false) {
     return internal::geometryStrokePaint(stroke,antiAlias);
 }
 
+// Applied to the isolated paper layer, so the cutout reveals whatever is
+// beneath the note and opacity is applied once to both paper and flap.
+void foldStickyCorner(SkCanvas& canvas, const semantic::StickyContent& note,
+                      const semantic::SolidStroke* stroke) {
+    const float w = skScalar(note.width);
+    const float h = skScalar(note.height);
+    const float run = std::min(23.0F, std::min(w, h) * 0.14F);
+    const float rise = run * 0.68F;
+    const float bleed = run + (stroke ? skScalar(stroke->width) : 0);
+    SkPathBuilder edge;
+    edge.moveTo(w, h - rise);
+    edge.cubicTo(w, h - rise * 0.65F, w - run * 0.45F, h, w - run, h);
+    const SkPath lip = edge.snapshot();
+
+    SkPaint paint;
+    paint.setAntiAlias(true);
+    paint.setBlendMode(SkBlendMode::kClear);
+    SkPathBuilder cut(lip);
+    cut.lineTo(w - run, h + bleed);
+    cut.lineTo(w + bleed, h + bleed);
+    cut.lineTo(w + bleed, h - rise);
+    cut.close();
+    canvas.drawPath(cut.detach(), paint);
+
+    // A curved inner seam and a gradual change of light give the turned
+    // corner thickness while retaining the colour and alpha of the paper.
+    SkPathBuilder flap(lip);
+    flap.cubicTo(w - run * 0.54F, h - rise * 0.07F,
+                 w - run * 0.31F, h - rise * 0.70F, w - run * 0.38F, h - rise);
+    flap.quadTo(w - run * 0.12F, h - rise * 0.78F, w, h - rise);
+    flap.close();
+    const SkColor4f tones[] = {{0.24F, 0.17F, 0.12F, 0.22F},
+                               {0.45F, 0.36F, 0.24F, 0.12F},
+                               {1, 1, 1, 0.48F}};
+    const SkPoint light[] = {{w - run * 0.42F, h - rise * 0.80F},
+                             {w - run * 0.19F, h - rise * 0.40F}};
+    paint.setBlendMode(SkBlendMode::kSrcATop);
+    paint.setShader(SkShaders::LinearGradient(light, SkGradient{
+        SkGradient::Colors{tones, SkTileMode::kClamp}, {}}));
+    canvas.drawPath(flap.detach(), paint);
+    if (stroke && stroke->width > 0 && stroke->color.a > 0)
+        canvas.drawPath(lip, strokePaint(*stroke, true));
+}
+
 bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool applyOpacity=true) {
     const auto* route=std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
     // Preserve the existing diagnostic renderer for terminal routing failures.
@@ -393,6 +438,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
     if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kConnector)stroke=&legacy;
     if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kSection)stroke=&sectionBorder;
     if(stroke&&stroke->width>0&&stroke->color.a>0){auto p=strokePaint(*stroke,true);if(derived)p.setStrokeWidth(skScalar(stroke->width*derived->outlineWidthScale));drawPath(canvas,derived?derived->outline:regular,p);if(derived&&!derived->arrowFill.commands.empty()){p.setStyle(SkPaint::kFill_Style);p.setPathEffect(nullptr);drawPath(canvas,derived->arrowFill,p);}}
+    if (sticky) foldStickyCorner(canvas, std::get<semantic::StickyContent>(record.content.get()), stroke);
     canvas.restore();return true;
 }
 

@@ -54,7 +54,7 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     else if(facts.length<257)facts.push(fact);else{if((fact.kind===2||fact.kind===3) && !pendingTerminal)pendingTerminal=fact;fault='Native input buffer full; input paused';stage.dataset.textError=fault;carrier.blur();return;}
     queueMicrotask(drain);
   }
-  function sync(){if(disposed)return;const s=snapshot(),session=JSON.stringify(s.token);
+  function sync(state){if(disposed)return;const s=state??snapshot(),session=JSON.stringify(s.token);
     if(s.phase===0){geometryFault='';if(!fault)delete stage.dataset.textError;carrier.value='';if(document.activeElement===carrier)carrier.blur();return;}
     if(!nativeComposing && !facts.length){carrier.value=decode(s.projection);carrier.setSelectionRange(s.selection[0],s.selection[0]+s.selection[1]);}
     geometryFault=(s.geometry.diagnostics||[]).join(', ');if(fault||geometryFault)stage.dataset.textError=fault||geometryFault;else delete stage.dataset.textError;

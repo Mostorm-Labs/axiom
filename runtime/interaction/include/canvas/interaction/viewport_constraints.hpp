@@ -45,6 +45,7 @@ struct SnapTarget final {
   foundation::WorldRect viewBounds{};
   bool selected = false;
   bool transformed = false;
+  bool fallback = false;  // Ink bounds when aligning a layout object.
 };
 
 struct SnapSource final {
@@ -63,6 +64,7 @@ struct SnapCandidate final {
   SnapFeatureKind targetFeature = SnapFeatureKind::kMinEdge;
   SnapFeatureKind sourceFeature = SnapFeatureKind::kMinEdge;
   float correction = 0.0F;
+  bool fallback = false;
 };
 
 struct SnapResolution final {

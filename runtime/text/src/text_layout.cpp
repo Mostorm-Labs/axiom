@@ -580,21 +580,30 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveStickyLa
     const float width = std::max(1.0F, worldWidth - 2.0F * padding);
     const float height = std::max(1.0F, worldHeight - 2.0F * padding);
     semantic::RichTextContent display = canonical;
-    bool empty = true;
-    for (const auto& paragraph : display.document.paragraphs)
-        for (const auto& run : paragraph.runs) empty = empty && run.text.empty();
-    const bool placeholder = showPlaceholder && empty;
+    // Paragraph separators are editable content, even if every run is empty.
+    const bool placeholder = showPlaceholder && display.document.paragraphs.size() <= 1 &&
+        (display.document.paragraphs.empty() ||
+         std::all_of(display.document.paragraphs.front().runs.begin(),
+                     display.document.paragraphs.front().runs.end(),
+                     [](const auto& run) { return run.text.empty(); }));
     if (placeholder) {
+        if (display.document.paragraphs.empty()) {
+            semantic::Paragraph paragraph;
+            paragraph.id = foundation::ObjectId::fromUint64(0x535449434B595445ULL);
+            paragraph.style = {semantic::ParagraphAlignment::kLeft, 1, 0, 0};
+            display.document.paragraphs.push_back(std::move(paragraph));
+        }
+        auto& paragraph = display.document.paragraphs.front();
         semantic::TextStyle style;
-        style.font_size = 16.0;
-        style.weight = 400;
+        if (!paragraph.runs.empty()) {
+            style = paragraph.runs.front().style;
+        } else {
+            style.font_size = 16;
+            style.weight = 400;
+            if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        }
         style.color = {0.25F, 0.25F, 0.25F, 1.0F};
-        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
-        semantic::Paragraph paragraph;
-        paragraph.id = foundation::ObjectId::fromUint64(0x535449434B595445ULL);
-        paragraph.style.alignment = semantic::ParagraphAlignment::kLeft;
-        paragraph.runs = {{"Type text", style}};
-        display.document.paragraphs = {std::move(paragraph)};
+        paragraph.runs = {{"Type text...", style}};
     }
     display.layout = semantic::RichTextLayout{width};
     const auto previous = impl_->context;
@@ -605,14 +614,26 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveStickyLa
     // see after wrapping; using a 4096px "natural" width here loses the
     // line-count information needed to apply ellipsis when the Sticky is
     // manually reduced.
-    const auto fittedNatural = resolve(id, display);
+    auto fittedNatural = resolve(id, display);
+    // A document font can support the user's script but lack the Latin prompt.
+    // Keep its paragraph metrics and use the admitted hint font in that case.
+    if (placeholder && !impl_->descriptors.empty() &&
+        std::find(fittedNatural->diagnostics.begin(), fittedNatural->diagnostics.end(),
+                  "font-glyph-unavailable") != fittedNatural->diagnostics.end()) {
+        auto& promptFont = display.document.paragraphs.front().runs.front().style.font_resource_id;
+        if (promptFont != impl_->descriptors.begin()->second.resourceId) {
+            promptFont = impl_->descriptors.begin()->second.resourceId;
+            fittedNatural = resolve(id, display);
+        }
+    }
     const bool verticalOverflow = fittedNatural->localBounds.bottom > height + 0.5F;
     const bool horizontalOverflow = fittedNatural->lines.size() == 1U &&
         fittedNatural->localBounds.right > width + 0.5F;
     if (verticalOverflow || horizontalOverflow) {
+        const float textHeight = std::max(0.0F, height - 20.0F); // room for the expand button
         std::size_t lines = 0;
         for (const auto& line : fittedNatural->lines) {
-            if (line.bounds.bottom > height + 0.5F) break;
+            if (line.bounds.bottom > textHeight + 0.5F) break;
             ++lines;
         }
         impl_->context.maxLines = std::max<std::size_t>(1, lines);
@@ -625,8 +646,8 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveStickyLa
     result->labelScaleY = 1.0F / sy;
     result->labelViewport = {padding, padding, worldWidth - padding,
                              worldHeight - padding};
-    result->expandButton = {worldWidth - 28.0F, worldHeight - 28.0F,
-                            worldWidth - padding, worldHeight - padding};
+    result->expandButton = {padding, worldHeight - padding - 16.0F,
+                            padding + 16.0F, worldHeight - padding};
     result->labelOffsetX = padding;
     result->labelOffsetY = padding;
     offsetSnapshot(*result, padding, padding);
@@ -712,19 +733,36 @@ EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,c
         const auto localStart=start>=total?static_cast<std::uint64_t>(start)-total:0;
         if(!caret && start>=total && localStart<=utf16.size()) {
             if(localStart<utf16.size() && utf16[localStart]>=0xDC00 && utf16[localStart]<=0xDFFF)return {};
-            Paragraph::GlyphInfo info{};
-            if(!utf16.empty() && paragraph.getGlyphInfoAtUTF16Offset(static_cast<std::size_t>(localStart==utf16.size()?localStart-1:localStart),&info)){
-                const bool trailing=localStart==utf16.size();const bool rtl=info.fDirection==TextDirection::kRtl;
-                const auto x=trailing!=rtl?info.fGraphemeLayoutBounds.right():info.fGraphemeLayoutBounds.left();
-                // GlyphInfo retains natural font ascent/descent even when an
-                // explicit line height makes the laid-out line shorter. Use
-                // the same effective line metrics as the frame and Scene.
+            if (utf16.empty()) {
+                const float height = paragraph.getHeight();
+                if (!(height > 0)) return {};
+                out.caret = {indent, y, indent + 1, y + height};
+            } else {
+                const bool trailing = localStart == utf16.size();
+                const auto index = static_cast<std::size_t>(trailing ? localStart - 1 : localStart);
+                Paragraph::GlyphInfo info{};
                 LineMetrics line;
-                const auto index=static_cast<std::size_t>(trailing?localStart-1:localStart);
-                if(!paragraph.getLineMetricsAt(paragraph.getLineNumberAtUTF16Offset(index),&line))return out;
-                out.caret={x+indent,static_cast<float>(line.fBaseline-line.fAscent)+y,
-                           x+indent+1,static_cast<float>(line.fBaseline+line.fDescent)+y};
-            }else{const float height=paragraph.getHeight();if(!(height>0))return {};out.caret={indent,y,indent+1,y+height};}
+                float x;
+                const int lineNumber = paragraph.getLineNumberAtUTF16Offset(index);
+                if (lineNumber >= 0 && paragraph.getGlyphInfoAtUTF16Offset(index, &info) &&
+                    !info.fIsEllipsis) {
+                    if (!paragraph.getLineMetricsAt(lineNumber, &line)) return out;
+                    const bool rtl = info.fDirection == TextDirection::kRtl;
+                    x = trailing != rtl ? info.fGraphemeLayoutBounds.right()
+                                        : info.fGraphemeLayoutBounds.left();
+                } else if (paragraph.didExceedMaxLines() && paragraph.lineNumber() > 0) {
+                    // Hidden UTF-16 offsets have no painted glyph. Place only the visual
+                    // caret at the end of the clipped layout, without moving the selection.
+                    const int lastLine = static_cast<int>(paragraph.lineNumber() - 1);
+                    if (!paragraph.getLineMetricsAt(lastLine, &line)) return out;
+                    x = static_cast<float>(line.fLeft + line.fWidth);
+                } else {
+                    return out;
+                }
+                const float left = x + indent;
+                out.caret = {left, static_cast<float>(line.fBaseline - line.fAscent) + y,
+                             left + 1, static_cast<float>(line.fBaseline + line.fDescent) + y};
+            }
             caret=true;
         }
         const auto a=std::max<std::uint64_t>(start,total),b=std::min<std::uint64_t>(static_cast<std::uint64_t>(start)+length,total+utf16.size());
@@ -754,26 +792,39 @@ EditingGeometry RichTextLayoutService::stickyEditingGeometry(
     const float width = std::max(1.0F, worldWidth - 2.0F * padding);
     auto display = canonical;
     display.layout = semantic::RichTextLayout{width};
-    const auto painted = resolveStickyLabel(id, canonical, sticky, false, transform);
-    const auto previous = impl_->context;
-    impl_->context = painted->context;
-    if (hit) {
-        hit->x = hit->x * sx - padding;
-        hit->y = hit->y * sy - padding;
+    const auto painted = resolveStickyLabel(id, canonical, sticky, true, transform);
+    EditingGeometry geometry;
+    if (painted->placeholder) {
+        // The prompt is display-only. Its first shaped line anchors the sole
+        // insertion point, including alignment, paragraph spacing and padding.
+        geometry.diagnostics = painted->diagnostics;
+        if (start != 0 || length != 0 || !geometry.diagnostics.empty() || painted->lines.empty())
+            return geometry;
+        const auto& line = painted->lines.front().bounds;
+        geometry.caret = {line.left, line.top, line.left + 1, line.bottom};
+        geometry.available = true;
+        if (hit) geometry.hit = 0;
+    } else {
+        const auto previous = impl_->context;
+        impl_->context = painted->context;
+        if (hit) {
+            hit->x = hit->x * sx - padding;
+            hit->y = hit->y * sy - padding;
+        }
+        geometry = editingGeometry(id, display, start, length, hit);
+        impl_->context = previous;
+        geometry.caret.left += padding;
+        geometry.caret.right += padding;
+        geometry.caret.top += padding;
+        geometry.caret.bottom += padding;
+        for (auto& selection : geometry.selection) {
+            selection.left += padding;
+            selection.right += padding;
+            selection.top += padding;
+            selection.bottom += padding;
+        }
     }
-    auto geometry = editingGeometry(id, display, start, length, hit);
-    impl_->context = previous;
     geometry.layoutIdentity = painted->digest;
-    geometry.caret.left += padding;
-    geometry.caret.right += padding;
-    geometry.caret.top += padding;
-    geometry.caret.bottom += padding;
-    for (auto& selection : geometry.selection) {
-        selection.left += padding;
-        selection.right += padding;
-        selection.top += padding;
-        selection.bottom += padding;
-    }
     const float maxX = std::max(padding, worldWidth - padding);
     const float maxY = std::max(padding, worldHeight - padding);
     if (!geometry.available || painted->lines.empty()) {

@@ -44,5 +44,21 @@ try{
  await page.keyboard.insertText('cell');await page.keyboard.press('Enter');await page.keyboard.insertText('line');await page.keyboard.press('Control+Enter');await pause();s=await capture();result.checks.tableFinishSelectsTable=s.phase===0&&pointSelected(s)&&s.primary===table.objectId&&s.text==='cell\nline';
  await open();await page.evaluate(async()=>{await sdk.zoomAt(0,0,2);await sdk.selectTool('text');});await start(600,300);await end(400,360);s=await capture();result.checks.reverseDragUsesWorldWidth=s.phase===1&&Math.abs(s.width-100)<1&&s.objects===0;
  await open();await page.evaluate(async()=>{await sdk.setSelectionMode('lasso');const c=document.createElement('canvas');c.width=c.height=32;c.getContext('2d').fillRect(0,0,32,32);const blob=await new Promise(r=>c.toBlob(r));await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png');});await pause();s=await capture();result.checks.imageAlwaysSelectsInPointMode=pointSelected(s)&&s.objects===1;
+ // The first IME composition can arrive before the next animation frame.
+ // Hold that frame to exercise focus transfer during the trusted pointer Up.
+ await open();
+ await page.evaluate(async()=>{
+   await sdk.selectShape('sticky');
+   const raf = window.requestAnimationFrame.bind(window);
+   window.requestAnimationFrame = callback => setTimeout(() => raf(callback), 150);
+ });
+ await start();await page.mouse.move(600,420,{steps:12});await page.mouse.up();
+ const cdp = await page.context().newCDPSession(page);
+ await cdp.send('Input.imeSetComposition',{text:'bian',selectionStart:4,selectionEnd:4});
+ await cdp.send('Input.insertText',{text:'便'});
+ await page.keyboard.type('A');
+ const typed = await capture();
+ result.checks.stickyAcceptsImmediateComposition = typed.phase===1 && typed.text==='便A';
+ await cdp.detach();
  result.status=result.errors.length===0&&Object.values(result.checks).every(Boolean)?'PASS':'FAIL';if(result.status!=='PASS')process.exitCode=1;
 }catch(e){result.status='ERROR';result.error=String(e.stack??e);process.exitCode=1;}finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));await fs.rm(root,{recursive:true,force:true});await fs.writeFile(output,JSON.stringify(result,null,2));console.log(JSON.stringify(result));}

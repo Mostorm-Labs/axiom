@@ -158,23 +158,45 @@ try {
   const addNamedTool = id => { const tool = DEMO_DRAWING_TOOLS.find(tool => tool.id === id); return addTool(tool.label, `tool:${tool.toolCode}`, () => sdk.selectTool(tool.runtimeTool)); };
   addNamedTool('select'); addNamedTool('ink');
   addTool('橡皮擦', 'tool:2', () => sdk.selectTool(sdk.readState().eraserMode === 1 ? 'objectEraser' : 'partialEraser')).id = 'eraser-tool';
-  // Only the last subtype is a UI preference. Active tools/defaults stay in Runtime.
+  // The SDK has one active creation style. Remember only the palette fields
+  // that differ between these Demo tools, including the user's own edits.
+  const readPalette = () => {
+    const {fill, fillKind, strokeEnabled} = sdk.appearance.readDefaults().values;
+    return {fill, fillKind, strokeEnabled};
+  };
+  const palettes = {
+    other: readPalette(),
+    shape: {fill: rgba('#E4EFFA'), fillKind: 'solid', strokeEnabled: true},
+    sticky: {fill: rgba('#FFEBAD'), fillKind: 'solid', strokeEnabled: false},
+  };
+  let activePalette = 'other';
+  const usePalette = async name => {
+    if (name === activePalette) return;
+    palettes[activePalette] = readPalette();
+    await sdk.appearance.setDefaults(palettes[name]);
+    activePalette = name;
+  };
+  const selectCreationTool = async name => {
+    await sdk.selectShape(name);
+    const closedShape = ['rectangle', 'ellipse', 'triangle'].includes(name);
+    await usePalette(closedShape ? 'shape' : name === 'sticky' ? 'sticky' : 'other');
+  };
   let preferredShape = 'rectangle';
-  const shapeTool = button(drawingGroup, '图形', () => sdk.selectShape(preferredShape), 'shape-tool');
+  const shapeTool = button(drawingGroup, '图形', () => selectCreationTool(preferredShape), 'shape-tool');
   shapeTool.setAttribute('aria-pressed', 'false');
   addNamedTool('text');
-  addTool('便签', 'shape:5', () => sdk.selectShape('sticky'));
-  addTool('表格', 'shape:6', () => sdk.selectShape('table')).id = 'table-open';
+  addTool('便签', 'shape:5', () => selectCreationTool('sticky'));
+  addTool('表格', 'shape:6', () => selectCreationTool('table')).id = 'table-open';
   button(drawingGroup, '图片', () => chooseImage(false), 'image-import');
-  addTool('分区', 'shape:7', () => sdk.selectShape('section')).id = 'section-create';
+  addTool('分区', 'shape:7', () => selectCreationTool('section')).id = 'section-create';
   addNamedTool('hand');
   const shapeOptions = group(toolOptions, 'shape-options');
-  DEMO_SHAPES.forEach((shape, code) => { if (code >= 5) return; addTool(shape.label, `shape:${code}`, () => { preferredShape = shape.id; return sdk.selectShape(shape.id); }, shapeOptions); });
+  DEMO_SHAPES.forEach((shape, code) => { if (code >= 5) return; addTool(shape.label, `shape:${code}`, () => { preferredShape = shape.id; return selectCreationTool(shape.id); }, shapeOptions); });
   const pathSamples={
     hole:[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'},{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],
     curve:[{op:'move',point:[0,50]},{op:'quad',control:[50,-20],point:[100,50]},{op:'cubic',control1:[130,110],control2:[165,-10],point:[200,50]}]
   };
-  const addPath=kind=>run(async()=>{await sdk.text.finish();await sdk.selectTool('select');const camera=sdk.readState().camera,rect=sdk.canvas.getBoundingClientRect();await sdk.createVectorPath({commands:pathSamples[kind],fillRule:kind==='hole'?'evenodd':'nonzero',x:(rect.width/2-camera.x)/camera.scale-80,y:(rect.height/2-camera.y)/camera.scale-80});});
+  const addPath=kind=>run(async()=>{await sdk.text.finish();await sdk.selectTool('select');await usePalette('other');const camera=sdk.readState().camera,rect=sdk.canvas.getBoundingClientRect();await sdk.createVectorPath({commands:pathSamples[kind],fillRule:kind==='hole'?'evenodd':'nonzero',x:(rect.width/2-camera.x)/camera.scale-80,y:(rect.height/2-camera.y)/camera.scale-80});});
   button(shapeOptions,'带孔路径',()=>addPath('hole'),'path-hole');
   button(shapeOptions,'开放曲线',()=>addPath('curve'),'path-curve');
   const file = $('file'); let replaceImage = false;

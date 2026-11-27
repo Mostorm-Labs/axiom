@@ -293,7 +293,7 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
     guidePaint.setAntiAlias(true);
     guidePaint.setStyle(SkPaint::kStroke_Style);
     guidePaint.setStrokeWidth(1.0F);
-    guidePaint.setColor4f({0.18F, 0.72F, 0.86F, 0.78F}, nullptr);
+    guidePaint.setColor(SkColorSetARGB(0xC7, 0x67, 0x61, 0xF8));
     for (const auto& guide : overlay.guides()) {
         canvas.drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
                          guidePaint);

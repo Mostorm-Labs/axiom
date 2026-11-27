@@ -76,7 +76,16 @@ bool CanvasEditingRuntime::enqueuePendingCreate(std::vector<semantic::ObjectReco
   const auto id=objects.front().id;
   const auto displaySession=(std::uint64_t{1}<<63)|(cpuPending_->nextSerial+1);if(displayOwner_&&!reserveDisplay(displaySession,DisplayKind::kLocal))return false;target->session=displaySession;
   target->prefixMetadata=std::move(*quota);target->creates=std::move(objects);target->editText=editText;target->serial=++cpuPending_->nextSerial;target->phase=CpuPendingEraseState::Phase::Ready;cpuPending_->lastAdmitted=target->serial;++cpuPending_->admitted;++cpuPending_->revision;
-  selectPendingCreated(id);target->focusRevision=selection_.revision();return true;
+  selectPendingCreated(id);
+  target->focusRevision = selection_.revision();
+  // Enter the editor within the initiating pointer event so the host can
+  // focus its native input before the first key or IME composition arrives.
+  // Older queued operations still take precedence.
+  if (editText && cpuPending_->head() == target &&
+      !(cpuPending_->requestOwner() && cpuPending_->requestOwner()->activeJob)) {
+    (void)servicePendingLocalHead();
+  }
+  return true;
  }catch(...){return false;}
 }
 bool CanvasEditingRuntime::enqueuePendingTransform(const semantic::SetTransformsOp& values)noexcept{

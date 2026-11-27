@@ -160,7 +160,28 @@ void independentHysteresisDifferential() {
   assert(!resolver.resolve(SnapSource{WorldRect{106, 40, 126, 60}}, targets, 2.0F).x.has_value());
 }
 
+// Two vertically separated cards, with ink ending just to their left.
+// A held ink edge must yield as soon as a card edge is within snap range.
+void alignmentAcrossInk() {
+  SnapResolver resolver;
+  const SnapTarget ink{ObjectId::fromUint64(1), {250, 100, 396, 500}, false, false, true};
+  const SnapTarget card{ObjectId::fromUint64(2), {391, 190, 541, 305}};
+  const std::array targets{ink, card};
+  auto move = [&](float x) {
+    return resolver.resolve(SnapSource{{x, 350, x + 260, 515}}, targets);
+  };
+  const auto first = move(400);
+  assert(first.x && first.x->targetObjectId == ink.objectId);
+  const auto aligned = move(396);
+  assert(aligned.x && aligned.x->targetObjectId == card.objectId);
+  assert(aligned.xGuide && aligned.xGuide->position == 391);
+  assert(aligned.xGuide->spanStart == 190 && aligned.xGuide->spanEnd == 515);
+  assert(396 + aligned.x->correction == aligned.xGuide->position);
+  assert(!move(425).xGuide);
+}
+
 int main() {
+  alignmentAcrossInk();
   fitPolicy();
   snapPolicy();
   snapPolicyBProfile();

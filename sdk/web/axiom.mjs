@@ -126,6 +126,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       }catch(error){s.paused=true;emitError(error instanceof AxiomError?error:listenerError(error));}
     }
   };
+  let checkPointerEditor = false;
   const render = () => {
     scheduled = 0; if (closed || closing) return;
     try {
@@ -142,7 +143,19 @@ export async function createRuntime({mount, documentId, restore, initialResource
         lastPresented = frame.presented;
         if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});
       }
-      if (frame.pending || frame.retry || terminalWaiters.size || text?.snapshot().phase) schedule();
+      const moreWork = frame.pending || frame.retry || terminalWaiters.size > 0;
+      // A queued Up can open an editor during the frame pump, after pointer
+      // dispatch already synced the carrier. Hand off only canvas-owned focus.
+      if (checkPointerEditor || !moreWork) {
+        const editor = text?.snapshot();
+        if (editor?.phase) {
+          if (document.activeElement === canonical) text.sync(editor);
+          schedule();
+        }
+        checkPointerEditor = checkPointerEditor && moreWork && !editor?.phase &&
+          document.activeElement === canonical;
+      }
+      if (moreWork) schedule();
     } catch(error) { emitError(error); }
   };
   const schedule = () => { if(!closed && !closing && !scheduled)scheduled=requestAnimationFrame(render); };
@@ -239,7 +252,9 @@ export async function createRuntime({mount, documentId, restore, initialResource
     canonical.addEventListener('pointerdown',inputSize,true);
     events.push(['pointerdown',inputSize,true]);
     disposeInput=installPointerInput({canvas:canonical,logicalSize:()=>[boundWidth,boundHeight],submit:fact=>{
-      try{call('pointer',fact);text.sync();if(pendingResize&&fact.phase>=2)resize();changed();schedule();return true;}catch(error){emitError(error);schedule();return false;}
+      try{call('pointer',fact);text.sync();
+        if (fact.phase === 2 && document.activeElement === canonical) checkPointerEditor = true;
+        if(pendingResize&&fact.phase>=2)resize();changed();schedule();return true;}catch(error){emitError(error);schedule();return false;}
     }});
     const listen=(name,fn,options)=>{canonical.addEventListener(name,fn,options);events.push([name,fn,options]);};
     listen('dblclick',event=>{const s=call('state').value;if(s.tool!==4 && !(s.tool===1&&s.selectionMode===0))event.stopImmediatePropagation();},true);
