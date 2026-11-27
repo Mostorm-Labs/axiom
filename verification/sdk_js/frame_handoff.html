@@ -100,6 +100,48 @@ try{
   await until(()=>Math.abs(anchorWidth()-120)<.05,'anchor projection resumes after context recovery');
   check(!errors.length,'no stale completion after context recovery');
   scenarios.push('context-recovery');
+  await sdk.selectBrush('round-handdrawn',4);
+  await sdk.selectTool('ink');
+  await sdk.setBrushConfig({...sdk.readBrushConfig(),size:8,color:[1,0,0,1],opacity:1});
+  const strokeStart=sdk.readState();
+  const redStrokeAt=(x,y)=>{
+    const c=sdk.canvas,g=c.getContext('webgl2'),fb=g.getParameter(g.FRAMEBUFFER_BINDING);
+    const rect=c.getBoundingClientRect(),pixel=new Uint8Array(4);
+    g.bindFramebuffer(g.FRAMEBUFFER,null);
+    try {
+      g.readPixels(Math.floor(x*c.width/rect.width),c.height-1-Math.floor(y*c.height/rect.height),
+        1,1,g.RGBA,g.UNSIGNED_BYTE,pixel);
+    } finally { g.bindFramebuffer(g.FRAMEBUFFER,fb); }
+    return pixel[0]>pixel[1]+80 && pixel[0]>pixel[2]+80 && pixel[3]>200;
+  };
+  const touch=(type,id,x,y)=>{
+    const canvas=sdk.canvas,rect=canvas.getBoundingClientRect();
+    canvas.dispatchEvent(new PointerEvent(type,{pointerId:id,pointerType:'touch',clientX:rect.left+x,
+      clientY:rect.top+y,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));
+  };
+  pointer('pointerdown',250,160);pointer('pointermove',265,164);
+  await until(()=>document.querySelector('#mount canvas[id$="-preview"]').style.visibility==='visible','live short stroke');
+  // Dispatch Up and both contacts before another display opportunity can run.
+  pointer('pointerup',280,168);
+  touch('pointerdown',41,180,140);touch('pointerdown',42,300,140);
+  await until(()=>sdk.readState().objects===strokeStart.objects+1,'short stroke committed');
+  const committed=sdk.readState();
+  check(committed.activeContacts===2,'two stationary contacts held after pen up');
+  await until(()=>sdk.readState().lastCommit.presentedGeneration===committed.generation,'latest stroke visible before the pinch moves');
+  check(redStrokeAt(265,164),'new stroke occupies canonical surface during stationary claim');
+  check(sdk.readState().camera.scale===strokeStart.camera.scale &&
+        Math.abs(anchorWidth()-strokeStart.camera.scale*100)<.05,'stationary contacts preserve submitted camera');
+  touch('pointermove',42,325,140);
+  await until(()=>sdk.readState().camera.scale>strokeStart.camera.scale &&
+    Math.abs(anchorWidth()-sdk.readState().camera.scale*100)<.05,'first real pinch move submitted');
+  const camera=sdk.readState().camera;
+  const zoom=camera.scale/strokeStart.camera.scale;
+  check(redStrokeAt((265-strokeStart.camera.x)*zoom+camera.x,(164-strokeStart.camera.y)*zoom+camera.y),
+    'first submitted pinch keeps the new stroke at its projected location');
+  touch('pointerup',42,325,140);touch('pointerup',41,180,140);
+  check(sdk.readState().objects===committed.objects && sdk.readState().generation===committed.generation &&
+    sdk.readState().activeContacts===0 && !errors.length,'pinch preserves committed stroke and releases contacts');
+  scenarios.push('short-stroke-pinch');
   anchors.dispose();
   await sdk.close();
   check(!anchorElement.isConnected,'disposing the Shell layer releases its DOM anchors');

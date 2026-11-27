@@ -43,7 +43,7 @@ try {
   const hashes={};for(const name of ['axiom.mjs','axiom.d.mts','internal/axiom.mjs','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs'])hashes[name]=createHash('sha256').update(await fs.readFile(path.join(files,name))).digest('hex');
   observation={consumer:files,result,exceptions:errors,consoleErrors,browserVersion,startup:started.diagnostics(),mode:'headless Chrome/WebGL2; synthetic DOM input',files:hashes};
   console.log(JSON.stringify(observation));
-  const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
+  const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery','short-stroke-pinch'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
   if(result?.status!=='PASS'||!Array.isArray(result.results)||(workerOnly?result.results.length<18:controllerOnly?result.results.length<15:framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
   if(!framesOnly&&process.env.AXIOM_EXPECTED_REVISION&&(result.buildInfo?.sourceRevision!==process.env.AXIOM_EXPECTED_REVISION||result.buildInfo?.dirty))throw Error('JS engine is not the frozen clean release revision');
   if(framesOnly||controllerOnly||workerOnly){await closeBrowser();}

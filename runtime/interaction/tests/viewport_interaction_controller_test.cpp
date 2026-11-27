@@ -11,13 +11,16 @@ int main() {
   const canvas::input::PointerKey b{1, 2, 1};
   // Waiting for a nonzero pinch baseline must preserve a committed camera.
   assert(controller.setCamera(2.0F, 10.0F, -5.0F));
+  const auto initialCamera = controller.cameraGeneration();
   assert(controller.updateGesture({1, 1, 5.0F, 5.0F, 0.0F, false, a},
                                   {1, 1, 5.0F, 5.0F, 0.0F, false, b}));
+  assert(controller.cameraGeneration() == initialCamera);
   assert(controller.state().scale == 2.0F);
   assert(controller.state().translationX == 10.0F);
   assert(controller.state().translationY == -5.0F);
   assert(controller.updateGesture({2, 2, 0.0F, 0.0F, 0.0F, false, a},
                                   {2, 2, 20.0F, 0.0F, 0.0F, false, b}));
+  assert(controller.cameraGeneration() == initialCamera);
   assert(controller.state().scale == 2.0F);
   assert(controller.state().translationX == 10.0F);
   assert(controller.state().translationY == -5.0F);
@@ -26,9 +29,14 @@ int main() {
   assert(controller.updateGesture({1, 1, 0.0F, 0.0F, 0.0F, false, a},
                                   {1, 1, 20.0F, 0.0F, 0.0F, false, b}));
   assert(controller.state().scale == 1.0F);
+  const auto baseline = controller.cameraGeneration();
   assert(controller.updateGesture({2, 2, 0.0F, 0.0F, 0.0F, false, a},
                                   {2, 2, 40.0F, 0.0F, 0.0F, false, b}));
   assert(controller.state().scale == 2.0F);
+  assert(controller.cameraGeneration() == baseline + 1);
+  assert(controller.updateGesture({3, 3, 0.0F, 0.0F, 0.0F, false, a},
+                                  {3, 3, 40.0F, 0.0F, 0.0F, false, b}));
+  assert(controller.cameraGeneration() == baseline + 1);
   controller.endGesture();
   assert(controller.committed().scale == 2.0F);
   assert(controller.applyNavigation({ViewportNavigationKind::kWheelPan, 5.0F, -3.0F, 0.0F, 0.0F}));

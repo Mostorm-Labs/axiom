@@ -11,10 +11,17 @@ bool ViewportInteractionController::updateGesture(
   const auto relative = gesture_.state();
   state_.centerX = relative.centerX;
   state_.centerY = relative.centerY;
-  state_.scale = relative.scale * committed_.scale;
-  state_.translationX = relative.scale * committed_.translationX + relative.translationX;
-  state_.translationY = relative.scale * committed_.translationY + relative.translationY;
-  ++cameraGeneration_;
+  const float scale = relative.scale * committed_.scale;
+  const float tx = relative.scale * committed_.translationX + relative.translationX;
+  const float ty = relative.scale * committed_.translationY + relative.translationY;
+  // Claiming two contacts establishes a gesture baseline. It changes the
+  // camera's identity only when the effective view transform actually moves.
+  if (state_.scale != scale || state_.translationX != tx || state_.translationY != ty) {
+    state_.scale = scale;
+    state_.translationX = tx;
+    state_.translationY = ty;
+    ++cameraGeneration_;
+  }
   return true;
 }
 
