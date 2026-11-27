@@ -92,6 +92,9 @@ class RuntimeFacade {
   [[nodiscard]] virtual ImageCropSnapshot readImageCrop() const { return {}; }
   [[nodiscard]] virtual SelectedImageSnapshot readSelectedImage() const { return {}; }
   [[nodiscard]] virtual ConnectorCommandReceipt createConnector(const ConnectorCreateRequest&) { return {}; }
+  [[nodiscard]] virtual ConnectorToolDefaults readConnectorDefaults(bool = false) const { return {}; }
+  [[nodiscard]] virtual ConnectorCommandReceipt setConnectorEndpoint(const ConnectorEndpointRequest&) { return {}; }
+  [[nodiscard]] virtual ConnectorCommandReceipt setConnectorDecoration(const ConnectorDecorationRequest&) { return {}; }
   [[nodiscard]] virtual ConnectorCommandReceipt setConnectorRouting(const ConnectorRoutingRequest&) { return {}; }
   [[nodiscard]] virtual semantic::ConnectorRouting readConnectorRoutingPreset() const { return semantic::ConnectorRouting::kStraight; }
   [[nodiscard]] virtual StickyCommandReceipt createSticky(const StickyCreateRequest&) { return {}; }

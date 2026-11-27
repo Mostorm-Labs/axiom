@@ -1,6 +1,7 @@
 #include "canvas/scene/derived_geometry.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/connector_router.hpp"
+#include "canvas/scene/sketch_geometry.hpp"
 
 #include <gtest/gtest.h>
 #include <algorithm>
@@ -59,6 +60,142 @@ TEST(FC05Route, ClearParallelPortsUseTheMiddleLaneInOneQuantum) {
         avoids(*route,objects);
     }
 }
+TEST(FC05Route, PerpendicularPortsUseTheOpenGutterInEitherDirection) {
+    const auto source = box(1, 50, 97, 150, 150);
+    const auto target = box(2, 432, 147, 150, 150);
+    const std::vector<semantic::ObjectRecord> objects{source, target};
+    auto c = wire(0, 0, 0, 0);
+    auto& content = std::get<semantic::ConnectorContent>(c.content);
+    content.start.value = semantic::AttachedEndpoint{source.id, semantic::StablePortAnchor{1}};
+    content.end.value = semantic::AttachedEndpoint{target.id, semantic::StablePortAnchor{4}};
+
+    for (bool reverse : {false, true}) {
+        if (reverse) std::swap(content.start, content.end);
+        scene::ConnectorRouteJob job(c, objects);
+        ASSERT_EQ(job.advance(), runtime::ConnectorRouteStatus::kReady);
+        auto g = scene::connectorDisplayRoute(c, job.result());
+        if (reverse) std::reverse(g.route.begin(), g.route.end());
+        ASSERT_EQ(g.route.size(), 5U);
+        EXPECT_GE(g.route[0].y - g.route[1].y, 16);
+        EXPECT_NEAR(g.route[2].x, (200 + 432) / 2., 1);
+        EXPECT_GE(g.route[4].x - g.route[3].x, 24);
+        avoids(g, objects);
+
+        // A third object covers the preferred trunk. The certified fallback must
+        // keep clear of both the object and its eight-unit clearance envelope.
+        const auto blocker = box(3, 300, 90, 40, 100);
+        const std::vector<semantic::ObjectRecord> blocked{target, blocker, source};
+        const auto fallback = scene::connectorGeometry(c, blocked);
+        ASSERT_TRUE(fallback);
+        ASSERT_EQ(fallback->status, runtime::ConnectorRouteStatus::kReady);
+        for (std::size_t i = 1; i < fallback->route.size(); ++i)
+            EXPECT_FALSE(crosses(fallback->route[i-1], fallback->route[i], {292,82,348,198}));
+
+        // When the specified sides already face a single natural elbow, keep it.
+        auto facing = objects;
+        facing.front().transform.ty = 360;
+        const auto simple = scene::connectorGeometry(c, facing);
+        ASSERT_TRUE(simple);
+        ASSERT_EQ(simple->status, runtime::ConnectorRouteStatus::kReady);
+        EXPECT_EQ(simple->route.size(), 3U);
+        avoids(*simple, facing);
+    }
+}
+
+TEST(FC05Route, SameSidePortsKeepBothElbowsClearAndPendingFollowsThePortDirections) {
+    const auto a = box(1, 50, 97, 150, 150), b = box(2, 432, 147, 150, 150);
+    auto c = wire(0,0,0,0);
+    auto& content = std::get<semantic::ConnectorContent>(c.content);
+    content.start.value = semantic::AttachedEndpoint{a.id, semantic::StablePortAnchor{1}};
+    for (std::uint32_t targetPort : {1U,4U}) {
+        content.end.value = semantic::AttachedEndpoint{b.id, semantic::StablePortAnchor{targetPort}};
+        std::vector<semantic::ObjectRecord> objects{a,b};
+        const auto ready = scene::connectorGeometry(c, objects);
+        ASSERT_TRUE(ready);
+        ASSERT_EQ(ready->status, runtime::ConnectorRouteStatus::kReady);
+        const auto visible = scene::connectorDisplayRoute(c, *ready);
+        ASSERT_GE(visible.route.size(), 4U);
+        EXPECT_GE(visible.route[0].y - visible.route[1].y, 16);
+        if (targetPort == 1U) {
+            EXPECT_EQ(visible.route.size(), 4U);
+            EXPECT_EQ(visible.route[1].y, visible.route[2].y);
+        }
+        for (unsigned n=0; n<1500; ++n) objects.push_back(box(10+n,100000+n*20,100000,10,10));
+        const auto pending = scene::connectorGeometry(c, objects, true);
+        ASSERT_TRUE(pending);
+        EXPECT_EQ(pending->status, runtime::ConnectorRouteStatus::kPending);
+        ASSERT_EQ(pending->route.size(), ready->route.size());
+        for (std::size_t i=0; i<ready->route.size(); ++i) {
+            EXPECT_EQ(pending->route[i].x, ready->route[i].x);
+            EXPECT_EQ(pending->route[i].y, ready->route[i].y);
+        }
+    }
+}
+
+TEST(FC05Route, ShortTerminalSegmentsKeepTheArrowheadClearOfTheBend) {
+    scene::ConnectorGeometry g;
+    g.route = {{0, 0}, {0, 40}, {8, 40}};
+    g.start = g.route.front(); g.end = g.route.back(); g.arrow_end = true;
+    const auto head = scene::arrowHead(g);
+    EXPECT_EQ(head.tip.x, 8);
+    EXPECT_GE(head.left.x, 4);
+    EXPECT_GE(head.right.x, 4);
+    EXPECT_GT(head.left.y, head.right.y);
+
+    const auto connector = wire(0, 0, 8, 40);
+    for (const double radius : {0., 8.}) {
+        semantic::PropertyBag style;
+        style.entries = {{0x102U, semantic::SketchStyleV1{1, 123, 1, true}},
+                         {0x201U, semantic::ConnectorDecorationValue::kArrow}};
+        if (radius > 0) style.entries.push_back({0x103U, semantic::CornerStyleV1{1, radius}});
+        const auto painted = scene::sketchGeometry(connector.content, style, &g);
+        ASSERT_TRUE(painted);
+        ASSERT_GE(painted->arrowFill.commands.size(), 3U);
+        for (const auto& command : painted->arrowFill.commands)
+            if (const auto* edge = std::get_if<semantic::LineTo>(&command))
+                EXPECT_GE(edge->end.x, 4);
+            else if (const auto* edge = std::get_if<semantic::CubicTo>(&command))
+                EXPECT_GE(edge->end.x, 4);
+    }
+
+    g.route = {{0, 0}, {8, 0}}; g.arrow_start = true;
+    EXPECT_LT(scene::arrowHead(g, true).left.x, scene::arrowHead(g).left.x);
+}
+
+TEST(FC05Route, DecoratedShaftStopsAtArrowBasesForBothSharpAndRoundedSketchPaths) {
+    scene::ConnectorGeometry route;
+    route.route = {{10,20}, {150,20}, {150,140}};
+    route.start=route.route.front(); route.end=route.route.back();
+    route.arrow_start=route.arrow_end=true;
+    const auto c=wire(10,20,150,140);
+    for (const double radius : {0.,8.}) {
+        for (const double roughness : {0.,1.5}) {
+            semantic::PropertyBag style;
+            style.entries={{0x102U,semantic::SketchStyleV1{1,123,roughness,true}},
+                           {0x200U,semantic::ConnectorDecorationValue::kArrow},
+                           {0x201U,semantic::ConnectorDecorationValue::kArrow}};
+            if (radius) style.entries.push_back({0x103U,semantic::CornerStyleV1{1,radius}});
+            const auto geometry=scene::sketchGeometry(c.content,style,&route);
+            ASSERT_TRUE(geometry);
+            const auto& shaft=geometry->outline.commands;
+            ASSERT_GT(shaft.size(),1U);
+            const auto start=std::get<semantic::MoveTo>(shaft.front()).point;
+            EXPECT_EQ(start.x,22); EXPECT_EQ(start.y,20);
+            const auto nextMove=std::find_if(std::next(shaft.begin()),shaft.end(),[](const auto& command){
+                return std::holds_alternative<semantic::MoveTo>(command);
+            });
+            const auto& last=*std::prev(nextMove);
+            const auto* line=std::get_if<semantic::LineTo>(&last);
+            const auto* curve=std::get_if<semantic::CubicTo>(&last);
+            ASSERT_TRUE(line||curve);
+            const auto end=line?line->end:curve->end;
+            EXPECT_EQ(end.x,150); EXPECT_EQ(end.y,128);
+            EXPECT_EQ(scene::arrowHead(route,true).tip.x,10);
+            EXPECT_EQ(scene::arrowHead(route).tip.y,140);
+        }
+    }
+}
+
 TEST(FC05Route, DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape) {
     for(bool pending:{false,true}) {
         auto a=box(1,0,0,100,100),b=box(2,50,300,100,100);

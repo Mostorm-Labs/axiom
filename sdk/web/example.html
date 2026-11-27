@@ -284,6 +284,21 @@ try {
     element.dataset.eraser = mode.id; element.setAttribute('aria-pressed', 'false'); return [mode.id, element];
   });
 
+  const connectorOptions=group(context,'connector-options');
+  const connectorScope=()=>{
+    const s=sdk.readState();
+    if(s.creationMode)return {};
+    const wire=sdk.readConnector();
+    if(!wire.available)throw new Error('请先选中连线');
+    return {objectId:wire.objectId,generation:wire.generation};
+  };
+  const routes=[['直连',1],['直角折线',2]].map(([label,routing])=>
+    button(connectorOptions,label,()=>sdk.setConnectorRouting({...connectorScope(),routing}),'connector-route-'+routing));
+  const arrows=[['无箭头',false,false],['末端箭头',false,true],['起点箭头',true,false],['双向箭头',true,true]]
+    .map(([label,startArrow,endArrow])=>({startArrow,endArrow,button:button(connectorOptions,label,
+      ()=>sdk.setConnectorDecoration({...connectorScope(),startArrow,endArrow}),'connector-arrows-'+Number(startArrow)+Number(endArrow))}));
+  const connectorNotice=document.createElement('span');
+  connectorNotice.className='hint';connectorNotice.setAttribute('role','status');connectorOptions.append(connectorNotice);
   const appearanceGroup = group(context, 'appearance-parameters');
   const fillEnabled = field(appearanceGroup, '填充', 'checkbox', 'object-fill-enabled');
   const fill = field(appearanceGroup, '填充色', 'color', 'object-fill');
@@ -825,6 +840,19 @@ try {
     $('tool-options-row').hidden = Array.from(toolOptions.children).every(element => element.hidden);
     for (const [code, element] of selectionButtons) element.setAttribute('aria-pressed', String(code === state.selectionMode));
     for (const [id, element] of eraserButtons) element.setAttribute('aria-pressed', String(id === (state.eraserMode === 1 ? 'objectEraser' : 'partialEraser')));
+    const connectorTool=state.creationMode && (state.shape===3 || state.shape===4);
+    connectorOptions.hidden=!(connectorTool || (objectContext && !locked && selected.count===1 && selected.kind===7));
+    if(!connectorOptions.hidden){
+      const wire=connectorTool?sdk.readConnectorDefaults():sdk.readConnector();
+      const reason=wire.endpointEdit?.reason;
+      const message=wire.endpointEdit?.state==='stale'?'画板已更新，请重新拖动端点':
+        wire.endpointEdit?.state==='rejected'?(reason===6?'此处没有可用路线':reason===7?'画板较复杂，请调整端点后重试':'此处无法连接'):
+        wire.routeStatus===0?'正在计算路线':wire.routeStatus===2?'没有可用路线':wire.routeStatus===3?'路线计算已达上限':'';
+      if(connectorNotice.textContent!==message)connectorNotice.textContent=message;
+      connectorNotice.hidden=!message;
+      routes.forEach((b,i)=>b.setAttribute('aria-pressed',String(wire.routing===i+1)));
+      arrows.forEach(a=>a.button.setAttribute('aria-pressed',String(a.startArrow===wire.startArrow && a.endArrow===wire.endArrow)));
+    }
     appearanceGroup.hidden = !objectContext || locked || selected.count !== 1 || !capability('appearance') || !selected.appearance;
     if (!appearanceGroup.hidden) {
       const appearance = selected.appearance;

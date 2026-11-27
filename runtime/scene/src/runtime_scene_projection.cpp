@@ -236,7 +236,7 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         projectedRecord.transform = projectedTransform;
         auto derivedGeometry = deriveGeometry(projectedRecord);
         if (record.kind == semantic::ObjectKind::kConnector) {
-            if (const auto route = connectorGeometry(record, source, deferRoutes); route) derivedGeometry = *route;
+            if (const auto route = connectorGeometry(record, source, deferRoutes); route) derivedGeometry = connectorDisplayRoute(record,*route);
         }
         const auto bounds = computeBounds(projectedRecord, layout.get(),
             std::get_if<ConnectorGeometry>(&derivedGeometry));

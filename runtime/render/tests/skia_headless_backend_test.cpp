@@ -789,6 +789,21 @@ void fc01TriangleAndConnectorStyleProbes() {
     assert(route.has_value());arrow.record.derivedGeometry=*route;
     list.entries={arrow};assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
     assert(pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}));
+    // A wide native cap must neither flatten the decorated tip nor disappear
+    // from the free end. Exercise the regular and rounded painters.
+    for (const auto cap : {canvas::semantic::StrokeCap::kRound, canvas::semantic::StrokeCap::kSquare}) {
+        for (const double radius : {0., 8.}) {
+            auto& props=arrow.record.properties.entries;
+            props={{0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,1,0,1},40,cap}}},
+                   {0x201U,canvas::semantic::ConnectorDecorationValue::kArrow}};
+            if (radius) props.push_back({0x103U,canvas::semantic::CornerStyleV1{1,radius}});
+            list.entries={arrow};
+            assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+            assert(pixel(*backend.observation(),143,100)[3]==0);
+            assert(pixel(*backend.observation(),137,100)[3]>0);
+            assert(pixel(*backend.observation(),25,100)[3]>0);
+        }
+    }
     std::cout<<"PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity\n";
 }
 

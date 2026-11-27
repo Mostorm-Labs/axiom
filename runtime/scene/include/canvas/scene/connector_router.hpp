@@ -3,6 +3,9 @@
 #include <memory>
 #include <span>
 namespace canvas::scene {
+// Resolve the same target perimeter as routing, in board coordinates.
+std::optional<foundation::WorldPoint> connectorAnchorPoint(const semantic::ObjectRecord& worldTarget,
+    const semantic::AnchorRef&, foundation::WorldPoint towards);
 // Owner-thread job. The immutable source span must outlive the job; cancel
 // before replacing it. No background callbacks or canonical mutations.
 class ConnectorRouteJob final {

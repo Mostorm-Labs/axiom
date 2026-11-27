@@ -437,6 +437,9 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         (void)state->facade->cancelImageCrop(state->facade->readImageCrop().cropToken);
         return 0;
       }
+      if(wParam==VK_ESCAPE && (state->mouseKey || !state->nativeContacts.empty())){
+        cancelHostPointers(*state,"escape");return 0;
+      }
       if (wParam == VK_F12) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
         if (state->debugUi) {

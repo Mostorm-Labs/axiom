@@ -69,6 +69,22 @@ std::shared_ptr<const SketchGeometry> roundedSketchGeometry(const ObjectContent 
             number(identity, double(v.y));
         }
         path = roundedPolyline(p, false, radius, route->sketchObstacles);
+        // Compute the fillets on the complete route before shortening the two
+        // terminal straight pieces. Changing an arrow must not move a bend.
+        if (path.commands.size()>=2 && route->status==runtime::ConnectorRouteStatus::kReady) {
+            bool startArrow=false,endArrow=false;
+            for (const auto& e : properties.entries) {
+                if (const auto* d=std::get_if<ConnectorDecorationValue>(&e.value)) {
+                    if (e.field_id==0x200U) startArrow=*d==ConnectorDecorationValue::kArrow;
+                    if (e.field_id==0x201U) endArrow=*d==ConnectorDecorationValue::kArrow;
+                }
+            }
+            const auto a=connectorShaftVertex(points,0,startArrow,endArrow);
+            const auto b=connectorShaftVertex(points,points.size()-1,startArrow,endArrow);
+            std::get<MoveTo>(path.commands.front()).point={a.x,a.y};
+            std::get<LineTo>(path.commands.back()).end={b.x,b.y};
+        }
+        number(identity,static_cast<std::uint64_t>(route->status));
         number(identity, std::uint64_t(4));
         for (const auto &o : route->sketchObstacles) {
             number(identity, double(o.left));
@@ -169,10 +185,8 @@ std::shared_ptr<const SketchGeometry> roundedSketchGeometry(const ObjectContent 
         }
         // Reuse v1 arrow geometry/random sequence; only its route outline is replaced.
         auto arrowStyle = style;
-        bool enabled = false;
         for (auto &e : arrowStyle.entries)
             if (auto *s = std::get_if<SketchStyleV1>(&e.value)) {
-                enabled = s->enabled && s->roughness > 0;
                 if (!s->enabled) {
                     s->enabled = true;
                     s->roughness = 0;
@@ -181,18 +195,6 @@ std::shared_ptr<const SketchGeometry> roundedSketchGeometry(const ObjectContent 
         const auto arrows = sketchGeometry(content, arrowStyle, route);
         if (arrows) {
             g->arrowFill = arrows->arrowFill;
-            bool dashed = false;
-            for (const auto &e : style.entries)
-                if (const auto *s = std::get_if<StrokeStyleValue>(&e.value))
-                    if (const auto *v = std::get_if<SolidStroke>(s))
-                        dashed = std::holds_alternative<DashPattern>(v->dash);
-            const auto n = route->route.empty() ? 2 : route->route.size();
-            const auto count = (1 + 2 * (n - 1)) * (enabled && !dashed ? 2 : 1);
-            if (count < arrows->outline.commands.size())
-                g->outline.commands.insert(g->outline.commands.end(),
-                                           arrows->outline.commands.begin() +
-                                               static_cast<std::ptrdiff_t>(count),
-                                           arrows->outline.commands.end());
             g->bounds = foundation::unionRects(g->bounds, arrows->bounds);
         }
     }

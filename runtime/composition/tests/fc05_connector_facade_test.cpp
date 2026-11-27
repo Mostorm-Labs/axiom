@@ -27,10 +27,22 @@ int main() {
     wire.content.end.value=semantic::AttachedEndpoint{b.objectId,semantic::StablePortAnchor{4}};
     wire.content.routing=semantic::ConnectorRouting::kOrthogonal;
     assert(f.createConnector(wire).state==runtime::ConnectorCommandState::kApplied);
+    // The tool profiles are independent: a plain line is straight, a connection is orthogonal.
+    const auto chooseTool=[&](runtime::CanvasCreationPreset preset,std::uint64_t sequence) {
+        runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=881;q.requestId=sequence;
+        q.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;q.payload.creationPreset=preset;
+        assert(f.submitCanvasControl(q).state==runtime::ProductControlState::kQueued && c.ownerPump());
+    };
+    chooseTool(runtime::CanvasCreationPreset::kLine,1);
+    assert(f.readConnectorRoutingPreset()==semantic::ConnectorRouting::kStraight);
+    chooseTool(runtime::CanvasCreationPreset::kArrow,2);
+    assert(f.readConnectorRoutingPreset()==semantic::ConnectorRouting::kOrthogonal);
     const auto generation=c.readback().semanticGeneration;
     const auto snapshot=settled(c,f,wire.objectId);
     assert(snapshot.routeStatus==runtime::ConnectorRouteStatus::kReady);
     assert(snapshot.route.front().x==100&&snapshot.route.back().x==400);
+    assert(snapshot.displayRoute.front().x==108 && snapshot.displayRoute.back().x==392);
+    assert(snapshot.endArrow && !snapshot.startArrow);
     assert(c.readback().semanticGeneration==generation);
 
     // An unrelated obstacle invalidates the route without editing ConnectorContent.
@@ -90,6 +102,21 @@ int main() {
     assert(f.undo(903,state.identity.runtimeGeneration).state==runtime::ProductControlState::kQueued);
     assert(c.ownerPump());
     assert(settled(c,f,wire.objectId).routeStatus==runtime::ConnectorRouteStatus::kReady);
+    // Object-scoped commands use connector-local endpoints and preserve the opposite end.
+    auto degenerate=wire;degenerate.objectId=id(109);degenerate.content.end=degenerate.content.start;
+    degenerate.content.routing=semantic::ConnectorRouting::kStraight;
+    assert(f.createConnector(degenerate).reason==runtime::ConnectorFailureReason::kInvalidEndpoint);
+    auto revision=c.readback().semanticGeneration;
+    auto endpoint=runtime::ConnectorEndpointRequest{wire.objectId,false,wire.content.end,revision};
+    assert(!f.setConnectorEndpoint(endpoint).historyChanged && c.readback().semanticGeneration==revision);
+    endpoint.endpoint.value=semantic::FreePointEndpoint{{500,40}};
+    assert(f.setConnectorEndpoint(endpoint).historyChanged && c.readback().semanticGeneration==revision+1);
+    assert(f.setConnectorEndpoint(endpoint).reason==runtime::ConnectorFailureReason::kStale);
+    auto revised=settled(c,f,wire.objectId);
+    assert(revised.content.start==wire.content.start && revised.content.end==endpoint.endpoint);
+    assert(f.setConnectorDecoration({wire.objectId,true,false,c.readback().semanticGeneration}).historyChanged);
+    revised=settled(c,f,wire.objectId);
+    assert(revised.startArrow && !revised.endArrow && f.readConnectorDefaults().endArrow);
     change.expectedSemanticGeneration=1;
     assert(f.setConnectorRouting(change).state==runtime::ConnectorCommandState::kRejected);
     assert(c.close());

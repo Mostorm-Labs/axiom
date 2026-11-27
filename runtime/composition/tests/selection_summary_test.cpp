@@ -151,7 +151,7 @@ TEST_F(Summary, SectionAndNestedGroupCountRootsWithoutDescendants) {
     EXPECT_EQ(s.roots, (std::vector{section.id, outer.id}));
     EXPECT_EQ(s.primary, section.id);
     ASSERT_TRUE(s.bounds.world);
-    EXPECT_EQ(*s.bounds.world, (foundation::WorldRect{0, 0, 340, 130}));
+    EXPECT_EQ(*s.bounds.world, (foundation::WorldRect{0, -20, 340, 130}));
     runtime::SectionIntent enter;
     enter.action = runtime::SectionAction::kEnterGroupScope;
     enter.objectId = outer.id;

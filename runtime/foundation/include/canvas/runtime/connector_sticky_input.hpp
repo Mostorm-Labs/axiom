@@ -12,13 +12,30 @@ enum class ConnectorCommandState : std::uint8_t { kRejected, kApplied, kPending 
 enum class ConnectorFailureReason : std::uint8_t {
   kNone, kWrongThread, kNotReady, kInvalidRequest, kObjectRejected,
   kInvalidTarget, kNoRouteInDomain, kBudgetExceeded, kInvalidEndpoint,
-  kCancelled,
+  kCancelled, kStale, kLocked,
+};
+struct ConnectorToolDefaults final {
+  semantic::ConnectorRouting routing = semantic::ConnectorRouting::kStraight;
+  bool startArrow = false;
+  bool endArrow = false;
+};
+struct ConnectorEndpointRequest final {
+  semantic::ObjectId objectId{};
+  bool atStart = false;
+  semantic::ConnectorEndpoint endpoint{};
+  std::uint64_t expectedSemanticGeneration = 0;
+};
+struct ConnectorDecorationRequest final {
+  semantic::ObjectId objectId{};
+  bool startArrow = false, endArrow = false;
+  std::uint64_t expectedSemanticGeneration = 0;
 };
 struct ConnectorCreateRequest final {
   semantic::ObjectId objectId{};
   semantic::ConnectorContent content{};
   semantic::Placement placement{};
   semantic::Transform2D transform{};
+  std::optional<bool> startArrow = std::nullopt, endArrow = std::nullopt;
 };
 struct ConnectorRoutingRequest final {
   // Zero object id changes only the preset for subsequent canvas connectors.
@@ -56,6 +73,11 @@ struct ConnectorSnapshot final {
   ConnectorRouteWork work{};
   std::uint64_t semanticGeneration = 0;
   std::uint64_t sceneRevision = 0;
+  bool editingEndpoint = false;
+  std::optional<ConnectorCommandReceipt> lastEndpointEdit;
+  bool startArrow = false, endArrow = false;
+  std::optional<semantic::Transform2D> worldTransform;
+  std::vector<semantic::Vec2> displayRoute;
   std::uint32_t algorithmRevision = 1;
   // Derived polyline in connector-local coordinates. Diagnostic chords carry
   // a non-Ready status; they never claim obstacle avoidance.

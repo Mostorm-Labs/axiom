@@ -243,13 +243,14 @@ std::shared_ptr<const SketchGeometry> generate(const Key &k) {
     if (k.kind == 4) {
         if (k.route.size() > 4097)
             return {};
+        const auto shaft=[&](std::size_t i) { return connectorShaftVertex(k.route,i,k.arrowStart,k.arrowEnd); };
         for (int pass = 0; pass < passes; ++pass) {
             if (k.route.size() < 2)
                 break;
-            auto p = k.route[0];
+            auto p = shaft(0);
             g->outline.commands.push_back(MoveTo{{p.x, p.y}});
             for (std::size_t i = 1; i < k.route.size(); ++i) {
-                auto a = k.route[i - 1], b = k.route[i];
+                auto a = shaft(i - 1), b = shaft(i);
                 const Vec2 mid{(double(a.x) + b.x) / 2, (double(a.y) + b.y) / 2};
                 g->outline.commands.push_back(
                     segment({a.x, a.y}, mid, k.rough, rng, i == 1, false, k.obstacles));
@@ -263,15 +264,22 @@ std::shared_ptr<const SketchGeometry> generate(const Key &k) {
             if (len == 0)
                 return;
             double ux = dx / len, uy = dy / len;
+            const auto head=connectorArrowLength(len,k.route.size()==2 && k.arrowStart && k.arrowEnd);
+            const auto halfWidth=head/2;
             std::vector<Vec2> v{{tip.x, tip.y},
-                                {tip.x - ux * 12 - uy * 6, tip.y - uy * 12 + ux * 6},
-                                {tip.x - ux * 12 + uy * 6, tip.y - uy * 12 - ux * 6}};
-            addPolygon(g->arrowFill, v);
-            for (std::size_t i = 0; i < 3; ++i) {
-                g->outline.commands.push_back(MoveTo{v[i]});
-                g->outline.commands.push_back(
-                    segment(v[i], v[(i + 1) % 3], k.rough, rng, false, false, {}));
+                                {tip.x - ux * head - uy * halfWidth, tip.y - uy * head + ux * halfWidth},
+                                {tip.x - ux * head + uy * halfWidth, tip.y - uy * head - ux * halfWidth}};
+            auto& contour=g->arrowFill.commands;
+            contour.push_back(MoveTo{v[0]});
+            for (std::size_t i=0; i<v.size(); ++i) {
+                const auto next=(i+1)%v.size();
+                const auto curve=segment(v[i],v[next],k.rough,rng,i==0,next==0,k.obstacles);
+                // The two seeded sides meet at one point. The straight base
+                // covers the shaft joint for every seed and brush width.
+                if (k.rough>0 && i!=1) contour.push_back(curve);
+                else if (next!=0) contour.push_back(LineTo{v[next]});
             }
+            contour.push_back(ClosePath{});
         };
         if (k.route.size() > 1) {
             if (k.arrowEnd)
@@ -362,6 +370,7 @@ std::shared_ptr<const SketchGeometry> sketchGeometry(const semantic::ObjectConte
         k.h = sticky->height;
     } else if (std::holds_alternative<ConnectorContent>(content) && route) {
         k.kind = 4;
+        if (route->status != runtime::ConnectorRouteStatus::kReady) k.arrowStart=k.arrowEnd=false;
         k.route = route->route;
         k.obstacles = route->sketchObstacles;
         if (k.route.empty())

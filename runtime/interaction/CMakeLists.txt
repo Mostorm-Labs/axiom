@@ -48,6 +48,7 @@ add_library(canvas_runtime_editor STATIC
     src/canvas_selection_summary.cpp
     src/region_selection_geometry.cpp
     src/canvas_text_geometry.cpp
+    src/canvas_connector_edit.cpp
     src/canvas_connector_routing.cpp
     src/brush_commit_adapter.cpp)
 if(MSVC)

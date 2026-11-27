@@ -62,6 +62,9 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] ImageCropSnapshot readImageCrop() const override;
   [[nodiscard]] SelectedImageSnapshot readSelectedImage() const override;
   [[nodiscard]] ConnectorCommandReceipt createConnector(const ConnectorCreateRequest&) override;
+  [[nodiscard]] ConnectorToolDefaults readConnectorDefaults(bool connectionTool = false) const override;
+  [[nodiscard]] ConnectorCommandReceipt setConnectorEndpoint(const ConnectorEndpointRequest&) override;
+  [[nodiscard]] ConnectorCommandReceipt setConnectorDecoration(const ConnectorDecorationRequest&) override;
   [[nodiscard]] ConnectorCommandReceipt setConnectorRouting(const ConnectorRoutingRequest&) override;
   [[nodiscard]] semantic::ConnectorRouting readConnectorRoutingPreset() const override;
   [[nodiscard]] StickyCommandReceipt createSticky(const StickyCreateRequest&) override;

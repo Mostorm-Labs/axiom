@@ -7,7 +7,7 @@ struct CanvasEditingRuntime::ConnectorPreviewRouting {
     semantic::ObjectId selected{};
     std::optional<semantic::Transform2D> transform;
     std::vector<std::pair<semantic::ObjectId, semantic::Transform2D>> transforms;
-    std::optional<semantic::ObjectRecord> creation;
+    std::optional<semantic::ObjectRecord> creation, sibling;
     std::vector<semantic::ObjectRecord> source;
     std::vector<semantic::ObjectRecord> queue;
     std::size_t cursor=0;
@@ -15,7 +15,7 @@ struct CanvasEditingRuntime::ConnectorPreviewRouting {
     std::unordered_map<semantic::ObjectId,scene::ConnectorGeometry,foundation::ObjectIdHash> results;
 };
 bool CanvasEditingRuntime::connectorPreviewRoutingPending() const noexcept {
-    return connectorPreviewRouting_&&connectorPreviewRouting_->cursor<connectorPreviewRouting_->queue.size();
+    return (endpointDrag_ && endpointDrag_->job) || (connectorPreviewRouting_&&connectorPreviewRouting_->cursor<connectorPreviewRouting_->queue.size());
 }
 scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const semantic::ObjectRecord& record) {
     const auto* transform=transformOverrides_.find(selection_.primary());
@@ -26,18 +26,25 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
             if (const auto* current = transformOverrides_.find(id)) transforms.emplace_back(id, *current);
         }
     } else if (transform) transforms.emplace_back(selection_.primary(), *transform);
-    std::optional<semantic::ObjectRecord> creation;
+    std::optional<semantic::ObjectRecord> creation, sibling;
     if(creationActive()&&creationPreview().valid&&creationPreview().record.kind==semantic::ObjectKind::kConnector)
         creation=creationPreview().record;
+    if(creation)if(const auto* target=quickConnectorSibling()){
+        const auto start=*creations_.at(latestCreationPointer_).startAttachment();
+        const auto port=std::get<semantic::StablePortAnchor>(start.anchor).port_id;
+        sibling=*target;
+        std::get<semantic::ConnectorContent>(creation->content).end.value=semantic::AttachedEndpoint{
+            target->id,semantic::StablePortAnchor{siblingAttachmentPort(start.target_object_id,port)}};
+    }
     const std::optional<semantic::Transform2D> current=transform?std::optional(*transform):std::nullopt;
     const auto appearanceRevision = appearanceSession_ && appearanceSession_->routingChanged ? appearancePreviewRevision_ : 0;
     if(!connectorPreviewRouting_||connectorPreviewRouting_->generation!=semanticGeneration_.current().value()||
        connectorPreviewRouting_->appearanceRevision!=appearanceRevision||
        connectorPreviewRouting_->selected!=selection_.primary()||connectorPreviewRouting_->transform!=current||
-       connectorPreviewRouting_->transforms!=transforms||connectorPreviewRouting_->creation!=creation) {
+       connectorPreviewRouting_->transforms!=transforms||connectorPreviewRouting_->creation!=creation||connectorPreviewRouting_->sibling!=sibling) {
         auto next=std::make_shared<ConnectorPreviewRouting>();next->generation=semanticGeneration_.current().value();
         next->appearanceRevision=appearanceRevision;
-        next->selected=selection_.primary();next->transform=current;next->transforms=transforms;next->creation=creation;
+        next->selected=selection_.primary();next->transform=current;next->transforms=transforms;next->creation=creation;next->sibling=sibling;
         next->source=semanticObjects_.allObjects();
         for(auto& object:next->source) {
             const auto found=std::find_if(transforms.begin(),transforms.end(),[&](const auto& item){return item.first==object.id;});
@@ -51,6 +58,7 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
         }
         if(appearanceSession_)for(auto& object:next->source)
             for(const auto& preview:appearanceSession_->after)if(object.id==preview.id)object.properties=preview.properties;
+        if(sibling)next->source.push_back(*sibling);
         next->source=scene::projectWorldObjects(next->source);
         if(creation)next->queue.push_back(*creation);
         else for(const auto& object:next->source) {
@@ -62,9 +70,9 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
     }
     const auto found=connectorPreviewRouting_->results.find(record.id);
     if(found!=connectorPreviewRouting_->results.end())return found->second;
-    auto connector=record;
+    auto connector=creation && creation->id==record.id?*creation:record;
     for(const auto& world:connectorPreviewRouting_->source)if(world.id==record.id){connector=world;break;}
-    auto route=*scene::connectorGeometry(connector,connectorPreviewRouting_->source,true);
+    auto route=scene::connectorDisplayRoute(connector,*scene::connectorGeometry(connector,connectorPreviewRouting_->source,true));
     if(route.status!=runtime::ConnectorRouteStatus::kPending)
         connectorPreviewRouting_->results.emplace(record.id,route);
     return route;
@@ -80,7 +88,7 @@ unsigned CanvasEditingRuntime::serviceConnectorPreviewRouting(unsigned quanta) {
         if(!preview.job)preview.job=std::make_unique<scene::ConnectorRouteJob>(object,preview.source);
         ++used;
         if(preview.job->advance()==runtime::ConnectorRouteStatus::kPending)continue;
-        preview.results[object.id]=preview.job->result();preview.job.reset();++preview.cursor;
+        preview.results[object.id]=scene::connectorDisplayRoute(object,preview.job->result());preview.job.reset();++preview.cursor;
         canonicalPresentationDirty_=true;transientOverlayDirty_=true;
     }
     return used;
@@ -109,12 +117,13 @@ bool CanvasEditingRuntime::serviceConnectorRouting() noexcept {
     // One live search arena, at most four quanta per owner opportunity. The
     // immutable source snapshot survives each yield; a new generation cancels
     // it before any further work or publication. Failed jobs never self-retry.
+    serviceEndpointRoute();
     const unsigned previewQuanta=serviceConnectorPreviewRouting(2);
     for(unsigned quantum=previewQuanta;quantum<4&&connectorRoutingCursor_<connectorRoutingQueue_.size();++quantum) {
         const auto& object=connectorRoutingSource_[connectorRoutingQueue_[connectorRoutingCursor_]];
         if(!connectorRoutingJob_)connectorRoutingJob_=std::make_unique<scene::ConnectorRouteJob>(object,connectorRoutingSource_);
         if(connectorRoutingJob_->advance()==runtime::ConnectorRouteStatus::kPending)continue;
-        completed.emplace_back(object.id,connectorRoutingJob_->result());
+        completed.emplace_back(object.id,scene::connectorDisplayRoute(object,connectorRoutingJob_->result()));
         connectorRoutingJob_.reset();++connectorRoutingCursor_;
     }
     connectorRoutingPending_=connectorRoutingCursor_<connectorRoutingQueue_.size();

@@ -9,6 +9,7 @@ namespace g5 = canvas::foundation::internal::g5;
 #include "canvas/semantic/table_content.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
 #include "skia_geometry_internal.hpp"
+#include "connector_cap_geometry.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
 #include "canvas/render/skia_text_resources.hpp"
@@ -437,7 +438,20 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
     bool explicitStroke=false;for(const auto& e:record.properties.entries)explicitStroke=explicitStroke||e.field_id==0x101U;
     if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kConnector)stroke=&legacy;
     if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kSection)stroke=&sectionBorder;
-    if(stroke&&stroke->width>0&&stroke->color.a>0){auto p=strokePaint(*stroke,true);if(derived)p.setStrokeWidth(skScalar(stroke->width*derived->outlineWidthScale));drawPath(canvas,derived?derived->outline:regular,p);if(derived&&!derived->arrowFill.commands.empty()){p.setStyle(SkPaint::kFill_Style);p.setPathEffect(nullptr);drawPath(canvas,derived->arrowFill,p);}}
+    if(stroke && stroke->width>0 && stroke->color.a>0) {
+        auto p=strokePaint(*stroke,true);
+        if(derived)p.setStrokeWidth(skScalar(stroke->width*derived->outlineWidthScale));
+        {
+            const auto cap=route ? internal::connectorCapOverhang(*route,p,true,true) : SkPath{};
+            SkAutoCanvasRestore restore(&canvas,!cap.isEmpty());
+            if(!cap.isEmpty())canvas.clipPath(cap,SkClipOp::kDifference,true);
+            drawPath(canvas,derived?derived->outline:regular,p);
+        }
+        if(derived && !derived->arrowFill.commands.empty()) {
+            p.setStyle(SkPaint::kFill_Style);p.setPathEffect(nullptr);
+            drawPath(canvas,derived->arrowFill,p);
+        }
+    }
     if (sticky) foldStickyCorner(canvas, std::get<semantic::StickyContent>(record.content.get()), stroke);
     canvas.restore();return true;
 }
@@ -742,10 +756,15 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
             if (derived != nullptr && derived->route.size() >= 2U) {
+                const bool ready=derived->status==runtime::ConnectorRouteStatus::kReady;
+                auto from=scene::connectorShaftVertex(derived->route,0,ready && derived->arrow_start,ready && derived->arrow_end);
                 for (std::size_t index = 1U; index < derived->route.size(); ++index) {
-                    const auto& from = derived->route[index - 1U];
-                    const auto& to = derived->route[index];
+                    const auto to=scene::connectorShaftVertex(derived->route,index,ready && derived->arrow_start,ready && derived->arrow_end);
+                    const auto cap=internal::connectorCapOverhang(*derived,paint,index==1,index+1==derived->route.size());
+                    SkAutoCanvasRestore restore(&canvas,!cap.isEmpty());
+                    if(!cap.isEmpty())canvas.clipPath(cap,SkClipOp::kDifference,true);
                     canvas.drawLine(from.x, from.y, to.x, to.y, paint);
+                    from=to;
                 }
             } else if (command.content.get().routing == semantic::ConnectorRouting::kOrthogonal) {
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
@@ -756,15 +775,9 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
                                 skScalar(end->point.y), paint);
             }
-            bool arrow = false;
-            for (const auto& property : record.properties.entries) {
-                if (property.field_id != 0x201U) continue;
-                if (const auto* decoration = std::get_if<semantic::ConnectorDecorationValue>(&property.value))
-                    arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
-            }
-            if (arrow && derived && derived->status==runtime::ConnectorRouteStatus::kReady) {
-                auto geometry=*derived;geometry.arrow_end=true;
-                const auto headGeometry=scene::arrowHead(geometry);
+            if (derived && derived->status==runtime::ConnectorRouteStatus::kReady) for(bool atStart:{false,true}) {
+                if(!(atStart?derived->arrow_start:derived->arrow_end))continue;
+                const auto headGeometry=scene::arrowHead(*derived,atStart);
                 SkPathBuilder head;head.moveTo(headGeometry.tip.x,headGeometry.tip.y);
                 head.lineTo(headGeometry.left.x,headGeometry.left.y);
                 head.lineTo(headGeometry.right.x,headGeometry.right.y);head.close();

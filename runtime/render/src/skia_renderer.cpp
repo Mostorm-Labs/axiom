@@ -318,6 +318,24 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
             canvas.drawLine(x, y - 2.5F, x, y + 2.5F, attachmentPaint);
         }
     }
+    if(overlay.connectorFeedbackVisible()){
+        SkPaint p;p.setAntiAlias(true);p.setColor(SkColorSetRGB(0x67,0x61,0xF8));
+        if(!overlay.connectorTargetOutline.empty()){
+            const auto& points=overlay.connectorTargetOutline;
+            SkPathBuilder path;path.moveTo(points.front().x,points.front().y);
+            for(const auto& v:points)path.lineTo(v.x,v.y);
+            path.close();p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(2.f);
+            canvas.drawPath(path.detach(),p);
+        }
+        const auto grip=[&](ScreenPoint center,bool attached,float radius){
+            p.setStyle(SkPaint::kFill_Style);p.setColor(SK_ColorWHITE);canvas.drawCircle(center.x,center.y,radius,p);
+            p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(1.6f);p.setColor(SkColorSetRGB(0x67,0x61,0xF8));
+            canvas.drawCircle(center.x,center.y,radius,p);
+            if(attached){p.setStyle(SkPaint::kFill_Style);canvas.drawCircle(center.x,center.y,radius*.49f,p);}
+        };
+        if(overlay.connectorTargetPort)grip(*overlay.connectorTargetPort,true,6);
+        if(overlay.connectorGrips)for(const auto& handle:*overlay.connectorGrips)grip(handle.center,handle.attached,4.5f);
+    }
     if (overlay.selectionOutline().visible) {
         SkPaint chrome;
         chrome.setAntiAlias(true);
@@ -1198,7 +1216,7 @@ internal::ObjectInteractionWork SkiaRenderer::objectInteractionWork()const noexc
 #endif
 
 namespace {
-bool feedbackBare(const EditingOverlay* overlay){return overlay&&!overlay->selectionOutline().visible&&!overlay->creationPreview()&&!overlay->creationHover()&&!overlay->textBox&&!overlay->textCaret&&overlay->textSelection.empty()&&overlay->readOnlyOutlines.empty()&&overlay->candidateOutlines.empty()&&overlay->acquisitionOutline.empty()&&overlay->guides().empty()&&overlay->attachmentPoints().empty();}
+bool feedbackBare(const EditingOverlay* overlay){return overlay&&!overlay->connectorFeedbackVisible()&&!overlay->selectionOutline().visible&&!overlay->creationPreview()&&!overlay->creationHover()&&!overlay->textBox&&!overlay->textCaret&&overlay->textSelection.empty()&&overlay->readOnlyOutlines.empty()&&overlay->candidateOutlines.empty()&&overlay->acquisitionOutline.empty()&&overlay->guides().empty()&&overlay->attachmentPoints().empty();}
 bool feedbackBodyEqual(const ReferenceTraversalEntry& a,const ReferenceTraversalEntry& b){
     const auto& x=a.record;const auto& y=b.record;
     const auto xa=x.content.shared(),ya=y.content.shared();
@@ -1500,7 +1518,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
     // whole scene first and then add the editing chrome.
     const auto includeInk=!selectionOverlay->creationPreview().has_value();
     const bool bareOverlay=!selectionOverlay->selectionOutline().visible&&!selectionOverlay->creationPreview()&&
-        !selectionOverlay->creationHover()&&!selectionOverlay->textBox&&!selectionOverlay->textCaret&&
+        !selectionOverlay->connectorFeedbackVisible()&&!selectionOverlay->creationHover()&&!selectionOverlay->textBox&&!selectionOverlay->textCaret&&
         selectionOverlay->textSelection.empty()&&selectionOverlay->readOnlyOutlines.empty()&&
         selectionOverlay->candidateOutlines.empty()&&selectionOverlay->acquisitionOutline.empty()&&
         selectionOverlay->guides().empty()&&selectionOverlay->attachmentPoints().empty();
@@ -1609,7 +1627,7 @@ BackendSubmissionResult SkiaRenderer::prepareTransientFrame(
             if(staged){if(!cache->completedFrame())scene=BackendSubmissionResult::retry("transient staged frame unavailable");}
             else if(cache){if(!cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk,incremental,&deviceGrid,
                 selectionOverlay->active() && selectionOverlay->selectionOutline().visible &&
-                !selectionOverlay->creationPreview() && !selectionOverlay->creationHover() &&
+                !selectionOverlay->creationPreview() && !selectionOverlay->connectorFeedbackVisible()&&!selectionOverlay->creationHover() &&
                 !selectionOverlay->textCaret && !selectionOverlay->textBox &&
                 selectionOverlay->readOnlyOutlines.empty() && selectionOverlay->candidateOutlines.empty() &&
                 selectionOverlay->acquisitionOutline.empty()))

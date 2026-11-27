@@ -68,6 +68,14 @@ bool aabb(const semantic::ObjectRecord& o,R& r) {
     }
     return true;
 }
+bool obstacleBounds(const semantic::ObjectRecord& o, double wireOutset, R& r) {
+    if (!aabb(o,r)) return false;
+    const double margin=8+wireOutset+stroke(o);
+    if (!std::isfinite(margin)) return false;
+    r={std::floor((r.l-margin)*64)/64,std::floor((r.t-margin)*64)/64,
+       std::ceil((r.r+margin)*64)/64,std::ceil((r.b+margin)*64)/64};
+    return true;
+}
 bool intersects(R a,R b) { return a.l<=b.r&&a.r>=b.l&&a.t<=b.b&&a.b>=b.t; }
 bool inside(P p,R r) { return p.x>r.l&&p.x<r.r&&p.y>r.t&&p.y<r.b; }
 bool crossing(P a,P b,R r) {
@@ -94,6 +102,52 @@ std::vector<P> simplified(std::vector<P> path) {
     return out;
 }
 struct Endpoint { P p{},normal{},cornerNormal{}; const semantic::ObjectRecord* target=nullptr; };
+P exitOnSide(P anchor, P dir, R bounds) {
+    if (dir.x != 0) return {dir.x > 0 ? bounds.r : bounds.l, anchor.y};
+    return {anchor.x, dir.y > 0 ? bounds.b : bounds.t};
+}
+
+// Leave enough room to read an outward-facing leg. When it points into the
+// gutter between the two bodies, place the turn halfway across that gutter.
+constexpr double portLead = 32;
+P gutterExit(P anchor, P escape, R peer) {
+    const bool horizontal = escape.y == anchor.y;
+    const double delta = horizontal ? escape.x-anchor.x : escape.y-anchor.y;
+    const double sign = delta > 0 ? 1 : -1;
+    const double nearFace = horizontal ? (sign > 0 ? peer.l : peer.r)
+                                       : (sign > 0 ? peer.t : peer.b);
+    const double gap = (nearFace - (horizontal ? anchor.x : anchor.y))*sign;
+    const double lead = std::max(std::abs(delta), gap > 0 ? gap/2 : portLead);
+    return horizontal ? P{anchor.x+sign*lead,anchor.y} : P{anchor.x,anchor.y+sign*lead};
+}
+
+// The returned interior path starts and ends on the inflated target bounds.
+// Ready paths must still certify every segment against all obstacles.
+std::vector<P> portPath(const Endpoint& a, P start, const Endpoint& b, P end) {
+    if (!a.target || !b.target || start==a.p || end==b.p) return {};
+    const bool horizontal = start.y==a.p.y;
+    const double da = horizontal ? start.x-a.p.x : start.y-a.p.y;
+    if (horizontal == (end.y==b.p.y)) {
+        const double db = horizontal ? end.x-b.p.x : end.y-b.p.y;
+        if ((da>0)!=(db>0)) return {}; // Opposing ports already have a midline.
+        const double sign=da>0 ? 1 : -1;
+        const double aa=(horizontal?a.p.x:a.p.y)*sign, bb=(horizontal?b.p.x:b.p.y)*sign;
+        const double lane=sign*std::max(aa+std::max(portLead,std::abs(da)),
+                                        bb+std::max(portLead,std::abs(db)));
+        return horizontal ? std::vector<P>{start,{lane,start.y},{lane,end.y},end}
+                          : std::vector<P>{start,{start.x,lane},{end.x,lane},end};
+    }
+    const P elbow=horizontal ? P{end.x,start.y} : P{start.x,end.y};
+    const auto ahead=[](P anchor,P escape,P bend) {
+        return (bend.x-escape.x)*(escape.x-anchor.x)+(bend.y-escape.y)*(escape.y-anchor.y)>=0;
+    };
+    if (ahead(a.p,start,elbow) && ahead(b.p,end,elbow)) return {start,elbow,end};
+    R bodyA{},bodyB{};
+    if (!aabb(*a.target,bodyA) || !aabb(*b.target,bodyB)) return {};
+    const P leadA=gutterExit(a.p,start,bodyB), leadB=gutterExit(b.p,end,bodyA);
+    const P turn=horizontal ? P{leadA.x,leadB.y} : P{leadB.x,leadA.y};
+    return {start,leadA,turn,leadB,end};
+}
 // Resolve once in target-local f64; transform once to world. No recursive
 // perimeter dependency: an attached opposite endpoint contributes its center.
 bool endpoint(const semantic::ObjectRecord& c,const semantic::ConnectorEndpoint& e,
@@ -164,6 +218,16 @@ bool endpoint(const semantic::ObjectRecord& c,const semantic::ConnectorEndpoint&
 }
 }
 
+std::optional<foundation::WorldPoint> connectorAnchorPoint(const semantic::ObjectRecord& target,
+    const semantic::AnchorRef& anchor, foundation::WorldPoint towards) {
+    semantic::ObjectRecord line;
+    const semantic::ConnectorEndpoint attached{semantic::AttachedEndpoint{target.id,anchor}};
+    const semantic::ConnectorEndpoint other{semantic::FreePointEndpoint{{towards.x,towards.y}}};
+    Endpoint out;
+    if(!endpoint(line,attached,other,&target,nullptr,out))return std::nullopt;
+    return foundation::WorldPoint{float(out.p.x),float(out.p.y)};
+}
+
 struct ConnectorRouteJob::Impl {
     semantic::ObjectRecord connector;
     std::span<const semantic::ObjectRecord> source;
@@ -196,8 +260,12 @@ struct ConnectorRouteJob::Impl {
     Impl(const semantic::ObjectRecord& c,std::span<const semantic::ObjectRecord> s):connector(c),source(s) {
         result.status=Status::kPending;
         if (const auto* cc=std::get_if<semantic::ConnectorContent>(&c.content)) {
-            for(const auto& p:c.properties.entries) if(p.field_id==0x201U)
-                if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&p.value)) result.arrow_end=*v==semantic::ConnectorDecorationValue::kArrow;
+            for(const auto& property:c.properties.entries) {
+                const auto* value=std::get_if<semantic::ConnectorDecorationValue>(&property.value);
+                if(!value)continue;
+                if(property.field_id==0x200U)result.arrow_start=*value==semantic::ConnectorDecorationValue::kArrow;
+                if(property.field_id==0x201U)result.arrow_end=*value==semantic::ConnectorDecorationValue::kArrow;
+            }
             (void)cc;
         } else fail(Status::kInvalidEndpoint);
     }
@@ -250,9 +318,7 @@ struct ConnectorRouteJob::Impl {
         for(const auto dir:std::array<P,4>{{{1,0},{0,1},{-1,0},{0,-1}}}) {
             if(dir.x*e.normal.x+dir.y*e.normal.y<=0 &&
                dir.x*e.cornerNormal.x+dir.y*e.cornerNormal.y<=0) continue;
-            P p=e.p;
-            if(dir.x>0) p.x=found->rect.r; else if(dir.x<0) p.x=found->rect.l;
-            else if(dir.y>0) p.y=found->rect.b;else p.y=found->rect.t;
+            const P p=exitOnSide(e.p,dir,found->rect);
             bool clear=true;
             for(const auto& o:obstacles) if(o.id!=e.target->id&&!predicate(e.p,p,o)) {clear=false;break;}
             if(clear) out.push_back(p);
@@ -271,6 +337,7 @@ struct ConnectorRouteJob::Impl {
         // Test the middle lane before equal-length routes along object edges.
         preferred.clear();preferredIndex=0;preferredSegment=1;preferredObstacle=0;
         if(start.x==end.x||start.y==end.y)preferred.push_back({start,end});
+        if(auto path=portPath(a,start,b,end); !path.empty()) preferred.push_back(std::move(path));
         const bool horizontalA=start!=a.p&&start.y==a.p.y;
         const bool horizontalB=end!=b.p&&end.y==b.p.y;
         const bool verticalA=start!=a.p&&start.x==a.p.x;
@@ -337,8 +404,18 @@ struct ConnectorRouteJob::Impl {
                 // A provisional orthogonal path follows the current endpoints
                 // during bounded work. It remains Pending until collision
                 // checks/search certify a route; never publish it as Ready.
+                const auto previewExit=[&](const Endpoint& e) {
+                    R bounds{};
+                    if(!e.target || !obstacleBounds(*e.target,stroke(connector),bounds)) return e.p;
+                    const P n{e.normal.x+e.cornerNormal.x,e.normal.y+e.cornerNormal.y};
+                    const P dir=std::abs(n.x)>std::abs(n.y) ? P{n.x,0} : P{0,n.y};
+                    return exitOnSide(e.p,dir,bounds);
+                };
                 std::vector<P> provisional{a.p};
-                if(a.p.x!=b.p.x&&a.p.y!=b.p.y) {
+                auto ports=portPath(a,previewExit(a),b,previewExit(b));
+                if(!ports.empty()) {
+                    provisional.insert(provisional.end(),ports.begin(),ports.end());
+                } else if(a.p.x!=b.p.x&&a.p.y!=b.p.y) {
                     const auto vertical=[](const Endpoint& e) {
                         return e.target&&std::abs(e.normal.y+e.cornerNormal.y)>=
                             std::abs(e.normal.x+e.cornerNormal.x);
@@ -354,7 +431,7 @@ struct ConnectorRouteJob::Impl {
                     } else provisional.push_back(ha?P{b.p.x,a.p.y}:P{a.p.x,b.p.y});
                 }
                 provisional.push_back(b.p);
-                finishPath(provisional,Status::kPending);
+                finishPath(simplified(std::move(provisional)),Status::kPending);
                 if(result.status!=Status::kPending)break;
                 finalDomain={std::min(a.p.x,b.p.x)-1024,std::min(a.p.y,b.p.y)-1024,
                              std::max(a.p.x,b.p.x)+1024,std::max(a.p.y,b.p.y)+1024};
@@ -365,11 +442,7 @@ struct ConnectorRouteJob::Impl {
                     if(result.work.examined>=8192U){fail(Status::kBudgetExceeded);break;}
                     const auto& o=source[scan++];++result.work.examined;
                     if(!admitted(o)||o.id==connector.id||(!visible(o) && &o!=targetA && &o!=targetB))continue;
-                    R r{};if(!aabb(o,r)){fail(Status::kInvalidGeometry);break;}
-                    const double margin=8+stroke(connector)+stroke(o);
-                    if(!std::isfinite(margin)){fail(Status::kInvalidGeometry);break;}
-                    r={std::floor((r.l-margin)*64)/64,std::floor((r.t-margin)*64)/64,
-                       std::ceil((r.r+margin)*64)/64,std::ceil((r.b+margin)*64)/64};
+                    R r{};if(!obstacleBounds(o,stroke(connector),r)){fail(Status::kInvalidGeometry);break;}
                     if(!intersects(r,finalDomain))continue;
                     if(obstacles.size()>=256U){fail(Status::kBudgetExceeded);break;}
                     obstacles.push_back({o.id,r});continue;

@@ -61,10 +61,15 @@ export function installPointerInput({canvas, logicalSize, submit, lifecycle = gl
     }
   }
   for (const [name, listener] of listeners) canvas.addEventListener(name, listener);
+  const cancelOnEscape=event=>{
+    if(event.key==='Escape' && !event.isComposing && active.size){cancelAll();event.preventDefault?.();}
+  };
+  lifecycle?.addEventListener('keydown',cancelOnEscape);
   lifecycle?.addEventListener('blur', cancelAll);
   const dispose = () => {
     cancelAll();
     for (const [name, listener] of listeners) canvas.removeEventListener(name, listener);
+    lifecycle?.removeEventListener('keydown',cancelOnEscape);
     lifecycle?.removeEventListener('blur', cancelAll);
   };
   dispose.cancelAll = cancelAll;

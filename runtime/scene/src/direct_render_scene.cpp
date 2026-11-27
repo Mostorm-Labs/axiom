@@ -300,12 +300,16 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
     } else if (const auto* connector = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry)) {
         std::vector<foundation::WorldPoint> transformedRoute;
         transformedRoute.reserve(connector->route.size());
-        for (const auto point : connector->route) transformedRoute.push_back(world(point));
+        const bool ready=connector->status==runtime::ConnectorRouteStatus::kReady;
+        for (std::size_t i=0; i<connector->route.size(); ++i)
+            transformedRoute.push_back(world(scene::connectorShaftVertex(connector->route,i,
+                ready && connector->arrow_start, ready && connector->arrow_end)));
         const scene::ConnectorGeometry transformed{world(connector->start), world(connector->end), std::move(transformedRoute), connector->arrow_end};
         hit = scene::pointOnConnector(request.worldPoint, transformed, request.tolerance + (sketchTolerance>0?strokeHalfWidth(record.properties)+sketchTolerance:0));
         distance = scene::distanceToSegment(request.worldPoint, transformed.start, transformed.end);
-        if (connector->arrow_end) {
-            const auto head = scene::arrowHead(*connector);
+        for (bool start : {false,true}) {
+            if (!(start ? connector->arrow_start : connector->arrow_end) || connector->status!=runtime::ConnectorRouteStatus::kReady) continue;
+            const auto head = scene::arrowHead(*connector,start);
             const scene::TriangleGeometry transformedHead{world(head.tip), world(head.left), world(head.right), {}};
             const float headDistance = std::min({
                 scene::distanceToSegment(request.worldPoint, transformedHead.top, transformedHead.right),

@@ -40,12 +40,7 @@ class CreationSession final {
   [[nodiscard]] bool cancel(input::PointerKey) noexcept;
   [[nodiscard]] bool active() const noexcept { return preview_.active; }
   [[nodiscard]] const CreationPreview& preview() const noexcept { return preview_; }
-  // A connector endpoint may be attached to the object whose perimeter
-  // accepted the latest snapped pointer position.  This is transient
-  // interaction state; only the resulting AttachedEndpoint is canonical.
-  [[nodiscard]] std::optional<semantic::AttachedEndpoint> snappedEndpoint() const noexcept {
-    return snappedEndpoint_;
-  }
+  [[nodiscard]] const std::optional<semantic::AttachedEndpoint>& endAttachment() const noexcept { return endAttachment_; }
   [[nodiscard]] std::optional<semantic::AttachedEndpoint> startAttachment() const noexcept {
     return startAttachment_;
   }
@@ -74,7 +69,7 @@ class CreationSession final {
   std::vector<interaction::SnapTarget> snapTargets_{};
   float snapScale_ = 1.0F;
   CreationPreview preview_{};
-  std::optional<semantic::AttachedEndpoint> snappedEndpoint_{};
+
   std::optional<semantic::AttachedEndpoint> startAttachment_{};
   std::optional<semantic::AttachedEndpoint> endAttachment_{};
 };

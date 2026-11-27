@@ -1,3 +1,5 @@
+#include "canvas/interaction/sibling_order.hpp"
+#include <map>
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "cpu_pending_erase_state.hpp"
 #include "partial_erase_geometry.hpp"
@@ -69,11 +71,36 @@ bool CanvasEditingRuntime::enqueuePendingCreate(std::vector<semantic::ObjectReco
   // The prototype remains immutable; head resolves order after prior creates.
   std::size_t bytes=65536;for(const auto& object:objects){if(const auto* table=std::get_if<semantic::TableContent>(&object.content))bytes+=table->cells.size()*sizeof(semantic::TableCell);}
   auto quota=skiaRenderer_.reserveCpuPendingMetadata(bytes);if(!quota)return false;
-  for(auto& object:objects){std::vector<std::uint8_t> order;for(const auto& existing:semanticObjects_.children(object.placement.parent_id))if(order.empty()||semantic::OrderKey(order)<existing.placement.order_key)order.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());for(const auto& prior:cpuPending_->slots)if(prior&&prior->serial)for(const auto& existing:prior->creates)if(existing.placement.parent_id==object.placement.parent_id&&(order.empty()||semantic::OrderKey(order)<existing.placement.order_key))order.assign(existing.placement.order_key.bytes().begin(),existing.placement.order_key.bytes().end());if(order.size()==semantic::OrderKey::kMaxSize)return false;order.push_back(128);object.placement.order_key=semantic::OrderKey(std::move(order));}
+  const auto focusObject=objects.front().id;
+  // Reserve keys in paint order within this batch. Canonical normalization later sorts by ID.
+  std::vector<semantic::ObjectRecord*> paintOrder;
+  for(auto& object:objects)paintOrder.push_back(&object);
+  std::stable_sort(paintOrder.begin(),paintOrder.end(),[](const auto* a,const auto* b){
+      return a->placement.order_key<b->placement.order_key;
+  });
+  std::map<std::optional<semantic::ObjectId>,std::vector<std::uint8_t>> orders;
+  for(auto* object:paintOrder){
+      const auto parent=object->placement.parent_id;
+      auto [it,first]=orders.try_emplace(parent);
+      auto& key=it->second;
+      if(first){
+          const auto remember=[&](const semantic::ObjectRecord& previous){
+              if(previous.placement.parent_id==parent && (key.empty() || semantic::OrderKey(key)<previous.placement.order_key)){
+                  const auto bytes=previous.placement.order_key.bytes();key.assign(bytes.begin(),bytes.end());
+              }
+          };
+          for(const auto& previous:semanticObjects_.children(parent))remember(previous);
+          for(const auto& prior:cpuPending_->slots)if(prior && prior->serial)
+              for(const auto& previous:prior->creates)remember(previous);
+      }
+      if(!nextSiblingOrderKey(key))return false;
+      object->placement.order_key=semantic::OrderKey(key);
+  }
   semantic::Operation prototype{semantic::OperationId{foundation::ObjectId::fromUint64(1)},documentId_,1,1,semantic::InsertObjectsOp{std::move(objects)}};
   auto normalized=semantic::normalizeOperation(prototype);if(!normalized.ok())return false;objects=std::get<semantic::InsertObjectsOp>(std::move(normalized.value.payload)).objects;
   for(const auto& object:objects)if(object.placement.parent_id&&!semanticObjects_.contains(*object.placement.parent_id))for(const auto& prior:cpuPending_->slots)if(prior&&prior->serial)for(const auto& created:prior->creates)if(created.id==*object.placement.parent_id)target->dependencies.push_back(prior->serial);
-  const auto id=objects.front().id;
+  const auto id=focusObject;
+  target->focusObject=focusObject;
   const auto displaySession=(std::uint64_t{1}<<63)|(cpuPending_->nextSerial+1);if(displayOwner_&&!reserveDisplay(displaySession,DisplayKind::kLocal))return false;target->session=displaySession;
   target->prefixMetadata=std::move(*quota);target->creates=std::move(objects);target->editText=editText;target->serial=++cpuPending_->nextSerial;target->phase=CpuPendingEraseState::Phase::Ready;cpuPending_->lastAdmitted=target->serial;++cpuPending_->admitted;++cpuPending_->revision;
   selectPendingCreated(id);
@@ -158,7 +185,7 @@ bool CanvasEditingRuntime::servicePendingLocalHead()noexcept{
   else if(p->kind==CpuPendingEraseState::Kind::Redo)ok=history_.redo();
   state.headApplying=false;
  }catch(...){state.headApplying=false;ok=false;}
- const auto focusId=p->creates.empty()?foundation::ObjectId{}:p->creates.front().id;
+ const auto focusId=p->focusObject;
  const bool enterText=ok&&p->kind==CpuPendingEraseState::Kind::Create&&p->editText&&selection_.revision()==p->focusRevision&&selection_.primary()==focusId&&selectionMode_&&!creationActive()&&!selectionTransformActive();
  const auto failedPrimary=!ok&&std::any_of(p->creates.begin(),p->creates.end(),[&](const auto& object){return object.id==selection_.primary();});
  const auto serial=p->serial;const auto session=p->session;const auto key=p->key;const auto grant=p->traceGrant,executor=p->grantExecutor;

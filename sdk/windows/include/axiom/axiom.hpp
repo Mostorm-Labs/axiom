@@ -412,6 +412,9 @@ class Runtime final {
         args["action"] = "create";
         return connector(args);
     }
+    Json readConnectorDefaults() { return connector({{"action","readDefaults"}}).at("value"); }
+    Json setConnectorEndpoint(Json args) { args["action"]="endpoint";return connector(std::move(args)); }
+    Json setConnectorDecoration(Json args) { args["action"]="decoration";return connector(std::move(args)); }
     Json connectorRouting(Json args) {
         args["action"] = "routing";
         return connector(args);

@@ -30,7 +30,7 @@ bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, Cr
       viewport.right <= viewport.left || viewport.bottom <= viewport.top || active()) return false;
   pointer_ = pointer; objectSeed_ = objectSeed; preset_ = preset; style_ = std::move(style); viewport_ = viewport;
   preview_ = {}; preview_.active = true; preview_.preset = preset; preview_.start = start; preview_.end = start; preview_.viewport = viewport;
-  snappedEndpoint_.reset();
+
   preview_.record.id = objectId.isZero() ? makeId(objectSeed) : objectId;
   preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
   return rebuild(start);
@@ -44,7 +44,7 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
   preview_.valid = false;
   preview_.snapped = false;
   preview_.guides.clear();
-  snappedEndpoint_.reset();
+
   const auto start = preview_.start;
   preview_.end = end;
   foundation::WorldPoint snappedEnd = end;
@@ -68,7 +68,7 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
                        extent[3] <= std::numeric_limits<float>::epsilon())) {
     return true;
   }
-  if (!snapTargets_.empty()) {
+  if (boxPreset && !snapTargets_.empty()) {
     const foundation::WorldRect source{extent[0] * snapScale_, extent[1] * snapScale_,
                                        (extent[0] + extent[2]) * snapScale_,
                                        (extent[1] + extent[3]) * snapScale_};
@@ -107,14 +107,6 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
       if (boxPreset && (increasing ? snapped <= fixed : snapped >= fixed)) return;
       endpoint = snapped;
       preview_.snapped = true;
-      // The movable endpoint is the only endpoint that can be attached by a
-      // drag.  Preserve the target identity while the resolver supplies the
-      // exact edge/center correction; the semantic anchor remains automatic.
-      if ((preset_ == CreationPreset::kLine || preset_ == CreationPreset::kArrow) &&
-          !snappedEndpoint_.has_value()) {
-        snappedEndpoint_ = semantic::AttachedEndpoint{
-            candidate->targetObjectId, semantic::AutoPerimeterAnchor{}};
-      }
     };
     apply(resolved.x, true);
     apply(resolved.y, false);
@@ -160,14 +152,15 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     record.transform = {};
     semantic::ConnectorEndpoint endPoint{semantic::FreePointEndpoint{{snappedEnd.x, snappedEnd.y}}};
     if (endAttachment_.has_value()) endPoint.value = *endAttachment_;
-    else if (snappedEndpoint_.has_value()) endPoint.value = *snappedEndpoint_;
+
     record.content = semantic::ConnectorContent{
         {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
                                       : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
         routing_};
-    if (preset_ == CreationPreset::kArrow && std::none_of(record.properties.entries.begin(),record.properties.entries.end(),
+    if (preset_==CreationPreset::kArrow && std::none_of(record.properties.entries.begin(),record.properties.entries.end(),
         [](const auto& property){return property.field_id==0x201U;}))
-      record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
+      record.properties.entries.push_back({0x201U,semantic::ConnectorDecorationValue::kArrow});
+
   }
   preview_.valid = true;
   return true;
@@ -181,5 +174,5 @@ std::optional<CreationCommit> CreationSession::finish(input::PointerKey pointer)
   return out;
 }
 bool CreationSession::cancel(input::PointerKey pointer) noexcept { if (!active() || pointer != pointer_) return false; clear(); return true; }
-void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; snappedEndpoint_.reset(); startAttachment_.reset(); endAttachment_.reset(); snapResolver_.reset(); }
+void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; startAttachment_.reset(); endAttachment_.reset(); snapResolver_.reset(); }
 }  // namespace canvas::interaction

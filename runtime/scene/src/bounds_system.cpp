@@ -134,10 +134,9 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
                     have = true;
                 }
             }
-            bool arrow=false; for(const auto& entry:record.properties.entries) if(entry.field_id==0x201U) if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&entry.value)) arrow=*v==semantic::ConnectorDecorationValue::kArrow;
-            if(arrow && have && route && route->status==runtime::ConnectorRouteStatus::kReady) {
-                auto geometry=*route;geometry.arrow_end=true;
-                const auto head=arrowHead(geometry);
+            if(route && have && route->status==runtime::ConnectorRouteStatus::kReady) for(bool start:{false,true}) {
+                if(!(start?route->arrow_start:route->arrow_end))continue;
+                const auto head=arrowHead(*route,start);
                 result=foundation::unionRects(result,{head.left.x,head.left.y,head.left.x,head.left.y});
                 result=foundation::unionRects(result,{head.right.x,head.right.y,head.right.x,head.right.y});
             }

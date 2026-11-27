@@ -383,17 +383,24 @@ class Session::Impl {
     }
     static semantic::ConnectorEndpoint endpoint(const J& j) {
         semantic::ConnectorEndpoint e;
+        if(!j.is_object())throw std::invalid_argument("connector endpoint");
         if (j.contains("point")) {
-            auto p = j.at("point").get<std::array<double, 2>>();
-            e.value = semantic::FreePointEndpoint{{p[0], p[1]}};
+            if(j.size()!=1||!j.at("point").is_array()||j.at("point").size()!=2)throw std::invalid_argument("free endpoint");
+            auto p=j.at("point").get<std::array<double,2>>();
+            if(!std::isfinite(p[0])||!std::isfinite(p[1]))throw std::invalid_argument("free endpoint");
+            e.value=semantic::FreePointEndpoint{{p[0],p[1]}};
         } else {
-            semantic::AttachedEndpoint a;
-            a.target_object_id = rawId(j.at("objectId"));
-            if (j.contains("port"))
-                a.anchor = semantic::StablePortAnchor{unsignedValue(j.at("port"), 4)};
-            else
-                a.anchor = semantic::AutoPerimeterAnchor{};
-            e.value = a;
+            semantic::AttachedEndpoint a;a.target_object_id=rawId(j.at("objectId"));
+            if(a.target_object_id.isZero() || j.size()!=1+std::size_t(j.contains("port")||j.contains("hint")))throw std::invalid_argument("attached endpoint");
+            if(j.contains("port")){
+                const auto port=unsignedValue(j.at("port"),4);if(!port)throw std::invalid_argument("port");a.anchor=semantic::StablePortAnchor{port};
+            } else if(j.contains("hint")){
+                if(!j.at("hint").is_array()||j.at("hint").size()!=2)throw std::invalid_argument("perimeter hint");
+                const auto q=j.at("hint").get<std::array<double,2>>();
+                if(!(q[0]>=0&&q[0]<=1&&q[1]>=0&&q[1]<=1))throw std::invalid_argument("perimeter hint");
+                a.anchor=semantic::AutoPerimeterAnchor{semantic::Vec2{q[0],q[1]}};
+            } else a.anchor=semantic::AutoPerimeterAnchor{};
+            e.value=a;
         }
         return e;
     }
@@ -404,6 +411,8 @@ class Session::Impl {
         J j = {{"objectId", hexId(a.target_object_id)}};
         if (const auto* p = std::get_if<semantic::StablePortAnchor>(&a.anchor))
             j["port"] = p->port_id;
+        else if(const auto& hint=std::get<semantic::AutoPerimeterAnchor>(a.anchor).hint)
+            j["hint"]={hint->x,hint->y};
         return j;
     }
     static J imageContent(const semantic::ImageContent& c) {
@@ -586,11 +595,6 @@ class Session::Impl {
             for (unsigned source = 1; source <= 3; ++source)
                 if (!owner->registerSource(source))
                     return error("INPUT_SOURCE_FAILED");
-            runtime::ConnectorRoutingRequest routing;
-            routing.routing = semantic::ConnectorRouting::kOrthogonal;
-            if (facade().setConnectorRouting(routing).state !=
-                runtime::ConnectorCommandState::kApplied)
-                return error("ROUTING_FAILED");
             if (!owner->setLocalOperationCallbacks(
                     localOperation, this, preparePublication, abortPublication, operationStatus))
                 return error("CALLBACK_FAILED");
@@ -688,7 +692,7 @@ class Session::Impl {
         if(runtime::RuntimePlatformAccess::cpuPendingStatus(*owner).pending){
             const bool readCommand=command=="state"||command=="frame"||command=="selection"||command=="presets"||command=="hover"||command=="cpuPending"||command=="cpuWorkerGrant"||(command=="table"&&j.value("action",std::string{})=="create")||(command=="sticky"&&j.value("action",std::string{})=="create")||(command=="image"&&j.value("action",std::string{})=="import")||command=="pendingReceipt"||command=="resize"||command=="lose";
             const auto action=j.value("action",std::string{});
-            const bool readOnlyAction=action=="read"||action=="snapshot"||action=="fonts"||action=="fontStatus"||action=="status";
+            const bool readOnlyAction=action=="read"||(command=="connector"&&action=="readDefaults")||action=="snapshot"||action=="fonts"||action=="fontStatus"||action=="status";
             if(!readCommand&&command!="control"&&command!="pointer"&&!readOnlyAction)return error("BUSY");
         }
         if (command == "resize") {
@@ -970,11 +974,26 @@ class Session::Impl {
         if (command == "connector") {
             const auto action = j.at("action").get<std::string>();
             auto& f = facade();
+            if(action=="readDefaults"){
+                const auto d=f.readConnectorDefaults();
+                return {{"ok",true},{"value",{{"routing",d.routing},{"startArrow",d.startArrow},{"endArrow",d.endArrow}}}};
+            }
             if (action == "read") {
                 const auto s = j.contains("objectId")
                                    ? f.readConnectorState(rawId(j.at("objectId")))
                                    : f.readSelectedConnector();
-                J points = J::array();
+                J points = J::array(), display=J::array();
+                J pose=nullptr;
+                if(s.worldTransform){const auto& t=*s.worldTransform;pose={t.a,t.b,t.c,t.d,t.tx,t.ty};}
+                J edit=nullptr;
+                if(s.editingEndpoint)edit={{"state","editing"},{"reason",0}};
+                else if(s.lastEndpointEdit){
+                    const auto& r=*s.lastEndpointEdit;
+                    const auto phase=r.state==runtime::ConnectorCommandState::kApplied?(r.historyChanged?"applied":"unchanged"):
+                        r.reason==runtime::ConnectorFailureReason::kCancelled?"cancelled":r.reason==runtime::ConnectorFailureReason::kStale?"stale":"rejected";
+                    edit={{"state",phase},{"reason",r.reason}};
+                }
+                for(auto p:s.displayRoute)display.push_back({p.x,p.y});
                 for (auto p : s.route)
                     points.push_back({p.x, p.y});
                 return {{"ok", true},
@@ -985,11 +1004,21 @@ class Session::Impl {
                           {"end", endpointJson(s.content.end)},
                           {"routing", s.content.routing},
                           {"routeStatus", s.routeStatus},
-                          {"route", points},
+                          {"route", points},{"worldTransform",pose},{"sceneRevision",std::to_string(s.sceneRevision)},{"displayRoute",display},{"endpointEdit",edit},{"startArrow",s.startArrow},{"endArrow",s.endArrow},
                           {"generation", std::to_string(s.semanticGeneration)}}}};
             }
             runtime::ConnectorCommandReceipt result;
-            if (action == "routing") {
+            if(action=="endpoint" || action=="decoration"){
+                const auto id=j.contains("objectId")?rawId(j.at("objectId")):foundation::ObjectId{};
+                if(j.contains("objectId")&&id.isZero())throw std::invalid_argument("zero connector id");
+                const auto generation=j.contains("generation")?decimal(j.at("generation")):0;
+                if(action=="endpoint"){
+                    const auto side=j.at("side").get<std::string>();
+                    if(id.isZero() || (side!="start" && side!="end") || !j.contains("generation"))throw std::invalid_argument("endpoint edit");
+
+                    result=f.setConnectorEndpoint({id,side=="start",endpoint(j.at("endpoint")),generation});
+                } else result=f.setConnectorDecoration({id,j.at("startArrow").get<bool>(),j.at("endArrow").get<bool>(),generation});
+            } else if (action == "routing") {
                 runtime::ConnectorRoutingRequest r;
                 r.routing =
                     static_cast<semantic::ConnectorRouting>(unsignedValue(j.at("routing"), 2));
@@ -1005,13 +1034,15 @@ class Session::Impl {
                 r.content.start = endpoint(j.at("start"));
                 r.content.end = endpoint(j.at("end"));
                 r.content.routing = static_cast<semantic::ConnectorRouting>(
-                    unsignedValue(j.value("routing", J(2)), 2));
+                    unsignedValue(j.value("routing", J(f.readConnectorDefaults(true).routing)), 2));
+                if(j.contains("startArrow"))r.startArrow=j.at("startArrow").get<bool>();
+                if(j.contains("endArrow"))r.endArrow=j.at("endArrow").get<bool>();
                 result = f.createConnector(r);
             } else
                 return error("UNSUPPORTED");
             return {{"ok", result.state == runtime::ConnectorCommandState::kApplied},
-                    {"code", "CONNECTOR_REJECTED"},
-                    {"reason", result.reason},
+                    {"code", result.reason==runtime::ConnectorFailureReason::kStale?"STALE":result.reason==runtime::ConnectorFailureReason::kLocked?"LOCKED":"CONNECTOR_REJECTED"},
+                    {"reason", result.reason},{"changed",result.historyChanged},{"generation",std::to_string(result.semanticGeneration)},
                     {"objectId", hexId(result.objectId)}};
         }
         if(command=="vectorPath") {

@@ -50,6 +50,8 @@ ObjectRecord record(std::uint64_t value, ObjectKind kind, std::uint32_t version 
         case ObjectKind::kSticky:
             result.content = StickyContent{10.0, 20.0};
             break;
+        case ObjectKind::kSection: result.content = SectionContent{}; break;
+        case ObjectKind::kTable: result.content = TableContent{}; break;
         case ObjectKind::kGroup:
             result.content = GroupContent{};
             break;
@@ -71,7 +73,7 @@ ConnectorContent content(ConnectorEndpoint start, ConnectorEndpoint end) {
 
 StatefulIssue independentKindOutcome(ObjectKind kind, std::uint32_t version) {
     const auto numeric_kind = static_cast<std::uint8_t>(kind);
-    if (version != 1U || numeric_kind < 1U || numeric_kind > 9U) {
+    if (version != 1U || numeric_kind < 1U || numeric_kind > 11U) {
         return StatefulIssue::kInvalidKindVersion;
     }
     switch (kind) {
@@ -84,6 +86,8 @@ StatefulIssue independentKindOutcome(ObjectKind kind, std::uint32_t version) {
         case ObjectKind::kVectorStroke:
         case ObjectKind::kDabStroke:
         case ObjectKind::kConnector:
+        case ObjectKind::kSection:
+        case ObjectKind::kTable:
         case ObjectKind::kGroup:
             return StatefulIssue::kConnectorInvalid;
     }
@@ -165,9 +169,9 @@ TEST(ConnectorStatefulValidation, UnsupportedTargetKindVersionReturnsInvalidKind
 }
 
 TEST(ConnectorStatefulValidation, V1NonConnectableKindsReturnConnectorInvalid) {
-    const std::array<ObjectKind, 6> kinds = {
+    const std::array<ObjectKind, 8> kinds = {
         ObjectKind::kVectorPath, ObjectKind::kRichText, ObjectKind::kVectorStroke,
-        ObjectKind::kDabStroke, ObjectKind::kConnector, ObjectKind::kGroup};
+        ObjectKind::kDabStroke, ObjectKind::kConnector, ObjectKind::kGroup, ObjectKind::kSection, ObjectKind::kTable};
     for (std::size_t index = 0; index < kinds.size(); ++index) {
         ReferenceObjectStore store;
         insert(store, record(110U + index, kinds[index]));

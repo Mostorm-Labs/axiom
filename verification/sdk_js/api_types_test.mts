@@ -1,5 +1,14 @@
 import {createRuntime,createAnchorLayer,AxiomError,type AnchorRect,type Color} from '../../sdk/web/axiom.mjs';
 const sdk=await createRuntime({mount:document.createElement('div'),permission:'localSingleUser',onOperation:bytes=>{bytes.slice();}});
+const connectorOptions=sdk.readConnectorDefaults();
+const wire=sdk.readConnector();
+if(wire.available){
+  await sdk.setConnectorEndpoint({objectId:wire.objectId,side:'end',endpoint:{point:[12,24]},generation:wire.generation});
+  await sdk.setConnectorDecoration({objectId:wire.objectId,startArrow:connectorOptions.startArrow,endArrow:true});
+  const painted:[number,number][]=wire.displayRoute;void painted;
+  // @ts-expect-error a rebind is conditional on the full document generation
+  await sdk.setConnectorEndpoint({objectId:wire.objectId,side:'start',endpoint:{objectId:wire.objectId,port:1}});
+}
 const clipboard=sdk.copySelection();clipboard.bytes.slice();const clipboardRevision:string=clipboard.stamp.token[0];void clipboardRevision;
 await sdk.cutSelection(clipboard.stamp);await sdk.duplicateSelection({offset:[24,24]});await sdk.pasteObjects(clipboard.bytes);
 // @ts-expect-error a bare array is not a Runtime-owned selection Stamp

@@ -38,7 +38,7 @@ RuntimeSceneProjection projectRuntimeScene(
         if (record.kind == semantic::ObjectKind::kConnector) {
             if (const auto route = scene::connectorGeometry(record,
                     worldSource, deferRoutes); route) {
-                derivedGeometry = *route;
+                derivedGeometry = scene::connectorDisplayRoute(record,*route);
             }
         }
         const auto* route = std::get_if<scene::ConnectorGeometry>(&derivedGeometry);

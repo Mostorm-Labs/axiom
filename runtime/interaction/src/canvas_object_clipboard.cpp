@@ -1,3 +1,4 @@
+#include "canvas/interaction/sibling_order.hpp"
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/semantic/codec.hpp"
@@ -47,14 +48,7 @@ const ResourceManifestEntry* resource(const ResourceManifest& manifest, foundati
     const auto it = std::find_if(manifest.entries.begin(), manifest.entries.end(), [&](const auto& e) { return e.resource_id.value == id; });
     return it == manifest.entries.end() ? nullptr : &*it;
 }
-bool nextOrder(std::vector<std::uint8_t>& key) {
-    if (key.empty()) { key.push_back(128); return true; }
-    for (std::size_t n = key.size(); n > 0; --n) if (key[n - 1] != 255) {
-        ++key[n - 1]; key.resize(n); return true;
-    }
-    if (key.size() == OrderKey::kMaxSize) return false;
-    key.push_back(128); return true;
-}
+
 }
 
 runtime::ClipboardResult CanvasEditingRuntime::clipboardCommand(
@@ -108,10 +102,9 @@ runtime::ClipboardResult CanvasEditingRuntime::clipboardCommand(
             if (auto* c = std::get_if<ConnectorContent>(&o.content)) {
                 const auto* route = std::get_if<scene::ConnectorGeometry>(&world->derivedGeometry);
                 for (auto* e : {&c->start, &c->end}) if (const auto* a = std::get_if<AttachedEndpoint>(&e->value); a && !closure.contains(a->target_object_id)) {
-                    Transform2D inverse;
-                    if (!route || !scene::inverseTransform(world->transform, inverse)) return fail(ClipboardError::kUnsupported);
-                    const auto p = e == &c->start ? route->start : route->end;
-                    e->value = FreePointEndpoint{{inverse.a * p.x + inverse.c * p.y + inverse.tx, inverse.b * p.x + inverse.d * p.y + inverse.ty}};
+                    if (!route || route->route.size()<2) return fail(ClipboardError::kUnsupported);
+                    const auto p = e == &c->start ? route->route.front() : route->route.back();
+                    e->value = FreePointEndpoint{{p.x,p.y}};
                 }
             }
         }
@@ -212,7 +205,7 @@ runtime::ClipboardResult CanvasEditingRuntime::clipboardCommand(
                 o.placement.parent_id = parent;
                 auto [it, first] = orders.try_emplace(parent);
                 if (first) { const auto siblings = semanticObjects_.children(parent); if (!siblings.empty()) it->second.assign(siblings.back().placement.order_key.bytes().begin(), siblings.back().placement.order_key.bytes().end()); }
-                if (!nextOrder(it->second)) return fail(ClipboardError::kUnsupported);
+                if (!nextSiblingOrderKey(it->second)) return fail(ClipboardError::kUnsupported);
                 o.placement.order_key = OrderKey(it->second); createdRoots.push_back(o.id);
             }
             for (auto& mask : o.erase_masks) mask.id = allocateTextIdentity();

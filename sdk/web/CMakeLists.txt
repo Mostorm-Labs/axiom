@@ -35,12 +35,15 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/cpu-worker.cmake")
 add_custom_command(TARGET axiom_js_runtime POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.wasm" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/internal/axiom.data" "${CMAKE_CURRENT_BINARY_DIR}/axiom.data")
-file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/axiom.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/axiom.d.mts"
-  "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.mjs" "${PROJECT_SOURCE_DIR}/sdk/api/demo-controls.d.mts"
-  DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
-file(COPY "${PROJECT_SOURCE_DIR}/sdk/api/internal" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/api")
+set(_api_source "${PROJECT_SOURCE_DIR}/sdk/api")
+file(GLOB _api_internal RELATIVE "${_api_source}" CONFIGURE_DEPENDS
+  "${_api_source}/internal/*.mjs" "${_api_source}/internal/*.mts")
+foreach(file axiom.mjs axiom.d.mts demo-controls.mjs demo-controls.d.mts ${_api_internal})
+  configure_file("${_api_source}/${file}" "${CMAKE_CURRENT_BINARY_DIR}/api/${file}" COPYONLY)
+endforeach()
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/api" DESTINATION js)
 foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
+  set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${file}")
   file(READ "${CMAKE_CURRENT_SOURCE_DIR}/${file}" _web_source)
   string(REPLACE "'../api/" "'./api/" _web_source "${_web_source}")
   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/${file}" "${_web_source}")

@@ -245,11 +245,16 @@ runtime::SectionSnapshot CanvasEditingRuntime::sectionSnapshot(foundation::Objec
     return out;
 }
 
-bool CanvasEditingRuntime::placeInContainingSection(ObjectRecord& record) const {
+bool CanvasEditingRuntime::placeInContainingSection(ObjectRecord& record,std::optional<ObjectId> preferred) const {
     if (!sceneCoordinator_ || record.placement.parent_id) return false;
     const auto bounds=scene::computeBounds(record);
-    const auto hits=runtimeSceneHost_->query(canvas::SceneQuery{bounds.world});
+    auto hits=runtimeSceneHost_->query(canvas::SceneQuery{bounds.world});
     if (!bounds.finite || !hits) return false;
+    if(preferred){
+        auto& ids=hits.value().backToFront;
+        const auto found=std::find(ids.begin(),ids.end(),*preferred);
+        if(found!=ids.end())std::rotate(found,found+1,ids.end());
+    }
     for (auto it=hits.value().backToFront.rbegin(); it!=hits.value().backToFront.rend(); ++it) {
         const auto* section=sceneCoordinator_->runtimeScene().find(*it);
         if (!section || section->kind!=ObjectKind::kSection || !textWritable(*it) ||

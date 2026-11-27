@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/connector_sticky_input.hpp"
 #include "canvas/runtime/object_clipboard.hpp"
 #include "canvas/interaction/internal/cpu_pending_erase.hpp"
 #include "canvas/runtime/image_input.hpp"
@@ -237,7 +238,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                            std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool selectCreationPreset(CreationPreset preset) noexcept;
   [[nodiscard]] bool creationPointer(const input::PointerKey& key, input::PointerPhase phase,
-                                     float x, float y) noexcept;
+                                     float x, float y, bool touch=false) noexcept;
   [[nodiscard]] bool creationActive() const noexcept { return !creations_.empty() || textCreation_.has_value() || placementCreation_.has_value(); }
   [[nodiscard]] CreationPreset creationPreset() const noexcept { return creationPreset_; }
   [[nodiscard]] const CreationPreview& creationPreview() const noexcept { if(placementCreation_)return placementCreation_->preview; static const CreationPreview empty{}; const auto it = creations_.find(latestCreationPointer_); return it == creations_.end() ? empty : it->second.preview(); }
@@ -300,7 +301,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
                                       float x, float y) noexcept;
   void cancelSelectionTransform() noexcept;
-  [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active() || sectionBoundaryDrag_.has_value(); }
+  [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active() || sectionBoundaryDrag_.has_value() || endpointDrag_.has_value(); }
   [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
   void clearSelection() noexcept {
     cancelRegionSelection();
@@ -948,7 +949,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   };
   std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
   bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
-  bool placeInContainingSection(semantic::ObjectRecord& worldRecord) const;
+  bool placeInContainingSection(semantic::ObjectRecord& worldRecord,std::optional<semantic::ObjectId> preferred={}) const;
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&, foundation::WorldPoint release) noexcept;
   runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop, const semantic::PropertyBag* appearance = nullptr) noexcept;
   struct SectionTitleEditorFocus final {
@@ -1044,7 +1045,42 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void cancelDisplayDemands() noexcept;
   bool canonicalPresentationDirty_ = false;
   bool connectorRoutingPending_ = false;
-  semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;
+  struct ConnectorEndpointDrag {
+    input::PointerKey key{};
+    semantic::ObjectId id{};
+    bool atStart=false, moved=false;
+    float downX=0,downY=0;
+    std::uint64_t generation=0;
+    RegionSelectionContext context{};
+    semantic::ObjectRecord candidate{};
+    std::optional<semantic::AttachedEndpoint> target;
+    scene::ConnectorGeometry route;
+    std::vector<semantic::ObjectRecord> world;
+    std::unique_ptr<scene::ConnectorRouteJob> job;
+  };
+  std::optional<ConnectorEndpointDrag> endpointDrag_;
+  std::optional<semantic::AttachedEndpoint> connectorHover_;
+  bool connectorEndpointPointer(const input::PointerSample&);
+  bool endpointEditCurrent() const noexcept;
+  void clearEndpointEdit(runtime::ConnectorFailureReason = runtime::ConnectorFailureReason::kCancelled) noexcept;
+  std::optional<runtime::ConnectorCommandReceipt> lastEndpointEdit_;
+  const semantic::ObjectRecord* quickConnectorSibling() const noexcept;
+  void applyEndpointPreview(render::ReferenceDrawList&) const;
+  void connectorFeedback(render::EditingOverlay&) const;
+  void serviceEndpointRoute();
+  runtime::ConnectorToolDefaults lineDefaults_{}, connectorDefaults_{semantic::ConnectorRouting::kOrthogonal,false,true};
+  runtime::ConnectorToolDefaults& activeConnectorDefaults() noexcept {
+    return creationMode_ && creationPreset_==CreationPreset::kLine ? lineDefaults_ : connectorDefaults_;
+  }
+  const runtime::ConnectorToolDefaults& activeConnectorDefaults() const noexcept {
+    return creationMode_ && creationPreset_==CreationPreset::kLine ? lineDefaults_ : connectorDefaults_;
+  }
+  runtime::ConnectorCommandReceipt commitConnectorContent(semantic::ObjectId,const semantic::ConnectorContent&,std::uint64_t);
+  runtime::ConnectorCommandReceipt editConnectorEndpoint(const runtime::ConnectorEndpointRequest&);
+  void placeNewConnector(semantic::ObjectRecord&, std::span<const semantic::ObjectRecord> added = {}) const;
+  std::optional<semantic::AttachedEndpoint> connectorAttachmentAt(float x,float y,
+      const std::optional<semantic::AttachedEndpoint>& previous = {}, bool touch = false) const;
+
   std::uint64_t connectorRoutingGeneration_ = std::numeric_limits<std::uint64_t>::max();
   std::vector<semantic::ObjectRecord> connectorRoutingSource_;
   std::vector<std::size_t> connectorRoutingQueue_;
@@ -1087,7 +1123,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] foundation::Result<HitTestResult> selectionPointHits(foundation::WorldPoint) const;
   [[nodiscard]] bool selectPointRoot(foundation::ObjectId) noexcept;
   [[nodiscard]] bool selectionPointer(const input::PointerKey&, input::PointerPhase, float x, float y,
-                                      std::optional<foundation::ObjectId> downRoot) noexcept;
+                                      std::optional<foundation::ObjectId> downRoot, bool touch=false) noexcept;
   [[nodiscard]] RegionQueryResult querySelectionRegion(std::span<const RegionPoint>) const;
   [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;
@@ -1128,6 +1164,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     RegionSelectionContext context;
     runtime::AppearanceValues defaults;
     std::uint64_t generation=0;
+    std::uint64_t pendingRevision=0;
     CreationPreset preset=CreationPreset::kRectangle;
     semantic::ConnectorRouting routing=semantic::ConnectorRouting::kStraight;
     bool toolMode=false;
@@ -1140,6 +1177,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<input::PointerKey,semantic::ObjectRecord,input::PointerKeyHash> creationSiblingPrototypes_;
   semantic::ObjectRecord makeCreationPrototype(CreationPreset,bool linked=false);
   semantic::ObjectRecord makeConnectorSibling(semantic::ObjectId,std::uint32_t,foundation::WorldPoint,semantic::ObjectRecord={});
+  std::optional<scene::ConnectorGeometry> layoutConnectorSibling(
+      const semantic::ObjectRecord&, semantic::ObjectRecord& sibling, std::uint32_t targetPort) const;
   foundation::WorldPoint defaultAttachmentEnd(const semantic::AttachedEndpoint&) const;
   std::uint32_t siblingAttachmentPort(semantic::ObjectId source, std::uint32_t sourcePort) const noexcept;
   std::array<render::ScreenPoint, 4> attachmentPortCenters(const RuntimeSceneRecord&) const noexcept;
@@ -1148,7 +1187,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool clearCreationHover() noexcept;
   void installCreationHover(render::EditingOverlay&);
   std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
-  std::unordered_set<input::PointerKey, input::PointerKeyHash> connectorPointerKeys_;
+  std::unordered_map<input::PointerKey,semantic::AttachedEndpoint,input::PointerKeyHash> quickConnectorStarts_;
   struct CreationFence final {
     semantic::SemanticGeneration semantic{};
     std::uint64_t camera = 0;
@@ -1159,12 +1198,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   runtime::CanvasAppearance futureAppearance_{};
   runtime::AppearanceValues futureStyle_=[] {runtime::AppearanceValues v;v.fillKind=runtime::AppearanceFill::kSolid;return v;}();
   bool futureStyleConfigured_=false;
+  bool futureCornerRadiusConfigured_=false;
   struct AppearanceSession { runtime::AppearanceToken token; std::vector<semantic::ObjectRecord> before,after;std::vector<std::uint64_t> seeds; bool routingChanged=false; };
   std::optional<AppearanceSession> appearanceSession_;
   std::uint64_t appearanceSerial_=0, appearancePreviewRevision_=0;
   std::uint64_t allocateSketchSeed();
   runtime::AppearanceValues appearanceDefaults() const;
-  void materializeAppearance(semantic::PropertyBag&,bool,bool sticky=false,bool rounded=false);
+  double creationCornerRadius(bool orthogonal) const noexcept;
+  void materializeAppearance(semantic::ObjectRecord&,bool fill);
   void materializeStructuralAppearance(semantic::ObjectRecord&);
   runtime::AppearanceValues appearanceValuesFor(const semantic::ObjectRecord&) const;
   runtime::AppearanceSnapshot appearanceSnapshot(const runtime::MultiSelectionProjection&,bool) const;

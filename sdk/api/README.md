@@ -20,3 +20,7 @@ up to `readSection(id).titleMaxCharacters` Unicode code points on one line.
 
 The camera accepts positive absolute zoom targets and clamps them to 10%–300%.
 Point-anchored zoom and fit-to-content, selection or object share these limits.
+
+## Connector commands
+
+The Controller exposes `createConnector`, `readConnector`, `readConnectorDefaults`, `setConnectorRouting`, `setConnectorDecoration`, and `setConnectorEndpoint`. Read the connector generation before setting an endpoint. Supply one side and a connector-local point or an attachment by object ID. One successful edit produces one operation. Both the anchor route and visible route are read-only coordinate arrays. The Controller copies values across the transport boundary. See the Web SDK documentation for the shared endpoint and receipt contract.

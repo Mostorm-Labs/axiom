@@ -246,11 +246,11 @@ void selected_attachment_click_does_not_snap_generated_target_to_neighbor() {
   pointer(host, 1U, 180.0F, 180.0F, PointerPhase::kDown);
   pointer(host, 2U, 260.0F, 260.0F, PointerPhase::kUp);
   const auto sourceId = Access::objects(host).front().id;
-  // Put an existing object where the left-side click's generated target would
+  // Put an existing object on the synthesized endpoint's X alignment, where it would
   // otherwise be close enough for normal drag snapping.
   assert(host.selectCreationPreset(CreationPreset::kRectangle));
-  pointer(host, 3U, 60.0F, 180.0F, PointerPhase::kDown);
-  pointer(host, 4U, 180.0F, 260.0F, PointerPhase::kUp);
+  pointer(host, 3U, 32.0F, 300.0F, PointerPhase::kDown);
+  pointer(host, 4U, 152.0F, 380.0F, PointerPhase::kUp);
   const auto neighborId = Access::objects(host).back().id;
   assert(host.setSelectionMode(true));
   assert(host.selectAtViewPoint(220.0F, 220.0F));

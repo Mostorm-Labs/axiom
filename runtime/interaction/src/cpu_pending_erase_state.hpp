@@ -29,6 +29,7 @@ struct CpuPendingEraseState final {
   std::optional<semantic::Operation> brushInverse;
   std::optional<runtime::ImageImportRequest> image;
   std::vector<std::uint64_t> dependencies;
+  foundation::ObjectId focusObject{};
   std::uint64_t focusRevision=0;
   bool editText=false;
   std::vector<std::pair<foundation::ObjectId,semantic::Transform2D>> erasePoses;

@@ -166,7 +166,7 @@ or Table counts. The ghost is drawn at 25% of the object's opacity using the sam
 shared Skia geometry and style. Runtime reserves the prospective identity/style
 once and reuses them on creation; hovering publishes no operation or History.
 A selected Shape, Sticky or Image has four side ports and a rotation handle outside its upper-right corner.
-Hovering a port previews the connected sibling. Clicking an Image port creates a connected rectangle.
+Hovering a port previews the connected sibling. Clicking an Image port creates a connected rectangle. Repeated clicks on a top or bottom port place siblings in the nearest free slots on the same row. Left and right ports use a column. Hover shows the planned slot, and each node and its connector form one undo step.
 Image crop mode shows the crop controls. Tables expose resize handles at the boundary. Leaving the canvas/point, changing
 tools, editing text, navigation or stale context removes the preview. Ghosts are
 presentation only and are excluded from snapshots and image export.
@@ -220,6 +220,18 @@ until custody is released. `applyRemoteOperations` reports independent mixed
 outcomes, never a generic transaction or local echo. `resources.list/readBytes`
 allow an external data owner to discover and retain actual resource bytes.
 See `docs/planning/sdk/shell-axis-integration.md` in the source repository.
+
+## Connector editing
+
+Choose the line tool for a free straight segment. The connector tool and quick-create ports initially use orthogonal routing with an end arrow. Each tool remembers its own settings. The Demo exposes route and arrow direction in the properties row.
+
+A selected connector has two endpoint handles. Drag a handle to a port for a fixed attachment, to a target outline for automatic attachment, or to empty space for a free endpoint. The preview is local. Release commits one undoable change. Escape or pointer cancellation discards the preview. A plain click keeps the current binding.
+
+`readConnector(id)` returns endpoint identities, arrow flags, routing status and two paths in connector-local coordinates. `route` connects the resolved anchors. `displayRoute` supplies the visible polyline used by the canvas and image export. Its attached ends are inset by up to eight board units, limited to a quarter of the adjacent segment. Free endpoints use the supplied point. Apply the returned `worldTransform` once to map either path to board coordinates, including every parent transform. `sceneRevision` identifies the published projection.
+
+`setConnectorEndpoint({objectId, side, endpoint, generation})` changes one end by ID. Pass the decimal generation from the last read and `'start'` or `'end'`. A free point uses `{point:[x,y]}` in connector-local coordinates. A fixed attachment uses `{objectId,port}` with ports 1–4 in top, right, bottom, left order. An automatic attachment uses `{objectId}` and may carry a normalized perimeter hint. The receipt returns `changed` and the resulting generation. A stale generation rejects with `STALE`. A locked line or newly selected locked target rejects with `LOCKED`. The last pointer edit is reported in `endpointEdit` on the edited connector.
+
+`setConnectorRouting` and `setConnectorDecoration({startArrow,endArrow})` with an object ID edit that line. Without an ID they update tool defaults, available through `readConnectorDefaults()`. Creating a new connection uses its common writable container. Reconnecting an existing line preserves its parent.
 
 ## Shell-owned canvas anchors
 
@@ -520,7 +532,7 @@ New paths always retain versioned appearance metadata even with sketch disabled;
 
 ### Rounded corners / handwriting resources
 
-Appearance values/patches add `cornerRadius` in object-local units [0,16384], independent of roughness. Radius0 clears the canonical property. Rectangle/triangle and Connector support it; `radiusEligible/radiusExcluded` report applicability, with mixed values only across eligible roots. The requested radius is clamped geometrically to prevent overlapping fillets. Existing preview/token/History semantics apply, and creation defaults materialize only on supported object kinds. Connector route/endpoints stay canonical; only its displayed interior bends round within obstacle constraints. Snapshot requires `rounded-corners-v1` (bit512).
+Appearance values/patches add `cornerRadius` in object-local units [0,16384], independent of roughness. Radius0 clears the canonical property. Rectangle/triangle and Connector support it; `radiusEligible/radiusExcluded` report applicability, with mixed values only across eligible roots. The requested radius is clamped geometrically to prevent overlapping fillets. Existing preview/token/History semantics apply, and creation defaults materialize only on supported object kinds. Connector route/endpoints stay canonical; only its displayed interior bends round within obstacle constraints. New orthogonal connectors start with a local radius of 8. An explicit creation default, including zero, takes precedence. Existing objects retain their saved radius. Snapshot requires `rounded-corners-v1` (bit512).
 
 The application font catalog ships Noto Sans CJK SC and Excalifont under their respective licenses. Font selection still uses owned resource IDs through existing `text.format({font})` and Table cell format. Chinese coverage comes from Noto Sans CJK SC; Excalifont is the imported handwriting face. Missing/corrupt bytes or unsupported metadata reject/diagnose explicitly. Old v1 font resources and ordinary API lifetime/thread rules are unchanged.
 

@@ -683,7 +683,7 @@ bool CanvasEditingRuntime::selection(const input::PointerSample& sample,
 
 bool CanvasEditingRuntime::creation(const input::PointerSample& sample,
                                  std::uint64_t) noexcept {
-  return sample.predicted || creationPointer(sample.key, sample.phase, sample.x, sample.y);
+  return sample.predicted || creationPointer(sample.key, sample.phase, sample.x, sample.y,sample.capabilities.tool==input::PointerTool::kFinger);
 }
 
 bool CanvasEditingRuntime::pan(const input::PointerSample& sample,
@@ -1180,32 +1180,54 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
   return true;
 }
 
-std::array<render::ScreenPoint, 4> CanvasEditingRuntime::attachmentPortCenters(
-    const RuntimeSceneRecord& record) const noexcept {
-  const auto& viewport = viewportController_->state();
-  const auto& geometry = record.geometryBounds;
-  const auto& outline = usesDerivedAppearance(record.properties) ? geometry : record.visualBounds;
-  const float axisX = (geometry.left + geometry.right) * 0.5F;
-  const float axisY = (geometry.top + geometry.bottom) * 0.5F;
-  const auto& t = record.transform;
-  const auto project = [&](float x, float y) -> render::ScreenPoint {
-    return {static_cast<float>((t.a*x + t.c*y + t.tx)*viewport.scale + viewport.translationX),
-            static_cast<float>((t.b*x + t.d*y + t.ty)*viewport.scale + viewport.translationY)};
+namespace {
+std::array<semantic::Vec2,4> attachmentPortsInWorld(const RuntimeSceneRecord& record, double gap) {
+  const auto& geometry=record.geometryBounds;
+  const auto& outline=usesDerivedAppearance(record.properties) ? geometry : record.visualBounds;
+  const double x=(geometry.left+geometry.right)*.5, y=(geometry.top+geometry.bottom)*.5;
+  const auto& t=record.transform;
+  const auto map=[&](double px,double py)->semantic::Vec2 {
+    return {t.a*px+t.c*py+t.tx,t.b*px+t.d*py+t.ty};
   };
-  const auto center = project(axisX, axisY);
-  // Stable ports follow the authored axes. Stroke joins can extend the visible
-  // outline asymmetrically, and the button gap is measured in screen pixels.
-  std::array ports{project(axisX, outline.top), project(outline.right, axisY),
-                   project(axisX, outline.bottom), project(outline.left, axisY)};
-  for (auto& port : ports) {
-    const float dx = port.x - center.x, dy = port.y - center.y;
-    const float length = std::hypot(dx, dy);
-    if (length > 1.0e-5F) {
-      port.x += kAttachmentPortGap * dx / length;
-      port.y += kAttachmentPortGap * dy / length;
-    }
+  const auto center=map(x,y);
+  std::array ports{map(x,outline.top),map(outline.right,y),map(x,outline.bottom),map(outline.left,y)};
+  for(auto& port:ports) {
+    const double dx=port.x-center.x,dy=port.y-center.y,length=std::hypot(dx,dy);
+    if(length>1e-8){port.x+=gap*dx/length;port.y+=gap*dy/length;}
   }
   return ports;
+}
+}
+
+std::array<render::ScreenPoint, 4> CanvasEditingRuntime::attachmentPortCenters(
+    const RuntimeSceneRecord& record) const noexcept {
+  const auto& camera=viewportController_->state();
+  const auto ports=attachmentPortsInWorld(record,kAttachmentPortGap/camera.scale);
+  std::array<render::ScreenPoint,4> screen;
+  for(std::size_t i=0;i<ports.size();++i)
+    screen[i]={static_cast<float>(ports[i].x*camera.scale+camera.translationX),
+               static_cast<float>(ports[i].y*camera.scale+camera.translationY)};
+  return screen;
+}
+
+foundation::WorldPoint CanvasEditingRuntime::defaultAttachmentEnd(const semantic::AttachedEndpoint& attached) const {
+  const auto* anchor=std::get_if<semantic::StablePortAnchor>(&attached.anchor);
+  if(!anchor || anchor->port_id<1 || anchor->port_id>4 || !sceneCoordinator_) return {};
+  const auto* source=sceneCoordinator_->runtimeScene().find(attached.target_object_id);
+  const auto* object=semanticObjects_.find(attached.target_object_id);
+  if(!source || !object) return {};
+  // The button gap is screen-sized. The sibling row belongs to the board and
+  // must keep its coordinates when the camera changes between two clicks.
+  const auto port=attachmentPortsInWorld(*source,kAttachmentPortGap)[anchor->port_id-1];
+  foundation::WorldPoint end{static_cast<float>(port.x),static_cast<float>(port.y)};
+  const auto targetPort=siblingAttachmentPort(attached.target_object_id,anchor->port_id);
+  switch(targetPort){case 1:end.y+=120;break;case 2:end.x-=120;break;case 3:end.y-=120;break;default:end.x+=120;}
+  auto world=*object;
+  world.transform=source->transform;
+  if(const auto start=scene::connectorAnchorPoint(world,attached.anchor,end)) {
+    if(targetPort==1 || targetPort==3) end.x=start->x; else end.y=start->y;
+  }
+  return end;
 }
 
 semantic::ObjectRecord CanvasEditingRuntime::makeCreationPrototype(CreationPreset preset,bool linked) {
@@ -1221,16 +1243,21 @@ semantic::ObjectRecord CanvasEditingRuntime::makeCreationPrototype(CreationPrese
   const bool sticky=preset==CreationPreset::kSticky;
   const bool shape=preset<=CreationPreset::kTriangle;
   const bool filled=shape||linked||(sticky&&futureStyleConfigured_);
-  record.properties=appearanceProperties(futureAppearance_,filled);
-  materializeAppearance(record.properties,filled,sticky,!sticky&&preset!=CreationPreset::kEllipse);
   if(sticky){record.kind=semantic::ObjectKind::kSticky;record.kind_version=1;record.content=semantic::StickyContent{200,200};}
   else if(shape){record.kind=semantic::ObjectKind::kShape;record.kind_version=preset==CreationPreset::kTriangle?2:1;
     record.content=semantic::ShapeContent{preset==CreationPreset::kRectangle?1U:preset==CreationPreset::kEllipse?2U:3U,120,80};}
   else if(preset==CreationPreset::kLine||preset==CreationPreset::kArrow) {
     record.kind=semantic::ObjectKind::kConnector;record.kind_version=1;
-    record.content=semantic::ConnectorContent{{semantic::FreePointEndpoint{{0,0}}},{semantic::FreePointEndpoint{{120,0}}},connectorRoutingPreset_};
-    if(preset==CreationPreset::kArrow)record.properties.entries.push_back({0x201U,semantic::ConnectorDecorationValue::kArrow});
+    const auto routing = preset==CreationPreset::kLine ? lineDefaults_.routing : connectorDefaults_.routing;
+    record.content=semantic::ConnectorContent{{semantic::FreePointEndpoint{{0,0}}},{semantic::FreePointEndpoint{{120,0}}},routing};
   } else return {};
+  record.properties=appearanceProperties(futureAppearance_,filled);
+  materializeAppearance(record,filled);
+  if (record.kind==semantic::ObjectKind::kConnector) {
+    const auto& defaults=preset==CreationPreset::kLine?lineDefaults_:connectorDefaults_;
+    if(defaults.startArrow)record.properties.entries.push_back({0x200U,semantic::ConnectorDecorationValue::kArrow});
+    if(defaults.endArrow || preset==CreationPreset::kArrow)record.properties.entries.push_back({0x201U,defaults.endArrow?semantic::ConnectorDecorationValue::kArrow:semantic::ConnectorDecorationValue::kNone});
+  }
   return record;
 }
 
@@ -1238,12 +1265,13 @@ bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept 
   if (preset>CreationPreset::kSection) return false;
   if (closed_ || !brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
       panTool_ || creationActive()) return false;
+  connectorHover_.reset();
   if (selectionMode_) {
     dispatchRuntime_.cancelAll();
     resetTextTap();
     selectionMode_ = false;
     cancelSelectionTransform();
-    connectorPointerKeys_.clear();
+    quickConnectorStarts_.clear();
   }
   if(preset==CreationPreset::kTable||preset==CreationPreset::kSection){selection_.cancel();selectionView_.reset();}
   (void)clearCreationHover();
@@ -1254,7 +1282,7 @@ bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept 
 }
 
 bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::PointerPhase phase,
-                                        float x, float y) noexcept {
+                                        float x, float y,bool touch) noexcept {
   displayInputKey_=key;
   if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
   if (!key.valid() || !std::isfinite(x) || !std::isfinite(y) || surface_.width == 0U ||
@@ -1275,44 +1303,14 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     creationFences_.erase(key);
     creationClickCandidates_.erase(key);creationSiblingPrototypes_.erase(key);
   };
-  const auto attachmentAtView = [&](float viewX, float viewY) -> std::optional<semantic::AttachedEndpoint> {
-    if (creationPreset_ != CreationPreset::kLine && creationPreset_ != CreationPreset::kArrow)
-      return std::nullopt;
-    if (selectionView_ && !selection_.primary().isZero()) {
-      const auto& points = selectionView_->editingOverlay().attachmentPoints();
-      for (std::size_t i = 0; i < points.size(); ++i) {
-        const float dx = points[i].center.x - viewX, dy = points[i].center.y - viewY;
-        if (dx*dx + dy*dy <= 16.0F*16.0F)
-          return semantic::AttachedEndpoint{selection_.primary(), semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1)}};
-      }
-    }
-    if (!runtimeSceneHost_ || !sceneCoordinator_) return std::nullopt;
-    constexpr float snapRadius = 14.0F;
-    float best = snapRadius * snapRadius;
-    std::optional<semantic::AttachedEndpoint> result;
-    const auto& camera = viewportController_->state();
-    const auto [worldX, worldY] = viewportController_->viewToContent(viewX, viewY);
-    const float reach = (kAttachmentPortGap + snapRadius) / camera.scale;
-    const auto view = runtimeSceneHost_->read();
-    for (const auto& item : view.records()) {
-      const auto& bounds = item.worldBounds;
-      if (worldX < bounds.left - reach || worldX > bounds.right + reach ||
-          worldY < bounds.top - reach || worldY > bounds.bottom + reach) continue;
-      const auto* record = sceneCoordinator_->runtimeScene().find(item.objectId);
-      if (!record || !semantic::isConnectableObjectKind(record->kind, record->kindVersion)) continue;
-      const auto points = attachmentPortCenters(*record);
-      for (std::size_t i = 0; i < points.size(); ++i) {
-        const float dx = points[i].x - viewX, dy = points[i].y - viewY;
-        const float distance = dx*dx + dy*dy;
-        if (distance >= best || !textWritable(item.objectId)) continue;
-        best = distance;
-        result = semantic::AttachedEndpoint{item.objectId, semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1)}};
-      }
-    }
-    return result;
-  };
+  const bool canAttach=creationPreset_==CreationPreset::kArrow;
+  const bool quick=quickConnectorStarts_.contains(key);
   const auto refreshTargets = [&](CreationSession& creation) {
     if (!historySceneReady()) return false;
+    if(creationPreset_==CreationPreset::kLine || creationPreset_==CreationPreset::kArrow) {
+      creationFences_[key]={semanticGeneration_.current(),cameraGeneration()};
+      return !creation.startAttachment() || textWritable(creation.startAttachment()->target_object_id);
+    }
     const auto queried = runtimeSceneHost_->query(canvas::SceneQuery{viewport});
     if (!queried) return false;
     std::vector<interaction::SnapTarget> targets;
@@ -1334,26 +1332,28 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     return true;
   };
   if (phase == input::PointerPhase::kDown) {
+    connectorHover_.reset();
     if (creations_.contains(key)) return false;
     if(!reservePendingLocal(key,"create"))return false;
     auto& creation = creations_[key];
-    creation.setRouting(connectorRoutingPreset_);
+    creation.setRouting(activeConnectorDefaults().routing);
     latestCreationPointer_ = key;
     if (!refreshTargets(creation)) { eraseSession(); return false; }
-    if (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) {
-      creation.setStartAttachment(attachmentAtView(x, y));
-    }
+    if (const auto explicitStart=quickConnectorStarts_.find(key); explicitStart!=quickConnectorStarts_.end())
+      creation.setStartAttachment(explicitStart->second);
+    else if(canAttach)creation.setStartAttachment(connectorAttachmentAt(x,y,{},touch));
     const bool normalHover=validCreationHover(true)&&creationHover_->source.isZero();
     const bool linkedHover=creationHover_&&!creationHover_->source.isZero()&&
       creationHover_->context==regionContext()&&creationHover_->generation==semanticGeneration_.current().value()&&
       creationHover_->defaults==appearanceDefaults()&&creation.startAttachment()&&
-      creation.startAttachment()->target_object_id==creationHover_->source;
+      *creation.startAttachment()==semantic::AttachedEndpoint{creationHover_->source,semantic::StablePortAnchor{creationHover_->port}};
     auto prototype=(normalHover||linkedHover)?creationHover_->preview.primary:makeCreationPrototype(creationPreset_);
     if(linkedHover&&creationHover_->preview.sibling)creationSiblingPrototypes_[key]=*creationHover_->preview.sibling;
     (void)clearCreationHover();
     const auto seed=++creationSerial_+(std::uint64_t{1}<<48U);
     if(prototype.id.isZero()||!creation.begin(key,creationPreset_,CreationStyle{prototype.properties},
        {content.first,content.second},viewport,seed,prototype.id)){eraseSession();return false;}
+    if(quick)creationClickCandidates_.insert(key);
     if(creationPreset_<=CreationPreset::kTriangle||creationPreset_==CreationPreset::kSticky) {
       creationClickCandidates_.insert(key);
       const float width=creationPreset_==CreationPreset::kSticky?200.0F:120.0F;
@@ -1382,8 +1382,16 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     }
     if (!refreshTargets(creation)) eraseSession();
     else {
-      creation.setEndAttachment(attachmentAtView(x, y));
+      if(canAttach)creation.setEndAttachment(connectorAttachmentAt(x,y,creation.endAttachment(),touch));
       if (!creation.move(key, {content.first, content.second})) eraseSession();
+      else if(quick && creation.preview().valid && creation.startAttachment() && !creation.endAttachment()){
+        const auto start=*creation.startAttachment();
+        if(const auto* port=std::get_if<semantic::StablePortAnchor>(&start.anchor)){
+          auto& sibling=creationSiblingPrototypes_[key];
+          sibling=makeConnectorSibling(start.target_object_id,siblingAttachmentPort(start.target_object_id,port->port_id),
+                                       creation.preview().end,std::move(sibling));
+        }
+      }
     }
     // The transient object and snap guides are part of the next display
     // frame, so make the owner host repaint immediately after every move.
@@ -1403,7 +1411,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   const auto fence = creationFences_.find(key);
   if (fence == creationFences_.end() || fence->second.semantic != semanticGeneration_.current() ||
       fence->second.camera != cameraGeneration()) { eraseSession(); return false; }
-  creation.setEndAttachment(attachmentAtView(x, y));
+  if(canAttach)creation.setEndAttachment(connectorAttachmentAt(x,y,creation.endAttachment(),touch));
   foundation::WorldPoint finalEnd{content.first, content.second};
   if(creationClickCandidates_.contains(key)) {
     const auto start=creation.preview().start;
@@ -1411,24 +1419,16 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     if(std::hypot(content.first-start.x,content.second-start.y)*viewportGesture().scale>=4)
       creationClickCandidates_.erase(key);
   }
-  if(creationClickCandidates_.contains(key)) {
+  const bool portClick=quick && creationClickCandidates_.contains(key) && creation.startAttachment().has_value();
+  if(portClick) {
+    finalEnd=defaultAttachmentEnd(*creation.startAttachment());
+    creation.setSnapTargets({});
+    creation.setEndAttachment(std::nullopt);
+  } else if(creationClickCandidates_.contains(key)) {
     const auto start=creation.preview().start;
     finalEnd={start.x+(creationPreset_==CreationPreset::kSticky?200.0F:120.0F),
               start.y+(creationPreset_==CreationPreset::kSticky?200.0F:80.0F)};
     creation.setSnapTargets({});
-  }
-  if ((creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) &&
-      creation.startAttachment() &&
-      std::abs(finalEnd.x - creation.preview().start.x) < 1.0e-4F &&
-      std::abs(finalEnd.y - creation.preview().start.y) < 1.0e-4F) {
-    finalEnd=defaultAttachmentEnd(*creation.startAttachment());
-    // A point click is the explicit "create a sibling on this side" action.
-    // Do not feed its synthesized endpoint through ordinary drag snapping:
-    // nearby objects must not steal the generated target or pull it toward a
-    // center/edge on another side.  Dragging still retains the normal snap
-    // resolver and end attachment behavior.
-    creation.setSnapTargets({});
-    creation.setEndAttachment(std::nullopt);
   }
   if (!creation.move(key, finalEnd)) { eraseSession(); return true; }
   const auto startAttachment = creation.startAttachment();
@@ -1451,7 +1451,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   std::vector<semantic::ObjectRecord> inserted{commit->record};
   std::vector<semantic::ObjectId> inverseIds{commit->record.id};
   if ((creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) &&
-      startAttachment.has_value()) {
+      quick && startAttachment.has_value()) {
     auto& connector = inserted.front();
     auto* connectorContent = std::get_if<semantic::ConnectorContent>(&connector.content);
     const bool endAttached = connectorContent != nullptr &&
@@ -1465,25 +1465,35 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         auto target=makeConnectorSibling(startAttachment->target_object_id,targetPort,
             {static_cast<float>(freeEnd->point.x),static_cast<float>(freeEnd->point.y)},siblingPrototype);
         if(target.id.isZero())return false;
-        const auto targetOrdinal=ordinal+0x100000U;
-        target.placement.order_key=semantic::OrderKey{{0xFD,0xFE,
-            static_cast<std::uint8_t>((targetOrdinal&0xFFU)==0U?1U:targetOrdinal&0xFFU)}};
+        // Reserve a distinct ordering lane using the full creation serial.
+        auto order=connector.placement.order_key.bytes();
+        std::vector<std::uint8_t> siblingOrder(order.begin(),order.end());
+        siblingOrder.front()=0xFD;
+        target.placement.order_key=semantic::OrderKey{std::move(siblingOrder)};
         connectorContent->end.value=semantic::AttachedEndpoint{target.id,semantic::StablePortAnchor{targetPort}};
+        if(portClick && !layoutConnectorSibling(connector,target,targetPort)) {
+          cancelPendingLocal(key);
+          transientOverlayHandoffPending_=false;
+          (void)clearTransientOverlay();
+          return false;
+        }
+        const auto* source=semanticObjects_.find(startAttachment->target_object_id);
+        placeInContainingSection(target,source?source->placement.parent_id:std::nullopt);
         inserted.push_back(std::move(target));
         inverseIds.push_back(inserted.back().id);
       }
     }
   }
+  if(inserted.front().kind==semantic::ObjectKind::kConnector)
+    placeNewConnector(inserted.front(),std::span(inserted).subspan(1));
   // Creation is a staged graph: route against both existing objects and the
   // synthesized target. Never commit a no-route/budget result as if it were
   // successful avoidance. Subsequent target moves retain their own acceptance
   // and surface any reroute failure as a derived diagnostic.
-  if (const auto* connector = std::get_if<semantic::ConnectorContent>(&inserted.front().content);
-      connector && connector->routing == semantic::ConnectorRouting::kOrthogonal) {
+  if (inserted.front().kind == semantic::ObjectKind::kConnector) {
     auto staged = semanticObjects_.allObjects();
-    staged.insert(staged.end(), inserted.begin(), inserted.end());
-    staged=scene::projectWorldObjects(staged);
-    const auto route = scene::connectorGeometry(inserted.front(), staged);
+    staged.insert(staged.end(),inserted.begin()+1,inserted.end());
+    const auto route=scene::stagedConnectorRoute(inserted.front(),std::move(staged));
     if (!route || route->status != runtime::ConnectorRouteStatus::kReady) {
       transientOverlayHandoffPending_ = false;
       (void)clearTransientOverlay();
@@ -1575,7 +1585,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   creationClickCandidates_.clear();creationSiblingPrototypes_.clear();
   (void)clearCreationHover();
   creationFences_.clear();
-  connectorPointerKeys_.clear();
+  quickConnectorStarts_.clear();
   cancelSelectionTransform();
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);
@@ -1708,7 +1718,7 @@ bool CanvasEditingRuntime::selectTool(ToolMode mode) noexcept {
   creationClickCandidates_.clear();creationSiblingPrototypes_.clear();
   (void)clearCreationHover();
   creationFences_.clear();
-  connectorPointerKeys_.clear();
+  quickConnectorStarts_.clear();
   return true;
 }
 
@@ -1723,7 +1733,7 @@ bool CanvasEditingRuntime::setPanTool(bool enabled) noexcept {
   creationClickCandidates_.clear();creationSiblingPrototypes_.clear();
   (void)clearCreationHover();
   creationFences_.clear();
-  connectorPointerKeys_.clear();
+  quickConnectorStarts_.clear();
   if (enabled) {
     toolMode_ = ToolMode::kBrush;
     if (selectionMode_) (void)setSelectionMode(false);
@@ -1736,6 +1746,7 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
     return false;
   }
   if (selectionMode_ != enabled) {
+    connectorHover_.reset();
     if (sectionTitleEditor_) { sectionTitleEditor_.reset(); markCanonicalPresentationDirty(); }
     dispatchRuntime_.cancelAll();
     coordinator_->reset();viewportController_->endGesture();
@@ -1753,7 +1764,7 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
   }
   if (!enabled) { cancelSelectionTransform(); cancelRegionSelection(); acquisitionClickPointers_.clear(); selectionView_.reset(); }
   if (enabled) panTool_=false;
-  if (!enabled) connectorPointerKeys_.clear();
+  if (!enabled) quickConnectorStarts_.clear();
   canonicalPresentationDirty_ = true;
   return true;
 }
@@ -2652,7 +2663,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     const auto& b=sectionBoundaryDrag_->preview.boundary;
     overlayBounds={static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
   }
-  auto frameStyle = render::SelectionFrameStyle::kTight;
+  auto frameStyle = record->kind==semantic::ObjectKind::kConnector ? render::SelectionFrameStyle::kConnector : render::SelectionFrameStyle::kTight;
   if (record->kind == semantic::ObjectKind::kTable)
     frameStyle = render::SelectionFrameStyle::kPadded;
   else if (record->kind == semantic::ObjectKind::kShape || record->kind == semantic::ObjectKind::kSticky)
@@ -2667,14 +2678,16 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, overlayBounds, pose,
       true, false, transformDrag_.active(),
-      render::HandleCapabilities{canTransform, canTransform, canRotate},
+      render::HandleCapabilities{canTransform && record->kind!=semantic::ObjectKind::kConnector, canTransform && record->kind!=semantic::ObjectKind::kConnector, canRotate && record->kind!=semantic::ObjectKind::kConnector},
       snapGuides_, attachmentPoints, hasAttachmentPorts ? 60.0F : 32.0F, frameStyle});
+  if(updated)connectorFeedback(selectionView_->editingOverlay());
   if (updated) appendGroupScopeOutline(selectionView_->editingOverlay());
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }
 
 void CanvasEditingRuntime::cancelSelectionTransform() noexcept {
+  clearEndpointEdit();connectorHover_.reset();
   cancelPendingLocal(editingPointer_);editingPendingBasis_.reset();
   sectionBoundaryDrag_.reset();
   transformDrag_.cancel();
@@ -2699,7 +2712,20 @@ bool CanvasEditingRuntime::selectionPointer(std::uint64_t pointer, input::Pointe
 
 bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x,float y) noexcept {
   bool changed=false;
-  try { changed=updateCreationHover(x,y); }
+  const auto prior=connectorHover_;
+  connectorHover_.reset();
+  if(std::isfinite(x)&&std::isfinite(y)&&x>=0&&y>=0&&!endpointDrag_ && !creationActive()) {
+    if(creationMode_&&creationPreset_==CreationPreset::kArrow)connectorHover_=connectorAttachmentAt(x,y,prior);
+    else if(selectionMode_&&selectionView_&&selectionView_->editingOverlay().connectorGrips) {
+      const auto* record=semanticObjects_.find(selection_.primary());
+      if(record)if(const auto* c=std::get_if<semantic::ConnectorContent>(&record->content)){
+        const auto& grips=*selectionView_->editingOverlay().connectorGrips;
+        for(unsigned n=0;n<2;++n)if(std::hypot(x-grips[n].center.x,y-grips[n].center.y)<=10)
+          if(const auto* a=std::get_if<semantic::AttachedEndpoint>(&(n?c->end:c->start).value))connectorHover_=*a;
+      }
+    }
+  }
+  try { changed=updateCreationHover(x,y)||prior!=connectorHover_; }
   catch(const std::bad_alloc&) {changed=clearCreationHover();}
   const bool connector=creationMode_&&(creationPreset_==CreationPreset::kLine||creationPreset_==CreationPreset::kArrow);
   if((selectionMode_||connector)&&selectionView_) {
@@ -2720,7 +2746,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
 }
 
 bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
-                                           float x, float y, std::optional<foundation::ObjectId> downRoot) noexcept {
+                                           float x, float y, std::optional<foundation::ObjectId> downRoot,bool touch) noexcept {
   if (!selectionMode_ || !key.valid()) return false;
 #if defined(AXIOM_G5_UR0_DIAGNOSTICS)
   const auto observePose=[&]()noexcept{if(!g5::enabled())return;const auto id=selection_.primary();if(id.isZero())return;
@@ -2730,10 +2756,10 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
   struct ObservePoseExit{const decltype(observePose)& callback;~ObservePoseExit(){callback();}} observePoseExit{observePose};
 #endif
 
-  if (connectorPointerKeys_.contains(key)) {
-    const bool accepted = creationPointer(key, phase, x, y);
+  if (quickConnectorStarts_.contains(key)) {
+    const bool accepted = creationPointer(key, phase, x, y,touch);
     if (phase == input::PointerPhase::kUp || phase == input::PointerPhase::kCancel || !accepted)
-      connectorPointerKeys_.erase(key);
+      quickConnectorStarts_.erase(key);
     return accepted;
   }
   if (phase == input::PointerPhase::kCancel) {
@@ -2810,15 +2836,17 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     (void)renderSelectionOverlay();
     const auto* overlay = selectionOverlay();
     if (overlay != nullptr) {
-      for (const auto& point : overlay->attachmentPoints()) {
-        const float dx = point.center.x - x;
-        const float dy = point.center.y - y;
+      const auto& points=overlay->attachmentPoints();
+      for (std::size_t port=0; port<points.size(); ++port) {
+        const float dx = points[port].center.x - x;
+        const float dy = points[port].center.y - y;
         if (dx * dx + dy * dy > 16.0F * 16.0F) continue;
-        if (creationPreset_ != CreationPreset::kLine && creationPreset_ != CreationPreset::kArrow)
-          creationPreset_ = CreationPreset::kLine;
-        connectorPointerKeys_.insert(key);
-        if (creationPointer(key, phase, x, y)) return true;
-        connectorPointerKeys_.erase(key);
+        if (!textWritable(selection_.primary())) return false;
+        creationPreset_ = CreationPreset::kArrow;
+        quickConnectorStarts_.emplace(key,semantic::AttachedEndpoint{
+            selection_.primary(),semantic::StablePortAnchor{static_cast<std::uint32_t>(port+1)}});
+        if (creationPointer(key, phase, x, y,touch)) return true;
+        quickConnectorStarts_.erase(key);
         return false;
       }
     }
@@ -2847,6 +2875,11 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     }
     const auto* object = pendingObject(selection_.primary());
     if (object == nullptr) return false;
+    if(const auto* wire=std::get_if<semantic::ConnectorContent>(&object->content); wire &&
+       (std::holds_alternative<semantic::AttachedEndpoint>(wire->start.value) ||
+        std::holds_alternative<semantic::AttachedEndpoint>(wire->end.value))) {
+        editingPointer_=key;return true;
+    }
     if (propertyBool(object->properties, 2U, false)) return true;
     auto bounds = canvas::computeBounds(*object);
     const auto pendingRecord=pendingSceneRecord(object->id);
@@ -2980,18 +3013,24 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       if (queried) {
         targets.reserve(queried.value().backToFront.size());
       }
+      const auto movesWithSelection=[&](std::optional<semantic::ObjectId> id){
+        while(id){
+          if(*id==selection_.primary())return true;
+          const auto* ancestor=semanticObjects_.find(*id);
+          id=ancestor?ancestor->placement.parent_id:std::nullopt;
+        }
+        return false;
+      };
       if (queried) for (const auto objectId : queried.value().backToFront) {
         const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
-        if (record == nullptr) continue;
-        if (record->objectId == selection_.primary()) continue;
-        if (selectedObject && (selectedObject->kind==semantic::ObjectKind::kGroup ||
-                               selectedObject->kind==semantic::ObjectKind::kSection)) {
-          auto parent=record->placement.parent_id;
-          while (parent && *parent!=selectedObject->id) {
-            const auto* ancestor=semanticObjects_.find(*parent);
-            parent=ancestor ? ancestor->placement.parent_id : std::nullopt;
-          }
-          if (parent) continue; // Children move with this container.
+        if (!record || movesWithSelection(record->objectId))continue;
+        if(const auto* c=std::get_if<semantic::ConnectorContent>(&record->content.get())){
+          const auto follows=[&](const auto& endpoint){
+            const auto* a=std::get_if<semantic::AttachedEndpoint>(&endpoint.value);
+            return a&&movesWithSelection(a->target_object_id);
+          };
+          // Its route moves with the dragged target and cannot be a stationary alignment guide.
+          if(follows(c->start)||follows(c->end))continue;
         }
         targets.push_back({record->objectId, viewBounds(interactionBounds(*record), viewport),
                            false, transformOverrides_.find(record->objectId) != nullptr,
@@ -4920,6 +4959,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return {}; }
   applyAppearancePreview(references.value());
+  applyEndpointPreview(references.value());
   if (transformDrag_.active()) for(auto& entry:references.value().entries) {
     if(entry.record.kind!=semantic::ObjectKind::kConnector)continue;
     const auto* object=semanticObjects_.find(entry.record.objectId);
@@ -5233,6 +5273,12 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if(!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     installCreationHover(selectionView_->editingOverlay());
   } else if(selectionView_)selectionView_->editingOverlay().clearCreationHover();
+  if(connectorHover_ || creationActive() || endpointDrag_) {
+    if(!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    connectorFeedback(selectionView_->editingOverlay());
+    if(const auto* sibling=quickConnectorSibling())
+      selectionView_->editingOverlay().setCreationHover({*sibling,std::nullopt,std::nullopt});
+  }
   if(textState.phase!=runtime::TextPhase::kClosed){
     selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
@@ -5428,7 +5474,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   transientOverlayDirty_ = true;
   if (!surface_.available || frameId == 0U || previewProvider_ == nullptr ||
       runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
-      (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && !partialEraseFeedbackActive() && !validCreationHover() && selectionOverlay() == nullptr)) {
+      (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && !partialEraseFeedbackActive() && !validCreationHover() && !connectorHover_ && selectionOverlay() == nullptr)) {
     return false;
   }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
@@ -5546,6 +5592,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   AXIOM_FRAME_TIMING_END(transientReferenceTiming);
   if (!references) return false;
   applyAppearancePreview(references.value());
+  applyEndpointPreview(references.value());
   {AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
   if(!applyPendingPresentation(references.value()))return false;
   if(!applyPartialErasePreview(references.value()))return false;}
@@ -5704,6 +5751,12 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     if(!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     installCreationHover(selectionView_->editingOverlay());
   } else if(selectionView_)selectionView_->editingOverlay().clearCreationHover();
+  if(connectorHover_ || creationActive() || endpointDrag_) {
+    if(!selectionView_)selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    connectorFeedback(selectionView_->editingOverlay());
+    if(const auto* sibling=quickConnectorSibling())
+      selectionView_->editingOverlay().setCreationHover({*sibling,std::nullopt,std::nullopt});
+  }
   if (textCreation_) {
     selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     selectionView_->editingOverlay().textBox=textEditingBox();
@@ -5736,7 +5789,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
 
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
-  if (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && !partialEraseFeedbackActive() && !validCreationHover()) return clearTransientOverlay();
+  if (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && !objectEraseFeedbackActive() && !partialEraseFeedbackActive() && !validCreationHover() && !connectorHover_) return clearTransientOverlay();
   return G5_CALL(g5::Tag::transient,g5::Purpose::transient,presentTransientOverlayFrame(nextCanonicalFrameId(),true));
 }
 

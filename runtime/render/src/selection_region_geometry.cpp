@@ -13,6 +13,7 @@
 #include "mask_residency_policy.hpp"
 #include "mask_primitive_observation.hpp"
 #include "skia_geometry_internal.hpp"
+#include "connector_cap_geometry.hpp"
 #include "cpu_exact_path_kernel.hpp"
 #include "compact_contour_skia_path.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -160,17 +161,31 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
             const auto* solid=std::get_if<semantic::SolidStroke>(v);if(!solid)return Hit::kMiss;style=*solid;
         }
         if(style.width<=0||style.color.a<=0)return Hit::kMiss;
+        auto paint=internal::geometryStrokePaint(style);
+        const auto shaftInk=[&](const SkPath& centerline,bool first,bool last)->std::optional<SkPath> {
+            auto ink=skpathutils::FillPathWithPaint(centerline,paint);
+            const auto cap=internal::connectorCapOverhang(*g,paint,first,last);
+            return cap.isEmpty()?std::optional<SkPath>{std::move(ink)}:Op(ink,cap,kDifference_SkPathOp);
+        };
         if(std::any_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& e){return e.field_id==0x103U;})) {
             const auto rounded=scene::sketchGeometry(r.content,r.properties,g);if(!rounded)return Hit::kInvalid;
-            path=stroke(internal::semanticPath(rounded->outline),style.width*rounded->outlineWidthScale);
+            paint.setStrokeWidth(f(style.width*rounded->outlineWidthScale));
+            const auto ink=shaftInk(internal::semanticPath(rounded->outline),true,true);
+            if(!ink)return Hit::kInvalid;
+            path=*ink;
             break;
         }
+        auto from=scene::connectorShaftVertex(g->route,0,g->arrow_start,g->arrow_end);
         for(std::size_t i=1;i<g->route.size();++i) {
-            SkPathBuilder b;b.moveTo(g->route[i-1].x,g->route[i-1].y);b.lineTo(g->route[i].x,g->route[i].y);
-            if(!unite(path,skpathutils::FillPathWithPaint(b.detach(),internal::geometryStrokePaint(style))))return Hit::kInvalid;
+            const auto to=scene::connectorShaftVertex(g->route,i,g->arrow_start,g->arrow_end);
+            SkPathBuilder b;b.moveTo(from.x,from.y);b.lineTo(to.x,to.y);
+            const auto ink=shaftInk(b.detach(),i==1,i+1==g->route.size());
+            if(!ink||!unite(path,*ink))return Hit::kInvalid;
+            from=to;
         }
-        if(g->arrow_end) {
-            const auto h=scene::arrowHead(*g);SkPathBuilder b;b.moveTo(h.tip.x,h.tip.y);b.lineTo(h.left.x,h.left.y);b.lineTo(h.right.x,h.right.y);b.close();
+        for(bool start:{false,true}) {
+            if(!(start?g->arrow_start:g->arrow_end))continue;
+            const auto h=scene::arrowHead(*g,start);SkPathBuilder b;b.moveTo(h.tip.x,h.tip.y);b.lineTo(h.left.x,h.left.y);b.lineTo(h.right.x,h.right.y);b.close();
             if(!unite(path,b.detach()))return Hit::kInvalid;
         }
         break;

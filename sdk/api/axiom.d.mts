@@ -33,7 +33,7 @@ export interface TextToken {runtime:Revision;attachment:Revision;view:Revision;a
 export interface TextSnapshot {phase:0|1|2|3|4;token:TextToken;sequence:Revision;composition:Revision;effect:Revision;projection:number[];preedit:number[];selection:[number,number];replacement:[number,number];width:number;format:TextFormat;formatObject:Id128;mixedFormat:boolean;geometry:{available:boolean;caret:number[];selection:number[][];diagnostics:string[]};}
 export interface FontEntry {id:Id128;family:string;revision:Revision;contentHash:string;byteLength:number;status:number;diagnostic:string;}
 export interface FontCatalog {entries:FontEntry[];manifestRevision:Revision;bindingGeneration:Revision;}
-export type Endpoint = {point:[number,number]}|{objectId:Id128;port?:1|2|3|4};
+export type Endpoint = {point:[number,number]}|{objectId:Id128;port:1|2|3|4;hint?:never}|{objectId:Id128;port?:never;hint?:[number,number]};
 export interface ImageContent {resourceId:Id128;width:number;height:number;intrinsicWidth:number;intrinsicHeight:number;sourceRect:[number,number,number,number];}
 export interface CommandResult {ok:true;requestId?:Revision;revision?:Revision;section?:{objectId:Id128;operationId:Id128;generation:Revision;canonical:number;projection:number;failure:number};}
 export interface PendingLocalState {
@@ -134,9 +134,12 @@ interface ControlMethods {
   resizeImage(id:Id128,width:number,height:number,freeStretch?:boolean):Promise<CommandResult>;
   beginCrop(id:Id128):Promise<{cropToken:Revision}>;updateCrop(options:{token:Revision;sourceRect:[number,number,number,number];width:number;height:number;scale?:number}):Promise<CommandResult>;
   commitCrop(token:Revision):Promise<CommandResult>;cancelCrop(token:Revision):Promise<CommandResult>;
-  createConnector(options:{objectId?:Id128;start:Endpoint;end:Endpoint;routing?:1|2}):Promise<{objectId:Id128}>;
+  createConnector(options:{objectId?:Id128;start:Endpoint;end:Endpoint;routing?:1|2;startArrow?:boolean;endArrow?:boolean}):Promise<{objectId:Id128}>;
+  readConnectorDefaults():{routing:1|2;startArrow:boolean;endArrow:boolean};
+  setConnectorEndpoint(options:{objectId:Id128;side:'start'|'end';endpoint:Endpoint;generation:Revision}):Promise<CommandResult&{changed:boolean;generation:Revision}>;
+  setConnectorDecoration(options:{objectId?:Id128;startArrow:boolean;endArrow:boolean;generation?:Revision}):Promise<CommandResult&{changed:boolean;generation:Revision}>;
   setConnectorRouting(options:{objectId?:Id128;routing:1|2;generation?:Revision}):Promise<CommandResult>;
-  readConnector(id?:Id128):{available:boolean;objectId:Id128;start:Endpoint;end:Endpoint;routing:1|2;routeStatus:number;route:[number,number][];generation:Revision};
+  readConnector(id?:Id128):{available:boolean;objectId:Id128;start:Endpoint;end:Endpoint;routing:1|2;routeStatus:number;route:[number,number][];worldTransform:[number,number,number,number,number,number]|null;sceneRevision:Revision;displayRoute:[number,number][];endpointEdit:{state:'editing'|'applied'|'unchanged'|'cancelled'|'stale'|'rejected';reason:number}|null;startArrow:boolean;endArrow:boolean;generation:Revision};
   createSticky(options:{objectId?:Id128;size:number;x?:number;y?:number}):Promise<{objectId:Id128}>;readSelectedSticky():{available:boolean;objectId:Id128;width:number;height:number};
   captureSnapshot(metadata:{generation:Revision;documentRevision:Revision;recoveryFrontier:number[]}):Promise<{bytes:Uint8Array;generation:Revision;checkpointDigest:number[];throughCommit:CommitStamp}>;
   applyRemoteOperations(packets:{operationId:Id128;bytes:Uint8Array}[]):Promise<{ok:boolean;code?:string;disposition?:number;operationId?:Id128;commit?:CommitStamp}[]>;

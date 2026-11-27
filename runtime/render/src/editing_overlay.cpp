@@ -36,6 +36,7 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 } // namespace
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
+    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();
     textBox.reset();
     creationHover_.reset();
     creationPreview_.reset();
@@ -132,7 +133,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
         }
         rotation = {top.x + nx * rotationGap, top.y + ny * rotationGap};
     }
-    outline_ = SelectionOutline{corners, rotation, input.selected};
+    outline_ = SelectionOutline{corners, rotation, input.selected && input.frameStyle!=SelectionFrameStyle::kConnector};
     const std::array<std::pair<HandleKind, ScreenPoint>, kHandleCount> geometry{{
         {HandleKind::kTopLeft, corners[0]},
         {HandleKind::kTop, top},
@@ -164,6 +165,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 }
 
 void EditingOverlay::clear() noexcept {
+    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();
     textBox.reset();
     readOnlyOutlines.clear();candidateOutlines.clear();acquisitionOutline.clear();
     creationHover_.reset();

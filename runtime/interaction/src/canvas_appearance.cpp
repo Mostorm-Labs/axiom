@@ -285,11 +285,11 @@ runtime::AppearanceValues CanvasEditingRuntime::appearanceDefaults() const {
         v.fillKind = runtime::AppearanceFill::kNone;
     return v;
 }
-void CanvasEditingRuntime::materializeAppearance(semantic::PropertyBag &bag, bool fill, bool sticky,
-                                                 bool rounded) {
+double CanvasEditingRuntime::creationCornerRadius(bool orthogonal) const noexcept {
+    return orthogonal && !futureCornerRadiusConfigured_ ? 8.0 : futureStyle_.cornerRadius;
+}
+void CanvasEditingRuntime::materializeAppearance(semantic::ObjectRecord &record, bool fill) {
     auto v = appearanceDefaults();
-    semantic::ObjectRecord record;
-    record.properties = bag;
     if (record.properties.entries.empty() && futureStyleConfigured_) {
         set(record, 3U, static_cast<float>(v.opacity));
         if (fill)
@@ -303,7 +303,7 @@ void CanvasEditingRuntime::materializeAppearance(semantic::PropertyBag &bag, boo
                                   semantic::MiterJoin{4}, semantic::SolidDash{}}}
                             : semantic::StrokeStyleValue{semantic::NoStroke{}});
     }
-    if (v.enabled || (sticky && futureStyleConfigured_))
+    if (v.enabled || (record.kind == ObjectKind::kSticky && futureStyleConfigured_))
         record.properties.entries.push_back(
             {0x102U, semantic::SketchStyleV1{1, allocateSketchSeed(), v.roughness, v.enabled}});
     if (fill && (v.fillKind == runtime::AppearanceFill::kDiagonal ||
@@ -322,9 +322,11 @@ void CanvasEditingRuntime::materializeAppearance(semantic::PropertyBag &bag, boo
                 if (auto *s = std::get_if<semantic::StrokeStyleValue>(&e.value))
                     if (auto *solid = std::get_if<semantic::SolidStroke>(s))
                         solid->dash = semantic::DashPattern{v.dash, v.dashOffset};
-    if (rounded && v.cornerRadius > 0)
-        set(record, 0x103U, CornerStyleV1{1, v.cornerRadius});
-    bag = std::move(record.properties);
+    if (radiusEligible(record)) {
+        const auto* wire = std::get_if<ConnectorContent>(&record.content);
+        const double radius = creationCornerRadius(wire && wire->routing == ConnectorRouting::kOrthogonal);
+        if (radius > 0) set(record, 0x103U, CornerStyleV1{1, radius});
+    }
 }
 runtime::AppearanceValues
 CanvasEditingRuntime::appearanceValuesFor(const semantic::ObjectRecord &record) const {
@@ -348,6 +350,8 @@ CanvasEditingRuntime::appearanceSnapshot(const runtime::MultiSelectionProjection
         out.available = true;
         out.writable = true;
         out.values = appearanceDefaults();
+        if (creationMode_ && (creationPreset_ == CreationPreset::kArrow || creationPreset_ == CreationPreset::kLine))
+            out.values.cornerRadius = creationCornerRadius(activeConnectorDefaults().routing == ConnectorRouting::kOrthogonal);
         return out;
     }
     if (!projection.available)
@@ -503,6 +507,11 @@ CanvasEditingRuntime::appearanceCommand(const runtime::AppearanceRequest &r,
         v.gap = r.patch.gap.value_or(prior.gap);
         v.hatchWidth = r.patch.hatchWidth.value_or(prior.hatchWidth);
         v.seed = 0;
+        // An explicit zero also overrides the initial rounding of new elbow connectors.
+        if (r.patch.cornerRadius && !futureCornerRadiusConfigured_) {
+            futureCornerRadiusConfigured_ = true;
+            (void)clearCreationHover();
+        }
         if (v == prior) {
             out.applied = true;
             out.error = AppearanceError::kNone;

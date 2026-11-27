@@ -4,6 +4,7 @@
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/runtime/connector_route.hpp"
 #include <optional>
+#include <span>
 #include <vector>
 #include <variant>
 namespace canvas::scene {
@@ -15,11 +16,12 @@ struct ConnectorGeometry final {
     runtime::ConnectorRouteStatus status = runtime::ConnectorRouteStatus::kReady;
     runtime::ConnectorRouteWork work{};
     foundation::WorldRect searchedDomain{};
-    std::uint32_t algorithmRevision = 2;
+    std::uint32_t algorithmRevision = 3;
     std::vector<foundation::WorldRect> sketchObstacles{};
+    bool arrow_start=false;
     bool operator==(const ConnectorGeometry& o) const {
         if (start.x != o.start.x || start.y != o.start.y || end.x != o.end.x ||
-            end.y != o.end.y || sketchObstacles != o.sketchObstacles || arrow_end != o.arrow_end || status != o.status ||
+            end.y != o.end.y || sketchObstacles != o.sketchObstacles || arrow_start != o.arrow_start || arrow_end != o.arrow_end || status != o.status ||
             work != o.work || algorithmRevision != o.algorithmRevision ||
             searchedDomain != o.searchedDomain || route.size() != o.route.size()) return false;
         for (std::size_t i=0; i<route.size(); ++i)
@@ -49,5 +51,14 @@ using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, Connector
 [[nodiscard]] float distanceToSegment(foundation::WorldPoint, foundation::WorldPoint, foundation::WorldPoint) noexcept;
 [[nodiscard]] bool pointOnConnector(foundation::WorldPoint, const ConnectorGeometry&, float tolerance) noexcept;
 [[nodiscard]] bool pointOnArrowHead(foundation::WorldPoint, const ConnectorGeometry&, float tolerance) noexcept;
-[[nodiscard]] ArrowHeadGeometry arrowHead(const ConnectorGeometry&) noexcept;
+// The route used for painting, picking and copying. start/end remain the resolved logical anchors.
+[[nodiscard]] ConnectorGeometry connectorDisplayRoute(const semantic::ObjectRecord&, ConnectorGeometry);
+[[nodiscard]] std::optional<ConnectorGeometry> stagedConnectorRoute(const semantic::ObjectRecord&,
+    std::vector<semantic::ObjectRecord> graph, bool defer = false);
+[[nodiscard]] ArrowHeadGeometry arrowHead(const ConnectorGeometry&, bool atStart = false) noexcept;
+[[nodiscard]] double connectorArrowLength(double segmentLength, bool arrowsShareSegment) noexcept;
+// Decorated endpoint vertices stop at the base of the corresponding arrow.
+// The visible route itself still runs to the tips for grips, copying and readback.
+[[nodiscard]] foundation::WorldPoint connectorShaftVertex(std::span<const foundation::WorldPoint> route,
+    std::size_t index, bool startArrow, bool endArrow) noexcept;
 }

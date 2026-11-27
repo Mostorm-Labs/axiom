@@ -155,8 +155,9 @@ void creation_session_indexed_reference_camera_matrix() {
         assert(session.begin(key,preset,CreationStyle{},start,viewport,123));
         assert(session.move(key,end));
         const WorldRect source{start.x*zoom,start.y*zoom,end.x*zoom,end.y*zoom};
-        const auto expectedX=referenceAxis(source,referenceTargets,true,dpr,6,policy.engageLogicalPx);
-        const auto expectedY=referenceAxis(source,referenceTargets,false,dpr,6,policy.engageLogicalPx);
+        const bool line=preset==CreationPreset::kLine || preset==CreationPreset::kArrow;
+        const auto expectedX=line?std::nullopt:referenceAxis(source,referenceTargets,true,dpr,6,policy.engageLogicalPx);
+        const auto expectedY=line?std::nullopt:referenceAxis(source,referenceTargets,false,dpr,6,policy.engageLogicalPx);
         WorldPoint expectedEnd=end;
         const auto adjust=[&](const auto& candidate,float& value) {
           if(candidate)value+=(candidate->candidate.sourceFeature==SnapFeatureKind::kCenter?2:1)*
@@ -184,20 +185,8 @@ void creation_session_indexed_reference_camera_matrix() {
           assert(std::abs(shape->height-(expectedEnd.y-start.y))<1e-4);
         } else {
           const auto connector=std::get<canvas::semantic::ConnectorContent>(committed->record.content);
-          if(const auto* free=std::get_if<canvas::semantic::FreePointEndpoint>(&connector.end.value)) {
-            assert(std::abs(free->point.x-expectedEnd.x)<1e-4 && std::abs(free->point.y-expectedEnd.y)<1e-4);
-          } else {
-            // FC05 persists an attachment when snapping finds a target. The
-            // independent coordinates are checked on preview.end above, and
-            // commit==preview remains required. Check the canonical identity
-            // against the independent X-then-Y candidate, not a fake free point.
-            const auto* attached=std::get_if<canvas::semantic::AttachedEndpoint>(&connector.end.value);
-            const auto& expected=expectedX?expectedX:expectedY;
-            assert(attached&&expected);
-            assert(attached->target_object_id==expected->candidate.targetObjectId);
-            const auto* anchor=std::get_if<canvas::semantic::AutoPerimeterAnchor>(&attached->anchor);
-            assert(anchor&&!anchor->hint);
-          }
+          const auto* free=std::get_if<canvas::semantic::FreePointEndpoint>(&connector.end.value);
+          assert(free && free->point.x==end.x && free->point.y==end.y);
         }
         // Nonzero rotation remains a world-axis constraint. Its logical length
         // is zoom*world length; DPR only selects physical raster density.
@@ -321,7 +310,7 @@ void invalid_targets_and_two_view_preview_are_isolated() {
                     {ObjectId::fromUint64(10),{80,20,140,80},false,true}});
   b.setSnapTargets({{ObjectId::fromUint64(12),{80,20,140,80}}});
   assert(a.begin(key,CreationPreset::kTriangle,{}, {20,20},{0,0,256,256},100));
-  assert(b.begin(key,CreationPreset::kArrow,{}, {20,20},{0,0,256,256},200));
+  assert(b.begin(key,CreationPreset::kRectangle,{}, {20,20},{0,0,256,256},200));
   assert(a.move(key,{77,80}) && b.move(key,{77,80}));
   assert(!a.preview().snapped && b.preview().snapped);
   const auto before=b.preview().record;
