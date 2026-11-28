@@ -92,7 +92,10 @@ bool fillVisible(const RuntimeSceneRecord& r) {
     }
     return r.kind!=semantic::ObjectKind::kVectorPath || std::none_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;});
 }
-Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations,bool applyMasks=true,internal::ExactQueryWork* exact=nullptr) {
+Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations,bool applyMasks=true,internal::ExactQueryWork* exact=nullptr,
+             SelectionGeometryUse use=SelectionGeometryUse::kRegion) {
+    const auto* connector=std::get_if<scene::ConnectorGeometry>(&r.derivedGeometry);
+    const bool warning=connector && connector->showsWarning() && use==SelectionGeometryUse::kPoint;
     switch(r.kind) {
     case semantic::ObjectKind::kVectorPath: {
         const auto* c=std::get_if<semantic::VectorPathContent>(&r.content.get());if(!c)return Hit::kInvalid;
@@ -154,14 +157,23 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         break;
     }
     case semantic::ObjectKind::kConnector: {
-        const auto* g=std::get_if<scene::ConnectorGeometry>(&r.derivedGeometry);
-        if(!g||g->status!=runtime::ConnectorRouteStatus::kReady||g->route.size()<2)return Hit::kUnsupported;
+        const auto* g=connector;
+        if(!g || (g->status!=runtime::ConnectorRouteStatus::kReady && !warning) || g->route.size()<2)return Hit::kUnsupported;
         semantic::SolidStroke style{{1,1,1,1},4};
         for(const auto& p:r.properties.entries)if(p.field_id==0x101U)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&p.value)) {
             const auto* solid=std::get_if<semantic::SolidStroke>(v);if(!solid)return Hit::kMiss;style=*solid;
         }
         if(style.width<=0||style.color.a<=0)return Hit::kMiss;
         auto paint=internal::geometryStrokePaint(style);
+        if(warning) {
+            // A failed route exposes just its current diagnostic chord for point picking.
+            internal::applyConnectorWarningPaint(paint);
+            SkPathBuilder chord;
+            chord.moveTo(g->route.front().x,g->route.front().y);
+            chord.lineTo(g->route.back().x,g->route.back().y);
+            path=skpathutils::FillPathWithPaint(chord.detach(),paint);
+            break;
+        }
         const auto shaftInk=[&](const SkPath& centerline,bool first,bool last)->std::optional<SkPath> {
             auto ink=skpathutils::FillPathWithPaint(centerline,paint);
             const auto cap=internal::connectorCapOverhang(*g,paint,first,last);
@@ -268,7 +280,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
     }
     default:return Hit::kUnsupported;
     }
-    if(const auto sketch=scene::sketchGeometry(r.content,r.properties,std::get_if<scene::ConnectorGeometry>(&r.derivedGeometry))) {
+    if(const auto sketch=warning ? nullptr : scene::sketchGeometry(r.content,r.properties,connector)) {
         double width=r.kind==semantic::ObjectKind::kConnector?4:r.kind==semantic::ObjectKind::kSection?1:0;
         if(const auto* table=std::get_if<semantic::TableContent>(&r.content.get()))width=table->grid.color.a>0?table->grid.width:0;
         for(const auto& e:r.properties.entries)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value)){if(const auto* s=std::get_if<semantic::SolidStroke>(v))width=s->color.a>0?s->width:0;else width=0;}
@@ -1306,7 +1318,8 @@ SelectionGeometryHit EraseMaskPathCache::selectionQuery(const RuntimeSceneRecord
     }catch(const std::bad_alloc&){return fallback();}
 }
 }
-SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {
+SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region,
+                                                      SelectionGeometryUse use) noexcept {
     try {
         const auto& t=record.transform;
         const double determinant=t.a*t.d-t.b*t.c;
@@ -1320,7 +1333,7 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
         }
         regionPath.close();auto selection=regionPath.detach();SkPath visible;
         std::vector<SkPath> decorations;decorations.reserve(2);
-        const auto status=geometry(record,visible,decorations);if(status!=Hit::kHit)return status;
+        const auto status=geometry(record,visible,decorations,true,nullptr,use);if(status!=Hit::kHit)return status;
         const auto intersects=[&](const SkPath& part){
             if(part.isEmpty())return Hit::kMiss;
             const auto overlap=Op(part,selection,kIntersect_SkPathOp);
@@ -1345,6 +1358,6 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
 #else
 namespace canvas::render {
 SelectionGeometryHit intersectEraseGeometry(const RuntimeSceneRecord&,const semantic::EraseMaskGeometry&,EraseGeometryWork*) noexcept {return SelectionGeometryHit::kUnsupported;}
-SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>) noexcept {return SelectionGeometryHit::kUnsupported;}
+SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&,std::span<const foundation::WorldPoint>,SelectionGeometryUse) noexcept {return SelectionGeometryHit::kUnsupported;}
 }
 #endif

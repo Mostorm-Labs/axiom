@@ -121,11 +121,12 @@ class EditingOverlay final {
     std::optional<std::array<float,8>> textBox;
     std::vector<SelectionOutline> readOnlyOutlines;
     std::vector<SelectionOutline> candidateOutlines;
-    struct ConnectorGrip { ScreenPoint center{}; bool attached=false; };
+    struct ConnectorGrip { ScreenPoint center{}; bool attached=false; bool visible=true; };
     std::optional<std::array<ConnectorGrip,2>> connectorGrips;
     std::vector<ScreenPoint> connectorTargetOutline;
     std::optional<ScreenPoint> connectorTargetPort;
-    bool connectorFeedbackVisible() const noexcept { return connectorGrips || !connectorTargetOutline.empty() || connectorTargetPort; }
+    std::optional<std::array<ScreenPoint,4>> connectorTargetPorts;
+    bool connectorFeedbackVisible() const noexcept { return connectorGrips || !connectorTargetOutline.empty() || connectorTargetPort || connectorTargetPorts; }
     std::vector<ScreenPoint> acquisitionOutline;
     bool textCaretVisible = true;
     [[nodiscard]] foundation::ObjectId selectedObject() const noexcept {

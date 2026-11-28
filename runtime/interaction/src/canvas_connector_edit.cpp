@@ -143,79 +143,57 @@ void CanvasEditingRuntime::placeNewConnector(semantic::ObjectRecord& wire,
         }
 }
 
-std::optional<semantic::AttachedEndpoint> CanvasEditingRuntime::connectorAttachmentAt(
+CanvasEditingRuntime::ConnectorAttachmentPick CanvasEditingRuntime::connectorAttachmentAt(
     float x, float y, const std::optional<semantic::AttachedEndpoint>& previous, bool touch) const {
-    if (!sceneCoordinator_ || !runtimeSceneHost_)
-        return {};
-    const auto& camera = viewportController_->state();
-    const auto [wx, wy] = viewportController_->viewToContent(x, y);
-    const float enter = touch ? 16.f : 10.f, exit = touch ? 22.f : 14.f;
-    const float reach = (28.f + exit) / camera.scale;
-    const auto hits = runtimeSceneHost_->query({{wx - reach, wy - reach, wx + reach, wy + reach}});
-    if (!hits)
-        return {};
-    float bestPort = INFINITY, bestRim = INFINITY;
-    std::optional<semantic::AttachedEndpoint> port, rim;
-    for (auto it = hits.value().backToFront.rbegin(); it != hits.value().backToFront.rend(); ++it) {
-        const auto* r = sceneCoordinator_->runtimeScene().find(*it);
-        if (!r || !semantic::isConnectableObjectKind(r->kind, r->kindVersion) || !textWritable(*it))
-            continue;
-        const auto* source = semanticObjects_.find(*it);
-        if (!source)
-            continue;
-        auto target = *source;
-        target.transform = r->transform;
-        const Point pointer{wx, wy};
-        const auto screenDistance = [&](Point p) {
-            return std::hypot(p.x - wx, p.y - wy) * camera.scale;
-        };
-        const auto buttons = attachmentPortCenters(*r);
-        for (unsigned n = 0; n < 4; ++n) {
-            const semantic::AttachedEndpoint candidate{*it, semantic::StablePortAnchor{n + 1}};
-            const auto anchor = scene::connectorAnchorPoint(target, candidate.anchor, pointer);
-            if (!anchor)
-                continue;
-            float d = screenDistance(*anchor);
-            float tolerance = previous == candidate ? exit : enter;
-            if (*it == selection_.primary()) {
-                const auto button = std::hypot(buttons[n].x - x, buttons[n].y - y);
-                if (button < d) {
-                    d = button;
-                    tolerance = std::max(tolerance, 16.f);
-                }
-            }
-            if (d < bestPort && d <= tolerance) {
-                bestPort = d;
-                port = candidate;
+    if (!sceneCoordinator_ || !runtimeSceneHost_) return {};
+    const auto scale=viewportController_->state().scale;
+    const auto [wx,wy]=viewportController_->viewToContent(x,y);
+    const Point pointer{wx,wy};
+    const float enter=touch ? 16.f : 10.f, release=touch ? 22.f : 14.f;
+    const float discover=touch ? 36.f : 26.f;
+    const float reach=discover/scale;
+    const auto hits=runtimeSceneHost_->query({{wx-reach,wy-reach,wx+reach,wy+reach}});
+    if (!hits) return {};
+    const auto distance=[&](Point p){return std::hypot(p.x-wx,p.y-wy)*scale;};
+    float bestPort=INFINITY,bestRim=INFINITY,bestNearby=INFINITY;
+    std::optional<semantic::AttachedEndpoint> port,rim;
+    semantic::ObjectId nearby{};
+    for(auto it=hits.value().backToFront.rbegin();it!=hits.value().backToFront.rend();++it) {
+        const auto* record=sceneCoordinator_->runtimeScene().find(*it);
+        if(!record || !semantic::isConnectableObjectKind(record->kind,record->kindVersion) || !textWritable(*it))continue;
+        const auto* source=semanticObjects_.find(*it);
+        if(!source)continue;
+        auto target=*source;
+        target.transform=record->transform;
+        for(unsigned n=1;n<=4;++n) {
+            const semantic::AttachedEndpoint candidate{*it,semantic::StablePortAnchor{n}};
+            const auto position=scene::connectorAnchorPoint(target,candidate.anchor,pointer);
+            if(!position)continue;
+            const float d=distance(*position);
+            const bool held=previous==candidate;
+            if(d<=(held ? release : enter) && (d<bestPort || (d==bestPort && held))) {
+                bestPort=d;
+                port=candidate;
             }
         }
-        if (port)
-            continue;
-        const semantic::AttachedEndpoint candidate{*it, semantic::AutoPerimeterAnchor{}};
-        const float radius = (previous == candidate ? exit : enter) / camera.scale;
-        // Probe from both sides of the cursor so a long oblique side is picked by
-        // its screen distance, independently of the ray from the object's center.
-        for (const auto& [dx, dy] : std::array<std::pair<float, float>, 9>{{{0, 0},
-                                                                            {1, 0},
-                                                                            {-1, 0},
-                                                                            {0, 1},
-                                                                            {0, -1},
-                                                                            {.7071f, .7071f},
-                                                                            {-.7071f, .7071f},
-                                                                            {.7071f, -.7071f},
-                                                                            {-.7071f, -.7071f}}}) {
-            const auto p = scene::connectorAnchorPoint(
-                target, candidate.anchor, {wx + dx * radius, wy + dy * radius});
-            if (!p)
-                continue;
-            const float d = screenDistance(*p);
-            if (d < bestRim && d <= radius * camera.scale) {
-                bestRim = d;
-                rim = candidate;
-            }
+        if(port)continue;
+        const auto hit=scene::nearestConnectorPerimeter(target,pointer);
+        if(!hit)continue;
+        const float d=distance(hit->point);
+        if((hit->inside || d<=discover) && d<bestNearby) {
+            bestNearby=d;
+            nearby=*it;
+        }
+        // A drag can slide along the same contour while its directional hint changes.
+        const bool held=previous && previous->target_object_id==*it &&
+                        std::holds_alternative<semantic::AutoPerimeterAnchor>(previous->anchor);
+        if(d<=(held ? release : enter) && (d<bestRim || (d==bestRim && held))) {
+            bestRim=d;
+            rim=semantic::AttachedEndpoint{*it,hit->anchor};
         }
     }
-    return port ? port : rim;
+    const auto& snapped=port ? port : rim;
+    return {snapped,snapped ? snapped->target_object_id : nearby};
 }
 bool CanvasEditingRuntime::endpointEditCurrent() const noexcept {
     return endpointDrag_ && endpointDrag_->generation == semanticGeneration().value() &&
@@ -318,11 +296,10 @@ bool CanvasEditingRuntime::connectorEndpointPointer(const input::PointerSample& 
         auto& c = std::get<semantic::ConnectorContent>(edit.candidate.content);
         auto& e = edit.atStart ? c.start : c.end;
         const auto previous = e;
-        edit.target =
-            connectorAttachmentAt(sample.x,
-                                  sample.y,
-                                  edit.target,
-                                  sample.capabilities.tool == input::PointerTool::kFinger);
+        const auto pick=connectorAttachmentAt(sample.x,sample.y,edit.target,
+                                               sample.capabilities.tool==input::PointerTool::kFinger);
+        edit.target=pick.attachment;
+        edit.nearbyTarget=pick.nearby;
         if (std::hypot(sample.x - edit.downX, sample.y - edit.downY) <= 2) {
             const auto& original =
                 std::get<semantic::ConnectorContent>(semanticObjects_.find(edit.id)->content);
@@ -388,6 +365,7 @@ void CanvasEditingRuntime::connectorFeedback(render::EditingOverlay& overlay) co
     overlay.connectorGrips.reset();
     overlay.connectorTargetOutline.clear();
     overlay.connectorTargetPort.reset();
+    overlay.connectorTargetPorts.reset();
     const auto& cam = viewportController_->state();
     const auto screen = [&](Point p) {
         return render::ScreenPoint{p.x * cam.scale + cam.translationX,
@@ -412,22 +390,37 @@ void CanvasEditingRuntime::connectorFeedback(render::EditingOverlay& overlay) co
             }
         }
     }
-    auto target = edit ? edit->target : connectorHover_;
-    if (const auto it = creations_.find(latestCreationPointer_); it != creations_.end())
-        target = it->second.endAttachment();
-    if (!target || !textWritable(target->target_object_id))
-        return;
-    const auto* object = semanticObjects_.find(target->target_object_id);
-    const auto* r = sceneCoordinator_->runtimeScene().find(target->target_object_id);
-    if (!object || !r)
-        return;
-    auto world = *object;
-    world.transform = r->transform;
-    if (std::holds_alternative<semantic::StablePortAnchor>(target->anchor)) {
-        if (auto p = scene::connectorAnchorPoint(world, target->anchor, {}))
-            overlay.connectorTargetPort = screen(*p);
-        return;
+    auto target=edit ? edit->target : connectorHover_;
+    auto nearby=edit ? edit->nearbyTarget : semantic::ObjectId{};
+    if(const auto it=creations_.find(latestCreationPointer_);it!=creations_.end()) {
+        target=it->second.endAttachment();
+        nearby=it->second.nearbyEndTarget();
     }
+    const auto id=target ? target->target_object_id : nearby;
+    if(id.isZero() || !textWritable(id)) return;
+    const auto* object=semanticObjects_.find(id);
+    const auto* r=sceneCoordinator_->runtimeScene().find(id);
+    if(!object || !r) return;
+    auto world=*object;
+    world.transform=r->transform;
+    if(!nearby.isZero()) {
+        auto& ports=overlay.connectorTargetPorts.emplace();
+        for(unsigned n=0;n<4;++n) {
+            const auto p=scene::connectorAnchorPoint(world,semantic::StablePortAnchor{n+1},{});
+            if(!p){overlay.connectorTargetPorts.reset();break;}
+            ports[n]=screen(*p);
+        }
+    }
+    if(!target)return;
+    const auto* automatic=std::get_if<semantic::AutoPerimeterAnchor>(&target->anchor);
+    if(!automatic || automatic->hint) {
+        if(const auto p=scene::connectorAnchorPoint(world,target->anchor,{})) {
+            overlay.connectorTargetPort=screen(*p);
+            if(edit && edit->moved && overlay.connectorGrips)
+                (*overlay.connectorGrips)[edit->atStart ? 0 : 1].visible=false;
+        }
+    }
+    if(!automatic)return;
     // Sample the same local perimeter as the route solver, including curved and rotated targets.
     const auto b = r->geometryBounds;
     const double cx = (b.left + b.right) * .5, cy = (b.top + b.bottom) * .5;
@@ -436,7 +429,7 @@ void CanvasEditingRuntime::connectorFeedback(render::EditingOverlay& overlay) co
         const auto towards = map(world.transform,
                                  cx + std::cos(a) * (b.right - b.left),
                                  cy + std::sin(a) * (b.bottom - b.top));
-        if (auto p = scene::connectorAnchorPoint(world, target->anchor, towards))
+        if (auto p = scene::connectorAnchorPoint(world, semantic::AutoPerimeterAnchor{}, towards))
             overlay.connectorTargetOutline.push_back(screen(*p));
     }
 }

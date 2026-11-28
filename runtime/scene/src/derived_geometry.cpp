@@ -46,33 +46,41 @@ std::optional<ConnectorGeometry> stagedConnectorRoute(const semantic::ObjectReco
     const auto found = std::find_if(world.begin(), world.end(), match);
     return found == world.end() ? std::nullopt : connectorGeometry(*found, world, defer);
 }
+double connectorAnchorInsetFraction(double boardLength, double localLength, bool bentArrow) noexcept {
+    if (boardLength<=0 || localLength<=0) return 0;
+    const double gap=std::min(connectorTipGap/boardLength,0.25);
+    if (!bentArrow) return gap;
+    // The inset is in board units. Arrow and fillet are connector-local.
+    const double spare=(localLength-connectorNominalArrowLength-connectorBendClearance)/localLength;
+    return std::clamp(spare,std::min(1./boardLength,gap),gap);
+}
 ConnectorGeometry connectorDisplayRoute(const semantic::ObjectRecord& object, ConnectorGeometry g) {
     const auto* content = std::get_if<semantic::ConnectorContent>(&object.content);
     if (!content || g.route.size() < 2)
         return g;
     const auto trim = [&](foundation::WorldPoint anchor,
                           foundation::WorldPoint next,
-                          const semantic::ConnectorEndpoint& e) {
+                          const semantic::ConnectorEndpoint& e, bool arrow) {
         if (!std::holds_alternative<semantic::AttachedEndpoint>(e.value))
             return anchor;
         const double dx = next.x - anchor.x, dy = next.y - anchor.y;
         const auto& t = object.transform;
         const double length = std::hypot(t.a * dx + t.c * dy, t.b * dx + t.d * dy);
-        if (length <= 0)
-            return anchor;
-        // Eight board units at 100% zoom. Short terminal segments retain their direction and bends.
-        const double fraction = std::min(8.0 / length, 0.25);
+        const double fraction=connectorAnchorInsetFraction(length,std::hypot(dx,dy),arrow && g.route.size()>2);
         return foundation::WorldPoint{float(anchor.x + dx * fraction),
                                       float(anchor.y + dy * fraction)};
     };
-    const auto first = trim(g.start, g.route[1], content->start);
-    const auto last = trim(g.end, g.route[g.route.size() - 2], content->end);
+    const auto first = trim(g.start, g.route[1], content->start, g.arrow_start);
+    const auto last = trim(g.end, g.route[g.route.size() - 2], content->end, g.arrow_end);
     g.route.front() = first;
     g.route.back() = last;
     return g;
 }
-double connectorArrowLength(double segmentLength, bool arrowsShareSegment) noexcept {
-    return std::min(12.0, segmentLength / (arrowsShareSegment ? 3.0 : 2.0));
+double connectorArrowLength(double segmentLength, std::size_t vertices, bool twoArrows) noexcept {
+    if (vertices<=2) return std::min(connectorNominalArrowLength,segmentLength/(twoArrows?3.:2.));
+    // A long shaft on the other side of the bend needn't share half its
+    // landing with the head. In a very short landing keep half for the bend.
+    return std::min(connectorNominalArrowLength,std::max(segmentLength/2,segmentLength-connectorBendClearance));
 }
 foundation::WorldPoint connectorShaftVertex(std::span<const foundation::WorldPoint> route,
     std::size_t index, bool startArrow, bool endArrow) noexcept {
@@ -83,7 +91,7 @@ foundation::WorldPoint connectorShaftVertex(std::span<const foundation::WorldPoi
     const double dx=double(next.x)-vertex.x, dy=double(next.y)-vertex.y;
     const double length=std::hypot(dx,dy);
     if (length==0) return vertex;
-    const double inset=connectorArrowLength(length,route.size()==2 && startArrow && endArrow)/length;
+    const double inset=connectorArrowLength(length,route.size(),startArrow && endArrow)/length;
     return {static_cast<float>(vertex.x+dx*inset),static_cast<float>(vertex.y+dy*inset)};
 }
 ArrowHeadGeometry arrowHead(const ConnectorGeometry& g, bool atStart) noexcept {
@@ -96,7 +104,7 @@ ArrowHeadGeometry arrowHead(const ConnectorGeometry& g, bool atStart) noexcept {
         g.status != runtime::ConnectorRouteStatus::kReady || len <= 0)
         return {tip, tip, tip};
     const float ux = dx / len, uy = dy / len, px = -uy, py = ux;
-    const auto head = static_cast<float>(connectorArrowLength(len, g.route.size()<=2 && g.arrow_start && g.arrow_end));
+    const auto head = static_cast<float>(connectorArrowLength(len,g.route.size(),g.arrow_start && g.arrow_end));
     const auto halfWidth = head/2;
     return {tip,
             {tip.x - ux * head + px * halfWidth, tip.y - uy * head + py * halfWidth},

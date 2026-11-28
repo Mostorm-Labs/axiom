@@ -41,7 +41,7 @@ int main() {
     const auto snapshot=settled(c,f,wire.objectId);
     assert(snapshot.routeStatus==runtime::ConnectorRouteStatus::kReady);
     assert(snapshot.route.front().x==100&&snapshot.route.back().x==400);
-    assert(snapshot.displayRoute.front().x==108 && snapshot.displayRoute.back().x==392);
+    assert(snapshot.displayRoute.front().x==104 && snapshot.displayRoute.back().x==396);
     assert(snapshot.endArrow && !snapshot.startArrow);
     assert(c.readback().semanticGeneration==generation);
 

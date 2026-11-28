@@ -174,5 +174,5 @@ std::optional<CreationCommit> CreationSession::finish(input::PointerKey pointer)
   return out;
 }
 bool CreationSession::cancel(input::PointerKey pointer) noexcept { if (!active() || pointer != pointer_) return false; clear(); return true; }
-void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; startAttachment_.reset(); endAttachment_.reset(); snapResolver_.reset(); }
+void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; startAttachment_.reset(); endAttachment_.reset(); nearbyEndTarget_={}; snapResolver_.reset(); }
 }  // namespace canvas::interaction

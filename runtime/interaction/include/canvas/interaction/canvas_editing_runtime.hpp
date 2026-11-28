@@ -1054,6 +1054,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     RegionSelectionContext context{};
     semantic::ObjectRecord candidate{};
     std::optional<semantic::AttachedEndpoint> target;
+    semantic::ObjectId nearbyTarget{};
     scene::ConnectorGeometry route;
     std::vector<semantic::ObjectRecord> world;
     std::unique_ptr<scene::ConnectorRouteJob> job;
@@ -1078,7 +1079,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   runtime::ConnectorCommandReceipt commitConnectorContent(semantic::ObjectId,const semantic::ConnectorContent&,std::uint64_t);
   runtime::ConnectorCommandReceipt editConnectorEndpoint(const runtime::ConnectorEndpointRequest&);
   void placeNewConnector(semantic::ObjectRecord&, std::span<const semantic::ObjectRecord> added = {}) const;
-  std::optional<semantic::AttachedEndpoint> connectorAttachmentAt(float x,float y,
+  struct ConnectorAttachmentPick {
+    std::optional<semantic::AttachedEndpoint> attachment;
+    semantic::ObjectId nearby{};
+  };
+  ConnectorAttachmentPick connectorAttachmentAt(float x,float y,
       const std::optional<semantic::AttachedEndpoint>& previous = {}, bool touch = false) const;
 
   std::uint64_t connectorRoutingGeneration_ = std::numeric_limits<std::uint64_t>::max();
@@ -1173,13 +1178,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     float x=0,y=0;
   };
   std::optional<CreationHover> creationHover_;
-  std::unordered_set<input::PointerKey,input::PointerKeyHash> creationClickCandidates_;
+  std::unordered_map<input::PointerKey,render::ScreenPoint,input::PointerKeyHash> creationClickOrigins_;
   std::unordered_map<input::PointerKey,semantic::ObjectRecord,input::PointerKeyHash> creationSiblingPrototypes_;
   semantic::ObjectRecord makeCreationPrototype(CreationPreset,bool linked=false);
   semantic::ObjectRecord makeConnectorSibling(semantic::ObjectId,std::uint32_t,foundation::WorldPoint,semantic::ObjectRecord={});
   std::optional<scene::ConnectorGeometry> layoutConnectorSibling(
-      const semantic::ObjectRecord&, semantic::ObjectRecord& sibling, std::uint32_t targetPort) const;
-  foundation::WorldPoint defaultAttachmentEnd(const semantic::AttachedEndpoint&) const;
+      const semantic::ObjectRecord&, semantic::ObjectRecord& sibling, std::uint32_t targetPort,
+      foundation::WorldPoint sourcePoint) const;
+  std::optional<foundation::WorldPoint> fixedAttachmentPosition(const semantic::AttachedEndpoint&) const;
+  static foundation::WorldPoint defaultAttachmentEnd(foundation::WorldPoint source, std::uint32_t targetPort) noexcept;
   std::uint32_t siblingAttachmentPort(semantic::ObjectId source, std::uint32_t sourcePort) const noexcept;
   std::array<render::ScreenPoint, 4> attachmentPortCenters(const RuntimeSceneRecord&) const noexcept;
   bool updateCreationHover(float,float);

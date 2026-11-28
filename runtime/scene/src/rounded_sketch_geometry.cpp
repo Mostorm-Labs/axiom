@@ -68,10 +68,9 @@ std::shared_ptr<const SketchGeometry> roundedSketchGeometry(const ObjectContent 
             number(identity, double(v.x));
             number(identity, double(v.y));
         }
-        path = roundedPolyline(p, false, radius, route->sketchObstacles);
-        // Compute the fillets on the complete route before shortening the two
-        // terminal straight pieces. Changing an arrow must not move a bend.
-        if (path.commands.size()>=2 && route->status==runtime::ConnectorRouteStatus::kReady) {
+        // Keep the original bend unless its arc would extend into an arrow.
+        std::optional<std::array<Vec2,2>> shaftEnds;
+        if (p.size()>=2 && route->status==runtime::ConnectorRouteStatus::kReady) {
             bool startArrow=false,endArrow=false;
             for (const auto& e : properties.entries) {
                 if (const auto* d=std::get_if<ConnectorDecorationValue>(&e.value)) {
@@ -81,9 +80,9 @@ std::shared_ptr<const SketchGeometry> roundedSketchGeometry(const ObjectContent 
             }
             const auto a=connectorShaftVertex(points,0,startArrow,endArrow);
             const auto b=connectorShaftVertex(points,points.size()-1,startArrow,endArrow);
-            std::get<MoveTo>(path.commands.front()).point={a.x,a.y};
-            std::get<LineTo>(path.commands.back()).end={b.x,b.y};
+            shaftEnds=std::array<Vec2,2>{{{a.x,a.y},{b.x,b.y}}};
         }
+        path=roundedPolyline(p,false,radius,route->sketchObstacles,shaftEnds);
         number(identity,static_cast<std::uint64_t>(route->status));
         number(identity, std::uint64_t(4));
         for (const auto &o : route->sketchObstacles) {

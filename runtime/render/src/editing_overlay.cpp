@@ -36,7 +36,7 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 } // namespace
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
-    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();
+    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();connectorTargetPorts.reset();
     textBox.reset();
     creationHover_.reset();
     creationPreview_.reset();
@@ -165,7 +165,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 }
 
 void EditingOverlay::clear() noexcept {
-    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();
+    connectorGrips.reset();connectorTargetOutline.clear();connectorTargetPort.reset();connectorTargetPorts.reset();
     textBox.reset();
     readOnlyOutlines.clear();candidateOutlines.clear();acquisitionOutline.clear();
     creationHover_.reset();

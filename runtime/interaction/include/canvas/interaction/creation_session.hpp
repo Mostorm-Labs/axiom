@@ -47,8 +47,10 @@ class CreationSession final {
   void setStartAttachment(std::optional<semantic::AttachedEndpoint> value) noexcept {
     startAttachment_ = std::move(value);
   }
-  void setEndAttachment(std::optional<semantic::AttachedEndpoint> value) noexcept {
+  [[nodiscard]] semantic::ObjectId nearbyEndTarget() const noexcept { return nearbyEndTarget_; }
+  void setEndAttachment(std::optional<semantic::AttachedEndpoint> value, semantic::ObjectId nearby={}) noexcept {
     endAttachment_ = std::move(value);
+    nearbyEndTarget_ = nearby;
   }
   void setSnapTargets(std::vector<interaction::SnapTarget> targets) noexcept {
     snapTargets_ = std::move(targets);
@@ -72,5 +74,6 @@ class CreationSession final {
 
   std::optional<semantic::AttachedEndpoint> startAttachment_{};
   std::optional<semantic::AttachedEndpoint> endAttachment_{};
+  semantic::ObjectId nearbyEndTarget_{};
 };
 }  // namespace canvas::interaction

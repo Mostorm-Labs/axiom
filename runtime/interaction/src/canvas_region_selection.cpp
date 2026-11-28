@@ -1,6 +1,7 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/interaction/region_selection_geometry.hpp"
 #include "canvas/render/direct_reference_source.hpp"
+#include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -204,6 +205,13 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
             if (hit == render::SelectionGeometryHit::kMiss) continue;
             if (hit != render::SelectionGeometryHit::kHit) return foundation::Result<HitTestResult>::failure(
                 {foundation::ErrorCode::kInvalidRecord, "Ink selection coverage unavailable"});
+        } else if (const auto* wire=std::get_if<scene::ConnectorGeometry>(&record->derivedGeometry); wire && wire->showsWarning()) {
+            const std::array<foundation::WorldPoint,4> query{{{point.x-4,point.y-4},{point.x+4,point.y-4},
+                                                              {point.x+4,point.y+4},{point.x-4,point.y+4}}};
+            const auto hit=render::intersectVisibleSelectionGeometry(*record,query,render::SelectionGeometryUse::kPoint);
+            if (hit==render::SelectionGeometryHit::kMiss) continue;
+            if (hit!=render::SelectionGeometryHit::kHit) return foundation::Result<HitTestResult>::failure(
+                {foundation::ErrorCode::kInvalidRecord,"Connector warning geometry unavailable"});
         } else if (object->kind == semantic::ObjectKind::kVectorPath ||
                    std::any_of(object->properties.entries.begin(), object->properties.entries.end(),
                                [](const auto& e) { return e.field_id == 0x103U; })) {

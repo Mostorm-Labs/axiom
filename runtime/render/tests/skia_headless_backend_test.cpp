@@ -1,5 +1,6 @@
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/runtime/resource_provider.hpp"
@@ -833,6 +834,17 @@ void pendingConnectorKeepsSolidStyleAndFailureStaysDistinct() {
     list.entries[0].record.derivedGeometry=geometry;
     assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
     assert(backend.observation()->rgba!=ready);
+    auto& warning=list.entries[0].record;
+    warning.properties.entries.push_back({0x103U,canvas::semantic::CornerStyleV1{1,4}});
+    warning.transform={1,0,0,1,10,20};
+    using canvas::render::intersectVisibleSelectionGeometry;
+    using canvas::render::SelectionGeometryHit;
+    using canvas::render::SelectionGeometryUse;
+    const std::array<WorldPoint,4> dash{{{82,119},{84,119},{84,121},{82,121}}};
+    const std::array<WorldPoint,4> gap{{{87,119},{89,119},{89,121},{87,121}}};
+    assert(intersectVisibleSelectionGeometry(warning,dash,SelectionGeometryUse::kPoint)==SelectionGeometryHit::kHit);
+    assert(intersectVisibleSelectionGeometry(warning,gap,SelectionGeometryUse::kPoint)==SelectionGeometryHit::kMiss);
+    assert(intersectVisibleSelectionGeometry(warning,dash)==SelectionGeometryHit::kUnsupported);
 }
 
 void ellipseUsesLocalOvalGeometryAfterTransform() {

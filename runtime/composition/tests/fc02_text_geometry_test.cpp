@@ -2235,6 +2235,84 @@ TEST(CreationHover, ReusesStyleSeedObjectAndTableAxesThroughMovementAndClick) {
         EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
     }
 }
+TEST(CreationHover, FreeDefaultComesBeforeAnEstablishedWorldAxisOutsideTheViewport) {
+    for(const unsigned port:{1U,2U,3U,4U}) {
+        SCOPED_TRACE(port);
+        Host h(true);
+        auto source=labelShape();
+        source.transform.tx=88;source.transform.ty=91;
+        source.content=semantic::ShapeContent{1,80,60};
+        const bool row=port==1 || port==3;
+        const double axis=port==1 || port==4 ? -190 : 410;
+        const unsigned facing=(port+1)%4+1;
+        const auto attach=[](auto id,unsigned side) {
+            return semantic::ConnectorEndpoint{semantic::AttachedEndpoint{id,semantic::StablePortAnchor{side}}};
+        };
+        semantic::ObjectRecord group;
+        group.id=foundation::ObjectId::fromUint64(949);group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;
+        group.content=semantic::GroupContent{};group.placement.order_key=semantic::OrderKey{{11}};
+        group.transform.tx=200;group.transform.ty=-80;
+        std::vector<semantic::ObjectRecord> graph{source,group};
+        for(unsigned i=0;i<3;++i) {
+            auto target=source;
+            target.id=foundation::ObjectId::fromUint64(900+i);
+            target.placement.order_key=semantic::OrderKey{{static_cast<std::uint8_t>(2+i)}};
+            // One old outlier and two targets on the same row/column.
+            const double depth=axis+(i==0 ? 55 : 0);
+            const double across=std::array{-250.,300.,500.}[i];
+            target.transform.tx=row ? across : depth-(facing==2 ? 80 : 0);
+            target.transform.ty=row ? depth-(facing==3 ? 60 : 0) : across;
+            if(i>0) {
+                target.placement.parent_id=group.id;
+                target.transform.tx-=group.transform.tx;target.transform.ty-=group.transform.ty;
+            }
+            graph.push_back(target);
+            semantic::ObjectRecord wire;
+            wire.id=foundation::ObjectId::fromUint64(910+i);
+            wire.kind=semantic::ObjectKind::kConnector;wire.kind_version=1;
+            wire.placement.order_key=semantic::OrderKey{{static_cast<std::uint8_t>(6+i)}};
+            wire.content=semantic::ConnectorContent{attach(source.id,port),attach(target.id,facing),semantic::ConnectorRouting::kOrthogonal};
+            graph.push_back(wire);
+            if(i==0) {
+                // Extra wires to a single outlier still represent one target.
+                for(unsigned copy=0;copy<2;++copy) {
+                    wire.id=foundation::ObjectId::fromUint64(950+copy);
+                    wire.placement.order_key=semantic::OrderKey{{static_cast<std::uint8_t>(12+copy)}};
+                    graph.push_back(wire);
+                }
+            }
+        }
+        const semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(930)},
+            semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{graph}};
+        ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+        runtime::CanvasControlRequest tool;tool.clientId=6013;tool.requestId=1;tool.target=h.facade.mountedCanvasTargets().front();
+        tool.payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;tool.payload.tool=runtime::CanvasToolKind::kSelect;
+        ASSERT_EQ(h.facade.submitCanvasControl(tool).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+        auto& interaction=h.runtime.qualificationRuntime();
+        ASSERT_TRUE(interaction.selectAtViewPoint(128,121));
+        const auto point=interaction.selectionOverlay()->attachmentPoints().at(port-1).center;
+        ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(point.x,point.y));
+        const auto& hover=interaction.selectionOverlay()->creationHover();
+        ASSERT_TRUE(hover && hover->route && hover->sibling);
+        const auto from=hover->route->start, to=hover->route->end;
+        EXPECT_FLOAT_EQ(to.x,from.x+(port==2 ? 148 : port==4 ? -148 : 0));
+        EXPECT_FLOAT_EQ(to.y,from.y+(port==3 ? 148 : port==1 ? -148 : 0));
+        EXPECT_EQ(h.runtime.semanticObjectCount(),graph.size());
+        ASSERT_TRUE(h.runtime.registerSource(6013));
+        for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+            input::PlatformPointerSample p;p.source=6013;p.pointer=1;p.sequence=phase==input::PointerPhase::kDown?1:2;
+            p.timestampNs=p.sequence*1000;p.phase=phase;p.x=point.x;p.y=point.y;
+            input::PlatformPointerBatch batch;batch.samples={p};ASSERT_TRUE(h.runtime.submit(batch));
+        }
+        ASSERT_EQ(h.runtime.semanticObjectCount(),graph.size()+2);
+        ASSERT_TRUE(interaction.selectAtViewPoint(128,121));
+        ASSERT_TRUE(h.runtime.hoverSelectionAtViewPoint(point.x,point.y));
+        const auto& occupied=interaction.selectionOverlay()->creationHover();
+        ASSERT_TRUE(occupied && occupied->route && occupied->sibling);
+        EXPECT_DOUBLE_EQ(row ? occupied->route->end.y : occupied->route->end.x,axis);
+    }
+}
+
 TEST(CreationHover, AttachmentPreviewReusesTheCommittedSiblingFactoryAndIdentities) {
     Host h(true);seedShape(h,labelShape());
     runtime::CanvasControlRequest tool;tool.clientId=6012;tool.requestId=1;tool.target=h.facade.mountedCanvasTargets().front();
@@ -2325,7 +2403,7 @@ TEST(ObjectClipboard, StandaloneConnectorDetachesExternalTargetsAtCapturedWorldE
     Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();auto shape=labelShape();shape.transform.tx=10;shape.transform.ty=50;shape.content=semantic::ShapeContent{1,50,50};
     semantic::ObjectRecord line;line.id=foundation::ObjectId::fromUint64(1003);line.kind=semantic::ObjectKind::kConnector;line.kind_version=1;line.placement.order_key=semantic::OrderKey({2});line.content=semantic::ConnectorContent{{semantic::AttachedEndpoint{shape.id,semantic::StablePortAnchor{2}}},{semantic::FreePointEndpoint{{200,75}}},semantic::ConnectorRouting::kStraight};
     semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8000)},q.documentId(),1,1,semantic::InsertObjectsOp{{shape,line}}};ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
-    ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(130,75));ASSERT_EQ(q.selectedPrimaryObject(),line.id);runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto result=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(result.applied);const auto* clone=q.qualificationObjectRecord(result.roots.at(0));ASSERT_NE(clone,nullptr);const auto& c=std::get<semantic::ConnectorContent>(clone->content);ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.start.value));ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.end.value));EXPECT_NEAR(std::get<semantic::FreePointEndpoint>(c.start.value).point.x,60,1);EXPECT_NEAR(std::get<semantic::FreePointEndpoint>(c.start.value).point.y,75,1);EXPECT_DOUBLE_EQ(clone->transform.tx,24);EXPECT_DOUBLE_EQ(clone->transform.ty,24);
+    ASSERT_TRUE(q.setSelectionMode(true));ASSERT_TRUE(q.selectAtViewPoint(130,75));ASSERT_EQ(q.selectedPrimaryObject(),line.id);runtime::ClipboardRequest duplicate;duplicate.action=runtime::ClipboardAction::kDuplicate;const auto result=h.facade.clipboardCommand(duplicate);ASSERT_TRUE(result.applied);const auto* clone=q.qualificationObjectRecord(result.roots.at(0));ASSERT_NE(clone,nullptr);const auto& c=std::get<semantic::ConnectorContent>(clone->content);ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.start.value));ASSERT_TRUE(std::holds_alternative<semantic::FreePointEndpoint>(c.end.value));EXPECT_DOUBLE_EQ(std::get<semantic::FreePointEndpoint>(c.start.value).point.x,64);EXPECT_DOUBLE_EQ(std::get<semantic::FreePointEndpoint>(c.start.value).point.y,75);EXPECT_DOUBLE_EQ(clone->transform.tx,24);EXPECT_DOUBLE_EQ(clone->transform.ty,24);
 }
 TEST(ObjectClipboard, SectionCutAndPasteCarryTheSubtreeWithoutChangingDeleteSemantics) {
     Host h;ASSERT_TRUE(h.facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));auto& q=h.runtime.qualificationRuntime();semantic::ObjectRecord section;section.id=foundation::ObjectId::fromUint64(1000);section.kind=semantic::ObjectKind::kSection;section.kind_version=1;section.placement.order_key=semantic::OrderKey({1});section.transform.tx=10;section.transform.ty=20;section.content=semantic::SectionContent{{0,0,230,200},"Section",0,0};auto child=labelShape();child.placement.parent_id=section.id;child.transform.tx=50;child.transform.ty=50;child.content=semantic::ShapeContent{1,60,60};

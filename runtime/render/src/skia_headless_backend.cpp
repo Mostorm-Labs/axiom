@@ -419,8 +419,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
     const auto* route=std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
     // Preserve the existing diagnostic renderer for terminal routing failures.
     // Pending remains a styled interactive route; failure is never disguised as ink.
-    if(route && route->status!=runtime::ConnectorRouteStatus::kReady &&
-       route->status!=runtime::ConnectorRouteStatus::kPending) return false;
+    if(route && route->showsWarning()) return false;
     auto derived=scene::sketchGeometry(record.content,record.properties,route);
     const bool sticky=record.kind==semantic::ObjectKind::kSticky;
     if(!derived&&!sticky)return false;
@@ -746,12 +745,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             // Pending is an interactive connection, not a routing failure.
             // Keep its authored solid/dash style while the readback remains
             // Pending; only terminal failures use the diagnostic treatment.
-            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady &&
-               derived->status!=runtime::ConnectorRouteStatus::kPending) {
-                const SkScalar intervals[]{6.0F,4.0F};
-                paint.setColor4f({0.9F,0.35F,0.12F,1.0F},nullptr);
-                paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));
-            }
+            if(derived && derived->showsWarning()) internal::applyConnectorWarningPaint(paint);
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}

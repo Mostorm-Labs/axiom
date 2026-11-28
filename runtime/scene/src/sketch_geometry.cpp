@@ -264,7 +264,7 @@ std::shared_ptr<const SketchGeometry> generate(const Key &k) {
             if (len == 0)
                 return;
             double ux = dx / len, uy = dy / len;
-            const auto head=connectorArrowLength(len,k.route.size()==2 && k.arrowStart && k.arrowEnd);
+            const auto head=connectorArrowLength(len,k.route.size(),k.arrowStart && k.arrowEnd);
             const auto halfWidth=head/2;
             std::vector<Vec2> v{{tip.x, tip.y},
                                 {tip.x - ux * head - uy * halfWidth, tip.y - uy * head + ux * halfWidth},

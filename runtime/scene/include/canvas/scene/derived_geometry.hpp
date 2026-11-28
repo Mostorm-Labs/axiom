@@ -16,9 +16,12 @@ struct ConnectorGeometry final {
     runtime::ConnectorRouteStatus status = runtime::ConnectorRouteStatus::kReady;
     runtime::ConnectorRouteWork work{};
     foundation::WorldRect searchedDomain{};
-    std::uint32_t algorithmRevision = 3;
+    std::uint32_t algorithmRevision = 12;
     std::vector<foundation::WorldRect> sketchObstacles{};
     bool arrow_start=false;
+    [[nodiscard]] bool showsWarning() const noexcept {
+        return status!=runtime::ConnectorRouteStatus::kReady && status!=runtime::ConnectorRouteStatus::kPending;
+    }
     bool operator==(const ConnectorGeometry& o) const {
         if (start.x != o.start.x || start.y != o.start.y || end.x != o.end.x ||
             end.y != o.end.y || sketchObstacles != o.sketchObstacles || arrow_start != o.arrow_start || arrow_end != o.arrow_end || status != o.status ||
@@ -56,7 +59,11 @@ using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, Connector
 [[nodiscard]] std::optional<ConnectorGeometry> stagedConnectorRoute(const semantic::ObjectRecord&,
     std::vector<semantic::ObjectRecord> graph, bool defer = false);
 [[nodiscard]] ArrowHeadGeometry arrowHead(const ConnectorGeometry&, bool atStart = false) noexcept;
-[[nodiscard]] double connectorArrowLength(double segmentLength, bool arrowsShareSegment) noexcept;
+inline constexpr double connectorNominalArrowLength = 12;
+inline constexpr double connectorBendClearance = 4;
+inline constexpr double connectorTipGap = 4;
+[[nodiscard]] double connectorAnchorInsetFraction(double boardLength, double localLength, bool bentArrow) noexcept;
+[[nodiscard]] double connectorArrowLength(double segmentLength, std::size_t vertices, bool twoArrows) noexcept;
 // Decorated endpoint vertices stop at the base of the corresponding arrow.
 // The visible route itself still runs to the tips for grips, copying and readback.
 [[nodiscard]] foundation::WorldPoint connectorShaftVertex(std::span<const foundation::WorldPoint> route,

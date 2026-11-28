@@ -2,9 +2,16 @@
 #include "canvas/scene/derived_geometry.hpp"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPathBuilder.h"
+#include "include/effects/SkDashPathEffect.h"
 #include <cmath>
 
 namespace canvas::render::internal {
+inline void applyConnectorWarningPaint(SkPaint& paint) {
+    constexpr SkScalar intervals[]{6,4};
+    paint.setColor4f({.9F,.35F,.12F,1},nullptr);
+    paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));
+}
+
 // The normal stroke cap stays on free ends and dashes. When a decorated
 // end is very thick, remove only the cap that would escape the triangle.
 inline SkPath connectorCapOverhang(const scene::ConnectorGeometry& route, const SkPaint& paint,

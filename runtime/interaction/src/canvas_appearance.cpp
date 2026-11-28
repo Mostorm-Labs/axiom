@@ -286,7 +286,7 @@ runtime::AppearanceValues CanvasEditingRuntime::appearanceDefaults() const {
     return v;
 }
 double CanvasEditingRuntime::creationCornerRadius(bool orthogonal) const noexcept {
-    return orthogonal && !futureCornerRadiusConfigured_ ? 8.0 : futureStyle_.cornerRadius;
+    return orthogonal && !futureCornerRadiusConfigured_ ? 4.0 : futureStyle_.cornerRadius;
 }
 void CanvasEditingRuntime::materializeAppearance(semantic::ObjectRecord &record, bool fill) {
     auto v = appearanceDefaults();

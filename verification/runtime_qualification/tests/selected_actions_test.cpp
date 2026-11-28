@@ -145,14 +145,17 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
     std::uint32_t expectedTargetPort;
     ObjectKind expectedKind;
     std::uint32_t expectedShapeKind;
+    canvas::foundation::WorldPoint expectedEnd;
   };
+  // The source rectangle/ellipse/triangle is [20,20]-[100,80]; the sticky is square.
+  // Landings are measured from the real perimeter in board coordinates.
   const std::array cases{
-      Case{CreationPreset::kRectangle, 0U, 3U, ObjectKind::kShape, 1U},
-      Case{CreationPreset::kEllipse, 1U, 4U, ObjectKind::kShape, 2U},
-      Case{CreationPreset::kTriangle, 2U, 1U, ObjectKind::kShape, 3U},
-      Case{CreationPreset::kSticky, 3U, 2U, ObjectKind::kSticky, 0U},
-      Case{CreationPreset::kTriangle, 1U, 4U, ObjectKind::kShape, 3U},
-      Case{CreationPreset::kTriangle, 3U, 2U, ObjectKind::kShape, 3U},
+      Case{CreationPreset::kRectangle, 0U, 3U, ObjectKind::kShape, 1U, {60,-128}},
+      Case{CreationPreset::kEllipse, 1U, 4U, ObjectKind::kShape, 2U, {248,50}},
+      Case{CreationPreset::kTriangle, 2U, 1U, ObjectKind::kShape, 3U, {60,228}},
+      Case{CreationPreset::kSticky, 3U, 2U, ObjectKind::kSticky, 0U, {-128,60}},
+      Case{CreationPreset::kTriangle, 1U, 4U, ObjectKind::kShape, 3U, {228,50}},
+      Case{CreationPreset::kTriangle, 3U, 2U, ObjectKind::kShape, 3U, {-108,50}},
   };
   for (const auto& test : cases) {
     InkPlaygroundHost host;
@@ -167,7 +170,6 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
     assert(overlay != nullptr);
     assert(overlay->attachmentPoints().size() == 4U);
     const auto point = overlay->attachmentPoints()[test.sourcePortIndex].center;
-    const auto sourcePoint = point;
     const canvas::input::PointerKey key{11U,
         static_cast<std::uint64_t>(100U + test.sourcePortIndex), 1U};
     assert(host.selectionPointer(key, PointerPhase::kDown, point.x, point.y));
@@ -213,11 +215,6 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
       targetWidth = sticky->width;
       targetHeight = sticky->height;
     }
-    canvas::foundation::WorldPoint expectedEnd{sourcePoint.x, sourcePoint.y};
-    if (test.sourcePortIndex == 0U) expectedEnd.y -= 120.0F;
-    else if (test.sourcePortIndex == 1U) expectedEnd.x += 120.0F;
-    else if (test.sourcePortIndex == 2U) expectedEnd.y += 120.0F;
-    else expectedEnd.x -= 120.0F;
     canvas::foundation::WorldPoint targetPoint{
         static_cast<float>(target->transform.tx), static_cast<float>(target->transform.ty)};
     if (test.expectedTargetPort == 1U) {
@@ -232,8 +229,8 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
       targetPoint.x += static_cast<float>(targetWidth * (test.expectedShapeKind == 3U ? 0.25 : 0.0));
       targetPoint.y += static_cast<float>(targetHeight * 0.5);
     }
-    assert(std::abs(targetPoint.x - expectedEnd.x) < 1.0e-4F);
-    assert(std::abs(targetPoint.y - expectedEnd.y) < 1.0e-4F);
+    assert(std::abs(targetPoint.x - test.expectedEnd.x) < 1.0e-4F);
+    assert(std::abs(targetPoint.y - test.expectedEnd.y) < 1.0e-4F);
   }
 }
 

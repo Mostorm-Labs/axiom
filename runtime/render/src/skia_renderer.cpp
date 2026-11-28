@@ -327,6 +327,14 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
             path.close();p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(2.f);
             canvas.drawPath(path.detach(),p);
         }
+        if(overlay.connectorTargetPorts) {
+            for(const auto center:*overlay.connectorTargetPorts) {
+                p.setStyle(SkPaint::kFill_Style);p.setColor(SK_ColorWHITE);
+                canvas.drawCircle(center.x,center.y,3,p);
+                p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(1.25f);p.setColor(SkColorSetRGB(0x99,0x96,0xE5));
+                canvas.drawCircle(center.x,center.y,3,p);
+            }
+        }
         const auto grip=[&](ScreenPoint center,bool attached,float radius){
             p.setStyle(SkPaint::kFill_Style);p.setColor(SK_ColorWHITE);canvas.drawCircle(center.x,center.y,radius,p);
             p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(1.6f);p.setColor(SkColorSetRGB(0x67,0x61,0xF8));
@@ -334,7 +342,8 @@ void drawEditingOverlayToSkCanvas(SkCanvas& canvas, const SurfaceMetrics& metric
             if(attached){p.setStyle(SkPaint::kFill_Style);canvas.drawCircle(center.x,center.y,radius*.49f,p);}
         };
         if(overlay.connectorTargetPort)grip(*overlay.connectorTargetPort,true,6);
-        if(overlay.connectorGrips)for(const auto& handle:*overlay.connectorGrips)grip(handle.center,handle.attached,4.5f);
+        if(overlay.connectorGrips)for(const auto& handle:*overlay.connectorGrips)
+            if(handle.visible)grip(handle.center,handle.attached,4.5f);
     }
     if (overlay.selectionOutline().visible) {
         SkPaint chrome;
