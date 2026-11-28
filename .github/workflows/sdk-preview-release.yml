@@ -109,6 +109,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Ensure locked MSVC toolset is installed
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: ./tools/release/install_msvc_14_51.ps1
       - uses: ilammy/msvc-dev-cmd@v1
         if: matrix.platform == 'windows'
         with:

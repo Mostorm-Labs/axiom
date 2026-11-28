@@ -108,6 +108,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Ensure locked MSVC toolset is installed
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: ./tools/release/install_msvc_14_51.ps1
       - uses: ilammy/msvc-dev-cmd@v1
         if: matrix.platform == 'windows'
         with:
