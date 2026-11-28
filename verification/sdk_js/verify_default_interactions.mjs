@@ -71,19 +71,21 @@ try{
  const imageTarget=await page.evaluate(async()=>{
    const {content}=sdk.readSelectedImage();
    await sdk.transformSelection([0,1,-1,0,715,285]);
-   return {x:715-content.height/2,y:285+content.width+28,centerY:285+content.width/2};
+   const portY=285+content.width;
+   return {x:715-content.height/2,portY,extensionY:portY+28,centerY:285+content.width/2};
  });
  await page.evaluate(()=>sdk.selectShape('rectangle'));await start(195,345);await end(335,425);
  const source=await page.evaluate(()=>sdk.readSelection());
  await start(source.bounds[2]+28,(source.bounds[1]+source.bounds[3])/2);
- await end(imageTarget.x,imageTarget.y);
+ // The snap radius is measured from the actual port, not the quick-create handle.
+ await end(imageTarget.x,imageTarget.portY+4);
  const inbound=await page.evaluate(()=>sdk.readConnector());
  result.checks.rotatedImageReceivesLinkOnItsLocalRightPort=(await capture()).objects===3 &&
    inbound.start?.objectId===source.primary && inbound.end?.objectId===s.primary && inbound.end.port===2;
  await page.evaluate(()=>sdk.undo());await pause();
  await page.mouse.click(imageTarget.x,imageTarget.centerY);await pause();
- await page.mouse.click(imageTarget.x,imageTarget.y);await pause();
- await page.mouse.click(imageTarget.x,imageTarget.y+55);await pause();
+ await page.mouse.click(imageTarget.x,imageTarget.extensionY);await pause();
+ await page.mouse.click(imageTarget.x,imageTarget.extensionY+55);await pause();
  const outward=await page.evaluate(()=>sdk.readConnector());
  result.checks.rotatedImageExpandsOnTheDisplayedSide=outward.available && outward.start?.objectId===s.primary &&
    outward.start.port===2 && outward.end?.port===1 && outward.route.length>=2 &&
