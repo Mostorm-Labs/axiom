@@ -63,8 +63,9 @@ try {
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
   const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   const until=async(expression,label)=>{for(let i=0;i<300;i++){if(await evaluate(expression))return;await delay(50);}throw Error('Example timeout: '+label);};
-  await until(`document.getElementById('status')?.textContent.includes('0 objects')`,'startup');
   const rectangleButton = `(document.querySelector('#shape-tool')||document.querySelector('[data-tool="shape:0"]')||[...document.querySelectorAll('button')].find(b=>b.textContent==='rectangle'))`;
+  await until(`Boolean(${rectangleButton}) && !document.querySelector('#tools[inert], #tools[aria-busy="true"]') &&
+    document.getElementById('status')?.textContent.includes('0 objects')`,'ready drawing toolbar');
   await evaluate(`${rectangleButton}.click()`);
   await until(`${rectangleButton}?.getAttribute('aria-pressed')==='true'`,'tool receipt');
   const point=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.left+60,y:r.top+180}})()`);
