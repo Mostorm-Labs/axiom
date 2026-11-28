@@ -809,6 +809,78 @@ TEST(FC05Route, AnArrowKeepsItsCertifiedConnectionWhenALongerLandingIsADeadEnd) 
     EXPECT_FLOAT_EQ(std::abs(head.left.y-head.right.y),12);
 }
 
+TEST(FC05Route, AnUndecoratedSidePortKeepsItsFirstRoundedBendClearOnADetour) {
+    for (const double upperX : {320.,215.}) for (bool transpose : {false,true})
+        for (bool reverse : {false,true}) for (bool arrow : {false,true}) {
+            SCOPED_TRACE(::testing::Message()<<"upperX="<<upperX<<" transpose="<<transpose
+                <<" reverse="<<reverse<<" arrow="<<arrow);
+            const auto rect=[=](unsigned id,double x,double y) {
+                auto r=transpose?box(id,y,x,80,120):box(id,x,y,120,80);
+                r.properties.entries={{0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{
+                    {0,0,0,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+                return r;
+            };
+            const auto hub=rect(1,0,0), target=rect(2,320,0);
+            const std::vector<semantic::ObjectRecord> objects{hub,target,rect(3,upperX,-120),rect(4,320,176)};
+            auto c=wire(0,0,0,0);c.properties=hub.properties;
+            auto& cc=std::get<semantic::ConnectorContent>(c.content);
+            cc.start.value=semantic::AttachedEndpoint{hub.id,semantic::StablePortAnchor{transpose?1U:4U}};
+            cc.end.value=semantic::AttachedEndpoint{target.id,semantic::StablePortAnchor{transpose?4U:1U}};
+            if(reverse)std::swap(cc.start,cc.end);
+            if(arrow)c.properties.entries.push_back({reverse?0x200U:0x201U,semantic::ConnectorDecorationValue::kArrow});
+            const auto g=scene::connectorGeometry(c,objects);ASSERT_TRUE(g);
+            ASSERT_EQ(g->status,runtime::ConnectorRouteStatus::kReady);
+            const auto display=scene::connectorDisplayRoute(c,*g);
+            avoids(display,objects);
+            if(arrow) {
+                const auto h=scene::arrowHead(display,reverse);
+                EXPECT_FLOAT_EQ(std::hypot(h.left.x-h.right.x,h.left.y-h.right.y),12);
+            }
+            auto p=display.route;if(reverse)std::reverse(p.begin(),p.end());
+            if(transpose)for(auto& v:p)std::swap(v.x,v.y);
+            ASSERT_GE(p.size(),4U);
+            EXPECT_FLOAT_EQ(p.front().x,-4);EXPECT_EQ(p[1].y,40);
+            EXPECT_LE(p[1].x,-32)<<"the obstacle near the other end does not crowd this port";
+            std::vector<semantic::Vec2> points;
+            for(const auto v:display.route) points.push_back({v.x,v.y});
+            const auto path=scene::roundedPolyline(points,false,4,display.sketchObstacles);
+            EXPECT_TRUE(std::any_of(path.commands.begin(),path.commands.end(),[&](const auto& cmd) {
+                const auto* edge=std::get_if<semantic::CubicTo>(&cmd);
+                if(!edge)return false;
+                auto end=edge->end;if(transpose)std::swap(end.x,end.y);
+                return reverse ? end.x==p[1].x+4 && end.y==40 : end.x==p[1].x && end.y==36;
+            }))<<"the first turn has the requested four-unit fillet";
+        }
+}
+
+TEST(FC05Route, AnUndecoratedPortRespectsNearbyInkAndANaturalSingleElbow) {
+    auto hub=box(1,0,0,120,80),target=box(2,320,0,120,80), c=wire(0,0,0,0);
+    const auto stroke=semantic::StrokeStyleValue{semantic::SolidStroke{
+        {0,0,0,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}};
+    hub.properties.entries=target.properties.entries=c.properties.entries={{0x101U,stroke}};
+    auto& cc=std::get<semantic::ConnectorContent>(c.content);
+    cc.start.value=semantic::AttachedEndpoint{hub.id,semantic::StablePortAnchor{4}};
+    cc.end.value=semantic::AttachedEndpoint{target.id,semantic::StablePortAnchor{1}};
+    auto neighbour=box(3,-143,0,120,80);neighbour.properties=hub.properties;
+    const auto roof=box(4,320,-120,120,80);
+    const auto constrained=scene::connectorGeometry(c,{hub,target,roof,neighbour});
+    ASSERT_TRUE(constrained);ASSERT_EQ(constrained->status,runtime::ConnectorRouteStatus::kReady);
+    const auto display=scene::connectorDisplayRoute(c,*constrained);
+    avoids(display,{hub,target,roof,neighbour});
+    EXPECT_LT(constrained->route[1].x,-13);
+    EXPECT_GT(constrained->route[1].x,-23);
+    neighbour.transform.tx=-120;
+    const auto blocked=scene::connectorGeometry(c,{hub,target,roof,neighbour});
+    ASSERT_TRUE(blocked);EXPECT_EQ(blocked->status,runtime::ConnectorRouteStatus::kNoRouteInDomain);
+
+    target.transform.tx=73;target.transform.ty=160;
+    cc.start.value=semantic::AttachedEndpoint{hub.id,semantic::StablePortAnchor{2}};
+    const auto elbow=scene::connectorGeometry(c,{hub,target});
+    ASSERT_TRUE(elbow);ASSERT_EQ(elbow->status,runtime::ConnectorRouteStatus::kReady);
+    ASSERT_EQ(elbow->route.size(),3U);
+    EXPECT_EQ(elbow->route[1].x,133);EXPECT_EQ(elbow->route[1].y,40);
+}
+
 TEST(FC05Route, ArrowsFitTheOpenSlotBetweenATargetAndItsNeighbour) {
     for (const double gap : {28.5, 19.5}) for (bool vertical : {false,true})
         for (bool fartherTarget : {false,true}) for (bool reverse : {false,true}) {

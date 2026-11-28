@@ -94,6 +94,45 @@ async function test(name,fn){try{await fn();cases.push({name,passed:true});}catc
 
 try {
   await open();
+  await test('the bare left port has a rounded exit when the opposite top port is constrained',async()=>{
+    await page.locator('#shape-tool').click();
+    const hub=await draw('rectangle',[330,420],[450,500]), center=await draw('rectangle',[650,420],[770,500]);
+    const upper=await draw('rectangle',[650,300],[770,380]), lower=await draw('rectangle',[650,596],[770,676]);
+    await page.evaluate(async({hub,center,upper,lower})=>{
+      for(const [from,id,to] of [[2,upper,4],[2,center,4],[2,lower,4],[3,center,2]])
+        await sdk.createConnector({start:{objectId:hub,port:from},end:{objectId:id,port:to},endArrow:true});
+    },{hub:hub.primary,center:center.primary,upper:upper.primary,lower:lower.primary});
+    const clip={x:250,y:270,width:580,height:420};
+    await page.mouse.click(390,460);await page.waitForFunction(id=>sdk.readSelection().primary===id,hub.primary);
+    const n=await count();await drag([hub.bounds[0]-28,460],[710,420],false);
+    const held=await page.screenshot({clip,path:path.join(out,'bare-port-drag.png')});
+    assert.equal(await count(),n);await page.mouse.up();await page.waitForFunction(n=>packets.length===n+1,n);
+    const wire=await read();
+    assert.deepEqual(wire.start,{objectId:hub.primary,port:4});assert.deepEqual(wire.end,{objectId:center.primary,port:1});
+    assert(!wire.startArrow && wire.endArrow);assert.equal(wire.routeStatus,1);
+    await page.screenshot({clip,path:path.join(out,'bare-port-selected.png')});
+    await page.mouse.click(990,620);
+    const screen=await page.screenshot({clip,path:path.join(out,'bare-port.png')});
+    const png=await page.evaluate(async c=>[...(await sdk.exportImage({format:'png',
+      bounds:[c.x,c.y,c.x+c.width,c.y+c.height],padding:0,scale:4})).bytes],clip);
+    await fs.writeFile(path.join(out,'bare-port-export.png'),Buffer.from(png));
+    const points=wire.route.map(p=>world(wire.worldTransform,p));
+    const samples=[[298,447],[317,447],[298-.5,460+.5],[299.25,458.75]];
+    const ink={held:await redSamples(held,clip,samples),screen:await redSamples(screen,clip,samples),
+      png:await redSamples(png,clip,samples)};
+    await fs.writeFile(path.join(out,'bare-port.json'),JSON.stringify({points,ink,
+      display:wire.displayRoute.map(p=>world(wire.worldTransform,p)),warning:await countWarningPixels(held)},null,2));
+    assert.equal(points[0][0]-points[1][0],32,'run before the first bend');
+    assert.equal(points[0][1],points[1][1]);
+    for(const values of Object.values(ink))assert(values[0]<190 && values[1]>240,'visible detour: '+values);
+    assert(ink.png[2]>240 && ink.png[3]<190,'rounded outer corner and curved stroke in PNG: '+ink.png);
+    assert.equal(await countWarningPixels(held),0);
+    await page.evaluate(()=>sdk.undo());assert.equal((await read(wire.objectId)).available,false);
+    await page.evaluate(()=>sdk.redo());
+    const restored=await read(wire.objectId);assert.deepEqual(restored.route,wire.route);
+    assert.deepEqual(restored.displayRoute,wire.displayRoute);
+  });
+  await open();
   await test('the middle horizontal wire keeps its own full arrow at a shared right port',async()=>{
     await page.locator('#shape-tool').click();
     const hub=await draw('rectangle',[280,320],[400,400]),upper=await draw('rectangle',[662.5,370.5],[782.5,450.5]);

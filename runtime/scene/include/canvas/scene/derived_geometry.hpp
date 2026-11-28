@@ -16,7 +16,7 @@ struct ConnectorGeometry final {
     runtime::ConnectorRouteStatus status = runtime::ConnectorRouteStatus::kReady;
     runtime::ConnectorRouteWork work{};
     foundation::WorldRect searchedDomain{};
-    std::uint32_t algorithmRevision = 12;
+    std::uint32_t algorithmRevision = 13;
     std::vector<foundation::WorldRect> sketchObstacles{};
     bool arrow_start=false;
     [[nodiscard]] bool showsWarning() const noexcept {

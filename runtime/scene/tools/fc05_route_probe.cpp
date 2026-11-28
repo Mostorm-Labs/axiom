@@ -45,7 +45,7 @@ int main(int argc,char** argv) {
     const bool benchmark=argc>1&&std::string_view(argv[1])=="--benchmark";
     if(benchmark){benchmarks();return 0;}
     std::cout<<std::setprecision(17)<<"[";
-    const unsigned count=125U;
+    const unsigned count=133U;
     for(unsigned fixture=0;fixture<count;++fixture) {
         if(fixture)std::cout<<",";
         semantic::ObjectRecord c{};c.id=foundation::ObjectId::fromUint64(900000);
@@ -233,7 +233,7 @@ int main(int argc,char** argv) {
                 if(fixture==112)c.transform={2,0,0,.75,17,-9};
                 c.properties.entries.push_back({fixture==109?0x200U:0x201U,semantic::ConnectorDecorationValue::kArrow});
             }
-            if(fixture>=113) {
+            if(fixture>=113 && fixture<125) {
                 const bool vertical=fixture==115 || fixture==123, reverse=fixture==116 || fixture==122;
                 const auto make=[&](unsigned id,double x,double y) {
                     auto r=vertical?box(id,y,x,80,120):box(id,x,y,120,80);
@@ -259,6 +259,24 @@ int main(int argc,char** argv) {
                 if(reverse || fixture==119)c.properties.entries.push_back({0x200U,semantic::ConnectorDecorationValue::kArrow});
                 if(!reverse)c.properties.entries.push_back({0x201U,semantic::ConnectorDecorationValue::kArrow});
                 if(fixture==120)for(unsigned n=0;n<1100;++n)objects.push_back(box(30+n,50000+n*20,50000,10,10));
+            }
+            if(fixture>=125) {
+                const bool transpose=fixture==128, reverse=fixture==127;
+                const auto rect=[transpose](unsigned id,double x,double y) {
+                    auto r=transpose?box(id,y,x,80,120):box(id,x,y,120,80);
+                    r.properties.entries={{0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{
+                        {0,0,0,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+                    return r;
+                };
+                const auto hub=rect(1,0,0), target=rect(2,320,0);
+                objects={hub,target,rect(3,fixture==129?215:320,-120),rect(4,320,176)};
+                cc.start.value=semantic::AttachedEndpoint{hub.id,semantic::StablePortAnchor{transpose?1U:4U}};
+                cc.end.value=semantic::AttachedEndpoint{target.id,semantic::StablePortAnchor{transpose?4U:1U}};
+                if(reverse)std::swap(cc.start,cc.end);
+                c.properties=hub.properties;
+                if(fixture!=126)c.properties.entries.push_back({reverse?0x200U:0x201U,semantic::ConnectorDecorationValue::kArrow});
+                if(fixture==130 || fixture==131)objects.push_back(rect(5,fixture==130?-143:-120,0));
+                if(fixture==132)for(unsigned n=0;n<1100;++n)objects.push_back(box(30+n,50000+n*20,50000,10,10));
             }
             if(fixture==40) {
                 const auto a=box(1,0,0,100,100),b=box(2,50,300,100,100);objects={a,b};

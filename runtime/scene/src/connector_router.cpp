@@ -735,14 +735,27 @@ struct ConnectorRouteJob::Impl {
         const auto at=[&](double d){return P{port.p.x+dir.x*d,port.p.y+dir.y*d};};
         const auto exit=std::find_if(exits.begin(),exits.end(),[&](P p){return along(p)>0;});
         const P base=exit==exits.end()?port.p:*exit;
-        if (!(atStart?result.arrow_start:result.arrow_end)) return base;
+        const bool arrow=atStart?result.arrow_start:result.arrow_end;
+        if (!arrow && !port.target) return base;
         const auto p=result.route[i],q=result.route[j];
         const double local=std::hypot(double(q.x)-p.x,double(q.y)-p.y);
         if (local<=0) return best[j];
-        const double gap=port.target?connectorTipGap:0.;
-        const double comfortable=gap+(connectorNominalArrowLength+connectorBendClearance)*(run/local);
-        const double inset=port.target?connectorAnchorInsetFraction(run,local,true):0.;
-        if (!port.target || connectorArrowLength(local*(1-inset),best.size(),false)>=connectorNominalArrowLength-1e-5)
+        const double boardPerLocal=run/local;
+        double comfortable=portLead;
+        bool needsRoom=false;
+        if (arrow) {
+            const double gap=port.target?connectorTipGap:0.;
+            comfortable=gap+(connectorNominalArrowLength+connectorBendClearance)*boardPerLocal;
+            const double inset=port.target?connectorAnchorInsetFraction(run,local,true):0.;
+            needsRoom=connectorArrowLength(local*(1-inset),best.size(),false)<connectorNominalArrowLength-1e-5;
+        } else if (best.size()>3) {
+            // On a detour the grid can turn exactly on its own padded body.
+            // A bare port also needs room for the first fillet. A single
+            // natural elbow already has its position fixed by the two ends.
+            const double bodyEdge=along(exitOnSide(port.p,dir,port.obstacle));
+            needsRoom=run+1e-5<std::min(portLead,bodyEdge+connectorBendClearance*boardPerLocal);
+        }
+        if (!port.target || !needsRoom)
             return at(std::min(run,std::max(along(base),comfortable)));
 
         double reach=std::clamp(comfortable,portLead,searchPadding.back());
@@ -756,7 +769,7 @@ struct ConnectorRouteJob::Impl {
     }
     bool retryShortLanding() {
         if(result.status!=Status::kReady || best.size()<3 ||
-           (!(a.target && result.arrow_start) && !(b.target && result.arrow_end)) ||
+           (!a.target && !b.target) ||
            result.work.predicates+landingScanBound()>65536U) return false;
         bool grew=false;
         const P first=landingGate(true,grew),last=landingGate(false,grew);
