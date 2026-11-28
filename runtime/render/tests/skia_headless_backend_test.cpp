@@ -797,7 +797,7 @@ void fc01TriangleAndConnectorStyleProbes() {
             auto& props=arrow.record.properties.entries;
             props={{0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,1,0,1},40,cap}}},
                    {0x201U,canvas::semantic::ConnectorDecorationValue::kArrow}};
-            if (radius) props.push_back({0x103U,canvas::semantic::CornerStyleV1{1,radius}});
+            if (radius > 0) props.push_back({0x103U,canvas::semantic::CornerStyleV1{1,radius}});
             list.entries={arrow};
             assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
             assert(pixel(*backend.observation(),143,100)[3]==0);

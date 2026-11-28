@@ -646,13 +646,13 @@ struct ConnectorRouteJob::Impl {
             }
         }
     }
-    void observeBranchWire(const semantic::ConnectorContent& current,const semantic::ConnectorContent& other) {
+    void observeBranchWire(const semantic::ConnectorContent& currentWire,const semantic::ConnectorContent& other) {
         if (other.routing!=semantic::ConnectorRouting::kOrthogonal) return;
         const auto link=[&](const auto& hub,const auto& far) {
-            if (hub!=current.start && hub!=current.end) return;
+            if (hub!=currentWire.start && hub!=currentWire.end) return;
             const auto* attachment=fixedAttachment(far);
             if (!attachment || attachment->target_object_id==targetA->id || attachment->target_object_id==targetB->id) return;
-            const unsigned side=hub==current.start ? 1 : 0;
+            const unsigned side=hub==currentWire.start ? 1 : 0;
             const auto port=std::get<semantic::StablePortAnchor>(attachment->anchor).port_id;
             auto& peer=branchPeers[attachment->target_object_id];
             const auto bit=1U<<(port-1);

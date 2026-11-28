@@ -156,11 +156,11 @@ struct RichTextLayoutService::Impl {
     Impl(const runtime::ResourceProvider& r,LayoutContext c) : resources(r), context(c) {}
     semantic::RichTextContent shapeLabelForLayout(semantic::RichTextContent label, float width) const {
         label.layout = semantic::RichTextLayout{width};
-        auto& paragraphs = label.document.paragraphs;
-        const auto first = std::find_if(paragraphs.begin(), paragraphs.end(),
+        auto& labelParagraphs = label.document.paragraphs;
+        const auto first = std::find_if(labelParagraphs.begin(), labelParagraphs.end(),
                                         [](const auto& p) { return !p.runs.empty(); });
         semantic::TextStyle inherited;
-        if (first != paragraphs.end()) {
+        if (first != labelParagraphs.end()) {
             inherited = first->runs.front().style;
         } else if (!descriptors.empty()) {
             inherited = {descriptors.begin()->second.resourceId, 16, 400, false, false, {0, 0, 0, 1}};
@@ -169,7 +169,7 @@ struct RichTextLayoutService::Impl {
         }
         // SplitParagraph may leave no run at all. Give the derived blank line its
         // adjacent font so measuring, painting and editing use the same advance.
-        for (auto& p : paragraphs) {
+        for (auto& p : labelParagraphs) {
             if (p.runs.empty()) p.runs.push_back({"", inherited});
             else inherited = p.runs.back().style;
         }

@@ -994,8 +994,8 @@ TEST(FC05Route, ShortTerminalSegmentsKeepTheArrowheadClearOfTheBend) {
         for (const auto& command : painted->arrowFill.commands)
             if (const auto* edge = std::get_if<semantic::LineTo>(&command))
                 EXPECT_GE(edge->end.x, 4);
-            else if (const auto* edge = std::get_if<semantic::CubicTo>(&command))
-                EXPECT_GE(edge->end.x, 4);
+            else if (const auto* curve = std::get_if<semantic::CubicTo>(&command))
+                EXPECT_GE(curve->end.x, 4);
     }
 
     g.route = {{0, 0}, {8, 0}}; g.arrow_start = true;
@@ -1024,8 +1024,8 @@ TEST(FC05Route, AnAttachedArrowFitsBesideALargeFilletWithoutTheShaftDoublingBack
                 EXPECT_LE(edge->control1.x,head.left.x+.001);
                 EXPECT_LE(edge->control2.x,head.left.x+.001);
                 EXPECT_LE(edge->end.x,head.left.x+.001);
-            } else if(const auto* edge=std::get_if<semantic::LineTo>(&command)) {
-                EXPECT_LE(edge->end.x,head.left.x+.001);
+            } else if(const auto* line=std::get_if<semantic::LineTo>(&command)) {
+                EXPECT_LE(line->end.x,head.left.x+.001);
             }
         }
         EXPECT_TRUE(sawCurve);
@@ -1044,7 +1044,7 @@ TEST(FC05Route, DecoratedShaftStopsAtArrowBasesForBothSharpAndRoundedSketchPaths
             style.entries={{0x102U,semantic::SketchStyleV1{1,123,roughness,true}},
                            {0x200U,semantic::ConnectorDecorationValue::kArrow},
                            {0x201U,semantic::ConnectorDecorationValue::kArrow}};
-            if (radius) style.entries.push_back({0x103U,semantic::CornerStyleV1{1,radius}});
+            if (radius > 0) style.entries.push_back({0x103U,semantic::CornerStyleV1{1,radius}});
             const auto geometry=scene::sketchGeometry(c.content,style,&route);
             ASSERT_TRUE(geometry);
             const auto& shaft=geometry->outline.commands;
