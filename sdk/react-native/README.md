@@ -1,4 +1,4 @@
-# @mostorm/axiom-react-native (0.5.2 package)
+# @mostorm/axiom-react-native (1.0.0 package)
 
 This package exposes the shared async Controller and Fabric `AxiomCanvasView`
 contract for the React Native development lanes below. The same TypeScript calls are used on

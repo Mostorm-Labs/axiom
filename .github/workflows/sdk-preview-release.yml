@@ -209,17 +209,15 @@ jobs:
         run: |
           set -euo pipefail
           cat > release-notes.txt <<'EOF'
-          Matching consumer SDK and demos for Windows x64 and JavaScript/WebAssembly. Windows apps link only axiom.lib and deploy axiom.dll plus runtime assets. JS apps import axiom.mjs with axiom.wasm and axiom.data. Semantic, Skia and Runtime component archives are private build inputs; their licenses are included. The 0.x SDK release does not imply production readiness or a cross-version C++ ABI declaration.
+          This release includes the canvas interaction and demo updates from d9c6e0f3.
 
-          Includes the Web CPU Worker executor for ordered pending erase/create/transform/History work, additive read-only pending-state DTOs, exact erase and stroke-material reuse, v4 corner-join repair and settled zoom-out startup optimization. Worker editing is enabled in the Web SDK/Demo release profile; native package profiles retain their current executor behavior. Existing tables, appearance, text, backgrounds and image export remain available. npm package: `@mostorm/axiom` at `http://npm.nearhub.cc/`.
+          - Connectors support endpoint editing, arrow controls, more consistent orthogonal routing, and placement of new objects from connector ports.
+          - The canvas improves selection handles, image cropping, text editing, and Section titles. The Web SDK adds Shell-owned canvas anchors for content that follows the viewport.
+          - Camera commands and gestures clamp zoom to 10%–300%. Section title creation and editing accept one line of up to 50 Unicode code points. Update controls and input validation that relied on the previous behavior.
 
-          0.5.2 also fixes Android NDK strict aggregate initialization for the navigation validation path. The previously published 0.5.1 GitHub assets remain unchanged.
+          The GitHub assets contain matching Windows x64 and Web SDKs and demos. The Web package is `@mostorm/axiom` at `http://npm.nearhub.cc/`. Each archive includes integration instructions and a manifest. SHA256SUMS and release.json identify the payloads and their shared source revision and build number.
 
-          0.5.1 integrates pending-erase navigation quiet-time/progress fixes, lightweight private Worker status polling, prepared-mask/body sharing, regional exposure reuse, bounded resource retirement and erase-feedback replay improvements. The settled-navigation diagnostic checkpoint remains BLOCKED / ROOT_CAUSE_NOT_ESTABLISHED; the original EFF4 performance target is unmet. Private timing/progress observers remain disabled in release builds. No new public editing API or semantic format is introduced.
-
-          Known limits: Worker erase coverage is controlled to algorithm-v4 compact round/marker with translation/rotation/uniform scale; unsupported document brush mixes use the existing legacy path. One fixed 64 MiB Worker and at most eight intents are supported; long convergence tails remain, with no general performance Gate PASS. Physical-input/IME coverage is incomplete; document persistence, synchronization and durable close are owned by the embedding application; Undo history is not restored from checkpoints. The known D07 Protobuf/Abseil allocation-failure hang is unresolved.
-
-          See each archive's README and manifest.json, and verify SHA256SUMS and release.json before use. All four assets share one exact source revision, SemVer and pipeline build number. SDK/API display X.Y.Z.Build; npm keeps X.Y.Z plus buildNumber. Performance evidence checkpoints include known unresolved cumulative erase/live-continuity limits; this release is not a performance Gate PASS.
+          Known limits include long convergence for cumulative erasures, incomplete physical input and IME verification, and the D07 allocation-failure hang. The embedding application owns document persistence and synchronization.
           EOF
           display_version=$(python -c 'import json; print(json.load(open("release-assets/release.json"))["sdk_version"])')
           version=$(python -c 'import json; print(json.load(open("release-assets/release.json"))["version"])')
