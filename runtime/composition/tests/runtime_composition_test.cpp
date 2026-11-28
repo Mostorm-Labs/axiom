@@ -308,13 +308,15 @@ void logicalInputMatchesCanonicalAndPreviewPixels() {
   canvas::runtime::RuntimeFrameOpportunity selected{};
   assert(composition.serviceFrameOpportunity(false, selected));
   assert(composition.readCanonicalRgba(pixels));
-  const auto corner = (40U * 256U + 40U) * 4U;
   // White corner grip and violet edge in the same logical space as the object.
-  // Its bounds include one unit of stroke and the grip extends four more:
-  // (20 - 1 - 4) * DPR2 places the left edge at x=30px.
+  // Start at the 20px logical rectangle corner, include 1px of stroke and the
+  // 3px selection gap, then double for the physical raster at DPR 2.
+  constexpr auto gripCenter = (20U - 1U - 3U) * 2U;
+  constexpr auto gripLeft = gripCenter - 4U * 2U;
+  const auto corner = (gripCenter * 256U + gripCenter) * 4U;
   assert(pixels[corner] > 245U && pixels[corner + 1U] > 245U &&
          pixels[corner + 2U] > 245U && pixels[corner + 3U] == 255U);
-  const auto edge = (40U * 256U + 30U) * 4U;
+  const auto edge = (gripCenter * 256U + gripLeft) * 4U;
   assert(pixels[edge] >= 90U && pixels[edge] <= 120U &&
          pixels[edge + 1U] >= 85U && pixels[edge + 1U] <= 115U &&
          pixels[edge + 2U] >= 245U && pixels[edge + 3U] == 255U);

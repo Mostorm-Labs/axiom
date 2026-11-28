@@ -7,8 +7,7 @@
 
 namespace {
 using namespace canvas;
-constexpr auto kSnapshotCapability =
-    semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+constexpr auto kSnapshotCapability = semantic::SnapshotCapability::kAllWithCompactStrokeV1;
 
 struct Recorder {
   std::vector<semantic::Operation> operations;
