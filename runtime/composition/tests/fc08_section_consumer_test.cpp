@@ -44,12 +44,14 @@ TEST(FC08SectionConsumer, TitleAuthoringLimitsApplyToWholeUnicodeCharactersAndOn
         EXPECT_EQ(r->section->failure==runtime::SectionFailure::kNone,accepted);
     };
     std::string fifty;
-    for(int i=0;i<25;++i) fifty+="甲😀";
+    // UTF-8 for U+7532 and U+1F600, independent of the compiler code page.
+    for(int i=0;i<25;++i) fifty+="\xe7\x94\xb2\xf0\x9f\x98\x80";
     intent.content.title=fifty+"a"; submit(false);
     intent.content.title=fifty; submit(true);
     const auto generation=c.readback().semanticGeneration;
     intent.action=runtime::SectionAction::kRename;
-    for(const auto* invalid:{"a\nb","a\rb","a\u0085b","a\u2028b","a\u2029b"}) {
+    // Unicode NEL, line separator and paragraph separator in UTF-8.
+    for(const auto* invalid:{"a\nb","a\rb","a\xc2\x85" "b","a\xe2\x80\xa8" "b","a\xe2\x80\xa9" "b"}) {
         intent.content.title=invalid;submit(false);
     }
     EXPECT_EQ(c.readback().semanticGeneration,generation);

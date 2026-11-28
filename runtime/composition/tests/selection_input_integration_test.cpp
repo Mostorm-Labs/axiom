@@ -464,8 +464,10 @@ TEST_F(SelectionInput, PointSelectsVisibleInkOrTheObjectUnderItsGap) {
     ASSERT_TRUE(editor.selectTool(interaction::CanvasEditingRuntime::ToolMode::kBrush));
     ASSERT_TRUE(editor.selectBrushProfile("round-handdrawn",4));
     ASSERT_TRUE(pointer(input::PointerPhase::kDown,80,75));
-    for (int i=1; i<=14; ++i)
-        ASSERT_TRUE(pointer(input::PointerPhase::kMove,80+i*10,75+i*7.5F));
+    for (int i=1; i<=14; ++i) {
+        const float step = static_cast<float>(i);
+        ASSERT_TRUE(pointer(input::PointerPhase::kMove,80.0F+step*10.0F,75.0F+step*7.5F));
+    }
     ASSERT_TRUE(pointer(input::PointerPhase::kUp,220,180));
     ASSERT_EQ(c.semanticObjectCount(),4U);
     mode(runtime::CanvasSelectionMode::kPoint);
